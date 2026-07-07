@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>LLMRouter Console</title>
+  <link rel="stylesheet" href="/static/styles.css?v=21">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">LR</div>
+        <div>
+          <strong>LLMRouter</strong>
+          <span>模型路由控制台</span>
+        </div>
+      </div>
+
+      <button class="new-chat" id="newChatButton" type="button">
+        <span aria-hidden="true">＋</span>
+        新建对话
+      </button>
+
+      <nav class="primary-nav" aria-label="主导航">
+        <button class="nav-item active" data-view="chat" type="button">
+          <span class="nav-icon" aria-hidden="true">⌁</span>
+          对话
+        </button>
+        <button class="nav-item" data-view="routing" type="button">
+          <span class="nav-icon" aria-hidden="true">⇄</span>
+          路由
+        </button>
+        <button class="nav-item" data-view="models" type="button">
+          <span class="nav-icon" aria-hidden="true">▦</span>
+          模型
+        </button>
+        <button class="nav-item" data-view="evaluation" type="button">
+          <span class="nav-icon" aria-hidden="true">▥</span>
+          实验
+        </button>
+        <button class="nav-item" data-view="scheduler" type="button">
+          <span class="nav-icon" aria-hidden="true">⌬</span>
+          调度
+        </button>
+        <button class="nav-item" data-view="charts" type="button">
+          <span class="nav-icon" aria-hidden="true">📊</span>
+          可视化分析
+        </button>
+        <button class="nav-item" data-view="logs" type="button">
+          <span class="nav-icon" aria-hidden="true">≡</span>
+          日志
+        </button>
+        <button class="nav-item" data-view="system" type="button">
+          <span class="nav-icon" aria-hidden="true">◉</span>
+          系统
+        </button>
+      </nav>
+
+      <div class="session-section">
+        <div class="section-label">
+          <span>最近对话</span>
+          <button class="icon-button" id="clearSessionsButton" type="button" title="清除全部对话">×</button>
+        </div>
+        <div class="session-list" id="sessionList"></div>
+      </div>
+
+      <div class="sidebar-footer">
+        <span class="status-dot" id="sidebarStatusDot"></span>
+        <span id="sidebarStatusText">正在连接服务</span>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menuButton" type="button" title="打开导航">☰</button>
+        <div class="topbar-title">
+          <h1 id="viewTitle">智能对话</h1>
+          <p id="viewSubtitle">由 GraphRouter 自动选择合适的模型</p>
+        </div>
+        <div class="topbar-actions">
+          <label class="model-control" for="solveModeSelect">
+            <span>求解模式</span>
+            <select id="solveModeSelect">
+              <option value="single">普通自动路由</option>
+              <option value="static_multi">静态多轮路由</option>
+              <option value="dynamic_subtasks">动态子任务调度</option>
+            </select>
+          </label>
+          <label class="model-control" for="dispatchModeSelect">
+            <span>调度策略</span>
+            <select id="dispatchModeSelect">
+              <option value="conservative">保守串行</option>
+              <option value="balanced">平衡依赖图</option>
+              <option value="fast">极速并行</option>
+            </select>
+          </label>
+          <label class="model-control" for="modelSelect">
+            <span>调用模型</span>
+            <select id="modelSelect">
+              <option value="auto">自动路由</option>
+            </select>
+          </label>
+          <button class="icon-button" id="refreshButton" type="button" title="刷新服务状态">↻</button>
+          <button class="icon-button" id="settingsButton" type="button" title="对话设置">⚙</button>
+        </div>
+      </header>
+
+      <section class="view active" id="chatView" data-view-panel="chat">
+        <div class="chat-layout">
+          <div class="conversation-column">
+            <div class="message-list" id="messageList">
+              <div class="welcome-state" id="welcomeState">
+                <div class="welcome-mark">LR</div>
+                <h2>开始一次智能路由对话</h2>
+                <p>当前问题会先经过路由器，再交给选中的大模型回答。</p>
+                <div class="prompt-grid">
+                  <button type="button" data-prompt="请用通俗的语言解释什么是大模型路由。">
+                    <strong>概念解释</strong>
+                    <span>什么是大模型路由？</span>
+                  </button>
+                  <button type="button" data-prompt="请用 Python 写一个快速排序，并解释时间复杂度。">
+                    <strong>代码生成</strong>
+                    <span>编写快速排序</span>
+                  </button>
+                  <button type="button" data-prompt="帮我写一份三分钟的人工智能主题演讲稿。">
+                    <strong>内容创作</strong>
+                    <span>生成演讲稿</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="composer-wrap">
+              <div class="composer">
+                <textarea id="messageInput" rows="1" placeholder="输入消息..."></textarea>
+                <div class="composer-bottom">
+                  <span class="composer-hint" id="composerHint">自动路由 · GraphRouter</span>
+                  <div class="composer-actions">
+                    <button class="compare-button" id="compareButton" type="button" title="A/B 对比">A/B</button>
+                    <button class="send-button" id="sendButton" type="button" title="发送消息">➤</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="inspector" id="inspector">
+            <div class="inspector-header">
+              <div>
+                <span class="eyebrow">本轮路由</span>
+                <h2 id="selectedModelName">等待提问</h2>
+              </div>
+              <span class="route-state idle" id="routeState">空闲</span>
+            </div>
+
+            <dl class="metric-list">
+              <div>
+                <dt>服务策略</dt>
+                <dd id="strategyValue">-</dd>
+              </div>
+              <div>
+                <dt>求解模式</dt>
+                <dd id="solveModeValue">-</dd>
+              </div>
+              <div>
+                <dt>调度策略</dt>
+                <dd id="dispatchModeValue">-</dd>
+              </div>
+              <div>
+                <dt>算法路由器</dt>
+                <dd id="algorithmValue">-</dd>
+              </div>
+              <div>
+                <dt>响应时间</dt>
+                <dd id="latencyValue">-</dd>
+              </div>
+              <div>
+                <dt>本地请求</dt>
+                <dd id="requestCountValue">0</dd>
+              </div>
+            </dl>
+
+            <div class="route-log-block">
+              <div class="section-label">路由记录</div>
+              <div class="route-log" id="routeLog">
+                <div class="empty-log">发送消息后显示路由结果</div>
+              </div>
+            </div>
+
+            <div class="route-detail-block">
+              <div class="section-label">路由理由</div>
+              <p class="route-reason" id="routeReason">等待路由结果</p>
+            </div>
+
+            <div class="route-detail-block">
+              <div class="section-label">多步执行过程</div>
+              <div class="route-step-list" id="routeStepList">
+                <div class="empty-log">普通模式没有拆解步骤；选择静态多轮或动态子任务后会显示过程</div>
+              </div>
+            </div>
+
+            <div class="candidate-block">
+              <div class="section-label">候选模型评分</div>
+              <div class="candidate-list" id="candidateList">
+                <div class="empty-log">暂无候选评分</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view content-view" id="routingView" data-view-panel="routing">
+        <div class="content-heading">
+          <div>
+            <span class="eyebrow">Routing</span>
+            <h2>路由运行状态</h2>
+          </div>
+          <span class="health-badge" id="routerHealthBadge">检查中</span>
+        </div>
+        <div class="router-selector-panel">
+          <div class="selector-copy">
+            <span class="eyebrow">可选择路由模块</span>
+            <h3>服务层与算法层路由决策中心</h3>
+            <p>先选择服务层分配策略；当服务策略为“算法路由”时，再选择具体算法层路由器。</p>
+          </div>
+          <label class="router-select-field">
+            <span>服务策略</span>
+            <select id="serviceStrategySelect"></select>
+          </label>
+          <label class="router-select-field" id="algorithmSelectField">
+            <span>算法路由器</span>
+            <select id="algorithmRouterSelect"></select>
+          </label>
+          <button class="apply-router-button" id="applyRouterButton" type="button">应用配置</button>
+          <div class="router-catalog">
+            <div class="catalog-section">
+              <div class="catalog-heading">
+                <strong>全部服务层策略</strong>
+                <span id="serviceStrategyCount">0 项</span>
+              </div>
+              <div class="catalog-list service-catalog-list" id="serviceCatalogList"></div>
+            </div>
+            <div class="catalog-section">
+              <div class="catalog-heading">
+                <strong>全部算法层路由器</strong>
+                <span id="algorithmRouterCount">0 项</span>
+              </div>
+              <div class="catalog-legend" aria-label="运行模式说明">
+                <span>原生运行</span>
+                <span class="compatibility">兼容运行</span>
+              </div>
+              <div class="catalog-list algorithm-catalog-list" id="algorithmCatalogList"></div>
+            </div>
+          </div>
+        </div>
+        <div class="route-flow">
+          <div class="flow-node">
+            <span>01</span>
+            <strong>用户请求</strong>
+            <small>API 或前端输入</small>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node emphasis">
+            <span>02</span>
+            <strong id="routingStrategyName">llmrouter</strong>
+            <small>服务层路由策略</small>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node active-node">
+            <span>03</span>
+            <strong id="routingAlgorithmName">GraphRouter</strong>
+            <small>算法层模型选择</small>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <span>04</span>
+            <strong>目标模型</strong>
+            <small>调用真实模型 API</small>
+          </div>
+        </div>
+        <div class="info-grid">
+          <div class="info-panel">
+            <span class="eyebrow">当前配置</span>
+            <h3 id="routingConfigPath">-</h3>
+            <p>算法层路由器加载的推理配置。</p>
+          </div>
+          <div class="info-panel">
+            <span class="eyebrow">模型前缀</span>
+            <h3 id="prefixFeatureValue">已启用</h3>
+            <p>接口响应中保留实际选中的模型名称。</p>
+          </div>
+          <div class="info-panel">
+            <span class="eyebrow">路由器状态</span>
+            <h3 id="routerLoadedValue">-</h3>
+            <p>显示算法模型是否成功加载。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="view content-view" id="modelsView" data-view-panel="models">
+        <div class="content-heading">
+          <div>
+            <span class="eyebrow">Models</span>
+            <h2>模型配置</h2>
+          </div>
+          <div class="heading-actions">
+            <span class="count-badge" id="modelCountBadge">0 个模型</span>
+            <button class="compact-button" id="addModelButton" type="button">添加模型</button>
+          </div>
+        </div>
+        <div class="model-config-note">
+          <strong>配置说明</strong>
+          <span>新增模型可立即手动调用；若希望被 GraphRouter 自动选择，需要补充训练数据并重新训练路由器。</span>
+        </div>
+        <div class="model-grid" id="modelGrid"></div>
+      </section>
+
+      <section class="view content-view" id="evaluationView" data-view-panel="evaluation">
+        <div class="content-heading">
+          <div>
+            <span class="eyebrow">Experiment</span>
+            <h2>实验验证面板</h2>
+          </div>
+          <div class="heading-actions">
+            <button class="compact-button ghost" id="refreshMetricsButton" type="button">刷新运行数据</button>
+            <button class="compact-button ghost" id="exportExperimentButton" type="button">导出报告</button>
+            <button class="compact-button ghost" id="runRealExperimentButton" type="button">真实抽样实验</button>
+            <button class="compact-button" id="runExperimentButton" type="button">运行模拟实验</button>
+          </div>
+        </div>
+
+        <div class="experiment-brief">
+          <div>
+            <span class="eyebrow">实验目标</span>
+            <h3>质量、成本、延迟和可靠性的多目标路由对比</h3>
+            <p id="experimentBasisText">这里用一组代表性任务，对比全部服务层策略、算法层路由器和调度优化方法在回答质量、调用成本、响应速度和稳定性上的取舍。</p>
+          </div>
+          <div class="weight-grid" id="experimentWeights"></div>
+        </div>
+
+        <div class="experiment-grid">
+          <div class="experiment-panel">
+            <div class="panel-title">
+              <h3>实验任务集</h3>
+              <span id="experimentTaskCount">0 个任务</span>
+            </div>
+            <div class="task-list" id="experimentTaskList"></div>
+          </div>
+          <div class="experiment-panel">
+            <div class="panel-title">
+              <h3>对比策略</h3>
+              <span id="experimentBestStrategy">等待运行</span>
+            </div>
+            <div class="strategy-list" id="experimentStrategyList"></div>
+          </div>
+        </div>
+
+        <div class="experiment-table-wrap">
+          <table class="experiment-table">
+            <thead>
+              <tr>
+                <th>策略</th>
+                <th>类型</th>
+                <th>质量</th>
+                <th>成本</th>
+                <th>延迟</th>
+                <th>可靠性</th>
+                <th>综合效用</th>
+              </tr>
+            </thead>
+            <tbody id="experimentTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="process-panel">
+          <div class="panel-title">
+            <h3>实验过程展示</h3>
+            <span>从任务加载到最终结论</span>
+          </div>
+          <div class="process-list" id="experimentProcessList"></div>
+        </div>
+
+        <div class="case-panel">
+          <div class="panel-title">
+            <h3>典型案例分析</h3>
+            <span>路由选择、候选评分和理由</span>
+          </div>
+          <div class="case-list" id="experimentCaseList"></div>
+        </div>
+
+        <div class="evaluation-grid">
+          <div class="evaluation-card">
+            <span>请求总数</span>
+            <strong id="metricRequests">0</strong>
+          </div>
+          <div class="evaluation-card positive">
+            <span>成功率</span>
+            <strong id="metricSuccessRate">0%</strong>
+          </div>
+          <div class="evaluation-card">
+            <span>平均响应</span>
+            <strong id="metricLatency">0 ms</strong>
+          </div>
+          <div class="evaluation-card warning">
+            <span>自动降级</span>
+            <strong id="metricFallbacks">0</strong>
+          </div>
+        </div>
+        <div class="evaluation-panels">
+          <div class="evaluation-panel">
+            <div class="panel-title">
+              <h3>模型调用分布</h3>
+              <span>成功请求</span>
+            </div>
+            <div class="usage-bars" id="modelUsageBars"></div>
+          </div>
+          <div class="evaluation-panel">
+            <div class="panel-title">
+              <h3>模型健康状态</h3>
+              <span>失败模型会自动冷却</span>
+            </div>
+            <div class="health-list" id="modelHealthList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view content-view" id="schedulerView" data-view-panel="scheduler">
+        <div class="content-heading">
+          <div>
+            <span class="eyebrow">Scheduler</span>
+            <h2>PSO / GA 调度优化模块</h2>
+          </div>
+          <div class="heading-actions">
+            <button class="compact-button ghost" id="refreshSchedulerButton" type="button">刷新调度结果</button>
+            <button class="compact-button" id="runSchedulerButton" type="button">运行调度实验</button>
+          </div>
+        </div>
+
+        <div class="scheduler-hero">
+          <div>
+            <span class="eyebrow">离线批量调度</span>
+            <h3>把一批任务整体分配给不同模型</h3>
+            <p>PSO 和 GA 不负责单个用户问题的即时回答，而是在实验阶段对一批任务做整体搜索：在质量、成本、延迟、可靠性和负载均衡之间寻找更优分配方案。</p>
+          </div>
+          <div class="scheduler-status-card">
+            <span>当前定位</span>
+            <strong>PSO / GA 主实验</strong>
+            <small>PPO 暂不进入主实验，适合后续有用户反馈数据后做在线学习。</small>
+          </div>
+        </div>
+
+        <div class="scheduler-grid">
+          <article class="scheduler-method-card pso">
+            <div>
+              <span class="method-tag">PSO</span>
+              <h3>粒子群调度</h3>
+            </div>
+            <p>把一个“任务-模型分配方案”看作粒子位置，通过个体最优和全局最优不断更新，适合快速搜索较好的批量分配。</p>
+            <ul>
+              <li>适合：预算、延迟约束明确的批量任务。</li>
+              <li>输出：最终模型分配、适应度、搜索轨迹。</li>
+            </ul>
+          </article>
+          <article class="scheduler-method-card ga">
+            <div>
+              <span class="method-tag">GA</span>
+              <h3>遗传调度</h3>
+            </div>
+            <p>把分配方案看作种群个体，通过选择、交叉和变异保留更优方案，适合作为进化搜索类调度基线。</p>
+            <ul>
+              <li>适合：候选模型较多、约束组合复杂的任务集。</li>
+              <li>输出：最终模型分配、适应度、代际搜索过程。</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="scheduler-section">
+          <div class="panel-title">
+            <h3>约束与适应度设计</h3>
+            <span>不是简单线性加权</span>
+          </div>
+          <div class="scheduler-constraint-grid">
+            <div><span>质量下限</span><strong>任务级约束</strong><small>质量过低会触发惩罚</small></div>
+            <div><span>成本预算</span><strong>批量约束</strong><small>限制整体调用开销</small></div>
+            <div><span>延迟预算</span><strong>批量约束</strong><small>控制整体响应时间</small></div>
+            <div><span>可靠性下限</span><strong>风险约束</strong><small>高风险任务优先稳定模型</small></div>
+            <div><span>负载均衡</span><strong>公平性惩罚</strong><small>避免所有任务都挤到同一个模型</small></div>
+          </div>
+        </div>
+
+        <div class="scheduler-section">
+          <div class="panel-title">
+            <h3>本轮调度结果</h3>
+            <span id="schedulerResultHint">请先运行或刷新实验</span>
+          </div>
+          <div class="scheduler-result-grid" id="schedulerResultGrid"></div>
+        </div>
+
+        <div class="scheduler-section">
+          <div class="panel-title">
+            <h3>任务分配明细</h3>
+            <span>来自实验案例中的 PSO / GA 结果</span>
+          </div>
+          <div class="scheduler-assignment-list" id="schedulerAssignmentList"></div>
+        </div>
+
+        <div class="scheduler-section">
+          <div class="panel-title">
+            <h3>预训练前检查</h3>
+            <span>下一步要做什么</span>
+          </div>
+          <div class="pretrain-checklist">
+            <div><strong>可以开始准备预训练/训练数据</strong><span>先做金融垂直任务集、标准答案、模型真实回答和评分记录。</span></div>
+            <div><strong>暂时不必先加 PPO</strong><span>PPO 需要用户反馈或长期调用日志；没有反馈数据时硬加会显得牵强。</span></div>
+            <div><strong>优先补真实评估闭环</strong><span>记录回答质量、token 成本、延迟、失败率，再训练 GraphRouter / RouterDC / 领域路由器。</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view content-view" id="chartsView" data-view-panel="charts">
+        <div class="content-heading">
+          <div>
+            <span class="eyebrow">Visualization</span>
+            <h2>实验结果可视化</h2>
+          </div>
+          <div class="heading-actions">
+            <button class="compact-button ghost" id="refreshChartButton" type="button">刷新图表</button>
+          </div>
+        </div>
+
+        <div class="charts-dashboard">
+          <div class="chart-card large" id="paretoChart" data-title="成本-质量 Pareto 图"></div>
+          <div class="chart-card" id="radarChart" data-title="多维性能雷达图"></div>
+          <div class="chart-card wide" id="taskBarChart" data-title="任务类型质量对比"></div>
+          <div class="chart-card" id="utilityBarChart" data-title="综合效用排序"></div>
+        </div>
+      </section>
+
+      <section class="view content-view" id="logsView" data-view-panel="logs">
+        <div class="content-heading">
+          <div>
+            <span class="eyebrow">Logs</span>
+            <h2>路由与请求日志</h2>
+          </div>
+          <button class="compact-button" id="refreshLogsButton" type="button">刷新日志</button>
+        </div>
+        <div class="log-table-wrap">
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>状态</th>
+                <th>策略 / 算法</th>
+                <th>最终模型</th>
+                <th>耗时</th>
+                <th>路由说明</th>
+              </tr>
+            </thead>
+            <tbody id="logTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="view content-view" id="systemView" data-view-panel="system">
+        <div class="content-heading">
+          <div>
+            <span class="eyebrow">System</span>
+            <h2>服务与接口</h2>
+          </div>
+          <span class="health-badge" id="systemHealthBadge">检查中</span>
+        </div>
+        <div class="system-overview">
+          <div class="system-stat">
+            <span>服务状态</span>
+            <strong id="systemStatusValue">-</strong>
+          </div>
+          <div class="system-stat">
+            <span>路由策略</span>
+            <strong id="systemStrategyValue">-</strong>
+          </div>
+          <div class="system-stat">
+            <span>模型数量</span>
+            <strong id="systemModelCountValue">-</strong>
+          </div>
+        </div>
+        <div class="endpoint-list" id="endpointList"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="settings-drawer" id="settingsDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <div>
+        <span class="eyebrow">Settings</span>
+        <h2>对话设置</h2>
+      </div>
+      <button class="icon-button" id="closeSettingsButton" type="button" title="关闭设置">×</button>
+    </div>
+    <label class="setting-field">
+      <span>Temperature</span>
+      <output id="temperatureOutput">0.7</output>
+      <input id="temperatureInput" type="range" min="0" max="1.5" step="0.1" value="0.7">
+    </label>
+    <label class="setting-field">
+      <span>最大输出 Token</span>
+      <input id="maxTokensInput" type="number" min="128" max="4096" step="128" value="1024">
+    </label>
+    <label class="setting-field">
+      <span>系统提示词</span>
+      <textarea id="systemPromptInput" rows="5" placeholder="可选"></textarea>
+    </label>
+    <button class="secondary-button" id="clearChatButton" type="button">清空当前对话</button>
+  </aside>
+
+  <div class="modal-backdrop" id="modelModalBackdrop"></div>
+  <section class="model-modal" id="modelModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modelModalTitle">
+    <div class="drawer-header">
+      <div>
+        <span class="eyebrow">Model Config</span>
+        <h2 id="modelModalTitle">添加模型</h2>
+      </div>
+      <button class="icon-button" id="closeModelModalButton" type="button" title="关闭">×</button>
+    </div>
+    <form class="model-form" id="modelForm">
+      <label>
+        <span>模型 ID</span>
+        <input id="modelIdInput" name="id" required placeholder="例如：qwen-plus">
+        <small>前端和路由系统中显示的唯一名称，创建后不可修改。</small>
+      </label>
+      <div class="form-row">
+        <label>
+          <span>供应商</span>
+          <input id="modelProviderInput" name="provider" required placeholder="例如：qwen">
+        </label>
+        <label>
+          <span>实际模型 ID</span>
+          <input id="modelApiNameInput" name="model_id" required placeholder="供应商接口使用的模型名">
+        </label>
+      </div>
+      <label>
+        <span>API Base URL</span>
+        <input id="modelBaseUrlInput" name="base_url" type="url" required placeholder="https://api.example.com/v1">
+      </label>
+      <div class="form-row">
+        <label>
+          <span>Chat Path</span>
+          <input id="modelChatPathInput" name="chat_path" required value="/chat/completions">
+        </label>
+        <label>
+          <span>认证方式</span>
+          <select id="modelAuthModeInput" name="auth_mode">
+            <option value="bearer">Bearer API Key</option>
+            <option value="auto">自动判断</option>
+            <option value="none">无需认证</option>
+          </select>
+        </label>
+      </div>
+      <label>
+        <span>API Key</span>
+        <input id="modelApiKeyInput" name="api_key" type="password" autocomplete="new-password" placeholder="编辑时留空可保留原 Key">
+        <small id="apiKeyHint">Key 只写入本地配置，接口不会回传明文。</small>
+      </label>
+      <div class="form-row">
+        <label>
+          <span>上下文长度</span>
+          <input id="modelContextLimitInput" name="context_limit" type="number" min="128" value="32768" required>
+        </label>
+        <label>
+          <span>最大输出 Token</span>
+          <input id="modelMaxTokensInput" name="max_tokens" type="number" min="1" value="1024" required>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>
+          <span>输入价格（每百万 token）</span>
+          <input id="modelInputPriceInput" name="input_price" type="number" min="0" step="0.000001" value="0">
+        </label>
+        <label>
+          <span>输出价格（每百万 token）</span>
+          <input id="modelOutputPriceInput" name="output_price" type="number" min="0" step="0.000001" value="0">
+        </label>
+      </div>
+      <label>
+        <span>模型说明</span>
+        <textarea id="modelDescriptionInput" name="description" rows="3" placeholder="简要说明模型的能力和用途"></textarea>
+      </label>
+      <label class="checkbox-field">
+        <input id="modelAutoRoutableInput" name="auto_routable" type="checkbox" checked>
+        <span>参与自动路由</span>
+        <small>关闭后仍可手动调用，但不会被自动路由选中。</small>
+      </label>
+      <div class="form-actions">
+        <button class="secondary-action" id="cancelModelButton" type="button">取消</button>
+        <button class="primary-action" id="saveModelButton" type="submit">保存模型</button>
+      </div>
+    </form>
+  </section>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/static/app.js?v=22" defer></script>
+</body>
+</html>

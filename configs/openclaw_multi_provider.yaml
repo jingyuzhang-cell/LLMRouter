@@ -1,0 +1,99 @@
+serve:
+  host: 127.0.0.1
+  port: 8000
+  show_model_prefix: true
+router:
+  strategy: constrained_multi_objective
+  provider: deepseek
+  model: deepseek-chat
+  base_url: https://api.deepseek.com/v1
+  provider_type: openai_compatible
+  auth_mode: bearer
+  chat_path: /chat/completions
+  llmrouter:
+    name: graphrouter
+    config_path: configs/model_config_test/multi_provider_graphrouter.yaml
+api_keys:
+  deepseek: ${DEEPSEEK_API_KEY}
+  qwen: ${QWEN_API_KEY}
+  doubao: ${DOUBAO_API_KEY}
+  gemini: ${GEMINI_API_KEY}
+  zhipu: ${ZHIPU_API_KEY}
+memory:
+  enabled: false
+llms:
+  deepseek-chat:
+    provider: deepseek
+    provider_type: openai_compatible
+    model: deepseek-chat
+    base_url: https://api.deepseek.com/v1
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: DeepSeek chat model
+    max_tokens: 1024
+    context_limit: 64000
+    input_price: 0.28
+    output_price: 0.42
+  qwen-plus:
+    provider: qwen
+    provider_type: openai_compatible
+    model: qwen-plus
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: Alibaba Cloud Qwen Plus model
+    max_tokens: 1024
+    context_limit: 131000
+    input_price: 0.11
+    output_price: 0.28
+  doubao:
+    provider: doubao
+    provider_type: openai_compatible
+    model: doubao-seed-evolving
+    base_url: https://ark.cn-beijing.volces.com/api/v3
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: ByteDance Doubao model through Volcano Engine Ark
+    max_tokens: 384
+    context_limit: 131000
+    input_price: 0.11
+    output_price: 1.1
+    auto_routable: false
+  gemini-2.5-flash:
+    provider: gemini
+    provider_type: openai_compatible
+    model: gemini-2.5-flash
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: Google Gemini 2.5 Flash model
+    max_tokens: 1024
+    context_limit: 1000000
+    input_price: 0.3
+    output_price: 2.5
+  doubao-seed-2.1-turbo:
+    provider: doubao
+    provider_type: openai_compatible
+    model: doubao-seed-2-1-turbo-260628
+    base_url: https://ark.cn-beijing.volces.com/api/v3
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: ByteDance Doubao Seed 2.1 Turbo model through Volcano Engine Ark
+    max_tokens: 512
+    context_limit: 131000
+    input_price: 0.11
+    output_price: 1.1
+    auto_routable: false
+  glm-5.2:
+    provider: zhipu
+    provider_type: openai_compatible
+    model: glm-5.2
+    base_url: https://open.bigmodel.cn/api/paas/v4
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: Zhipu GLM-5.2 model through BigModel OpenAI-compatible API
+    max_tokens: 4096
+    context_limit: 1000000
+    input_price: 1.4
+    output_price: 4.4
+    auto_routable: true
