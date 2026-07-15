@@ -11,6 +11,9 @@ import threading
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any
 
+from dotenv import load_dotenv
+load_dotenv()
+
 
 def _parse_bool(value: Any, default: bool = False) -> bool:
     if value is None:

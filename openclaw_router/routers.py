@@ -665,6 +665,482 @@ def select_by_latency_sla_pareto(query: str, models: List[str]) -> Dict[str, Any
     }
 
 
+def select_by_ra_cmcr(query: str, models: List[str]) -> Dict[str, Any]:
+    """Risk-aware constrained multi-objective cascading routing."""
+    task = _finance_task_profile(query)
+    constraints = _finance_constraints(task)
+    context_key = _bandit_context_key(task)
+    context_state = _load_bandit_state().get(context_key, {})
+    scored = []
+
+    for model in models:
+        metrics = _mo_adjusted_metrics(model, task)
+        violations = _mo_violations(metrics, constraints)
+        linear_score = _mo_utility(metrics)
+        nonlinear_score, params = _finance_nonlinear_utility(metrics, task)
+        history = context_state.get(model, {})
+        count = float(history.get("count", 0.0))
+        historical_reward = float(history.get("reward", linear_score))
+        success_rate = float(history.get("success_rate", metrics.get("reliability", 0.7)))
+        exploration = 0.08 / ((count + 1.0) ** 0.5)
+
+        score = (
+            0.30 * nonlinear_score
+            + 0.20 * linear_score
+            + 0.18 * historical_reward
+            + 0.14 * success_rate
+            + 0.08 * (1.0 - metrics["cost"])
+            + 0.06 * (1.0 - metrics["latency"])
+            + exploration
+        )
+        if task.get("risk_level") == "high":
+            score += 0.08 * metrics["quality"] + 0.08 * metrics["reliability"]
+        elif task.get("risk_level") == "low":
+            score += 0.05 * (1.0 - metrics["cost"]) + 0.05 * (1.0 - metrics["latency"])
+
+        scored.append({
+            "model": model,
+            "score": round(max(0.0, min(1.0, score)), 4),
+            "metrics": metrics,
+            "linear_score": linear_score,
+            "nonlinear_score": nonlinear_score,
+            "nonlinear_params": params,
+            "history_reward": round(historical_reward, 4),
+            "success_rate": round(success_rate, 4),
+            "exploration": round(exploration, 4),
+            "count": int(count),
+            "feasible": not violations,
+            "violations": violations,
+        })
+
+    scored.sort(key=lambda item: item["score"], reverse=True)
+    feasible = [item for item in scored if item["feasible"]]
+    candidate_pool = feasible or scored
+    relaxed = not bool(feasible)
+    front = [
+        item for item in candidate_pool
+        if not any(_mo_dominates(other, item) for other in candidate_pool if other is not item)
+    ] or candidate_pool
+    front = sorted(front, key=lambda item: item["score"], reverse=True)
+
+    uncertainty = _uncertainty_from_scores(scored)
+    confidence = round(max(0.0, min(1.0, 1.0 - uncertainty)), 4)
+    front_best = front[0]
+    strongest = max(
+        scored,
+        key=lambda item: (
+            item["metrics"]["quality"],
+            item["metrics"]["reliability"],
+            item["score"],
+        ),
+    )
+    cheapest_front = min(
+        front,
+        key=lambda item: (
+            item["metrics"]["cost"],
+            item["metrics"]["latency"],
+            -item["score"],
+        ),
+    )
+
+    if task.get("risk_level") == "high" and confidence < 0.64:
+        selected = strongest
+        cascade_action = "escalate_strong_model"
+    elif task.get("risk_level") == "low" and confidence >= 0.58:
+        selected = cheapest_front
+        cascade_action = "start_low_cost_pareto"
+    else:
+        selected = front_best
+        cascade_action = "use_best_pareto_bandit"
+
+    escalation_chain = [
+        item["model"]
+        for item in scored
+        if item["model"] != selected["model"]
+    ][:3]
+    constraint_text = (
+        f"quality>={constraints['min_quality']:.2f}, "
+        f"cost<={constraints['max_cost']:.2f}, "
+        f"latency<={constraints['max_latency']:.2f}, "
+        f"reliability>={constraints['min_reliability']:.2f}"
+    )
+
+    return {
+        "selected_model": selected["model"],
+        "candidate_scores": {item["model"]: item["score"] for item in scored},
+        "candidate_details": scored,
+        "constraints": {
+            **constraints,
+            "relaxed": relaxed,
+            "risk_level": task.get("risk_level"),
+            "domain": task.get("domain"),
+        },
+        "pareto_front": [item["model"] for item in front],
+        "feasible_models": [item["model"] for item in feasible],
+        "rejected_models": [
+            {"model": item["model"], "violations": item["violations"]}
+            for item in scored
+            if item["violations"]
+        ],
+        "confidence": confidence,
+        "uncertainty": uncertainty,
+        "context_key": context_key,
+        "escalation_chain": escalation_chain,
+        "cascade_action": cascade_action,
+        "linear_score": selected["linear_score"],
+        "nonlinear_score": selected["nonlinear_score"],
+        "nonlinear_params": selected["nonlinear_params"],
+        "risk_level": task.get("risk_level"),
+        "domain": task.get("domain"),
+        "reason": (
+            "RA-CMCR 风险感知约束多目标级联路由：先识别任务风险并生成约束，"
+            "再进行 Pareto 前沿筛选，随后融合非线性风险效用、Bandit 历史反馈、"
+            "成功率和探索项选择模型；当高风险且低置信度时触发强模型升级。 "
+            f"risk={task.get('risk_level')}, domain={task.get('domain')}, "
+            f"constraints=({constraint_text}), confidence={confidence:.2f}, "
+            f"action={cascade_action}, selected={selected['model']}, "
+            f"fallback_chain={', '.join(escalation_chain) or '-'}."
+            + (" 当前没有模型完全满足约束，已放宽为全候选 Pareto 比较。" if relaxed else "")
+        ),
+        "execution_mode": "ra_cmcr",
+    }
+
+
+def _mo_objectives(metrics: Dict[str, float]) -> List[float]:
+    return [
+        float(metrics["quality"]),
+        float(metrics["reliability"]),
+        1.0 - float(metrics["cost"]),
+        1.0 - float(metrics["latency"]),
+    ]
+
+
+def _normalize_weights(weights: List[float]) -> List[float]:
+    clipped = [max(0.001, float(value)) for value in weights]
+    total = sum(clipped) or 1.0
+    return [value / total for value in clipped]
+
+
+def _task_preference_weights(task: Dict[str, Any]) -> List[float]:
+    risk_level = task.get("risk_level", "low")
+    task_type = task.get("type", "")
+    if risk_level == "high":
+        return [0.38, 0.34, 0.12, 0.16]
+    if task_type in {"代码生成", "逻辑推理", "专业问答"}:
+        return [0.42, 0.24, 0.14, 0.20]
+    if risk_level == "medium":
+        return [0.34, 0.26, 0.20, 0.20]
+    return [0.24, 0.20, 0.30, 0.26]
+
+
+def _weighted_score(metrics: Dict[str, float], weights: List[float]) -> float:
+    objectives = _mo_objectives(metrics)
+    return sum(weight * objective for weight, objective in zip(weights, objectives))
+
+
+def _solution_from_weights(weights: List[float], scored_models: List[Dict[str, Any]]) -> Dict[str, Any]:
+    weights = _normalize_weights(weights)
+    selected = max(
+        scored_models,
+        key=lambda item: (_weighted_score(item["metrics"], weights), item["metrics"]["reliability"]),
+    )
+    return {
+        "weights": [round(value, 4) for value in weights],
+        "model": selected["model"],
+        "score": round(_weighted_score(selected["metrics"], weights), 4),
+        "objectives": [round(value, 4) for value in _mo_objectives(selected["metrics"])],
+        "metrics": selected["metrics"],
+    }
+
+
+def _solution_dominates(left: Dict[str, Any], right: Dict[str, Any]) -> bool:
+    left_obj = left["objectives"]
+    right_obj = right["objectives"]
+    return all(l >= r for l, r in zip(left_obj, right_obj)) and any(l > r for l, r in zip(left_obj, right_obj))
+
+
+def _solution_pareto_front(solutions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    front = []
+    seen = set()
+    for item in solutions:
+        key = (item["model"], tuple(item["weights"]))
+        if key in seen:
+            continue
+        seen.add(key)
+        if not any(_solution_dominates(other, item) for other in solutions if other is not item):
+            front.append(item)
+    return front or solutions
+
+
+def _crowding_distance(front: List[Dict[str, Any]]) -> Dict[int, float]:
+    if not front:
+        return {}
+    distances = {index: 0.0 for index in range(len(front))}
+    objective_count = len(front[0]["objectives"])
+    for objective_index in range(objective_count):
+        ordered = sorted(range(len(front)), key=lambda idx: front[idx]["objectives"][objective_index])
+        distances[ordered[0]] = float("inf")
+        distances[ordered[-1]] = float("inf")
+        min_value = front[ordered[0]]["objectives"][objective_index]
+        max_value = front[ordered[-1]]["objectives"][objective_index]
+        spread = max(max_value - min_value, 1e-9)
+        for pos in range(1, len(ordered) - 1):
+            prev_value = front[ordered[pos - 1]]["objectives"][objective_index]
+            next_value = front[ordered[pos + 1]]["objectives"][objective_index]
+            distances[ordered[pos]] += (next_value - prev_value) / spread
+    return distances
+
+
+def _seed_weights(task: Dict[str, Any], seed: int, count: int = 24) -> List[List[float]]:
+    rng = random.Random(seed)
+    seeds = [
+        [0.45, 0.20, 0.15, 0.20],
+        [0.60, 0.20, 0.10, 0.10],
+        [0.20, 0.15, 0.45, 0.20],
+        [0.20, 0.15, 0.20, 0.45],
+        [0.25, 0.25, 0.25, 0.25],
+        _task_preference_weights(task),
+    ]
+    while len(seeds) < count:
+        raw = [rng.random() + 0.05 for _ in range(4)]
+        seeds.append(_normalize_weights(raw))
+    return seeds[:count]
+
+
+def _evolve_weight_solutions(
+    task: Dict[str, Any],
+    scored_models: List[Dict[str, Any]],
+    *,
+    seed: int,
+    generations: int = 10,
+    population_size: int = 24,
+) -> List[Dict[str, Any]]:
+    rng = random.Random(seed)
+    weights_population = _seed_weights(task, seed, population_size)
+    for _ in range(generations):
+        solutions = [_solution_from_weights(weights, scored_models) for weights in weights_population]
+        front = _solution_pareto_front(solutions)
+        distances = _crowding_distance(front)
+        ranked_front = [
+            item for _, item in sorted(
+                enumerate(front),
+                key=lambda pair: (distances.get(pair[0], 0.0), pair[1]["score"]),
+                reverse=True,
+            )
+        ]
+        elites = [item["weights"] for item in ranked_front[: max(4, population_size // 3)]]
+        next_population = list(elites)
+        while len(next_population) < population_size:
+            parent_a = rng.choice(elites)
+            parent_b = rng.choice(elites)
+            child = []
+            for a_value, b_value in zip(parent_a, parent_b):
+                mixed = (a_value + b_value) / 2.0
+                mutated = mixed + rng.uniform(-0.08, 0.08)
+                child.append(mutated)
+            next_population.append(_normalize_weights(child))
+        weights_population = next_population
+    return [_solution_from_weights(weights, scored_models) for weights in weights_population]
+
+
+def _select_nsga_solution(query: str, models: List[str], *, variant: str) -> Dict[str, Any]:
+    task = _finance_task_profile(query)
+    constraints = _finance_constraints(task)
+    scored_models = []
+    for model in models:
+        metrics = _mo_adjusted_metrics(model, task)
+        violations = _mo_violations(metrics, constraints)
+        scored_models.append({
+            "model": model,
+            "metrics": metrics,
+            "score": _mo_utility(metrics),
+            "feasible": not violations,
+            "violations": violations,
+        })
+    feasible_models = [item for item in scored_models if item["feasible"]]
+    pool = feasible_models or scored_models
+    seed = sum(ord(ch) for ch in f"{variant}:{query}:{','.join(models)}")
+    solutions = _evolve_weight_solutions(task, pool, seed=seed)
+    front = _solution_pareto_front(solutions)
+    preference = _task_preference_weights(task)
+    if variant == "nsga3":
+        selected_solution = min(
+            front,
+            key=lambda item: sum((objective - pref) ** 2 for objective, pref in zip(item["objectives"], preference)),
+        )
+    else:
+        distances = _crowding_distance(front)
+        selected_index, selected_solution = max(
+            enumerate(front),
+            key=lambda pair: (pair[1]["score"], distances.get(pair[0], 0.0)),
+        )
+    candidate_scores = {}
+    for item in front:
+        candidate_scores[item["model"]] = max(candidate_scores.get(item["model"], 0.0), item["score"])
+    return {
+        "selected_model": selected_solution["model"],
+        "candidate_scores": dict(sorted(candidate_scores.items(), key=lambda pair: pair[1], reverse=True)),
+        "candidate_details": sorted(pool, key=lambda item: item["score"], reverse=True),
+        "weight_pareto_front": sorted(front, key=lambda item: item["score"], reverse=True)[:12],
+        "selected_weights": selected_solution["weights"],
+        "selected_objectives": selected_solution["objectives"],
+        "constraints": {**constraints, "relaxed": not bool(feasible_models), "risk_level": task.get("risk_level"), "domain": task.get("domain")},
+        "pareto_front": sorted({item["model"] for item in front}),
+        "feasible_models": [item["model"] for item in feasible_models],
+        "rejected_models": [
+            {"model": item["model"], "violations": item["violations"]}
+            for item in scored_models
+            if item["violations"]
+        ],
+        "risk_level": task.get("risk_level"),
+        "domain": task.get("domain"),
+        "reason": (
+            f"{variant.upper()} 权重搜索路由：进化搜索质量、可靠性、低成本、低延迟四个目标的权重组合，"
+            "在非支配权重解集中选择最适合当前任务风险的路由方案。"
+            f" selected_weights={selected_solution['weights']}; selected={selected_solution['model']}."
+            + (" 当前没有模型完全满足约束，已放宽为全候选搜索。" if not feasible_models else "")
+        ),
+        "execution_mode": variant,
+    }
+
+
+def select_by_nsga2_router(query: str, models: List[str]) -> Dict[str, Any]:
+    return _select_nsga_solution(query, models, variant="nsga2")
+
+
+def select_by_nsga3_router(query: str, models: List[str]) -> Dict[str, Any]:
+    return _select_nsga_solution(query, models, variant="nsga3")
+
+
+def select_by_moead_router(query: str, models: List[str]) -> Dict[str, Any]:
+    task = _finance_task_profile(query)
+    constraints = _finance_constraints(task)
+    preference_vectors = [
+        {"name": "high_quality", "weights": [0.62, 0.20, 0.08, 0.10]},
+        {"name": "low_cost", "weights": [0.20, 0.16, 0.48, 0.16]},
+        {"name": "low_latency", "weights": [0.20, 0.16, 0.16, 0.48]},
+        {"name": "balanced", "weights": [0.30, 0.25, 0.22, 0.23]},
+        {"name": "high_reliability", "weights": [0.28, 0.46, 0.10, 0.16]},
+    ]
+    if task.get("risk_level") == "high":
+        active = "high_reliability"
+    elif task.get("type") in {"逻辑推理", "专业问答", "代码生成"}:
+        active = "high_quality"
+    elif task.get("risk_level") == "low":
+        active = "low_cost"
+    else:
+        active = "balanced"
+    scored = []
+    for model in models:
+        metrics = _mo_adjusted_metrics(model, task)
+        violations = _mo_violations(metrics, constraints)
+        objectives = _mo_objectives(metrics)
+        sub_scores = {}
+        for vector in preference_vectors:
+            weights = _normalize_weights(vector["weights"])
+            # Tchebycheff-style decomposition against ideal objective 1.0.
+            distance = max(weight * abs(1.0 - objective) for weight, objective in zip(weights, objectives))
+            sub_scores[vector["name"]] = round(1.0 - distance, 4)
+        scored.append({
+            "model": model,
+            "metrics": metrics,
+            "score": sub_scores[active],
+            "subproblem_scores": sub_scores,
+            "feasible": not violations,
+            "violations": violations,
+        })
+    feasible = [item for item in scored if item["feasible"]]
+    pool = feasible or scored
+    front = [
+        item for item in pool
+        if not any(_mo_dominates(other, item) for other in pool if other is not item)
+    ] or pool
+    selected = sorted(front, key=lambda item: item["score"], reverse=True)[0]
+    scored = sorted(scored, key=lambda item: item["score"], reverse=True)
+    return {
+        "selected_model": selected["model"],
+        "candidate_scores": {item["model"]: item["score"] for item in scored},
+        "candidate_details": scored,
+        "subproblems": preference_vectors,
+        "active_subproblem": active,
+        "constraints": {**constraints, "relaxed": not bool(feasible), "risk_level": task.get("risk_level"), "domain": task.get("domain")},
+        "pareto_front": [item["model"] for item in front],
+        "feasible_models": [item["model"] for item in feasible],
+        "rejected_models": [
+            {"model": item["model"], "violations": item["violations"]}
+            for item in scored
+            if item["violations"]
+        ],
+        "risk_level": task.get("risk_level"),
+        "domain": task.get("domain"),
+        "reason": (
+            "MOEA/D 分解路由：把多目标路由拆成高质量、低成本、低延迟、均衡和高可靠五个子问题，"
+            f"当前任务选择子问题 {active}，再在约束 Pareto 候选中选择该子问题得分最高的模型。"
+            + (" 当前没有模型完全满足约束，已放宽为全候选比较。" if not feasible else "")
+        ),
+        "execution_mode": "moead",
+    }
+
+
+def select_by_constrained_contextual_bandit(query: str, models: List[str]) -> Dict[str, Any]:
+    task = _finance_task_profile(query)
+    constraints = _finance_constraints(task)
+    context_key = _bandit_context_key(task)
+    context_state = _load_bandit_state().get(context_key, {})
+    scored = []
+    total_pulls = sum(float(item.get("count", 0.0)) for item in context_state.values())
+    for model in models:
+        metrics = _mo_adjusted_metrics(model, task)
+        violations = _mo_violations(metrics, constraints)
+        prior = _mo_utility(metrics)
+        state_item = context_state.get(model, {})
+        count = float(state_item.get("count", 0.0))
+        reward = float(state_item.get("reward", prior))
+        success_rate = float(state_item.get("success_rate", metrics["reliability"]))
+        exploration = 0.20 / ((count + 1.0) ** 0.5) if total_pulls else 0.20
+        violation_penalty = 0.12 * len(violations)
+        score = 0.52 * reward + 0.22 * prior + 0.16 * success_rate + exploration - violation_penalty
+        scored.append({
+            "model": model,
+            "score": round(max(0.0, min(1.0, score)), 4),
+            "prior": round(prior, 4),
+            "avg_reward": round(reward, 4),
+            "success_rate": round(success_rate, 4),
+            "exploration": round(exploration, 4),
+            "count": int(count),
+            "metrics": metrics,
+            "feasible": not violations,
+            "violations": violations,
+        })
+    feasible = [item for item in scored if item["feasible"]]
+    pool = feasible or scored
+    pool = sorted(pool, key=lambda item: item["score"], reverse=True)
+    selected = pool[0]
+    scored = sorted(scored, key=lambda item: item["score"], reverse=True)
+    return {
+        "selected_model": selected["model"],
+        "candidate_scores": {item["model"]: item["score"] for item in scored},
+        "candidate_details": scored,
+        "context_key": context_key,
+        "constraints": {**constraints, "relaxed": not bool(feasible), "risk_level": task.get("risk_level"), "domain": task.get("domain")},
+        "feasible_models": [item["model"] for item in feasible],
+        "rejected_models": [
+            {"model": item["model"], "violations": item["violations"]}
+            for item in scored
+            if item["violations"]
+        ],
+        "risk_level": task.get("risk_level"),
+        "domain": task.get("domain"),
+        "reason": (
+            "Constrained Contextual Bandit 路由：在质量、成本、延迟和可靠性约束内，"
+            "用历史 reward、先验效用、成功率和 UCB 探索项选择模型；违反约束的候选会被惩罚。"
+            f" context={context_key}; selected={selected['model']}."
+            + (" 当前没有模型完全满足约束，已使用带惩罚的全候选 Bandit 选择。" if not feasible else "")
+        ),
+        "execution_mode": "constrained_contextual_bandit",
+    }
+
+
 def record_contextual_bandit_feedback(
     query: str,
     model_name: str,
@@ -672,6 +1148,8 @@ def record_contextual_bandit_feedback(
     success: bool,
     latency_ms: float = 0.0,
     fallback_count: int = 0,
+    quality_score: Optional[float] = None,
+    cost_score: Optional[float] = None,
 ) -> Dict[str, Any]:
     task = _mo_task_profile(query)
     context_key = _bandit_context_key(task)
@@ -680,8 +1158,13 @@ def record_contextual_bandit_feedback(
     prior = _bandit_prior_score(model_name, task)
     latency_penalty = min(0.25, max(0.0, float(latency_ms)) / 60000.0)
     fallback_penalty = min(0.20, 0.08 * int(fallback_count))
-    reward = prior if success else 0.0
-    reward = max(0.0, min(1.0, reward - latency_penalty - fallback_penalty))
+    cost_penalty = min(0.20, max(0.0, float(cost_score or 0.0)) * 0.20)
+    if quality_score is None:
+        reward = prior if success else 0.0
+    else:
+        quality = max(0.0, min(1.0, float(quality_score)))
+        reward = 0.62 * quality + 0.20 * prior + 0.18 * (1.0 if success else 0.0)
+    reward = max(0.0, min(1.0, reward - latency_penalty - fallback_penalty - cost_penalty))
 
     item = context_state.setdefault(model_name, {
         "count": 0.0,
@@ -698,6 +1181,10 @@ def record_contextual_bandit_feedback(
     )
     item["last_latency_ms"] = round(float(latency_ms), 2)
     item["last_success"] = bool(success)
+    if quality_score is not None:
+        item["last_quality_score"] = round(max(0.0, min(1.0, float(quality_score))), 4)
+    if cost_score is not None:
+        item["last_cost_score"] = round(max(0.0, min(1.0, float(cost_score))), 4)
     _save_bandit_state()
     return {
         "context_key": context_key,
@@ -1338,6 +1825,56 @@ class OpenClawRouter:
             })
             return details
 
+        if strategy == "ra_cmcr":
+            details = select_by_ra_cmcr(query, models)
+            selected = details["selected_model"]
+            _safe_log(f"[Router] Strategy=ra_cmcr -> {selected}")
+            details.update({
+                "strategy": strategy,
+                "algorithm": "risk_aware_constrained_multi_objective_cascade",
+            })
+            return details
+
+        if strategy == "nsga2_router":
+            details = select_by_nsga2_router(query, models)
+            selected = details["selected_model"]
+            _safe_log(f"[Router] Strategy=nsga2_router -> {selected}")
+            details.update({
+                "strategy": strategy,
+                "algorithm": "nsga2_weight_search",
+            })
+            return details
+
+        if strategy == "nsga3_router":
+            details = select_by_nsga3_router(query, models)
+            selected = details["selected_model"]
+            _safe_log(f"[Router] Strategy=nsga3_router -> {selected}")
+            details.update({
+                "strategy": strategy,
+                "algorithm": "nsga3_reference_direction_search",
+            })
+            return details
+
+        if strategy == "moead_router":
+            details = select_by_moead_router(query, models)
+            selected = details["selected_model"]
+            _safe_log(f"[Router] Strategy=moead_router -> {selected}")
+            details.update({
+                "strategy": strategy,
+                "algorithm": "moead_preference_decomposition",
+            })
+            return details
+
+        if strategy == "constrained_contextual_bandit":
+            details = select_by_constrained_contextual_bandit(query, models)
+            selected = details["selected_model"]
+            _safe_log(f"[Router] Strategy=constrained_contextual_bandit -> {selected}")
+            details.update({
+                "strategy": strategy,
+                "algorithm": "constrained_ucb_bandit",
+            })
+            return details
+
         if strategy == "finance_risk_adaptive":
             details = select_by_finance_risk_adaptive(query, models)
             selected = details["selected_model"]
@@ -1449,9 +1986,11 @@ class OpenClawRouter:
         success: bool,
         latency_ms: float = 0.0,
         fallback_count: int = 0,
+        quality_score: Optional[float] = None,
+        cost_score: Optional[float] = None,
     ) -> Dict[str, Any]:
         """Persist online feedback for adaptive bandit-like strategies."""
-        if self.config.router.strategy not in {"contextual_bandit", "cascading_bandit_pareto", "latency_sla_pareto"}:
+        if self.config.router.strategy not in {"contextual_bandit", "cascading_bandit_pareto", "latency_sla_pareto", "finance_risk_adaptive", "ra_cmcr", "constrained_contextual_bandit"}:
             return {}
         return record_contextual_bandit_feedback(
             query,
@@ -1459,6 +1998,8 @@ class OpenClawRouter:
             success=success,
             latency_ms=latency_ms,
             fallback_count=fallback_count,
+            quality_score=quality_score,
+            cost_score=cost_score,
         )
 
     def get_available_routers(self) -> List[str]:

@@ -121,6 +121,8 @@ class FeedbackRequest(BaseModel):
     rating: str = "up"
     latency_ms: float = 0.0
     fallback_count: int = 0
+    quality_score: Optional[float] = None
+    cost_score: Optional[float] = None
     reason: Optional[str] = None
     strategy: Optional[str] = None
 
@@ -617,6 +619,41 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             "description": "先满足延迟、成本、质量和可靠性 SLA 约束，再在 Pareto 前沿中选择最优模型。",
             "available": True,
             "note": "适合作为理论贡献：把服务等级约束和多目标 Pareto 决策结合起来。",
+        },
+        {
+            "id": "ra_cmcr",
+            "name": "RA-CMCR 风险感知级联路由",
+            "description": "识别任务风险，生成多目标约束，结合 Pareto、非线性风险效用、Bandit 反馈和级联升级选择模型。",
+            "available": True,
+            "note": "论文主方法：Risk-Aware Constrained Multi-Objective Cascading Router。",
+        },
+        {
+            "id": "nsga2_router",
+            "name": "NSGA-II 权重搜索路由",
+            "description": "用非支配排序和拥挤距离搜索质量、成本、延迟、可靠性权重，生成 Pareto 权重解集后选择模型。",
+            "available": True,
+            "note": "适合作为论文实验对比：自动搜索多目标权重和阈值偏好。",
+        },
+        {
+            "id": "nsga3_router",
+            "name": "NSGA-III 参考方向路由",
+            "description": "用参考方向选择更贴近当前任务风险偏好的非支配权重解，适合四目标及以上路由实验。",
+            "available": True,
+            "note": "适合作为 NSGA-II 的多目标扩展对照。",
+        },
+        {
+            "id": "moead_router",
+            "name": "MOEA/D 偏好分解路由",
+            "description": "将路由拆成高质量、低成本、低延迟、均衡、高可靠等子问题，再按任务场景选择子问题。",
+            "available": True,
+            "note": "适合不同用户或业务偏好的多目标路由。",
+        },
+        {
+            "id": "constrained_contextual_bandit",
+            "name": "约束 Contextual Bandit 路由",
+            "description": "在成本和延迟 SLA 约束下，用历史 reward、成功率、先验效用和 UCB 探索项选择模型。",
+            "available": True,
+            "note": "适合长期运行系统，真实反馈会持续更新策略。",
         },
         {
             "id": "finance_risk_adaptive",
@@ -1934,17 +1971,22 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         "fixed_lightweight": "低成本基线",
         "fixed_strong": "高质量基线",
         "service_random": "随机选择基线",
-        "algorithm_knnrouter": "Embedding/近邻检索代表",
-        f"algorithm_{contrastive_representative_id}": f"{contrastive_representative_name}：对比学习/协同过滤代表",
         "algorithm_graphrouter": "图结构路由代表",
         "algorithm_automixrouter": "传统级联路由代表",
         "service_latency_sla_pareto": "Latency-SLA 约束 Pareto 代表",
-        "service_cascading_bandit_pareto": "本文方法：级联 Bandit Pareto 路由",
-        "service_finance_risk_adaptive": "本文方法：金融风险自适应非线性路由",
-        "pso_scheduler": "离线批量调度优化代表",
-        "ga_scheduler": "进化搜索调度基线",
+        "service_nsga2_router": "进化优化代表：NSGA-II 权重搜索",
+        "service_moead_router": "分解优化代表：MOEA/D 偏好路由",
+        "service_constrained_contextual_bandit": "在线学习代表：约束 Contextual Bandit",
+        "service_ra_cmcr": "本文方法：RA-CMCR 风险感知约束多目标级联路由",
     }
     appendix_role_notes = {
+        "algorithm_knnrouter": "KNN 可作为最小学习型基线；主表已有 GraphRouter 代表学习型路由，KNN 放附录避免传统算法堆砌。",
+        f"algorithm_{contrastive_representative_id}": f"{contrastive_representative_name} 与 MF/Graph 同属学习型匹配范式；主表保留 GraphRouter，{contrastive_representative_name} 放附录作为补充对照。",
+        "service_nsga3_router": "NSGA-III 适合目标数更多或参考方向更复杂的场景；当前只有质量、成本、延迟、可靠性四目标，主表保留 NSGA-II 即可。",
+        "service_cascading_bandit_pareto": "RA-CMCR 的早期组件变体，主表保留完整 RA-CMCR，本策略放附录做消融说明。",
+        "service_finance_risk_adaptive": "RA-CMCR 的领域风险效用组件，主表保留完整 RA-CMCR，本策略放附录做领域变体说明。",
+        "pso_scheduler": "PSO 属于离线批量调度优化，与本文单请求风险感知路由主线不同，放附录说明即可。",
+        "ga_scheduler": "GA 与 NSGA-II 同属进化搜索家族，主表保留 NSGA-II，GA 放附录避免重复。",
         "algorithm_mfrouter": "如果 RouterDC 已进入主实验，MFRouter 作为矩阵分解备用范式放入附录。",
         "algorithm_dcrouter": "如果 RouterDC 未进入主实验，则作为待补充权重的对比学习范式放入附录。",
         "service_round_robin": "轮询更适合系统基线演示，论文主表中信息增量较低。",
@@ -2036,8 +2078,10 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             return round(0.8 + complexity * 0.8, 3)
         if strategy_id in {"service_llm"}:
             return round(180.0 + complexity * 120.0, 3)
-        if strategy_id in {"service_constrained_multi_objective", "constrained_multi_objective", "multi_objective", "finance_risk_adaptive", "service_finance_risk_adaptive", "service_latency_sla_pareto"}:
+        if strategy_id in {"service_constrained_multi_objective", "constrained_multi_objective", "multi_objective", "finance_risk_adaptive", "service_finance_risk_adaptive", "service_latency_sla_pareto", "service_ra_cmcr", "ra_cmcr", "service_moead_router", "service_constrained_contextual_bandit"}:
             return round(3.0 + complexity * 4.0, 3)
+        if strategy_id in {"service_nsga2_router", "service_nsga3_router"}:
+            return round(12.0 + complexity * 18.0, 3)
         if strategy_id in {"service_contextual_bandit", "service_cascading_bandit_pareto"}:
             return round(5.0 + complexity * 7.0, 3)
         if strategy_id.startswith("algorithm_graphrouter"):
@@ -3120,6 +3164,407 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             "domain": profile["domain"],
         }
 
+    def choose_model_by_ra_cmcr(
+        task: Dict[str, Any],
+        models: List[str],
+        real_results: Optional[Dict[tuple[str, str], Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        constraints = finance_constraints(task)
+        profile = finance_task_profile(task)
+        scored = []
+        for model_name in models:
+            item_metrics = metrics_for_assignment(task, model_name, real_results)
+            violations = constraint_violations(item_metrics, constraints)
+            nonlinear_score, nonlinear_params = finance_nonlinear_utility(item_metrics, task)
+            linear_score = utility_score(item_metrics)
+            pseudo_count = sum(ord(ch) for ch in f"{task.get('type')}:{model_name}") % 5
+            history_reward = max(0.0, min(1.0, linear_score + ((pseudo_count - 2) * 0.012)))
+            success_rate = max(0.0, min(1.0, item_metrics["reliability"] + pseudo_count * 0.012))
+            exploration = 0.08 / ((pseudo_count + 1) ** 0.5)
+            score = (
+                0.30 * nonlinear_score
+                + 0.20 * linear_score
+                + 0.18 * history_reward
+                + 0.14 * success_rate
+                + 0.08 * (1.0 - item_metrics["cost"])
+                + 0.06 * (1.0 - item_metrics["latency"])
+                + exploration
+            )
+            if profile["risk_level"] == "high":
+                score += 0.08 * item_metrics["quality"] + 0.08 * item_metrics["reliability"]
+            elif profile["risk_level"] == "low":
+                score += 0.05 * (1.0 - item_metrics["cost"]) + 0.05 * (1.0 - item_metrics["latency"])
+            scored.append({
+                "model": model_name,
+                "score": round(max(0.0, min(1.0, score)), 4),
+                "linear_score": linear_score,
+                "nonlinear_score": nonlinear_score,
+                "nonlinear_params": nonlinear_params,
+                "history_reward": round(history_reward, 4),
+                "success_rate": round(success_rate, 4),
+                "exploration": round(exploration, 4),
+                "history_count": pseudo_count,
+                "metrics": item_metrics,
+                "feasible": not violations,
+                "violations": violations,
+            })
+
+        scored_sorted = sorted(scored, key=lambda item: item["score"], reverse=True)
+        feasible = [item for item in scored_sorted if item["feasible"]]
+        candidate_pool = feasible or scored_sorted
+        relaxed = not bool(feasible)
+        front = pareto_front(candidate_pool) or candidate_pool
+        front = sorted(front, key=lambda item: item["score"], reverse=True)
+        uncertainty = uncertainty_from_candidate_scores(scored_sorted)
+        front_best = front[0]
+        strongest = max(
+            scored_sorted,
+            key=lambda item: (
+                item["metrics"]["quality"],
+                item["metrics"]["reliability"],
+                item["score"],
+            ),
+        )
+        cheapest_front = min(
+            front,
+            key=lambda item: (
+                item["metrics"]["cost"],
+                item["metrics"]["latency"],
+                -item["score"],
+            ),
+        )
+        if profile["risk_level"] == "high" and uncertainty["confidence"] < 0.64:
+            selected = strongest
+            cascade_action = "高风险低置信度，升级到强模型"
+        elif profile["risk_level"] == "low" and uncertainty["confidence"] >= 0.58:
+            selected = cheapest_front
+            cascade_action = "低风险高置信度，从低成本 Pareto 候选起步"
+        else:
+            selected = front_best
+            cascade_action = "使用 Pareto-Bandit 综合最优候选"
+        escalation_chain = [
+            item["model"]
+            for item in scored_sorted
+            if item["model"] != selected["model"]
+        ][:3]
+        reason = (
+            "RA-CMCR 风险感知约束多目标级联路由：先根据任务风险生成质量、成本、延迟和可靠性约束，"
+            "再计算 Pareto 前沿，并融合非线性风险效用、在线反馈代理分、成功率和探索项；"
+            f"风险={profile['risk_level']}，领域={profile['domain']}，"
+            f"置信度={uncertainty['confidence']:.2f}，动作={cascade_action}，"
+            f"升级链={', '.join(escalation_chain) or '-'}。"
+        )
+        if relaxed:
+            reason += " 当前没有模型完全满足约束，已放宽为全候选 Pareto 比较。"
+        return {
+            "selected_model": selected["model"],
+            "score": selected["score"],
+            "candidate_scores": {item["model"]: item["score"] for item in scored_sorted},
+            "metrics": selected["metrics"],
+            "reason": reason,
+            "constraints": {
+                "min_quality": constraints["min_quality"],
+                "max_cost": constraints["max_cost"],
+                "max_latency": constraints["max_latency"],
+                "min_reliability": constraints["min_reliability"],
+                "labels": constraints["labels"],
+                "relaxed": relaxed,
+                "risk_level": profile["risk_level"],
+                "domain": profile["domain"],
+            },
+            "pareto_front": [item["model"] for item in front],
+            "feasible_models": [item["model"] for item in feasible],
+            "rejected_models": [
+                {"model": item["model"], "violations": item["violations"]}
+                for item in scored_sorted
+                if item["violations"]
+            ],
+            "candidate_details": scored_sorted,
+            "linear_score": selected["linear_score"],
+            "nonlinear_score": selected["nonlinear_score"],
+            "nonlinear_params": selected["nonlinear_params"],
+            "confidence": uncertainty["confidence"],
+            "uncertainty": uncertainty["uncertainty"],
+            "score_margin": uncertainty["margin"],
+            "escalation_chain": escalation_chain,
+            "cascade_action": cascade_action,
+            "risk_level": profile["risk_level"],
+            "domain": profile["domain"],
+        }
+
+    def objective_vector(metrics_payload: Dict[str, float]) -> List[float]:
+        return [
+            float(metrics_payload["quality"]),
+            float(metrics_payload["reliability"]),
+            1.0 - float(metrics_payload["cost"]),
+            1.0 - float(metrics_payload["latency"]),
+        ]
+
+    def normalize_weights(values: List[float]) -> List[float]:
+        clipped = [max(0.001, float(value)) for value in values]
+        total = sum(clipped) or 1.0
+        return [value / total for value in clipped]
+
+    def task_preference_weights(task: Dict[str, Any]) -> List[float]:
+        profile = finance_task_profile(task)
+        if profile["risk_level"] == "high":
+            return [0.38, 0.34, 0.12, 0.16]
+        if task.get("type") in {"代码生成", "逻辑推理", "专业问答"}:
+            return [0.42, 0.24, 0.14, 0.20]
+        if profile["risk_level"] == "medium":
+            return [0.34, 0.26, 0.20, 0.20]
+        return [0.24, 0.20, 0.30, 0.26]
+
+    def weighted_metric_score(metrics_payload: Dict[str, float], weights: List[float]) -> float:
+        return sum(weight * objective for weight, objective in zip(normalize_weights(weights), objective_vector(metrics_payload)))
+
+    def solution_dominates(left: Dict[str, Any], right: Dict[str, Any]) -> bool:
+        left_objectives = left["objectives"]
+        right_objectives = right["objectives"]
+        return (
+            all(left_value >= right_value for left_value, right_value in zip(left_objectives, right_objectives))
+            and any(left_value > right_value for left_value, right_value in zip(left_objectives, right_objectives))
+        )
+
+    def solution_front(solutions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        front = []
+        seen = set()
+        for item in solutions:
+            key = (item["model"], tuple(item["weights"]))
+            if key in seen:
+                continue
+            seen.add(key)
+            if not any(solution_dominates(other, item) for other in solutions if other is not item):
+                front.append(item)
+        return front or solutions
+
+    def choose_model_by_nsga_router(
+        task: Dict[str, Any],
+        models: List[str],
+        variant: str,
+        real_results: Optional[Dict[tuple[str, str], Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        constraints = finance_constraints(task)
+        profile = finance_task_profile(task)
+        scored_models = []
+        for model_name in models:
+            item_metrics = metrics_for_assignment(task, model_name, real_results)
+            violations = constraint_violations(item_metrics, constraints)
+            scored_models.append({
+                "model": model_name,
+                "metrics": item_metrics,
+                "score": utility_score(item_metrics),
+                "feasible": not violations,
+                "violations": violations,
+            })
+        feasible = [item for item in scored_models if item["feasible"]]
+        pool = feasible or scored_models
+        rng = random.Random(sum(ord(ch) for ch in f"{variant}:{task.get('id')}:{task.get('query')}"))
+        weight_population = [
+            [0.45, 0.20, 0.15, 0.20],
+            [0.60, 0.20, 0.10, 0.10],
+            [0.20, 0.15, 0.45, 0.20],
+            [0.20, 0.15, 0.20, 0.45],
+            [0.25, 0.25, 0.25, 0.25],
+            task_preference_weights(task),
+        ]
+        while len(weight_population) < 28:
+            weight_population.append(normalize_weights([rng.random() + 0.05 for _ in range(4)]))
+
+        solutions = []
+        for weights in weight_population:
+            weights = normalize_weights(weights)
+            selected = max(pool, key=lambda item: (weighted_metric_score(item["metrics"], weights), item["metrics"]["reliability"]))
+            solutions.append({
+                "weights": [round(value, 4) for value in weights],
+                "model": selected["model"],
+                "score": round(weighted_metric_score(selected["metrics"], weights), 4),
+                "objectives": [round(value, 4) for value in objective_vector(selected["metrics"])],
+                "metrics": selected["metrics"],
+            })
+        front = solution_front(solutions)
+        preference = task_preference_weights(task)
+        if variant == "nsga3_router":
+            selected_solution = min(
+                front,
+                key=lambda item: sum((objective - pref) ** 2 for objective, pref in zip(item["objectives"], preference)),
+            )
+            method_text = "NSGA-III 参考方向路由"
+        else:
+            selected_solution = max(front, key=lambda item: item["score"])
+            method_text = "NSGA-II 非支配排序路由"
+        candidate_scores = {}
+        for item in front:
+            candidate_scores[item["model"]] = max(candidate_scores.get(item["model"], 0.0), item["score"])
+        return {
+            "selected_model": selected_solution["model"],
+            "score": selected_solution["score"],
+            "candidate_scores": dict(sorted(candidate_scores.items(), key=lambda pair: pair[1], reverse=True)),
+            "metrics": selected_solution["metrics"],
+            "reason": (
+                f"{method_text}：自动搜索质量、可靠性、低成本、低延迟的权重组合，"
+                "生成非支配权重解集后按任务风险偏好选择模型。"
+                f" selected_weights={selected_solution['weights']}，风险={profile['risk_level']}。"
+                + (" 当前没有模型完全满足约束，已放宽为全候选搜索。" if not feasible else "")
+            ),
+            "constraints": {
+                "min_quality": constraints["min_quality"],
+                "max_cost": constraints["max_cost"],
+                "max_latency": constraints["max_latency"],
+                "min_reliability": constraints["min_reliability"],
+                "labels": constraints["labels"],
+                "relaxed": not bool(feasible),
+                "risk_level": profile["risk_level"],
+                "domain": profile["domain"],
+            },
+            "pareto_front": sorted({item["model"] for item in front}),
+            "weight_pareto_front": sorted(front, key=lambda item: item["score"], reverse=True)[:12],
+            "selected_weights": selected_solution["weights"],
+            "selected_objectives": selected_solution["objectives"],
+            "feasible_models": [item["model"] for item in feasible],
+            "rejected_models": [{"model": item["model"], "violations": item["violations"]} for item in scored_models if item["violations"]],
+            "candidate_details": sorted(pool, key=lambda item: item["score"], reverse=True),
+            "risk_level": profile["risk_level"],
+            "domain": profile["domain"],
+        }
+
+    def choose_model_by_moead_router(
+        task: Dict[str, Any],
+        models: List[str],
+        real_results: Optional[Dict[tuple[str, str], Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        constraints = finance_constraints(task)
+        profile = finance_task_profile(task)
+        subproblems = [
+            {"name": "高质量优先", "id": "high_quality", "weights": [0.62, 0.20, 0.08, 0.10]},
+            {"name": "低成本优先", "id": "low_cost", "weights": [0.20, 0.16, 0.48, 0.16]},
+            {"name": "低延迟优先", "id": "low_latency", "weights": [0.20, 0.16, 0.16, 0.48]},
+            {"name": "均衡型", "id": "balanced", "weights": [0.30, 0.25, 0.22, 0.23]},
+            {"name": "可靠性优先", "id": "high_reliability", "weights": [0.28, 0.46, 0.10, 0.16]},
+        ]
+        if profile["risk_level"] == "high":
+            active = "high_reliability"
+        elif task.get("type") in {"代码生成", "逻辑推理", "专业问答"}:
+            active = "high_quality"
+        elif profile["risk_level"] == "low":
+            active = "low_cost"
+        else:
+            active = "balanced"
+        scored = []
+        for model_name in models:
+            item_metrics = metrics_for_assignment(task, model_name, real_results)
+            violations = constraint_violations(item_metrics, constraints)
+            objectives = objective_vector(item_metrics)
+            sub_scores = {}
+            for subproblem in subproblems:
+                weights = normalize_weights(subproblem["weights"])
+                distance = max(weight * abs(1.0 - objective) for weight, objective in zip(weights, objectives))
+                sub_scores[subproblem["id"]] = round(1.0 - distance, 4)
+            scored.append({
+                "model": model_name,
+                "score": sub_scores[active],
+                "metrics": item_metrics,
+                "subproblem_scores": sub_scores,
+                "feasible": not violations,
+                "violations": violations,
+            })
+        scored_sorted = sorted(scored, key=lambda item: item["score"], reverse=True)
+        feasible = [item for item in scored_sorted if item["feasible"]]
+        candidate_pool = feasible or scored_sorted
+        front = pareto_front(candidate_pool) or candidate_pool
+        selected = sorted(front, key=lambda item: item["score"], reverse=True)[0]
+        return {
+            "selected_model": selected["model"],
+            "score": selected["score"],
+            "candidate_scores": {item["model"]: item["score"] for item in scored_sorted},
+            "metrics": selected["metrics"],
+            "reason": (
+                "MOEA/D 偏好分解路由：将多目标拆为高质量、低成本、低延迟、均衡和高可靠五个子问题，"
+                f"当前任务选择 {active} 子问题，并在约束 Pareto 候选中选择最优模型。"
+                + (" 当前没有模型完全满足约束，已放宽为全候选比较。" if not feasible else "")
+            ),
+            "constraints": {
+                "min_quality": constraints["min_quality"],
+                "max_cost": constraints["max_cost"],
+                "max_latency": constraints["max_latency"],
+                "min_reliability": constraints["min_reliability"],
+                "labels": constraints["labels"],
+                "relaxed": not bool(feasible),
+                "risk_level": profile["risk_level"],
+                "domain": profile["domain"],
+            },
+            "pareto_front": [item["model"] for item in front],
+            "subproblems": subproblems,
+            "active_subproblem": active,
+            "feasible_models": [item["model"] for item in feasible],
+            "rejected_models": [{"model": item["model"], "violations": item["violations"]} for item in scored_sorted if item["violations"]],
+            "candidate_details": scored_sorted,
+            "risk_level": profile["risk_level"],
+            "domain": profile["domain"],
+        }
+
+    def choose_model_by_constrained_contextual_bandit(
+        task: Dict[str, Any],
+        models: List[str],
+        real_results: Optional[Dict[tuple[str, str], Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        constraints = finance_constraints(task)
+        profile = finance_task_profile(task)
+        scored = []
+        context_seed = sum(ord(char) for char in f"constrained:{task.get('type')}:{task.get('id')}")
+        for index, model_name in enumerate(models):
+            item_metrics = metrics_for_assignment(task, model_name, real_results)
+            violations = constraint_violations(item_metrics, constraints)
+            prior = utility_score(item_metrics)
+            pseudo_count = (context_seed + index * 7) % 6
+            historical_reward = max(0.0, min(1.0, prior + (((context_seed + index) % 9) - 4) * 0.01))
+            success_rate = max(0.0, min(1.0, item_metrics["reliability"] + pseudo_count * 0.01))
+            exploration = 0.20 / ((pseudo_count + 1) ** 0.5)
+            score = 0.52 * historical_reward + 0.22 * prior + 0.16 * success_rate + exploration - 0.12 * len(violations)
+            scored.append({
+                "model": model_name,
+                "score": round(max(0.0, min(1.0, score)), 4),
+                "metrics": item_metrics,
+                "prior": prior,
+                "historical_reward": round(historical_reward, 4),
+                "success_rate": round(success_rate, 4),
+                "exploration": round(exploration, 4),
+                "history_count": pseudo_count,
+                "feasible": not violations,
+                "violations": violations,
+            })
+        scored_sorted = sorted(scored, key=lambda item: item["score"], reverse=True)
+        feasible = [item for item in scored_sorted if item["feasible"]]
+        candidate_pool = feasible or scored_sorted
+        selected = candidate_pool[0]
+        return {
+            "selected_model": selected["model"],
+            "score": selected["score"],
+            "candidate_scores": {item["model"]: item["score"] for item in scored_sorted},
+            "metrics": selected["metrics"],
+            "reason": (
+                "约束 Contextual Bandit 路由：在质量、成本、延迟和可靠性约束下，"
+                "融合历史 reward、先验效用、成功率和 UCB 探索项；违反约束的模型被惩罚。"
+                + (" 当前没有模型完全满足约束，已使用带惩罚的全候选 Bandit 选择。" if not feasible else "")
+            ),
+            "constraints": {
+                "min_quality": constraints["min_quality"],
+                "max_cost": constraints["max_cost"],
+                "max_latency": constraints["max_latency"],
+                "min_reliability": constraints["min_reliability"],
+                "labels": constraints["labels"],
+                "relaxed": not bool(feasible),
+                "risk_level": profile["risk_level"],
+                "domain": profile["domain"],
+            },
+            "feasible_models": [item["model"] for item in feasible],
+            "rejected_models": [{"model": item["model"], "violations": item["violations"]} for item in scored_sorted if item["violations"]],
+            "candidate_details": scored_sorted,
+            "context_key": f"{task.get('type')}|risk={profile['risk_level']}|complexity={task.get('complexity')}",
+            "risk_level": profile["risk_level"],
+            "domain": profile["domain"],
+        }
+
     def choose_model_by_latency_sla_pareto(
         task: Dict[str, Any],
         models: List[str],
@@ -3223,6 +3668,21 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         if service_id == "latency_sla_pareto":
             result = choose_model_by_latency_sla_pareto(task, models)
             return result["selected_model"], result["reason"]
+        if service_id == "ra_cmcr":
+            result = choose_model_by_ra_cmcr(task, models)
+            return result["selected_model"], result["reason"]
+        if service_id == "nsga2_router":
+            result = choose_model_by_nsga_router(task, models, "nsga2_router")
+            return result["selected_model"], result["reason"]
+        if service_id == "nsga3_router":
+            result = choose_model_by_nsga_router(task, models, "nsga3_router")
+            return result["selected_model"], result["reason"]
+        if service_id == "moead_router":
+            result = choose_model_by_moead_router(task, models)
+            return result["selected_model"], result["reason"]
+        if service_id == "constrained_contextual_bandit":
+            result = choose_model_by_constrained_contextual_bandit(task, models)
+            return result["selected_model"], result["reason"]
         return models[0], "未知服务层策略，使用默认模型。"
 
     def pick_by_algorithm_router(algorithm_id: str, task: Dict[str, Any], models: List[str]) -> tuple[str, str]:
@@ -3281,6 +3741,16 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             return choose_model_by_cascading_bandit_pareto(task, models)
         elif strategy_id == "service_latency_sla_pareto":
             return choose_model_by_latency_sla_pareto(task, models)
+        elif strategy_id == "service_ra_cmcr":
+            return choose_model_by_ra_cmcr(task, models)
+        elif strategy_id == "service_nsga2_router":
+            return choose_model_by_nsga_router(task, models, "nsga2_router")
+        elif strategy_id == "service_nsga3_router":
+            return choose_model_by_nsga_router(task, models, "nsga3_router")
+        elif strategy_id == "service_moead_router":
+            return choose_model_by_moead_router(task, models)
+        elif strategy_id == "service_constrained_contextual_bandit":
+            return choose_model_by_constrained_contextual_bandit(task, models)
         elif strategy_id == "service_finance_risk_adaptive":
             return choose_model_by_finance_risk_adaptive(task, models)
         elif strategy_id.startswith("service_"):
@@ -3291,6 +3761,16 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             return choose_model_by_constrained_multi_objective(task, models)
         elif strategy_id == "finance_risk_adaptive":
             return choose_model_by_finance_risk_adaptive(task, models)
+        elif strategy_id == "ra_cmcr":
+            return choose_model_by_ra_cmcr(task, models)
+        elif strategy_id == "nsga2_router":
+            return choose_model_by_nsga_router(task, models, "nsga2_router")
+        elif strategy_id == "nsga3_router":
+            return choose_model_by_nsga_router(task, models, "nsga3_router")
+        elif strategy_id == "moead_router":
+            return choose_model_by_moead_router(task, models)
+        elif strategy_id == "constrained_contextual_bandit":
+            return choose_model_by_constrained_contextual_bandit(task, models)
         elif strategy_id == "multi_objective":
             return choose_model_by_multi_objective(task, models)
         else:
@@ -3659,6 +4139,111 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                         uncertainty = sla_result.get("uncertainty")
                         score_margin = sla_result.get("score_margin")
                         escalation_chain = sla_result.get("escalation_chain", [])
+                    elif strategy_item["id"] in {"service_ra_cmcr", "ra_cmcr"}:
+                        ra_cmcr_result = choose_model_by_ra_cmcr(task, models, real_results)
+                        selected_model = ra_cmcr_result["selected_model"]
+                        score = ra_cmcr_result["score"]
+                        task_metric = ra_cmcr_result["metrics"]
+                        reason = ra_cmcr_result["reason"]
+                        candidate_scores = ra_cmcr_result.get("candidate_scores", {})
+                        constraints = ra_cmcr_result.get("constraints")
+                        pareto_front_models = ra_cmcr_result.get("pareto_front", [])
+                        feasible_models = ra_cmcr_result.get("feasible_models", [])
+                        rejected_models = ra_cmcr_result.get("rejected_models", [])
+                        candidate_details = ra_cmcr_result.get("candidate_details", [])
+                        linear_score = ra_cmcr_result.get("linear_score")
+                        nonlinear_score = ra_cmcr_result.get("nonlinear_score")
+                        nonlinear_params = ra_cmcr_result.get("nonlinear_params")
+                        risk_level = ra_cmcr_result.get("risk_level")
+                        domain = ra_cmcr_result.get("domain")
+                        confidence = ra_cmcr_result.get("confidence")
+                        uncertainty = ra_cmcr_result.get("uncertainty")
+                        score_margin = ra_cmcr_result.get("score_margin")
+                        escalation_chain = ra_cmcr_result.get("escalation_chain", [])
+                    elif strategy_item["id"] in {"service_nsga2_router", "nsga2_router"}:
+                        nsga_result = choose_model_by_nsga_router(task, models, "nsga2_router", real_results)
+                        selected_model = nsga_result["selected_model"]
+                        score = nsga_result["score"]
+                        task_metric = nsga_result["metrics"]
+                        reason = nsga_result["reason"]
+                        candidate_scores = nsga_result.get("candidate_scores", {})
+                        constraints = nsga_result.get("constraints")
+                        pareto_front_models = nsga_result.get("pareto_front", [])
+                        feasible_models = nsga_result.get("feasible_models", [])
+                        rejected_models = nsga_result.get("rejected_models", [])
+                        candidate_details = nsga_result.get("candidate_details", [])
+                        linear_score = nsga_result.get("linear_score")
+                        nonlinear_score = nsga_result.get("nonlinear_score")
+                        nonlinear_params = nsga_result.get("nonlinear_params")
+                        risk_level = nsga_result.get("risk_level")
+                        domain = nsga_result.get("domain")
+                        confidence = nsga_result.get("confidence")
+                        uncertainty = nsga_result.get("uncertainty")
+                        score_margin = nsga_result.get("score_margin")
+                        escalation_chain = nsga_result.get("escalation_chain", [])
+                    elif strategy_item["id"] in {"service_nsga3_router", "nsga3_router"}:
+                        nsga_result = choose_model_by_nsga_router(task, models, "nsga3_router", real_results)
+                        selected_model = nsga_result["selected_model"]
+                        score = nsga_result["score"]
+                        task_metric = nsga_result["metrics"]
+                        reason = nsga_result["reason"]
+                        candidate_scores = nsga_result.get("candidate_scores", {})
+                        constraints = nsga_result.get("constraints")
+                        pareto_front_models = nsga_result.get("pareto_front", [])
+                        feasible_models = nsga_result.get("feasible_models", [])
+                        rejected_models = nsga_result.get("rejected_models", [])
+                        candidate_details = nsga_result.get("candidate_details", [])
+                        linear_score = nsga_result.get("linear_score")
+                        nonlinear_score = nsga_result.get("nonlinear_score")
+                        nonlinear_params = nsga_result.get("nonlinear_params")
+                        risk_level = nsga_result.get("risk_level")
+                        domain = nsga_result.get("domain")
+                        confidence = nsga_result.get("confidence")
+                        uncertainty = nsga_result.get("uncertainty")
+                        score_margin = nsga_result.get("score_margin")
+                        escalation_chain = nsga_result.get("escalation_chain", [])
+                    elif strategy_item["id"] in {"service_moead_router", "moead_router"}:
+                        moead_result = choose_model_by_moead_router(task, models, real_results)
+                        selected_model = moead_result["selected_model"]
+                        score = moead_result["score"]
+                        task_metric = moead_result["metrics"]
+                        reason = moead_result["reason"]
+                        candidate_scores = moead_result.get("candidate_scores", {})
+                        constraints = moead_result.get("constraints")
+                        pareto_front_models = moead_result.get("pareto_front", [])
+                        feasible_models = moead_result.get("feasible_models", [])
+                        rejected_models = moead_result.get("rejected_models", [])
+                        candidate_details = moead_result.get("candidate_details", [])
+                        linear_score = moead_result.get("linear_score")
+                        nonlinear_score = moead_result.get("nonlinear_score")
+                        nonlinear_params = moead_result.get("nonlinear_params")
+                        risk_level = moead_result.get("risk_level")
+                        domain = moead_result.get("domain")
+                        confidence = moead_result.get("confidence")
+                        uncertainty = moead_result.get("uncertainty")
+                        score_margin = moead_result.get("score_margin")
+                        escalation_chain = moead_result.get("escalation_chain", [])
+                    elif strategy_item["id"] in {"service_constrained_contextual_bandit", "constrained_contextual_bandit"}:
+                        bandit_result = choose_model_by_constrained_contextual_bandit(task, models, real_results)
+                        selected_model = bandit_result["selected_model"]
+                        score = bandit_result["score"]
+                        task_metric = bandit_result["metrics"]
+                        reason = bandit_result["reason"]
+                        candidate_scores = bandit_result.get("candidate_scores", {})
+                        constraints = bandit_result.get("constraints")
+                        pareto_front_models = bandit_result.get("pareto_front", [])
+                        feasible_models = bandit_result.get("feasible_models", [])
+                        rejected_models = bandit_result.get("rejected_models", [])
+                        candidate_details = bandit_result.get("candidate_details", [])
+                        linear_score = bandit_result.get("linear_score")
+                        nonlinear_score = bandit_result.get("nonlinear_score")
+                        nonlinear_params = bandit_result.get("nonlinear_params")
+                        risk_level = bandit_result.get("risk_level")
+                        domain = bandit_result.get("domain")
+                        confidence = bandit_result.get("confidence")
+                        uncertainty = bandit_result.get("uncertainty")
+                        score_margin = bandit_result.get("score_margin")
+                        escalation_chain = bandit_result.get("escalation_chain", [])
                     elif strategy_item["id"] in {"finance_risk_adaptive", "service_finance_risk_adaptive"}:
                         finance_result = choose_model_by_finance_risk_adaptive(task, models, real_results)
                         selected_model = finance_result["selected_model"]
@@ -4242,7 +4827,23 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
     @app.post("/api/router/config")
     async def update_router_config(request: RouterUpdateRequest):
         strategy = request.strategy.strip().lower()
-        allowed_strategies = {"llmrouter", "constrained_multi_objective", "contextual_bandit", "cascading_bandit_pareto", "latency_sla_pareto", "finance_risk_adaptive", "random", "round_robin", "rules", "llm"}
+        allowed_strategies = {
+            "llmrouter",
+            "constrained_multi_objective",
+            "contextual_bandit",
+            "cascading_bandit_pareto",
+            "latency_sla_pareto",
+            "finance_risk_adaptive",
+            "ra_cmcr",
+            "nsga2_router",
+            "nsga3_router",
+            "moead_router",
+            "constrained_contextual_bandit",
+            "random",
+            "round_robin",
+            "rules",
+            "llm",
+        }
         if strategy not in allowed_strategies:
             raise HTTPException(status_code=400, detail=f"不支持的服务策略：{strategy}")
 
@@ -4487,6 +5088,8 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             success=positive,
             latency_ms=float(request.latency_ms or 0.0),
             fallback_count=int(request.fallback_count or (1 if negative else 0)),
+            quality_score=request.quality_score,
+            cost_score=request.cost_score,
         )
         append_request_log({
             "type": "feedback",
