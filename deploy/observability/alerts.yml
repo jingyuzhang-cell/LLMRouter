@@ -1,0 +1,21 @@
+groups:
+  - name: llmrouter-staging-resilience
+    rules:
+      - alert: LLMRouterAllChainFailureRateHigh
+        expr: llmrouter_all_chain_failure_rate > 0.005
+        for: 5m
+        labels: {severity: critical}
+      - alert: LLMRouterP95LatencyRegression
+        expr: (llmrouter_latency_p95_ms / llmrouter_latency_p95_baseline_ms - 1) > 0.15
+        for: 10m
+        labels: {severity: warning}
+      - alert: LLMRouterCircuitOpenRateHigh
+        expr: llmrouter_circuit_open_rate > 0.02
+        for: 5m
+        labels: {severity: critical}
+      - alert: LLMRouterNonrecoverableError
+        expr: increase(llmrouter_errors_total{category=~"authentication|invalid_request"}[5m]) > 0
+        labels: {severity: critical}
+      - alert: LLMRouterDuplicateCallPreventionIncrease
+        expr: increase(llmrouter_duplicate_calls_prevented_total[5m]) > 0
+        labels: {severity: warning}

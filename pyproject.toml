@@ -58,6 +58,7 @@ classifiers = [
 [project.optional-dependencies]
 # RouterR1 requires vLLM (GPU only)
 router-r1 = ["vllm==0.6.3", "torch==2.4.0", "openai>=1.0"]
+observability = ["opentelemetry-sdk>=1.25", "opentelemetry-exporter-otlp-proto-http>=1.25"]
 # All optional dependencies
 all = ["vllm==0.6.3", "torch==2.4.0", "openai>=1.0"]
 
@@ -72,3 +73,10 @@ include-package-data = true
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["llmrouter*", "openclaw_router*"]
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib -m 'not integration'"
+asyncio_mode = "auto"
+markers = [
+  "integration: requires a running service, API credentials, or model artifacts",
+]

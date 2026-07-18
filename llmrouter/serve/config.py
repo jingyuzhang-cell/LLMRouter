@@ -43,6 +43,27 @@ class ServeConfig:
     # Show model name prefix
     show_model_prefix: bool = True
 
+    # Backend resilience configuration.
+    fallback_models: List[str] = field(default_factory=list)
+    request_timeout_s: float = 120.0
+    total_timeout_s: float = 180.0
+    circuit_failure_threshold: int = 3
+    circuit_cooldown_s: float = 30.0
+
+    # Aggregate monitoring. Metrics fail closed unless the bearer-token
+    # environment variable is configured by the deployment.
+    metrics_enabled: bool = True
+    metrics_token_env: str = "LLMROUTER_METRICS_TOKEN"
+    metrics_persistence_path: Optional[str] = None
+    quality_cascade_enabled: bool = False
+    alert_thresholds: Dict[str, float] = field(default_factory=lambda: {
+        "all_chain_failure_rate": 0.005,
+        "p95_latency_regression_fraction": 0.15,
+        "circuit_open_rate": 0.02,
+        "duplicate_calls_prevented": 0,
+        "quality_escalation_rate": 0.25,
+    })
+
     @classmethod
     def from_yaml(cls, yaml_path: str) -> "ServeConfig":
         """Load configuration from YAML file"""
@@ -59,6 +80,20 @@ class ServeConfig:
         config.host = serve_config.get("host", config.host)
         config.port = serve_config.get("port", config.port)
         config.show_model_prefix = serve_config.get("show_model_prefix", config.show_model_prefix)
+        resilience = data.get("resilience", {})
+        config.fallback_models = list(resilience.get("fallback_models", []))
+        config.request_timeout_s = float(resilience.get("request_timeout_s", config.request_timeout_s))
+        config.total_timeout_s = float(resilience.get("total_timeout_s", config.total_timeout_s))
+        config.circuit_failure_threshold = int(resilience.get("circuit_failure_threshold", config.circuit_failure_threshold))
+        config.circuit_cooldown_s = float(resilience.get("circuit_cooldown_s", config.circuit_cooldown_s))
+        monitoring = data.get("monitoring", {})
+        config.metrics_enabled = bool(monitoring.get("enabled", config.metrics_enabled))
+        config.metrics_token_env = str(monitoring.get("token_env", config.metrics_token_env))
+        config.metrics_persistence_path = monitoring.get("persistence_path", config.metrics_persistence_path)
+        config.quality_cascade_enabled = bool(
+            monitoring.get("quality_cascade_enabled", config.quality_cascade_enabled)
+        )
+        config.alert_thresholds.update(monitoring.get("alert_thresholds", {}))
 
         # Router settings
         router_config = data.get("router", {})

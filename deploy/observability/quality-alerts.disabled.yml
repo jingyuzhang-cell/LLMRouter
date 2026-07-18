@@ -1,0 +1,8 @@
+# Do not add this file to Prometheus rule_files until quality_cascade_enabled=true.
+groups:
+  - name: llmrouter-quality-cascade
+    rules:
+      - alert: LLMRouterQualityEscalationRateHigh
+        expr: llmrouter_quality_escalation_rate > 0.25
+        for: 10m
+        labels: {severity: warning}

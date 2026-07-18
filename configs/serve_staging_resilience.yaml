@@ -1,0 +1,43 @@
+# Staging-only template. Secrets remain in .env.
+serve:
+  host: "127.0.0.1"
+  port: 8001
+  show_model_prefix: true
+router:
+  name: mlprouter
+  config_path: configs/model_config_test/mlprouter_soft.yaml
+api_keys:
+  nvidia: "${NVIDIA_API_KEY}"
+monitoring:
+  enabled: true
+  token_env: LLMROUTER_METRICS_TOKEN
+  persistence_path: run_logs/serve/staging_resilience_state.json
+  quality_cascade_enabled: false
+  alert_thresholds:
+    all_chain_failure_rate: 0.005
+    p95_latency_regression_fraction: 0.15
+    circuit_open_rate: 0.02
+    duplicate_calls_prevented: 0
+    quality_escalation_rate: 0.25
+resilience:
+  fallback_models: [strong, medium]
+  request_timeout_s: 45
+  total_timeout_s: 90
+  circuit_failure_threshold: 3
+  circuit_cooldown_s: 30
+llms:
+  small:
+    provider: nvidia
+    model: meta/llama-3.2-3b-instruct
+    base_url: https://integrate.api.nvidia.com/v1
+    max_tokens: 1024
+  medium:
+    provider: nvidia
+    model: meta/llama-3.1-8b-instruct
+    base_url: https://integrate.api.nvidia.com/v1
+    max_tokens: 1024
+  strong:
+    provider: nvidia
+    model: mistralai/mistral-small-4-119b-2603
+    base_url: https://integrate.api.nvidia.com/v1
+    max_tokens: 1024
