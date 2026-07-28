@@ -22,9 +22,11 @@ import httpx
 try:
     from .config import OpenClawConfig
     from .memory import MemoryBank
+    from .experience import feedback_reward
 except ImportError:
     from config import OpenClawConfig
     from memory import MemoryBank
+    from experience import feedback_reward
 
 
 # ============================================================
@@ -672,39 +674,46 @@ def record_contextual_bandit_feedback(
     success: bool,
     latency_ms: float = 0.0,
     fallback_count: int = 0,
+    automatic_quality: Optional[float] = None,
+    user_feedback: Optional[float] = None,
+    cost_reward: Optional[float] = None,
+    latency_reward: Optional[float] = None,
+    reliability: Optional[float] = None,
+    constraint_violation: bool = False,
 ) -> Dict[str, Any]:
     task = _mo_task_profile(query)
     context_key = _bandit_context_key(task)
+    # A successful HTTP response alone is not evidence that the answer or route was correct.
+    if success and automatic_quality is None and user_feedback is None:
+        return {"context_key": context_key, "model": model_name, "pending": True, "updated": False}
     state = _load_bandit_state()
     context_state = state.setdefault(context_key, {})
     prior = _bandit_prior_score(model_name, task)
-    latency_penalty = min(0.25, max(0.0, float(latency_ms)) / 60000.0)
-    fallback_penalty = min(0.20, 0.08 * int(fallback_count))
-    reward = prior if success else 0.0
-    reward = max(0.0, min(1.0, reward - latency_penalty - fallback_penalty))
-
-    item = context_state.setdefault(model_name, {
-        "count": 0.0,
-        "reward": prior,
-        "success_rate": 1.0,
-    })
+    if not success:
+        reward = 0.0
+    else:
+        reward = feedback_reward(
+            automatic_quality=float(automatic_quality if automatic_quality is not None else prior),
+            user_feedback=float(user_feedback) if user_feedback is not None else None,
+            cost_reward=float(cost_reward if cost_reward is not None else 0.5),
+            latency_reward=float(latency_reward if latency_reward is not None else max(0.0, 1.0 - latency_ms / 10000.0)),
+            reliability=float(reliability if reliability is not None else 1.0),
+            fallback_count=fallback_count,
+            constraint_violation=constraint_violation,
+        )
+    item = context_state.setdefault(model_name, {"count": 0.0, "reward": prior, "success_rate": 1.0})
     count = float(item.get("count", 0.0))
     new_count = count + 1.0
     item["count"] = new_count
     item["reward"] = round((float(item.get("reward", prior)) * count + reward) / new_count, 4)
     item["success_rate"] = round(
-        (float(item.get("success_rate", 1.0)) * count + (1.0 if success else 0.0)) / new_count,
-        4,
+        (float(item.get("success_rate", 1.0)) * count + (1.0 if success else 0.0)) / new_count, 4
     )
     item["last_latency_ms"] = round(float(latency_ms), 2)
     item["last_success"] = bool(success)
+    item["last_evidence"] = "user_and_automatic" if user_feedback is not None else "automatic" if automatic_quality is not None else "operational_failure"
     _save_bandit_state()
-    return {
-        "context_key": context_key,
-        "model": model_name,
-        "reward": round(reward, 4),
-        "count": int(new_count),
-    }
+    return {"context_key": context_key, "model": model_name, "reward": round(reward, 4), "count": int(new_count), "updated": True}
 
 
 async def select_by_llm(
@@ -1388,7 +1397,7 @@ class OpenClawRouter:
 
             selected = await select_by_llm(query, models, self.config, memory_items=memory_items)
             _safe_log(f"[Router] Strategy=llm -> {selected}")
-            self.record_route(query, selected, user=user)
+            # Route outcomes are persisted after answer evaluation by RoutingExperienceStore.
             return {
                 "selected_model": selected,
                 "strategy": strategy,

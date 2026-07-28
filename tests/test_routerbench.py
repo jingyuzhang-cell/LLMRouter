@@ -26,3 +26,25 @@ def test_routerbench_builds_pareto_and_significance():
     assert report["significance"]
     assert report["significance"][0]["n"] == 2
     assert any(item["name"] == "Router A" for item in report["pareto_front"])
+
+
+def test_routerbench_risk_ci_and_sensitivity():
+    payload = {
+        "weights": {"quality": .45, "cost": .2, "latency": .15, "reliability": .2},
+        "scoring": {"risk_lambda": 1.0},
+        "task_set": [{"id": "low", "risk": .1}, {"id": "high", "risk": .9}],
+        "strategies": [{"id": "a", "name": "A", "summary": {"utility": .8}}, {"id": "b", "name": "B", "summary": {"utility": .5}}],
+        "routerbench_rows": [
+            {"strategy_id": "a", "task_id": "low", "score": .8, "metrics": {"quality": .9, "cost": .2, "latency": .2, "reliability": .9}},
+            {"strategy_id": "a", "task_id": "high", "score": .8, "metrics": {"quality": .8, "cost": .2, "latency": .2, "reliability": .8}},
+            {"strategy_id": "b", "task_id": "low", "score": .5, "metrics": {"quality": .5, "cost": .5, "latency": .5, "reliability": .5}},
+            {"strategy_id": "b", "task_id": "high", "score": .5, "metrics": {"quality": .5, "cost": .5, "latency": .5, "reliability": .5}},
+        ],
+    }
+    report = build_routerbench(payload)
+    best = next(item for item in report["strategies"] if item["id"] == "a")
+    assert len(best["summary"]["utility_ci95"]) == 2
+    assert best["summary"]["risk_weighted_utility"] > 0
+    assert best["summary"]["failure_rate"] == .15
+    assert len(report["sensitivity"]) == 5
+    assert all(item["winner"] == "A" for item in report["sensitivity"])

@@ -13,6 +13,7 @@
   experimentReport: "/api/experiments/report",
   experimentChartData: "/api/experiments/chart-data",
   feedback: "/api/feedback",
+  experienceMetrics: "/api/experience/metrics",
   abCompare: "/api/chat/compare",
 };
 
@@ -135,6 +136,7 @@ const elements = {
   refreshMetricsButton: $("#refreshMetricsButton"),
   runExperimentButton: $("#runExperimentButton"),
   runRealExperimentButton: $("#runRealExperimentButton"),
+  runPilotExperimentButton: $("#runPilotExperimentButton"),
   exportExperimentButton: $("#exportExperimentButton"),
   metricRequests: $("#metricRequests"),
   metricSuccessRate: $("#metricSuccessRate"),
@@ -199,6 +201,7 @@ const elements = {
   refreshMetricsButton: $("#refreshMetricsButton"),
   runExperimentButton: $("#runExperimentButton"),
   runRealExperimentButton: $("#runRealExperimentButton"),
+  runPilotExperimentButton: $("#runPilotExperimentButton"),
   exportExperimentButton: $("#exportExperimentButton"),
   metricRequests: $("#metricRequests"),
   metricSuccessRate: $("#metricSuccessRate"),
@@ -468,32 +471,62 @@ function createFeedbackActions(message) {
   const label = document.createElement("span");
   label.textContent = message.feedback
     ? `已反馈：${message.feedback === "up" ? "满意" : "不满意"}`
-    : "这次路由结果满意吗";
+    : "评价回答与路由";
+  const reason = document.createElement("select");
+  reason.title = "反馈原因";
+  const reasons = [
+    ["answer_correct", "回答正确且模型合适"],
+    ["too_slow", "回答正确但太慢"],
+    ["too_expensive", "回答正确但太贵"],
+    ["answer_wrong", "回答错误"],
+    ["incomplete", "拒答或内容不完整"],
+    ["wrong_model", "路由模型不合适"],
+  ];
+  for (const [value, text] of reasons) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = text;
+    reason.append(option);
+  }
   const up = document.createElement("button");
-  up.type = "button";
-  up.title = "满意";
-  up.textContent = "👍";
+  up.type = "button"; up.title = "满意"; up.textContent = "👍";
   const down = document.createElement("button");
-  down.type = "button";
-  down.title = "不满意";
-  down.textContent = "👎";
-  up.disabled = Boolean(message.feedback);
-  down.disabled = Boolean(message.feedback);
-  up.addEventListener("click", () => submitMessageFeedback(message, "up"));
-  down.addEventListener("click", () => submitMessageFeedback(message, "down"));
-  wrap.append(label, up, down);
+  down.type = "button"; down.title = "不满意"; down.textContent = "👎";
+  up.disabled = Boolean(message.feedback); down.disabled = Boolean(message.feedback);
+  reason.disabled = Boolean(message.feedback);
+  up.addEventListener("click", () => submitMessageFeedback(message, "up", reason.value));
+  down.addEventListener("click", () => submitMessageFeedback(
+    message, "down", reason.value === "answer_correct" ? "answer_wrong" : reason.value,
+  ));
+  wrap.append(label, reason, up, down);
   return wrap;
 }
 
-async function submitMessageFeedback(message, rating) {
+async function submitMessageFeedback(message, rating, reason = "") {
   try {
+    let correctedAnswer = "";
+    let preferredModel = "";
+    let feedbackText = "";
+    if (rating === "down" && ["answer_wrong", "incomplete"].includes(reason)) {
+      correctedAnswer = window.prompt("可选：请提供正确答案或期望补充的内容", "") || "";
+    }
+    if (["wrong_model", "too_slow", "too_expensive"].includes(reason)) {
+      preferredModel = window.prompt("可选：你认为更合适的模型名称", "") || "";
+    }
+    if (rating === "down") {
+      feedbackText = window.prompt("可选：补充说明问题原因", "") || "";
+    }
     const response = await fetch(API.feedback, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        request_id: message.routing?.request_id || null,
         query: message.query || "",
         model: message.routing?.selected_model || message.model,
-        rating,
+        rating, reason,
+        corrected_answer: correctedAnswer || null,
+        preferred_model: preferredModel || null,
+        feedback_text: feedbackText || null,
         latency_ms: message.routing?.latency_ms || 0,
         fallback_count: Array.isArray(message.routing?.fallbacks) ? message.routing.fallbacks.length : 0,
         strategy: message.routing?.strategy || "",
@@ -502,9 +535,9 @@ async function submitMessageFeedback(message, rating) {
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.detail || "反馈提交失败");
     message.feedback = rating;
-    saveState();
-    renderMessages();
-    await refreshLogs();
+    message.feedbackReason = reason;
+    message.verificationStatus = payload.experience?.verification_status || null;
+    saveState(); renderMessages(); await refreshLogs();
     showToast(payload.message || "反馈已记录");
   } catch (error) {
     showToast(error.message);
@@ -516,9 +549,10 @@ function createRoutingCard(routing = {}, messageModel = "") {
   const initialModel = routing.initial_model && routing.initial_model !== selectedModel
     ? routing.initial_model
     : "";
-  const scores = Object.entries(routing.candidate_scores || {})
-    .sort((a, b) => Number(b[1]) - Number(a[1]))
-    .slice(0, 4);
+  const allScores = Object.entries(routing.candidate_scores || {})
+    .sort((a, b) => Number(b[1]) - Number(a[1]));
+  const scoreLimit = 4;
+  const scores = allScores.slice(0, scoreLimit);
   const multiSteps = Array.isArray(routing.multi_step) ? routing.multi_step : [];
   const fallbackText = routing.fallbacks?.length
     ? `原计划调用 ${initialModel || routing.fallbacks[0]?.model || "其他模型"}，失败后自动降级到 ${selectedModel}。`
@@ -549,7 +583,7 @@ function createRoutingCard(routing = {}, messageModel = "") {
   card.className = "message-routing-card";
   card.innerHTML = `
     <div class="message-routing-head">
-      <strong>为什么选择这个模型</strong>
+      <strong>路由决策依据</strong>
       <span>${escapeHtml(selectedModel)}</span>
     </div>
     <div class="message-routing-grid">
@@ -581,10 +615,14 @@ function createRoutingCard(routing = {}, messageModel = "") {
     ${riskText ? `<p>${escapeHtml(riskText)}</p>` : ""}
     ${scores.length ? `
       <div class="message-score-list">
-        ${scores.map(([model, rawScore]) => {
+        <div class="message-score-head">
+          <strong>候选效用排序 · Top ${Math.min(scoreLimit, allScores.length)} / ${allScores.length}</strong>
+          ${allScores.length > scoreLimit ? '<button class="score-expand-button" type="button" aria-expanded="false">展开全部</button>' : ""}
+        </div>
+        ${allScores.map(([model, rawScore], index) => {
           const score = Math.max(0, Math.min(1, Number(rawScore) || 0));
           return `
-            <div class="message-score-row${model === selectedModel ? " selected" : ""}">
+            <div class="message-score-row${model === selectedModel ? " selected" : ""}${index >= scoreLimit ? " score-row-extra" : ""}">
               <span>${escapeHtml(model)}${model === selectedModel ? " · 已选" : ""}</span>
               <i><em style="width:${(score * 100).toFixed(1)}%"></em></i>
               <b>${(score * 100).toFixed(1)}%</b>
@@ -608,6 +646,12 @@ function createRoutingCard(routing = {}, messageModel = "") {
       </div>
     ` : ""}
   `;
+  const expandButton = card.querySelector(".score-expand-button");
+  expandButton?.addEventListener("click", () => {
+    const expanded = card.classList.toggle("scores-expanded");
+    expandButton.textContent = expanded ? "收起" : "展开全部";
+    expandButton.setAttribute("aria-expanded", String(expanded));
+  });
   return card;
 }
 
@@ -863,6 +907,7 @@ async function sendMessage(prompt) {
         stream: false,
         solve_mode: solveMode,
         dispatch_mode: dispatchMode,
+        verify_response: true,
       }),
     });
 
@@ -1359,6 +1404,20 @@ function renderWeightGrid(weights = {}) {
   }
 }
 
+function renderExperimentScoring(scoring = {}, routerbench = null) {
+  const panel = document.getElementById("experimentScoring");
+  if (!panel) return;
+  const sensitivity = Array.isArray(routerbench?.sensitivity) ? routerbench.sensitivity : [];
+  panel.innerHTML = `
+    <div class="panel-title"><h3>评分公式与证据口径</h3><span>λ=${Number(scoring.risk_lambda ?? routerbench?.risk_lambda ?? 1).toFixed(1)}</span></div>
+    <p><strong>${escapeHtml(scoring.formula || "U=0.45Q+0.20(1-C)+0.15(1-L)+0.20R")}</strong></p>
+    <p>${escapeHtml(scoring.overall_formula || "Overall=Σ(1+λ·risk_t)·U_t / Σ(1+λ·risk_t)")}</p>
+    <small>${escapeHtml(scoring.weights_note || "权重是评价偏好，不是实验测得比例。")}</small>
+    <small>${escapeHtml(scoring.cost_normalization || "")} · ${escapeHtml(scoring.latency_normalization || "")} · ${escapeHtml(scoring.reliability_definition || "")}</small>
+    ${sensitivity.length ? `<small>权重敏感性：${sensitivity.map((item) => `${item.profile}→${item.winner}`).join("；")}</small>` : ""}
+  `;
+}
+
 function renderExperimentTasks(tasks = [], sampledTasks = []) {
   elements.experimentTaskCount.textContent = sampledTasks.length
     ? `${tasks.length} 个任务 · 本次真实抽样 ${sampledTasks.length} 个`
@@ -1424,7 +1483,7 @@ function renderExperimentStrategies(strategies = [], appendixStrategies = []) {
 function renderExperimentTable(strategies = [], hasRun = false) {
   elements.experimentTableBody.replaceChildren();
   if (!hasRun || !strategies.length) {
-    elements.experimentTableBody.innerHTML = '<tr><td colspan="7">暂无实验结果，请先运行路由实验</td></tr>';
+    elements.experimentTableBody.innerHTML = '<tr><td colspan="9">暂无实验结果，请先运行路由实验</td></tr>';
     return;
   }
   for (const strategy of strategies) {
@@ -1434,7 +1493,7 @@ function renderExperimentTable(strategies = [], hasRun = false) {
       row.innerHTML = `
       <td>${escapeHtml(strategy.name)}</td>
       <td>${escapeHtml(strategy.category || "-")}</td>
-      <td colspan="5">待运行</td>
+      <td colspan="7">待运行</td>
     `;
       elements.experimentTableBody.append(row);
       continue;
@@ -1447,6 +1506,8 @@ function renderExperimentTable(strategies = [], hasRun = false) {
       <td>${percent(summary.latency)}</td>
       <td>${percent(summary.reliability)}</td>
       <td><strong>${Number(summary.utility || 0).toFixed(3)}</strong></td>
+      <td><strong>${Number(strategy.routerbench_summary?.risk_weighted_utility ?? summary.risk_weighted_utility ?? summary.utility ?? 0).toFixed(3)}</strong></td>
+      <td>${escapeHtml(String(strategy.routerbench_summary?.utility_ci95 || summary.utility_ci95 || "-"))}</td>
     `;
     elements.experimentTableBody.append(row);
   }
@@ -1474,7 +1535,7 @@ function renderExperimentCases(cases = []) {
       ? `估算成本 $${Number(item.raw_cost_usd || 0).toFixed(8)}`
       : "";
     const qualityText = item.quality_source
-      ? `质量来源：${item.quality_source}${item.judge_model ? ` · 裁判 ${item.judge_model}` : ""}`
+      ? `质量来源：${item.quality_source}${item.judge_model ? ` · 主裁判 ${item.judge_model}` : ""}${item.reviewer_model ? ` · 复核裁判 ${item.reviewer_model}` : ""}${item.objective_score != null ? ` · 客观分 ${(Number(item.objective_score) * 100).toFixed(1)}%` : ""}${item.manual_review_required ? " · 需人工复核" : ""}`
       : "";
     const judgeDimensionText = item.judge_dimensions
       ? Object.entries(item.judge_dimensions).map(([key, value]) => `${key} ${(Number(value || 0) * 100).toFixed(0)}%`).join(" · ")
@@ -1607,6 +1668,7 @@ function renderExperiments() {
   const processSteps = result.process_steps || [];
   const routerbench = result.routerbench || payload.routerbench || null;
   const weights = result.weights || payload.weights || {};
+  const scoring = result.scoring || payload.scoring || {};
   const sourceText = result.score_source || payload.score_source || "";
   const scopeText = result.strategy_scope_note || payload.strategy_scope_note || "";
   const financeDataset = result.finance_dataset || payload.finance_dataset || {};
@@ -1624,6 +1686,9 @@ function renderExperiments() {
     ? `最优：${result.best_strategy}`
     : "等待运行";
   renderWeightGrid(weights);
+  const benchmarkById = new Map((routerbench?.strategies || []).map((item) => [item.id, item.summary]));
+  strategies.forEach((item) => { item.routerbench_summary = benchmarkById.get(item.id); });
+  renderExperimentScoring(scoring, routerbench);
   renderExperimentTasks(tasks, sampledTasks);
   renderExperimentStrategies(strategies, appendixStrategies);
   renderExperimentTable(strategies, hasRun);
@@ -2105,18 +2170,18 @@ async function refreshExperiments() {
 }
 
 async function runExperiment(mode = "simulated") {
-  const button = mode === "real" ? elements.runRealExperimentButton : elements.runExperimentButton;
+  const button = mode === "real" ? elements.runRealExperimentButton : mode === "pilot" ? elements.runPilotExperimentButton : elements.runExperimentButton;
   button.disabled = true;
-  button.textContent = mode === "real" ? "真实调用中" : "正在运行";
+  button.textContent = mode === "real" ? "正式实验调用中" : mode === "pilot" ? "预实验调用中" : "正在运行";
   try {
     const response = await fetch(API.runExperiment, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         mode,
-        sample_limit: mode === "real" ? 4 : 14,
-        repeats: mode === "real" ? 2 : 1,
-        judge_enabled: mode === "real",
+        sample_limit: mode === "real" ? 100 : mode === "pilot" ? 10 : 100,
+        repeats: mode === "real" ? 3 : mode === "pilot" ? 1 : 1,
+        judge_enabled: mode !== "simulated",
       }),
     });
     const payload = await response.json();
@@ -2130,12 +2195,12 @@ async function runExperiment(mode = "simulated") {
       renderSchedulerView();
     }
     await refreshLogs();
-    showToast(mode === "real" ? "真实抽样实验已完成" : "模拟路由实验已完成");
+    showToast(mode === "real" ? "正式真实实验已完成" : mode === "pilot" ? "预实验已完成（不计入正式结果）" : "模拟路由实验已完成");
   } catch (error) {
     showToast(error.message);
   } finally {
     button.disabled = false;
-    button.textContent = mode === "real" ? "真实抽样实验" : "运行模拟实验";
+    button.textContent = mode === "real" ? "正式真实实验" : mode === "pilot" ? "运行10条预实验" : "运行模拟实验";
   }
 }
 
@@ -2186,10 +2251,20 @@ function renderMetrics() {
 
 async function refreshMetrics() {
   try {
-    const response = await fetch(API.metrics, { cache: "no-store" });
+    const [response, experienceResponse] = await Promise.all([
+      fetch(API.metrics, { cache: "no-store" }),
+      fetch(API.experienceMetrics, { cache: "no-store" }),
+    ]);
     if (!response.ok) throw new Error("无法读取评估数据");
     state.metrics = await response.json();
+    state.experienceMetrics = experienceResponse.ok ? await experienceResponse.json() : {};
     renderMetrics();
+    const experience = state.experienceMetrics || {};
+    $("#experienceEvents").textContent = String(experience.events || 0);
+    $("#feedbackCoverage").textContent = `${(Number(experience.feedback_coverage || 0) * 100).toFixed(1)}%`;
+    $("#routingAccuracy").textContent = `${(Number(experience.routing_accuracy || 0) * 100).toFixed(1)}%`;
+    $("#negativeFeedbackRate").textContent = `${(Number(experience.negative_feedback_rate || 0) * 100).toFixed(1)}%`;
+    $("#averageRegret").textContent = Number(experience.average_estimated_regret || 0).toFixed(3);
   } catch (error) {
     showToast(error.message);
   }
@@ -2283,13 +2358,13 @@ function populateModelSelect() {
   elements.modelSelect.replaceChildren();
   const auto = document.createElement("option");
   auto.value = "auto";
-  auto.textContent = "自动路由";
+  auto.textContent = "策略路由（自动决策）";
   elements.modelSelect.append(auto);
 
   for (const model of state.models) {
     const option = document.createElement("option");
     option.value = model.id;
-    option.textContent = model.id;
+    option.textContent = `路由覆盖 · ${model.id}`;
     elements.modelSelect.append(option);
   }
   elements.modelSelect.value = [...elements.modelSelect.options].some((option) => option.value === current)
@@ -2401,7 +2476,13 @@ function bindEvents() {
     if (session) session.selectedModel = elements.modelSelect.value;
     elements.composerHint.textContent = elements.modelSelect.value === "auto"
       ? `自动路由 · ${state.system?.router?.algorithm || "路由器"}`
-      : `指定模型 · ${elements.modelSelect.value}`;
+      : `路由覆盖 · ${elements.modelSelect.value}`;
+    if (elements.modelSelect.value !== "auto") {
+      const scope = state.settings.solveMode === "single"
+        ? "本轮将跳过自动模型决策。"
+        : "所有子任务将限定使用该模型，自动模型决策不再生效。";
+      showToast(`已启用路由覆盖：${scope}`);
+    }
     saveState();
   });
   elements.solveModeSelect?.addEventListener("change", () => {
@@ -2440,6 +2521,7 @@ function bindEvents() {
   elements.runSchedulerButton?.addEventListener("click", () => runExperiment("simulated"));
   elements.runExperimentButton.addEventListener("click", () => runExperiment("simulated"));
   elements.runRealExperimentButton.addEventListener("click", () => runExperiment("real"));
+  elements.runPilotExperimentButton.addEventListener("click", () => runExperiment("pilot"));
   elements.exportExperimentButton.addEventListener("click", exportExperimentReport);
   elements.refreshLogsButton.addEventListener("click", refreshLogs);
   elements.settingsButton.addEventListener("click", () => openSettings(true));

@@ -19,6 +19,7 @@ api_keys:
   doubao: ${DOUBAO_API_KEY}
   gemini: ${GEMINI_API_KEY}
   zhipu: ${ZHIPU_API_KEY}
+  openai: ${OPENAI_API_KEY}
 memory:
   enabled: false
 llms:
@@ -34,6 +35,20 @@ llms:
     context_limit: 64000
     input_price: 0.28
     output_price: 0.42
+
+  deepseek-coder:
+    provider: deepseek
+    provider_type: openai_compatible
+    model: deepseek-coder
+    base_url: https://api.deepseek.com/v1
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: "DeepSeek code-specialized model"
+    max_tokens: 1024
+    context_limit: 64000
+    input_price: 0.14
+    output_price: 0.28
+
   qwen-plus:
     provider: qwen
     provider_type: openai_compatible
@@ -46,6 +61,33 @@ llms:
     context_limit: 131000
     input_price: 0.11
     output_price: 0.28
+
+  qwen-max:
+    provider: qwen
+    provider_type: openai_compatible
+    model: qwen-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: "Alibaba Cloud Qwen Max flagship model"
+    max_tokens: 1024
+    context_limit: 131000
+    input_price: 0.56
+    output_price: 2.0
+
+  qwen-turbo:
+    provider: qwen
+    provider_type: openai_compatible
+    model: qwen-turbo
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: "Alibaba Cloud Qwen Turbo fast & cheap"
+    max_tokens: 1024
+    context_limit: 131000
+    input_price: 0.008
+    output_price: 0.02
+
   doubao:
     provider: doubao
     provider_type: openai_compatible
@@ -71,6 +113,20 @@ llms:
     context_limit: 1000000
     input_price: 0.3
     output_price: 2.5
+
+  gemini-2.5-pro:
+    provider: gemini
+    provider_type: openai_compatible
+    model: gemini-2.5-pro
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: "Google Gemini 2.5 Pro, 1M context, top reasoning"
+    max_tokens: 4096
+    context_limit: 1000000
+    input_price: 1.25
+    output_price: 5.0
+
   doubao-seed-2.1-turbo:
     provider: doubao
     provider_type: openai_compatible
@@ -96,4 +152,46 @@ llms:
     context_limit: 1000000
     input_price: 1.4
     output_price: 4.4
+    auto_routable: true
+
+  glm-4-flash:
+    provider: zhipu
+    provider_type: openai_compatible
+    model: glm-4-flash
+    base_url: https://open.bigmodel.cn/api/paas/v4
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: "Zhipu GLM-4 Flash, fast & cost-efficient"
+    max_tokens: 1024
+    context_limit: 128000
+    input_price: 0.1
+    output_price: 0.1
+
+  # ================= OpenAI Models =================
+  gpt-4o:
+    provider: openai
+    provider_type: openai_compatible
+    model: gpt-4o
+    base_url: https://api.openai.com/v1
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: "OpenAI flagship multimodal model"
+    max_tokens: 4096
+    context_limit: 128000
+    input_price: 2.5
+    output_price: 10.0
+    auto_routable: true
+
+  gpt-4o-mini:
+    provider: openai
+    provider_type: openai_compatible
+    model: gpt-4o-mini
+    base_url: https://api.openai.com/v1
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: "Fast, cheap OpenAI model"
+    max_tokens: 4096
+    context_limit: 128000
+    input_price: 0.15
+    output_price: 0.60
     auto_routable: true

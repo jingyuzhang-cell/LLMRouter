@@ -11,6 +11,7 @@ Or directly:
 """
 
 import asyncio
+import hashlib
 import json
 import math
 import os
@@ -42,11 +43,27 @@ try:
     from .routers import OpenClawRouter, _safe_log, record_contextual_bandit_feedback
     from .media import process_multimodal_content, MediaConfig
     from .routerbench import build_routerbench, render_routerbench_markdown
+    from .experience import RoutingExperienceStore, automatic_verification, utility_score as experience_utility_score
+    from .scoring import utility as canonical_utility, normalized_cost as canonical_normalized_cost
+    from .checkpoint import load_successful, append_record, write_progress
+    from .judge_utils import extract_message_text, parse_judge_payload, load_calibration, calibrate_score
+    from .experiment_protocol import (ANSWER_FORMAT_VERSION, DATA_VERSION, MAX_INPUT_CHARS, OBJECTIVE_FEASIBILITY_THRESHOLD,
+        PROMPT_TEMPLATE_VERSION, build_prompt as build_experiment_prompt, objective_feasible,
+        objective_score as protocol_objective_score, select_context_pilot, signature as protocol_signature,
+        signature_payload as protocol_signature_payload)
 except ImportError:
     from config import OpenClawConfig, LLMConfig, MODELS_WITHOUT_SYSTEM_ROLE, MODEL_CONTEXT_LIMITS
     from routers import OpenClawRouter, _safe_log, record_contextual_bandit_feedback
     from media import process_multimodal_content, MediaConfig
     from routerbench import build_routerbench, render_routerbench_markdown
+    from experience import RoutingExperienceStore, automatic_verification, utility_score as experience_utility_score
+    from scoring import utility as canonical_utility, normalized_cost as canonical_normalized_cost
+    from checkpoint import load_successful, append_record, write_progress
+    from judge_utils import extract_message_text, parse_judge_payload, load_calibration, calibrate_score
+    from experiment_protocol import (ANSWER_FORMAT_VERSION, DATA_VERSION, MAX_INPUT_CHARS, OBJECTIVE_FEASIBILITY_THRESHOLD,
+        PROMPT_TEMPLATE_VERSION, build_prompt as build_experiment_prompt, objective_feasible,
+        objective_score as protocol_objective_score, select_context_pilot, signature as protocol_signature,
+        signature_payload as protocol_signature_payload)
 
 try:
     from llmscheduler import BatchConstraints, SchedulerType, solve_batch_assignment
@@ -80,6 +97,7 @@ class ChatRequest(BaseModel):
     stream_options: Optional[Dict[str, Any]] = None
     solve_mode: Optional[str] = "single"
     dispatch_mode: Optional[str] = "conservative"
+    verify_response: bool = False
 
 
 class RouterUpdateRequest(BaseModel):
@@ -106,8 +124,8 @@ class ModelConfigRequest(BaseModel):
 
 class ExperimentRunRequest(BaseModel):
     mode: str = "simulated"
-    sample_limit: int = 4
-    repeats: int = 2
+    sample_limit: int = 50
+    repeats: int = 3
     judge_enabled: bool = True
 
 
@@ -123,6 +141,10 @@ class FeedbackRequest(BaseModel):
     fallback_count: int = 0
     reason: Optional[str] = None
     strategy: Optional[str] = None
+    request_id: Optional[str] = None
+    corrected_answer: Optional[str] = None
+    preferred_model: Optional[str] = None
+    feedback_text: Optional[str] = None
 
 
 class ABCompareRequest(BaseModel):
@@ -241,6 +263,9 @@ def clean_response(result: Dict) -> Dict:
                 cleaned_choice["message"]["tool_calls"] = msg["tool_calls"]
             if msg.get("function_call") is not None:
                 cleaned_choice["message"]["function_call"] = msg["function_call"]
+            for reasoning_key in ("reasoning_content", "reasoning", "analysis"):
+                if msg.get(reasoning_key) is not None:
+                    cleaned_choice["message"][reasoning_key] = msg[reasoning_key]
         cleaned["choices"].append(cleaned_choice)
 
     return cleaned
@@ -537,6 +562,8 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
     # Initialize components
     router = OpenClawRouter(config)
     backend = LLMBackend(config)
+    experience_store = RoutingExperienceStore(Path.cwd() / "run_logs" / "routing_experience.jsonl")
+    judge_calibration = load_calibration(Path.cwd() / "configs" / "judge_calibration.json")
     request_logs = deque(maxlen=200)
     model_failures: Dict[str, Dict[str, Any]] = {}
     metrics = {
@@ -1380,6 +1407,48 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             **entry,
         })
 
+    def routing_config_version() -> str:
+        return hashlib.sha256(json.dumps({
+            "strategy": config.router.strategy,
+            "models": {name: {"model": item.model_id, "base_url": item.base_url} for name, item in config.llms.items()},
+        }, sort_keys=True).encode()).hexdigest()[:16]
+
+    def apply_verified_experience(
+        routing: Dict[str, Any], query: str, candidates: List[str], user_id: Optional[str]
+    ) -> Dict[str, Any]:
+        """Blend verified outcomes into semantic strategies; never override manual/baseline routing."""
+        strategy = str(routing.get("strategy") or "")
+        if strategy in {"manual", "random", "round_robin", "rules"} or not candidates:
+            return routing
+        stats = experience_store.model_statistics(query, candidates, user_id=user_id, config_version=routing_config_version())
+        base_scores = {name: float((routing.get("candidate_scores") or {}).get(name, 0.0)) for name in candidates}
+        if not any(float(item.get("history_count") or 0.0) > 0 for item in stats.values()):
+            routing["experience"] = {"applied": False, "reason": "没有相似且已验证的历史经验。"}
+            return routing
+        adjusted = {}
+        for model in candidates:
+            history = stats[model]
+            confidence = min(0.30, 0.08 * math.log1p(float(history.get("history_count") or 0.0)))
+            adjusted[model] = round(
+                (1.0 - confidence) * base_scores.get(model, 0.0)
+                + confidence * float(history.get("historical_reward") or 0.5), 4
+            )
+        selected = max(adjusted, key=adjusted.get)
+        previous = routing.get("selected_model")
+        routing.update({
+            "selected_model": selected,
+            "candidate_scores_before_experience": base_scores,
+            "candidate_scores": adjusted,
+            "experience": {
+                "applied": True, "previous_model": previous, "selected_model": selected,
+                "model_statistics": stats,
+                "note": "仅使用 verified_positive/negative/disputed 历史；pending 不参与路由。",
+            },
+        })
+        if selected != previous:
+            routing["reason"] = f"{routing.get('reason', '')} 经已验证历史经验校正后选择 {selected}。".strip()
+        return routing
+
     experiment_tasks = [
         {
             "id": "qa_basic",
@@ -1745,7 +1814,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         },
     ])
 
-    def load_finance_router_tasks(limit: int = 80) -> List[Dict[str, Any]]:
+    def load_finance_router_tasks(limit: int = 110) -> List[Dict[str, Any]]:
         dataset_path = Path.cwd() / "data" / "finance_router" / "standardized" / "finance_router_tasks.jsonl"
         if not dataset_path.exists():
             return []
@@ -1786,6 +1855,11 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                     "requires_kg_reasoning": bool(item.get("requires_kg_reasoning")),
                     "gold_answer": item.get("gold_answer"),
                     "context": item.get("context"),
+                    "table": item.get("table"),
+                    "evidence": item.get("evidence", []),
+                    "source_url": item.get("source_url"),
+                    "source_id": item.get("source_id"),
+                    "review_status": item.get("review_status"),
                 })
                 if len(loaded) >= limit:
                     break
@@ -1801,12 +1875,23 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
 
     def finance_dataset_summary() -> Dict[str, Any]:
         datasets = Counter(str(item.get("dataset", "unknown")) for item in finance_dataset_tasks)
+        manifest_path = Path.cwd() / "data" / "finance_router" / "standardized" / "finance_experiment_manifest.json"
+        manifest = {}
+        try:
+            if manifest_path.exists():
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except Exception as error:
+            _safe_log(f"[FinanceDataset] Failed to read manifest: {error}")
         return {
             "loaded": len(finance_dataset_tasks),
             "datasets": dict(datasets),
             "standardized_path": "data/finance_router/standardized/finance_router_tasks.jsonl",
             "training_jsonl": "data/finance_router/routing/finance_router_train.jsonl",
             "training_csv": "data/finance_router/routing/finance_router_train.csv",
+            "manifest_path": "data/finance_router/standardized/finance_experiment_manifest.json",
+            "sampling_seed": manifest.get("seed"),
+            "counts_by_stratum": manifest.get("counts_by_stratum", {}),
+            "sources": manifest.get("sources", []),
             "note": "FinQA/TAT-QA 等金融数据集会先转成统一 JSONL，再生成路由训练标签。",
         }
 
@@ -1853,6 +1938,16 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         "cost": 0.20,
         "latency": 0.15,
         "reliability": 0.20,
+    }
+
+    experiment_scoring = {
+        "formula": "U=0.45Q+0.20(1-C)+0.15(1-L)+0.20R",
+        "overall_formula": "Overall=Σ(1+λ·risk_t)·U_t / Σ(1+λ·risk_t)",
+        "risk_lambda": 1.0,
+        "cost_normalization": "C=min(raw_cost_usd/0.02,1)；无价格配置时 C=min(total_tokens/3000,1)",
+        "latency_normalization": "L=min(latency_ms/10000,1)",
+        "reliability_definition": "R=success_count/repeat_count",
+        "weights_note": "45%/20%/15%/20% 是评价偏好权重，不是实验测得比例。",
     }
 
     experiment_baselines = [
@@ -2020,13 +2115,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         }
 
     def utility_score(metrics_payload: Dict[str, float]) -> float:
-        return round(
-            metrics_payload["quality"] * experiment_weights["quality"]
-            + (1.0 - metrics_payload["cost"]) * experiment_weights["cost"]
-            + (1.0 - metrics_payload["latency"]) * experiment_weights["latency"]
-            + metrics_payload["reliability"] * experiment_weights["reliability"],
-            4,
-        )
+        return canonical_utility(metrics_payload, experiment_weights)
 
     def estimate_router_overhead_ms(strategy_id: str, task: Optional[Dict[str, Any]] = None) -> float:
         complexity = float((task or {}).get("complexity", 0.3))
@@ -2231,6 +2320,9 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             },
         }
         profile = {**common, **profiles.get(task_type, {})}
+        if task.get("gold_answer") not in (None, ""):
+            profile["reference_answer"] = str(task.get("gold_answer"))[:4000]
+            profile["criteria"] = profile["criteria"] + ["与给定标准答案或证据保持一致"]
         if task.get("requires_verification"):
             profile["criteria"] = profile["criteria"] + ["对高风险内容给出谨慎说明或验证建议"]
         return profile
@@ -2239,10 +2331,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         return max(1, int(len(text or "") / 3.5))
 
     def extract_response_text(result: Dict[str, Any]) -> str:
-        try:
-            return result.get("choices", [{}])[0].get("message", {}).get("content", "") or ""
-        except Exception:
-            return ""
+        return extract_message_text(result)
 
     def extract_usage(result: Dict[str, Any], prompt: str, response: str) -> Dict[str, int]:
         usage = result.get("usage") if isinstance(result, dict) else {}
@@ -2270,10 +2359,9 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
 
     def normalized_cost_score(model_name: str, usage: Dict[str, int], cost_usd: Optional[float] = None) -> float:
         llm = config.llms.get(model_name)
-        if llm and (llm.input_price > 0 or llm.output_price > 0):
-            raw_cost = raw_cost_usd(model_name, usage) if cost_usd is None else cost_usd
-            return round(max(0.0, min(1.0, raw_cost / 0.02)), 3)
-        return round(max(0.0, min(1.0, usage["total_tokens"] / 3000)), 3)
+        priced = bool(llm and (llm.input_price > 0 or llm.output_price > 0))
+        raw_cost = raw_cost_usd(model_name, usage) if priced and cost_usd is None else cost_usd
+        return canonical_normalized_cost(raw_cost, int(usage.get("total_tokens") or 0), priced=priced)
 
     def heuristic_quality(task: Dict[str, Any], response: str, ok: bool) -> float:
         if not ok or not response.strip():
@@ -2304,39 +2392,11 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         return round(max(0.0, min(1.0, score)), 3)
 
     def parse_judge_json(text: str) -> Optional[Dict[str, Any]]:
-        match = re.search(r"\{.*\}", text or "", flags=re.S)
-        if not match:
-            return None
-        try:
-            data = json.loads(match.group(0))
-        except Exception:
-            return None
-        score = data.get("score")
-        try:
-            score_value = float(score)
-        except Exception:
-            return None
-        if score_value > 1:
-            score_value = score_value / 100.0
-        dimensions = data.get("dimensions") or data.get("维度") or {}
-        clean_dimensions = {}
-        if isinstance(dimensions, dict):
-            for key in ("accuracy", "completeness", "reasoning", "clarity", "safety"):
-                raw = dimensions.get(key)
-                if raw is None:
-                    continue
-                try:
-                    value = float(raw)
-                    if value > 1:
-                        value = value / 100.0
-                    clean_dimensions[key] = round(max(0.0, min(1.0, value)), 3)
-                except Exception:
-                    continue
-        return {
-            "score": round(max(0.0, min(1.0, score_value)), 3),
-            "reason": str(data.get("reason") or data.get("理由") or "").strip()[:500],
-            "dimensions": clean_dimensions,
-        }
+        return parse_judge_payload(text)
+
+    def objective_answer_score(task: Dict[str, Any], response: str) -> Optional[float]:
+        """Dataset-aware objective score; gold is used only after the candidate response exists."""
+        return protocol_objective_score(task, response)
 
     async def judge_response_quality(
         task: Dict[str, Any],
@@ -2345,33 +2405,29 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         fallback_score: float,
         judge_enabled: bool = True,
     ) -> Dict[str, Any]:
+        objective_score = objective_answer_score(task, response)
+        base = {
+            "score": objective_score if objective_score is not None else fallback_score,
+            "source": "objective_rule" if objective_score is not None else "heuristic",
+            "reason": "使用标准答案进行精确匹配、数值容差或关键词覆盖评分。" if objective_score is not None else "使用规则启发式质量评分。",
+            "judge_model": None, "reviewer_model": None, "judge_scores": [],
+            "judge_attempts": [], "judge_cost_usd": 0.0,
+            "objective_score": objective_score, "disagreement": 0.0,
+            "manual_review_required": False, "dimensions": {},
+        }
         if not judge_enabled:
-            return {
-                "score": fallback_score,
-                "source": "heuristic",
-                "reason": "未启用 LLM 裁判，使用规则启发式质量评分。",
-                "judge_model": None,
-                "dimensions": {},
-            }
-        judge_model = next(
-            (name for name in ("qwen-plus", "deepseek-chat", "gemini-2.5-flash") if name in config.llms),
-            None,
-        )
-        if not judge_model:
-            return {
-                "score": fallback_score,
-                "source": "heuristic",
-                "reason": "未配置可用裁判模型，使用规则启发式质量评分。",
-                "judge_model": None,
-                "dimensions": {},
-            }
+            return base
+        preferred = [name for name in ("qwen-plus", "deepseek-chat", "glm-5.2", "qwen-turbo") if name in config.llms and name != candidate_model]
+        if not preferred:
+            return base
         profile = task_evaluation_profile(task)
         criteria = "\n".join(f"- {item}" for item in profile["criteria"])
-        judge_prompt = f"""你是大模型路由实验的质量裁判。请只输出 JSON，不要输出其他文字。
+        judge_prompt = f"""你是大模型路由实验的独立质量裁判。请只输出 JSON，不要输出其他文字。
 
 任务类型：{task.get('type')}
+数据集：{task.get('dataset', '-')}
 用户问题：{task.get('query')}
-参考要求：{profile['reference_answer']}
+标准答案/参考要求：{profile['reference_answer']}
 评分标准：
 {criteria}
 
@@ -2381,38 +2437,57 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
 
 请输出：
 {{"score": 0到1之间的小数, "dimensions": {{"accuracy": 0到1, "completeness": 0到1, "reasoning": 0到1, "clarity": 0到1, "safety": 0到1}}, "reason": "一句话说明评分原因"}}"""
-        try:
-            result = await backend.call(
-                judge_model,
-                [{"role": "user", "content": judge_prompt}],
-                max_tokens=220,
-                temperature=0.0,
-                stream=False,
-            )
-            judge_text = extract_response_text(result)
-            parsed = parse_judge_json(judge_text)
-            if parsed:
-                return {
-                    "score": parsed["score"],
-                    "source": "llm_judge",
-                    "reason": parsed["reason"] or "LLM 裁判根据参考要求和评分标准给出该分数。",
-                    "judge_model": judge_model,
-                    "dimensions": parsed.get("dimensions", {}),
-                }
-        except Exception as error:
-            return {
-                "score": fallback_score,
-                "source": "heuristic",
-                "reason": f"LLM 裁判失败，使用规则启发式质量评分：{str(error)[:180]}",
-                "judge_model": judge_model,
-                "dimensions": {},
-            }
+        judgments, judge_attempts = [], []
+        judge_cost = 0.0
+        for judge_model in preferred:
+            if len(judgments) >= 2:
+                break
+            try:
+                result = await backend.call(judge_model, [{"role": "user", "content": judge_prompt}], max_tokens=220, temperature=0.0, stream=False)
+                judge_text = extract_response_text(result)
+                usage = extract_usage(result, judge_prompt, judge_text)
+                attempt_cost = raw_cost_usd(judge_model, usage)
+                judge_cost += attempt_cost
+                parsed = parse_judge_json(judge_text)
+                if parsed:
+                    parsed["raw_score"] = parsed["score"]
+                    parsed["score"] = calibrate_score(judge_model, parsed["score"], judge_calibration)
+                judge_attempts.append({
+                    "model": judge_model, "ok": bool(parsed), "cost_usd": attempt_cost,
+                    "error": None if parsed else "unparseable_json",
+                    "raw_excerpt": None if parsed else judge_text[:1000],
+                    "calibration_enabled": bool(judge_calibration.get("enabled")),
+                })
+                if parsed:
+                    judgments.append({"model": judge_model, **parsed})
+            except Exception as error:
+                judge_attempts.append({"model": judge_model, "ok": False, "cost_usd": 0.0, "error": str(error)[:300]})
+                _safe_log(f"[ExperimentJudge] {judge_model} failed: {str(error)[:180]}")
+        if not judgments:
+            return {**base, "judge_attempts": judge_attempts, "judge_cost_usd": round(judge_cost, 8)}
+        judge_mean = sum(item["score"] for item in judgments) / len(judgments)
+        if objective_score is None:
+            final_score = judge_mean
+        elif objective_score < OBJECTIVE_FEASIBILITY_THRESHOLD:
+            # An explanation judge cannot rescue an objectively incorrect answer.
+            final_score = objective_score
+        else:
+            final_score = .7 * objective_score + .3 * judge_mean
+        compared = [item["score"] for item in judgments] + ([objective_score] if objective_score is not None else [])
+        disagreement = max(compared) - min(compared) if len(compared) > 1 else 0.0
+        dimensions = {}
+        for key in ("accuracy", "completeness", "reasoning", "clarity", "safety"):
+            values = [item.get("dimensions", {}).get(key) for item in judgments if key in item.get("dimensions", {})]
+            if values:
+                dimensions[key] = round(sum(values) / len(values), 3)
         return {
-            "score": fallback_score,
-            "source": "heuristic",
-            "reason": "LLM 裁判未返回可解析 JSON，使用规则启发式质量评分。",
-            "judge_model": judge_model,
-            "dimensions": {},
+            "score": round(final_score, 3), "source": "objective_plus_dual_judge" if objective_score is not None and len(judgments) > 1 else "dual_llm_judge" if len(judgments) > 1 else "single_llm_judge",
+            "reason": " | ".join(f"{item['model']}: {item['reason']}" for item in judgments)[:1000],
+            "judge_model": judgments[0]["model"], "reviewer_model": judgments[1]["model"] if len(judgments) > 1 else None,
+            "judge_scores": [{"model": item["model"], "score": item["score"]} for item in judgments],
+            "judge_attempts": judge_attempts, "judge_cost_usd": round(judge_cost, 8),
+            "objective_score": objective_score, "disagreement": round(disagreement, 3),
+            "manual_review_required": disagreement >= .20, "dimensions": dimensions,
         }
 
     async def call_model_for_experiment(
@@ -2421,7 +2496,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         repeat_index: int = 1,
         judge_enabled: bool = True,
     ) -> Dict[str, Any]:
-        prompt = task["query"]
+        prompt, prompt_audit = build_experiment_prompt(task)
         started = time.perf_counter()
         try:
             result = await backend.call(
@@ -2448,14 +2523,25 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                 "raw_cost_usd": cost_usd,
                 "quality_source": judge["source"],
                 "judge_model": judge["judge_model"],
+                "reviewer_model": judge.get("reviewer_model"),
+                "judge_scores": judge.get("judge_scores", []),
+                "judge_attempts": judge.get("judge_attempts", []),
+                "judge_cost_usd": judge.get("judge_cost_usd", 0.0),
+                "objective_score": judge.get("objective_score"),
+                "judge_disagreement": judge.get("disagreement", 0.0),
+                "manual_review_required": judge.get("manual_review_required", False),
                 "judge_reason": judge["reason"],
                 "judge_dimensions": judge.get("dimensions", {}),
                 "evaluation_profile": task_evaluation_profile(task),
+                "prompt_audit": prompt_audit,
                 "metrics": {
                     "quality": judge["score"],
                     "cost": normalized_cost_score(model_name, usage, cost_usd),
                     "latency": round(max(0.0, min(1.0, elapsed_ms / 10000)), 3),
-                    "reliability": 1.0,
+                    "api_availability": 1.0,
+                    "answer_correctness": judge.get("objective_score") if judge.get("objective_score") is not None else judge["score"],
+                    "objective_feasible": objective_feasible(judge.get("objective_score")),
+                    "reliability": round(float(judge.get("objective_score") if judge.get("objective_score") is not None else judge["score"]), 3),
                 },
                 "error": None,
             }
@@ -2475,10 +2561,14 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                 "judge_reason": "模型调用失败，质量记为 0。",
                 "judge_dimensions": {},
                 "evaluation_profile": task_evaluation_profile(task),
+                "prompt_audit": prompt_audit,
                 "metrics": {
                     "quality": 0.0,
                     "cost": model_profile(model_name)["cost"],
                     "latency": 1.0,
+                    "api_availability": 0.0,
+                    "answer_correctness": 0.0,
+                    "objective_feasible": False,
                     "reliability": 0.0,
                 },
                 "error": str(getattr(error, "detail", error))[:500],
@@ -2509,7 +2599,11 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             sum(float(item.get("raw_cost_usd") or 0.0) for item in runs) / repeat_count,
             8,
         )
-        reliability = round(success_count / repeat_count, 3)
+        api_availability = round(success_count / repeat_count, 3)
+        objective_values = [float(item["objective_score"]) for item in runs if item.get("objective_score") is not None]
+        avg_objective = round(sum(objective_values) / len(objective_values), 3) if objective_values else None
+        answer_correctness = avg_objective if avg_objective is not None else avg_quality
+        reliability = round(api_availability * answer_correctness, 3)
         best_run = max(
             runs,
             key=lambda item: float((item.get("metrics") or {}).get("quality", 0.0)),
@@ -2527,6 +2621,14 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             "raw_cost_usd": avg_cost_usd,
             "quality_source": best_run.get("quality_source", "aggregate"),
             "judge_model": best_run.get("judge_model"),
+            "reviewer_model": best_run.get("reviewer_model"),
+            "judge_scores": best_run.get("judge_scores", []),
+            "judge_attempts": best_run.get("judge_attempts", []),
+            "judge_cost_usd": round(sum(float(item.get("judge_cost_usd") or 0.0) for item in runs) / repeat_count, 8),
+            "objective_score": avg_objective,
+            "objective_feasible": objective_feasible(avg_objective),
+            "judge_disagreement": best_run.get("judge_disagreement", 0.0),
+            "manual_review_required": any(bool(item.get("manual_review_required")) for item in runs),
             "judge_reason": best_run.get("judge_reason", "多轮运行聚合结果。"),
             "judge_dimensions": best_run.get("judge_dimensions", {}),
             "evaluation_profile": task_evaluation_profile(task),
@@ -2535,6 +2637,9 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                 "quality": avg_quality,
                 "cost": normalized_cost_score(model_name, avg_usage, avg_cost_usd),
                 "latency": round(max(0.0, min(1.0, avg_latency_ms / 10000)), 3),
+                "api_availability": api_availability,
+                "answer_correctness": answer_correctness,
+                "objective_feasible": objective_feasible(avg_objective),
                 "reliability": reliability,
             },
             "error": None if success_count else "; ".join(str(item.get("error", "")) for item in runs)[:500],
@@ -2756,8 +2861,15 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                 "repeat_count": real_item.get("repeat_count"),
                 "success_count": real_item.get("success_count"),
                 "quality_source": real_item.get("quality_source"),
-                "judge_model": real_item.get("judge_model"),
-                "judge_reason": real_item.get("judge_reason"),
+                        "judge_model": real_item.get("judge_model"),
+                        "reviewer_model": real_item.get("reviewer_model"),
+                        "judge_scores": real_item.get("judge_scores", []),
+                        "judge_attempts": real_item.get("judge_attempts", []),
+                        "judge_cost_usd": real_item.get("judge_cost_usd", 0.0),
+                        "objective_score": real_item.get("objective_score"),
+                        "judge_disagreement": real_item.get("judge_disagreement", 0.0),
+                        "manual_review_required": real_item.get("manual_review_required", False),
+                        "judge_reason": real_item.get("judge_reason"),
                 "judge_dimensions": real_item.get("judge_dimensions", {}),
                 "response_excerpt": (real_item.get("response") or "")[:500],
                 "evaluation_profile": real_item.get("evaluation_profile"),
@@ -2970,41 +3082,34 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
 
     def choose_model_by_contextual_bandit(task: Dict[str, Any], models: List[str]) -> Dict[str, Any]:
         scored = []
-        context_seed = sum(ord(char) for char in f"{task.get('type')}:{task.get('id')}")
-        for index, model_name in enumerate(models):
+        history = experience_store.model_statistics(str(task.get("query") or ""), models)
+        total_count = sum(float(item.get("history_count") or 0.0) for item in history.values())
+        for model_name in models:
             item_metrics = evaluate_model_for_task(model_name, task)
             prior = utility_score(item_metrics)
-            pseudo_count = (context_seed + index * 7) % 5
-            historical_reward = max(0.0, min(1.0, prior + (((context_seed + index) % 9) - 4) * 0.012))
-            success_rate = max(0.55, min(1.0, float(item_metrics["reliability"]) + (pseudo_count * 0.015)))
-            exploration = 0.16 / ((pseudo_count + 1) ** 0.5)
-            score = round(
-                min(1.0, 0.58 * historical_reward + 0.24 * prior + 0.12 * success_rate + exploration),
-                4,
-            )
+            model_history = history.get(model_name, {})
+            history_count = float(model_history.get("history_count") or 0.0)
+            historical_reward = float(model_history.get("historical_reward") or prior)
+            positive = float(model_history.get("positive_weight") or 0.0)
+            negative = float(model_history.get("negative_weight") or 0.0)
+            success_rate = positive / max(1e-9, positive + negative) if positive + negative else float(item_metrics["reliability"])
+            exploration = min(0.16, 0.08 * math.sqrt(math.log1p(total_count + 1.0) / (history_count + 1.0)))
+            score = round(min(1.0, 0.58 * historical_reward + 0.24 * prior + 0.12 * success_rate + exploration), 4)
             scored.append({
-                "model": model_name,
-                "score": score,
-                "metrics": item_metrics,
-                "prior": prior,
-                "historical_reward": round(historical_reward, 4),
-                "success_rate": round(success_rate, 4),
-                "exploration": round(exploration, 4),
-                "history_count": pseudo_count,
+                "model": model_name, "score": score, "metrics": item_metrics, "prior": prior,
+                "historical_reward": round(historical_reward, 4), "success_rate": round(success_rate, 4),
+                "exploration": round(exploration, 4), "history_count": round(history_count, 4),
             })
         scored.sort(key=lambda item: item["score"], reverse=True)
         selected = scored[0]
         return {
-            "selected_model": selected["model"],
-            "score": selected["score"],
+            "selected_model": selected["model"], "score": selected["score"],
             "candidate_scores": {item["model"]: item["score"] for item in scored},
             "metrics": selected["metrics"],
-            "reason": (
-                "在线反馈路由：把任务上下文映射为一个 bandit 状态，综合模型先验效用、历史奖励、"
-                "成功率和探索项进行选择；真实聊天会继续用实际调用结果更新该状态。"
-            ),
+            "reason": "在线反馈路由：使用已验证路由经验的真实奖励、成功率、模型先验和探索项；pending 记录不参与学习。",
             "candidate_details": scored,
             "context_key": f"{task.get('type')}|risk={task.get('risk')}|complexity={task.get('complexity')}",
+            "history_source": "run_logs/routing_experience.jsonl",
         }
 
     def uncertainty_from_candidate_scores(scored: List[Dict[str, Any]]) -> Dict[str, float]:
@@ -3501,6 +3606,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                 ),
             },
             "weights": experiment_weights,
+            "scoring": experiment_scoring,
             "finance_dataset": finance_dataset_summary(),
             "task_set": experiment_tasks,
             "strategies": strategy_rows,
@@ -3537,29 +3643,112 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         })
         return payload
 
+    def stratified_task_sample(tasks: List[Dict[str, Any]], limit: int, seed: int = 20260727) -> List[Dict[str, Any]]:
+        """Round-robin strata so a prefix cannot overrepresent generic tasks or one dataset."""
+        size = max(1, min(int(limit or 1), len(tasks), 100))
+        groups: Dict[str, List[Dict[str, Any]]] = {}
+        for task in tasks:
+            key = "|".join((str(task.get("dataset") or "project"), str(task.get("task_type") or task.get("type") or "unknown"), "high" if float(task.get("risk", 0)) >= .75 else "medium" if float(task.get("risk", 0)) >= .45 else "low"))
+            groups.setdefault(key, []).append(task)
+        rng = random.Random(seed)
+        for values in groups.values():
+            rng.shuffle(values)
+        selected: List[Dict[str, Any]] = []
+        keys = sorted(groups)
+        while len(selected) < size:
+            progressed = False
+            for key in keys:
+                if groups[key] and len(selected) < size:
+                    selected.append(groups[key].pop())
+                    progressed = True
+            if not progressed:
+                break
+        rng.shuffle(selected)
+        return selected
+
+    def experiment_checkpoint_context(models: List[str], tasks: List[Dict[str, Any]], repeats: int, phase: str) -> Dict[str, Any]:
+        protocol_path = Path.cwd() / "data" / "finance_router" / "frozen" / "v1" / "experiment_protocol_v1.json"
+        protocol = {}
+        try:
+            if protocol_path.exists():
+                protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+        except Exception as error:
+            _safe_log(f"[ExperimentCheckpoint] protocol read failed: {error}")
+        signature_payload = protocol_signature_payload(
+            freeze_id=protocol.get("freeze_id", "unfrozen"),
+            dataset_sha256=protocol.get("dataset_sha256"), models=models, tasks=tasks,
+            repeats=repeats, phase=phase,
+        )
+        return {"signature": protocol_signature(signature_payload), "payload": signature_payload}
+
+    def load_experiment_checkpoint(path: Path, signature: str) -> Dict[tuple[str, str, int], Dict[str, Any]]:
+        return load_successful(path, signature)
+
+    def append_experiment_checkpoint(path: Path, record: Dict[str, Any]) -> None:
+        append_record(path, record)
+
+    def write_experiment_progress(path: Path, payload: Dict[str, Any]) -> None:
+        write_progress(path, payload)
+
     async def run_real_sample_experiment(
-        sample_limit: int = 4,
-        repeats: int = 2,
+        sample_limit: int = 50,
+        repeats: int = 3,
         judge_enabled: bool = True,
+        development_only: bool = False,
+        phase: str = "formal_context_v2",
+        selection_mode: str = "stratified",
     ) -> Dict[str, Any]:
-        models = healthy_models()
-        selected_tasks = experiment_tasks[:max(1, min(sample_limit, len(experiment_tasks), 8))]
-        safe_repeats = max(1, min(int(repeats or 1), 3))
+        experiment_model_pool = ["deepseek-chat", "qwen-plus", "qwen-turbo", "glm-5.2"]
+        healthy = set(healthy_models())
+        models = [name for name in experiment_model_pool if name in healthy]
+        if len(models) < 2:
+            raise HTTPException(status_code=503, detail=f"预注册实验模型池可用模型不足：{models}")
+        selected_tasks = (
+            select_context_pilot(finance_dataset_tasks, per_dataset=3)
+            if selection_mode == "context_pilot_3_per_dataset"
+            else stratified_task_sample(finance_dataset_tasks, sample_limit)
+        )
+        safe_repeats = max(1, min(int(repeats or 1), 5))
         real_results: Dict[tuple[str, str], Dict[str, Any]] = {}
         raw_model_runs: List[Dict[str, Any]] = []
+        checkpoint_path = Path.cwd() / "run_logs" / "llmrouter_experiment_checkpoint_v2.jsonl"
+        progress_path = Path.cwd() / "run_logs" / "llmrouter_experiment_progress_v2.json"
+        checkpoint = experiment_checkpoint_context(models, selected_tasks, safe_repeats, phase)
+        completed = {} if development_only else load_experiment_checkpoint(checkpoint_path, checkpoint["signature"])
+        total_calls = len(selected_tasks) * len(models) * safe_repeats
+        completed_before_start = len(completed)
 
         for task in selected_tasks:
             for model_name in models:
                 runs = []
                 for repeat_index in range(1, safe_repeats + 1):
-                    run_result = await call_model_for_experiment(
-                        model_name,
-                        task,
-                        repeat_index=repeat_index,
-                        judge_enabled=judge_enabled,
-                    )
+                    checkpoint_key = (str(task["id"]), model_name, repeat_index)
+                    resumed = checkpoint_key in completed
+                    if resumed:
+                        run_result = completed[checkpoint_key]
+                    else:
+                        run_result = await call_model_for_experiment(
+                            model_name, task, repeat_index=repeat_index, judge_enabled=judge_enabled,
+                        )
+                        if not development_only:
+                            if run_result.get("ok") is True:
+                                completed[checkpoint_key] = run_result
+                            append_experiment_checkpoint(checkpoint_path, {
+                                "signature": checkpoint["signature"], "task_id": task["id"],
+                                "model": model_name, "repeat": repeat_index, "saved_at": time.time(),
+                                "result": run_result,
+                            })
+                            write_experiment_progress(progress_path, {
+                                "status": "running", "signature": checkpoint["signature"],
+                                "completed": len(completed), "total": total_calls,
+                                "fraction": round(len(completed) / max(1, total_calls), 6),
+                                "current_task_id": task["id"], "current_model": model_name,
+                                "current_repeat": repeat_index, "resumed_at_start": completed_before_start,
+                                "updated_at": time.time(),
+                            })
                     runs.append(run_result)
                     raw_model_runs.append({
+                        "resumed_from_checkpoint": resumed,
                         "task_id": task["id"],
                         "task_type": task["type"],
                         "query": task["query"],
@@ -3569,6 +3758,14 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                         "quality": (run_result.get("metrics") or {}).get("quality"),
                         "quality_source": run_result.get("quality_source"),
                         "judge_model": run_result.get("judge_model"),
+                        "reviewer_model": run_result.get("reviewer_model"),
+                        "judge_scores": run_result.get("judge_scores", []),
+                        "judge_attempts": run_result.get("judge_attempts", []),
+                        "judge_cost_usd": run_result.get("judge_cost_usd", 0.0),
+                        "total_cost_with_judges_usd": round(float(run_result.get("raw_cost_usd") or 0.0) + float(run_result.get("judge_cost_usd") or 0.0), 8),
+                        "objective_score": run_result.get("objective_score"),
+                        "judge_disagreement": run_result.get("judge_disagreement", 0.0),
+                        "manual_review_required": run_result.get("manual_review_required", False),
                         "judge_reason": run_result.get("judge_reason"),
                         "judge_dimensions": run_result.get("judge_dimensions", {}),
                         "prompt_tokens": (run_result.get("usage") or {}).get("prompt_tokens"),
@@ -3578,6 +3775,10 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                         "latency_ms": run_result.get("latency_ms"),
                         "error": run_result.get("error"),
                         "response": run_result.get("response", ""),
+                        "prompt_audit": run_result.get("prompt_audit", {}),
+                        "api_availability": (run_result.get("metrics") or {}).get("api_availability"),
+                        "answer_correctness": (run_result.get("metrics") or {}).get("answer_correctness"),
+                        "objective_feasible": (run_result.get("metrics") or {}).get("objective_feasible"),
                     })
                 real_results[(task["id"], model_name)] = aggregate_repeated_runs(model_name, task, runs)
 
@@ -3804,6 +4005,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                 "note": f"已真实调用 {len(models)} 个模型 × {len(selected_tasks)} 个任务 × {safe_repeats} 次重复；质量优先由 LLM 裁判评分，失败时使用规则评分。",
             },
             "weights": experiment_weights,
+            "scoring": experiment_scoring,
             "finance_dataset": finance_dataset_summary(),
             "task_set": experiment_tasks,
             "sampled_task_set": selected_tasks,
@@ -3829,13 +4031,35 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                 best,
                 real_call_count=len(models) * len(selected_tasks) * safe_repeats,
             ),
-            "score_source": "真实抽样评分：同题多模型多轮真实回答 + LLM 裁判/规则回退质量分 + 真实耗时 + token/价格成本 + 多轮成功率。",
+            "score_source": "真实抽样评分：标准答案客观评分 + 双独立LLM裁判 + 真实耗时 + token/价格成本 + 多轮成功率。",
             "updated_at": time.time(),
+            "experiment_phase": (
+                phase if len(completed) == total_calls else f"{phase}_incomplete_retryable"
+            ),
+            "exclude_from_final_analysis": bool(development_only or phase != "formal_context_v2" or len(completed) != total_calls),
+            "prompt_protocol": checkpoint["payload"],
+            "checkpoint": {
+                "enabled": not development_only, "signature": checkpoint["signature"],
+                "path": str(checkpoint_path.relative_to(Path.cwd())),
+                "progress_path": str(progress_path.relative_to(Path.cwd())),
+                "completed": len(completed), "total": total_calls,
+                "resumed_at_start": completed_before_start,
+            },
         }
+        if not development_only:
+            is_complete = len(completed) == total_calls
+            write_experiment_progress(progress_path, {
+                "status": "completed" if is_complete else "incomplete_retryable",
+                "signature": checkpoint["signature"],
+                "completed": len(completed), "total": total_calls,
+                "fraction": round(len(completed) / max(1, total_calls), 6),
+                "resumed_at_start": completed_before_start, "updated_at": time.time(),
+            })
         payload["routerbench"] = build_routerbench(payload)
         experiment_state["last_run"] = payload
         experiment_state["runs"] = int(experiment_state["runs"]) + 1
-        persist_experiment_run(payload, legacy_real=True)
+        if not development_only and phase == "formal_context_v2":
+            persist_experiment_run(payload, legacy_real=True)
         append_request_log({
             "type": "experiment",
             "status": "success",
@@ -3863,6 +4087,9 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             f"- Router training JSONL: {payload.get('finance_dataset', {}).get('training_jsonl', '-')}",
             "",
             f"- 分数来源：{payload.get('score_source', '-')}",
+            f"- 评分公式：{payload.get('scoring', {}).get('formula', '-')}",
+            f"- 风险加权：{payload.get('scoring', {}).get('overall_formula', '-')}",
+            f"- 归一化：{payload.get('scoring', {}).get('cost_normalization', '-')}；{payload.get('scoring', {}).get('latency_normalization', '-')}",
             "",
             "## 权重设置",
             "",
@@ -4287,6 +4514,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             "runs": int(experiment_state["runs"]),
             "task_set": experiment_tasks,
             "weights": experiment_weights,
+            "scoring": experiment_scoring,
             "finance_dataset": finance_dataset_summary(),
             "project_basis": {
                 "title": "基于模型路由的大模型协同调度优化方法研究",
@@ -4425,11 +4653,23 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
 
     @app.post("/api/experiments/run")
     async def run_experiment(request: ExperimentRunRequest = ExperimentRunRequest()):
+        if request.mode == "pilot":
+            return await run_real_sample_experiment(
+                min(request.sample_limit, 10), repeats=1,
+                judge_enabled=request.judge_enabled, development_only=True,
+                phase="development_pilot_v2",
+            )
+        if request.mode == "context_pilot":
+            return await run_real_sample_experiment(
+                12, repeats=1, judge_enabled=request.judge_enabled,
+                development_only=False, phase="context_fix_validation_v2",
+                selection_mode="context_pilot_3_per_dataset",
+            )
         if request.mode == "real":
             return await run_real_sample_experiment(
-                request.sample_limit,
-                repeats=request.repeats,
-                judge_enabled=request.judge_enabled,
+                request.sample_limit, repeats=request.repeats,
+                judge_enabled=request.judge_enabled, development_only=False,
+                phase="formal_context_v2",
             )
         return await run_route_only_experiment()
 
@@ -4481,29 +4721,55 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         negative = rating in {"down", "dislike", "negative", "bad", "0", "👎"}
         if not positive and not negative:
             raise HTTPException(status_code=400, detail="rating 必须是 up/down。")
+        normalized_rating = "up" if positive else "down"
+        event = None
+        if request.request_id:
+            try:
+                event = experience_store.apply_feedback(
+                    request.request_id, rating=normalized_rating, reason=request.reason,
+                    corrected_answer=request.corrected_answer,
+                    preferred_model=request.preferred_model, feedback_text=request.feedback_text,
+                )
+            except KeyError:
+                raise HTTPException(status_code=404, detail="未找到对应 request_id，反馈未写入经验库。")
         feedback = record_contextual_bandit_feedback(
             request.query,
             request.model,
             success=positive,
-            latency_ms=float(request.latency_ms or 0.0),
-            fallback_count=int(request.fallback_count or (1 if negative else 0)),
+            latency_ms=float(request.latency_ms or (event or {}).get("latency_ms") or 0.0),
+            fallback_count=int(request.fallback_count or (event or {}).get("fallback_count") or (1 if negative else 0)),
+            automatic_quality=(event or {}).get("quality_score"),
+            user_feedback=(event or {}).get("user_feedback_score"),
+            cost_reward=(event or {}).get("cost_reward"),
+            latency_reward=(event or {}).get("latency_reward"),
+            reliability=(event or {}).get("reliability"),
+            constraint_violation=bool((event or {}).get("constraint_violation")),
         )
         append_request_log({
-            "type": "feedback",
-            "status": "success",
-            "query": request.query[:300],
-            "selected_model": request.model,
+            "type": "feedback", "status": "success", "request_id": request.request_id,
+            "query": request.query[:300], "selected_model": request.model,
             "strategy": request.strategy or config.router.strategy,
-            "rating": "up" if positive else "down",
-            "reason": request.reason,
+            "rating": normalized_rating, "reason": request.reason,
+            "verification_status": (event or {}).get("verification_status"),
+            "routing_correct": (event or {}).get("routing_correct"),
             "bandit_feedback": feedback,
         })
         return {
-            "ok": True,
-            "rating": "up" if positive else "down",
-            "feedback": feedback,
-            "message": "反馈已写入在线 Bandit 状态。",
+            "ok": True, "rating": normalized_rating, "feedback": feedback,
+            "experience": event,
+            "message": "反馈已同步写入路由经验库与在线 Bandit 状态。",
         }
+
+    @app.get("/api/experience/metrics")
+    async def experience_metrics():
+        return experience_store.metrics()
+
+    @app.get("/api/experience/{request_id}")
+    async def experience_detail(request_id: str):
+        event = experience_store.get(request_id)
+        if not event:
+            raise HTTPException(status_code=404, detail="未找到路由经验事件。")
+        return event
 
     @app.post("/api/chat/compare")
     async def ab_compare(request: ABCompareRequest):
@@ -4527,6 +4793,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             available_models=available,
         )
         routing_overhead_ms = round((time.perf_counter() - routing_started_at) * 1000, 3)
+        routing = apply_verified_experience(routing, query, available, request.user)
         selected = routing["selected_model"]
         cheapest = min(available, key=lambda name: (model_profile(name)["cost"], model_profile(name)["latency"]))
         strongest = max(available, key=lambda name: (model_profile(name)["quality"], model_profile(name)["reliability"]))
@@ -4593,6 +4860,40 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                     "metrics": {"quality": 0.0, "cost": 1.0, "latency": 1.0, "reliability": 0.0},
                     "error": str(getattr(error, "detail", error))[:500],
                 })
+        successful_results = [item for item in results if item.get("ok")]
+        counterfactual_event = None
+        if successful_results:
+            observed_utilities = {}
+            for item in successful_results:
+                metrics_item = item["metrics"]
+                observed_utilities[item["model"]] = round(experience_utility_score(
+                    quality=float(metrics_item["quality"]),
+                    cost_reward=1.0 - float(metrics_item["cost"]),
+                    latency_reward=1.0 - float(metrics_item["latency"]),
+                    reliability=float(metrics_item["reliability"]),
+                ), 4)
+            selected_result = next((item for item in successful_results if item["model"] == selected), successful_results[0])
+            selected = selected_result["model"]
+            selected_metrics = selected_result["metrics"]
+            observed_regret = max(observed_utilities.values()) - observed_utilities[selected]
+            counterfactual_event = experience_store.create(
+                user_id=request.user, query=query, task_type=task["type"], risk_level="low",
+                candidate_models=compare_models, candidate_scores=routing.get("candidate_scores", {}),
+                observed_utilities=observed_utilities, selected_model=selected,
+                answer=selected_result.get("answer", ""), quality_score=selected_result.get("quality_proxy", 0.0),
+                objective_score=None, judge_scores=[], automatic_evaluation="ab_observed_quality_proxy",
+                latency_ms=selected_result.get("latency_ms", 0.0), cost_usd=selected_result.get("raw_cost_usd", 0.0),
+                cost_reward=1.0 - float(selected_metrics["cost"]),
+                latency_reward=1.0 - float(selected_metrics["latency"]), reliability=float(selected_metrics["reliability"]),
+                utility=observed_utilities[selected], api_success=True, fallback_count=0,
+                constraint_violation=False, estimated_regret=round(observed_regret, 4),
+                regret_type="observed_counterfactual", regret_epsilon=0.10, quality_threshold=0.60,
+                strategy=routing.get("strategy"), routing_reason=routing.get("reason"),
+                config_version=routing_config_version(),
+            )
+            routing["request_id"] = counterfactual_event["request_id"]
+            routing["estimated_regret"] = round(observed_regret, 4)
+            routing["regret_type"] = "observed_counterfactual"
         append_request_log({
             "type": "ab_compare",
             "status": "success",
@@ -4736,6 +5037,10 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             }
             router_overhead_ms = 0.0
             print(f"[Specified] Query: '{user_query}' -> {selected_model}")
+
+        if request.model == "auto" or request.model not in available_models:
+            routing = apply_verified_experience(routing, user_query, route_candidates, request.user)
+            selected_model = routing["selected_model"]
 
         # Handle streaming
         if request.stream:
@@ -4929,9 +5234,22 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                     latency_ms=elapsed_ms,
                     fallback_count=len(fallback_events),
                 )
+                failed_event = experience_store.create(
+                    user_id=request.user, query=user_query, task_type="unknown", risk_level="unknown",
+                    candidate_models=candidates, candidate_scores=routing.get("candidate_scores", {}),
+                    selected_model=selected_model, answer="", quality_score=0.0,
+                    latency_ms=elapsed_ms, cost_usd=0.0, cost_reward=0.0,
+                    latency_reward=max(0.0, 1.0 - elapsed_ms / 10000.0), reliability=0.0,
+                    api_success=False, fallback_count=len(fallback_events),
+                    constraint_violation=False, estimated_regret=1.0, regret_epsilon=0.10,
+                    quality_threshold=0.60, strategy=routing.get("strategy"),
+                    routing_reason=routing.get("reason"), verification_status="verified_negative",
+                    routing_correct=False, error=str(getattr(last_error, "detail", last_error))[:500],
+                )
                 append_request_log({
                     "type": "chat",
                     "status": "failed",
+                    "request_id": failed_event["request_id"],
                     "query": user_query,
                     "strategy": routing.get("strategy"),
                     "algorithm": routing.get("algorithm"),
@@ -4969,8 +5287,68 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
             metrics["successes"] += 1
             metrics["total_latency_ms"] += elapsed_ms
             metrics["model_usage"][selected_model] += 1
+            answer_text = extract_response_text(result)
+            answer_usage = extract_usage(result, user_query, answer_text)
+            answer_cost = raw_cost_usd(selected_model, answer_usage)
+            quality_task = {
+                "query": user_query, "type": "专业问答" if any(token in user_query for token in ("金融", "审计", "合规", "财务")) else "通用问答",
+                "risk": 0.86 if any(token in user_query for token in ("审计", "合规", "投资", "监管")) else 0.40,
+                "requires_verification": any(token in user_query for token in ("金融", "审计", "合规", "计算")),
+            }
+            heuristic_score = heuristic_quality(quality_task, answer_text, True)
+            quality_evaluation = await judge_response_quality(
+                quality_task, answer_text, selected_model, heuristic_score,
+                judge_enabled=bool(request.verify_response or quality_task["risk"] >= 0.75),
+            )
+            automatic_quality = float(quality_evaluation.get("score") or heuristic_score)
+            cost_reward = 1.0 - min(1.0, float(answer_cost or 0.0) / 0.02)
+            latency_reward = 1.0 - min(1.0, elapsed_ms / 10000.0)
+            candidate_scores = {key: float(value) for key, value in (routing.get("candidate_scores") or {}).items()}
+            selected_estimate = candidate_scores.get(selected_model, 0.0)
+            estimated_regret = max(0.0, (max(candidate_scores.values()) if candidate_scores else selected_estimate) - selected_estimate)
+            constraint_violation = bool((routing.get("constraints") or {}).get("relaxed"))
+            automatic_state = automatic_verification(
+                api_success=True, quality_score=automatic_quality,
+                quality_threshold=0.75 if quality_task["risk"] >= 0.75 else 0.60,
+                risk_level="high" if quality_task["risk"] >= 0.75 else "medium" if quality_task["risk"] >= 0.45 else "low",
+                objective_score=quality_evaluation.get("objective_score"),
+                constraint_violation=constraint_violation,
+                estimated_regret=estimated_regret, regret_epsilon=0.10,
+                manual_review_required=bool(quality_evaluation.get("manual_review_required")),
+                cost_reward=cost_reward, latency_reward=latency_reward, reliability=1.0,
+                fallback_count=len(fallback_events),
+            )
+            experience_event = experience_store.create(
+                user_id=request.user, query=user_query, task_type=quality_task["type"],
+                risk_level="high" if quality_task["risk"] >= 0.75 else "medium" if quality_task["risk"] >= 0.45 else "low",
+                candidate_models=route_candidates, candidate_scores=candidate_scores,
+                selected_model=selected_model, answer=answer_text,
+                quality_score=automatic_quality,
+                objective_score=quality_evaluation.get("objective_score"),
+                judge_scores=quality_evaluation.get("judge_scores", []),
+                judge_model=quality_evaluation.get("judge_model"), reviewer_model=quality_evaluation.get("reviewer_model"),
+                judge_disagreement=quality_evaluation.get("disagreement", 0.0),
+                judge_reason=quality_evaluation.get("reason"),
+                verification_status=automatic_state["verification_status"],
+                routing_correct=automatic_state["routing_correct"], reward=automatic_state["reward"],
+                automatic_evaluation=quality_evaluation.get("source", "heuristic"),
+                latency_ms=elapsed_ms, cost_usd=answer_cost,
+                cost_reward=round(cost_reward, 4), latency_reward=round(latency_reward, 4), reliability=1.0,
+                utility=round(experience_utility_score(quality=automatic_quality, cost_reward=cost_reward, latency_reward=latency_reward, reliability=1.0), 4),
+                api_success=True, fallback_count=len(fallback_events), constraint_violation=constraint_violation,
+                estimated_regret=round(estimated_regret, 4), regret_epsilon=0.10,
+                quality_threshold=0.75 if quality_task["risk"] >= 0.75 else 0.60,
+                strategy=routing.get("strategy"), routing_reason=routing.get("reason"),
+                config_version=routing_config_version(),
+            )
             routing_payload = {
                 **routing,
+                "request_id": experience_event["request_id"],
+                "verification_status": experience_event["verification_status"],
+                "automatic_quality": automatic_quality,
+                "quality_source": quality_evaluation.get("source"),
+                "judge_disagreement": quality_evaluation.get("disagreement", 0.0),
+                "estimated_regret": round(estimated_regret, 4),
                 "selected_model": selected_model,
                 "initial_model": routing.get("selected_model"),
                 "attempted_models": attempted_models,

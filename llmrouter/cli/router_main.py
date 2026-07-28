@@ -9,6 +9,9 @@ import argparse
 import sys
 from typing import List, Optional
 
+from dotenv import load_dotenv
+load_dotenv()
+
 
 def print_banner():
     """Print LLMRouter banner."""
