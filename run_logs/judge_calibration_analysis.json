@@ -1,72 +1,73 @@
 {
-  "phase": "interim_development_only",
+  "phase": "final_post_run_analysis",
   "snapshot_successes": 1200,
+  "experiment_status": "completed",
   "threshold_sensitivity": [
     {
       "threshold": 0.1,
-      "review_count": 592,
-      "review_rate": 0.4933
+      "review_count": 588,
+      "review_rate": 0.49
     },
     {
       "threshold": 0.15,
-      "review_count": 504,
-      "review_rate": 0.42
+      "review_count": 501,
+      "review_rate": 0.4175
     },
     {
       "threshold": 0.2,
-      "review_count": 433,
-      "review_rate": 0.3608
+      "review_count": 425,
+      "review_rate": 0.3542
     },
     {
       "threshold": 0.25,
-      "review_count": 384,
-      "review_rate": 0.32
+      "review_count": 375,
+      "review_rate": 0.3125
     },
     {
       "threshold": 0.3,
-      "review_count": 364,
-      "review_rate": 0.3033
+      "review_count": 355,
+      "review_rate": 0.2958
     },
     {
       "threshold": 0.35,
-      "review_count": 342,
-      "review_rate": 0.285
+      "review_count": 333,
+      "review_rate": 0.2775
     },
     {
       "threshold": 0.4,
-      "review_count": 318,
-      "review_rate": 0.265
+      "review_count": 307,
+      "review_rate": 0.2558
     },
     {
       "threshold": 0.45,
-      "review_count": 263,
-      "review_rate": 0.2192
+      "review_count": 249,
+      "review_rate": 0.2075
     },
     {
       "threshold": 0.5,
-      "review_count": 253,
-      "review_rate": 0.2108
+      "review_count": 239,
+      "review_rate": 0.1992
     }
   ],
   "by_candidate_model": {
     "deepseek-chat": {
       "n": 300,
       "thresholds": {
-        "0.15": 0.34,
-        "0.20": 0.3033,
-        "0.25": 0.26,
-        "0.30": 0.2467,
-        "0.35": 0.2367
+        "0.15": 0.35,
+        "0.20": 0.31,
+        "0.25": 0.2667,
+        "0.30": 0.2533,
+        "0.35": 0.2433
       }
     },
     "qwen-plus": {
       "n": 300,
       "thresholds": {
-        "0.15": 0.3967,
-        "0.20": 0.3633,
-        "0.25": 0.3167,
-        "0.30": 0.3,
-        "0.35": 0.2933
+        "0.15": 0.3867,
+        "0.20": 0.3533,
+        "0.25": 0.3033,
+        "0.30": 0.2867,
+        "0.35": 0.28
       }
     },
     "qwen-turbo": {
@@ -82,11 +83,11 @@
     "glm-5.2": {
       "n": 300,
       "thresholds": {
-        "0.15": 0.5133,
-        "0.20": 0.42,
-        "0.25": 0.4,
-        "0.30": 0.3867,
-        "0.35": 0.3667
+        "0.15": 0.5033,
+        "0.20": 0.3967,
+        "0.25": 0.3767,
+        "0.30": 0.3633,
+        "0.35": 0.3433
       }
     }
   },
@@ -163,84 +164,84 @@
   },
   "objective_calibration": {
     "n": 1188,
-    "pearson": 0.5833,
-    "mae": 0.1933,
-    "judge_minus_objective_bias": 0.0687,
+    "pearson": 0.5972,
+    "mae": 0.185,
+    "judge_minus_objective_bias": 0.0569,
     "by_objective_bucket": {
       "zero": {
-        "n": 150,
-        "mean_judge": 0.5434
+        "n": 136,
+        "mean_judge": 0.5119
       },
       "partial": {
         "n": 167,
         "mean_judge": 0.6928
       },
       "one": {
-        "n": 871,
-        "mean_judge": 0.9183
+        "n": 885,
+        "mean_judge": 0.9172
       }
     }
   },
   "quality_mix_sensitivity": {
     "0.5": {
       "ranking": [
+        "glm-5.2",
         "deepseek-chat",
         "qwen-plus",
-        "glm-5.2",
         "qwen-turbo"
       ],
       "means": {
-        "deepseek-chat": 0.8292,
-        "qwen-plus": 0.814,
+        "deepseek-chat": 0.8275,
+        "qwen-plus": 0.8224,
         "qwen-turbo": 0.766,
-        "glm-5.2": 0.8106
+        "glm-5.2": 0.8275
       }
     },
     "0.6": {
       "ranking": [
-        "deepseek-chat",
         "glm-5.2",
+        "deepseek-chat",
         "qwen-plus",
         "qwen-turbo"
       ],
       "means": {
-        "deepseek-chat": 0.8218,
-        "qwen-plus": 0.8029,
+        "deepseek-chat": 0.8198,
+        "qwen-plus": 0.813,
         "qwen-turbo": 0.7593,
-        "glm-5.2": 0.8084
+        "glm-5.2": 0.8286
       }
     },
     "0.7": {
       "ranking": [
-        "deepseek-chat",
         "glm-5.2",
+        "deepseek-chat",
         "qwen-plus",
         "qwen-turbo"
       ],
       "means": {
-        "deepseek-chat": 0.8145,
-        "qwen-plus": 0.7918,
+        "deepseek-chat": 0.8122,
+        "qwen-plus": 0.8035,
         "qwen-turbo": 0.7525,
-        "glm-5.2": 0.8061
+        "glm-5.2": 0.8296
       }
     },
     "0.8": {
       "ranking": [
-        "deepseek-chat",
         "glm-5.2",
+        "deepseek-chat",
         "qwen-plus",
         "qwen-turbo"
       ],
       "means": {
-        "deepseek-chat": 0.8072,
-        "qwen-plus": 0.7806,
+        "deepseek-chat": 0.8045,
+        "qwen-plus": 0.7941,
         "qwen-turbo": 0.7458,
-        "glm-5.2": 0.8038
+        "glm-5.2": 0.8307
       }
     }
   },
   "quality_mix_rank_changes_vs_0.6": {
-    "0.5": 2,
+    "0.5": 0,
     "0.6": 0,
     "0.7": 0,
     "0.8": 0

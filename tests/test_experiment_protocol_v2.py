@@ -71,3 +71,19 @@ def test_finqa_yes_no_text_fallback():
     yesno=task(gold_answer="no")
     assert objective_score(yesno,"50.50 is less than 90.50. 最终答案：否") == 1.0
     assert objective_score(yesno,"最终答案：yes") == 0.0
+
+
+def test_numeric_scoring_ignores_late_template_placeholder():
+    item=task(gold_answer="0.34")
+    response="最终答案：34.0%\nanalysis mentions format 最终答案：<数值><单位>"
+    assert objective_score(item,response)==1.0
+
+def test_numeric_scoring_falls_back_to_full_text_when_only_placeholder_exists():
+    item=task("financial_table_text_reasoning",dataset="TAT-QA",gold_answer="2019, 2018, 2017")
+    response="The table shows 2019, 2018 and 2017. 最终答案：<数值><单位>"
+    assert objective_score(item,response)==1.0
+
+def test_numeric_scoring_uses_later_real_answer_after_placeholder():
+    item=task("financial_table_text_reasoning",dataset="TAT-QA",gold_answer="234 thousand")
+    response="最终答案：<数值><单位> discussion\n最终答案：234000 dollars"
+    assert objective_score(item,response)==1.0

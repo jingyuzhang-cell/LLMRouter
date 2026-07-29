@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
 from openclaw_router.checkpoint import load_successful
-PROGRESS=ROOT/'run_logs/llmrouter_experiment_progress_v2.json';CHECKPOINT=ROOT/'run_logs/llmrouter_experiment_checkpoint_v2.jsonl';DATA=ROOT/'data/finance_router/frozen/v1/finance_benchmark_v1.jsonl';OUT=ROOT/'run_logs/judge_calibration_analysis.json';OUT_MD=ROOT/'run_logs/judge_calibration_analysis.md'
+PROGRESS=ROOT/'run_logs/llmrouter_experiment_progress_v2.json';CHECKPOINT=ROOT/'run_logs/llmrouter_experiment_checkpoint_v2.jsonl';DATA=ROOT/'data/finance_router/frozen/v1/finance_benchmark_v1.jsonl';RESCORED=ROOT/'run_logs/formal_context_v2_rescored_v22_result.json';OUT=ROOT/'run_logs/judge_calibration_analysis.json';OUT_MD=ROOT/'run_logs/judge_calibration_analysis.md'
 MODELS=['deepseek-chat','qwen-plus','qwen-turbo','glm-5.2']
 def pearson(xs,ys):
  if len(xs)<3:return None
@@ -23,6 +23,9 @@ def ranks(values):
  return out
 def main():
  progress=json.loads(PROGRESS.read_text());completed=load_successful(CHECKPOINT,progress['signature']);tasks={r['id']:r for r in (json.loads(x) for x in DATA.read_text().splitlines() if x.strip())}
+ rescored={(str(r['task_id']),str(r['model']),int(r['repeat'])):r for r in json.loads(RESCORED.read_text()).get('raw_model_runs',[])} if RESCORED.exists() else {}
+ is_final=progress.get('status')=='completed' and progress.get('completed')==progress.get('total')==len(completed)
+ phase='final_post_run_analysis' if is_final else 'interim_development_only';snapshot_label='final completed snapshot' if is_final else 'interim snapshot'
  rows=[];judge_values=defaultdict(list);pair_values=defaultdict(list);attempts=defaultdict(lambda:Counter());fallback_responses=0
  for (tid,candidate,repeat),r in completed.items():
   scores={str(x['model']):float(x['score']) for x in (r.get('judge_scores') or []) if x.get('model') is not None and x.get('score') is not None}
@@ -34,7 +37,8 @@ def main():
   for i,a in enumerate(ats):
    m=str(a.get('model') or 'unknown');attempts[m]['attempts']+=1;attempts[m]['parsed']+=bool(a.get('ok'));attempts[m]['fallback_position']+=i>=2;attempts[m]['failed']+=not bool(a.get('ok'));attempts[m]['cost_microusd']+=round(float(a.get('cost_usd') or 0)*1_000_000)
   raw=tasks.get(tid.removeprefix('finance_dataset_'),{})
-  rows.append({'task_id':tid,'candidate':candidate,'dataset':raw.get('dataset','unknown'),'objective':r.get('objective_score'),'judge_mean':statistics.mean(scores.values()) if scores else None,'disagreement':float(r.get('judge_disagreement') or 0),'scores':scores})
+  scored=rescored.get((str(tid),str(candidate),int(repeat)),r)
+  rows.append({'task_id':tid,'candidate':candidate,'dataset':raw.get('dataset','unknown'),'objective':scored.get('objective_score'),'judge_mean':statistics.mean(scores.values()) if scores else None,'disagreement':float(scored.get('judge_disagreement') or 0),'scores':scores})
  thresholds=[]
  for t in [x/100 for x in range(10,51,5)]:
   count=sum(x['disagreement']>=t-1e-12 for x in rows);thresholds.append({'threshold':t,'review_count':count,'review_rate':round(count/max(1,len(rows)),4)})
@@ -58,9 +62,9 @@ def main():
  attempt_summary={m:{'attempts':c['attempts'],'parsed':c['parsed'],'parse_rate':round(c['parsed']/max(1,c['attempts']),4),'failed':c['failed'],'fallback_position_attempts':c['fallback_position'],'recorded_cost_usd':round(c['cost_microusd']/1_000_000,6)} for m,c in attempts.items()}
  glm=attempt_summary.get('glm-5.2',{});diagnosis={'responses_requiring_third_or_later_judge':fallback_responses,'fallback_response_rate':round(fallback_responses/max(1,len(rows)),4),'glm_parse_rate':glm.get('parse_rate'),'glm_failed_attempts':glm.get('failed'),'result_level_dual_coverage':round(sum(len(x['scores'])>=2 for x in rows)/max(1,len(rows)),4),'interpretation':'GLM judge outputs are unparseable, but fallback judges preserve result-level dual coverage. Do not claim GLM contributed valid judge scores.'}
  recommendation={'keep_current_formal_threshold':.20,'do_not_change_mid_run':True,'post_run_sensitivity_thresholds':[.20,.25,.30,.35],'recommended_calibration_actions':['store raw failed judge text after the frozen run','repair GLM reasoning/content JSON extraction','report result-level coverage separately from attempt parse rate','report sensitivity at thresholds 0.20/0.25/0.30/0.35','do not describe GLM as a successful judge in the current run']}
- report={'phase':'interim_development_only','snapshot_successes':len(rows),'threshold_sensitivity':thresholds,'by_candidate_model':by_candidate,'judge_score_bias':judge_summary,'judge_pair_bias':pair_summary,'objective_calibration':calibration,'quality_mix_sensitivity':mix,'quality_mix_rank_changes_vs_0.6':mix_changed,'attempts_by_judge':attempt_summary,'fallback_diagnosis':diagnosis,'recommendation':recommendation}
+ report={'phase':phase,'snapshot_successes':len(rows),'experiment_status':progress.get('status'),'threshold_sensitivity':thresholds,'by_candidate_model':by_candidate,'judge_score_bias':judge_summary,'judge_pair_bias':pair_summary,'objective_calibration':calibration,'quality_mix_sensitivity':mix,'quality_mix_rank_changes_vs_0.6':mix_changed,'attempts_by_judge':attempt_summary,'fallback_diagnosis':diagnosis,'recommendation':recommendation}
  OUT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
- lines=['# Judge Calibration Analysis','',f"Snapshot: {len(rows)} successful runs (interim only)",'','## Threshold sensitivity']+[f"- {x['threshold']:.2f}: {x['review_count']} ({x['review_rate']:.2%})" for x in thresholds]+['','## Judge parsing']+[f"- {m}: {x['parsed']}/{x['attempts']} ({x['parse_rate']:.2%})" for m,x in attempt_summary.items()]+['','## Objective calibration',f"- Pearson: {calibration['pearson']}",f"- MAE: {calibration['mae']}",f"- Judge minus objective bias: {calibration['judge_minus_objective_bias']}",'','## Recommendation']+[f"- {x}" for x in recommendation['recommended_calibration_actions']]
+ lines=['# Judge Calibration Analysis','',f"Snapshot: {len(rows)} successful runs ({snapshot_label})",'','## Threshold sensitivity']+[f"- {x['threshold']:.2f}: {x['review_count']} ({x['review_rate']:.2%})" for x in thresholds]+['','## Judge parsing']+[f"- {m}: {x['parsed']}/{x['attempts']} ({x['parse_rate']:.2%})" for m,x in attempt_summary.items()]+['','## Objective calibration',f"- Pearson: {calibration['pearson']}",f"- MAE: {calibration['mae']}",f"- Judge minus objective bias: {calibration['judge_minus_objective_bias']}",'','## Recommendation']+[f"- {x}" for x in recommendation['recommended_calibration_actions']]
  OUT_MD.write_text('\n'.join(lines)+'\n')
  print(json.dumps({'snapshot':len(rows),'thresholds':thresholds,'judge_bias':judge_summary,'pairs':pair_summary,'calibration':calibration,'mix_rank_changes':mix_changed,'fallback':diagnosis,'json':str(OUT),'markdown':str(OUT_MD)},ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

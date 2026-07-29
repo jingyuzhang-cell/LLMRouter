@@ -1,0 +1,2613 @@
+{
+  "report_type": "final_quality_audit",
+  "generated_at": "2026-07-29T07:24:52.687295+00:00",
+  "signature": "13ba763720ca0c4211d1e278bfc0f84e9c171d44d19217f221b490d0c4e2d6a5",
+  "source_result_sha256": "e82409ecf3e7cf4ced0d2825aa45a6d8b2154b5a6e1f601e91975f38441ffcde",
+  "raw_responses_included": false,
+  "api_audit": {
+    "failed_attempts": 1745,
+    "failed_unique_calls": 1131,
+    "recovered_unique_calls": 1131,
+    "retry_recovery_rate": 1.0,
+    "final_failed_calls": 0,
+    "error_types": {
+      "All connection attempts failed": 1740,
+      "Server disconnected without sending a response.": 3,
+      "unknown": 1,
+      "peer closed connection without sending complete message body (incomplete chunked read)": 1
+    },
+    "failed_attempts_by_model": {
+      "glm-5.2": 439,
+      "deepseek-chat": 434,
+      "qwen-plus": 437,
+      "qwen-turbo": 435
+    },
+    "failed_attempts_by_utc_hour": {
+      "2026-07-27T09:00Z": 1131,
+      "2026-07-27T12:00Z": 2,
+      "2026-07-27T13:00Z": 612
+    },
+    "attempts_per_call": {
+      "1": 69,
+      "2": 517,
+      "3": 614
+    },
+    "max_attempts_per_call": 3
+  },
+  "judge_audit": {
+    "attempts_by_judge": {
+      "deepseek-chat": {
+        "attempts": 900,
+        "parsed": 900,
+        "failed": 0,
+        "parse_rate": 1.0
+      },
+      "glm-5.2": {
+        "attempts": 601,
+        "parsed": 3,
+        "failed": 598,
+        "parse_rate": 0.004992
+      },
+      "qwen-plus": {
+        "attempts": 900,
+        "parsed": 894,
+        "failed": 6,
+        "parse_rate": 0.993333
+      },
+      "qwen-turbo": {
+        "attempts": 601,
+        "parsed": 601,
+        "failed": 0,
+        "parse_rate": 1.0
+      }
+    },
+    "glm_parse_summary": {
+      "parsed": 3,
+      "attempts": 601,
+      "parse_rate": 0.004992
+    },
+    "responses_requiring_fallback_judge": 602,
+    "fallback_response_rate": 0.501667,
+    "dual_valid_judge_results": 1198,
+    "dual_valid_judge_coverage": 0.998333,
+    "fallback_preserved_dual_coverage": true,
+    "objective_calibration": {
+      "n": 1188,
+      "pearson": 0.5972,
+      "mae": 0.185,
+      "judge_minus_objective_bias": 0.0569,
+      "by_objective_bucket": {
+        "zero": {
+          "n": 136,
+          "mean_judge": 0.5119
+        },
+        "partial": {
+          "n": 167,
+          "mean_judge": 0.6928
+        },
+        "one": {
+          "n": 885,
+          "mean_judge": 0.9172
+        }
+      }
+    },
+    "interpretation": "GLM judge parsing failed on nearly all attempts; fallback judges preserved final result-level dual coverage. GLM must not be described as a valid scoring contributor."
+  },
+  "score_anomaly_audit": {
+    "zero_quality_count": 136,
+    "full_quality_count": 300,
+    "judge_disagreement_ge_0_20_count": 425,
+    "manual_review_required_count": 402,
+    "zero_quality_examples": [
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 6328.13,
+        "raw_cost_usd": 0.00014019
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 19730.23,
+        "raw_cost_usd": 0.00021607
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 5795.27,
+        "raw_cost_usd": 0.00015643
+      },
+      {
+        "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 5645.23,
+        "raw_cost_usd": 0.001876
+      },
+      {
+        "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 6808.76,
+        "raw_cost_usd": 0.0018804
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "deepseek-chat",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 2307.14,
+        "raw_cost_usd": 0.00013188
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8599.83,
+        "raw_cost_usd": 0.00016731
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8213.16,
+        "raw_cost_usd": 0.00016955
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "deepseek-chat",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1688.1,
+        "raw_cost_usd": 0.00030142
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 10361.46,
+        "raw_cost_usd": 0.00023948
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 7893.52,
+        "raw_cost_usd": 0.0002462
+      },
+      {
+        "task_id": "finance_dataset_finqa_005031",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8805.06,
+        "raw_cost_usd": 0.00024896
+      },
+      {
+        "task_id": "finance_dataset_finqa_005333",
+        "model": "qwen-turbo",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1937.11,
+        "raw_cost_usd": 1.299e-05
+      },
+      {
+        "task_id": "finance_dataset_27e7cd2f-377f-482d-b504-cb21d6c18229",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.96,
+        "manual_review_required": true,
+        "latency_ms": 5151.57,
+        "raw_cost_usd": 0.0003619
+      },
+      {
+        "task_id": "finance_dataset_48c3b9b7-0d9f-4919-9b6e-1659e72cb7f8",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.95,
+        "manual_review_required": true,
+        "latency_ms": 9019.73,
+        "raw_cost_usd": 0.00028977
+      },
+      {
+        "task_id": "finance_dataset_48c3b9b7-0d9f-4919-9b6e-1659e72cb7f8",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.95,
+        "manual_review_required": true,
+        "latency_ms": 8802.66,
+        "raw_cost_usd": 0.00028977
+      },
+      {
+        "task_id": "finance_dataset_48c3b9b7-0d9f-4919-9b6e-1659e72cb7f8",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.95,
+        "manual_review_required": true,
+        "latency_ms": 9126.06,
+        "raw_cost_usd": 0.00028977
+      },
+      {
+        "task_id": "finance_dataset_7bdf70f2-45b5-485b-b3b3-c967f28f38f1",
+        "model": "qwen-turbo",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.95,
+        "manual_review_required": true,
+        "latency_ms": 1667.79,
+        "raw_cost_usd": 8.49e-06
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.95,
+        "manual_review_required": true,
+        "latency_ms": 2424.15,
+        "raw_cost_usd": 0.00013398
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "deepseek-chat",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.95,
+        "manual_review_required": true,
+        "latency_ms": 2243.92,
+        "raw_cost_usd": 0.000126
+      }
+    ],
+    "full_quality_examples": [
+      {
+        "task_id": "finance_dataset_09d6e968-1144-42ba-8791-acfe13e826c3",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 8064.46,
+        "raw_cost_usd": 0.00019947
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 2261.28,
+        "raw_cost_usd": 0.00019026
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "deepseek-chat",
+        "repeat": 3,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 2526.21,
+        "raw_cost_usd": 0.00019026
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-turbo",
+        "repeat": 1,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 2019.93,
+        "raw_cost_usd": 7.4e-06
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-turbo",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 1367.84,
+        "raw_cost_usd": 7.4e-06
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-turbo",
+        "repeat": 3,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 1509.04,
+        "raw_cost_usd": 7.4e-06
+      },
+      {
+        "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 10356.41,
+        "raw_cost_usd": 0.00016366
+      },
+      {
+        "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 8540.97,
+        "raw_cost_usd": 0.00018186
+      },
+      {
+        "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+        "model": "qwen-turbo",
+        "repeat": 1,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 1190.26,
+        "raw_cost_usd": 4.79e-06
+      },
+      {
+        "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+        "model": "qwen-turbo",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 1195.75,
+        "raw_cost_usd": 4.79e-06
+      },
+      {
+        "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+        "model": "qwen-turbo",
+        "repeat": 3,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 1081.67,
+        "raw_cost_usd": 4.79e-06
+      },
+      {
+        "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 6103.08,
+        "raw_cost_usd": 0.00012289
+      },
+      {
+        "task_id": "finance_dataset_4852e5e7-b26e-4a7d-a0a0-13ad9309d1c8",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 1714.14,
+        "raw_cost_usd": 0.00021084
+      },
+      {
+        "task_id": "finance_dataset_4852e5e7-b26e-4a7d-a0a0-13ad9309d1c8",
+        "model": "deepseek-chat",
+        "repeat": 3,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 1910.45,
+        "raw_cost_usd": 0.00021126
+      },
+      {
+        "task_id": "finance_dataset_48c3b9b7-0d9f-4919-9b6e-1659e72cb7f8",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 3165.5,
+        "raw_cost_usd": 0.0004004
+      },
+      {
+        "task_id": "finance_dataset_4c3d448a-90c1-4d71-b661-a950a041399e",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 3445.36,
+        "raw_cost_usd": 0.00010186
+      },
+      {
+        "task_id": "finance_dataset_65c9dfde-cdb7-4f8f-b906-facb6d4401b3",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 2200.18,
+        "raw_cost_usd": 0.0002968
+      },
+      {
+        "task_id": "finance_dataset_65c9dfde-cdb7-4f8f-b906-facb6d4401b3",
+        "model": "qwen-turbo",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 1924.57,
+        "raw_cost_usd": 1.094e-05
+      },
+      {
+        "task_id": "finance_dataset_716dff82-ebc4-46b9-89f5-4f7f49c92548",
+        "model": "deepseek-chat",
+        "repeat": 1,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 2537.43,
+        "raw_cost_usd": 0.00015778
+      },
+      {
+        "task_id": "finance_dataset_716dff82-ebc4-46b9-89f5-4f7f49c92548",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 2576.29,
+        "raw_cost_usd": 0.00015778
+      }
+    ],
+    "highest_disagreement_examples": [
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 6328.13,
+        "raw_cost_usd": 0.00014019
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 19730.23,
+        "raw_cost_usd": 0.00021607
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 5795.27,
+        "raw_cost_usd": 0.00015643
+      },
+      {
+        "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 5645.23,
+        "raw_cost_usd": 0.001876
+      },
+      {
+        "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 6808.76,
+        "raw_cost_usd": 0.0018804
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "deepseek-chat",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 2307.14,
+        "raw_cost_usd": 0.00013188
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8599.83,
+        "raw_cost_usd": 0.00016731
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8213.16,
+        "raw_cost_usd": 0.00016955
+      },
+      {
+        "task_id": "finance_dataset_finqa_001348",
+        "model": "qwen-turbo",
+        "repeat": 1,
+        "quality": 0.85,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1914.2,
+        "raw_cost_usd": 1.093e-05
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "deepseek-chat",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1688.1,
+        "raw_cost_usd": 0.00030142
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 10361.46,
+        "raw_cost_usd": 0.00023948
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 7893.52,
+        "raw_cost_usd": 0.0002462
+      },
+      {
+        "task_id": "finance_dataset_finqa_003913",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.73,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 9139.45,
+        "raw_cost_usd": 0.00024918
+      },
+      {
+        "task_id": "finance_dataset_finqa_004096",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 0.76,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1791.6,
+        "raw_cost_usd": 0.00038388
+      },
+      {
+        "task_id": "finance_dataset_finqa_004096",
+        "model": "deepseek-chat",
+        "repeat": 3,
+        "quality": 0.76,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 2485.8,
+        "raw_cost_usd": 0.00038934
+      },
+      {
+        "task_id": "finance_dataset_finqa_005031",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8805.06,
+        "raw_cost_usd": 0.00024896
+      },
+      {
+        "task_id": "finance_dataset_finqa_005051",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 0.79,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 4600.99,
+        "raw_cost_usd": 0.00016006
+      },
+      {
+        "task_id": "finance_dataset_finqa_005051",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.842,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 4585.39,
+        "raw_cost_usd": 0.0016314
+      },
+      {
+        "task_id": "finance_dataset_finqa_005333",
+        "model": "qwen-turbo",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1937.11,
+        "raw_cost_usd": 1.299e-05
+      },
+      {
+        "task_id": "finance_dataset_27e7cd2f-377f-482d-b504-cb21d6c18229",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.96,
+        "manual_review_required": true,
+        "latency_ms": 5151.57,
+        "raw_cost_usd": 0.0003619
+      }
+    ],
+    "manual_review_examples": [
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 6328.13,
+        "raw_cost_usd": 0.00014019
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 19730.23,
+        "raw_cost_usd": 0.00021607
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 5795.27,
+        "raw_cost_usd": 0.00015643
+      },
+      {
+        "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 5645.23,
+        "raw_cost_usd": 0.001876
+      },
+      {
+        "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 6808.76,
+        "raw_cost_usd": 0.0018804
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "deepseek-chat",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 2307.14,
+        "raw_cost_usd": 0.00013188
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8599.83,
+        "raw_cost_usd": 0.00016731
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8213.16,
+        "raw_cost_usd": 0.00016955
+      },
+      {
+        "task_id": "finance_dataset_finqa_001348",
+        "model": "qwen-turbo",
+        "repeat": 1,
+        "quality": 0.85,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1914.2,
+        "raw_cost_usd": 1.093e-05
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "deepseek-chat",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1688.1,
+        "raw_cost_usd": 0.00030142
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 10361.46,
+        "raw_cost_usd": 0.00023948
+      },
+      {
+        "task_id": "finance_dataset_finqa_003781",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 7893.52,
+        "raw_cost_usd": 0.0002462
+      },
+      {
+        "task_id": "finance_dataset_finqa_003913",
+        "model": "qwen-plus",
+        "repeat": 1,
+        "quality": 0.73,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 9139.45,
+        "raw_cost_usd": 0.00024918
+      },
+      {
+        "task_id": "finance_dataset_finqa_004096",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 0.76,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1791.6,
+        "raw_cost_usd": 0.00038388
+      },
+      {
+        "task_id": "finance_dataset_finqa_004096",
+        "model": "deepseek-chat",
+        "repeat": 3,
+        "quality": 0.76,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 2485.8,
+        "raw_cost_usd": 0.00038934
+      },
+      {
+        "task_id": "finance_dataset_finqa_005031",
+        "model": "qwen-plus",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 8805.06,
+        "raw_cost_usd": 0.00024896
+      },
+      {
+        "task_id": "finance_dataset_finqa_005051",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 0.79,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 4600.99,
+        "raw_cost_usd": 0.00016006
+      },
+      {
+        "task_id": "finance_dataset_finqa_005051",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.842,
+        "objective_score": 1.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 4585.39,
+        "raw_cost_usd": 0.0016314
+      },
+      {
+        "task_id": "finance_dataset_finqa_005333",
+        "model": "qwen-turbo",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 1937.11,
+        "raw_cost_usd": 1.299e-05
+      },
+      {
+        "task_id": "finance_dataset_27e7cd2f-377f-482d-b504-cb21d6c18229",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.96,
+        "manual_review_required": true,
+        "latency_ms": 5151.57,
+        "raw_cost_usd": 0.0003619
+      }
+    ]
+  },
+  "call_balance_and_outliers": {
+    "model_counts": {
+      "deepseek-chat": 300,
+      "qwen-plus": 300,
+      "qwen-turbo": 300,
+      "glm-5.2": 300
+    },
+    "balanced_300_each": true,
+    "by_model": {
+      "deepseek-chat": {
+        "final_results": 300,
+        "latency_ms": {
+          "n": 300,
+          "mean": 2440.6127,
+          "p50": 1986.18,
+          "p95": 5232.587,
+          "p99": 7088.4432,
+          "max": 20269.18,
+          "iqr_upper_fence": 4427.68375,
+          "iqr_high_outlier_count": 25
+        },
+        "raw_cost_usd": {
+          "n": 300,
+          "mean": 0.000264,
+          "p50": 0.000253,
+          "p95": 0.000463,
+          "p99": 0.000549,
+          "max": 0.000572,
+          "iqr_upper_fence": 0.000641,
+          "iqr_high_outlier_count": 0
+        }
+      },
+      "glm-5.2": {
+        "final_results": 300,
+        "latency_ms": {
+          "n": 300,
+          "mean": 8983.931133,
+          "p50": 8610.4,
+          "p95": 14940.9525,
+          "p99": 21851.2433,
+          "max": 38660.59,
+          "iqr_upper_fence": 17077.94375,
+          "iqr_high_outlier_count": 9
+        },
+        "raw_cost_usd": {
+          "n": 300,
+          "mean": 0.002868,
+          "p50": 0.002855,
+          "p95": 0.004078,
+          "p99": 0.004367,
+          "max": 0.004418,
+          "iqr_upper_fence": 0.004886,
+          "iqr_high_outlier_count": 0
+        }
+      },
+      "qwen-plus": {
+        "final_results": 300,
+        "latency_ms": {
+          "n": 300,
+          "mean": 6273.293067,
+          "p50": 5563.485,
+          "p95": 11871.2815,
+          "p99": 12698.5792,
+          "max": 19730.23,
+          "iqr_upper_fence": 16037.305,
+          "iqr_high_outlier_count": 1
+        },
+        "raw_cost_usd": {
+          "n": 300,
+          "mean": 0.000179,
+          "p50": 0.00018,
+          "p95": 0.00029,
+          "p99": 0.000318,
+          "max": 0.000319,
+          "iqr_upper_fence": 0.000352,
+          "iqr_high_outlier_count": 0
+        }
+      },
+      "qwen-turbo": {
+        "final_results": 300,
+        "latency_ms": {
+          "n": 300,
+          "mean": 1829.844133,
+          "p50": 1637.565,
+          "p95": 3375.358,
+          "p99": 4727.8342,
+          "max": 10859.18,
+          "iqr_upper_fence": 3322.1325,
+          "iqr_high_outlier_count": 17
+        },
+        "raw_cost_usd": {
+          "n": 300,
+          "mean": 9e-06,
+          "p50": 9e-06,
+          "p95": 1.6e-05,
+          "p99": 2e-05,
+          "max": 2e-05,
+          "iqr_upper_fence": 2.2e-05,
+          "iqr_high_outlier_count": 0
+        }
+      }
+    },
+    "global_latency_ms": {
+      "n": 1200,
+      "mean": 4881.920258,
+      "p50": 3360.34,
+      "p95": 11922.45,
+      "p99": 16797.9735,
+      "max": 38660.59,
+      "iqr_upper_fence": 16462.85375,
+      "iqr_high_outlier_count": 14
+    },
+    "global_raw_cost_usd": {
+      "n": 1200,
+      "mean": 0.00083,
+      "p50": 0.000196,
+      "p95": 0.003526,
+      "p99": 0.004114,
+      "max": 0.004418,
+      "iqr_upper_fence": 0.001684,
+      "iqr_high_outlier_count": 277
+    },
+    "top_latency_outliers": [
+      {
+        "task_id": "finance_dataset_finreflect_7206319eb6e63946",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 38660.59,
+        "raw_cost_usd": 0.0027096
+      },
+      {
+        "task_id": "finance_dataset_finqa_003266",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.6,
+        "manual_review_required": true,
+        "latency_ms": 22542.24,
+        "raw_cost_usd": 0.0038054
+      },
+      {
+        "task_id": "finance_dataset_80155cd7-5a1f-4464-bfb2-75a8fdd84968",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.035,
+        "objective_score": 0.035,
+        "judge_disagreement": 0.885,
+        "manual_review_required": true,
+        "latency_ms": 21915.92,
+        "raw_cost_usd": 0.0028534
+      },
+      {
+        "task_id": "finance_dataset_aac89e0d-df40-4eb8-93ac-e165802532f4",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.992,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.05,
+        "manual_review_required": false,
+        "latency_ms": 21850.59,
+        "raw_cost_usd": 0.0016872
+      },
+      {
+        "task_id": "finance_dataset_finqa_005051",
+        "model": "deepseek-chat",
+        "repeat": 2,
+        "quality": 0.79,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.8,
+        "manual_review_required": true,
+        "latency_ms": 20269.18,
+        "raw_cost_usd": 0.00023758
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 1.0,
+        "manual_review_required": true,
+        "latency_ms": 19730.23,
+        "raw_cost_usd": 0.00021607
+      },
+      {
+        "task_id": "finance_dataset_finqa_001323",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.97,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.15,
+        "manual_review_required": false,
+        "latency_ms": 18719.2,
+        "raw_cost_usd": 0.0042282
+      },
+      {
+        "task_id": "finance_dataset_finqa_004018",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.6,
+        "manual_review_required": true,
+        "latency_ms": 18139.18,
+        "raw_cost_usd": 0.0043668
+      },
+      {
+        "task_id": "finance_dataset_4c3d448a-90c1-4d71-b661-a950a041399e",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.925,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.35,
+        "manual_review_required": true,
+        "latency_ms": 17912.7,
+        "raw_cost_usd": 0.002894
+      },
+      {
+        "task_id": "finance_dataset_6114d50f-c240-46d2-8fe0-2159ee379e42",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.962,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.15,
+        "manual_review_required": false,
+        "latency_ms": 17481.58,
+        "raw_cost_usd": 0.00281
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.842,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.65,
+        "manual_review_required": true,
+        "latency_ms": 17133.87,
+        "raw_cost_usd": 0.0026784
+      },
+      {
+        "task_id": "finance_dataset_835245df-3585-4913-a460-730158048891",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.167,
+        "objective_score": 0.167,
+        "judge_disagreement": 0.653,
+        "manual_review_required": true,
+        "latency_ms": 16933.95,
+        "raw_cost_usd": 0.0034092
+      },
+      {
+        "task_id": "finance_dataset_finreflect_371536103b2494e4",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 16796.6,
+        "raw_cost_usd": 0.0018078
+      },
+      {
+        "task_id": "finance_dataset_4e67de7e-2d32-47c3-b86f-7096267d0612",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.457,
+        "objective_score": 0.457,
+        "judge_disagreement": 0.463,
+        "manual_review_required": true,
+        "latency_ms": 16530.11,
+        "raw_cost_usd": 0.0031698
+      },
+      {
+        "task_id": "finance_dataset_7fe54f97-90d6-4a89-a6f2-05a7c6ae95ca",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.025,
+        "objective_score": 0.025,
+        "judge_disagreement": 0.425,
+        "manual_review_required": true,
+        "latency_ms": 16009.96,
+        "raw_cost_usd": 0.0031348
+      },
+      {
+        "task_id": "finance_dataset_80155cd7-5a1f-4464-bfb2-75a8fdd84968",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.259,
+        "objective_score": 0.259,
+        "judge_disagreement": 0.691,
+        "manual_review_required": true,
+        "latency_ms": 15776.79,
+        "raw_cost_usd": 0.0028534
+      },
+      {
+        "task_id": "finance_dataset_a22a01bc-15e3-440c-8eae-dccb337fa4ce",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.505,
+        "objective_score": 0.505,
+        "judge_disagreement": 0.155,
+        "manual_review_required": false,
+        "latency_ms": 15203.96,
+        "raw_cost_usd": 0.0032384
+      },
+      {
+        "task_id": "finance_dataset_7ef84d16-fcbb-4352-92b9-6db04cba8cef",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.97,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.15,
+        "manual_review_required": false,
+        "latency_ms": 14927.11,
+        "raw_cost_usd": 0.0026364
+      },
+      {
+        "task_id": "finance_dataset_7bdf70f2-45b5-485b-b3b3-c967f28f38f1",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.805,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.65,
+        "manual_review_required": true,
+        "latency_ms": 14915.66,
+        "raw_cost_usd": 0.003104
+      },
+      {
+        "task_id": "finance_dataset_835245df-3585-4913-a460-730158048891",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.444,
+        "objective_score": 0.444,
+        "judge_disagreement": 0.236,
+        "manual_review_required": true,
+        "latency_ms": 14349.58,
+        "raw_cost_usd": 0.0034092
+      }
+    ],
+    "top_cost_outliers": [
+      {
+        "task_id": "finance_dataset_finreflect_339704e486824368",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 6153.44,
+        "raw_cost_usd": 0.0044182
+      },
+      {
+        "task_id": "finance_dataset_finreflect_0ba3d2f9e1bd45de",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 7319.57,
+        "raw_cost_usd": 0.00439
+      },
+      {
+        "task_id": "finance_dataset_finqa_002099",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.985,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.05,
+        "manual_review_required": false,
+        "latency_ms": 7574.63,
+        "raw_cost_usd": 0.0043892
+      },
+      {
+        "task_id": "finance_dataset_finqa_004018",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.65,
+        "manual_review_required": true,
+        "latency_ms": 11937.46,
+        "raw_cost_usd": 0.0043668
+      },
+      {
+        "task_id": "finance_dataset_finqa_004018",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.6,
+        "manual_review_required": true,
+        "latency_ms": 18139.18,
+        "raw_cost_usd": 0.0043668
+      },
+      {
+        "task_id": "finance_dataset_finreflect_c0745423b9789a31",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 6471.96,
+        "raw_cost_usd": 0.0043268
+      },
+      {
+        "task_id": "finance_dataset_finqa_004018",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.0,
+        "objective_score": 0.0,
+        "judge_disagreement": 0.3,
+        "manual_review_required": true,
+        "latency_ms": 9593.57,
+        "raw_cost_usd": 0.0042964
+      },
+      {
+        "task_id": "finance_dataset_finqa_001323",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.97,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.15,
+        "manual_review_required": false,
+        "latency_ms": 18719.2,
+        "raw_cost_usd": 0.0042282
+      },
+      {
+        "task_id": "finance_dataset_finqa_001323",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.95,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.25,
+        "manual_review_required": true,
+        "latency_ms": 9058.88,
+        "raw_cost_usd": 0.0042282
+      },
+      {
+        "task_id": "finance_dataset_finqa_006147",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.955,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.15,
+        "manual_review_required": false,
+        "latency_ms": 7963.16,
+        "raw_cost_usd": 0.0041932
+      },
+      {
+        "task_id": "finance_dataset_finqa_006147",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.992,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.05,
+        "manual_review_required": false,
+        "latency_ms": 11307.82,
+        "raw_cost_usd": 0.0041932
+      },
+      {
+        "task_id": "finance_dataset_finqa_001323",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.989,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.05,
+        "manual_review_required": false,
+        "latency_ms": 9396.92,
+        "raw_cost_usd": 0.0041446
+      },
+      {
+        "task_id": "finance_dataset_finqa_004549",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.989,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.05,
+        "manual_review_required": false,
+        "latency_ms": 11876.7,
+        "raw_cost_usd": 0.0041138
+      },
+      {
+        "task_id": "finance_dataset_finqa_004096",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.82,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.8,
+        "manual_review_required": true,
+        "latency_ms": 13776.67,
+        "raw_cost_usd": 0.0040784
+      },
+      {
+        "task_id": "finance_dataset_finqa_004096",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.827,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.8,
+        "manual_review_required": true,
+        "latency_ms": 8088.23,
+        "raw_cost_usd": 0.0040784
+      },
+      {
+        "task_id": "finance_dataset_finqa_004096",
+        "model": "glm-5.2",
+        "repeat": 3,
+        "quality": 0.82,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.8,
+        "manual_review_required": true,
+        "latency_ms": 9111.07,
+        "raw_cost_usd": 0.0040784
+      },
+      {
+        "task_id": "finance_dataset_finqa_006147",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 0.985,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.05,
+        "manual_review_required": false,
+        "latency_ms": 11696.39,
+        "raw_cost_usd": 0.0040128
+      },
+      {
+        "task_id": "finance_dataset_finreflect_692e2422611f602d",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 8659.03,
+        "raw_cost_usd": 0.0040098
+      },
+      {
+        "task_id": "finance_dataset_finreflect_c0745423b9789a31",
+        "model": "glm-5.2",
+        "repeat": 2,
+        "quality": 1.0,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.0,
+        "manual_review_required": false,
+        "latency_ms": 8830.17,
+        "raw_cost_usd": 0.0040012
+      },
+      {
+        "task_id": "finance_dataset_finqa_005345",
+        "model": "glm-5.2",
+        "repeat": 1,
+        "quality": 0.992,
+        "objective_score": 1.0,
+        "judge_disagreement": 0.05,
+        "manual_review_required": false,
+        "latency_ms": 9881.94,
+        "raw_cost_usd": 0.003951
+      }
+    ]
+  },
+  "three_repeat_variance_audit": {
+    "task_model_groups": 400,
+    "all_groups_have_three_repeats": true,
+    "quality_std_ge_0_20_count": 41,
+    "latency_cv_ge_0_50_count": 10,
+    "cost_cv_ge_0_50_count": 0,
+    "highest_quality_variance": [
+      {
+        "task_id": "finance_dataset_09d6e968-1144-42ba-8791-acfe13e826c3",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.333333,
+        "quality_std": 0.471405,
+        "latency_mean_ms": 10572.466667,
+        "latency_std_ms": 1773.431589,
+        "latency_cv": 0.167741,
+        "cost_mean_usd": 0.0002032033,
+        "cost_std_usd": 2.6399e-06,
+        "cost_cv": 0.012991
+      },
+      {
+        "task_id": "finance_dataset_finqa_001807",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.666667,
+        "quality_std": 0.471405,
+        "latency_mean_ms": 11148.026667,
+        "latency_std_ms": 1596.448793,
+        "latency_cv": 0.143205,
+        "cost_mean_usd": 0.00031914,
+        "cost_std_usd": 0.0,
+        "cost_cv": 0.0
+      },
+      {
+        "task_id": "finance_dataset_finqa_006147",
+        "model": "deepseek-chat",
+        "n": 3,
+        "quality_mean": 0.333333,
+        "quality_std": 0.471405,
+        "latency_mean_ms": 1764.696667,
+        "latency_std_ms": 119.216958,
+        "latency_cv": 0.067557,
+        "cost_mean_usd": 0.0004137,
+        "cost_std_usd": 1.4948e-06,
+        "cost_cv": 0.003613
+      },
+      {
+        "task_id": "finance_dataset_finqa_006147",
+        "model": "qwen-turbo",
+        "n": 3,
+        "quality_mean": 0.333333,
+        "quality_std": 0.471405,
+        "latency_mean_ms": 1973.313333,
+        "latency_std_ms": 182.663838,
+        "latency_cv": 0.092567,
+        "cost_mean_usd": 1.568e-05,
+        "cost_std_usd": 5.66e-08,
+        "cost_cv": 0.003608
+      },
+      {
+        "task_id": "finance_dataset_finqa_005345",
+        "model": "deepseek-chat",
+        "n": 3,
+        "quality_mean": 0.661667,
+        "quality_std": 0.467909,
+        "latency_mean_ms": 2228.21,
+        "latency_std_ms": 228.21302,
+        "latency_cv": 0.10242,
+        "cost_mean_usd": 0.00040124,
+        "cost_std_usd": 5.5118e-06,
+        "cost_cv": 0.013737
+      },
+      {
+        "task_id": "finance_dataset_finqa_005345",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.330667,
+        "quality_std": 0.467633,
+        "latency_mean_ms": 9560.41,
+        "latency_std_ms": 1562.177588,
+        "latency_cv": 0.163401,
+        "cost_mean_usd": 0.00028713,
+        "cost_std_usd": 0.0,
+        "cost_cv": 0.0
+      },
+      {
+        "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.329333,
+        "quality_std": 0.465748,
+        "latency_mean_ms": 6361.563333,
+        "latency_std_ms": 511.713738,
+        "latency_cv": 0.080438,
+        "cost_mean_usd": 0.0018686667,
+        "cost_std_usd": 1.36013e-05,
+        "cost_cv": 0.007279
+      },
+      {
+        "task_id": "finance_dataset_4852e5e7-b26e-4a7d-a0a0-13ad9309d1c8",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.656667,
+        "quality_std": 0.464369,
+        "latency_mean_ms": 9561.073333,
+        "latency_std_ms": 1632.210177,
+        "latency_cv": 0.170714,
+        "cost_mean_usd": 0.00021805,
+        "cost_std_usd": 0.0,
+        "cost_cv": 0.0
+      },
+      {
+        "task_id": "finance_dataset_finqa_005333",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.328333,
+        "quality_std": 0.464333,
+        "latency_mean_ms": 9430.533333,
+        "latency_std_ms": 2844.897426,
+        "latency_cv": 0.301669,
+        "cost_mean_usd": 0.00024785,
+        "cost_std_usd": 3.9994e-05,
+        "cost_cv": 0.161364
+      },
+      {
+        "task_id": "finance_dataset_finqa_002647",
+        "model": "qwen-turbo",
+        "n": 3,
+        "quality_mean": 0.326,
+        "quality_std": 0.461034,
+        "latency_mean_ms": 2039.676667,
+        "latency_std_ms": 220.886247,
+        "latency_cv": 0.108295,
+        "cost_mean_usd": 1.25733e-05,
+        "cost_std_usd": 2.64e-07,
+        "cost_cv": 0.020996
+      },
+      {
+        "task_id": "finance_dataset_87d1dc85-d372-4ddd-bf18-8aca923cffbb",
+        "model": "deepseek-chat",
+        "n": 3,
+        "quality_mean": 0.323333,
+        "quality_std": 0.457262,
+        "latency_mean_ms": 2575.556667,
+        "latency_std_ms": 302.576477,
+        "latency_cv": 0.11748,
+        "cost_mean_usd": 0.00019264,
+        "cost_std_usd": 6.2953e-06,
+        "cost_cv": 0.032679
+      },
+      {
+        "task_id": "finance_dataset_49d7ee2d-93a5-4ed7-9fe9-030ead91c8d2",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.644,
+        "quality_std": 0.455377,
+        "latency_mean_ms": 8902.12,
+        "latency_std_ms": 1146.775862,
+        "latency_cv": 0.128821,
+        "cost_mean_usd": 0.0038474,
+        "cost_std_usd": 0.0,
+        "cost_cv": 0.0
+      },
+      {
+        "task_id": "finance_dataset_finqa_002647",
+        "model": "deepseek-chat",
+        "n": 3,
+        "quality_mean": 0.641333,
+        "quality_std": 0.453491,
+        "latency_mean_ms": 2975.263333,
+        "latency_std_ms": 632.270501,
+        "latency_cv": 0.212509,
+        "cost_mean_usd": 0.00039004,
+        "cost_std_usd": 1.99056e-05,
+        "cost_cv": 0.051035
+      },
+      {
+        "task_id": "finance_dataset_finqa_003266",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.639,
+        "quality_std": 0.452359,
+        "latency_mean_ms": 14991.24,
+        "latency_std_ms": 5715.211478,
+        "latency_cv": 0.381237,
+        "cost_mean_usd": 0.0037144667,
+        "cost_std_usd": 0.0001285992,
+        "cost_cv": 0.034621
+      },
+      {
+        "task_id": "finance_dataset_49d7ee2d-93a5-4ed7-9fe9-030ead91c8d2",
+        "model": "qwen-turbo",
+        "n": 3,
+        "quality_mean": 0.626667,
+        "quality_std": 0.443289,
+        "latency_mean_ms": 1617.796667,
+        "latency_std_ms": 381.904822,
+        "latency_cv": 0.236065,
+        "cost_mean_usd": 1.252e-05,
+        "cost_std_usd": 6.276e-07,
+        "cost_cv": 0.050127
+      },
+      {
+        "task_id": "finance_dataset_finqa_002647",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.303333,
+        "quality_std": 0.428978,
+        "latency_mean_ms": 8871.79,
+        "latency_std_ms": 207.736785,
+        "latency_cv": 0.023415,
+        "cost_mean_usd": 0.00027459,
+        "cost_std_usd": 0.0,
+        "cost_cv": 0.0
+      },
+      {
+        "task_id": "finance_dataset_finqa_000549",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.596667,
+        "quality_std": 0.428259,
+        "latency_mean_ms": 8741.146667,
+        "latency_std_ms": 1936.829815,
+        "latency_cv": 0.221576,
+        "cost_mean_usd": 0.0031258667,
+        "cost_std_usd": 0.0001908246,
+        "cost_cv": 0.061047
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.604,
+        "quality_std": 0.427374,
+        "latency_mean_ms": 12356.486667,
+        "latency_std_ms": 2042.350673,
+        "latency_cv": 0.165286,
+        "cost_mean_usd": 0.0030984,
+        "cost_std_usd": 0.0,
+        "cost_cv": 0.0
+      },
+      {
+        "task_id": "finance_dataset_49d7ee2d-93a5-4ed7-9fe9-030ead91c8d2",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.601333,
+        "quality_std": 0.426791,
+        "latency_mean_ms": 10068.22,
+        "latency_std_ms": 1661.275539,
+        "latency_cv": 0.165002,
+        "cost_mean_usd": 0.0002808767,
+        "cost_std_usd": 1.32e-07,
+        "cost_cv": 0.00047
+      },
+      {
+        "task_id": "finance_dataset_09d6e968-1144-42ba-8791-acfe13e826c3",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.298333,
+        "quality_std": 0.421907,
+        "latency_mean_ms": 9826.863333,
+        "latency_std_ms": 192.684674,
+        "latency_cv": 0.019608,
+        "cost_mean_usd": 0.0029766,
+        "cost_std_usd": 0.0,
+        "cost_cv": 0.0
+      }
+    ],
+    "highest_latency_variance": [
+      {
+        "task_id": "finance_dataset_finqa_005051",
+        "model": "deepseek-chat",
+        "n": 3,
+        "quality_mean": 0.78,
+        "quality_std": 0.014142,
+        "latency_mean_ms": 7920.37,
+        "latency_std_ms": 8734.272468,
+        "latency_cv": 1.102761,
+        "cost_mean_usd": 0.00023506,
+        "cost_std_usd": 2.0576e-06,
+        "cost_cv": 0.008753
+      },
+      {
+        "task_id": "finance_dataset_49d7ee2d-93a5-4ed7-9fe9-030ead91c8d2",
+        "model": "deepseek-chat",
+        "n": 3,
+        "quality_mean": 0.0,
+        "quality_std": 0.0,
+        "latency_mean_ms": 5518.673333,
+        "latency_std_ms": 4497.562552,
+        "latency_cv": 0.814972,
+        "cost_mean_usd": 0.00034762,
+        "cost_std_usd": 1.5464e-06,
+        "cost_cv": 0.004448
+      },
+      {
+        "task_id": "finance_dataset_finreflect_7206319eb6e63946",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 1.0,
+        "quality_std": 0.0,
+        "latency_mean_ms": 18478.83,
+        "latency_std_ms": 14270.938242,
+        "latency_cv": 0.772286,
+        "cost_mean_usd": 0.0029706667,
+        "cost_std_usd": 0.000255082,
+        "cost_cv": 0.085867
+      },
+      {
+        "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+        "model": "qwen-turbo",
+        "n": 3,
+        "quality_mean": 0.0,
+        "quality_std": 0.0,
+        "latency_mean_ms": 5208.466667,
+        "latency_std_ms": 3996.255456,
+        "latency_cv": 0.767261,
+        "cost_mean_usd": 6.7567e-06,
+        "cost_std_usd": 2.877e-07,
+        "cost_cv": 0.042576
+      },
+      {
+        "task_id": "finance_dataset_finreflect_4003f7becc392d82",
+        "model": "qwen-turbo",
+        "n": 3,
+        "quality_mean": 0.992,
+        "quality_std": 0.0,
+        "latency_mean_ms": 2903.733333,
+        "latency_std_ms": 2184.942268,
+        "latency_cv": 0.75246,
+        "cost_mean_usd": 1.006e-05,
+        "cost_std_usd": 0.0,
+        "cost_cv": 0.0
+      },
+      {
+        "task_id": "finance_dataset_aac89e0d-df40-4eb8-93ac-e165802532f4",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.992,
+        "quality_std": 0.0,
+        "latency_mean_ms": 11204.02,
+        "latency_std_ms": 7656.529954,
+        "latency_cv": 0.683373,
+        "cost_mean_usd": 0.0015273333,
+        "cost_std_usd": 0.0001180826,
+        "cost_cv": 0.077313
+      },
+      {
+        "task_id": "finance_dataset_finreflect_371536103b2494e4",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.997333,
+        "quality_std": 0.003771,
+        "latency_mean_ms": 8890.88,
+        "latency_std_ms": 5709.792665,
+        "latency_cv": 0.642208,
+        "cost_mean_usd": 0.0019280667,
+        "cost_std_usd": 0.0002928416,
+        "cost_cv": 0.151884
+      },
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.0,
+        "quality_std": 0.0,
+        "latency_mean_ms": 10617.876667,
+        "latency_std_ms": 6447.078015,
+        "latency_cv": 0.607191,
+        "cost_mean_usd": 0.0001708967,
+        "cost_std_usd": 3.26232e-05,
+        "cost_cv": 0.190894
+      },
+      {
+        "task_id": "finance_dataset_finqa_001348",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.997333,
+        "quality_std": 0.003771,
+        "latency_mean_ms": 6219.386667,
+        "latency_std_ms": 3253.350962,
+        "latency_cv": 0.523098,
+        "cost_mean_usd": 0.0020052,
+        "cost_std_usd": 5.29221e-05,
+        "cost_cv": 0.026392
+      },
+      {
+        "task_id": "finance_dataset_finqa_001593",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.994667,
+        "quality_std": 0.003771,
+        "latency_mean_ms": 7011.183333,
+        "latency_std_ms": 3655.266215,
+        "latency_cv": 0.521348,
+        "cost_mean_usd": 0.0022521333,
+        "cost_std_usd": 5.3327e-05,
+        "cost_cv": 0.023678
+      },
+      {
+        "task_id": "finance_dataset_finqa_005454",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.957333,
+        "quality_std": 0.050109,
+        "latency_mean_ms": 7486.3,
+        "latency_std_ms": 3740.009091,
+        "latency_cv": 0.49958,
+        "cost_mean_usd": 0.0029167333,
+        "cost_std_usd": 0.0008607847,
+        "cost_cv": 0.295119
+      },
+      {
+        "task_id": "finance_dataset_7ef84d16-fcbb-4352-92b9-6db04cba8cef",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.984667,
+        "quality_std": 0.010371,
+        "latency_mean_ms": 9135.533333,
+        "latency_std_ms": 4506.861278,
+        "latency_cv": 0.493333,
+        "cost_mean_usd": 0.0019456,
+        "cost_std_usd": 0.000620478,
+        "cost_cv": 0.318913
+      },
+      {
+        "task_id": "finance_dataset_finqa_003266",
+        "model": "qwen-turbo",
+        "n": 3,
+        "quality_mean": 0.0,
+        "quality_std": 0.0,
+        "latency_mean_ms": 2268.81,
+        "latency_std_ms": 1073.426724,
+        "latency_cv": 0.473123,
+        "cost_mean_usd": 1.10767e-05,
+        "cost_std_usd": 7.54e-08,
+        "cost_cv": 0.006809
+      },
+      {
+        "task_id": "finance_dataset_finqa_005333",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.961333,
+        "quality_std": 0.052576,
+        "latency_mean_ms": 8130.873333,
+        "latency_std_ms": 3645.317024,
+        "latency_cv": 0.44833,
+        "cost_mean_usd": 0.003278,
+        "cost_std_usd": 0.0006940945,
+        "cost_cv": 0.211743
+      },
+      {
+        "task_id": "finance_dataset_finqa_003581",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.99,
+        "quality_std": 0.007071,
+        "latency_mean_ms": 3779.906667,
+        "latency_std_ms": 1625.367173,
+        "latency_cv": 0.430002,
+        "cost_mean_usd": 0.00019529,
+        "cost_std_usd": 2.87088e-05,
+        "cost_cv": 0.147006
+      },
+      {
+        "task_id": "finance_dataset_1123721d-7c4c-4191-ba08-a1e4280f1599",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.965,
+        "quality_std": 0.028856,
+        "latency_mean_ms": 9225.916667,
+        "latency_std_ms": 3934.370504,
+        "latency_cv": 0.426448,
+        "cost_mean_usd": 0.00016082,
+        "cost_std_usd": 3.72221e-05,
+        "cost_cv": 0.231452
+      },
+      {
+        "task_id": "finance_dataset_cceaabcb-f900-439a-aff3-858985207c63",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.992,
+        "quality_std": 0.0,
+        "latency_mean_ms": 5240.7,
+        "latency_std_ms": 2125.170207,
+        "latency_cv": 0.405513,
+        "cost_mean_usd": 0.0014034,
+        "cost_std_usd": 9.39583e-05,
+        "cost_cv": 0.06695
+      },
+      {
+        "task_id": "finance_dataset_finreflect_b875ebfc7976b284",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.989667,
+        "quality_std": 0.0033,
+        "latency_mean_ms": 8115.213333,
+        "latency_std_ms": 3272.655073,
+        "latency_cv": 0.403274,
+        "cost_mean_usd": 0.0028093333,
+        "cost_std_usd": 0.0007176662,
+        "cost_cv": 0.255458
+      },
+      {
+        "task_id": "finance_dataset_finqa_006147",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 1.0,
+        "quality_std": 0.0,
+        "latency_mean_ms": 6669.48,
+        "latency_std_ms": 2654.450363,
+        "latency_cv": 0.398,
+        "cost_mean_usd": 0.0002587333,
+        "cost_std_usd": 2.36058e-05,
+        "cost_cv": 0.091236
+      },
+      {
+        "task_id": "finance_dataset_08439cc4-cc83-400e-ae6e-0550c2a91344",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.201333,
+        "quality_std": 0.093646,
+        "latency_mean_ms": 8057.633333,
+        "latency_std_ms": 3176.817808,
+        "latency_cv": 0.394262,
+        "cost_mean_usd": 0.0002274767,
+        "cost_std_usd": 2.69512e-05,
+        "cost_cv": 0.118479
+      }
+    ],
+    "highest_cost_variance": [
+      {
+        "task_id": "finance_dataset_1c4ed010-bd17-4a11-be8b-19e64adfcd4b",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.985,
+        "quality_std": 0.0,
+        "latency_mean_ms": 5598.05,
+        "latency_std_ms": 2123.96242,
+        "latency_cv": 0.379411,
+        "cost_mean_usd": 0.00012446,
+        "cost_std_usd": 4.04158e-05,
+        "cost_cv": 0.324729
+      },
+      {
+        "task_id": "finance_dataset_7ef84d16-fcbb-4352-92b9-6db04cba8cef",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.984667,
+        "quality_std": 0.010371,
+        "latency_mean_ms": 9135.533333,
+        "latency_std_ms": 4506.861278,
+        "latency_cv": 0.493333,
+        "cost_mean_usd": 0.0019456,
+        "cost_std_usd": 0.000620478,
+        "cost_cv": 0.318913
+      },
+      {
+        "task_id": "finance_dataset_finreflect_5131b9003b72f28b",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.997333,
+        "quality_std": 0.003771,
+        "latency_mean_ms": 7668.666667,
+        "latency_std_ms": 1808.68041,
+        "latency_cv": 0.235853,
+        "cost_mean_usd": 0.0022458667,
+        "cost_std_usd": 0.000709227,
+        "cost_cv": 0.315792
+      },
+      {
+        "task_id": "finance_dataset_finreflect_8d468c1cd51cda03",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.997333,
+        "quality_std": 0.003771,
+        "latency_mean_ms": 6629.436667,
+        "latency_std_ms": 1821.248798,
+        "latency_cv": 0.274722,
+        "cost_mean_usd": 0.002231,
+        "cost_std_usd": 0.0006819101,
+        "cost_cv": 0.305652
+      },
+      {
+        "task_id": "finance_dataset_finqa_005454",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.957333,
+        "quality_std": 0.050109,
+        "latency_mean_ms": 7486.3,
+        "latency_std_ms": 3740.009091,
+        "latency_cv": 0.49958,
+        "cost_mean_usd": 0.0029167333,
+        "cost_std_usd": 0.0008607847,
+        "cost_cv": 0.295119
+      },
+      {
+        "task_id": "finance_dataset_7fe54f97-90d6-4a89-a6f2-05a7c6ae95ca",
+        "model": "qwen-turbo",
+        "n": 3,
+        "quality_mean": 0.099333,
+        "quality_std": 0.105123,
+        "latency_mean_ms": 3306.03,
+        "latency_std_ms": 1010.910711,
+        "latency_cv": 0.305778,
+        "cost_mean_usd": 1.03733e-05,
+        "cost_std_usd": 3.0235e-06,
+        "cost_cv": 0.291466
+      },
+      {
+        "task_id": "finance_dataset_a2aca3b3-e82a-496f-94d6-8d2c6578f0d0",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.979333,
+        "quality_std": 0.010625,
+        "latency_mean_ms": 6262.906667,
+        "latency_std_ms": 1483.707088,
+        "latency_cv": 0.236904,
+        "cost_mean_usd": 0.0021622,
+        "cost_std_usd": 0.0006070406,
+        "cost_cv": 0.280751
+      },
+      {
+        "task_id": "finance_dataset_78ed28e5-4139-48ca-8a7e-d173a72ad032",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.994667,
+        "quality_std": 0.003771,
+        "latency_mean_ms": 4656.5,
+        "latency_std_ms": 1014.681325,
+        "latency_cv": 0.217906,
+        "cost_mean_usd": 0.0020480667,
+        "cost_std_usd": 0.0005326525,
+        "cost_cv": 0.260076
+      },
+      {
+        "task_id": "finance_dataset_finreflect_4003f7becc392d82",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.990667,
+        "quality_std": 0.001886,
+        "latency_mean_ms": 5724.35,
+        "latency_std_ms": 1532.2317,
+        "latency_cv": 0.267669,
+        "cost_mean_usd": 0.0028417333,
+        "cost_std_usd": 0.0007355798,
+        "cost_cv": 0.258849
+      },
+      {
+        "task_id": "finance_dataset_finreflect_b875ebfc7976b284",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.989667,
+        "quality_std": 0.0033,
+        "latency_mean_ms": 8115.213333,
+        "latency_std_ms": 3272.655073,
+        "latency_cv": 0.403274,
+        "cost_mean_usd": 0.0028093333,
+        "cost_std_usd": 0.0007176662,
+        "cost_cv": 0.255458
+      },
+      {
+        "task_id": "finance_dataset_4c3d448a-90c1-4d71-b661-a950a041399e",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.927333,
+        "quality_std": 0.052162,
+        "latency_mean_ms": 6388.483333,
+        "latency_std_ms": 2221.976211,
+        "latency_cv": 0.34781,
+        "cost_mean_usd": 0.00015198,
+        "cost_std_usd": 3.86542e-05,
+        "cost_cv": 0.254337
+      },
+      {
+        "task_id": "finance_dataset_1123721d-7c4c-4191-ba08-a1e4280f1599",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.965,
+        "quality_std": 0.028856,
+        "latency_mean_ms": 9225.916667,
+        "latency_std_ms": 3934.370504,
+        "latency_cv": 0.426448,
+        "cost_mean_usd": 0.00016082,
+        "cost_std_usd": 3.72221e-05,
+        "cost_cv": 0.231452
+      },
+      {
+        "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.971,
+        "quality_std": 0.017455,
+        "latency_mean_ms": 9128.206667,
+        "latency_std_ms": 1474.270095,
+        "latency_cv": 0.161507,
+        "cost_mean_usd": 0.0020887333,
+        "cost_std_usd": 0.0004750008,
+        "cost_cv": 0.227411
+      },
+      {
+        "task_id": "finance_dataset_1123721d-7c4c-4191-ba08-a1e4280f1599",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.988,
+        "quality_std": 0.0,
+        "latency_mean_ms": 9746.73,
+        "latency_std_ms": 3051.595745,
+        "latency_cv": 0.313089,
+        "cost_mean_usd": 0.0019056667,
+        "cost_std_usd": 0.0004145092,
+        "cost_cv": 0.217514
+      },
+      {
+        "task_id": "finance_dataset_finqa_005333",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.961333,
+        "quality_std": 0.052576,
+        "latency_mean_ms": 8130.873333,
+        "latency_std_ms": 3645.317024,
+        "latency_cv": 0.44833,
+        "cost_mean_usd": 0.003278,
+        "cost_std_usd": 0.0006940945,
+        "cost_cv": 0.211743
+      },
+      {
+        "task_id": "finance_dataset_finqa_003266",
+        "model": "qwen-plus",
+        "n": 3,
+        "quality_mean": 0.945,
+        "quality_std": 0.046368,
+        "latency_mean_ms": 6385.273333,
+        "latency_std_ms": 1659.739907,
+        "latency_cv": 0.259932,
+        "cost_mean_usd": 0.0002088,
+        "cost_std_usd": 4.39538e-05,
+        "cost_cv": 0.210507
+      },
+      {
+        "task_id": "finance_dataset_finreflect_37a5701d8dcbb5de",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.997333,
+        "quality_std": 0.003771,
+        "latency_mean_ms": 5937.146667,
+        "latency_std_ms": 2112.553182,
+        "latency_cv": 0.35582,
+        "cost_mean_usd": 0.0016310667,
+        "cost_std_usd": 0.000333111,
+        "cost_cv": 0.204229
+      },
+      {
+        "task_id": "finance_dataset_4e67de7e-2d32-47c3-b86f-7096267d0612",
+        "model": "qwen-turbo",
+        "n": 3,
+        "quality_mean": 0.048,
+        "quality_std": 0.025923,
+        "latency_mean_ms": 2010.02,
+        "latency_std_ms": 772.827912,
+        "latency_cv": 0.384488,
+        "cost_mean_usd": 9.4733e-06,
+        "cost_std_usd": 1.915e-06,
+        "cost_cv": 0.202148
+      },
+      {
+        "task_id": "finance_dataset_finqa_002522",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.988,
+        "quality_std": 0.005657,
+        "latency_mean_ms": 4963.693333,
+        "latency_std_ms": 839.68431,
+        "latency_cv": 0.169165,
+        "cost_mean_usd": 0.0021850667,
+        "cost_std_usd": 0.0004269638,
+        "cost_cv": 0.195401
+      },
+      {
+        "task_id": "finance_dataset_716dff82-ebc4-46b9-89f5-4f7f49c92548",
+        "model": "glm-5.2",
+        "n": 3,
+        "quality_mean": 0.944667,
+        "quality_std": 0.033629,
+        "latency_mean_ms": 9142.803333,
+        "latency_std_ms": 2589.908565,
+        "latency_cv": 0.283273,
+        "cost_mean_usd": 0.0024629333,
+        "cost_std_usd": 0.0004749872,
+        "cost_cv": 0.192854
+      }
+    ]
+  },
+  "objective_scorer_drift_audit": {
+    "scorer_version": "dataset-aware-objective-v2.2",
+    "changed_records": 32,
+    "up": 23,
+    "down": 9,
+    "rescoring_metadata": {
+      "scorer_version": "dataset-aware-objective-v2.2",
+      "source": "run_logs/formal_context_v2_resumed_result.json",
+      "source_sha256": "cccc328d7d19ad09c26121a5585211a34112468d29e071865e0c7479ba94dec0",
+      "generated_at": "2026-07-29T07:24:04.544646+00:00",
+      "api_calls": 0,
+      "raw_responses_modified": false,
+      "rescored_records": 1200,
+      "changed_records": 32,
+      "up": 23,
+      "down": 9,
+      "changes": [
+        {
+          "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+          "model": "qwen-plus",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_09d6e968-1144-42ba-8791-acfe13e826c3",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_09d6e968-1144-42ba-8791-acfe13e826c3",
+          "model": "glm-5.2",
+          "repeat": 3,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_finqa_005345",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_finqa_001593",
+          "model": "glm-5.2",
+          "repeat": 1,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_finqa_001593",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_89f2121c-df16-4e60-b78a-1c7a2fac97e2",
+          "model": "glm-5.2",
+          "repeat": 1,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+          "model": "glm-5.2",
+          "repeat": 1,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_finqa_004549",
+          "model": "glm-5.2",
+          "repeat": 3,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_finqa_000255",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_6114d50f-c240-46d2-8fe0-2159ee379e42",
+          "model": "qwen-plus",
+          "repeat": 1,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_6114d50f-c240-46d2-8fe0-2159ee379e42",
+          "model": "qwen-plus",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_6114d50f-c240-46d2-8fe0-2159ee379e42",
+          "model": "qwen-plus",
+          "repeat": 3,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_6114d50f-c240-46d2-8fe0-2159ee379e42",
+          "model": "glm-5.2",
+          "repeat": 1,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_65c9dfde-cdb7-4f8f-b906-facb6d4401b3",
+          "model": "deepseek-chat",
+          "repeat": 1,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_65c9dfde-cdb7-4f8f-b906-facb6d4401b3",
+          "model": "deepseek-chat",
+          "repeat": 3,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_65c9dfde-cdb7-4f8f-b906-facb6d4401b3",
+          "model": "qwen-plus",
+          "repeat": 1,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_49d7ee2d-93a5-4ed7-9fe9-030ead91c8d2",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_95eed10b-6250-4bcb-a41b-be928d2e802c",
+          "model": "glm-5.2",
+          "repeat": 1,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_1123721d-7c4c-4191-ba08-a1e4280f1599",
+          "model": "qwen-plus",
+          "repeat": 3,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_finqa_001685",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_finqa_004591",
+          "model": "glm-5.2",
+          "repeat": 1,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_finqa_004591",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_7ef84d16-fcbb-4352-92b9-6db04cba8cef",
+          "model": "qwen-plus",
+          "repeat": 3,
+          "old": 0.0,
+          "new": 1.0
+        },
+        {
+          "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+          "model": "deepseek-chat",
+          "repeat": 1,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+          "model": "deepseek-chat",
+          "repeat": 2,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+          "model": "deepseek-chat",
+          "repeat": 3,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+          "model": "qwen-plus",
+          "repeat": 1,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_93c842a1-5a07-40cf-a651-63d7d5b22557",
+          "model": "qwen-plus",
+          "repeat": 3,
+          "old": 1.0,
+          "new": 0.0
+        },
+        {
+          "task_id": "finance_dataset_87d1dc85-d372-4ddd-bf18-8aca923cffbb",
+          "model": "glm-5.2",
+          "repeat": 2,
+          "old": 0.0,
+          "new": 1.0
+        }
+      ]
+    },
+    "requires_offline_metric_recomputation": false,
+    "interpretation": "Frozen API responses remain valid, but strategy statistics must be recomputed offline before significance claims are final."
+  },
+  "quality_gates": {
+    "experiment_completed_1200_of_1200": true,
+    "result_has_1200_unique_successes": true,
+    "all_failed_calls_recovered": true,
+    "balanced_model_calls": true,
+    "complete_three_repeat_groups": true,
+    "dual_judge_coverage_at_least_99_percent": true,
+    "glm_judge_limitation_disclosed": true,
+    "objective_scorer_drift_resolved": true
+  },
+  "passed": true,
+  "warnings": [
+    "GLM judge parsing succeeded for only 3/601 attempts; fallback judges, not GLM, supplied valid replacement scores.",
+    "Equivalent routing baselines identified in final_paper_analysis must not be interpreted as independent evidence.",
+    "Zero/full scores and high-variance groups listed here require paper caveats or targeted manual review; raw response text remains excluded.",
+    "Objective scorer dataset-aware-objective-v2.2 changes 32/1200 records; strategy metrics and significance must be recomputed before paper claims are final."
+  ]
+}

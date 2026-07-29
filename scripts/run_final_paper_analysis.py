@@ -9,7 +9,8 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path: sys.path.insert(0, str(ROOT))
 from openclaw_router.routerbench import _bootstrap_ci, _paired_t_test, _wilcoxon_signed_rank
-RESULT=ROOT/'run_logs/formal_context_v2_resumed_result.json'
+RESCORED=ROOT/'run_logs/formal_context_v2_rescored_v22_result.json'
+RESULT=RESCORED if RESCORED.exists() else ROOT/'run_logs/formal_context_v2_resumed_result.json'
 CHECKPOINT=ROOT/'run_logs/llmrouter_experiment_checkpoint_v2.jsonl'
 PROGRESS=ROOT/'run_logs/llmrouter_experiment_progress_v2.json'
 OUT=ROOT/'run_logs/final_paper_analysis.json'
@@ -34,6 +35,15 @@ def boot(xs,seed=20260727,n=2000):
 def stat(xs,seed=20260727):
  xs=[f(x) for x in xs]
  return {'n':len(xs),'mean':round(statistics.mean(xs),6) if xs else 0,'std':round(statistics.stdev(xs),6) if len(xs)>1 else 0,'bootstrap_ci95':boot(xs,seed),'p50':round(pct(xs,.5),6),'p95':round(pct(xs,.95),6)}
+
+def holm_adjust(p_values):
+ """Return Holm family-wise-error adjusted p-values in input order."""
+ indexed=sorted(enumerate(min(1.0,max(0.0,f(p,1.0))) for p in p_values),key=lambda x:x[1])
+ adjusted=[1.0]*len(indexed);running=0.0;m=len(indexed)
+ for rank,(index,p_value) in enumerate(indexed):
+  running=max(running,(m-rank)*p_value)
+  adjusted[index]=round(min(1.0,running),6)
+ return adjusted
 
 def utility(m,w=W):return sum((f(m['quality']),1-f(m['cost']),1-f(m['latency']),f(m['reliability']))[i]*w[k] for i,k in enumerate(METRICS))
 def canonical_dataset(task):
@@ -113,8 +123,22 @@ def main():
   common=sorted(set(task_utility[canonical_best]) & set(task_utility[sid]))
   diffs=[task_utility[canonical_best][tid]-task_utility[sid][tid] for tid in common]
   ci=_bootstrap_ci(diffs, samples=2000)
-  paired.append({'reference_id':canonical_best,'reference':strategy_names.get(canonical_best,canonical_best),'baseline_id':sid,'baseline':strategy_names.get(sid,sid),'n':len(diffs),'mean_delta':ci['mean'],'bootstrap_ci95':[ci['low'],ci['high']],'paired_t':_paired_t_test(diffs),'wilcoxon':_wilcoxon_signed_rank(diffs),'significant':bool(ci['low']>0 or ci['high']<0)})
- report={'report_type':'frozen_formal_main_experiment','generated_at':datetime.now(timezone.utc).isoformat(),'source':str(RESULT.relative_to(ROOT)),'signature':signature,'integrity':{'raw_runs':len(raw),'all_success':all(r.get('ok') is True for r in raw),'success_checkpoints':len(success),'model_counts':dict(model_counts),'task_count':len(task_counts),'per_task_count_distribution':dict(Counter(task_counts.values())),'historical_connection_failures':len(failed),'historical_failure_window_ended_at':datetime.fromtimestamp(last_failure,timezone.utc).isoformat() if last_failure else None,'failure_records_after_final_failure':0,'note':f'{len(failed)} historical failed attempts are preserved as audit records and excluded from the 1200 unique successful final checkpoints; no failure record occurs after the final failure timestamp.'},'judges':judges,'costs':{'answer_cost_usd':round(answer_cost,8),'judge_cost_usd':round(judge_cost,8),'total_usd':round(answer_cost+judge_cost,8),'judge_share':round(judge_cost/max(answer_cost+judge_cost,1e-12),6)},'raw_model_results':raw_models,'strategy_results':strategies,'canonical_best_strategy':canonical_best,'bootstrap_note':'Deterministic percentile bootstrap, 2000 resamples, seed 20260727.','paired_significance':paired,'source_routerbench_score_significance':d['routerbench']['significance'],'pareto_front':{'recomputed_ids':pareto,'routerbench':d['routerbench']['pareto_front'],'weight_independent':True},'weight_sensitivity':sensitivity,'dataset_group_results':grouped,'dataset_counts':dict(Counter(ds_by_id.values())),'frozen_result_sha256':hashlib.sha256(RESULT.read_bytes()).hexdigest()}
+  paired.append({'reference_id':canonical_best,'reference':strategy_names.get(canonical_best,canonical_best),'baseline_id':sid,'baseline':strategy_names.get(sid,sid),'n':len(diffs),'mean_delta':ci['mean'],'bootstrap_ci95':[ci['low'],ci['high']],'paired_t':_paired_t_test(diffs),'wilcoxon':_wilcoxon_signed_rank(diffs)})
+ t_adjusted=holm_adjust([x['paired_t'].get('p') for x in paired]);w_adjusted=holm_adjust([x['wilcoxon'].get('p') for x in paired])
+ for item,t_p,w_p in zip(paired,t_adjusted,w_adjusted):
+  item['paired_t']['holm_adjusted_p']=t_p;item['wilcoxon']['holm_adjusted_p']=w_p
+  item['bootstrap_excludes_zero']=item['bootstrap_ci95'][0]>0 or item['bootstrap_ci95'][1]<0
+  item['significant']=bool(item['bootstrap_excludes_zero'] and t_p<.05 and w_p<.05)
+ selection_vectors={};baseline_selection_summary={}
+ for sid,rs in strategy_rows.items():
+  ordered=sorted((str(r['task_id']),str(r.get('selected_model'))) for r in rs);selection_vectors[sid]=tuple(ordered)
+  baseline_selection_summary[sid]={'name':strategy_names.get(sid,sid),'task_count':len(ordered),'model_counts':dict(Counter(model for _,model in ordered)),'selection_pattern_sha256':hashlib.sha256(json.dumps(ordered,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()}
+ equivalence=defaultdict(list)
+ for sid,vector in selection_vectors.items():equivalence[vector].append(sid)
+ equivalent_groups=[{'strategy_ids':sorted(ids),'strategy_names':[strategy_names.get(sid,sid) for sid in sorted(ids)],'task_count':len(vector),'model_counts':dict(Counter(model for _,model in vector)),'interpretation':'These strategies produced the same per-task model selections in this frozen experiment and therefore do not provide independent empirical contrasts.'} for vector,ids in equivalence.items() if len(ids)>1]
+ baseline_audit={'effective_unique_selection_patterns':len(equivalence),'strategy_count':len(selection_vectors),'strategies':baseline_selection_summary,'equivalent_selection_groups':equivalent_groups,'independence_warning':bool(equivalent_groups)}
+ significance_rule={'alpha':.05,'multiple_comparison_correction':'Holm family-wise error rate correction, applied separately to paired t-test and Wilcoxon p-values across all 11 comparisons.','primary_significant_definition':'Bootstrap 95% CI excludes zero AND Holm-adjusted paired t-test p < 0.05 AND Holm-adjusted Wilcoxon p < 0.05.','bootstrap':'Deterministic percentile bootstrap, 2000 resamples.'}
+ report={'report_type':'frozen_formal_main_experiment','generated_at':datetime.now(timezone.utc).isoformat(),'source':str(RESULT.relative_to(ROOT)),'signature':signature,'integrity':{'raw_runs':len(raw),'all_success':all(r.get('ok') is True for r in raw),'success_checkpoints':len(success),'model_counts':dict(model_counts),'task_count':len(task_counts),'per_task_count_distribution':dict(Counter(task_counts.values())),'historical_connection_failures':len(failed),'historical_failure_window_ended_at':datetime.fromtimestamp(last_failure,timezone.utc).isoformat() if last_failure else None,'failure_records_after_final_failure':0,'note':f'{len(failed)} historical failed attempts are preserved as audit records and excluded from the 1200 unique successful final checkpoints; no failure record occurs after the final failure timestamp.'},'judges':judges,'costs':{'answer_cost_usd':round(answer_cost,8),'judge_cost_usd':round(judge_cost,8),'total_usd':round(answer_cost+judge_cost,8),'judge_share':round(judge_cost/max(answer_cost+judge_cost,1e-12),6)},'raw_model_results':raw_models,'strategy_results':strategies,'canonical_best_strategy':canonical_best,'bootstrap_note':'Deterministic percentile bootstrap, 2000 resamples, seed 20260727.','significance_rule':significance_rule,'paired_significance':paired,'baseline_validity_audit':baseline_audit,'source_routerbench_score_significance':d['routerbench']['significance'],'pareto_front':{'recomputed_ids':pareto,'routerbench':d['routerbench']['pareto_front'],'weight_independent':True},'weight_sensitivity':sensitivity,'dataset_group_results':grouped,'dataset_counts':dict(Counter(ds_by_id.values())),'frozen_result_sha256':hashlib.sha256(RESULT.read_bytes()).hexdigest()}
  OUT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
  lines=['# 正式论文实验结果（冻结主实验）','',f"- 成功检查点：{len(success)}/1200",f"- 模型分布：{dict(model_counts)}",f"- 双裁判覆盖：{judges['dual_coverage_count']}/1200 ({judges['dual_coverage_rate']:.2%})",f"- 裁判尝试解析率：{judges['attempt_parse_rate']:.2%}",f"- 回答成本：${answer_cost:.6f}",f"- 裁判成本：${judge_cost:.6f}",f"- 总成本：${answer_cost+judge_cost:.6f}",f"- 冻结结果 SHA-256：`{report['frozen_result_sha256']}`",'', '## 路由策略主结果','', '| 策略 | Q (均值±SD) | C | L | R | Utility 95% CI | P50/P95 ms | 失败/回退 |','|---|---:|---:|---:|---:|---|---:|---:|']
  for sid in sorted(strategies,key=lambda x:strategies[x]['utility']['mean'],reverse=True):
@@ -124,7 +148,11 @@ def main():
  lines+=['','## 数据集分组','']
  for ds,x in grouped.items():
   best=max(x['strategies'],key=lambda sid:x['strategies'][sid]['utility']['mean']);lines.append(f"- {ds}（{x['task_count']}题）：最高效用策略 {strategy_names.get(best,best)}，U={x['strategies'][best]['utility']['mean']:.4f}")
- lines+=['','## 统计显著性','',f"配对比较 {len(report['paired_significance'])} 组；完整 paired t、Wilcoxon 与 Bootstrap CI 见 JSON。",'','> {len(failed)} 条历史失败尝试作为审计记录保留，与最终 1200 条唯一成功结果分开统计；最后一条失败记录之后未再出现失败。','']
+ lines+=['','## 基线有效性审计','',f"共 {len(selection_vectors)} 个策略，但只有 {len(equivalence)} 种逐题模型选择模式。"]
+ for group in equivalent_groups:lines.append(f"- 等价选择组：{', '.join(group['strategy_names'])}；{group['task_count']} 个任务逐题选择完全一致，模型分布 {group['model_counts']}。这些结果不得解释为相互独立的基线证据。")
+ lines+=['','## 统计显著性','',f"配对比较 {len(report['paired_significance'])} 组。主判定规则：Bootstrap 95% CI 不跨 0，且 paired t 与 Wilcoxon 的 Holm 校正 p 值均小于 0.05；完整结果见 JSON。"]
+ for item in paired:lines.append(f"- {item['reference']} vs {item['baseline']}：Δ={item['mean_delta']:.5f}，CI={item['bootstrap_ci95']}，t-Holm p={item['paired_t']['holm_adjusted_p']:.6g}，Wilcoxon-Holm p={item['wilcoxon']['holm_adjusted_p']:.6g}，显著={item['significant']}。")
+ lines+=['',f"> {len(failed)} 条历史失败尝试作为审计记录保留，与最终 1200 条唯一成功结果分开统计；最后一条失败记录之后未再出现失败。",'']
  OUT_MD.write_text('\n'.join(lines))
  print(json.dumps({'json':str(OUT),'markdown':str(OUT_MD),'success':len(success),'dual_coverage':judges['dual_coverage_rate'],'answer_cost':answer_cost,'judge_cost':judge_cost,'pareto':pareto,'weight_vectors':len(grid),'winners':dict(winners)},ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

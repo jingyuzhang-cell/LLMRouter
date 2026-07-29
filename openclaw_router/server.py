@@ -2417,7 +2417,7 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
         }
         if not judge_enabled:
             return base
-        preferred = [name for name in ("qwen-plus", "deepseek-chat", "glm-5.2", "qwen-turbo") if name in config.llms and name != candidate_model]
+        preferred = [name for name in ("qwen-plus", "deepseek-chat", "qwen-turbo") if name in config.llms and name != candidate_model]
         if not preferred:
             return base
         profile = task_evaluation_profile(task)

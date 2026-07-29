@@ -9,7 +9,7 @@ ANSWER_FORMAT_VERSION="task-aware-final-answer-v2"
 DATA_VERSION="finance-benchmark-v2-context-grounded"
 MAX_INPUT_CHARS=24000
 OBJECTIVE_FEASIBILITY_THRESHOLD=0.60
-OBJECTIVE_SCORER_VERSION="dataset-aware-objective-v2.1"
+OBJECTIVE_SCORER_VERSION="dataset-aware-objective-v2.2"
 RELIABILITY_VERSION="api-availability-times-answer-correctness-v2"
 
 _STOPWORDS={"the","a","an","and","or","of","to","in","for","is","are","be","by","with","that","this","must","should","may","its","their","from","as","on","at"}
@@ -104,11 +104,25 @@ def _numbers(text:str)->List[float]:
         elif 0<abs(value)<=1:out.append(value*100.0)
     return out
 
+def _unit_scale(text:str)->float:
+    value=(text or "").lower()
+    if re.search(r"\b(?:billion|bn)\b|十亿",value):return 1_000_000_000.0
+    if re.search(r"\b(?:million|mn)\b|[£€$]\s*m\b|百万",value):return 1_000_000.0
+    if re.search(r"\b(?:thousand|000s)\b|千",value):return 1_000.0
+    return 1.0
+
 def _numeric_score(gold:str,response:str)->Optional[float]:
-    expected=_numbers(gold)
+    gold_scale=_unit_scale(gold)
+    expected=[x*gold_scale for x in _numbers(gold)]
     if not expected:return None
-    final_match=re.split(r"(?:final\s+answer|最终答案|答案|result)\s*[:：]",response,flags=re.I)
-    observed=_numbers(final_match[-1] if len(final_match)>1 else response)
+    marker=re.compile(r"(?:final\s+answer|最终答案|答案|result)\s*[:：]",re.I)
+    explicit=[]
+    for match in marker.finditer(response):
+        line=response[match.end():].splitlines()[0].strip()
+        if line and not re.search(r"<\s*(?:数值|单位|value|unit)",line,re.I):explicit.append(line)
+    candidate="\n".join(explicit) if explicit else response
+    candidate_scale=_unit_scale(candidate) if gold_scale!=1.0 else 1.0
+    observed=[x*candidate_scale for x in _numbers(candidate)]
     if not observed:return 0.0
     matched=0
     for left in expected:
