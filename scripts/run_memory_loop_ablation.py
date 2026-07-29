@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
 from openclaw_router.experience import RoutingExperienceStore,automatic_verification
-RESULT=ROOT/'run_logs/formal_100_final_result.json'
+RESULT=ROOT/'run_logs/formal_context_v2_resumed_result.json'
 OUT=ROOT/'run_logs/memory_loop_ablation.json';OUT_MD=ROOT/'run_logs/memory_loop_ablation.md'
 MODELS=['qwen-plus','deepseek-chat','qwen-turbo','glm-5.2'];EPS=.02;EPOCHS=5
 

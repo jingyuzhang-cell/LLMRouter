@@ -1,28 +1,28 @@
 # Judge Calibration Analysis
 
-Snapshot: 388 successful runs (interim only)
+Snapshot: 1200 successful runs (interim only)
 
 ## Threshold sensitivity
-- 0.10: 277 (71.39%)
-- 0.15: 268 (69.07%)
-- 0.20: 250 (64.43%)
-- 0.25: 142 (36.60%)
-- 0.30: 125 (32.22%)
-- 0.35: 107 (27.58%)
-- 0.40: 85 (21.91%)
-- 0.45: 49 (12.63%)
-- 0.50: 45 (11.60%)
+- 0.10: 592 (49.33%)
+- 0.15: 504 (42.00%)
+- 0.20: 433 (36.08%)
+- 0.25: 384 (32.00%)
+- 0.30: 364 (30.33%)
+- 0.35: 342 (28.50%)
+- 0.40: 318 (26.50%)
+- 0.45: 263 (21.92%)
+- 0.50: 253 (21.08%)
 
 ## Judge parsing
-- qwen-plus: 289/291 (99.31%)
-- glm-5.2: 1/196 (0.51%)
-- qwen-turbo: 194/195 (99.49%)
-- deepseek-chat: 289/289 (100.00%)
+- qwen-plus: 894/900 (99.33%)
+- glm-5.2: 3/601 (0.50%)
+- qwen-turbo: 601/601 (100.00%)
+- deepseek-chat: 900/900 (100.00%)
 
 ## Objective calibration
-- Pearson: 0.6598
-- MAE: 0.1526
-- Judge minus objective bias: 0.0788
+- Pearson: 0.5833
+- MAE: 0.1933
+- Judge minus objective bias: 0.0687
 
 ## Recommendation
 - store raw failed judge text after the frozen run

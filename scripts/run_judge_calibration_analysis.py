@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
 from openclaw_router.checkpoint import load_successful
-PROGRESS=ROOT/'run_logs/llmrouter_experiment_progress_v1.json';CHECKPOINT=ROOT/'run_logs/llmrouter_experiment_checkpoint_v1.jsonl';DATA=ROOT/'data/finance_router/frozen/v1/finance_benchmark_v1.jsonl';OUT=ROOT/'run_logs/judge_calibration_analysis.json';OUT_MD=ROOT/'run_logs/judge_calibration_analysis.md'
+PROGRESS=ROOT/'run_logs/llmrouter_experiment_progress_v2.json';CHECKPOINT=ROOT/'run_logs/llmrouter_experiment_checkpoint_v2.jsonl';DATA=ROOT/'data/finance_router/frozen/v1/finance_benchmark_v1.jsonl';OUT=ROOT/'run_logs/judge_calibration_analysis.json';OUT_MD=ROOT/'run_logs/judge_calibration_analysis.md'
 MODELS=['deepseek-chat','qwen-plus','qwen-turbo','glm-5.2']
 def pearson(xs,ys):
  if len(xs)<3:return None
