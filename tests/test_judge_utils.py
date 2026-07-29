@@ -19,6 +19,12 @@ def test_finds_json_after_reasoning_text():
     assert parsed["score"] == 0.65
 
 
+def test_finds_json_after_long_glm_reasoning_text():
+    reasoning = "分析候选回答：准确、完整、推理清楚。" * 100
+    parsed = parse_judge_payload(reasoning + '\n```json\n{"score":0.92,"reason":"匹配标准答案"}\n```')
+    assert parsed["score"] == 0.92
+
+
 def test_calibration_is_disabled_by_default_and_clamped_when_enabled():
     cfg={"enabled":False,"models":{"qwen-turbo":{"intercept":-0.1,"slope":0.7}}}
     assert calibrate_score("qwen-turbo",0.8,cfg)==0.8

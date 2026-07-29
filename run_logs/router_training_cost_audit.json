@@ -1,0 +1,58 @@
+{
+  "report_type": "router_training_cost_and_named_review",
+  "generated_at": "2026-07-29T09:41:17.790812+00:00",
+  "offline_only": true,
+  "api_calls": 0,
+  "source_sha256": "e82409ecf3e7cf4ced0d2825aa45a6d8b2154b5a6e1f601e91975f38441ffcde",
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 4090"
+  },
+  "graphrouter": {
+    "implementation_present": true,
+    "torch_geometric_version": "2.8.0",
+    "demo_weight_present": true,
+    "demo_weight_bytes": 224919,
+    "demo_parameter_count": 53828,
+    "demo_training_rows": 8,
+    "financial_embeddings_ready": true,
+    "financial_embedding_bytes": 313931,
+    "financial_routing_rows_required": 400,
+    "configured_epochs": 30,
+    "readiness": "Code and dependencies are ready. Demo weights are incompatible with the 100-task/4-model financial label space; a new leakage-safe graph dataset and training run are required.",
+    "cost_assessment": "No API cost and the 100 Longformer embeddings can be reused. Expected compute is a small 30-epoch GNN run; measured wall time is deferred until leakage-safe graph edges are built."
+  },
+  "routerdc": {
+    "implementation_present": false,
+    "config_present": true,
+    "weights_present": false,
+    "deberta_cache_present": false,
+    "readiness": "Blocked: no RouterDC implementation, config, weights, or cached DeBERTa checkpoint in this checkout.",
+    "cost_assessment": "A defensible measured cost is impossible here. Importing and pinning RouterDC plus its encoder may require network access and substantially more GPU memory/time than KNN."
+  },
+  "named_manual_review": {
+    "rows": 425,
+    "by_model": {
+      "qwen-plus": 106,
+      "glm-5.2": 119,
+      "deepseek-chat": 93,
+      "qwen-turbo": 107
+    },
+    "by_dataset": {
+      "TAT-QA": 99,
+      "FinQA": 125,
+      "ObliQA": 168,
+      "TAT-QA-seed": 11,
+      "FinQA-seed": 7,
+      "FinKG-seed": 11,
+      "FinReflectKG-EvalBench-derived": 1,
+      "AuditCompliance-seed": 3
+    },
+    "worksheet": "run_logs/judge_disagreement_named_review.csv",
+    "reviewer_identity_required": true,
+    "completed_rows": 0,
+    "status": "awaiting human adjudication"
+  }
+}

@@ -2500,6 +2500,9 @@ def create_app(config: OpenClawConfig = None, config_path: str = None) -> FastAP
                     "model": judge_model, "ok": bool(parsed), "cost_usd": attempt_cost,
                     "error": None if parsed else "unparseable_json",
                     "raw_excerpt": None if parsed else judge_text[:1000],
+                    # Failed judge output must remain available in local raw logs so a
+                    # repaired parser can be replayed without another paid API call.
+                    "raw_response": None if parsed else judge_text,
                     "calibration_enabled": bool(judge_calibration.get("enabled")),
                 })
                 if parsed:
