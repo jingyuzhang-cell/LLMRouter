@@ -1,0 +1,612 @@
+{
+  "report_type": "strict_offline_graphrouter_baseline",
+  "generated_at": "2026-07-29T10:06:28.253099+00:00",
+  "offline_only": true,
+  "api_calls": 0,
+  "source_sha256": "e82409ecf3e7cf4ced0d2825aa45a6d8b2154b5a6e1f601e91975f38441ffcde",
+  "device": "cuda",
+  "split_source": "run_logs/offline_knn_baseline/split.json",
+  "split_counts": {
+    "train": 60,
+    "validation": 20,
+    "test": 20
+  },
+  "graph": {
+    "train_edges": 240,
+    "validation_edges": 80,
+    "test_edges": 80,
+    "query_dimension": 768,
+    "model_dimension": 768,
+    "test_edges_visible_during_training": false,
+    "validation_edges_visible_during_training": false
+  },
+  "leakage_checks": {
+    "same_split_as_knn": true,
+    "train_validation_test_disjoint": true,
+    "scaler_fit_without_test": true,
+    "model_descriptions_contain_no_outcome_metrics": true,
+    "test_labels_and_utilities_used_only_after_prediction": true
+  },
+  "tuning": {
+    "seconds": 6.115,
+    "trials": [
+      {
+        "hidden": 16,
+        "lr": 0.001,
+        "seed": 17,
+        "validation_utility": 0.863833,
+        "validation_accuracy": 0.3,
+        "best_epoch": 85
+      },
+      {
+        "hidden": 16,
+        "lr": 0.001,
+        "seed": 29,
+        "validation_utility": 0.859411,
+        "validation_accuracy": 0.35,
+        "best_epoch": 100
+      },
+      {
+        "hidden": 16,
+        "lr": 0.001,
+        "seed": 43,
+        "validation_utility": 0.868595,
+        "validation_accuracy": 0.45,
+        "best_epoch": 45
+      },
+      {
+        "hidden": 16,
+        "lr": 0.003,
+        "seed": 17,
+        "validation_utility": 0.857806,
+        "validation_accuracy": 0.3,
+        "best_epoch": 40
+      },
+      {
+        "hidden": 16,
+        "lr": 0.003,
+        "seed": 29,
+        "validation_utility": 0.854237,
+        "validation_accuracy": 0.3,
+        "best_epoch": 80
+      },
+      {
+        "hidden": 16,
+        "lr": 0.003,
+        "seed": 43,
+        "validation_utility": 0.867357,
+        "validation_accuracy": 0.4,
+        "best_epoch": 70
+      },
+      {
+        "hidden": 32,
+        "lr": 0.001,
+        "seed": 17,
+        "validation_utility": 0.87484,
+        "validation_accuracy": 0.5,
+        "best_epoch": 25
+      },
+      {
+        "hidden": 32,
+        "lr": 0.001,
+        "seed": 29,
+        "validation_utility": 0.874805,
+        "validation_accuracy": 0.45,
+        "best_epoch": 30
+      },
+      {
+        "hidden": 32,
+        "lr": 0.001,
+        "seed": 43,
+        "validation_utility": 0.864193,
+        "validation_accuracy": 0.35,
+        "best_epoch": 75
+      },
+      {
+        "hidden": 32,
+        "lr": 0.003,
+        "seed": 17,
+        "validation_utility": 0.87484,
+        "validation_accuracy": 0.5,
+        "best_epoch": 25
+      },
+      {
+        "hidden": 32,
+        "lr": 0.003,
+        "seed": 29,
+        "validation_utility": 0.868518,
+        "validation_accuracy": 0.45,
+        "best_epoch": 20
+      },
+      {
+        "hidden": 32,
+        "lr": 0.003,
+        "seed": 43,
+        "validation_utility": 0.857365,
+        "validation_accuracy": 0.35,
+        "best_epoch": 60
+      }
+    ],
+    "selected": {
+      "hidden": 32,
+      "lr": 0.001,
+      "seed": 17,
+      "validation_utility": 0.87484,
+      "validation_accuracy": 0.5,
+      "best_epoch": 25
+    }
+  },
+  "test": {
+    "count": 20,
+    "accuracy": 0.5,
+    "selection_counts": {
+      "deepseek-chat": 9,
+      "qwen-turbo": 9,
+      "qwen-plus": 1,
+      "glm-5.2": 1
+    },
+    "label_counts": {
+      "qwen-turbo": 12,
+      "deepseek-chat": 6,
+      "qwen-plus": 2
+    },
+    "graphrouter_metrics": {
+      "quality": 0.8279,
+      "raw_cost_usd": 0.000196,
+      "latency_ms": 2376.235333,
+      "reliability": 1.0,
+      "utility": 0.885855
+    },
+    "knn_metrics": {
+      "quality": 0.7428,
+      "raw_cost_usd": 4.7e-05,
+      "latency_ms": 1898.754667,
+      "reliability": 1.0,
+      "utility": 0.855314
+    },
+    "fixed_strong_metrics": {
+      "quality": 0.813667,
+      "raw_cost_usd": 0.000272,
+      "latency_ms": 2359.2895,
+      "reliability": 1.0,
+      "utility": 0.878041
+    },
+    "oracle_upper_bound_metrics": {
+      "quality": 0.898017,
+      "raw_cost_usd": 9.8e-05,
+      "latency_ms": 2623.845167,
+      "reliability": 1.0,
+      "utility": 0.914395
+    },
+    "rows": [
+      {
+        "task_id": "finance_dataset_1228eebb-fdd2-44c7-9d48-cda11e7dfcba",
+        "dataset": "TAT-QA",
+        "selected_model": "deepseek-chat",
+        "label_model": "qwen-turbo",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.780769,
+          "glm-5.2": 0.772726,
+          "qwen-plus": 0.754441,
+          "qwen-turbo": 0.660346
+        },
+        "metrics": {
+          "quality": 0.99733333,
+          "raw_cost_usd": 0.00019026,
+          "latency_ms": 2049.21,
+          "reliability": 1.0,
+          "utility": 0.96615925
+        }
+      },
+      {
+        "task_id": "finance_dataset_1ff8c020-a1bd-487d-a686-4c19ddd98bc0",
+        "dataset": "ObliQA",
+        "selected_model": "qwen-turbo",
+        "label_model": "qwen-turbo",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.431761,
+          "glm-5.2": 0.453417,
+          "qwen-plus": 0.486189,
+          "qwen-turbo": 0.609639
+        },
+        "metrics": {
+          "quality": 0.65866667,
+          "raw_cost_usd": 1.254e-05,
+          "latency_ms": 3443.00333333,
+          "reliability": 1.0,
+          "utility": 0.79462955
+        }
+      },
+      {
+        "task_id": "finance_dataset_6114d50f-c240-46d2-8fe0-2159ee379e42",
+        "dataset": "TAT-QA",
+        "selected_model": "deepseek-chat",
+        "label_model": "deepseek-chat",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.707294,
+          "glm-5.2": 0.696937,
+          "qwen-plus": 0.683459,
+          "qwen-turbo": 0.460285
+        },
+        "metrics": {
+          "quality": 0.992,
+          "raw_cost_usd": 0.0001169,
+          "latency_ms": 1325.37333333,
+          "reliability": 1.0,
+          "utility": 0.9753504
+        }
+      },
+      {
+        "task_id": "finance_dataset_78ed28e5-4139-48ca-8a7e-d173a72ad032",
+        "dataset": "TAT-QA",
+        "selected_model": "deepseek-chat",
+        "label_model": "qwen-turbo",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.436485,
+          "glm-5.2": 0.386369,
+          "qwen-plus": 0.376352,
+          "qwen-turbo": 0.328246
+        },
+        "metrics": {
+          "quality": 0.99733333,
+          "raw_cost_usd": 0.00019432,
+          "latency_ms": 1078.69666667,
+          "reliability": 1.0,
+          "utility": 0.98067635
+        }
+      },
+      {
+        "task_id": "finance_dataset_7bdf70f2-45b5-485b-b3b3-c967f28f38f1",
+        "dataset": "TAT-QA",
+        "selected_model": "deepseek-chat",
+        "label_model": "qwen-plus",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.512164,
+          "glm-5.2": 0.50118,
+          "qwen-plus": 0.49033,
+          "qwen-turbo": 0.386926
+        },
+        "metrics": {
+          "quality": 0.32733333,
+          "raw_cost_usd": 0.00019796,
+          "latency_ms": 1808.22666667,
+          "reliability": 1.0,
+          "utility": 0.668197
+        }
+      },
+      {
+        "task_id": "finance_dataset_7fe54f97-90d6-4a89-a6f2-05a7c6ae95ca",
+        "dataset": "ObliQA",
+        "selected_model": "qwen-plus",
+        "label_model": "deepseek-chat",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.351031,
+          "glm-5.2": 0.364271,
+          "qwen-plus": 0.370956,
+          "qwen-turbo": 0.366579
+        },
+        "metrics": {
+          "quality": 0.03333333,
+          "raw_cost_usd": 0.00013889,
+          "latency_ms": 5629.86666667,
+          "reliability": 1.0,
+          "utility": 0.47916307
+        }
+      },
+      {
+        "task_id": "finance_dataset_95d0d7eb-57b1-44cd-9ec4-491078ecc33f",
+        "dataset": "ObliQA",
+        "selected_model": "qwen-turbo",
+        "label_model": "qwen-turbo",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.60924,
+          "glm-5.2": 0.602109,
+          "qwen-plus": 0.633286,
+          "qwen-turbo": 0.719159
+        },
+        "metrics": {
+          "quality": 0.722,
+          "raw_cost_usd": 5.17e-06,
+          "latency_ms": 1892.60666667,
+          "reliability": 1.0,
+          "utility": 0.84645917
+        }
+      },
+      {
+        "task_id": "finance_dataset_a22a01bc-15e3-440c-8eae-dccb337fa4ce",
+        "dataset": "ObliQA",
+        "selected_model": "qwen-turbo",
+        "label_model": "qwen-plus",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.4596,
+          "glm-5.2": 0.486428,
+          "qwen-plus": 0.505288,
+          "qwen-turbo": 0.554818
+        },
+        "metrics": {
+          "quality": 0.0,
+          "raw_cost_usd": 1.111e-05,
+          "latency_ms": 2930.77666667,
+          "reliability": 1.0,
+          "utility": 0.50592728
+        }
+      },
+      {
+        "task_id": "finance_dataset_aac89e0d-df40-4eb8-93ac-e165802532f4",
+        "dataset": "TAT-QA",
+        "selected_model": "glm-5.2",
+        "label_model": "deepseek-chat",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.643282,
+          "glm-5.2": 0.65125,
+          "qwen-plus": 0.619221,
+          "qwen-turbo": 0.401112
+        },
+        "metrics": {
+          "quality": 0.992,
+          "raw_cost_usd": 0.00152733,
+          "latency_ms": 11204.02,
+          "reliability": 1.0,
+          "utility": 0.83112667
+        }
+      },
+      {
+        "task_id": "finance_dataset_d656c8b8-1cd6-492d-8b1d-c64f04799633",
+        "dataset": "TAT-QA",
+        "selected_model": "deepseek-chat",
+        "label_model": "qwen-turbo",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.541366,
+          "glm-5.2": 0.512215,
+          "qwen-plus": 0.505024,
+          "qwen-turbo": 0.508718
+        },
+        "metrics": {
+          "quality": 1.0,
+          "raw_cost_usd": 0.00012054,
+          "latency_ms": 1672.05666667,
+          "reliability": 1.0,
+          "utility": 0.97371375
+        }
+      },
+      {
+        "task_id": "finance_dataset_dc7bc0fa-dfb6-49cd-89c4-06c3156c5b1f",
+        "dataset": "TAT-QA",
+        "selected_model": "qwen-turbo",
+        "label_model": "qwen-turbo",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.583676,
+          "glm-5.2": 0.58747,
+          "qwen-plus": 0.584987,
+          "qwen-turbo": 0.680592
+        },
+        "metrics": {
+          "quality": 0.99466667,
+          "raw_cost_usd": 5.98e-06,
+          "latency_ms": 1249.22,
+          "reliability": 1.0,
+          "utility": 0.97880193
+        }
+      },
+      {
+        "task_id": "finance_dataset_finqa_001370",
+        "dataset": "FinQA",
+        "selected_model": "deepseek-chat",
+        "label_model": "qwen-turbo",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.673543,
+          "glm-5.2": 0.645375,
+          "qwen-plus": 0.645192,
+          "qwen-turbo": 0.660689
+        },
+        "metrics": {
+          "quality": 1.0,
+          "raw_cost_usd": 0.00037954,
+          "latency_ms": 1741.33666667,
+          "reliability": 1.0,
+          "utility": 0.97008455
+        }
+      },
+      {
+        "task_id": "finance_dataset_finqa_002500",
+        "dataset": "FinQA",
+        "selected_model": "deepseek-chat",
+        "label_model": "deepseek-chat",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.265508,
+          "glm-5.2": 0.245698,
+          "qwen-plus": 0.231489,
+          "qwen-turbo": 0.138352
+        },
+        "metrics": {
+          "quality": 0.99733333,
+          "raw_cost_usd": 0.0003668,
+          "latency_ms": 1404.63,
+          "reliability": 1.0,
+          "utility": 0.97406255
+        }
+      },
+      {
+        "task_id": "finance_dataset_finqa_003266",
+        "dataset": "FinQA",
+        "selected_model": "deepseek-chat",
+        "label_model": "deepseek-chat",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.280838,
+          "glm-5.2": 0.278811,
+          "qwen-plus": 0.271277,
+          "qwen-turbo": 0.268846
+        },
+        "metrics": {
+          "quality": 0.932,
+          "raw_cost_usd": 0.00033642,
+          "latency_ms": 2104.87,
+          "reliability": 1.0,
+          "utility": 0.93446275
+        }
+      },
+      {
+        "task_id": "finance_dataset_finqa_005817",
+        "dataset": "FinQA",
+        "selected_model": "deepseek-chat",
+        "label_model": "qwen-turbo",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.477108,
+          "glm-5.2": 0.45921,
+          "qwen-plus": 0.45336,
+          "qwen-turbo": 0.418409
+        },
+        "metrics": {
+          "quality": 0.98566667,
+          "raw_cost_usd": 0.00026152,
+          "latency_ms": 2013.21,
+          "reliability": 1.0,
+          "utility": 0.96073665
+        }
+      },
+      {
+        "task_id": "finance_dataset_finreflect_0ba3d2f9e1bd45de",
+        "dataset": "FinReflectKG-EvalBench-derived",
+        "selected_model": "qwen-turbo",
+        "label_model": "qwen-turbo",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.387438,
+          "glm-5.2": 0.400624,
+          "qwen-plus": 0.430282,
+          "qwen-turbo": 0.703278
+        },
+        "metrics": {
+          "quality": 0.98266667,
+          "raw_cost_usd": 1.68e-05,
+          "latency_ms": 1923.16666667,
+          "reliability": 1.0,
+          "utility": 0.96318447
+        }
+      },
+      {
+        "task_id": "finance_dataset_finreflect_339704e486824368",
+        "dataset": "FinReflectKG-EvalBench-derived",
+        "selected_model": "qwen-turbo",
+        "label_model": "qwen-turbo",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.442305,
+          "glm-5.2": 0.44955,
+          "qwen-plus": 0.476408,
+          "qwen-turbo": 0.70404
+        },
+        "metrics": {
+          "quality": 0.98933333,
+          "raw_cost_usd": 1.582e-05,
+          "latency_ms": 924.27666667,
+          "reliability": 1.0,
+          "utility": 0.98117765
+        }
+      },
+      {
+        "task_id": "finance_dataset_finreflect_37a5701d8dcbb5de",
+        "dataset": "FinReflectKG-EvalBench-derived",
+        "selected_model": "qwen-turbo",
+        "label_model": "deepseek-chat",
+        "correct": false,
+        "scores": {
+          "deepseek-chat": 0.574792,
+          "glm-5.2": 0.573489,
+          "qwen-plus": 0.609103,
+          "qwen-turbo": 0.823966
+        },
+        "metrics": {
+          "quality": 0.97233333,
+          "raw_cost_usd": 5.23e-06,
+          "latency_ms": 1250.24333333,
+          "reliability": 1.0,
+          "utility": 0.96874405
+        }
+      },
+      {
+        "task_id": "finance_dataset_finreflect_7f97fc61e2d20399",
+        "dataset": "FinReflectKG-EvalBench-derived",
+        "selected_model": "qwen-turbo",
+        "label_model": "qwen-turbo",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.369463,
+          "glm-5.2": 0.385782,
+          "qwen-plus": 0.413568,
+          "qwen-turbo": 0.683399
+        },
+        "metrics": {
+          "quality": 0.992,
+          "raw_cost_usd": 1.025e-05,
+          "latency_ms": 852.18666667,
+          "reliability": 1.0,
+          "utility": 0.9835147
+        }
+      },
+      {
+        "task_id": "finance_dataset_finreflect_bff126cf2cdeedd6",
+        "dataset": "FinReflectKG-EvalBench-derived",
+        "selected_model": "qwen-turbo",
+        "label_model": "qwen-turbo",
+        "correct": true,
+        "scores": {
+          "deepseek-chat": 0.361612,
+          "glm-5.2": 0.37403,
+          "qwen-plus": 0.399557,
+          "qwen-turbo": 0.630672
+        },
+        "metrics": {
+          "quality": 0.992,
+          "raw_cost_usd": 4.97e-06,
+          "latency_ms": 1027.73,
+          "reliability": 1.0,
+          "utility": 0.98093438
+        }
+      }
+    ],
+    "paired_significance": [
+      {
+        "baseline": "fixed_strong",
+        "mean_delta": 0.007815,
+        "bootstrap_95_ci": [
+          -0.029085,
+          0.051152
+        ],
+        "paired_t_p": 0.7123281878586801,
+        "wilcoxon_p": 0.3333003029059074,
+        "holm_paired_t_p": 0.712328,
+        "holm_wilcoxon_p": 0.666601,
+        "joint_significant": false
+      },
+      {
+        "baseline": "knn",
+        "mean_delta": 0.030542,
+        "bootstrap_95_ci": [
+          -0.016597,
+          0.089777
+        ],
+        "paired_t_p": 0.28431727767648574,
+        "wilcoxon_p": 0.9272785186767578,
+        "holm_paired_t_p": 0.568635,
+        "holm_wilcoxon_p": 0.927279,
+        "joint_significant": false
+      }
+    ]
+  }
+}
