@@ -90,6 +90,27 @@ def _bootstrap_ci(differences: List[float], samples: int = 600) -> Dict[str, flo
     }
 
 
+def _mean_bootstrap_ci(values: List[float], samples: int = 1000, seed: int = 20260727) -> List[float]:
+    """Deterministic percentile CI for a strategy mean."""
+    if not values:
+        return [0.0, 0.0]
+    if len(values) == 1:
+        value = round(values[0], 5)
+        return [value, value]
+    rng = random.Random(seed)
+    boot = sorted(mean([rng.choice(values) for _ in values]) for _ in range(samples))
+    return [round(boot[int(0.025 * (samples - 1))], 5), round(boot[int(0.975 * (samples - 1))], 5)]
+
+
+def _utility(metrics: Dict[str, Any], weights: Dict[str, float]) -> float:
+    return (
+        _safe_float(metrics.get("quality")) * weights["quality"]
+        + (1.0 - _safe_float(metrics.get("cost"), 1.0)) * weights["cost"]
+        + (1.0 - _safe_float(metrics.get("latency"), 1.0)) * weights["latency"]
+        + _safe_float(metrics.get("reliability")) * weights["reliability"]
+    )
+
+
 def _normal_cdf(value: float) -> float:
     return 0.5 * (1.0 + math.erf(value / math.sqrt(2.0)))
 
@@ -174,6 +195,17 @@ def build_routerbench(payload: Dict[str, Any]) -> Dict[str, Any]:
     for row in rows:
         strategy = str(row.get("strategy_id") or row.get("strategy") or "unknown")
         rows_by_strategy[strategy].append(row)
+    task_risks = {
+        str(task.get("id")): max(0.0, min(1.0, _safe_float(task.get("risk"))))
+        for task in (payload.get("sampled_task_set") or payload.get("task_set") or [])
+    }
+    weights = {
+        "quality": _safe_float((payload.get("weights") or {}).get("quality"), 0.45),
+        "cost": _safe_float((payload.get("weights") or {}).get("cost"), 0.20),
+        "latency": _safe_float((payload.get("weights") or {}).get("latency"), 0.15),
+        "reliability": _safe_float((payload.get("weights") or {}).get("reliability"), 0.20),
+    }
+    risk_lambda = max(0.0, _safe_float((payload.get("scoring") or {}).get("risk_lambda"), 1.0))
 
     benchmark_rows = []
     for strategy in strategies:
@@ -215,6 +247,13 @@ def build_routerbench(payload: Dict[str, Any]) -> Dict[str, Any]:
         cost = _safe_float(summary.get("cost"))
         latency = _safe_float(summary.get("latency"))
         utility = _safe_float(summary.get("utility"))
+        row_utilities = [_utility(row.get("metrics") or {}, weights) for row in strategy_rows]
+        risk_weights = [1.0 + risk_lambda * task_risks.get(str(row.get("task_id")), 0.0) for row in strategy_rows]
+        risk_utility = (sum(value * weight for value, weight in zip(row_utilities, risk_weights)) / sum(risk_weights) if risk_weights else utility)
+        success_observations = [
+            _safe_float((row.get("metrics") or {}).get("api_availability"), _safe_float((row.get("metrics") or {}).get("reliability")))
+            for row in strategy_rows
+        ]
         benchmark_rows.append({
             "id": strategy_id,
             "name": strategy.get("name", strategy_id),
@@ -237,6 +276,10 @@ def build_routerbench(payload: Dict[str, Any]) -> Dict[str, Any]:
                 "router_overhead_ratio": round(mean(overhead_ratios), 5) if overhead_ratios else 0.0,
                 "reliability": round(reliability, 4),
                 "utility": round(utility, 5),
+                "risk_weighted_utility": round(risk_utility, 5),
+                "utility_ci95": _mean_bootstrap_ci(row_utilities, seed=20260727 + len(benchmark_rows)),
+                "failure_rate": round(1.0 - mean(success_observations), 5) if success_observations else 0.0,
+                "fallback_rate": round(sum(bool(row.get("fallback_used") or row.get("service_fallback")) for row in strategy_rows) / len(strategy_rows), 5) if strategy_rows else 0.0,
                 "quality_per_dollar": round(
                     quality / max(1e-8, mean(raw_costs) if raw_costs else cost * 0.01),
                     4,
@@ -302,6 +345,24 @@ def build_routerbench(payload: Dict[str, Any]) -> Dict[str, Any]:
         key=lambda item: (-item["uncertainty"], item["score_margin"]),
     )[:30]
 
+    sensitivity_profiles = {
+        "当前偏好": weights,
+        "质量优先": {"quality": 0.60, "cost": 0.10, "latency": 0.10, "reliability": 0.20},
+        "成本优先": {"quality": 0.30, "cost": 0.40, "latency": 0.15, "reliability": 0.15},
+        "低延迟优先": {"quality": 0.30, "cost": 0.15, "latency": 0.40, "reliability": 0.15},
+        "可靠性优先": {"quality": 0.30, "cost": 0.10, "latency": 0.10, "reliability": 0.50},
+    }
+    sensitivity = []
+    for profile_name, profile_weights in sensitivity_profiles.items():
+        ranked = []
+        for strategy in strategies:
+            strategy_id = str(strategy.get("id") or strategy.get("name"))
+            strategy_rows = rows_by_strategy.get(strategy_id) or rows_by_strategy.get(str(strategy.get("name"))) or []
+            values = [_utility(row.get("metrics") or {}, profile_weights) for row in strategy_rows]
+            ranked.append({"id": strategy_id, "name": strategy.get("name", strategy_id), "utility": round(mean(values), 5) if values else 0.0})
+        ranked.sort(key=lambda item: item["utility"], reverse=True)
+        sensitivity.append({"profile": profile_name, "weights": profile_weights, "winner": ranked[0]["name"] if ranked else "-", "ranking": ranked})
+
     return {
         "name": "RouterBench",
         "version": "0.1",
@@ -316,6 +377,8 @@ def build_routerbench(payload: Dict[str, Any]) -> Dict[str, Any]:
         "pareto_front": [{"id": item["id"], "name": item["name"]} for item in pareto_front],
         "strategies": sorted(benchmark_rows, key=lambda item: item["summary"]["utility"], reverse=True),
         "significance": sorted(significance, key=lambda item: item["mean_delta"], reverse=True),
+        "risk_lambda": risk_lambda,
+        "sensitivity": sensitivity,
         "active_learning": active_learning,
     }
 

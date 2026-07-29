@@ -1,0 +1,129 @@
+{
+  "experiment_type": "separate_memory_loop_ablation",
+  "excluded_from_frozen_main_experiment": true,
+  "source_result": "run_logs/formal_100_final_result.json",
+  "source_sha256": "d6c2a8aa0e186b8bed51e62c61fdd27d33cb375fc318d688869806f0e9fdc026",
+  "tasks": 100,
+  "epochs": 5,
+  "events_per_mode": 500,
+  "regret_epsilon": 0.02,
+  "mode_definitions": {
+    "none": "No historical experience.",
+    "legacy_query_model": "Memorize query to selected model regardless of outcome.",
+    "positive_verified": "Retrieve verified positive experience; discard negatives.",
+    "full_feedback": "Use verified positive and negative experience plus structured user feedback.",
+    "full_no_user_feedback": "Use automatic objective/judge state only; disputed cases remain excluded."
+  },
+  "modes": {
+    "none": {
+      "events": 500,
+      "routing_accuracy": 0.37,
+      "average_regret": 0.037343,
+      "cumulative_regret": 18.671679,
+      "cumulative_reward": 294.476464,
+      "negative_feedback_rate": 0.0,
+      "correction_rate": 0.0,
+      "correction_opportunities": 252,
+      "final_epoch_accuracy": 0.37,
+      "experience_metrics": null
+    },
+    "legacy_query_model": {
+      "events": 500,
+      "routing_accuracy": 0.37,
+      "average_regret": 0.037343,
+      "cumulative_regret": 18.671679,
+      "cumulative_reward": 294.476464,
+      "negative_feedback_rate": 0.0,
+      "correction_rate": 0.0,
+      "correction_opportunities": 252,
+      "final_epoch_accuracy": 0.37,
+      "experience_metrics": null
+    },
+    "positive_verified": {
+      "events": 500,
+      "routing_accuracy": 0.37,
+      "average_regret": 0.037343,
+      "cumulative_regret": 18.671679,
+      "cumulative_reward": 294.476464,
+      "negative_feedback_rate": 0.0,
+      "correction_rate": 0.0,
+      "correction_opportunities": 252,
+      "final_epoch_accuracy": 0.37,
+      "experience_metrics": {
+        "events": 185,
+        "audit_events": 500,
+        "expired_events": 315,
+        "statuses": {
+          "verified_positive": 185,
+          "expired": 315
+        },
+        "feedback_count": 185,
+        "feedback_coverage": 1.0,
+        "routing_accuracy": 1.0,
+        "negative_feedback_rate": 0.0,
+        "negative_experience_rate": 0.0,
+        "average_estimated_regret": 0.0044
+      }
+    },
+    "full_feedback": {
+      "events": 500,
+      "routing_accuracy": 0.666,
+      "average_regret": 0.026203,
+      "cumulative_regret": 13.101284,
+      "cumulative_reward": 300.04686,
+      "negative_feedback_rate": 0.334,
+      "correction_rate": 0.388889,
+      "correction_opportunities": 144,
+      "final_epoch_accuracy": 0.77,
+      "experience_metrics": {
+        "events": 500,
+        "audit_events": 500,
+        "expired_events": 0,
+        "statuses": {
+          "verified_positive": 333,
+          "verified_negative": 167
+        },
+        "feedback_count": 500,
+        "feedback_coverage": 1.0,
+        "routing_accuracy": 0.666,
+        "negative_feedback_rate": 0.334,
+        "negative_experience_rate": 0.334,
+        "average_estimated_regret": 0.0262
+      }
+    },
+    "full_no_user_feedback": {
+      "events": 500,
+      "routing_accuracy": 0.626,
+      "average_regret": 0.028042,
+      "cumulative_regret": 14.020866,
+      "cumulative_reward": 299.127277,
+      "negative_feedback_rate": 0.0,
+      "correction_rate": 0.329193,
+      "correction_opportunities": 161,
+      "final_epoch_accuracy": 0.74,
+      "experience_metrics": {
+        "events": 500,
+        "audit_events": 500,
+        "expired_events": 0,
+        "statuses": {
+          "verified_positive": 235,
+          "verified_negative": 135,
+          "disputed": 130
+        },
+        "feedback_count": 0,
+        "feedback_coverage": 0.0,
+        "routing_accuracy": 0.6351,
+        "negative_feedback_rate": 0.0,
+        "negative_experience_rate": 0.27,
+        "average_estimated_regret": 0.028
+      }
+    }
+  },
+  "guards": {
+    "all_100_tasks_complete": true,
+    "pending_expired_disputed_excluded": "covered by routing experience regression tests",
+    "no_external_model_calls": true
+  },
+  "best_by_accuracy": "full_feedback",
+  "best_by_regret": "full_feedback"
+}

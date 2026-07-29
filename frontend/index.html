@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>LLMRouter Console</title>
-  <link rel="stylesheet" href="/static/styles.css?v=21">
+  <link rel="stylesheet" href="/static/styles.css?v=22">
 </head>
 <body>
   <div class="app-shell">
@@ -96,10 +96,10 @@
               <option value="fast">极速并行</option>
             </select>
           </label>
-          <label class="model-control" for="modelSelect">
-            <span>调用模型</span>
+          <label class="model-control" for="modelSelect" title="自动决策由当前路由策略选择模型；路由覆盖用于消融实验、调试和模型对照。">
+            <span>模型决策模式</span>
             <select id="modelSelect">
-              <option value="auto">自动路由</option>
+              <option value="auto">策略路由（自动决策）</option>
             </select>
           </label>
           <button class="icon-button" id="refreshButton" type="button" title="刷新服务状态">↻</button>
@@ -326,7 +326,8 @@
           <div class="heading-actions">
             <button class="compact-button ghost" id="refreshMetricsButton" type="button">刷新运行数据</button>
             <button class="compact-button ghost" id="exportExperimentButton" type="button">导出报告</button>
-            <button class="compact-button ghost" id="runRealExperimentButton" type="button">真实抽样实验</button>
+            <button class="compact-button ghost" id="runPilotExperimentButton" type="button">运行10条预实验</button>
+            <button class="compact-button ghost" id="runRealExperimentButton" type="button">正式真实实验</button>
             <button class="compact-button" id="runExperimentButton" type="button">运行模拟实验</button>
           </div>
         </div>
@@ -339,6 +340,7 @@
           </div>
           <div class="weight-grid" id="experimentWeights"></div>
         </div>
+        <div class="experiment-panel scoring-panel" id="experimentScoring"></div>
 
         <div class="experiment-grid">
           <div class="experiment-panel">
@@ -368,6 +370,8 @@
                 <th>延迟</th>
                 <th>可靠性</th>
                 <th>综合效用</th>
+                <th>风险加权效用</th>
+                <th>95% CI</th>
               </tr>
             </thead>
             <tbody id="experimentTableBody"></tbody>
@@ -406,6 +410,26 @@
           <div class="evaluation-card warning">
             <span>自动降级</span>
             <strong id="metricFallbacks">0</strong>
+          </div>
+          <div class="evaluation-card">
+            <span>经验事件</span>
+            <strong id="experienceEvents">0</strong>
+          </div>
+          <div class="evaluation-card positive">
+            <span>反馈覆盖率</span>
+            <strong id="feedbackCoverage">0%</strong>
+          </div>
+          <div class="evaluation-card positive">
+            <span>路由正确率</span>
+            <strong id="routingAccuracy">0%</strong>
+          </div>
+          <div class="evaluation-card warning">
+            <span>负反馈率</span>
+            <strong id="negativeFeedbackRate">0%</strong>
+          </div>
+          <div class="evaluation-card">
+            <span>平均估计 Regret</span>
+            <strong id="averageRegret">0.000</strong>
           </div>
         </div>
         <div class="evaluation-panels">
@@ -700,6 +724,6 @@
   </section>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="/static/app.js?v=22" defer></script>
+  <script src="/static/app.js?v=23" defer></script>
 </body>
 </html>

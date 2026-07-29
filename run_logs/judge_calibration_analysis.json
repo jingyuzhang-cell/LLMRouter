@@ -1,0 +1,308 @@
+{
+  "phase": "final_post_run_analysis",
+  "snapshot_successes": 1200,
+  "experiment_status": "completed",
+  "threshold_sensitivity": [
+    {
+      "threshold": 0.1,
+      "review_count": 588,
+      "review_rate": 0.49
+    },
+    {
+      "threshold": 0.15,
+      "review_count": 501,
+      "review_rate": 0.4175
+    },
+    {
+      "threshold": 0.2,
+      "review_count": 425,
+      "review_rate": 0.3542
+    },
+    {
+      "threshold": 0.25,
+      "review_count": 375,
+      "review_rate": 0.3125
+    },
+    {
+      "threshold": 0.3,
+      "review_count": 355,
+      "review_rate": 0.2958
+    },
+    {
+      "threshold": 0.35,
+      "review_count": 333,
+      "review_rate": 0.2775
+    },
+    {
+      "threshold": 0.4,
+      "review_count": 307,
+      "review_rate": 0.2558
+    },
+    {
+      "threshold": 0.45,
+      "review_count": 249,
+      "review_rate": 0.2075
+    },
+    {
+      "threshold": 0.5,
+      "review_count": 239,
+      "review_rate": 0.1992
+    }
+  ],
+  "by_candidate_model": {
+    "deepseek-chat": {
+      "n": 300,
+      "thresholds": {
+        "0.15": 0.35,
+        "0.20": 0.31,
+        "0.25": 0.2667,
+        "0.30": 0.2533,
+        "0.35": 0.2433
+      }
+    },
+    "qwen-plus": {
+      "n": 300,
+      "thresholds": {
+        "0.15": 0.3867,
+        "0.20": 0.3533,
+        "0.25": 0.3033,
+        "0.30": 0.2867,
+        "0.35": 0.28
+      }
+    },
+    "qwen-turbo": {
+      "n": 300,
+      "thresholds": {
+        "0.15": 0.43,
+        "0.20": 0.3567,
+        "0.25": 0.3033,
+        "0.30": 0.28,
+        "0.35": 0.2433
+      }
+    },
+    "glm-5.2": {
+      "n": 300,
+      "thresholds": {
+        "0.15": 0.5033,
+        "0.20": 0.3967,
+        "0.25": 0.3767,
+        "0.30": 0.3633,
+        "0.35": 0.3433
+      }
+    }
+  },
+  "judge_score_bias": {
+    "qwen-plus": {
+      "n": 894,
+      "mean": 0.82,
+      "median": 0.95,
+      "std": 0.2691,
+      "zero_rate": 0.0213,
+      "one_rate": 0.2371
+    },
+    "qwen-turbo": {
+      "n": 601,
+      "mean": 0.8785,
+      "median": 0.95,
+      "std": 0.1939,
+      "zero_rate": 0.0033,
+      "one_rate": 0.4925
+    },
+    "deepseek-chat": {
+      "n": 900,
+      "mean": 0.8273,
+      "median": 0.95,
+      "std": 0.2443,
+      "zero_rate": 0.0211,
+      "one_rate": 0.4433
+    },
+    "glm-5.2": {
+      "n": 3,
+      "mean": 0.3667,
+      "median": 0.1,
+      "std": 0.4497,
+      "zero_rate": 0.3333,
+      "one_rate": 0.3333
+    }
+  },
+  "judge_pair_bias": {
+    "qwen-plus + qwen-turbo": {
+      "n": 298,
+      "mean_signed_first_minus_second": -0.0227,
+      "mean_absolute_difference": 0.0865,
+      "median_absolute_difference": 0.05,
+      "ge_0_20_rate": 0.1644
+    },
+    "deepseek-chat + qwen-turbo": {
+      "n": 302,
+      "mean_signed_first_minus_second": -0.0182,
+      "mean_absolute_difference": 0.0788,
+      "median_absolute_difference": 0.05,
+      "ge_0_20_rate": 0.1556
+    },
+    "deepseek-chat + qwen-plus": {
+      "n": 595,
+      "mean_signed_first_minus_second": 0.0088,
+      "mean_absolute_difference": 0.098,
+      "median_absolute_difference": 0.05,
+      "ge_0_20_rate": 0.1748
+    },
+    "glm-5.2 + qwen-plus": {
+      "n": 1,
+      "mean_signed_first_minus_second": 0.0,
+      "mean_absolute_difference": 0.0,
+      "median_absolute_difference": 0.0,
+      "ge_0_20_rate": 0.0
+    },
+    "deepseek-chat + glm-5.2": {
+      "n": 2,
+      "mean_signed_first_minus_second": -0.05,
+      "mean_absolute_difference": 0.05,
+      "median_absolute_difference": 0.05,
+      "ge_0_20_rate": 0.0
+    }
+  },
+  "objective_calibration": {
+    "n": 1188,
+    "pearson": 0.5972,
+    "mae": 0.185,
+    "judge_minus_objective_bias": 0.0569,
+    "by_objective_bucket": {
+      "zero": {
+        "n": 136,
+        "mean_judge": 0.5119
+      },
+      "partial": {
+        "n": 167,
+        "mean_judge": 0.6928
+      },
+      "one": {
+        "n": 885,
+        "mean_judge": 0.9172
+      }
+    }
+  },
+  "quality_mix_sensitivity": {
+    "0.5": {
+      "ranking": [
+        "glm-5.2",
+        "deepseek-chat",
+        "qwen-plus",
+        "qwen-turbo"
+      ],
+      "means": {
+        "deepseek-chat": 0.8275,
+        "qwen-plus": 0.8224,
+        "qwen-turbo": 0.766,
+        "glm-5.2": 0.8275
+      }
+    },
+    "0.6": {
+      "ranking": [
+        "glm-5.2",
+        "deepseek-chat",
+        "qwen-plus",
+        "qwen-turbo"
+      ],
+      "means": {
+        "deepseek-chat": 0.8198,
+        "qwen-plus": 0.813,
+        "qwen-turbo": 0.7593,
+        "glm-5.2": 0.8286
+      }
+    },
+    "0.7": {
+      "ranking": [
+        "glm-5.2",
+        "deepseek-chat",
+        "qwen-plus",
+        "qwen-turbo"
+      ],
+      "means": {
+        "deepseek-chat": 0.8122,
+        "qwen-plus": 0.8035,
+        "qwen-turbo": 0.7525,
+        "glm-5.2": 0.8296
+      }
+    },
+    "0.8": {
+      "ranking": [
+        "glm-5.2",
+        "deepseek-chat",
+        "qwen-plus",
+        "qwen-turbo"
+      ],
+      "means": {
+        "deepseek-chat": 0.8045,
+        "qwen-plus": 0.7941,
+        "qwen-turbo": 0.7458,
+        "glm-5.2": 0.8307
+      }
+    }
+  },
+  "quality_mix_rank_changes_vs_0.6": {
+    "0.5": 0,
+    "0.6": 0,
+    "0.7": 0,
+    "0.8": 0
+  },
+  "attempts_by_judge": {
+    "qwen-plus": {
+      "attempts": 900,
+      "parsed": 894,
+      "parse_rate": 0.9933,
+      "failed": 6,
+      "fallback_position_attempts": 0,
+      "recorded_cost_usd": 0.088266
+    },
+    "glm-5.2": {
+      "attempts": 601,
+      "parsed": 3,
+      "parse_rate": 0.005,
+      "failed": 598,
+      "fallback_position_attempts": 1,
+      "recorded_cost_usd": 0.978394
+    },
+    "qwen-turbo": {
+      "attempts": 601,
+      "parsed": 601,
+      "parse_rate": 1.0,
+      "failed": 0,
+      "fallback_position_attempts": 601,
+      "recorded_cost_usd": 0.003491
+    },
+    "deepseek-chat": {
+      "attempts": 900,
+      "parsed": 900,
+      "parse_rate": 1.0,
+      "failed": 0,
+      "fallback_position_attempts": 0,
+      "recorded_cost_usd": 0.170352
+    }
+  },
+  "fallback_diagnosis": {
+    "responses_requiring_third_or_later_judge": 602,
+    "fallback_response_rate": 0.5017,
+    "glm_parse_rate": 0.005,
+    "glm_failed_attempts": 598,
+    "result_level_dual_coverage": 0.9983,
+    "interpretation": "GLM judge outputs are unparseable, but fallback judges preserve result-level dual coverage. Do not claim GLM contributed valid judge scores."
+  },
+  "recommendation": {
+    "keep_current_formal_threshold": 0.2,
+    "do_not_change_mid_run": true,
+    "post_run_sensitivity_thresholds": [
+      0.2,
+      0.25,
+      0.3,
+      0.35
+    ],
+    "recommended_calibration_actions": [
+      "store raw failed judge text after the frozen run",
+      "repair GLM reasoning/content JSON extraction",
+      "report result-level coverage separately from attempt parse rate",
+      "report sensitivity at thresholds 0.20/0.25/0.30/0.35",
+      "do not describe GLM as a successful judge in the current run"
+    ]
+  }
+}
