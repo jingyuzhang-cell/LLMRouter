@@ -29,7 +29,9 @@ class GraphTrainer(BaseTrainer):
         self.device = device if device else ("cuda" if torch.cuda.is_available() else "cpu")
 
         # Get model paths
-        project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        project_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../../..")
+        )
         model_path_config = router.cfg.get("model_path", {})
 
         self.ini_model_path = os.path.join(

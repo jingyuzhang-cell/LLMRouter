@@ -255,6 +255,7 @@ Best LLM:"""
             row_copy["model_name"] = model_name
 
             # Step 2: Format query if task_name is provided
+            system_prompt = None
             if row_task_name:
                 try:
                     sample_data = {
@@ -263,7 +264,8 @@ Best LLM:"""
                     }
                     formatted_query = generate_task_query(row_task_name, sample_data)
                     row_copy["formatted_query"] = formatted_query
-                    query_text_for_execution = formatted_query
+                    query_text_for_execution = formatted_query["user"]
+                    system_prompt = formatted_query["system"]
                 except (ValueError, KeyError) as e:
                     print(f"Warning: Failed to format query with task '{row_task_name}': {e}. Using original query.")
                     query_text_for_execution = original_query
@@ -299,6 +301,7 @@ Best LLM:"""
             request = {
                 "api_endpoint": api_endpoint,
                 "query": query_text_for_execution,
+                "system_prompt": system_prompt,
                 "model_name": model_name,
                 "api_name": api_model_name
             }

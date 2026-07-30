@@ -1,0 +1,31 @@
+{
+  "experiment_id": "kqapro_cost_dev_v1",
+  "created_utc": "2026-07-18",
+  "development_only": true,
+  "final3_forbidden": true,
+  "sample_size": 1500,
+  "sample_seed": 20260718,
+  "operating_points": {
+    "quality_first": {
+      "epsilon_accuracy": 0.0025,
+      "min_coverage": 0.1,
+      "max_harm_rate": 0.025
+    },
+    "balanced": {
+      "epsilon_accuracy": 0.005,
+      "min_coverage": 0.2,
+      "max_harm_rate": 0.04
+    },
+    "cost_first": {
+      "epsilon_accuracy": 0.01,
+      "min_coverage": 0.4,
+      "max_harm_rate": 0.06
+    }
+  },
+  "selection": "maximize parameter-size saving among feasible candidates; paired bootstrap lower CI must be >= -epsilon",
+  "bootstrap": {
+    "replicates": 5000,
+    "seed": 20260718
+  },
+  "confirmation": "freeze one selected operating point, then evaluate once on a new disjoint sealed set"
+}

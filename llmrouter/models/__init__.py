@@ -7,6 +7,11 @@ from .largest_llm import LargestLLM
 from .knnrouter import KNNRouter
 from .knnrouter import KNNRouterTrainer
 
+from .knnmultiroundrouter import KNNMultiRoundRouter
+from .knnmultiroundrouter import KNNMultiRoundRouterTrainer
+
+from .llmmultiroundrouter import LLMMultiRoundRouter
+
 from .svmrouter import SVMRouter
 from .svmrouter import SVMRouterTrainer
 
@@ -69,6 +74,11 @@ __all__ = [
 
     "KNNRouter",
     "KNNRouterTrainer",
+
+    "KNNMultiRoundRouter",
+    "KNNMultiRoundRouterTrainer",
+
+    "LLMMultiRoundRouter",
 
     "SVMRouter",
     "SVMRouterTrainer",

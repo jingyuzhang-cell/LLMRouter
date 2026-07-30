@@ -59,7 +59,10 @@ def load_prompt_template(template_name: str) -> str:
             data = yaml.safe_load(f)
         if 'template' not in data:
             raise ValueError(f"YAML file {template_path} must contain a 'template' key")
-        return data['template']
+        template = data['template']
+        if not isinstance(template, str):
+            raise ValueError(f"Template in {template_path} must be a string")
+        return template.rstrip()
     
     # Step 1: Search in custom_tasks directory first (highest priority)
     if _CUSTOM_TASKS_DIR.exists():

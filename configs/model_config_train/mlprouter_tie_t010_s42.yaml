@@ -1,0 +1,37 @@
+data_path:
+  query_data_train: 'data/example_data/query_data/default_query_train.jsonl'
+  query_data_test: 'data/example_data/query_data/default_query_test.jsonl'
+  query_embedding_data: 'data/example_data/routing_data/query_embeddings_longformer.pt'
+  routing_data_train: 'data/example_data/routing_data/grouped/default_routing_train_data.jsonl'
+  routing_data_validation: 'data/example_data/routing_data/grouped/default_routing_validation_data.jsonl'
+  routing_data_test: 'data/example_data/routing_data/grouped/default_routing_test_data.jsonl'
+  llm_data: 'data/example_data/llm_candidates/default_llm.json'
+  llm_embedding_data: 'data/example_data/llm_candidates/default_llm_embeddings.json'
+
+model_path:
+  ini_model_path: ''
+  save_model_path: 'saved_models/mlprouter/mlprouter_tie_t010_s42.pkl'
+
+metric:
+  weights:
+    performance: 1
+    cost: 0
+    llm_judge: 0
+
+hparam:
+  hidden_layer_sizes: [128, 64]
+  activation: "relu"
+  lr: 0.001
+  epochs: 150
+  batch_size: 32
+  alpha: 0.0001
+  objective: "soft_performance_distribution"
+  soft_label_temperature: 0.10
+  tie_soft_blend: 0.20
+  clear_gap_threshold: 0.10
+  clear_gap_weight: 3.0
+  regret_loss_weight: 1.0
+  seed: 42
+  early_stopping_patience: 15
+  early_stopping_min_delta: 0.0001
+  # Primary monitor: optimal_set_accuracy - mean_regret

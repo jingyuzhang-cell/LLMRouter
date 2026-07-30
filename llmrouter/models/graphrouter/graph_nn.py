@@ -140,6 +140,10 @@ class GNNPredictor:
         batch_size = self.config.get('batch_size', 4)
         train_mask_rate = self.config.get('train_mask_rate', 0.3)
 
+        patience = self.config.get('early_stopping_patience', 20)
+        min_delta = self.config.get('early_stopping_min_delta', 0.0)
+        epochs_without_improvement = 0
+        best_epoch = -1
         for epoch in range(train_epochs):
             # Training phase
             self.model.train()
@@ -193,14 +197,25 @@ class GNNPredictor:
                 result_validate = value_validate[row_indices, max_idx].mean()
 
                 # Save best model
-                if result_validate > best_result:
+                if result_validate > best_result + min_delta:
                     best_result = result_validate
                     torch.save(self.model.state_dict(), save_path)
+                    best_epoch = epoch
+                    epochs_without_improvement = 0
+                else:
+                    epochs_without_improvement += 1
+
+                if patience and epochs_without_improvement >= patience:
+                    print(
+                        f"Early stopping at epoch {epoch}; "
+                        f"best epoch={best_epoch}, val_result={best_result:.4f}"
+                    )
+                    break
 
                 if epoch % 10 == 0:
                     print(f"Epoch {epoch}: train_loss={loss_mean:.4f}, val_result={result_validate:.4f}")
 
-        print(f"Training completed. Best validation result: {best_result:.4f}")
+        print(f"Training completed. Best epoch: {best_epoch}; best validation result: {best_result:.4f}")
         return best_result
 
     def predict(self, data):

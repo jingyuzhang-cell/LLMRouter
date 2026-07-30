@@ -47,6 +47,7 @@ class DataLoader:
 
         # Routing data
         obj_ref.routing_data_train = safe_load("routing_data_train", jsonl_to_csv, "routing_data_train")
+        obj_ref.routing_data_validation = safe_load("routing_data_validation", jsonl_to_csv, "routing_data_validation")
         obj_ref.routing_data_test = safe_load("routing_data_test", jsonl_to_csv, "routing_data_test")
 
         # LLM info

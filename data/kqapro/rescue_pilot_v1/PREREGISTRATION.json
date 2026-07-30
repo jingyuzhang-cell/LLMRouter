@@ -1,0 +1,46 @@
+{
+  "experiment": "rescue_pilot_v1",
+  "created_utc": "2026-07-21T12:00:21.119853+00:00",
+  "seed": 20260722,
+  "source": "KQAPro train.json only",
+  "sample_count": 2000,
+  "target_operations": [
+    "Count",
+    "Or",
+    "VerifyDate",
+    "VerifyNum",
+    "VerifyStr"
+  ],
+  "requested_quotas": {
+    "VerifyDate": 120,
+    "VerifyNum": 320,
+    "VerifyStr": 450,
+    "Or": 400,
+    "Count": 710
+  },
+  "actual_operation_presence": {
+    "VerifyDate": 120,
+    "VerifyNum": 320,
+    "VerifyStr": 450,
+    "Count": 1110,
+    "Or": 643
+  },
+  "models": [
+    "qwen-3b-local",
+    "deepseek",
+    "qwen",
+    "gemini",
+    "zhipu"
+  ],
+  "planned_evaluations": 10000,
+  "planned_external_api_calls": 8000,
+  "planned_local_inferences": 2000,
+  "sealed_query_sha256": "3364529b80fd651e7ae4c722894353df8bb93d5073765d9f5a178f20d3204315",
+  "heldout_test_task_ids_sha256": "f14142fa5eaf8ed144246f5dc0f59a2468080e6d8d2a1c0baecc555dc12016c7",
+  "heldout_test_matrix_sha256": "0b787e8dc062c68a17e52a47ffe0ed5d57556593d9255b334f3c88f396d65577",
+  "acceptance": {
+    "test_accuracy_strictly_greater_than": 0.7546742209631728,
+    "rescue_minus_3_harm_strictly_greater_than": 0
+  },
+  "test_usage": "evaluation only; never train or tune"
+}

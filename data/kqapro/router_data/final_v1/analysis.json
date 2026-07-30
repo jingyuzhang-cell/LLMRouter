@@ -1,0 +1,230 @@
+{
+  "dataset_size": 11761,
+  "models": [
+    "qwen-3b-local",
+    "deepseek",
+    "qwen",
+    "gemini",
+    "zhipu"
+  ],
+  "per_model": {
+    "qwen-3b-local": {
+      "accuracy": 0.43542215797976364,
+      "correct": 5121,
+      "unique_correct": 163,
+      "mean_latency_s": 0.18099789316988085,
+      "median_latency_s": 0.17760324478149414,
+      "p95_latency_s": 0.19296789169311523,
+      "mean_total_tokens": 166.2836493495451
+    },
+    "deepseek": {
+      "accuracy": 0.6055607516367656,
+      "correct": 7122,
+      "unique_correct": 213,
+      "mean_latency_s": 0.924918935388319,
+      "median_latency_s": 0.9041388034820557,
+      "p95_latency_s": 1.1791322231292725,
+      "mean_total_tokens": 152.72451322166484
+    },
+    "qwen": {
+      "accuracy": 0.5842190289941331,
+      "correct": 6871,
+      "unique_correct": 180,
+      "mean_latency_s": 0.7631141362207681,
+      "median_latency_s": 0.7291135787963867,
+      "p95_latency_s": 1.0450668334960938,
+      "mean_total_tokens": 182.30898733100926
+    },
+    "gemini": {
+      "accuracy": 0.7537624351670776,
+      "correct": 8865,
+      "unique_correct": 1087,
+      "mean_latency_s": 1.6984448996482988,
+      "median_latency_s": 1.6114740371704102,
+      "p95_latency_s": 2.3042142391204834,
+      "mean_total_tokens": 163.34554884788707
+    },
+    "zhipu": {
+      "accuracy": 0.5008077544426495,
+      "correct": 5890,
+      "unique_correct": 154,
+      "mean_latency_s": 1.0796689421189358,
+      "median_latency_s": 0.8445453643798828,
+      "p95_latency_s": 2.178673505783081,
+      "mean_total_tokens": 155.9720261882493
+    }
+  },
+  "oracle_accuracy": 0.8681234588895502,
+  "all_wrong": 1551,
+  "pairwise_complementarity": {
+    "qwen-3b-local__deepseek": {
+      "both_correct": 4304,
+      "either_correct": 7939,
+      "jaccard_correct": 0.5421337699962212,
+      "a_only": 817,
+      "b_only": 2818
+    },
+    "qwen-3b-local__qwen": {
+      "both_correct": 4142,
+      "either_correct": 7850,
+      "jaccard_correct": 0.5276433121019108,
+      "a_only": 979,
+      "b_only": 2729
+    },
+    "qwen-3b-local__gemini": {
+      "both_correct": 4549,
+      "either_correct": 9437,
+      "jaccard_correct": 0.48203878351170926,
+      "a_only": 572,
+      "b_only": 4316
+    },
+    "qwen-3b-local__zhipu": {
+      "both_correct": 4011,
+      "either_correct": 7000,
+      "jaccard_correct": 0.573,
+      "a_only": 1110,
+      "b_only": 1879
+    },
+    "deepseek__qwen": {
+      "both_correct": 5708,
+      "either_correct": 8285,
+      "jaccard_correct": 0.6889559444779723,
+      "a_only": 1414,
+      "b_only": 1163
+    },
+    "deepseek__gemini": {
+      "both_correct": 6477,
+      "either_correct": 9510,
+      "jaccard_correct": 0.6810725552050473,
+      "a_only": 645,
+      "b_only": 2388
+    },
+    "deepseek__zhipu": {
+      "both_correct": 4921,
+      "either_correct": 8091,
+      "jaccard_correct": 0.6082066493634903,
+      "a_only": 2201,
+      "b_only": 969
+    },
+    "qwen__gemini": {
+      "both_correct": 6317,
+      "either_correct": 9419,
+      "jaccard_correct": 0.6706656757617582,
+      "a_only": 554,
+      "b_only": 2548
+    },
+    "qwen__zhipu": {
+      "both_correct": 4832,
+      "either_correct": 7929,
+      "jaccard_correct": 0.6094085004414176,
+      "a_only": 2039,
+      "b_only": 1058
+    },
+    "gemini__zhipu": {
+      "both_correct": 5320,
+      "either_correct": 9435,
+      "jaccard_correct": 0.5638579756226815,
+      "a_only": 3545,
+      "b_only": 570
+    }
+  },
+  "router_evaluation": {
+    "selected_policy": {
+      "latency_penalty": 0.01,
+      "validation_accuracy": 0.713718820861678,
+      "validation_mean_latency_s": 1.233579639404539
+    },
+    "test_accuracy": 0.7002832861189802,
+    "test_mean_latency_s": 1.2007062882269408,
+    "selection_counts": {
+      "gemini": 934,
+      "deepseek": 226,
+      "qwen-3b-local": 261,
+      "qwen": 166,
+      "zhipu": 178
+    },
+    "per_model_auc": {
+      "qwen-3b-local": {
+        "validation_roc_auc": 0.7402853016709032,
+        "test_roc_auc": 0.7257906532096288
+      },
+      "deepseek": {
+        "validation_roc_auc": 0.7467625899280574,
+        "test_roc_auc": 0.7689147124286313
+      },
+      "qwen": {
+        "validation_roc_auc": 0.7583026221036133,
+        "test_roc_auc": 0.7849772141866456
+      },
+      "gemini": {
+        "validation_roc_auc": 0.8257657925279098,
+        "test_roc_auc": 0.8191783007025502
+      },
+      "zhipu": {
+        "validation_roc_auc": 0.7587682538050184,
+        "test_roc_auc": 0.7470929784644147
+      }
+    },
+    "policy_candidates": [
+      {
+        "latency_penalty": 0,
+        "validation_accuracy": 0.7154195011337868,
+        "validation_mean_latency_s": 1.2580977045759862
+      },
+      {
+        "latency_penalty": 0.01,
+        "validation_accuracy": 0.713718820861678,
+        "validation_mean_latency_s": 1.233579639404539
+      },
+      {
+        "latency_penalty": 0.02,
+        "validation_accuracy": 0.7091836734693877,
+        "validation_mean_latency_s": 1.20582703343865
+      },
+      {
+        "latency_penalty": 0.05,
+        "validation_accuracy": 0.6967120181405896,
+        "validation_mean_latency_s": 1.1094089878929987
+      },
+      {
+        "latency_penalty": 0.1,
+        "validation_accuracy": 0.6655328798185941,
+        "validation_mean_latency_s": 0.9551772884771127
+      },
+      {
+        "latency_penalty": 0.2,
+        "validation_accuracy": 0.6156462585034014,
+        "validation_mean_latency_s": 0.6674807133858436
+      }
+    ],
+    "baselines": {
+      "always_qwen-3b-local": {
+        "accuracy": 0.4351274787535411,
+        "mean_latency_s": 0.17980650464130865
+      },
+      "always_deepseek": {
+        "accuracy": 0.6056657223796034,
+        "mean_latency_s": 0.9340649069875225
+      },
+      "always_qwen": {
+        "accuracy": 0.5835694050991501,
+        "mean_latency_s": 0.7645816605759748
+      },
+      "always_gemini": {
+        "accuracy": 0.7546742209631728,
+        "mean_latency_s": 1.6921045924718927
+      },
+      "always_zhipu": {
+        "accuracy": 0.5008498583569405,
+        "mean_latency_s": 1.0868783491529082
+      },
+      "oracle_any_correct": {
+        "accuracy": 0.8679886685552408
+      },
+      "uniform_random_expected": {
+        "accuracy": 0.5759773371104816
+      }
+    }
+  },
+  "cost_note": "cost_proxy is 0.5 for all aligned rows/models and is non-informative; latency and token counts are used."
+}

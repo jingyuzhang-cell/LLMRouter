@@ -1,0 +1,43 @@
+{
+  "experiment_id": "kqapro_e6_final3_confirmatory",
+  "created_utc": "2026-07-18",
+  "status": "preregistered_before_final3_generation",
+  "sample_size": 1900,
+  "sample_seed": 46,
+  "alpha_two_sided": 0.05,
+  "target_power": 0.8,
+  "primary_comparison": "frozen E5 combined policy vs always-strong on paired correctness",
+  "primary_test": "exact McNemar test on discordant pairs",
+  "primary_success": "E5 accuracy > always-strong and two-sided McNemar p < 0.05",
+  "secondary_endpoints": [
+    "performance_score",
+    "avg_size_b",
+    "avg_latency_s",
+    "successful_rescues",
+    "harmful_downgrades"
+  ],
+  "secondary_rules": [
+    "avg_size_b < 3.0",
+    "successful_rescues > harmful_downgrades"
+  ],
+  "evaluation_rule": "Generate all three model outputs, seal hashes, then load frozen artifact exactly once; no retraining or threshold changes.",
+  "frozen_beta": 1.5,
+  "frozen_margin": 0.2,
+  "frozen_hashes": {
+    "run_logs/kqapro/e5/multitask_ensemble.joblib": "39a701bb4ed628881c7b30a420105772c62750bcfeaf5d5320707174e5748c7d",
+    "run_logs/kqapro/e5/frozen_policy.json": "8f2490ad9c72618ea6602d107e6a6db16b5cbc7039d5f99adc1bda0b406b2f7f",
+    "run_logs/kqapro/e5/power_analysis_final3.json": "2290ed71b0184a4fc900b8acd4ed49d2e23d8f698f7a926afbc4400e783a54bb",
+    "data/kqapro/e4/partition_manifest.json": "3bcf8ef3cc6088d86cf3a1968551c97599562af142ec37cf7b27587925f7aace",
+    "data/kqapro/e5_final2/partition_manifest.json": "be44978b01a814b6704ea31cdad82408c9a33dc8e84438d6dd8c130623b8ded4"
+  },
+  "reporting": [
+    "point estimates",
+    "paired 95% bootstrap CI",
+    "exact McNemar p-value",
+    "all failed endpoints"
+  ],
+  "limitations": [
+    "sample size estimated from E5 pilot effect",
+    "same KQAPro validation source distribution"
+  ]
+}

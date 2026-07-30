@@ -365,7 +365,7 @@ def load_charades_ego_samples(N=10, task_type="activity", data_root=None, random
         if selected_ego_seg is None:
             continue
         
-        selected_cls_id = selected_ego_seg["cls_id"][0]
+        selected_cls_id = selected_ego_seg["cls_id"]
         activity_id = str(selected_cls_id).lower()
         activity_label = selected_ego_seg["label"]
         
@@ -474,7 +474,7 @@ def process_charades_ego_jsonl_samples(task_name, task_samples, charades_ego_pat
         # Format choices for the query (id -> label mapping)
         choices_text = "\n".join([
             f"{choice_id}: {sample['id_to_label'][choice_id]}" 
-            for choice_id in sample['choices'][:20]  # Show first 20 for brevity
+            for choice_id in sample['choices']
         ])
         
         task_type_name = task_name.split('_')[1]  # 'activity', 'object', or 'verb'
@@ -500,7 +500,10 @@ def process_charades_ego_jsonl_samples(task_name, task_samples, charades_ego_pat
 # Main Conversion Logic
 # ============================================================================
 
-def convert_charades_ego(data_root, vlm_name, sample_size, task_type, top_k, num_frames):
+def convert_charades_ego(
+    data_root, vlm_name, sample_size, task_type, top_k, num_frames,
+    output_dir, random_seed,
+):
     print("=== CONVERTING CHARADES-EGO DATASET ===")
     
     # Map task_type to task_name for consistency
@@ -519,7 +522,7 @@ def convert_charades_ego(data_root, vlm_name, sample_size, task_type, top_k, num
         N=sample_size, 
         task_type=task_type, 
         data_root=data_root,
-        random_seed=42 # Default seed or None
+        random_seed=random_seed,
     )
     print(f"Loaded {len(samples)} samples.")
 
@@ -536,7 +539,9 @@ def convert_charades_ego(data_root, vlm_name, sample_size, task_type, top_k, num
     converted_data = []
 
     # Load LLM Candidates
-    llm_candidates_path = "../example_data/llm_candidates/default_llm.json"
+    llm_candidates_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "example_data", "llm_candidates", "default_llm.json")
+    )
     with open(llm_candidates_path, 'r') as f:
         llm_candidates = json.load(f)
 
@@ -614,7 +619,12 @@ def convert_charades_ego(data_root, vlm_name, sample_size, task_type, top_k, num
             print(f"Embeddings: {rid + 1}/{total_samples}...")
             
     df_all = pd.DataFrame(rows)
-    df_train, df_test, embedding_dict = process_final_data(df_all)
+    df_train, df_test, embedding_dict = process_final_data(
+        df_all,
+        output_dir=output_dir,
+        split_group_column="task_id",
+        random_state=random_seed,
+    )
 
     return df_train, df_test
 
@@ -638,11 +648,19 @@ def main():
     # VLM + frame sampling
     parser.add_argument("--vlm_name", type=str, default="gemma-3-27b-it", help="VLM model ID")
     parser.add_argument("--num_frames", type=int, default=5, help="Frames to sample per view (within the time window)")
+    parser.add_argument(
+        "--output_dir", type=str, default="data/charades_ego/generated/activity",
+        help="Directory for routing JSONL files and query embeddings",
+    )
+    parser.add_argument("--random_seed", type=int, default=42, help="Sampling and split seed")
     
     args = parser.parse_args()
     
     start_time = time.time()
-    train_df, test_df = convert_charades_ego(args.data_root, args.vlm_name, args.sample_size, args.task_type, args.top_k, args.num_frames)
+    train_df, test_df = convert_charades_ego(
+        args.data_root, args.vlm_name, args.sample_size, args.task_type,
+        args.top_k, args.num_frames, args.output_dir, args.random_seed,
+    )
     
     print(f"\nConversion completed in {time.time() - start_time:.1f}s")
     print(f"Train samples: {len(train_df)}")

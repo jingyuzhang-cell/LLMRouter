@@ -1,0 +1,36 @@
+data_path:
+  query_data_train: 'data/nvidia_current_v1/queries.jsonl'
+  query_data_test: 'data/nvidia_current_v1/queries.jsonl'
+  query_embedding_data: 'data/example_data/routing_data/query_embeddings_longformer.pt'
+  routing_data_train: 'data/nvidia_current_v1/grouped/default_routing_train_data.jsonl'
+  routing_data_validation: 'data/nvidia_current_v1/grouped/default_routing_validation_data.jsonl'
+  routing_data_test: 'data/nvidia_current_v1/grouped/default_routing_test_data.jsonl'
+  llm_data: 'data/nvidia_current_v1/llm_candidates.json'
+  llm_embedding_data: 'data/example_data/llm_candidates/default_llm_embeddings.json'
+
+model_path:
+  ini_model_path: ''
+  save_model_path: 'saved_models/mlprouter/mlprouter_nvidia_current_v1_seed42.pkl'
+
+metric:
+  weights:
+    performance: 1
+    cost: 0
+    llm_judge: 0
+
+hparam:
+  hidden_layer_sizes: [128, 64]
+  activation: "relu"
+  lr: 0.001
+  epochs: 150
+  batch_size: 32
+  alpha: 0.0001
+  objective: "soft_performance_distribution"
+  soft_label_temperature: 0.10
+  tie_soft_blend: 0.20
+  clear_gap_threshold: 0.10
+  clear_gap_weight: 3.0
+  regret_loss_weight: 10.0
+  seed: 42
+  early_stopping_patience: 15
+  early_stopping_min_delta: 0.0001

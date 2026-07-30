@@ -1,0 +1,104 @@
+{
+  "features": {
+    "semantic": "intfloat/e5-small-v2",
+    "semantic_dim": 384,
+    "program_dim": 43
+  },
+  "correctness_calibration": {
+    "qwen-3b-local": {
+      "validation_auc": 0.7381876874620175,
+      "test_auc": 0.7221782535105317,
+      "validation_brier": 0.20486193383670642,
+      "test_brier": 0.21040489276225646
+    },
+    "deepseek": {
+      "validation_auc": 0.7408039517871201,
+      "test_auc": 0.7561610915776911,
+      "validation_brier": 0.1989533890080757,
+      "test_brier": 0.19357843754149315
+    },
+    "qwen": {
+      "validation_auc": 0.7398957406701403,
+      "test_auc": 0.7596288224027474,
+      "validation_brier": 0.20220661221237274,
+      "test_brier": 0.19495063612915575
+    },
+    "gemini": {
+      "validation_auc": 0.8272130955012712,
+      "test_auc": 0.8084874713050233,
+      "validation_brier": 0.13503896290329648,
+      "test_brier": 0.138884023645578
+    },
+    "zhipu": {
+      "validation_auc": 0.7684774784039491,
+      "test_auc": 0.7437147215473983,
+      "validation_brier": 0.19652854724096427,
+      "test_brier": 0.20537298512070043
+    }
+  },
+  "rescue_calibration": {
+    "qwen-3b-local": {
+      "train_positive": 400,
+      "validation_positive": 87,
+      "test_positive": 85,
+      "validation_auc": 0.729456678935428,
+      "test_auc": 0.6698879551820728
+    },
+    "deepseek": {
+      "train_positive": 451,
+      "validation_positive": 99,
+      "test_positive": 95,
+      "validation_auc": 0.6048169381502715,
+      "test_auc": 0.6571131421367791
+    },
+    "qwen": {
+      "train_positive": 387,
+      "validation_positive": 85,
+      "test_positive": 82,
+      "validation_auc": 0.6195284307886347,
+      "test_auc": 0.616074663420431
+    },
+    "zhipu": {
+      "train_positive": 398,
+      "validation_positive": 87,
+      "test_positive": 85,
+      "validation_auc": 0.6504019904180289,
+      "test_auc": 0.6679971988795519
+    }
+  },
+  "harm_weight": 3,
+  "validation_gemini_baseline": 0.7528344671201814,
+  "selection_reason": "no nontrivial strategy met validation safety; fallback always Gemini",
+  "selected_validation_policy": {
+    "gemini_max_correct_prob": 0,
+    "rescue_min_prob": 1.1,
+    "small_min_correct_prob": 1.1,
+    "correctness_margin": 1.1,
+    "accuracy": 0.7528344671201814,
+    "mean_latency_s": 1.691475751043177,
+    "downgrades": 0,
+    "rescues": 0,
+    "harms": 0,
+    "asymmetric_utility": 0
+  },
+  "test_candidate": {
+    "accuracy": 0.7546742209631728,
+    "mean_latency_s": 1.6921045924718927,
+    "downgrades": 0,
+    "rescues": 0,
+    "harms": 0,
+    "asymmetric_utility": 0
+  },
+  "test_gemini_baseline": 0.7546742209631728,
+  "candidate_accepted": false,
+  "production_policy": {
+    "policy": "always_gemini",
+    "reason": "no nontrivial policy met validation safety; zero-downgrade gate is equivalent to always Gemini",
+    "accuracy": 0.7546742209631728,
+    "mean_latency_s": 1.6921045924718927
+  },
+  "test_selection_counts": {
+    "gemini": 1765
+  },
+  "oracle_test_accuracy": 0.8679886685552408
+}

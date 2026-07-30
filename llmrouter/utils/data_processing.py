@@ -9,18 +9,26 @@ import numpy as np
 import torch
 from tqdm import tqdm
 from multiprocessing.dummy import Pool as ThreadPool
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from .embeddings import parallel_embedding_task
 from .tensor_utils import to_tensor
 from .dataframe_utils import clean_df
 
-def process_final_data(df_all):
+def process_final_data(
+    df_all,
+    output_dir: str = ".",
+    split_group_column: Optional[str] = None,
+    random_state: int = 42,
+):
     """
     Process final data to match process.py format
     
     Args:
         df_all: DataFrame with all data including query_embedding column
+        output_dir: Directory for generated routing data and embeddings.
+        split_group_column: Keep rows sharing this value in the same split.
+        random_state: Seed used for a reproducible grouped split.
         
     Returns:
         tuple: (df_train_indexed, df_test_indexed, embedding_dict)
@@ -50,7 +58,9 @@ def process_final_data(df_all):
             # Handle string embeddings (fallback)
             embedding_dict[embedding_id] = to_tensor(query_embedding)
     
-    torch.save(embedding_dict, "query_embeddings.pt")
+    os.makedirs(output_dir, exist_ok=True)
+    embedding_output_path = os.path.join(output_dir, "query_embeddings.pt")
+    torch.save(embedding_dict, embedding_output_path)
     print(f"✅ Saved {len(embedding_dict)} vectors to query_embeddings.pt")
     
     # Step 3: Merge embedding_id back to main data
@@ -67,16 +77,30 @@ def process_final_data(df_all):
     
     # Step 5: Split into train/test (80/20 split)
     print("Splitting into train/test sets...")
-    total_size = len(df_all_indexed)
-    train_size = int(0.8 * total_size)
-    
-    df_train_indexed = df_all_indexed.iloc[:train_size]
-    df_test_indexed = df_all_indexed.iloc[train_size:]
+    if split_group_column:
+        if split_group_column not in df_all_indexed.columns:
+            raise ValueError(
+                f"split_group_column {split_group_column!r} is not present in the data"
+            )
+        groups = df_all_indexed[split_group_column].drop_duplicates()
+        groups = groups.sample(frac=1.0, random_state=random_state).tolist()
+        train_group_count = int(0.8 * len(groups))
+        train_groups = set(groups[:train_group_count])
+        train_mask = df_all_indexed[split_group_column].isin(train_groups)
+        df_train_indexed = df_all_indexed.loc[train_mask].copy()
+        df_test_indexed = df_all_indexed.loc[~train_mask].copy()
+    else:
+        total_size = len(df_all_indexed)
+        train_size = int(0.8 * total_size)
+        df_train_indexed = df_all_indexed.iloc[:train_size].copy()
+        df_test_indexed = df_all_indexed.iloc[train_size:].copy()
     
     # Step 6: Save as JSONL files
     print("Saving final files...")
-    df_train_indexed.to_json("default_routing_train_data.jsonl", orient="records", lines=True, force_ascii=False)
-    df_test_indexed.to_json("default_routing_test_data.jsonl", orient="records", lines=True, force_ascii=False)
+    train_output_path = os.path.join(output_dir, "default_routing_train_data.jsonl")
+    test_output_path = os.path.join(output_dir, "default_routing_test_data.jsonl")
+    df_train_indexed.to_json(train_output_path, orient="records", lines=True, force_ascii=False)
+    df_test_indexed.to_json(test_output_path, orient="records", lines=True, force_ascii=False)
     
     print(f"✅ Final files saved:")
     print(f"  - default_routing_train_data.jsonl ({len(df_train_indexed)} records)")

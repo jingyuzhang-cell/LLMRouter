@@ -191,12 +191,14 @@ class KNNMultiRoundRouter(MetaRouter):
             # Chat mode: simple query string, return response only
             original_query = query
             task_name = None
+            system_prompt = None
             chat_mode = True
             query_dict = {"query": original_query}
         else:
             # Evaluation mode: full dict with metrics
             original_query = query.get("query", "")
             task_name = query.get("task_name", None)
+            system_prompt = query.get("system_prompt")
             chat_mode = False
             query_dict = query
         
@@ -210,11 +212,13 @@ class KNNMultiRoundRouter(MetaRouter):
             model_name = self._route_sub_query(sub_query)
             
             # Execute the sub-query with the routed model
-            execution_result = self._execute_sub_query(sub_query, model_name)
+            execution_result = self._execute_sub_query(sub_query, model_name, system_prompt)
             sub_responses.append(execution_result)
         
         # Step 3: Aggregate responses into final answer
-        final_answer = self._aggregate_responses(original_query, sub_queries, sub_responses, task_name)
+        final_answer = self._aggregate_responses(
+            original_query, sub_queries, sub_responses, task_name, system_prompt
+        )
 
         # Chat mode: return response string only
         if chat_mode:
@@ -303,6 +307,7 @@ class KNNMultiRoundRouter(MetaRouter):
                 row_task_name = task_name
 
             # Format query if task_name is provided
+            system_prompt = None
             if row_task_name:
                 try:
                     # Prepare sample_data dict for generate_task_query
@@ -312,7 +317,8 @@ class KNNMultiRoundRouter(MetaRouter):
                     }
                     formatted_query = generate_task_query(row_task_name, sample_data)
                     row_copy["formatted_query"] = formatted_query
-                    query_text_for_routing = formatted_query
+                    query_text_for_routing = formatted_query["user"]
+                    system_prompt = formatted_query["system"]
                 except (ValueError, KeyError) as e:
                     # If formatting fails, fall back to original query
                     print(f"Warning: Failed to format query with task '{row_task_name}': {e}. Using original query.")
@@ -323,6 +329,7 @@ class KNNMultiRoundRouter(MetaRouter):
             # Use route_single to process the full pipeline (decompose → route → execute → aggregate)
             routing_result = self.route_single({
                 "query": query_text_for_routing,
+                "system_prompt": system_prompt,
                 "task_name": row_task_name
             })
             
@@ -395,7 +402,9 @@ class KNNMultiRoundRouter(MetaRouter):
         
         return sub_queries
     
-    def _execute_sub_query(self, sub_query: str, model_name: str) -> Dict[str, Any]:
+    def _execute_sub_query(
+        self, sub_query: str, model_name: str, system_prompt: Optional[str] = None
+    ) -> Dict[str, Any]:
         """
         Execute a sub-query using the routed model via API.
         
@@ -453,6 +462,7 @@ class KNNMultiRoundRouter(MetaRouter):
         request = {
             "api_endpoint": api_endpoint,
             "query": agent_prompt,
+            "system_prompt": system_prompt,
             "model_name": model_name,
             "api_name": api_model_name
         }
@@ -482,7 +492,8 @@ class KNNMultiRoundRouter(MetaRouter):
         original_query: str, 
         sub_queries: List[str], 
         sub_responses: List[Dict[str, Any]],
-        task_name: Optional[str] = None
+        task_name: Optional[str] = None,
+        system_prompt: Optional[str] = None
     ) -> str:
         """
         Aggregate sub-query responses into final answer.
@@ -528,7 +539,8 @@ Format:
             if self.local_llm is not None:
                 # Use local LLM
                 prompt_text = self.local_tokenizer.apply_chat_template(
-                    [{"role": "user", "content": agg_prompt}],
+                    ([{"role": "system", "content": system_prompt}] if system_prompt else [])
+                    + [{"role": "user", "content": agg_prompt}],
                     tokenize=False,
                     add_generation_prompt=True
                 )
@@ -569,6 +581,7 @@ Format:
             request = {
                 "api_endpoint": base_api_endpoint,
                 "query": agg_prompt,
+                "system_prompt": system_prompt,
                 "model_name": self.base_model,
                 "api_name": self.base_model
             }

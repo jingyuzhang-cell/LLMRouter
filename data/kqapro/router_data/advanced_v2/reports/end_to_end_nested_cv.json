@@ -1,0 +1,114 @@
+{
+  "objective": "rescue - 3*harm via cost-sensitive BCE; rescue-positive weighted sampling 5x; neutral negative weight .05",
+  "nested_cv": {
+    "outer_folds": 5,
+    "inner_threshold_fraction": 0.18,
+    "folds": [
+      {
+        "fold": 0,
+        "inner_threshold": 0.904129147529602,
+        "inner_accuracy": 0.7479166666666667,
+        "inner_downgrades": 1,
+        "inner_rescues": 1,
+        "inner_harms": 0,
+        "outer_accuracy": 0.751,
+        "outer_gemini": 0.751,
+        "outer_downgrades": 2,
+        "outer_rescues": 1,
+        "outer_harms": 1,
+        "outer_utility": -2
+      },
+      {
+        "fold": 1,
+        "inner_threshold": 0.8689776659011841,
+        "inner_accuracy": 0.7604166666666666,
+        "inner_downgrades": 1,
+        "inner_rescues": 1,
+        "inner_harms": 0,
+        "outer_accuracy": 0.759879939969985,
+        "outer_gemini": 0.759879939969985,
+        "outer_downgrades": 2,
+        "outer_rescues": 1,
+        "outer_harms": 1,
+        "outer_utility": -2
+      },
+      {
+        "fold": 2,
+        "inner_threshold": 0.8605538010597229,
+        "inner_accuracy": 0.7548611111111111,
+        "inner_downgrades": 1,
+        "inner_rescues": 0,
+        "inner_harms": 0,
+        "outer_accuracy": 0.751375687843922,
+        "outer_gemini": 0.7508754377188595,
+        "outer_downgrades": 1,
+        "outer_rescues": 1,
+        "outer_harms": 0,
+        "outer_utility": 1
+      },
+      {
+        "fold": 3,
+        "inner_threshold": 0.9351353049278259,
+        "inner_accuracy": 0.7583333333333333,
+        "inner_downgrades": 1,
+        "inner_rescues": 1,
+        "inner_harms": 0,
+        "outer_accuracy": 0.7593796898449224,
+        "outer_gemini": 0.7593796898449224,
+        "outer_downgrades": 0,
+        "outer_rescues": 0,
+        "outer_harms": 0,
+        "outer_utility": 0
+      },
+      {
+        "fold": 4,
+        "inner_threshold": 1.1,
+        "inner_accuracy": 0.7576388888888889,
+        "inner_downgrades": 0,
+        "inner_rescues": 0,
+        "inner_harms": 0,
+        "outer_accuracy": 0.7468734367183592,
+        "outer_gemini": 0.7468734367183592,
+        "outer_downgrades": 0,
+        "outer_rescues": 0,
+        "outer_harms": 0,
+        "outer_utility": 0
+      }
+    ],
+    "oof": {
+      "accuracy": 0.7537014805922368,
+      "gemini_accuracy": 0.7536014405762305,
+      "downgrades": 5,
+      "rescues": 3,
+      "harms": 2,
+      "utility": -3,
+      "selection_counts": {
+        "gemini": 9991,
+        "deepseek": 5
+      }
+    },
+    "inner_thresholds": [
+      0.904129147529602,
+      0.8689776659011841,
+      0.8605538010597229,
+      0.9351353049278259,
+      1.1
+    ],
+    "final_threshold": 1.1
+  },
+  "test": {
+    "accuracy": 0.7546742209631728,
+    "gemini_accuracy": 0.7546742209631728,
+    "downgrades": 0,
+    "rescues": 0,
+    "harms": 0,
+    "utility": 0,
+    "mean_latency_s": 1.6921045924718927,
+    "selection_counts": {
+      "gemini": 1765
+    }
+  },
+  "accepted": false,
+  "production_policy": "always_gemini",
+  "true_label_expansion": "not performed; requires paid five-model inference on new questions"
+}

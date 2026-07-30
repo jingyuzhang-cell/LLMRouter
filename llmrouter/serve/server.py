@@ -27,7 +27,7 @@ from typing import AsyncGenerator, Optional, Dict, Any, List
 try:
     from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
     from fastapi.responses import PlainTextResponse, StreamingResponse
-    from pydantic import BaseModel
+    from pydantic import BaseModel, Field
     import httpx
     import uvicorn
 except ImportError:
@@ -36,6 +36,7 @@ except ImportError:
 
 from .config import ServeConfig, LLMConfig
 from .monitoring import OpenTelemetryExporter, ResilienceMonitor
+from llmrouter.solver import IncrementalDAGSolver, NodeSpec, SQLiteNodeStore
 
 
 # ============================================================
@@ -53,6 +54,25 @@ class ChatRequest(BaseModel):
     temperature: Optional[float] = None
     max_tokens: Optional[int] = 4096
     stream: Optional[bool] = False
+
+
+class SolverNodeRequest(BaseModel):
+    id: str
+    semantic_key: str
+    executor: str
+    inputs: Dict[str, Any] = Field(default_factory=dict)
+    depends_on: List[str] = Field(default_factory=list)
+    implementation_version: str = "1"
+    model_version: str = ""
+    prompt_version: str = ""
+    ttl_seconds: Optional[float] = None
+    cacheable: bool = True
+
+
+class SolverRoundRequest(BaseModel):
+    session_id: str
+    question: str
+    nodes: List[SolverNodeRequest]
 
 
 # ============================================================
@@ -415,7 +435,13 @@ class LLMBackend:
 # FastAPI App
 # ============================================================
 
-def create_app(config: ServeConfig = None, config_path: str = None) -> FastAPI:
+def create_app(
+    config: ServeConfig = None,
+    config_path: str = None,
+    *,
+    solver_executors: Optional[Dict[str, Any]] = None,
+    solver_store_path: Optional[str] = None,
+) -> FastAPI:
     """Create FastAPI application"""
 
     if config is None and config_path:
@@ -437,6 +463,10 @@ def create_app(config: ServeConfig = None, config_path: str = None) -> FastAPI:
     llm_backend = LLMBackend(config)
     app.state.llm_backend = llm_backend
     app.state.router_adapter = router_adapter
+    solver_store = SQLiteNodeStore(solver_store_path or ":memory:")
+    dag_solver = IncrementalDAGSolver(solver_executors or {}, solver_store)
+    solver_lock = threading.Lock()
+    app.state.dag_solver = dag_solver
 
     @app.get("/health")
     async def health():
@@ -488,6 +518,59 @@ def create_app(config: ServeConfig = None, config_path: str = None) -> FastAPI:
                 for name in config.llms.keys()
             ]
         }
+
+    @app.post("/v1/solver/round")
+    def solve_round(request: SolverRoundRequest):
+        """Execute one DAG turn against the session's complete history."""
+        if not solver_executors:
+            raise HTTPException(
+                status_code=503,
+                detail="No solver executors were registered with create_app",
+            )
+        try:
+            specs = [
+                NodeSpec(
+                    id=node.id,
+                    semantic_key=node.semantic_key,
+                    executor=node.executor,
+                    inputs=node.inputs,
+                    depends_on=tuple(node.depends_on),
+                    implementation_version=node.implementation_version,
+                    model_version=node.model_version,
+                    prompt_version=node.prompt_version,
+                    ttl_seconds=node.ttl_seconds,
+                    cacheable=node.cacheable,
+                )
+                for node in request.nodes
+            ]
+            with solver_lock:
+                result = dag_solver.run(request.session_id, request.question, specs)
+            return {
+                "session_id": result.session_id,
+                "round_number": result.round_number,
+                "question": result.question,
+                "reused_count": result.reused_count,
+                "nodes": [
+                    {
+                        "id": node.node_id,
+                        "semantic_key": node.semantic_key,
+                        "status": node.status,
+                        "output": node.output,
+                        "fingerprint": node.fingerprint,
+                        "reused_from_round": node.reused_from_round,
+                    }
+                    for node in result.nodes
+                ],
+                "outputs": result.outputs,
+            }
+        except (ValueError, KeyError, TypeError) as error:
+            raise HTTPException(status_code=422, detail=str(error)) from error
+
+    @app.get("/v1/solver/sessions/{session_id}/history")
+    def solver_history(session_id: str):
+        with solver_lock:
+            history = solver_store.history(session_id)
+        return {"session_id": session_id, "history": history}
 
     @app.post("/v1/chat/completions")
     async def chat_completions(request: ChatRequest):

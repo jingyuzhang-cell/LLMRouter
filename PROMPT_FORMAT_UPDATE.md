@@ -10,7 +10,7 @@ We've updated the prompt formatting system to properly separate **system prompts
 Task-specific instructions were concatenated with the query as a single user message:
 
 ```python
-# Old format - everything in user message
+# Old format - everything in user m essage
 messages = [{"role": "user", "content": "Answer the following question...\nQuestion: What is 2+2?"}]
 ```
 

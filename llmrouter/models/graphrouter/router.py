@@ -32,6 +32,13 @@ class GraphRouter(MetaRouter):
         dummy_model = nn.Identity()
         super().__init__(model=dummy_model, yaml_path=yaml_path)
 
+        self.random_state = self.cfg.get("hparam", {}).get("random_state", 42)
+        np.random.seed(self.random_state)
+        torch.manual_seed(self.random_state)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(self.random_state)
+        self.rng = np.random.default_rng(self.random_state)
+
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # Get hyperparameters from config
@@ -53,7 +60,9 @@ class GraphRouter(MetaRouter):
             'train_mask_rate': self.gnn_params.get('train_mask_rate', 0.3),
             'llm_num': self.num_llms,
             'model_path': self._get_model_path('save_model_path'),
-            'val_split_ratio': self.gnn_params.get('val_split_ratio', 0.2)
+            'val_split_ratio': self.gnn_params.get('val_split_ratio', 0.2),
+            'early_stopping_patience': self.gnn_params.get('early_stopping_patience', 20),
+            'early_stopping_min_delta': self.gnn_params.get('early_stopping_min_delta', 0.0),
         }
 
         # Initialize FormData and GNNPredictor
@@ -69,7 +78,9 @@ class GraphRouter(MetaRouter):
 
     def _get_model_path(self, key: str) -> str:
         """Get model path from config."""
-        project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        project_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../../..")
+        )
         model_paths = self.cfg.get("model_path", {})
         return os.path.join(project_root, model_paths.get(key, f"models/gnn_{key}.pt"))
 
@@ -106,8 +117,8 @@ class GraphRouter(MetaRouter):
                 self.performance_matrix[i, model_idx] = row["performance"]
 
         # Normalize query embeddings
-        scaler = MinMaxScaler()
-        self.query_embedding_list = scaler.fit_transform(self.query_embedding_list)
+        self.query_scaler = MinMaxScaler()
+        self.query_embedding_list = self.query_scaler.fit_transform(self.query_embedding_list)
         self.query_dim = self.query_embedding_list.shape[1]
 
         # Flatten and normalize performance
@@ -120,16 +131,23 @@ class GraphRouter(MetaRouter):
 
     def _prepare_llm_embeddings(self):
         """Prepare LLM embeddings from config."""
-        llm_data = self.cfg.get("llm_data", {})
+        llm_data = self.llm_data or {}
         llm_embeddings = []
 
+        missing_embeddings = []
         for model_name in self.model_names:
             if model_name in llm_data and "embedding" in llm_data[model_name]:
                 embedding = llm_data[model_name]["embedding"]
             else:
-                # Random initialization if no embedding provided
-                embedding = np.random.randn(self.query_dim).tolist()
+                missing_embeddings.append(model_name)
+                continue
             llm_embeddings.append(embedding)
+
+        if missing_embeddings:
+            raise ValueError(
+                "GraphRouter requires deterministic LLM embeddings. Missing embedding for: "
+                + ", ".join(missing_embeddings)
+            )
 
         self.llm_embedding = np.array(llm_embeddings)
 
@@ -169,7 +187,7 @@ class GraphRouter(MetaRouter):
 
             # Shuffle indices
             all_indices = np.arange(num_queries)
-            np.random.shuffle(all_indices)
+            self.rng.shuffle(all_indices)
             train_indices = all_indices[:num_train]
             val_indices = all_indices[num_train:]
 
@@ -261,10 +279,7 @@ class GraphRouter(MetaRouter):
         query_embedding = get_longformer_embedding(query["query"]).numpy().reshape(1, -1)
 
         # Normalize with training data
-        combined = np.vstack([self.query_embedding_list, query_embedding])
-        scaler = MinMaxScaler()
-        scaler.fit(combined)
-        query_embedding_normalized = scaler.transform(query_embedding)
+        query_embedding_normalized = self.query_scaler.transform(query_embedding)
 
         # Build prediction graph: new query + all training data
         all_query_embeddings = np.vstack([self.query_embedding_list, query_embedding_normalized])
@@ -370,10 +385,7 @@ class GraphRouter(MetaRouter):
         test_embeddings = np.array(test_embeddings)
 
         # Normalize
-        combined = np.vstack([self.query_embedding_list, test_embeddings])
-        scaler = MinMaxScaler()
-        scaler.fit(combined)
-        test_embeddings_normalized = scaler.transform(test_embeddings)
+        test_embeddings_normalized = self.query_scaler.transform(test_embeddings)
 
         # Build prediction graph
         all_query_embeddings = np.vstack([self.query_embedding_list, test_embeddings_normalized])
@@ -442,6 +454,7 @@ class GraphRouter(MetaRouter):
             row_copy["model_name"] = model_name
 
             # Step 2: Format query if task_name is provided
+            system_prompt = None
             if row_task_name:
                 try:
                     sample_data = {
@@ -450,7 +463,8 @@ class GraphRouter(MetaRouter):
                     }
                     formatted_query = generate_task_query(row_task_name, sample_data)
                     row_copy["formatted_query"] = formatted_query
-                    query_text_for_execution = formatted_query
+                    query_text_for_execution = formatted_query["user"]
+                    system_prompt = formatted_query["system"]
                 except (ValueError, KeyError) as e:
                     print(f"Warning: Failed to format query with task '{row_task_name}': {e}. Using original query.")
                     query_text_for_execution = original_query
@@ -486,6 +500,7 @@ class GraphRouter(MetaRouter):
             request = {
                 "api_endpoint": api_endpoint,
                 "query": query_text_for_execution,
+                "system_prompt": system_prompt,
                 "model_name": model_name,
                 "api_name": api_model_name
             }
