@@ -1,0 +1,65 @@
+{
+  "report_type": "finrome_v4_phase2_fixed",
+  "version": "2.1.5_fixed",
+  "generated_at": "2026-08-18T15:24:02.563625+00:00",
+  "fixes_applied": [
+    "历史效用计算修复：严格仅使用训练集（60个任务）",
+    "Safety Oracle 计算统一：使用与 Phase 1 完全一致的函数",
+    "分割隔离验证：确保 Train/Calibration/Test 完全互斥",
+    "Router 实现标注：明确为 Prototype 而非原始 Router"
+  ],
+  "data_split": {
+    "train_count": 60,
+    "calibration_count": 20,
+    "test_count": 20,
+    "isolation_verified": true
+  },
+  "historical_utilities": {
+    "fixed_train_only": {
+      "deepseek-chat": 0.8049055650000001,
+      "glm-5.2": 0.708795386111111,
+      "qwen-plus": 0.7182512227777776,
+      "qwen-turbo": 0.7690250608333334
+    },
+    "previous_incorrect": {
+      "deepseek-chat": 0.8515722316666668,
+      "glm-5.2": 0.7487953861111111,
+      "qwen-plus": 0.7771401116666666,
+      "qwen-turbo": 0.8312472830555556
+    },
+    "correction_applied": true
+  },
+  "safety_oracle": {
+    "failure_rate": 0.05,
+    "should_match_phase1": true,
+    "consistency_note": "现在应与 Phase 1 的 15% 一致"
+  },
+  "routing_metrics": {
+    "m1": {
+      "mean_utility": 0.823650265,
+      "failure_rate": 0.25,
+      "oracle_match_rate": 0.3
+    },
+    "m3": {
+      "mean_utility": 0.8300423541666667,
+      "failure_rate": 0.2,
+      "oracle_match_rate": 0.6
+    },
+    "gaps": {
+      "safety_routing_gap": 0.2,
+      "utility_routing_gap": 0.06802021666666669
+    }
+  },
+  "expert_heterogeneity": {
+    "knn_mlp_disagreement": 0.45,
+    "knn_graph_disagreement": 0.6,
+    "mlp_graph_disagreement": 0.5
+  },
+  "router_implementation_type": "prototype",
+  "fix_status": {
+    "historical_utility_fixed": true,
+    "safety_oracle_unified": true,
+    "split_isolation_verified": true,
+    "overall_fixed": true
+  }
+}

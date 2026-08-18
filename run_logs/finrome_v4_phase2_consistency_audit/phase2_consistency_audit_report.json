@@ -1,0 +1,789 @@
+{
+  "report_type": "finrome_v4_phase2_consistency_audit",
+  "phase": "2.1_cross_phase_consistency_audit",
+  "generated_at": "2026-08-18T15:21:16.961110+00:00",
+  "scope": {
+    "safety_oracle_consistency": true,
+    "train_calibration_isolation": true,
+    "router_implementation_provenance": true,
+    "m1_m3_definition_clarity": true
+  },
+  "critical_findings": {
+    "safety_oracle_contradiction": {
+      "phase1_failure_rate": 0.15,
+      "phase2_failure_rate": 0.05,
+      "consistent": false,
+      "inconsistencies_found": 12,
+      "severity": "CRITICAL"
+    },
+    "train_calibration_isolation": {
+      "all_checks_passed": true,
+      "historical_utility_consistent": false,
+      "router_training_audit": {
+        "knn_router": {
+          "trained_on_train_split_claim": true,
+          "parameters": {
+            "n_neighbors": 5,
+            "weights": "distance",
+            "metric": "cosine"
+          }
+        },
+        "mlp_router": {
+          "trained_on_train_split_claim": true,
+          "parameters": {
+            "hidden_layers": "(64, 32)",
+            "max_iter": 1000,
+            "early_stopping": true
+          }
+        },
+        "graph_router": {
+          "trained_on_train_split_claim": true,
+          "parameters": {
+            "similarity_method": "dot_product",
+            "top_k_neighbors": 10
+          }
+        },
+        "train_count_consistent": true
+      }
+    },
+    "router_implementation_type": "surrogate",
+    "m1_m3_implementation_type": "formal"
+  },
+  "detailed_analyses": {
+    "safety_oracle_comparison": {
+      "total_calibration_tasks": 20,
+      "phase1_safety_oracle_failures": 3,
+      "phase1_safety_oracle_failure_rate": 0.15,
+      "phase2_safety_oracle_failures": 1,
+      "phase2_safety_oracle_failure_rate": 0.05,
+      "consistency_status": false,
+      "inconsistencies_found": 12,
+      "inconsistency_details": [
+        {
+          "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "qwen-turbo",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "deepseek-chat",
+            "glm-5.2",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.9646666666666667,
+            "glm-5.2": 0.971,
+            "qwen-plus": 0.9926666666666666,
+            "qwen-turbo": 1.0
+          }
+        },
+        {
+          "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "qwen-plus",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "deepseek-chat",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.9826666666666667,
+            "glm-5.2": 0.3293333333333333,
+            "qwen-plus": 0.9899999999999999,
+            "qwen-turbo": 0.5403333333333333
+          }
+        },
+        {
+          "task_id": "finance_dataset_49d7ee2d-93a5-4ed7-9fe9-030ead91c8d2",
+          "phase1_oracle": "glm-5.2",
+          "phase2_oracle": "glm-5.2",
+          "phase1_failed": true,
+          "phase2_failed": false,
+          "oracle_consistent": true,
+          "failure_consistent": false,
+          "safe_models": [
+            "glm-5.2",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.0,
+            "glm-5.2": 0.644,
+            "qwen-plus": 0.6013333333333333,
+            "qwen-turbo": 0.6266666666666666
+          }
+        },
+        {
+          "task_id": "finance_dataset_835245df-3585-4913-a460-730158048891",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "glm-5.2",
+          "phase1_failed": true,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": false,
+          "safe_models": [
+            "glm-5.2"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.23266666666666666,
+            "glm-5.2": 0.502,
+            "qwen-plus": 0.262,
+            "qwen-turbo": 0.24066666666666667
+          }
+        },
+        {
+          "task_id": "finance_dataset_87d1dc85-d372-4ddd-bf18-8aca923cffbb",
+          "phase1_oracle": "glm-5.2",
+          "phase2_oracle": "qwen-plus",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "glm-5.2",
+            "qwen-plus"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.3233333333333333,
+            "glm-5.2": 0.9296666666666665,
+            "qwen-plus": 0.9826666666666667,
+            "qwen-turbo": 0.0
+          }
+        },
+        {
+          "task_id": "finance_dataset_c6141817-0c1b-44f6-bbbf-4f64c5ede190",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "qwen-turbo",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "deepseek-chat",
+            "glm-5.2",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.9826666666666667,
+            "glm-5.2": 0.8016666666666667,
+            "qwen-plus": 0.9873333333333333,
+            "qwen-turbo": 0.992
+          }
+        },
+        {
+          "task_id": "finance_dataset_finqa_001401",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "qwen-turbo",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "deepseek-chat",
+            "glm-5.2",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.995,
+            "glm-5.2": 0.9923333333333333,
+            "qwen-plus": 0.995,
+            "qwen-turbo": 1.0
+          }
+        },
+        {
+          "task_id": "finance_dataset_finqa_002522",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "qwen-turbo",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "deepseek-chat",
+            "glm-5.2",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.9836666666666667,
+            "glm-5.2": 0.988,
+            "qwen-plus": 0.9846666666666666,
+            "qwen-turbo": 0.9946666666666667
+          }
+        },
+        {
+          "task_id": "finance_dataset_finqa_004591",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "glm-5.2",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "deepseek-chat",
+            "glm-5.2",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.9763333333333334,
+            "glm-5.2": 0.985,
+            "qwen-plus": 0.9496666666666668,
+            "qwen-turbo": 0.5613333333333334
+          }
+        },
+        {
+          "task_id": "finance_dataset_finqa_006147",
+          "phase1_oracle": "glm-5.2",
+          "phase2_oracle": "qwen-plus",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "glm-5.2",
+            "qwen-plus"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.3333333333333333,
+            "glm-5.2": 0.9773333333333333,
+            "qwen-plus": 1.0,
+            "qwen-turbo": 0.3333333333333333
+          }
+        },
+        {
+          "task_id": "finance_dataset_finreflect_8d468c1cd51cda03",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "qwen-plus",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "deepseek-chat",
+            "glm-5.2",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.992,
+            "glm-5.2": 0.9973333333333333,
+            "qwen-plus": 1.0,
+            "qwen-turbo": 0.985
+          }
+        },
+        {
+          "task_id": "finance_dataset_finreflect_c0745423b9789a31",
+          "phase1_oracle": "deepseek-chat",
+          "phase2_oracle": "glm-5.2",
+          "phase1_failed": false,
+          "phase2_failed": false,
+          "oracle_consistent": false,
+          "failure_consistent": true,
+          "safe_models": [
+            "deepseek-chat",
+            "glm-5.2",
+            "qwen-plus",
+            "qwen-turbo"
+          ],
+          "aggregated_qualities": {
+            "deepseek-chat": 0.992,
+            "glm-5.2": 1.0,
+            "qwen-plus": 1.0,
+            "qwen-turbo": 0.9906666666666667
+          }
+        }
+      ]
+    },
+    "train_calibration_isolation": {
+      "manifest_split_sizes": {
+        "train": 60,
+        "calibration": 20,
+        "test": 20
+      },
+      "isolation_checks": {
+        "train_calibration_disjoint": true,
+        "train_test_disjoint": true,
+        "calibration_test_disjoint": true
+      },
+      "historical_utility_audit": {
+        "phase2_reported": {
+          "deepseek-chat": 0.8515722316666668,
+          "glm-5.2": 0.7487953861111111,
+          "qwen-plus": 0.7771401116666666,
+          "qwen-turbo": 0.8312472830555556
+        },
+        "recomputed_from_train_only": {
+          "deepseek-chat": 0.8049055650000001,
+          "glm-5.2": 0.7087953861111111,
+          "qwen-plus": 0.7182512227777778,
+          "qwen-turbo": 0.7690250608333334
+        },
+        "consistent": false
+      },
+      "router_training_audit": {
+        "knn_router": {
+          "trained_on_train_split_claim": true,
+          "parameters": {
+            "n_neighbors": 5,
+            "weights": "distance",
+            "metric": "cosine"
+          }
+        },
+        "mlp_router": {
+          "trained_on_train_split_claim": true,
+          "parameters": {
+            "hidden_layers": "(64, 32)",
+            "max_iter": 1000,
+            "early_stopping": true
+          }
+        },
+        "graph_router": {
+          "trained_on_train_split_claim": true,
+          "parameters": {
+            "similarity_method": "dot_product",
+            "top_k_neighbors": 10
+          }
+        },
+        "train_count_consistent": true
+      }
+    },
+    "router_implementation_provenance": {
+      "knn_router": {
+        "found_files": [
+          "scripts/run_offline_knn_baseline.py",
+          "run_logs/offline_knn_baseline/knnrouter_longformer.pkl"
+        ],
+        "original_class": "KNeighborsClassifier (sklearn)",
+        "original_checkpoint": "run_logs/offline_knn_baseline/knnrouter_longformer.pkl",
+        "phase2_implementation": "surrogate - 重新实现的 KNNRouterExpert 类"
+      },
+      "mlp_router": {
+        "found_files": [
+          "scripts/evaluate_mlprouter_offline.py",
+          "llmrouter/models/mlprouter.py"
+        ],
+        "original_class": "MLPRouter (llmrouter.models)",
+        "original_checkpoint": "configs/model_config_test/mlprouter.yaml",
+        "phase2_implementation": "surrogate - 重新实现的 MLPRouterExpert 类"
+      },
+      "graph_router": {
+        "found_files": [
+          "scripts/run_offline_graphrouter_baseline.py",
+          "run_logs/offline_graphrouter_baseline/graphrouter_finance.pt"
+        ],
+        "original_class": "EncoderDecoderNet (llmrouter.models.graphrouter)",
+        "original_checkpoint": "run_logs/offline_graphrouter_baseline/graphrouter_finance.pt",
+        "phase2_implementation": "surrogate - 重新实现的 GraphRouterExpert 类"
+      },
+      "provenance_analysis": {
+        "phase2_script_path": "/root/autodl-tmp/LLMRouter-extracted/LLMRouter-main/LLMRouter-main/scripts/phase2_router_expert_reconstruction.py",
+        "imports_original_knn": true,
+        "imports_original_mlp": false,
+        "imports_original_graph": false,
+        "defines_new_expert_classes": true,
+        "implementation_type": "surrogate"
+      }
+    },
+    "m1_m3_definitions": {
+      "m1_definition": {
+        "function_name": "m1_equal_rank_fusion",
+        "implementation": "基于历史效用的等权融合",
+        "key_logic": "选择历史效用最高的模型",
+        "code_snippet": "def m1_equal_rank_fusion(\n    task_id: str,\n    knn_result: RouterExpertScores,\n    mlp_result: RouterExpertScores,\n    graph_result: RouterExpertScores,\n    historical_utilities: dict[str, float]\n) -> str:\n    \"\"\"\n    M1: Equal-rank fusion - select model with best historical utility.\n    This is the baseline Fin-RoME approach.\n    \"\"\"\n    # Simply select model with maximum historical utility\n    return max(MODELS, key=lambda m: historical_utilities.get(m, 0.0))",
+        "uses_router_experts": true,
+        "type": "router_expert_fusion"
+      },
+      "m3_definition": {
+        "function_name": "m3_weighted_fusion",
+        "implementation": "基于置信度的加权融合",
+        "key_features": [
+          "risk_conditioned_weights",
+          "confidence_weighted",
+          "conformal_weighting"
+        ],
+        "code_snippet": "def m3_weighted_fusion(\n    task_id: str,\n    knn_result: RouterExpertScores,\n    mlp_result: RouterExpertScores,\n    graph_result: RouterExpertScores,\n    historical_utilities: dict[str, float],\n    task_risk: str = \"medium\"\n) -> str:\n    \"\"\"\n    M3: Risk/conformal weighted fusion.\n    Uses router expert scores with risk-aware weighting.\n    \"\"\"\n    # Get scores from all experts\n    expert_scores = {model: 0.0 for model in MODELS}\n\n    # KNN contribution (weight based on confidence)\n    knn_wei...",
+        "type": "formal_m3"
+      },
+      "implementation_type": "formal",
+      "performance_metrics": {
+        "m1_utility": 0.8636502649999999,
+        "m3_utility": 0.8700423541666668,
+        "utility_improvement": 0.006392089166666892,
+        "m1_failure_rate": 0.25,
+        "m3_failure_rate": 0.2,
+        "failure_improvement": 0.04999999999999999,
+        "m1_oracle_match": 0.3,
+        "m3_oracle_match": 0.6,
+        "oracle_match_improvement": 0.3
+      }
+    }
+  },
+  "task_level_analysis": [
+    {
+      "task_id": "finance_dataset_08439cc4-cc83-400e-ae6e-0550c2a91344",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "deepseek-chat",
+      "consistent": true,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.343,
+        "glm-5.2": 0.242,
+        "qwen-plus": 0.20133333333333336,
+        "qwen-turbo": 0.03166666666666667
+      },
+      "safe_models": []
+    },
+    {
+      "task_id": "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "qwen-turbo",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.9646666666666667,
+        "glm-5.2": 0.971,
+        "qwen-plus": 0.9926666666666666,
+        "qwen-turbo": 1.0
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "qwen-plus",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.9826666666666667,
+        "glm-5.2": 0.3293333333333333,
+        "qwen-plus": 0.9899999999999999,
+        "qwen-turbo": 0.5403333333333333
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_48c3b9b7-0d9f-4919-9b6e-1659e72cb7f8",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "deepseek-chat",
+      "consistent": true,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.9926666666666666,
+        "glm-5.2": 0.5830000000000001,
+        "qwen-plus": 0.0,
+        "qwen-turbo": 0.9726666666666667
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_49d7ee2d-93a5-4ed7-9fe9-030ead91c8d2",
+      "phase1_safety_oracle": "glm-5.2",
+      "phase2_safety_oracle": "glm-5.2",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.0,
+        "glm-5.2": 0.644,
+        "qwen-plus": 0.6013333333333333,
+        "qwen-turbo": 0.6266666666666666
+      },
+      "safe_models": [
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_716dff82-ebc4-46b9-89f5-4f7f49c92548",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "deepseek-chat",
+      "consistent": true,
+      "aggregated_qualities": {
+        "deepseek-chat": 1.0,
+        "glm-5.2": 0.9446666666666667,
+        "qwen-plus": 1.0,
+        "qwen-turbo": 1.0
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_835245df-3585-4913-a460-730158048891",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "glm-5.2",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.23266666666666666,
+        "glm-5.2": 0.502,
+        "qwen-plus": 0.262,
+        "qwen-turbo": 0.24066666666666667
+      },
+      "safe_models": [
+        "glm-5.2"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_87d1dc85-d372-4ddd-bf18-8aca923cffbb",
+      "phase1_safety_oracle": "glm-5.2",
+      "phase2_safety_oracle": "qwen-plus",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.3233333333333333,
+        "glm-5.2": 0.9296666666666665,
+        "qwen-plus": 0.9826666666666667,
+        "qwen-turbo": 0.0
+      },
+      "safe_models": [
+        "glm-5.2",
+        "qwen-plus"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_9654e872-339e-4caa-a704-e9d5ca78a3e2",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "deepseek-chat",
+      "consistent": true,
+      "aggregated_qualities": {
+        "deepseek-chat": 1.0,
+        "glm-5.2": 0.9199999999999999,
+        "qwen-plus": 1.0,
+        "qwen-turbo": 1.0
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_c6141817-0c1b-44f6-bbbf-4f64c5ede190",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "qwen-turbo",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.9826666666666667,
+        "glm-5.2": 0.8016666666666667,
+        "qwen-plus": 0.9873333333333333,
+        "qwen-turbo": 0.992
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_ef754689-a758-4cce-9fb8-1efecaec496e",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "deepseek-chat",
+      "consistent": true,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.9973333333333333,
+        "glm-5.2": 0.98,
+        "qwen-plus": 0.9369999999999999,
+        "qwen-turbo": 0.9896666666666666
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_finqa_001401",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "qwen-turbo",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.995,
+        "glm-5.2": 0.9923333333333333,
+        "qwen-plus": 0.995,
+        "qwen-turbo": 1.0
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_finqa_001593",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "deepseek-chat",
+      "consistent": true,
+      "aggregated_qualities": {
+        "deepseek-chat": 1.0,
+        "glm-5.2": 0.9946666666666667,
+        "qwen-plus": 0.9973333333333333,
+        "qwen-turbo": 0.992
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_finqa_002522",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "qwen-turbo",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.9836666666666667,
+        "glm-5.2": 0.988,
+        "qwen-plus": 0.9846666666666666,
+        "qwen-turbo": 0.9946666666666667
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_finqa_003370",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "deepseek-chat",
+      "consistent": true,
+      "aggregated_qualities": {
+        "deepseek-chat": 1.0,
+        "glm-5.2": 0.9723333333333333,
+        "qwen-plus": 1.0,
+        "qwen-turbo": 1.0
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_finqa_004591",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "glm-5.2",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.9763333333333334,
+        "glm-5.2": 0.985,
+        "qwen-plus": 0.9496666666666668,
+        "qwen-turbo": 0.5613333333333334
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_finqa_006147",
+      "phase1_safety_oracle": "glm-5.2",
+      "phase2_safety_oracle": "qwen-plus",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.3333333333333333,
+        "glm-5.2": 0.9773333333333333,
+        "qwen-plus": 1.0,
+        "qwen-turbo": 0.3333333333333333
+      },
+      "safe_models": [
+        "glm-5.2",
+        "qwen-plus"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_finreflect_8d468c1cd51cda03",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "qwen-plus",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.992,
+        "glm-5.2": 0.9973333333333333,
+        "qwen-plus": 1.0,
+        "qwen-turbo": 0.985
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_finreflect_c0745423b9789a31",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "glm-5.2",
+      "consistent": false,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.992,
+        "glm-5.2": 1.0,
+        "qwen-plus": 1.0,
+        "qwen-turbo": 0.9906666666666667
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "glm-5.2",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    },
+    {
+      "task_id": "finance_dataset_seed_audit_001",
+      "phase1_safety_oracle": "deepseek-chat",
+      "phase2_safety_oracle": "deepseek-chat",
+      "consistent": true,
+      "aggregated_qualities": {
+        "deepseek-chat": 0.7366666666666667,
+        "glm-5.2": 0.4916666666666667,
+        "qwen-plus": 0.6249999999999999,
+        "qwen-turbo": 0.5
+      },
+      "safe_models": [
+        "deepseek-chat",
+        "qwen-plus",
+        "qwen-turbo"
+      ]
+    }
+  ],
+  "recommendations": [
+    "CRITICAL: Safety Oracle 不一致！Phase 1 和 Phase 2 使用了不同的计算方法。",
+    "HIGH: 历史效用计算不一致，可能包含了非训练集数据。",
+    "MEDIUM: Phase 2 使用了 surrogate 实现，应该明确标注为原型而非原始 Router 重建。"
+  ],
+  "audit_conclusions": {
+    "phase2_metrics_valid": false,
+    "can_proceed_to_phase3": false,
+    "critical_issues_resolved": false,
+    "high_priority_issues_resolved": false,
+    "overall_audit_status": "FAIL"
+  }
+}
