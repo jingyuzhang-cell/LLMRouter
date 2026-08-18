@@ -341,7 +341,7 @@ def main() -> None:
 
     for i, tid in enumerate(test_ids):
         risk = risk_name(tasks[tid])
-        oracle = labels[tid]
+        oracle = int(labels[tid])  # 确保是整数
         oracle_utility = outcomes[tid][oracle][4]
 
         # Router predictions
@@ -372,6 +372,8 @@ def main() -> None:
                 "safe_routers": [],
                 "abstained": True,
                 "abstain_reason": "no_safe_router",
+                "oracle": oracle,
+                "selected": None,
             })
             continue
 
@@ -418,6 +420,8 @@ def main() -> None:
                 "safe_models": [],
                 "abstained": True,
                 "abstain_reason": "no_safe_model",
+                "oracle": oracle,
+                "selected": None,
             })
             continue
 
@@ -467,6 +471,8 @@ def main() -> None:
                 "verifier_second_pass": second_pass,
                 "abstained": True,
                 "abstain_reason": "verifier_failed",
+                "oracle": oracle,
+                "selected": None,
             })
         else:
             result_rows.append({
@@ -490,6 +496,8 @@ def main() -> None:
                 "selected_model": MODELS[selected],
                 "verifier_second_pass": second_pass,
                 "abstained": False,
+                "oracle": oracle,
+                "selected": selected,
             })
 
     # Generate report
