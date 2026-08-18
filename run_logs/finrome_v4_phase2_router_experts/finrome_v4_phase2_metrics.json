@@ -1,0 +1,123 @@
+{
+  "report_type": "finrome_v4_phase2_router_expert_reconstruction",
+  "phase": "2_router_expert_reconstruction",
+  "generated_at": "2026-08-18T15:10:18.195776+00:00",
+  "scope": {
+    "test_split_access": false,
+    "v4_safety_gate_tuning": false,
+    "split_manifest": "/root/autodl-tmp/LLMRouter-extracted/LLMRouter-main/LLMRouter-main/finrome_v4_split_manifest.json",
+    "training_split_only": true,
+    "description": "Phase 2 rebuilds heterogeneous Router Experts (KNN/MLP/Graph)"
+  },
+  "data_split": {
+    "train_count": 60,
+    "calibration_count": 20,
+    "test_count": 20,
+    "test_accessed": false
+  },
+  "expert_validity": {
+    "disagreement_rates": {
+      "knn_vs_mlp": 0.5,
+      "knn_vs_graph": 0.45,
+      "mlp_vs_graph": 0.55
+    },
+    "selection_diversity": {
+      "knn": {
+        "qwen-plus": 2,
+        "deepseek-chat": 6,
+        "qwen-turbo": 12
+      },
+      "mlp": {
+        "qwen-turbo": 14,
+        "deepseek-chat": 6
+      },
+      "graph": {
+        "qwen-plus": 3,
+        "deepseek-chat": 12,
+        "qwen-turbo": 5
+      }
+    },
+    "spearman_correlations": {
+      "knn_mlp": 0.76,
+      "knn_graph": 0.7200000000000002,
+      "mlp_graph": 0.7300000000000001
+    },
+    "expert_collapse_flags": [],
+    "overall_heterogeneity_score": 0.1316666666666666
+  },
+  "historical_utilities": {
+    "deepseek-chat": 0.8515722316666668,
+    "glm-5.2": 0.7487953861111111,
+    "qwen-plus": 0.7771401116666666,
+    "qwen-turbo": 0.8312472830555556
+  },
+  "routing_comparison": {
+    "m1_metrics": {
+      "mean_utility": 0.8636502649999999,
+      "mean_regret": 0.04888478249999999,
+      "oracle_match_rate": 0.3,
+      "failure_rate": 0.25
+    },
+    "m3_metrics": {
+      "mean_utility": 0.8700423541666668,
+      "mean_regret": 0.04249269333333333,
+      "oracle_match_rate": 0.6,
+      "failure_rate": 0.2
+    },
+    "oracle_metrics": {
+      "mean_utility": 0.9125350475000001
+    },
+    "safety_oracle_metrics": {
+      "failure_rate": 0.05
+    },
+    "routing_gaps": {
+      "safety_routing_gap": 0.2,
+      "utility_routing_gap": 0.04888478250000028
+    }
+  },
+  "expert_training": {
+    "knn_router": {
+      "trained_on_train_split": true,
+      "n_neighbors": 5,
+      "weights": "distance",
+      "metric": "cosine"
+    },
+    "mlp_router": {
+      "trained_on_train_split": true,
+      "hidden_layers": "(64, 32)",
+      "max_iter": 1000,
+      "early_stopping": true
+    },
+    "graph_router": {
+      "trained_on_train_split": true,
+      "similarity_method": "dot_product",
+      "top_k_neighbors": 10
+    }
+  },
+  "key_findings": [
+    "Router Expert heterogeneity score: 0.132",
+    "KNN-MLP disagreement: 50.0%",
+    "KNN-Graph disagreement: 45.0%",
+    "MLP-Graph disagreement: 55.0%",
+    "M1 vs M3 utility difference: 0.0064",
+    "M1 oracle match rate: 30.0%",
+    "M3 oracle match rate: 60.0%",
+    "Safety Routing Gap: 20.0%",
+    "Utility Routing Gap: 0.0489"
+  ],
+  "phase2_completion_status": {
+    "router_experts_rebuilt": true,
+    "4_model_score_vectors_generated": true,
+    "expert_validity_assertions_passed": true,
+    "m1_m3_implemented": true,
+    "routing_metrics_computed": true,
+    "phase2_complete": true
+  },
+  "next_steps": [
+    "PHASE 2 COMPLETE - Router Experts are now heterogeneous",
+    "Review expert validity metrics and heterogeneity score",
+    "If heterogeneity is low, consider expert replacement or redesign",
+    "If heterogeneity is sufficient, proceed to Phase 3: Fin-RoME Dynamic Fusion",
+    "DO NOT proceed to Phase 3 until expert validity is confirmed"
+  ]
+}
