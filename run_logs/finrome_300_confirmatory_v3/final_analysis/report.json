@@ -1,0 +1,723 @@
+{
+  "report_type": "finrome_confirmatory_v3_frozen_policy_analysis",
+  "bootstrap": {
+    "paired": true,
+    "resamples": 10000,
+    "seed": 20260813
+  },
+  "multiplicity": {
+    "method": "Holm",
+    "family": "3 preregistered comparisons x 4 primary metrics",
+    "tests": 12
+  },
+  "methods": {
+    "weighted_M1_v2": {
+      "n": 300,
+      "utility": 0.8966954129999999,
+      "failure_rate": 0.16333333333333333,
+      "high_risk_failure_rate": 0.14666666666666667,
+      "mean_regret": 0.03765921284444445,
+      "accuracy": 0.68,
+      "selection_counts": {
+        "qwen-plus": 62,
+        "qwen-turbo": 200,
+        "deepseek-chat": 38
+      }
+    },
+    "M3_v2": {
+      "n": 300,
+      "utility": 0.8966199895555556,
+      "failure_rate": 0.16333333333333333,
+      "high_risk_failure_rate": 0.14666666666666667,
+      "mean_regret": 0.03773463628888889,
+      "accuracy": 0.68,
+      "selection_counts": {
+        "qwen-plus": 63,
+        "qwen-turbo": 200,
+        "deepseek-chat": 37
+      }
+    },
+    "M5_legacy_v1": {
+      "n": 300,
+      "utility": 0.8986663447777778,
+      "failure_rate": 0.14666666666666667,
+      "high_risk_failure_rate": 0.11333333333333333,
+      "mean_regret": 0.03568828106666667,
+      "accuracy": 0.72,
+      "selection_counts": {
+        "qwen-plus": 73,
+        "qwen-turbo": 210,
+        "deepseek-chat": 17
+      },
+      "escalation_rate": 0.1,
+      "manual_review_rate": 0.2833333333333333
+    },
+    "M5_sparse_v2": {
+      "n": 300,
+      "utility": 0.8976959794555556,
+      "failure_rate": 0.16333333333333333,
+      "high_risk_failure_rate": 0.14666666666666667,
+      "mean_regret": 0.03665864638888889,
+      "accuracy": 0.7233333333333334,
+      "selection_counts": {
+        "qwen-plus": 64,
+        "qwen-turbo": 219,
+        "deepseek-chat": 17
+      },
+      "escalation_rate": 0.07,
+      "manual_review_rate": 0.29
+    }
+  },
+  "comparisons": {
+    "M3_v2_vs_weighted_M1_v2": {
+      "utility": {
+        "delta": -7.54234444444446e-05,
+        "ci95": [
+          -0.0002262703333333338,
+          0.0
+        ],
+        "p_two_sided": 0.7456,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      },
+      "failure_rate": {
+        "delta": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "p_two_sided": 1.0,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      },
+      "high_risk_failure_rate": {
+        "delta": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "p_two_sided": 1.0,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      },
+      "mean_regret": {
+        "delta": 7.54234444444446e-05,
+        "ci95": [
+          0.0,
+          0.0002262703333333338
+        ],
+        "p_two_sided": 0.74,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      }
+    },
+    "M5_legacy_v1_vs_M3_v2": {
+      "utility": {
+        "delta": 0.0020463552222222264,
+        "ci95": [
+          -0.005330762692499998,
+          0.009458587427777781
+        ],
+        "p_two_sided": 0.576,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      },
+      "failure_rate": {
+        "delta": -0.016666666666666666,
+        "ci95": [
+          -0.04,
+          0.0033333333333333335
+        ],
+        "p_two_sided": 0.1834,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      },
+      "high_risk_failure_rate": {
+        "delta": -0.03333333333333333,
+        "ci95": [
+          -0.06666666666666667,
+          -0.006666666666666667
+        ],
+        "p_two_sided": 0.0118,
+        "holm_p": 0.1416,
+        "significant_holm_0.05": false
+      },
+      "mean_regret": {
+        "delta": -0.0020463552222222264,
+        "ci95": [
+          -0.009477166640000003,
+          0.0055028767847222155
+        ],
+        "p_two_sided": 0.5854,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      }
+    },
+    "M5_sparse_v2_vs_M3_v2": {
+      "utility": {
+        "delta": 0.0010759899000000051,
+        "ci95": [
+          -0.00612712137722222,
+          0.008164925700833338
+        ],
+        "p_two_sided": 0.7616,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      },
+      "failure_rate": {
+        "delta": 0.0,
+        "ci95": [
+          -0.016666666666666666,
+          0.016666666666666666
+        ],
+        "p_two_sided": 1.0,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      },
+      "high_risk_failure_rate": {
+        "delta": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "p_two_sided": 1.0,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      },
+      "mean_regret": {
+        "delta": -0.0010759899000000051,
+        "ci95": [
+          -0.008185642745555562,
+          0.0060879307811110995
+        ],
+        "p_two_sided": 0.7748,
+        "holm_p": 1.0,
+        "significant_holm_0.05": false
+      }
+    }
+  },
+  "success_gates": {
+    "M3_v2_vs_weighted_M1_v2": {
+      "benefit_gate": false,
+      "safety_only_gate": false
+    },
+    "M5_legacy_v1_vs_M3_v2": {
+      "benefit_gate": false,
+      "safety_only_gate": false
+    },
+    "M5_sparse_v2_vs_M3_v2": {
+      "benefit_gate": false,
+      "safety_only_gate": false
+    }
+  },
+  "risk_coverage": {
+    "M3_v2": {
+      "router_conformal": {
+        "quantiles": {
+          "knnrouter": {
+            "low": 1.0,
+            "medium": 0.23919960944164045,
+            "high": 0.1043011921300052
+          },
+          "mlprouter": {
+            "low": 1.0,
+            "medium": 0.40575799749736063,
+            "high": 0.19108036602046674
+          },
+          "graphrouter": {
+            "low": 1.0,
+            "medium": 0.42936359382334416,
+            "high": 0.06457341495198904
+          }
+        },
+        "nominal_limits": {
+          "low": 0.3,
+          "medium": 0.2,
+          "high": 0.1
+        },
+        "calibrated_limits": {
+          "low": 0.3,
+          "medium": 0.27444084613572023,
+          "high": 0.11721582710957812
+        },
+        "target_coverage": {
+          "low": 0.6,
+          "medium": 0.6,
+          "high": 0.5
+        },
+        "coverage": 0.6266666666666667,
+        "mean_safe_count": 0.8766666666666667
+      },
+      "conditional_model_safety": {
+        "targets": [
+          "Q(x,m)",
+          "P_fail(x,m)",
+          "C(x,m)",
+          "L(x,m)"
+        ],
+        "one_sided_bounds": true,
+        "cross_conformal_folds": 5,
+        "hierarchical_shrink_tau": 20,
+        "sparse_group_fallback_n": 8,
+        "base_thresholds": {
+          "low": [
+            0.58,
+            0.35
+          ],
+          "medium": [
+            0.58,
+            0.35
+          ],
+          "high": [
+            0.68,
+            0.22
+          ]
+        },
+        "calibrated_slack": {
+          "low": 0.0,
+          "medium": 0.6149319655210905,
+          "high": 0.7438322196354228
+        },
+        "target_coverage": {
+          "low": 0.6,
+          "medium": 0.6,
+          "high": 0.5
+        },
+        "safe_coverage": 0.63,
+        "quantiles": {
+          "0": {
+            "quality": {
+              "low": 0.7974551595395073,
+              "medium": 0.7974551595395073,
+              "high": 0.2935982709844174
+            },
+            "failure": {
+              "low": 0.9177858081345772,
+              "medium": 0.9177858081345772,
+              "high": 0.6817045952491927
+            },
+            "cost": {
+              "low": 0.00010585153882638283,
+              "medium": 0.00012582509015349004,
+              "high": 0.00011365616568147755
+            },
+            "latency": {
+              "low": 1132.6732114427514,
+              "medium": 1124.4136722027852,
+              "high": 2197.5990727189264
+            }
+          },
+          "1": {
+            "quality": {
+              "low": 0.6696858344217422,
+              "medium": 0.6696858344217423,
+              "high": 0.356090774071114
+            },
+            "failure": {
+              "low": 0.8919605077006452,
+              "medium": 0.859902741191681,
+              "high": 0.375247515804286
+            },
+            "cost": {
+              "low": 0.0008683600529919727,
+              "medium": 0.00102602311239954,
+              "high": 0.0009528988084923473
+            },
+            "latency": {
+              "low": 1635.3701550162932,
+              "medium": 1934.9313883033287,
+              "high": 1859.9228325912873
+            }
+          },
+          "2": {
+            "quality": {
+              "low": 0.8082909230696047,
+              "medium": 0.8082909230696047,
+              "high": 0.38280559262865943
+            },
+            "failure": {
+              "low": 0.8708256532065555,
+              "medium": 0.8275070845246375,
+              "high": 0.874909268400428
+            },
+            "cost": {
+              "low": 5.311533556856456e-05,
+              "medium": 7.366225048034995e-05,
+              "high": 6.75505494218038e-05
+            },
+            "latency": {
+              "low": 2871.895698650588,
+              "medium": 2948.0232175609235,
+              "high": 3657.5452097251027
+            }
+          },
+          "3": {
+            "quality": {
+              "low": 0.8316687328538142,
+              "medium": 0.8316687328538143,
+              "high": 0.40952015933957153
+            },
+            "failure": {
+              "low": 0.8057495248755933,
+              "medium": 0.8057495248755933,
+              "high": 0.5760389414682761
+            },
+            "cost": {
+              "low": 3.4696509868462425e-06,
+              "medium": 4.526430942041473e-06,
+              "high": 3.916576433889705e-06
+            },
+            "latency": {
+              "low": 724.6672087596064,
+              "medium": 652.3887055568633,
+              "high": 1823.7928152447105
+            }
+          }
+        }
+      }
+    },
+    "M5_legacy_v1": {
+      "escalation_rate": 0.1,
+      "manual_review_rate": 0.2833333333333333
+    },
+    "M5_sparse_v2": {
+      "escalation_rate": 0.07,
+      "manual_review_rate": 0.29
+    }
+  },
+  "grouped_results": {
+    "weighted_M1_v2": {
+      "dataset=FinQA": {
+        "n": 75,
+        "utility": 0.8731104233777779,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.06147966302222223,
+        "accuracy": 0.7466666666666667
+      },
+      "dataset=FinReflectKG-EvalBench-derived": {
+        "n": 75,
+        "utility": 0.9877736823555555,
+        "failure_rate": 0.0,
+        "high_risk_failure_rate": 0.0,
+        "mean_regret": 0.00018270155555555925,
+        "accuracy": 0.9466666666666667
+      },
+      "dataset=ObliQA": {
+        "n": 75,
+        "utility": 0.8174143549777778,
+        "failure_rate": 0.29333333333333333,
+        "high_risk_failure_rate": 0.29333333333333333,
+        "mean_regret": 0.03651000008888887,
+        "accuracy": 0.52
+      },
+      "dataset=TAT-QA": {
+        "n": 75,
+        "utility": 0.9084831912888888,
+        "failure_rate": 0.13333333333333333,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.05246448671111113,
+        "accuracy": 0.5066666666666667
+      },
+      "risk=high": {
+        "n": 150,
+        "utility": 0.9025940186666666,
+        "failure_rate": 0.14666666666666667,
+        "high_risk_failure_rate": 0.14666666666666667,
+        "mean_regret": 0.018346350822222218,
+        "accuracy": 0.7333333333333333
+      },
+      "risk=medium": {
+        "n": 150,
+        "utility": 0.8907968073333332,
+        "failure_rate": 0.18,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.05697207486666668,
+        "accuracy": 0.6266666666666667
+      },
+      "task_type=financial_audit_compliance_qa": {
+        "n": 75,
+        "utility": 0.8174143549777778,
+        "failure_rate": 0.29333333333333333,
+        "high_risk_failure_rate": 0.29333333333333333,
+        "mean_regret": 0.03651000008888887,
+        "accuracy": 0.52
+      },
+      "task_type=financial_kg_grounded_qa": {
+        "n": 75,
+        "utility": 0.9877736823555555,
+        "failure_rate": 0.0,
+        "high_risk_failure_rate": 0.0,
+        "mean_regret": 0.00018270155555555925,
+        "accuracy": 0.9466666666666667
+      },
+      "task_type=financial_numerical_reasoning": {
+        "n": 75,
+        "utility": 0.8731104233777779,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.06147966302222223,
+        "accuracy": 0.7466666666666667
+      },
+      "task_type=financial_table_text_reasoning": {
+        "n": 75,
+        "utility": 0.9084831912888888,
+        "failure_rate": 0.13333333333333333,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.05246448671111113,
+        "accuracy": 0.5066666666666667
+      }
+    },
+    "M3_v2": {
+      "dataset=FinQA": {
+        "n": 75,
+        "utility": 0.8731104233777779,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.06147966302222223,
+        "accuracy": 0.7466666666666667
+      },
+      "dataset=FinReflectKG-EvalBench-derived": {
+        "n": 75,
+        "utility": 0.9877736823555555,
+        "failure_rate": 0.0,
+        "high_risk_failure_rate": 0.0,
+        "mean_regret": 0.00018270155555555925,
+        "accuracy": 0.9466666666666667
+      },
+      "dataset=ObliQA": {
+        "n": 75,
+        "utility": 0.8171126612000001,
+        "failure_rate": 0.29333333333333333,
+        "high_risk_failure_rate": 0.29333333333333333,
+        "mean_regret": 0.03681169386666665,
+        "accuracy": 0.52
+      },
+      "dataset=TAT-QA": {
+        "n": 75,
+        "utility": 0.9084831912888888,
+        "failure_rate": 0.13333333333333333,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.05246448671111113,
+        "accuracy": 0.5066666666666667
+      },
+      "risk=high": {
+        "n": 150,
+        "utility": 0.9024431717777778,
+        "failure_rate": 0.14666666666666667,
+        "high_risk_failure_rate": 0.14666666666666667,
+        "mean_regret": 0.018497197711111107,
+        "accuracy": 0.7333333333333333
+      },
+      "risk=medium": {
+        "n": 150,
+        "utility": 0.8907968073333332,
+        "failure_rate": 0.18,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.05697207486666668,
+        "accuracy": 0.6266666666666667
+      },
+      "task_type=financial_audit_compliance_qa": {
+        "n": 75,
+        "utility": 0.8171126612000001,
+        "failure_rate": 0.29333333333333333,
+        "high_risk_failure_rate": 0.29333333333333333,
+        "mean_regret": 0.03681169386666665,
+        "accuracy": 0.52
+      },
+      "task_type=financial_kg_grounded_qa": {
+        "n": 75,
+        "utility": 0.9877736823555555,
+        "failure_rate": 0.0,
+        "high_risk_failure_rate": 0.0,
+        "mean_regret": 0.00018270155555555925,
+        "accuracy": 0.9466666666666667
+      },
+      "task_type=financial_numerical_reasoning": {
+        "n": 75,
+        "utility": 0.8731104233777779,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.06147966302222223,
+        "accuracy": 0.7466666666666667
+      },
+      "task_type=financial_table_text_reasoning": {
+        "n": 75,
+        "utility": 0.9084831912888888,
+        "failure_rate": 0.13333333333333333,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.05246448671111113,
+        "accuracy": 0.5066666666666667
+      }
+    },
+    "M5_legacy_v1": {
+      "dataset=FinQA": {
+        "n": 75,
+        "utility": 0.8731104233777779,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.06147966302222223,
+        "accuracy": 0.7466666666666667
+      },
+      "dataset=FinReflectKG-EvalBench-derived": {
+        "n": 75,
+        "utility": 0.9877736823555555,
+        "failure_rate": 0.0,
+        "high_risk_failure_rate": 0.0,
+        "mean_regret": 0.00018270155555555925,
+        "accuracy": 0.9466666666666667
+      },
+      "dataset=ObliQA": {
+        "n": 75,
+        "utility": 0.8210820207111112,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": 0.22666666666666666,
+        "mean_regret": 0.032842334355555544,
+        "accuracy": 0.52
+      },
+      "dataset=TAT-QA": {
+        "n": 75,
+        "utility": 0.9126992526666665,
+        "failure_rate": 0.13333333333333333,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.04824842533333334,
+        "accuracy": 0.6666666666666666
+      },
+      "risk=high": {
+        "n": 150,
+        "utility": 0.9044278515333334,
+        "failure_rate": 0.11333333333333333,
+        "high_risk_failure_rate": 0.11333333333333333,
+        "mean_regret": 0.01651251795555555,
+        "accuracy": 0.7333333333333333
+      },
+      "risk=medium": {
+        "n": 150,
+        "utility": 0.8929048380222222,
+        "failure_rate": 0.18,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.054864044177777786,
+        "accuracy": 0.7066666666666667
+      },
+      "task_type=financial_audit_compliance_qa": {
+        "n": 75,
+        "utility": 0.8210820207111112,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": 0.22666666666666666,
+        "mean_regret": 0.032842334355555544,
+        "accuracy": 0.52
+      },
+      "task_type=financial_kg_grounded_qa": {
+        "n": 75,
+        "utility": 0.9877736823555555,
+        "failure_rate": 0.0,
+        "high_risk_failure_rate": 0.0,
+        "mean_regret": 0.00018270155555555925,
+        "accuracy": 0.9466666666666667
+      },
+      "task_type=financial_numerical_reasoning": {
+        "n": 75,
+        "utility": 0.8731104233777779,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.06147966302222223,
+        "accuracy": 0.7466666666666667
+      },
+      "task_type=financial_table_text_reasoning": {
+        "n": 75,
+        "utility": 0.9126992526666665,
+        "failure_rate": 0.13333333333333333,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.04824842533333334,
+        "accuracy": 0.6666666666666666
+      }
+    },
+    "M5_sparse_v2": {
+      "dataset=FinQA": {
+        "n": 75,
+        "utility": 0.8731104233777779,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.06147966302222223,
+        "accuracy": 0.7466666666666667
+      },
+      "dataset=FinReflectKG-EvalBench-derived": {
+        "n": 75,
+        "utility": 0.9877736823555555,
+        "failure_rate": 0.0,
+        "high_risk_failure_rate": 0.0,
+        "mean_regret": 0.00018270155555555925,
+        "accuracy": 0.9466666666666667
+      },
+      "dataset=ObliQA": {
+        "n": 75,
+        "utility": 0.8172005594222224,
+        "failure_rate": 0.29333333333333333,
+        "high_risk_failure_rate": 0.29333333333333333,
+        "mean_regret": 0.036723795644444425,
+        "accuracy": 0.5333333333333333
+      },
+      "dataset=TAT-QA": {
+        "n": 75,
+        "utility": 0.9126992526666665,
+        "failure_rate": 0.13333333333333333,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.04824842533333334,
+        "accuracy": 0.6666666666666666
+      },
+      "risk=high": {
+        "n": 150,
+        "utility": 0.9024871208888889,
+        "failure_rate": 0.14666666666666667,
+        "high_risk_failure_rate": 0.14666666666666667,
+        "mean_regret": 0.018453248599999993,
+        "accuracy": 0.74
+      },
+      "risk=medium": {
+        "n": 150,
+        "utility": 0.8929048380222222,
+        "failure_rate": 0.18,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.054864044177777786,
+        "accuracy": 0.7066666666666667
+      },
+      "task_type=financial_audit_compliance_qa": {
+        "n": 75,
+        "utility": 0.8172005594222224,
+        "failure_rate": 0.29333333333333333,
+        "high_risk_failure_rate": 0.29333333333333333,
+        "mean_regret": 0.036723795644444425,
+        "accuracy": 0.5333333333333333
+      },
+      "task_type=financial_kg_grounded_qa": {
+        "n": 75,
+        "utility": 0.9877736823555555,
+        "failure_rate": 0.0,
+        "high_risk_failure_rate": 0.0,
+        "mean_regret": 0.00018270155555555925,
+        "accuracy": 0.9466666666666667
+      },
+      "task_type=financial_numerical_reasoning": {
+        "n": 75,
+        "utility": 0.8731104233777779,
+        "failure_rate": 0.22666666666666666,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.06147966302222223,
+        "accuracy": 0.7466666666666667
+      },
+      "task_type=financial_table_text_reasoning": {
+        "n": 75,
+        "utility": 0.9126992526666665,
+        "failure_rate": 0.13333333333333333,
+        "high_risk_failure_rate": null,
+        "mean_regret": 0.04824842533333334,
+        "accuracy": 0.6666666666666666
+      }
+    }
+  },
+  "human_review_contract": "all review items remain PENDING; no human labels or conclusions synthesized",
+  "artifacts": {
+    "frozen_policy_sha256": "7746eed5b15788239456bfdcea61efe3d4103d304a95ac0a4ed3ff4d30dfecab",
+    "matrix_sha256": "aac5cdab970a79591a11567b829f7afd42caf5ec714a446f6b320aa1a80e26ad"
+  }
+}
