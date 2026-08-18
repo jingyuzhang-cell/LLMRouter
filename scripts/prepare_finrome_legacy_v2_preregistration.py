@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+"""Seal repaired-development legacy_v2 and prepare a fresh confirmation set."""
+import hashlib,json,random
+from collections import Counter
+from datetime import datetime,timezone
+from pathlib import Path
+from scripts.build_finance_experiment_sample import finqa_records,tatqa_records,obliqa_records,finreflect_records
+
+ROOT=Path(__file__).resolve().parents[1];DEV=ROOT/'data/finance_router/finrome_300';OLD=ROOT/'data/finance_router/finrome_300_confirmatory_v3';OUT=ROOT/'data/finance_router/finrome_legacy_v2_confirmatory';RUN=ROOT/'run_logs/finrome_300';SEED=20260821
+def rows(p):return [json.loads(x) for x in p.read_text().splitlines() if x.strip()]
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def dump(p,x):p.write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n')
+def main():
+ if OUT.exists():raise SystemExit('Preregistration already exists; refusing to overwrite.')
+ matrix=json.loads((DEV/'matrix_report.json').read_text());assert matrix['matrix_shape']==[300,4] and matrix['judge_rows']==matrix['required_judge_rows']==1800 and matrix['unresolved_parse_failures']==0
+ legacy=json.loads((RUN/'m5_legacy_repaired_dev_valid/report.json').read_text());assert legacy['anchor_policy']=='legacy_v1' and legacy['M3']['count']==legacy['M5']['count']==45
+ excluded={x['id'] for x in rows(DEV/'tasks.jsonl')}|{x['id'] for x in rows(OLD/'tasks.jsonl')}
+ specs=[('FinQA',finqa_records(),100,'medium'),('TAT-QA',tatqa_records(),100,'medium'),('ObliQA',obliqa_records(),525,'high'),('FinReflectKG',finreflect_records(),75,'high')];selected=[];availability={}
+ for i,(name,pool,n,risk) in enumerate(specs):
+  candidates=sorted((x for x in pool if x['id'] not in excluded),key=lambda x:x['id']);availability[name]=len(candidates);chosen=random.Random(SEED+i).sample(candidates,n)
+  for x in chosen:x['risk_level']=risk
+  selected+=chosen
+ random.Random(SEED).shuffle(selected);assert len(selected)==800 and len({x['id'] for x in selected})==800 and not({x['id'] for x in selected}&excluded)
+ OUT.mkdir(parents=True);taskfile=OUT/'tasks.jsonl';taskfile.write_text(''.join(json.dumps(x,ensure_ascii=False)+'\n' for x in selected))
+ m3=legacy['M3'];m5=legacy['M5'];development_evidence={'M3':{k:m3[k] for k in ('count','utility','failure_rate','high_risk_failure_rate','mean_regret')},'legacy_v2':{k:m5[k] for k in ('count','utility','failure_rate','high_risk_failure_rate','mean_regret','escalation_rate','manual_review_rate')}}
+ policy={'name':'M5_legacy_v2','definition':'legacy_v1 algorithm recalibrated only on GLM-repaired development matrix','anchor_policy':'legacy_v1','anchor_min_group':legacy['anchor_min_group'],'anchor_shrink_tau':legacy['anchor_shrink_tau'],'minimum_predicted_risk_gain':legacy['minimum_predicted_risk_gain'],'anchor_utility_budgets':legacy['anchor_utility_budgets'],'upstream_M3_gate':legacy['M3_calibration_gate'],'development_evidence':development_evidence,'no_confirmatory_tuning':True}
+ dump(OUT/'FROZEN_POLICY.json',policy)
+ protocol={'version':'finrome-legacy-v2-confirmatory-v1','created_at':datetime.now(timezone.utc).isoformat(),'status':'PREREGISTERED_BEFORE_ANY_NEW_OUTCOMES','seed':SEED,'development_role':'training/calibration only; repaired matrix','previous_confirmatory_role':'planning effect-size only; no row-level tuning','confirmatory_tasks':800,'high_risk_tasks':600,'medium_risk_tasks':200,'dataset_counts':dict(Counter(x['dataset'] for x in selected)),'risk_counts':dict(Counter(x['risk_level'] for x in selected)),'available_after_all_exclusions':availability,'zero_overlap_with_development_and_previous_confirmation':True,'models':['deepseek-chat','qwen-plus','qwen-turbo','glm-5.2'],'repeats':3,'required_answer_calls':9600,'expected_cross_judge_calls':10800,'primary_comparison':'M5_legacy_v2 vs M3_v2','single_primary_endpoint':'paired high-risk failure rate','primary_test':{'method':'exact paired McNemar','alternative':'M5_legacy_v2 lower failure','alpha_one_sided':0.025,'analysis_population':'all 600 high-risk tasks'},'key_secondary_gate':{'metric':'paired utility delta','noninferiority_margin':-0.01,'criterion':'95% paired-bootstrap CI lower bound >= -0.01','bootstrap_resamples':10000,'seed':20260822},'other_secondary_endpoints':['overall failure rate','accuracy','mean regret','cost','latency','coverage','escalation rate'],'multiplicity':'No multiplicity adjustment for the single primary endpoint; all secondary endpoints are labeled secondary and interpreted with Holm adjustment within their family.','power_plan':{'basis':'previous confirmation used only for planning','observed_high_risk_transitions':{'M3_fail_M5_pass':5,'M3_pass_M5_fail':0,'n':150},'haldane_corrected_n_80pct_approx':283,'conservative_assumption':{'M3_fail_M5_pass':0.04,'M3_pass_M5_fail':0.01},'planned_power':0.90,'required_high_risk_approx':580,'chosen_high_risk_n':600},'stratified_reporting':['ObliQA','FinReflectKG-EvalBench-derived','FinQA','TAT-QA'],'stratum_rule':'All four strata reported regardless of direction; no stratum is promoted to primary after outcomes.','manual_review':'all unresolved cases remain PENDING until blinded human adjudication','stopping_rule':'complete every planned answer and required dual judge before analysis; no optional stopping','data_quality_gate':'success requires non-empty final answer; reasoning-only truncations are retried before judging','hashes':{'tasks':sha(taskfile),'frozen_policy':sha(OUT/'FROZEN_POLICY.json'),'repaired_development_matrix':sha(DEV/'utility_matrix.jsonl'),'development_matrix_report':sha(DEV/'matrix_report.json'),'previous_confirmation_seal':sha(ROOT/'run_logs/finrome_300_confirmatory_v3/CONFIRMATORY_COMPLETE.json')}}
+ dump(OUT/'PREREGISTRATION.json',protocol);(OUT/'PREREGISTRATION.sha256').write_text(sha(OUT/'PREREGISTRATION.json')+'  PREREGISTRATION.json\n');print(json.dumps({'out':str(OUT),'tasks':800,'datasets':protocol['dataset_counts'],'risks':protocol['risk_counts'],'answer_calls':9600,'judge_calls':10800,'primary':protocol['single_primary_endpoint']},ensure_ascii=False,indent=2))
+if __name__=='__main__':main()

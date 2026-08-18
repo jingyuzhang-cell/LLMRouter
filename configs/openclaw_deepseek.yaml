@@ -1,0 +1,31 @@
+# OpenClaw Router configuration for DeepSeek.
+
+serve:
+  host: "127.0.0.1"
+  port: 8000
+  show_model_prefix: true
+
+router:
+  strategy: random
+  weights:
+    deepseek-chat: 1
+
+api_keys:
+  deepseek: ${DEEPSEEK_API_KEY}
+
+memory:
+  enabled: false
+
+llms:
+  deepseek-chat:
+    provider: deepseek
+    provider_type: openai_compatible
+    model: deepseek-chat
+    base_url: https://api.deepseek.com/v1
+    auth_mode: bearer
+    chat_path: /chat/completions
+    description: "DeepSeek chat model"
+    max_tokens: 1024
+    context_limit: 64000
+    input_price: 0.0
+    output_price: 0.0

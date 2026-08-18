@@ -1,0 +1,27 @@
+# Demo GraphRouter training config for the four providers used by openclaw_multi_provider.yaml.
+data_path:
+  query_embedding_data: 'data/example_data/routing_data/query_embeddings_longformer.pt'
+  routing_data_train: 'data/example_data/routing_data/multi_provider_graph_train.jsonl'
+  routing_data_test: 'data/example_data/routing_data/multi_provider_graph_test.jsonl'
+  llm_data: 'data/example_data/llm_candidates/multi_provider_llm.json'
+
+model_path:
+  ini_model_path: ''
+  save_model_path: 'saved_models/graphrouter/graphrouter.pt'
+  load_model_path: 'saved_models/graphrouter/graphrouter.pt'
+
+metric:
+  weights:
+    performance: 1
+    cost: 0
+    llm_judge: 0
+
+hparam:
+  hidden_dim: 32
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  train_epoch: 30
+  batch_size: 2
+  train_mask_rate: 0.3
+  val_split_ratio: 0.5
+  random_state: 42
