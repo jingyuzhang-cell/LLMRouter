@@ -1,0 +1,178 @@
+{
+  "audit_type": "finrome_v4_phase3_1_baseline_fidelity",
+  "version": "3.1_fidelity_audit",
+  "run_id": 5,
+  "generated_at": "2026-08-19T13:29:58.945520+00:00",
+  "scope": {
+    "phase2_formal_path": "/root/autodl-tmp/LLMRouter-extracted/LLMRouter-main/LLMRouter-main/run_logs/finrome_v4_phase2_formal",
+    "calibration_only": true,
+    "test_accessed": false,
+    "baseline_fidelity_enforced": true,
+    "override_metrics_fixed": true
+  },
+  "reproducibility_hashes": {
+    "run_id": 5,
+    "timestamp": "2026-08-19T13:29:58.945418+00:00",
+    "seed": 20260808,
+    "anchor_hash": "0c847a5375ec299c35db626c74bc9eea7f771a8662e562a4f87e7dd0fccaccc0",
+    "proposal_hash": "e117c79edf91b16e527c9d97fc73ea620eebe547810aed03e751172e2d882882",
+    "selections_verified": true,
+    "task_count": 20
+  },
+  "fidelity_report": {
+    "passed": true,
+    "errors": [],
+    "computed_metrics": {
+      "M1": {
+        "n_tasks": 20,
+        "mean_utility": 0.8350752466666668,
+        "main_failure_rate": 0.15,
+        "strict_repeat_failure_rate": 0.2,
+        "oracle_match_rate": 0.2,
+        "safety_oracle_match_rate": 0.4,
+        "selection_counts": {
+          "deepseek-chat": 6,
+          "qwen-plus": 6,
+          "glm-5.2": 8
+        }
+      },
+      "M2": {
+        "n_tasks": 20,
+        "mean_utility": 0.86547562,
+        "main_failure_rate": 0.3,
+        "strict_repeat_failure_rate": 0.3,
+        "oracle_match_rate": 0.5,
+        "safety_oracle_match_rate": 0.35,
+        "selection_counts": {
+          "qwen-plus": 2,
+          "deepseek-chat": 8,
+          "qwen-turbo": 10
+        }
+      },
+      "M3": {
+        "n_tasks": 20,
+        "mean_utility": 0.8656190733333332,
+        "main_failure_rate": 0.3,
+        "strict_repeat_failure_rate": 0.3,
+        "oracle_match_rate": 0.55,
+        "safety_oracle_match_rate": 0.2,
+        "selection_counts": {
+          "qwen-plus": 2,
+          "qwen-turbo": 13,
+          "deepseek-chat": 5
+        }
+      }
+    },
+    "task_ids_verified": [
+      "finance_dataset_08439cc4-cc83-400e-ae6e-0550c2a91344",
+      "finance_dataset_14a221e6-0008-4445-8672-38ece52f2dbe",
+      "finance_dataset_3c4a695b-946c-46b9-a0b7-3eea80e93955",
+      "finance_dataset_48c3b9b7-0d9f-4919-9b6e-1659e72cb7f8",
+      "finance_dataset_49d7ee2d-93a5-4ed7-9fe9-030ead91c8d2",
+      "finance_dataset_716dff82-ebc4-46b9-89f5-4f7f49c92548",
+      "finance_dataset_835245df-3585-4913-a460-730158048891",
+      "finance_dataset_87d1dc85-d372-4ddd-bf18-8aca923cffbb",
+      "finance_dataset_9654e872-339e-4caa-a704-e9d5ca78a3e2",
+      "finance_dataset_c6141817-0c1b-44f6-bbbf-4f64c5ede190",
+      "finance_dataset_ef754689-a758-4cce-9fb8-1efecaec496e",
+      "finance_dataset_finqa_001401",
+      "finance_dataset_finqa_001593",
+      "finance_dataset_finqa_002522",
+      "finance_dataset_finqa_003370",
+      "finance_dataset_finqa_004591",
+      "finance_dataset_finqa_006147",
+      "finance_dataset_finreflect_8d468c1cd51cda03",
+      "finance_dataset_finreflect_c0745423b9789a31",
+      "finance_dataset_seed_audit_001"
+    ]
+  },
+  "phase2_baseline": {
+    "M1": {
+      "mean_utility": 0.8350752466666668,
+      "mean_regret": 0.07745980083333333,
+      "main_failure_rate": 0.15,
+      "strict_repeat_failure_rate": 0.2,
+      "oracle_match_rate": 0.2,
+      "safety_oracle_match_rate": 0.4,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "deepseek-chat": 6,
+        "qwen-plus": 6,
+        "glm-5.2": 8
+      },
+      "method": "M1-EqualRank"
+    },
+    "M2": {
+      "mean_utility": 0.8654756200000001,
+      "mean_regret": 0.047059427499999994,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.5,
+      "safety_oracle_match_rate": 0.35,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 8,
+        "qwen-turbo": 10
+      },
+      "method": "M2-Dynamic"
+    },
+    "M3": {
+      "mean_utility": 0.8656190733333334,
+      "mean_regret": 0.04691597416666667,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.55,
+      "safety_oracle_match_rate": 0.2,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "qwen-turbo": 13,
+        "deepseek-chat": 5
+      },
+      "method": "M3-M3_conformal"
+    }
+  },
+  "computed_baseline": {
+    "M1": {
+      "n_tasks": 20,
+      "mean_utility": 0.8350752466666668,
+      "main_failure_rate": 0.15,
+      "strict_repeat_failure_rate": 0.2,
+      "oracle_match_rate": 0.2,
+      "safety_oracle_match_rate": 0.4,
+      "selection_counts": {
+        "deepseek-chat": 6,
+        "qwen-plus": 6,
+        "glm-5.2": 8
+      }
+    },
+    "M2": {
+      "n_tasks": 20,
+      "mean_utility": 0.86547562,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.5,
+      "safety_oracle_match_rate": 0.35,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 8,
+        "qwen-turbo": 10
+      }
+    },
+    "M3": {
+      "n_tasks": 20,
+      "mean_utility": 0.8656190733333332,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.55,
+      "safety_oracle_match_rate": 0.2,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "qwen-turbo": 13,
+        "deepseek-chat": 5
+      }
+    }
+  },
+  "status": "PASSED"
+}

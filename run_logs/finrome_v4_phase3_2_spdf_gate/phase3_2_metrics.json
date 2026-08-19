@@ -1,0 +1,89 @@
+{
+  "spdf_metrics": {
+    "n_tasks": 20,
+    "mean_utility": 0.8350752466666668,
+    "mean_regret": 0.07745980083333333,
+    "main_failure_rate": 0.15,
+    "strict_repeat_failure_rate": 0.2,
+    "oracle_match_rate": 0.2,
+    "safety_oracle_match_rate": 0.4,
+    "selection_counts": {
+      "deepseek-chat": 6,
+      "qwen-plus": 6,
+      "glm-5.2": 8
+    },
+    "method": "SPDF",
+    "override_metrics": {
+      "total_overrides": 0,
+      "beneficial_overrides": 0,
+      "safety_harmful_overrides": 0,
+      "utility_harmful_overrides": 0,
+      "neutral_overrides": 0,
+      "override_rate": 0.0,
+      "beneficial_override_precision": 0.0
+    },
+    "override_details": []
+  },
+  "safety_verification": {
+    "m1_failure": 0.15,
+    "spdf_failure": 0.15,
+    "m1_utility": 0.8350752466666668,
+    "spdf_utility": 0.8350752466666668,
+    "safety_preserving": true,
+    "utility_improved": true,
+    "failure_delta": 0.0,
+    "utility_delta": 0.0,
+    "status": "SAFETY_PRESERVING"
+  },
+  "phase2_baseline": {
+    "M1": {
+      "mean_utility": 0.8350752466666668,
+      "mean_regret": 0.07745980083333333,
+      "main_failure_rate": 0.15,
+      "strict_repeat_failure_rate": 0.2,
+      "oracle_match_rate": 0.2,
+      "safety_oracle_match_rate": 0.4,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "deepseek-chat": 6,
+        "qwen-plus": 6,
+        "glm-5.2": 8
+      },
+      "method": "M1-EqualRank"
+    },
+    "M2": {
+      "mean_utility": 0.8654756200000001,
+      "mean_regret": 0.047059427499999994,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.5,
+      "safety_oracle_match_rate": 0.35,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 8,
+        "qwen-turbo": 10
+      },
+      "method": "M2-Dynamic"
+    },
+    "M3": {
+      "mean_utility": 0.8656190733333334,
+      "mean_regret": 0.04691597416666667,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.55,
+      "safety_oracle_match_rate": 0.2,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "qwen-turbo": 13,
+        "deepseek-chat": 5
+      },
+      "method": "M3-M3_conformal"
+    }
+  },
+  "thresholds": {
+    "tau_u": 0.01,
+    "tau_f": 0.0
+  }
+}
