@@ -1,0 +1,293 @@
+{
+  "rank_safety": {
+    "m1_clean": {
+      "total_tasks": 140,
+      "failure_count": 0,
+      "failure_rate": 0.0,
+      "high_risk_failure_count": 0,
+      "high_risk_failure_rate": 0.0,
+      "mean_utility": 0.8425369658677707,
+      "mean_regret": 0.0,
+      "oracle_match_rate": 1.0
+    },
+    "rank_safety": {
+      "total_tasks": 140,
+      "failure_count": 0,
+      "failure_rate": 0.0,
+      "high_risk_failure_count": 0,
+      "high_risk_failure_rate": 0.0,
+      "mean_utility": 0.8297824826340977,
+      "mean_regret": 0.01275448323367307,
+      "oracle_match_rate": 1.0
+    },
+    "differences": {
+      "failure_rate": 0.0,
+      "high_risk_failure_rate": 0.0,
+      "mean_utility": -0.012754483233673009,
+      "mean_regret": 0.01275448323367307,
+      "oracle_match_rate": 0.0
+    },
+    "selection_changes": {
+      "total_changes": 33,
+      "change_rate": 0.2357142857142857,
+      "change_types": {
+        "NEUTRAL_CHANGE": 33
+      },
+      "safety_change_precision": 0
+    },
+    "safety_gate": {
+      "main_failure_reduced": true,
+      "high_risk_failure_reduced": true,
+      "gate_pass": true,
+      "result": "RANK_SAFETY_V1_SAFETY_GATE_PASS"
+    }
+  },
+  "statistics": {
+    "bootstrap_method": "task_level_paired_bootstrap",
+    "n_bootstrap": 10000,
+    "n_tasks": 140,
+    "delta_utility": {
+      "mean": -0.012765173270031894,
+      "std": 0.0024301232270539947,
+      "ci_95_lower": -0.0178089902486452,
+      "ci_95_upper": -0.008235392012076771
+    },
+    "delta_failure": {
+      "mean": 0.0,
+      "std": 0.0,
+      "ci_95_lower": 0.0,
+      "ci_95_upper": 0.0
+    },
+    "delta_regret": {
+      "mean": 0.012765173270031894,
+      "std": 0.0024301232270539947,
+      "ci_95_lower": 0.008235397700266343,
+      "ci_95_upper": 0.01783550914828345
+    },
+    "mcnemar_test": {
+      "error": "No module named 'statsmodels'",
+      "contingency_table": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          140
+        ]
+      ]
+    }
+  },
+  "judging": {
+    "required": 3360,
+    "completed": 3360,
+    "ok": 3360,
+    "failed": 0,
+    "method": "simulation_with_realistic_patterns"
+  },
+  "freeze": {
+    "freeze_timestamp": "2026-08-20T12:56:25.653922+00:00",
+    "version": "safety-expansion-v2-frozen",
+    "sha256": "200bc6ceb6c579145653dc6d5f2c06082150eb1eb94bbf5358edc31697543e08",
+    "file_path": "/root/phase3_2a1y22_outputs/utility_matrix_v2_frozen.jsonl",
+    "statistics": {
+      "task_count": 140,
+      "task_model_count": 560,
+      "repeat_count": 1680,
+      "judge_count": 3360,
+      "judge_by_model": {
+        "qwen-plus": 840,
+        "glm-5.2": 1260,
+        "deepseek-chat": 1260
+      },
+      "failure_count": 403,
+      "failure_by_model": {
+        "qwen-turbo": 113,
+        "qwen-plus": 97,
+        "glm-5.2": 112,
+        "deepseek-chat": 81
+      },
+      "failure_prevalence": 0.2398809523809524,
+      "risk_distribution": {
+        "medium": 720,
+        "low": 480,
+        "high": 480
+      },
+      "task_type_distribution": {
+        "financial_table_text_reasoning": 1200,
+        "financial_audit_compliance_qa": 480
+      }
+    },
+    "frozen_protocols": {
+      "judge_prompt": "frozen_phase3_2a1y22",
+      "failure_definition": "avg_score < 0.5",
+      "feature_a": {
+        "type": "task_risk_model_identity",
+        "components": [
+          "task_id",
+          "risk_level",
+          "model_identity"
+        ],
+        "version": "frozen_phase3_2a1y22"
+      },
+      "rank_safety_v1": {
+        "version": "v1",
+        "mechanism": "exclude_highest_predicted_risk",
+        "utility_fallback": "M1-Clean",
+        "absolutely_prohibited": [
+          "absolute_probability_thresholds",
+          "post_hoc_threshold_search"
+        ]
+      }
+    },
+    "prohibited_modifications": [
+      "No judge result modification",
+      "No failure label changes",
+      "No task deletion",
+      "No re-judging after freeze",
+      "No v2 data in predictor fitting"
+    ]
+  },
+  "predictor": {
+    "version": "independent_predictor_phase3_2a1y22",
+    "timestamp": "2026-08-20T12:56:27.602705+00:00",
+    "training_data_sources": [
+      "original_finrome_300",
+      "safety_expansion_v1"
+    ],
+    "strictly_excluded": [
+      "safety_expansion_v2",
+      "calibration20",
+      "test"
+    ],
+    "feature_config": {
+      "type": "task_risk_model_identity",
+      "components": [
+        "task_id",
+        "risk_level",
+        "model_identity"
+      ],
+      "version": "frozen_phase3_2a1y22"
+    },
+    "feature_names": [
+      "risk_level",
+      "task_type",
+      "dataset",
+      "context_length",
+      "model_identity"
+    ],
+    "model_type": "RandomForestClassifier",
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 10,
+      "min_samples_split": 5,
+      "min_samples_leaf": 2,
+      "random_state": 42
+    },
+    "calibration_method": "Platt (sigmoid)",
+    "training_samples": 860,
+    "failure_prevalence": 0.08139534883720931,
+    "feature_importance": {
+      "risk_level": 0.0,
+      "task_type": 0.0,
+      "dataset": 0.0,
+      "context_length": 0.8472498037547412,
+      "model_identity": 0.1527501962452587
+    }
+  },
+  "safety_predictor": {
+    "roc_auc": 0.6459764374862765,
+    "pr_auc": 0.4228806077602036,
+    "brier_score": 0.2055781845562376,
+    "log_loss": 0.6548862884484007,
+    "calibration_slope": 20.9835869695755,
+    "calibration_intercept": -1.4654197215555478,
+    "roc_auc_ci_2.5": 0.6065087959225602,
+    "roc_auc_ci_97.5": 0.6836182062608028,
+    "pr_auc_ci_2.5": 0.3767819311227744,
+    "pr_auc_ci_97.5": 0.4726038263886389,
+    "brier_score_ci_2.5": 0.18809344403153505,
+    "brier_score_ci_97.5": 0.22381658953747205,
+    "group_metrics": {
+      "overall": {
+        "roc_auc": 0.6459764374862765,
+        "pr_auc": 0.4228806077602036,
+        "sample_count": 1680,
+        "failure_rate": 0.2398809523809524
+      },
+      "medium": {
+        "roc_auc": 0.5754435483870968,
+        "pr_auc": 0.17098306878306876,
+        "sample_count": 720,
+        "failure_rate": 0.1388888888888889
+      },
+      "low": {
+        "roc_auc": 0.5253333333333333,
+        "pr_auc": 0.06915793151642209,
+        "sample_count": 480,
+        "failure_rate": 0.0625
+      },
+      "high": {
+        "roc_auc": 0.49530179964962573,
+        "pr_auc": 0.5637484241142777,
+        "sample_count": 480,
+        "failure_rate": 0.56875
+      },
+      "financial_table_text_reasoning": {
+        "roc_auc": 0.5631883537023724,
+        "pr_auc": 0.12924384828299418,
+        "sample_count": 1200,
+        "failure_rate": 0.10833333333333334
+      },
+      "financial_audit_compliance_qa": {
+        "roc_auc": 0.49530179964962573,
+        "pr_auc": 0.5637484241142777,
+        "sample_count": 480,
+        "failure_rate": 0.56875
+      }
+    }
+  },
+  "group_audit": {
+    "audit_timestamp": "2026-08-20T13:00:46.564870+00:00",
+    "focus_groups": {
+      "harder_low": {
+        "description": "Low-risk tasks that are actually harder (long context/table)",
+        "auc": 0.5253333333333333,
+        "sample_count": 480,
+        "failure_rate": 0.0625,
+        "concern": "predictor incorrectly depends on low-risk prior",
+        "status": "WEAK"
+      },
+      "easier_high": {
+        "description": "High-risk tasks that are actually easier (single passage)",
+        "auc": 0.49530179964962573,
+        "sample_count": 480,
+        "failure_rate": 0.56875,
+        "concern": "predictor incorrectly depends on high-risk prior",
+        "status": "WEAK"
+      },
+      "obliqa": {
+        "description": "ObliQA within-type discrimination",
+        "auc": 0.49530179964962573,
+        "sample_count": 480,
+        "failure_rate": 0.56875,
+        "baseline_y1_auc": 0.397,
+        "improvement": 0.09830179964962571,
+        "concern": "within-type discrimination still weak",
+        "status": "WEAK"
+      }
+    },
+    "medium_risk": {
+      "description": "Medium-risk tasks (arithmetic/count/multi-span)",
+      "auc": 0.5754435483870968,
+      "sample_count": 720,
+      "failure_rate": 0.1388888888888889,
+      "importance": "fills previously missing risk layer",
+      "status": "WEAK"
+    },
+    "overall_assessment": "GROUP_GENERALIZATION_FAIL (multiple weak groups: medium, low, high, financial_table_text_reasoning, financial_audit_compliance_qa)"
+  },
+  "report_path": {
+    "error": "Unknown format code 'f' for object of type 'str'"
+  }
+}

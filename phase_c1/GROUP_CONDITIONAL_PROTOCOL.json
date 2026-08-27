@@ -1,0 +1,19 @@
+{
+  "version": "group-conditional-router-v1",
+  "status": "FROZEN_AFTER_C1_FAILURE_BEFORE_EXECUTION",
+  "trigger": "phase-c1 global interaction gate failed",
+  "groups": ["TAT-low", "TAT-medium", "Obli-high"],
+  "baselines": ["global best single", "group-conditional best single"],
+  "learned_method": "separate centered delta-utility Ridge predictor per group with Bradley-Terry aggregation",
+  "features": "same 28 structural features frozen in C1",
+  "dataset_and_task_type_features_inside_group": false,
+  "validation": "existing frozen 70-task development validation; diagnostic/development only",
+  "v2_used": false,
+  "success_gate": {
+    "validation_gap_recovery_min": 0.20,
+    "utility_strictly_above_global_best_single": true,
+    "bootstrap_positive_probability_min": 0.95
+  },
+  "frar_prohibited": true,
+  "v3_collection_prohibited_until_method_freeze": true
+}

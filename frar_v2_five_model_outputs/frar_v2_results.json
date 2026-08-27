@@ -1,0 +1,256 @@
+{
+  "protocol": {
+    "version": "frar-v2-five-model-v1",
+    "models": [
+      "deepseek-chat",
+      "glm-5.2",
+      "qwen-plus",
+      "qwen-turbo",
+      "gemini-2.5-flash"
+    ],
+    "train_tasks": 400,
+    "test_tasks": 140,
+    "train_test_overlap": 0,
+    "pairwise_pairs": 10,
+    "frar_v2_score": "0.6*utility_hat + 0.3*compatibility - 0.1*risk_hat",
+    "selection_outcome_separation": true,
+    "seed": 20260825
+  },
+  "integrity": {
+    "training_matrix_sha256": "6bd6410cc9d5a348bd78a19bc0a15d85da13644ae92190e097b192105013a01e"
+  },
+  "training": {
+    "mean_quality": {
+      "deepseek-chat": 0.7910034166666666,
+      "glm-5.2": 0.799627625,
+      "qwen-plus": 0.836750375,
+      "qwen-turbo": 0.7602882083333333,
+      "gemini-2.5-flash": 0.7424874999999999
+    },
+    "best_single": "qwen-plus",
+    "telemetry": {
+      "deepseek-chat": {
+        "cost_usd": 0.00023926,
+        "latency_ms": 7961.008333333333,
+        "reliability": 1.0
+      },
+      "glm-5.2": {
+        "cost_usd": 0.0028427,
+        "latency_ms": 14851.41,
+        "reliability": 1.0
+      },
+      "qwen-plus": {
+        "cost_usd": 0.00012467499999999998,
+        "latency_ms": 11698.418333333331,
+        "reliability": 1.0
+      },
+      "qwen-turbo": {
+        "cost_usd": 7.358e-06,
+        "latency_ms": 5714.483333333334,
+        "reliability": 1.0
+      },
+      "gemini-2.5-flash": {
+        "cost_usd": 0.00034665,
+        "latency_ms": 4669.2716666666665,
+        "reliability": 1.0
+      }
+    }
+  },
+  "pairwise_cv": {
+    "deepseek-chat__vs__glm-5.2": {
+      "n": 400,
+      "positive_rate": 0.2075,
+      "accuracy": 0.7475,
+      "auc": 0.7246398844589715,
+      "log_loss": 0.5622760270980908
+    },
+    "deepseek-chat__vs__qwen-plus": {
+      "n": 400,
+      "positive_rate": 0.2875,
+      "accuracy": 0.89,
+      "auc": 0.8857360793287566,
+      "log_loss": 0.4415898718425737
+    },
+    "deepseek-chat__vs__qwen-turbo": {
+      "n": 400,
+      "positive_rate": 0.1625,
+      "accuracy": 0.785,
+      "auc": 0.7472789896670493,
+      "log_loss": 0.5234067027655503
+    },
+    "deepseek-chat__vs__gemini-2.5-flash": {
+      "n": 400,
+      "positive_rate": 0.265,
+      "accuracy": 0.8275,
+      "auc": 0.8411949685534592,
+      "log_loss": 0.5046755542842943
+    },
+    "glm-5.2__vs__qwen-plus": {
+      "n": 400,
+      "positive_rate": 0.3075,
+      "accuracy": 0.8725,
+      "auc": 0.8675706612661794,
+      "log_loss": 0.4606733069910897
+    },
+    "glm-5.2__vs__qwen-turbo": {
+      "n": 400,
+      "positive_rate": 0.19,
+      "accuracy": 0.7875,
+      "auc": 0.7884178037686809,
+      "log_loss": 0.508833377263797
+    },
+    "glm-5.2__vs__gemini-2.5-flash": {
+      "n": 400,
+      "positive_rate": 0.27,
+      "accuracy": 0.8375,
+      "auc": 0.8197615423642821,
+      "log_loss": 0.5022369564182863
+    },
+    "qwen-plus__vs__qwen-turbo": {
+      "n": 400,
+      "positive_rate": 0.1,
+      "accuracy": 0.8725,
+      "auc": 0.6045138888888889,
+      "log_loss": 0.47999413259436385
+    },
+    "qwen-plus__vs__gemini-2.5-flash": {
+      "n": 400,
+      "positive_rate": 0.2025,
+      "accuracy": 0.8025,
+      "auc": 0.7870660629281319,
+      "log_loss": 0.5154510064147104
+    },
+    "qwen-turbo__vs__gemini-2.5-flash": {
+      "n": 400,
+      "positive_rate": 0.2925,
+      "accuracy": 0.8075,
+      "auc": 0.8035698106369484,
+      "log_loss": 0.5347946630812462
+    }
+  },
+  "metrics": {
+    "random": {
+      "n_tasks": 140,
+      "mean_quality": 0.6372556407022951,
+      "failure_rate": 0.24285714285714285,
+      "high_risk_failure_rate": 0.4833333333333333,
+      "mean_cost_usd": 0.0012504721476190477,
+      "mean_latency_ms": 246639.88926190478,
+      "mean_utility": 0.6269295340183065,
+      "mean_regret": 0.13037888573838435,
+      "selection_counts": {
+        "gemini-2.5-flash": 23,
+        "qwen-turbo": 34,
+        "glm-5.2": 28,
+        "qwen-plus": 29,
+        "deepseek-chat": 26
+      },
+      "selection_change_vs_best_single": 0.7928571428571428
+    },
+    "best_single": {
+      "n_tasks": 140,
+      "mean_quality": 0.6274882301146568,
+      "failure_rate": 0.23095238095238096,
+      "high_risk_failure_rate": 0.5416666666666666,
+      "mean_cost_usd": 0.00022576673809523808,
+      "mean_latency_ms": 295345.98328571423,
+      "mean_utility": 0.6486844132277026,
+      "mean_regret": 0.10862400652898836,
+      "selection_counts": {
+        "qwen-plus": 140
+      }
+    },
+    "cost_only": {
+      "n_tasks": 140,
+      "mean_quality": 0.6070478604905811,
+      "failure_rate": 0.2690476190476191,
+      "high_risk_failure_rate": 0.6,
+      "mean_cost_usd": 1.4734466666666668e-05,
+      "mean_latency_ms": 297131.90614285716,
+      "mean_utility": 0.671664512341595,
+      "mean_regret": 0.08564390741509591,
+      "selection_counts": {
+        "qwen-turbo": 140
+      },
+      "selection_change_vs_best_single": 1.0
+    },
+    "route_pairwise": {
+      "n_tasks": 140,
+      "mean_quality": 0.7725005716584601,
+      "failure_rate": 0.05238095238095238,
+      "high_risk_failure_rate": 0.075,
+      "mean_cost_usd": 0.00047735590476190483,
+      "mean_latency_ms": 161716.5819047619,
+      "mean_utility": 0.6945351528528348,
+      "mean_regret": 0.06277326690385605,
+      "selection_counts": {
+        "deepseek-chat": 100,
+        "gemini-2.5-flash": 38,
+        "qwen-plus": 2
+      },
+      "selection_change_vs_best_single": 0.9857142857142858
+    },
+    "utility_only": {
+      "n_tasks": 140,
+      "mean_quality": 0.6070478604905811,
+      "failure_rate": 0.2690476190476191,
+      "high_risk_failure_rate": 0.6,
+      "mean_cost_usd": 1.4734466666666668e-05,
+      "mean_latency_ms": 297131.90614285716,
+      "mean_utility": 0.671664512341595,
+      "mean_regret": 0.08564390741509591,
+      "selection_counts": {
+        "qwen-turbo": 140
+      },
+      "selection_change_vs_best_single": 1.0
+    },
+    "rank_safety": {
+      "n_tasks": 140,
+      "mean_quality": 0.6125406575896127,
+      "failure_rate": 0.2452380952380952,
+      "high_risk_failure_rate": 0.5166666666666666,
+      "mean_cost_usd": 2.824214761904762e-05,
+      "mean_latency_ms": 296729.2324761905,
+      "mean_utility": 0.6716034347159704,
+      "mean_regret": 0.08570498504072041,
+      "selection_counts": {
+        "qwen-turbo": 104,
+        "qwen-plus": 36
+      },
+      "selection_change_vs_best_single": 0.7428571428571429
+    },
+    "frar_v2": {
+      "n_tasks": 140,
+      "mean_quality": 0.7682963507516427,
+      "failure_rate": 0.05714285714285714,
+      "high_risk_failure_rate": 0.09166666666666665,
+      "mean_cost_usd": 0.0004760307380952381,
+      "mean_latency_ms": 169799.46704761902,
+      "mean_utility": 0.6926076246162919,
+      "mean_regret": 0.06470079514039888,
+      "selection_counts": {
+        "deepseek-chat": 100,
+        "gemini-2.5-flash": 36,
+        "qwen-plus": 4
+      },
+      "selection_change_vs_best_single": 0.9714285714285714
+    },
+    "oracle": {
+      "n_tasks": 140,
+      "mean_quality": 0.8742457258349619,
+      "failure_rate": 0.038095238095238085,
+      "high_risk_failure_rate": 0.049999999999999996,
+      "mean_cost_usd": 0.00043704436190476195,
+      "mean_latency_ms": 80009.13947619048,
+      "mean_utility": 0.7573084197566909,
+      "mean_regret": 0.0,
+      "selection_counts": {
+        "gemini-2.5-flash": 92,
+        "deepseek-chat": 6,
+        "qwen-turbo": 33,
+        "qwen-plus": 9
+      },
+      "selection_change_vs_best_single": 0.9357142857142857
+    }
+  }
+}

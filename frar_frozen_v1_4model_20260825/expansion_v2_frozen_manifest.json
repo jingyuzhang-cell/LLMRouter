@@ -1,0 +1,63 @@
+{
+  "freeze_timestamp": "2026-08-20T12:56:25.653922+00:00",
+  "version": "safety-expansion-v2-frozen",
+  "sha256": "200bc6ceb6c579145653dc6d5f2c06082150eb1eb94bbf5358edc31697543e08",
+  "file_path": "/root/phase3_2a1y22_outputs/utility_matrix_v2_frozen.jsonl",
+  "statistics": {
+    "task_count": 140,
+    "task_model_count": 560,
+    "repeat_count": 1680,
+    "judge_count": 3360,
+    "judge_by_model": {
+      "qwen-plus": 840,
+      "glm-5.2": 1260,
+      "deepseek-chat": 1260
+    },
+    "failure_count": 403,
+    "failure_by_model": {
+      "qwen-turbo": 113,
+      "qwen-plus": 97,
+      "glm-5.2": 112,
+      "deepseek-chat": 81
+    },
+    "failure_prevalence": 0.2398809523809524,
+    "risk_distribution": {
+      "medium": 720,
+      "low": 480,
+      "high": 480
+    },
+    "task_type_distribution": {
+      "financial_table_text_reasoning": 1200,
+      "financial_audit_compliance_qa": 480
+    }
+  },
+  "frozen_protocols": {
+    "judge_prompt": "frozen_phase3_2a1y22",
+    "failure_definition": "avg_score < 0.5",
+    "feature_a": {
+      "type": "task_risk_model_identity",
+      "components": [
+        "task_id",
+        "risk_level",
+        "model_identity"
+      ],
+      "version": "frozen_phase3_2a1y22"
+    },
+    "rank_safety_v1": {
+      "version": "v1",
+      "mechanism": "exclude_highest_predicted_risk",
+      "utility_fallback": "M1-Clean",
+      "absolutely_prohibited": [
+        "absolute_probability_thresholds",
+        "post_hoc_threshold_search"
+      ]
+    }
+  },
+  "prohibited_modifications": [
+    "No judge result modification",
+    "No failure label changes",
+    "No task deletion",
+    "No re-judging after freeze",
+    "No v2 data in predictor fitting"
+  ]
+}

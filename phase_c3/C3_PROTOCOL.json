@@ -1,0 +1,33 @@
+{
+  "version": "phase-c3-noise-aware-semantic-advantage-v1",
+  "status": "FROZEN_BEFORE_C3_EXECUTION",
+  "role": "development_only_nested_oof",
+  "development_tasks": 419,
+  "excluded_diagnostic_tasks": 90,
+  "external_api_calls": 0,
+  "v2_used": false,
+  "frar_locked": true,
+  "lambda_tuning_locked": true,
+  "outer_cv": "KFold(n_splits=5, shuffle=true, random_state=20260827)",
+  "inner_cv": "KFold(n_splits=5, shuffle=true, random_state=outer-fold-specific deterministic seed)",
+  "fold_baseline": "best single model by mean utility using outer-fold train only",
+  "target": "U(task, candidate)-U(task, fold-local baseline)",
+  "embedding": "local frozen e5-small-v2 mean pooling, no fine-tuning",
+  "embedding_input": "query: question [SEP] context [SEP] serialized table",
+  "embedding_max_tokens": 512,
+  "pca_components": 32,
+  "pca_fit_scope": "inner-fold train tasks only",
+  "regressor": "shared plus model-intercept plus model-specific interaction Ridge(alpha=10)",
+  "noise_weight": "clip(abs(advantage)/sqrt(var_candidate+var_baseline+1e-6), 0.25, 4.0)",
+  "utility_variance": "sample variance across the three repeat-level utilities",
+  "selective_rule": "switch only when max one-sided 90% ensemble LCB = mean-1.645*std > 0",
+  "methods": ["best_single", "global_pairwise_c2", "advantage_ridge", "noise_aware_advantage", "selective_advantage", "oracle"],
+  "bootstrap_samples": 10000,
+  "development_gate": {
+    "oof_gap_recovery_strictly_above": 0,
+    "bootstrap_probability_delta_utility_positive_min": 0.90,
+    "failure_rate_max_above_best_single": 0.02
+  },
+  "pass_action": "freeze C3 method; do not run FRAR; prepare a new outcome-blind holdout",
+  "fail_action": "C3_DEVELOPMENT_FAIL; stop without new data collection"
+}

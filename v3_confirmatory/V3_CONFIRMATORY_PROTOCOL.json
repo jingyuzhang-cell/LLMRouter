@@ -1,0 +1,56 @@
+{
+  "version": "v3-confirmatory-v1",
+  "status": "FROZEN_BEFORE_ANY_V3_MODEL_OUTCOME",
+  "seed": 20260829,
+  "selection_outcome_blind": true,
+  "tasks": 120,
+  "distribution": {
+    "TAT-QA:medium": 60,
+    "ObliQA:high": 40,
+    "TAT-QA:low": 20
+  },
+  "response_plans": {
+    "gemini_only_existing_four_models": 66,
+    "collect_all_five_models": 54
+  },
+  "overlap_existing_509": 0,
+  "overlap_c2_diagnostic_90": 0,
+  "overlap_v2": 0,
+  "normalized_text_overlap": 0,
+  "selection_features": [
+    "dataset",
+    "risk",
+    "answer_from",
+    "answer_type",
+    "table dimensions",
+    "derivation operator depth",
+    "task id and normalized text uniqueness"
+  ],
+  "forbidden_selection_features": [
+    "any model response",
+    "quality",
+    "utility",
+    "failure",
+    "winner",
+    "C2 diagnostic outcomes",
+    "v2 outcomes"
+  ],
+  "primary_method": "frozen C3 selective advantage; safety-veto failed and is not used",
+  "baselines": [
+    "best single",
+    "frozen C3 selective advantage",
+    "oracle"
+  ],
+  "success_gates": {
+    "gap_recovery_min": 0.2,
+    "bootstrap_probability_router_above_best_min": 0.95,
+    "failure_router_le_best": true,
+    "high_risk_failure_router_le_best": true
+  },
+  "new_response_calls": 1008,
+  "gemini_calls": 360,
+  "old_four_model_calls_for_new_raw_tat": 648,
+  "new_dual_judge_calls": 240,
+  "total_external_calls_required": 1248,
+  "frar_locked": true
+}

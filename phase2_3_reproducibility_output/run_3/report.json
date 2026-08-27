@@ -1,0 +1,340 @@
+{
+  "report_type": "finrome_v4_phase2_formal",
+  "version": "2.2_formal_routers",
+  "generated_at": "2026-08-19T01:20:39.570310+00:00",
+  "scope": {
+    "formal_routers_used": true,
+    "unified_metrics": true,
+    "proper_ablation_chain": true,
+    "m3_gate_applied": true,
+    "test_accessed": false,
+    "calibration_only": true
+  },
+  "data_split": {
+    "train_count": 60,
+    "calibration_count": 20,
+    "test_count": 20,
+    "isolation_verified": true
+  },
+  "router_implementations": {
+    "knnrouter": "正式 KNeighborsClassifier (sklearn)",
+    "mlprouter": "正式 MLPClassifierNN (llmrouter.models)",
+    "graphrouter": "正式 EncoderDecoderNet (llmrouter.models.graphrouter)"
+  },
+  "metrics_module": "llmrouter.utils.finrome_metrics (统一指标定义)",
+  "metric_definitions": {
+    "main_quality_threshold": 0.6,
+    "strict_repeat_quality_threshold": 0.5,
+    "main_failure": "reliability < 1.0 OR quality < 0.6",
+    "strict_repeat_failure": "any repeat quality < 0.5"
+  },
+  "method_results": {
+    "M0-KNN": {
+      "n_tasks": 20,
+      "mean_utility": 0.8665743758333333,
+      "mean_regret": 0.045960671666666675,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.6,
+      "safety_oracle_match_rate": 0.25,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "qwen-turbo": 12,
+        "deepseek-chat": 6
+      },
+      "method": "M0-KNN"
+    },
+    "M0-MLP": {
+      "n_tasks": 20,
+      "mean_utility": 0.8644851708333334,
+      "mean_regret": 0.04804987666666666,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.4,
+      "safety_oracle_match_rate": 0.25,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 6,
+        "qwen-turbo": 12
+      },
+      "method": "M0-MLP"
+    },
+    "M0-Graph": {
+      "n_tasks": 20,
+      "mean_utility": 0.8191323741666668,
+      "mean_regret": 0.09340267333333332,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.15,
+      "safety_oracle_match_rate": 0.5,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "glm-5.2": 7,
+        "deepseek-chat": 13
+      },
+      "method": "M0-Graph"
+    },
+    "M1-EqualRank": {
+      "n_tasks": 20,
+      "mean_utility": 0.8350752466666668,
+      "mean_regret": 0.07745980083333333,
+      "main_failure_rate": 0.15,
+      "strict_repeat_failure_rate": 0.2,
+      "oracle_match_rate": 0.2,
+      "safety_oracle_match_rate": 0.4,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "deepseek-chat": 6,
+        "qwen-plus": 6,
+        "glm-5.2": 8
+      },
+      "method": "M1-EqualRank"
+    },
+    "M2-Dynamic": {
+      "n_tasks": 20,
+      "mean_utility": 0.8646829741666668,
+      "mean_regret": 0.047852073333333335,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.45,
+      "safety_oracle_match_rate": 0.4,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 9,
+        "qwen-turbo": 9
+      },
+      "method": "M2-Dynamic"
+    },
+    "M3-M3_conformal": {
+      "n_tasks": 20,
+      "mean_utility": 0.8654404733333335,
+      "mean_regret": 0.04709457416666666,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.45,
+      "safety_oracle_match_rate": 0.3,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 7,
+        "qwen-turbo": 11
+      },
+      "method": "M3-M3_conformal"
+    }
+  },
+  "router_agreement": {
+    "agreement_matrix": {
+      "M0-KNN": {
+        "M0-MLP": 0.8,
+        "M0-Graph": 0.3,
+        "M1-EqualRank": 0.0,
+        "M2-Dynamic": 0.85,
+        "M3-M3_conformal": 0.85
+      },
+      "M0-MLP": {
+        "M0-KNN": 0.8,
+        "M0-Graph": 0.3,
+        "M1-EqualRank": 0.0,
+        "M2-Dynamic": 0.85,
+        "M3-M3_conformal": 0.95
+      },
+      "M0-Graph": {
+        "M0-KNN": 0.3,
+        "M0-MLP": 0.3,
+        "M1-EqualRank": 0.0,
+        "M2-Dynamic": 0.45,
+        "M3-M3_conformal": 0.35
+      },
+      "M1-EqualRank": {
+        "M0-KNN": 0.0,
+        "M0-MLP": 0.0,
+        "M0-Graph": 0.0,
+        "M2-Dynamic": 0.0,
+        "M3-M3_conformal": 0.0
+      },
+      "M2-Dynamic": {
+        "M0-KNN": 0.85,
+        "M0-MLP": 0.85,
+        "M0-Graph": 0.45,
+        "M1-EqualRank": 0.0,
+        "M3-M3_conformal": 0.9
+      },
+      "M3-M3_conformal": {
+        "M0-KNN": 0.85,
+        "M0-MLP": 0.95,
+        "M0-Graph": 0.35,
+        "M1-EqualRank": 0.0,
+        "M2-Dynamic": 0.9
+      }
+    },
+    "disagreement_rates": {
+      "M0-KNN_vs_M0-MLP": 0.19999999999999996,
+      "M0-KNN_vs_M0-Graph": 0.7,
+      "M0-KNN_vs_M1-EqualRank": 1.0,
+      "M0-KNN_vs_M2-Dynamic": 0.15000000000000002,
+      "M0-KNN_vs_M3-M3_conformal": 0.15000000000000002,
+      "M0-MLP_vs_M0-KNN": 0.19999999999999996,
+      "M0-MLP_vs_M0-Graph": 0.7,
+      "M0-MLP_vs_M1-EqualRank": 1.0,
+      "M0-MLP_vs_M2-Dynamic": 0.15000000000000002,
+      "M0-MLP_vs_M3-M3_conformal": 0.050000000000000044,
+      "M0-Graph_vs_M0-KNN": 0.7,
+      "M0-Graph_vs_M0-MLP": 0.7,
+      "M0-Graph_vs_M1-EqualRank": 1.0,
+      "M0-Graph_vs_M2-Dynamic": 0.55,
+      "M0-Graph_vs_M3-M3_conformal": 0.65,
+      "M1-EqualRank_vs_M0-KNN": 1.0,
+      "M1-EqualRank_vs_M0-MLP": 1.0,
+      "M1-EqualRank_vs_M0-Graph": 1.0,
+      "M1-EqualRank_vs_M2-Dynamic": 1.0,
+      "M1-EqualRank_vs_M3-M3_conformal": 1.0,
+      "M2-Dynamic_vs_M0-KNN": 0.15000000000000002,
+      "M2-Dynamic_vs_M0-MLP": 0.15000000000000002,
+      "M2-Dynamic_vs_M0-Graph": 0.55,
+      "M2-Dynamic_vs_M1-EqualRank": 1.0,
+      "M2-Dynamic_vs_M3-M3_conformal": 0.09999999999999998,
+      "M3-M3_conformal_vs_M0-KNN": 0.15000000000000002,
+      "M3-M3_conformal_vs_M0-MLP": 0.050000000000000044,
+      "M3-M3_conformal_vs_M0-Graph": 0.65,
+      "M3-M3_conformal_vs_M1-EqualRank": 1.0,
+      "M3-M3_conformal_vs_M2-Dynamic": 0.09999999999999998
+    },
+    "n_methods": 6,
+    "n_tasks": 20
+  },
+  "m3_gate_status": {
+    "passed": true,
+    "method_used": "M3_conformal",
+    "original_passed": true,
+    "conformal_bounds": {
+      "knnrouter": {
+        "medium": 0.0561805218931421,
+        "high": 0.2154095211071328
+      },
+      "mlprouter": {
+        "medium": 0.07038255565256726,
+        "high": 0.0646088697466993
+      },
+      "graphrouter": {
+        "medium": 0.12022219181533121,
+        "high": 0.12454850235137398
+      }
+    },
+    "risk_limits": {
+      "low": 0.3,
+      "medium": 0.2,
+      "high": 0.1
+    }
+  },
+  "ablation_chain": {
+    "M0_KNN": {
+      "n_tasks": 20,
+      "mean_utility": 0.8665743758333333,
+      "mean_regret": 0.045960671666666675,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.6,
+      "safety_oracle_match_rate": 0.25,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "qwen-turbo": 12,
+        "deepseek-chat": 6
+      },
+      "method": "M0-KNN"
+    },
+    "M0_MLP": {
+      "n_tasks": 20,
+      "mean_utility": 0.8644851708333334,
+      "mean_regret": 0.04804987666666666,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.4,
+      "safety_oracle_match_rate": 0.25,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 6,
+        "qwen-turbo": 12
+      },
+      "method": "M0-MLP"
+    },
+    "M0_Graph": {
+      "n_tasks": 20,
+      "mean_utility": 0.8191323741666668,
+      "mean_regret": 0.09340267333333332,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.15,
+      "safety_oracle_match_rate": 0.5,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "glm-5.2": 7,
+        "deepseek-chat": 13
+      },
+      "method": "M0-Graph"
+    },
+    "M1_EqualRank": {
+      "n_tasks": 20,
+      "mean_utility": 0.8350752466666668,
+      "mean_regret": 0.07745980083333333,
+      "main_failure_rate": 0.15,
+      "strict_repeat_failure_rate": 0.2,
+      "oracle_match_rate": 0.2,
+      "safety_oracle_match_rate": 0.4,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "deepseek-chat": 6,
+        "qwen-plus": 6,
+        "glm-5.2": 8
+      },
+      "method": "M1-EqualRank"
+    },
+    "M2_Dynamic": {
+      "n_tasks": 20,
+      "mean_utility": 0.8646829741666668,
+      "mean_regret": 0.047852073333333335,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.45,
+      "safety_oracle_match_rate": 0.4,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 9,
+        "qwen-turbo": 9
+      },
+      "method": "M2-Dynamic"
+    },
+    "M3_Conformal": {
+      "n_tasks": 20,
+      "mean_utility": 0.8654404733333335,
+      "mean_regret": 0.04709457416666666,
+      "main_failure_rate": 0.3,
+      "strict_repeat_failure_rate": 0.3,
+      "oracle_match_rate": 0.45,
+      "safety_oracle_match_rate": 0.3,
+      "high_risk_failure_rate": 0.0,
+      "selection_counts": {
+        "qwen-plus": 2,
+        "deepseek-chat": 7,
+        "qwen-turbo": 11
+      },
+      "method": "M3-M3_conformal"
+    }
+  },
+  "key_findings": [
+    "M3 Gate: PASS",
+    "Best utility: 0.8665743758333333",
+    "Best failure rate: 0.15",
+    "Router disagreement: 56.0%"
+  ],
+  "next_steps": [
+    "如果 M3 gate PASS 且指标优于 M2，可以进入 Phase 3",
+    "如果 M3 gate FAIL 或指标劣于 M2，应回退到 M2，重新考虑策略",
+    "禁止基于当前失败率 30% > 25% 的版本进入 Phase 3"
+  ]
+}

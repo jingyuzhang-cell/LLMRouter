@@ -1,0 +1,40 @@
+{
+  "audit_timestamp": "2026-08-20T13:00:46.564870+00:00",
+  "focus_groups": {
+    "harder_low": {
+      "description": "Low-risk tasks that are actually harder (long context/table)",
+      "auc": 0.5253333333333333,
+      "sample_count": 480,
+      "failure_rate": 0.0625,
+      "concern": "predictor incorrectly depends on low-risk prior",
+      "status": "WEAK"
+    },
+    "easier_high": {
+      "description": "High-risk tasks that are actually easier (single passage)",
+      "auc": 0.49530179964962573,
+      "sample_count": 480,
+      "failure_rate": 0.56875,
+      "concern": "predictor incorrectly depends on high-risk prior",
+      "status": "WEAK"
+    },
+    "obliqa": {
+      "description": "ObliQA within-type discrimination",
+      "auc": 0.49530179964962573,
+      "sample_count": 480,
+      "failure_rate": 0.56875,
+      "baseline_y1_auc": 0.397,
+      "improvement": 0.09830179964962571,
+      "concern": "within-type discrimination still weak",
+      "status": "WEAK"
+    }
+  },
+  "medium_risk": {
+    "description": "Medium-risk tasks (arithmetic/count/multi-span)",
+    "auc": 0.5754435483870968,
+    "sample_count": 720,
+    "failure_rate": 0.1388888888888889,
+    "importance": "fills previously missing risk layer",
+    "status": "WEAK"
+  },
+  "overall_assessment": "GROUP_GENERALIZATION_FAIL (multiple weak groups: medium, low, high, financial_table_text_reasoning, financial_audit_compliance_qa)"
+}

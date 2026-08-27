@@ -1,0 +1,377 @@
+{
+  "protocol": {
+    "version": "phase-c2-support-enriched-hierarchical-v1",
+    "status": "FROZEN_BEFORE_C2_EXECUTION",
+    "role": "development_audit_not_confirmatory",
+    "reason_not_confirmatory": "the 90-task holdout was previously inspected in C1 before C2 was proposed",
+    "methods": [
+      "global_prior",
+      "global_tie_aware_pairwise",
+      "hierarchical_tie_aware_pairwise"
+    ],
+    "models": [
+      "deepseek-chat",
+      "glm-5.2",
+      "qwen-plus",
+      "qwen-turbo",
+      "gemini-2.5-flash"
+    ],
+    "features": "the same frozen 28 structural features used in C1",
+    "target_global": "pairwise delta utility minus training global pair mean",
+    "target_hierarchical": "pairwise delta utility minus training family-specific pair mean",
+    "hierarchy": "joint shared structural block plus one family-specific structural interaction block",
+    "families": [
+      "TAT-QA:low",
+      "TAT-QA:medium",
+      "ObliQA:high"
+    ],
+    "predictor": "StandardScaler + Ridge(alpha=10)",
+    "tie_margin": 0.01,
+    "tie_policy": "exclude abs(delta utility)<0.01 from pairwise fitting and accuracy",
+    "aggregation": "least-squares Bradley-Terry latent scores with zero-sum constraint",
+    "development_train_tasks": 419,
+    "reused_holdout_tasks": 90,
+    "primary_gate": {
+      "hierarchical_gap_recovery_min": 0.2,
+      "hierarchical_utility_strictly_above_global_prior": true,
+      "task_bootstrap_positive_probability_min": 0.95
+    },
+    "safety_gate": "router failure rate must not exceed global-prior failure rate",
+    "if_pass": "freeze compatibility method, then evaluate once on a new outcome-blind v3 confirmatory set before any FRAR claim",
+    "if_fail": "do not reconnect FRAR and do not tune lambda on this holdout",
+    "v2_used": false
+  },
+  "integrity": {
+    "train_tasks": 419,
+    "reused_holdout_tasks": 90,
+    "overlap": 0,
+    "feature_count_global": 28,
+    "feature_count_hierarchical": 112,
+    "protocol_sha256": "73ddf197480417ee575b103717ecd6be5c29daacca68b6e400f9b85a92f94bbb",
+    "v2_used": false
+  },
+  "training_global_prior": {
+    "model": "qwen-plus",
+    "utilities": {
+      "deepseek-chat": 0.7778092150357995,
+      "glm-5.2": 0.7266108182577565,
+      "qwen-plus": 0.7947924123707241,
+      "qwen-turbo": 0.7631396053540176,
+      "gemini-2.5-flash": 0.7018698111774064
+    }
+  },
+  "methods": {
+    "global_prior": {
+      "oof": {
+        "mean_utility": 0.7947924123707241,
+        "global_prior_utility": 0.7947924123707241,
+        "oracle_utility": 0.855052317414479,
+        "oracle_gap": 0.06025990504375489,
+        "gap_recovery": 0.0,
+        "failure_rate": 0.1957040572792363,
+        "global_prior_failure_rate": 0.1957040572792363,
+        "high_risk_failure_rate": 0.28,
+        "global_prior_high_risk_failure_rate": 0.28,
+        "selection_counts": {
+          "qwen-plus": 419
+        }
+      },
+      "validation": {
+        "mean_utility": 0.7762068122222222,
+        "global_prior_utility": 0.7762068122222222,
+        "oracle_utility": 0.8551524832222221,
+        "oracle_gap": 0.07894567099999994,
+        "gap_recovery": 0.0,
+        "failure_rate": 0.2222222222222222,
+        "global_prior_failure_rate": 0.2222222222222222,
+        "high_risk_failure_rate": 0.3,
+        "global_prior_high_risk_failure_rate": 0.3,
+        "selection_counts": {
+          "qwen-plus": 90
+        }
+      }
+    },
+    "global_tie_aware_pairwise": {
+      "oof": {
+        "mean_utility": 0.8039064579554495,
+        "global_prior_utility": 0.7947924123707241,
+        "oracle_utility": 0.855052317414479,
+        "oracle_gap": 0.06025990504375489,
+        "gap_recovery": 0.15124560150082644,
+        "failure_rate": 0.23627684964200477,
+        "global_prior_failure_rate": 0.1957040572792363,
+        "high_risk_failure_rate": 0.41714285714285715,
+        "global_prior_high_risk_failure_rate": 0.28,
+        "selection_counts": {
+          "deepseek-chat": 91,
+          "qwen-plus": 140,
+          "glm-5.2": 28,
+          "gemini-2.5-flash": 95,
+          "qwen-turbo": 65
+        }
+      },
+      "oof_pairwise_sign_accuracy": 0.7209364908503767,
+      "validation": {
+        "mean_utility": 0.775894312814815,
+        "global_prior_utility": 0.7762068122222222,
+        "oracle_utility": 0.8551524832222221,
+        "oracle_gap": 0.07894567099999994,
+        "gap_recovery": -0.003958410935631739,
+        "failure_rate": 0.3111111111111111,
+        "global_prior_failure_rate": 0.2222222222222222,
+        "high_risk_failure_rate": 0.5,
+        "global_prior_high_risk_failure_rate": 0.3,
+        "selection_counts": {
+          "qwen-turbo": 20,
+          "deepseek-chat": 22,
+          "gemini-2.5-flash": 21,
+          "qwen-plus": 21,
+          "glm-5.2": 6
+        },
+        "gap_recovery_bootstrap": {
+          "mean": -0.03368995511019706,
+          "ci95_low": -0.6044887016962741,
+          "ci95_high": 0.36431594987075017,
+          "positive_probability": 0.4968
+        }
+      },
+      "fit_diagnostics": {
+        "deepseek-chat__vs__glm-5.2": {
+          "train_n": 403,
+          "tie_n": 16,
+          "centering_means": {
+            "global": 0.051198396778042964
+          },
+          "train_centered_r2": 0.1373443768208087
+        },
+        "deepseek-chat__vs__qwen-plus": {
+          "train_n": 288,
+          "tie_n": 131,
+          "centering_means": {
+            "global": -0.016983197334924427
+          },
+          "train_centered_r2": 0.2992133416019477
+        },
+        "deepseek-chat__vs__qwen-turbo": {
+          "train_n": 290,
+          "tie_n": 129,
+          "centering_means": {
+            "global": 0.014669609681782022
+          },
+          "train_centered_r2": 0.2696346813841831
+        },
+        "deepseek-chat__vs__gemini-2.5-flash": {
+          "train_n": 398,
+          "tie_n": 21,
+          "centering_means": {
+            "global": 0.07593940385839298
+          },
+          "train_centered_r2": 0.20332798359929405
+        },
+        "glm-5.2__vs__qwen-plus": {
+          "train_n": 411,
+          "tie_n": 8,
+          "centering_means": {
+            "global": -0.06818159411296738
+          },
+          "train_centered_r2": 0.21471643014138775
+        },
+        "glm-5.2__vs__qwen-turbo": {
+          "train_n": 399,
+          "tie_n": 20,
+          "centering_means": {
+            "global": -0.036528787096260944
+          },
+          "train_centered_r2": 0.09642641852123979
+        },
+        "glm-5.2__vs__gemini-2.5-flash": {
+          "train_n": 396,
+          "tie_n": 23,
+          "centering_means": {
+            "global": 0.02474100708035003
+          },
+          "train_centered_r2": 0.18166347925539805
+        },
+        "qwen-plus__vs__qwen-turbo": {
+          "train_n": 319,
+          "tie_n": 100,
+          "centering_means": {
+            "global": 0.031652807016706454
+          },
+          "train_centered_r2": 0.23555964719760392
+        },
+        "qwen-plus__vs__gemini-2.5-flash": {
+          "train_n": 405,
+          "tie_n": 14,
+          "centering_means": {
+            "global": 0.09292260119331743
+          },
+          "train_centered_r2": 0.14152662312436126
+        },
+        "qwen-turbo__vs__gemini-2.5-flash": {
+          "train_n": 407,
+          "tie_n": 12,
+          "centering_means": {
+            "global": 0.061269794176610964
+          },
+          "train_centered_r2": 0.2000420117040913
+        }
+      }
+    },
+    "hierarchical_tie_aware_pairwise": {
+      "oof": {
+        "mean_utility": 0.7701781645584727,
+        "global_prior_utility": 0.7947924123707241,
+        "oracle_utility": 0.855052317414479,
+        "oracle_gap": 0.06025990504375489,
+        "gap_recovery": -0.4084680816270609,
+        "failure_rate": 0.3269689737470167,
+        "global_prior_failure_rate": 0.1957040572792363,
+        "high_risk_failure_rate": 0.5714285714285714,
+        "global_prior_high_risk_failure_rate": 0.28,
+        "selection_counts": {
+          "deepseek-chat": 107,
+          "qwen-plus": 93,
+          "qwen-turbo": 93,
+          "gemini-2.5-flash": 86,
+          "glm-5.2": 40
+        }
+      },
+      "oof_pairwise_sign_accuracy": 0.701291711517761,
+      "validation": {
+        "mean_utility": 0.7600908574074072,
+        "global_prior_utility": 0.7762068122222222,
+        "oracle_utility": 0.8551524832222221,
+        "oracle_gap": 0.07894567099999994,
+        "gap_recovery": -0.20413981679647758,
+        "failure_rate": 0.35555555555555557,
+        "global_prior_failure_rate": 0.2222222222222222,
+        "high_risk_failure_rate": 0.7,
+        "global_prior_high_risk_failure_rate": 0.3,
+        "selection_counts": {
+          "qwen-turbo": 22,
+          "deepseek-chat": 28,
+          "qwen-plus": 17,
+          "gemini-2.5-flash": 16,
+          "glm-5.2": 7
+        },
+        "gap_recovery_bootstrap": {
+          "mean": -0.238463069415437,
+          "ci95_low": -0.8112558281926102,
+          "ci95_high": 0.16170090087565656,
+          "positive_probability": 0.1582
+        }
+      },
+      "fit_diagnostics": {
+        "deepseek-chat__vs__glm-5.2": {
+          "train_n": 403,
+          "tie_n": 16,
+          "centering_means": {
+            "TAT-QA:low": 0.03772790555555556,
+            "TAT-QA:medium": 0.04023409217311234,
+            "ObliQA:high": 0.06738799723809526
+          },
+          "train_centered_r2": 0.22675208123743995
+        },
+        "deepseek-chat__vs__qwen-plus": {
+          "train_n": 288,
+          "tie_n": 131,
+          "centering_means": {
+            "TAT-QA:low": -0.011116896560846568,
+            "TAT-QA:medium": 0.024920298342541426,
+            "ObliQA:high": -0.062435252571428575
+          },
+          "train_centered_r2": 0.30204191967038974
+        },
+        "deepseek-chat__vs__qwen-turbo": {
+          "train_n": 290,
+          "tie_n": 129,
+          "centering_means": {
+            "TAT-QA:low": 0.04335176640211639,
+            "TAT-QA:medium": 0.010086539392265201,
+            "ObliQA:high": 0.009084237390476188
+          },
+          "train_centered_r2": 0.3661838259211374
+        },
+        "deepseek-chat__vs__gemini-2.5-flash": {
+          "train_n": 398,
+          "tie_n": 21,
+          "centering_means": {
+            "TAT-QA:low": -0.012832499470899508,
+            "TAT-QA:medium": 0.1318967688766114,
+            "ObliQA:high": 0.05002138580952382
+          },
+          "train_centered_r2": 0.17627152759822662
+        },
+        "glm-5.2__vs__qwen-plus": {
+          "train_n": 411,
+          "tie_n": 8,
+          "centering_means": {
+            "TAT-QA:low": -0.04884480211640211,
+            "TAT-QA:medium": -0.015313793830570906,
+            "ObliQA:high": -0.1298232498095238
+          },
+          "train_centered_r2": 0.12716997921926565
+        },
+        "glm-5.2__vs__qwen-turbo": {
+          "train_n": 399,
+          "tie_n": 20,
+          "centering_means": {
+            "TAT-QA:low": 0.005623860846560844,
+            "TAT-QA:medium": -0.030147552780847145,
+            "ObliQA:high": -0.05830375984761905
+          },
+          "train_centered_r2": 0.1624307545181921
+        },
+        "glm-5.2__vs__gemini-2.5-flash": {
+          "train_n": 396,
+          "tie_n": 23,
+          "centering_means": {
+            "TAT-QA:low": -0.05056040502645505,
+            "TAT-QA:medium": 0.09166267670349906,
+            "ObliQA:high": -0.017366611428571436
+          },
+          "train_centered_r2": 0.11653059153348688
+        },
+        "qwen-plus__vs__qwen-turbo": {
+          "train_n": 319,
+          "tie_n": 100,
+          "centering_means": {
+            "TAT-QA:low": 0.05446866296296296,
+            "TAT-QA:medium": -0.014833758950276235,
+            "ObliQA:high": 0.07151948996190476
+          },
+          "train_centered_r2": 0.26370258311213257
+        },
+        "qwen-plus__vs__gemini-2.5-flash": {
+          "train_n": 405,
+          "tie_n": 14,
+          "centering_means": {
+            "TAT-QA:low": -0.00171560291005294,
+            "TAT-QA:medium": 0.10697647053407,
+            "ObliQA:high": 0.11245663838095238
+          },
+          "train_centered_r2": 0.13409784347264908
+        },
+        "qwen-turbo__vs__gemini-2.5-flash": {
+          "train_n": 407,
+          "tie_n": 12,
+          "centering_means": {
+            "TAT-QA:low": -0.05618426587301591,
+            "TAT-QA:medium": 0.12181022948434621,
+            "ObliQA:high": 0.04093714841904762
+          },
+          "train_centered_r2": 0.18197190928342466
+        }
+      }
+    }
+  },
+  "c2_gate": {
+    "recovery_ge_0.20": false,
+    "utility_above_global_prior": false,
+    "bootstrap_positive_probability_ge_0.95": false,
+    "failure_not_above_global_prior": false,
+    "pass": false
+  },
+  "interpretation": "development audit only; a pass permits method freeze and new v3, not a confirmatory claim"
+}

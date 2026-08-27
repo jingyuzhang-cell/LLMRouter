@@ -1,0 +1,223 @@
+{
+  "protocol": {
+    "train_sets": [
+      "finrome_300",
+      "safety_expansion_v1",
+      "finrome_300_confirmatory_v3",
+      "finrome_legacy_v2_confirmatory"
+    ],
+    "test_set": "safety_expansion_v2_counterexample_enrichment",
+    "repeat_aggregation": "mean_before_routing_evaluation",
+    "failure_definition": "mean repeat failure rate",
+    "utility_weights": {
+      "quality": 0.45,
+      "cost": 0.2,
+      "latency": 0.15,
+      "reliability": 0.2
+    },
+    "dynamic_lambda": {
+      "low": 0.1,
+      "medium": 0.3,
+      "high": 0.7,
+      "unknown": 0.3
+    },
+    "selection_outcome_separation": true,
+    "random_seed": 42
+  },
+  "training": {
+    "rows": 2832,
+    "best_single_selected_on_training": "deepseek-chat",
+    "historical_telemetry": {
+      "deepseek-chat": {
+        "cost": 0.00019004999999999998,
+        "latency": 25375.75833333333,
+        "reliability": 1.0
+      },
+      "glm-5.2": {
+        "cost": 0.0042967000000000005,
+        "latency": 40147.88166666667,
+        "reliability": 1.0
+      },
+      "qwen-plus": {
+        "cost": 0.00011222833333333332,
+        "latency": 30839.981666666663,
+        "reliability": 1.0
+      },
+      "qwen-turbo": {
+        "cost": 5.3719999999999996e-06,
+        "latency": 25202.198333333334,
+        "reliability": 1.0
+      }
+    }
+  },
+  "metrics": {
+    "best_single": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "random": {
+      "n_tasks": 140,
+      "mean_quality": 0.6223132146575557,
+      "failure_rate": 0.24285714285714285,
+      "high_risk_failure_rate": 0.5,
+      "mean_cost_usd": 0.0012906907809523808,
+      "mean_latency_ms": 298457.589,
+      "mean_utility": 0.6201564166425484,
+      "mean_regret": 0.06950325917312077
+    },
+    "utility_only": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "rank_safety": {
+      "n_tasks": 140,
+      "mean_quality": 0.6136466424065777,
+      "failure_rate": 0.2595238095238096,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 4.631877142857143e-05,
+      "mean_latency_ms": 295084.326452381,
+      "mean_utility": 0.6690153658073907,
+      "mean_regret": 0.02064431000827867
+    },
+    "frar_dynamic": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "frar_lambda_0": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "frar_lambda_0.1": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "frar_lambda_0.2": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "frar_lambda_0.5": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "frar_lambda_1": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "frar_lambda_2": {
+      "n_tasks": 140,
+      "mean_quality": 0.6585932914180794,
+      "failure_rate": 0.1928571428571429,
+      "high_risk_failure_rate": 0.5666666666666667,
+      "mean_cost_usd": 0.00046443600000000004,
+      "mean_latency_ms": 289137.51695238095,
+      "mean_utility": 0.6398233103494635,
+      "mean_regret": 0.049836365466205755
+    },
+    "oracle": {
+      "n_tasks": 140,
+      "mean_quality": 0.6825624374846526,
+      "failure_rate": 0.1476190476190476,
+      "high_risk_failure_rate": 0.39999999999999997,
+      "mean_cost_usd": 0.00012973550476190476,
+      "mean_latency_ms": 295006.1179285714,
+      "mean_utility": 0.6896596758156693,
+      "mean_regret": 0.0
+    }
+  },
+  "paired_bootstrap_vs_utility_only": {
+    "rank_safety": {
+      "quality": {
+        "mean": -0.04494664901150183,
+        "ci95_low": -0.06239612657085489,
+        "ci95_high": -0.02792620430517755
+      },
+      "failure": {
+        "mean": 0.06666666666666667,
+        "ci95_low": 0.03571428571428571,
+        "ci95_high": 0.09761904761904762
+      },
+      "utility": {
+        "mean": 0.02919205545792708,
+        "ci95_low": 0.021115052324479376,
+        "ci95_high": 0.0372078126496353
+      }
+    },
+    "frar_dynamic": {
+      "quality": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "failure": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "utility": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      }
+    }
+  },
+  "pareto_nondominated": [
+    "best_single",
+    "utility_only",
+    "rank_safety",
+    "frar_dynamic",
+    "frar_lambda_0",
+    "frar_lambda_0.1",
+    "frar_lambda_0.2",
+    "frar_lambda_0.5",
+    "frar_lambda_1",
+    "frar_lambda_2"
+  ]
+}

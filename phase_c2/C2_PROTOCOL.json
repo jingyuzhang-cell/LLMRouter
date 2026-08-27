@@ -1,0 +1,28 @@
+{
+  "version": "phase-c2-support-enriched-hierarchical-v1",
+  "status": "FROZEN_BEFORE_C2_EXECUTION",
+  "role": "development_audit_not_confirmatory",
+  "reason_not_confirmatory": "the 90-task holdout was previously inspected in C1 before C2 was proposed",
+  "methods": ["global_prior", "global_tie_aware_pairwise", "hierarchical_tie_aware_pairwise"],
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+  "features": "the same frozen 28 structural features used in C1",
+  "target_global": "pairwise delta utility minus training global pair mean",
+  "target_hierarchical": "pairwise delta utility minus training family-specific pair mean",
+  "hierarchy": "joint shared structural block plus one family-specific structural interaction block",
+  "families": ["TAT-QA:low", "TAT-QA:medium", "ObliQA:high"],
+  "predictor": "StandardScaler + Ridge(alpha=10)",
+  "tie_margin": 0.01,
+  "tie_policy": "exclude abs(delta utility)<0.01 from pairwise fitting and accuracy",
+  "aggregation": "least-squares Bradley-Terry latent scores with zero-sum constraint",
+  "development_train_tasks": 419,
+  "reused_holdout_tasks": 90,
+  "primary_gate": {
+    "hierarchical_gap_recovery_min": 0.20,
+    "hierarchical_utility_strictly_above_global_prior": true,
+    "task_bootstrap_positive_probability_min": 0.95
+  },
+  "safety_gate": "router failure rate must not exceed global-prior failure rate",
+  "if_pass": "freeze compatibility method, then evaluate once on a new outcome-blind v3 confirmatory set before any FRAR claim",
+  "if_fail": "do not reconnect FRAR and do not tune lambda on this holdout",
+  "v2_used": false
+}

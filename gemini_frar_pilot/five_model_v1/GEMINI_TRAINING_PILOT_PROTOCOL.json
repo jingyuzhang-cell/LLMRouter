@@ -1,0 +1,36 @@
+{
+  "version": "gemini-training-pilot-v1",
+  "seed": 20260825,
+  "selection_before_gemini_training_outcomes": true,
+  "selection_features": [
+    "dataset",
+    "task id uniqueness",
+    "normalized text uniqueness"
+  ],
+  "forbidden_selection_features": [
+    "any model response",
+    "quality",
+    "failure",
+    "oracle",
+    "v2 outcome"
+  ],
+  "tasks": 400,
+  "target_adjustment": "KG exhausted at 87 unique tasks; remainder allocated approximately evenly",
+  "per_dataset": {
+    "TAT-QA": 104,
+    "FinQA": 104,
+    "FinReflectKG-EvalBench-derived": 87,
+    "ObliQA": 105
+  },
+  "risk": {
+    "medium": 180,
+    "high": 192,
+    "low": 28
+  },
+  "repeats": 3,
+  "models_extension": [
+    "gemini-2.5-flash"
+  ],
+  "expected_calls": 1200,
+  "v2_id_overlap": 0
+}

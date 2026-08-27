@@ -1,0 +1,175 @@
+# Fin-RoMe v4 Phase 2.3 V3: Reproducibility Audit Report
+
+**生成时间:** 2026-08-19T01:20:41.805410+00:00
+**版本:** 2.3_reproducibility_audit
+**随机种子:** 42
+
+## 执行摘要
+
+**运行次数:** 3 次
+**总体一致性:** ❌ 失败
+
+## 运行详情
+
+
+### Run 1
+
+- **成功:** ✅
+- **时间戳:** 2026-08-19T01:19:48.388973+00:00
+- **Selections Hash:** `9bfb7351216ba2c7`
+
+**M3 Gate:**
+- 状态: ❌ FAIL
+- 方法: M3_conformal
+
+**关键指标:**
+
+| 方法 | Utility | Failure |
+|------|---------|---------|
+| M1-EqualRank | 0.83507525 | 0.15000000 |
+| M2-Dynamic | 0.86468297 | 0.30000000 |
+| M3-M3_conformal | 0.86448517 | 0.30000000 |
+
+**M3 vs M2:**
+- Utility 差: -0.00019780
+- Failure 差: 0.00000000
+
+### Run 2
+
+- **成功:** ✅
+- **时间戳:** 2026-08-19T01:20:12.146094+00:00
+- **Selections Hash:** `9bfb7351216ba2c7`
+
+**M3 Gate:**
+- 状态: ❌ FAIL
+- 方法: M3_conformal
+
+**关键指标:**
+
+| 方法 | Utility | Failure |
+|------|---------|---------|
+| M1-EqualRank | 0.83507525 | 0.15000000 |
+| M2-Dynamic | 0.86468297 | 0.30000000 |
+| M3-M3_conformal | 0.86448517 | 0.30000000 |
+
+**M3 vs M2:**
+- Utility 差: -0.00019780
+- Failure 差: 0.00000000
+
+### Run 3
+
+- **成功:** ✅
+- **时间戳:** 2026-08-19T01:20:41.805249+00:00
+- **Selections Hash:** `8d96d32246724d9a`
+
+**M3 Gate:**
+- 状态: ✅ PASS
+- 方法: M3_conformal
+
+**关键指标:**
+
+| 方法 | Utility | Failure |
+|------|---------|---------|
+| M1-EqualRank | 0.83507525 | 0.15000000 |
+| M2-Dynamic | 0.86468297 | 0.30000000 |
+| M3-M3_conformal | 0.86544047 | 0.30000000 |
+
+**M3 vs M2:**
+- Utility 差: 0.00075750
+- Failure 差: 0.00000000
+
+## 一致性检查
+
+### 总体结果
+❌ 发现不一致
+
+### 不一致项
+
+- Selections 不一致: ['9bfb7351216ba2c7', '9bfb7351216ba2c7', '8d96d32246724d9a']
+- M3_GATE_PASS 不一致: [False, False, True]
+
+### 关键指标详情
+
+**M1-EqualRank.mean_utility**: ✅
+
+- Values: ['0.83507525', '0.83507525', '0.83507525']
+- Range: 0.00000000e+00
+- Consistent: True
+
+**M1-EqualRank.main_failure_rate**: ✅
+
+- Values: ['0.15000000', '0.15000000', '0.15000000']
+- Range: 0.00000000e+00
+- Consistent: True
+
+**M2-Dynamic.mean_utility**: ✅
+
+- Values: ['0.86468297', '0.86468297', '0.86468297']
+- Range: 0.00000000e+00
+- Consistent: True
+
+**M2-Dynamic.main_failure_rate**: ✅
+
+- Values: ['0.30000000', '0.30000000', '0.30000000']
+- Range: 0.00000000e+00
+- Consistent: True
+
+**M3_GATE_PASS**: ❌
+
+- Values: ['FAIL', 'FAIL', 'PASS']
+- Consistent: False
+
+**M3_GATE_CONDITION_CONSISTENT**: ❌
+
+- Values: ['FAIL', 'FAIL', 'PASS']
+- Consistent: False
+
+**M3_M2_UTILITY_DIFF_CONSISTENT**: ❌
+
+- Values: ['-0.00019780', '-0.00019780', '0.00075750']
+- Range: 9.55302500e-04
+- Consistent: False
+
+
+## 关于 M3 Gate 敏感性的分析
+
+**M3 vs M2 Utility 差异一致性:**
+- 差异值: [-0.00019780333333341282, -0.00019780333333341282, 0.0007574991666666753]
+- 范围: 9.55302500e-04
+- 一致性: ❌
+
+**关键发现:**
+
+⚠️ **M3 vs M2 Utility 差异基本一致** - 差异在可接受范围内，但仍需注意这可能是微小的随机波动。
+
+## M3 Gate 跨运行稳定性
+
+**Gate 条件一致性:**
+- 跨运行一致: ❌
+- Gate 条件判定: [False, False, True]
+
+**最终判定:**
+
+❌ **REPRODUCIBILITY_FAILURE** - 固定随机种子后，关键指标在3次运行间不一致，结果不稳定。
+
+**建议:**
+- 需要进一步排查随机因素
+- 在结果稳定之前不应进入 Phase 3
+- 可能需要重新考虑 M3 gate 的设计
+
+## 下一步建议
+
+**如果 REPRODUCIBILITY_PASS:**
+
+**如果 REPRODUCIBILITY_FAILURE:**
+- 需要先解决训练随机性，不能进入 Phase 3
+- 重新考虑 M3 gate 的设计和阈值
+- 重点关注 M3 vs M2 utility 差异的稳定性
+
+---
+
+**Reproducibility Audit 完成**
+
+**文件:**
+- 每次运行的报告: output/run_{N}/report.json
+- 每次运行的 trace: output/run_{N}/trace.jsonl

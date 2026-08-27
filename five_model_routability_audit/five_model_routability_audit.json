@@ -1,0 +1,254 @@
+{
+  "protocol": {
+    "models": [
+      "deepseek-chat",
+      "glm-5.2",
+      "qwen-plus",
+      "qwen-turbo",
+      "gemini-2.5-flash"
+    ],
+    "tasks": 400,
+    "repeats": 3,
+    "repeat_aggregation": "mean",
+    "tie_margin": 0.01,
+    "quality_rule": "objective; compliance=0.55*objective+0.45*dual_judge_mean",
+    "failure_rule": "reliability<1 or mean_quality<0.6",
+    "utility_rule": "0.45Q+0.20(1-min(C/.02,1))+0.15(1-min(L/10000,1))+0.20R",
+    "router_training_performed": false
+  },
+  "integrity": {
+    "repeat_rows": 6000,
+    "matrix_rows": 2000,
+    "duplicate_repeat_keys": 0,
+    "missing_repeat_keys": 0,
+    "v2_task_overlap": 0,
+    "repeats_sha256": "18d85784f4feb15fbf913fc999423a4dfb5a68660178a1af1ec460bfd95ee708",
+    "matrix_sha256": "b6abdb86a2fb8debb45996ec67572320c08b0dc4e8c44b86e1084c84b14c0fec"
+  },
+  "overall": {
+    "n": 400,
+    "best_single_utility_model": "qwen-plus",
+    "best_single_utility": 0.8191905680833333,
+    "utility_oracle": 0.885211520325,
+    "utility_oracle_gap": 0.0660209522416666,
+    "best_single_quality_model": "qwen-plus",
+    "best_single_quality": 0.836750375,
+    "quality_oracle": 0.9156035833333334,
+    "quality_oracle_gap": 0.07885320833333331
+  },
+  "utility_winner_distribution": {
+    "qwen-plus": 86,
+    "deepseek-chat": 42,
+    "qwen-turbo": 175,
+    "gemini-2.5-flash": 86,
+    "glm-5.2": 11
+  },
+  "quality_winner_distribution": {
+    "qwen-plus": 84,
+    "deepseek-chat": 259,
+    "glm-5.2": 36,
+    "qwen-turbo": 19,
+    "gemini-2.5-flash": 2
+  },
+  "unique_utility_winner": {
+    "qwen-plus": 72,
+    "deepseek-chat": 34,
+    "gemini-2.5-flash": 84,
+    "qwen-turbo": 89,
+    "glm-5.2": 11
+  },
+  "unique_quality_winner": {
+    "qwen-plus": 77,
+    "glm-5.2": 18,
+    "deepseek-chat": 14,
+    "qwen-turbo": 17,
+    "gemini-2.5-flash": 2
+  },
+  "unique_safe_model": {
+    "qwen-plus": 37,
+    "glm-5.2": 14,
+    "qwen-turbo": 4,
+    "deepseek-chat": 5
+  },
+  "gemini_vs_deepseek": {
+    "deepseek_wins": 262,
+    "both_fail": 105,
+    "gemini_wins": 127,
+    "tie": 11,
+    "n": 400,
+    "gemini_win_rate": 0.3175,
+    "deepseek_win_rate": 0.655
+  },
+  "winner_entropy": {
+    "nats": 1.3581039162057273,
+    "normalized": 0.8438374079008382,
+    "top_winner_share": 0.4375
+  },
+  "conditional_oracle_gaps": {
+    "capability:kg_reasoning": {
+      "n": 87,
+      "best_single_utility_model": "gemini-2.5-flash",
+      "best_single_utility": 0.9356189379310346,
+      "utility_oracle": 0.9629875255938697,
+      "utility_oracle_gap": 0.02736858766283512,
+      "best_single_quality_model": "deepseek-chat",
+      "best_single_quality": 1.0,
+      "quality_oracle": 1.0,
+      "quality_oracle_gap": 0.0
+    },
+    "capability:long_context_ge_8000_chars": {
+      "n": 10,
+      "best_single_utility_model": "gemini-2.5-flash",
+      "best_single_utility": 0.92872874,
+      "utility_oracle": 0.9584517850000001,
+      "utility_oracle_gap": 0.029723045000000003,
+      "best_single_quality_model": "deepseek-chat",
+      "best_single_quality": 1.0,
+      "quality_oracle": 1.0,
+      "quality_oracle_gap": 0.0
+    },
+    "capability:table_reasoning": {
+      "n": 178,
+      "best_single_utility_model": "deepseek-chat",
+      "best_single_utility": 0.8358281609550562,
+      "utility_oracle": 0.9094710092696628,
+      "utility_oracle_gap": 0.07364284831460666,
+      "best_single_quality_model": "glm-5.2",
+      "best_single_quality": 0.8417602996254682,
+      "quality_oracle": 0.9559925093632959,
+      "quality_oracle_gap": 0.11423220973782777
+    },
+    "dataset:FinQA": {
+      "n": 104,
+      "best_single_utility_model": "deepseek-chat",
+      "best_single_utility": 0.8128291519230769,
+      "utility_oracle": 0.8922160698397437,
+      "utility_oracle_gap": 0.07938691791666674,
+      "best_single_quality_model": "glm-5.2",
+      "best_single_quality": 0.8317307692307693,
+      "quality_oracle": 0.9342948717948717,
+      "quality_oracle_gap": 0.10256410256410242
+    },
+    "dataset:FinReflectKG-EvalBench-derived": {
+      "n": 87,
+      "best_single_utility_model": "gemini-2.5-flash",
+      "best_single_utility": 0.9356189379310346,
+      "utility_oracle": 0.9629875255938697,
+      "utility_oracle_gap": 0.02736858766283512,
+      "best_single_quality_model": "deepseek-chat",
+      "best_single_quality": 1.0,
+      "quality_oracle": 1.0,
+      "quality_oracle_gap": 0.0
+    },
+    "dataset:ObliQA": {
+      "n": 105,
+      "best_single_utility_model": "qwen-plus",
+      "best_single_utility": 0.7455456433333333,
+      "utility_oracle": 0.7651333015555556,
+      "utility_oracle_gap": 0.019587658222222304,
+      "best_single_quality_model": "qwen-plus",
+      "best_single_quality": 0.7231125396825395,
+      "quality_oracle": 0.7530930158730158,
+      "quality_oracle_gap": 0.02998047619047628
+    },
+    "dataset:TAT-QA": {
+      "n": 104,
+      "best_single_utility_model": "deepseek-chat",
+      "best_single_utility": 0.8529391798076923,
+      "utility_oracle": 0.9343771680448718,
+      "utility_oracle_gap": 0.08143798823717951,
+      "best_single_quality_model": "deepseek-chat",
+      "best_single_quality": 0.8843365384615385,
+      "quality_oracle": 0.9903846153846154,
+      "quality_oracle_gap": 0.10604807692307694
+    },
+    "risk:high": {
+      "n": 192,
+      "best_single_utility_model": "qwen-plus",
+      "best_single_utility": 0.8191834151909722,
+      "utility_oracle": 0.8547859968229168,
+      "utility_oracle_gap": 0.03560258163194463,
+      "best_single_quality_model": "qwen-plus",
+      "best_single_quality": 0.8485771701388889,
+      "quality_oracle": 0.8649727430555556,
+      "quality_oracle_gap": 0.016395572916666712
+    },
+    "risk:low": {
+      "n": 28,
+      "best_single_utility_model": "qwen-plus",
+      "best_single_utility": 0.827575486904762,
+      "utility_oracle": 0.9149307872619048,
+      "utility_oracle_gap": 0.08735530035714278,
+      "best_single_quality_model": "qwen-plus",
+      "best_single_quality": 0.9472738095238096,
+      "quality_oracle": 1.0,
+      "quality_oracle_gap": 0.05272619047619043
+    },
+    "risk:medium": {
+      "n": 180,
+      "best_single_utility_model": "qwen-turbo",
+      "best_single_utility": 0.8340355491481481,
+      "utility_oracle": 0.9130424149814814,
+      "utility_oracle_gap": 0.07900686583333327,
+      "best_single_quality_model": "glm-5.2",
+      "best_single_quality": 0.8442796296296295,
+      "quality_oracle": 0.9564814814814816,
+      "quality_oracle_gap": 0.11220185185185205
+    },
+    "task_type:financial_audit_compliance_qa": {
+      "n": 105,
+      "best_single_utility_model": "qwen-plus",
+      "best_single_utility": 0.7455456433333333,
+      "utility_oracle": 0.7651333015555556,
+      "utility_oracle_gap": 0.019587658222222304,
+      "best_single_quality_model": "qwen-plus",
+      "best_single_quality": 0.7231125396825395,
+      "quality_oracle": 0.7530930158730158,
+      "quality_oracle_gap": 0.02998047619047628
+    },
+    "task_type:financial_kg_grounded_qa": {
+      "n": 87,
+      "best_single_utility_model": "gemini-2.5-flash",
+      "best_single_utility": 0.9356189379310346,
+      "utility_oracle": 0.9629875255938697,
+      "utility_oracle_gap": 0.02736858766283512,
+      "best_single_quality_model": "deepseek-chat",
+      "best_single_quality": 1.0,
+      "quality_oracle": 1.0,
+      "quality_oracle_gap": 0.0
+    },
+    "task_type:financial_numerical_reasoning": {
+      "n": 104,
+      "best_single_utility_model": "deepseek-chat",
+      "best_single_utility": 0.8128291519230769,
+      "utility_oracle": 0.8922160698397437,
+      "utility_oracle_gap": 0.07938691791666674,
+      "best_single_quality_model": "glm-5.2",
+      "best_single_quality": 0.8317307692307693,
+      "quality_oracle": 0.9342948717948717,
+      "quality_oracle_gap": 0.10256410256410242
+    },
+    "task_type:financial_table_text_reasoning": {
+      "n": 104,
+      "best_single_utility_model": "deepseek-chat",
+      "best_single_utility": 0.8529391798076923,
+      "utility_oracle": 0.9343771680448718,
+      "utility_oracle_gap": 0.08143798823717951,
+      "best_single_quality_model": "deepseek-chat",
+      "best_single_quality": 0.8843365384615385,
+      "quality_oracle": 0.9903846153846154,
+      "quality_oracle_gap": 0.10604807692307694
+    }
+  },
+  "routability_gate": {
+    "complete_400x5x3": true,
+    "train_test_overlap_zero": true,
+    "utility_oracle_gap_ge_0.02": true,
+    "quality_oracle_gap_ge_0.03": true,
+    "normalized_winner_entropy_ge_0.35": true,
+    "top_utility_winner_share_le_0.75": true,
+    "gemini_win_rate_ge_0.10": true,
+    "deepseek_win_rate_ge_0.10": true,
+    "pass": true
+  }
+}

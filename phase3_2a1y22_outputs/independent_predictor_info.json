@@ -1,0 +1,47 @@
+{
+  "version": "independent_predictor_phase3_2a1y22",
+  "timestamp": "2026-08-20T12:56:27.602705+00:00",
+  "training_data_sources": [
+    "original_finrome_300",
+    "safety_expansion_v1"
+  ],
+  "strictly_excluded": [
+    "safety_expansion_v2",
+    "calibration20",
+    "test"
+  ],
+  "feature_config": {
+    "type": "task_risk_model_identity",
+    "components": [
+      "task_id",
+      "risk_level",
+      "model_identity"
+    ],
+    "version": "frozen_phase3_2a1y22"
+  },
+  "feature_names": [
+    "risk_level",
+    "task_type",
+    "dataset",
+    "context_length",
+    "model_identity"
+  ],
+  "model_type": "RandomForestClassifier",
+  "hyperparameters": {
+    "n_estimators": 100,
+    "max_depth": 10,
+    "min_samples_split": 5,
+    "min_samples_leaf": 2,
+    "random_state": 42
+  },
+  "calibration_method": "Platt (sigmoid)",
+  "training_samples": 860,
+  "failure_prevalence": 0.08139534883720931,
+  "feature_importance": {
+    "risk_level": 0.0,
+    "task_type": 0.0,
+    "dataset": 0.0,
+    "context_length": 0.8472498037547412,
+    "model_identity": 0.1527501962452587
+  }
+}

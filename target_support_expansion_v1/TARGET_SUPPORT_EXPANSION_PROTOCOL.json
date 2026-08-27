@@ -1,0 +1,52 @@
+{
+  "version": "target-support-expansion-v1",
+  "status": "FROZEN_BEFORE_GEMINI_OUTCOMES",
+  "seed": 20260828,
+  "selection_outcome_blind": true,
+  "selection_features": [
+    "dataset",
+    "risk_level",
+    "task_type",
+    "task id uniqueness",
+    "normalized text uniqueness",
+    "four-model key completeness"
+  ],
+  "forbidden_selection_features": [
+    "quality",
+    "utility",
+    "failure",
+    "winner",
+    "any model response text",
+    "v2 diagnostic outcomes"
+  ],
+  "tasks": 300,
+  "distribution": {
+    "ObliQA:high": 100,
+    "TAT-QA:medium": 150,
+    "TAT-QA:low": 50
+  },
+  "source_distribution": {
+    "finrome_legacy_v2_confirmatory": 140,
+    "finrome_300": 50,
+    "finrome_300_confirmatory_v3": 52,
+    "safety_expansion_v1": 58
+  },
+  "models": [
+    "deepseek-chat",
+    "glm-5.2",
+    "qwen-plus",
+    "qwen-turbo",
+    "gemini-2.5-flash"
+  ],
+  "repeats": 3,
+  "existing_four_model_calls": 3600,
+  "new_gemini_response_calls": 900,
+  "compliance_tasks": 100,
+  "new_dual_judge_calls": 600,
+  "old_pilot_overlap": 0,
+  "v2_overlap": 0,
+  "quality_rule": "objective; compliance=0.55*objective+0.45*dual_judge_mean",
+  "repeat_aggregation": "mean",
+  "best_repeat_prohibited": true,
+  "next_gate": "rerun frozen C1 and group-conditional protocols; no FRAR or v3 unless gate passes"
+}

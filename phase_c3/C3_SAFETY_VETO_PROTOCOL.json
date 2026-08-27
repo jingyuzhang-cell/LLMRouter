@@ -1,0 +1,22 @@
+{
+  "version": "c3-safety-veto-v1",
+  "status": "FROZEN_BEFORE_SAFETY_VETO_EXECUTION",
+  "scope": "419-task nested OOF development only",
+  "base_router": "frozen noise-aware selective advantage",
+  "normal_risk_rule": "switch when one-sided 90% ensemble LCB = mean-1.645*std > 0",
+  "high_risk_rule": "switch when one-sided 95% ensemble LCB = mean-1.96*std > 0",
+  "threshold_search": false,
+  "additional_model": false,
+  "features_changed": false,
+  "diagnostic_90_tasks_used": false,
+  "v2_used": false,
+  "external_api_calls": 0,
+  "development_gate": {
+    "gap_recovery_strictly_above": 0,
+    "bootstrap_probability_delta_positive_min": 0.90,
+    "failure_not_above_best_single": true,
+    "high_risk_failure_not_above_best_single": true
+  },
+  "pass_action": "freeze as C3 primary candidate and validate once on new v3",
+  "fail_action": "stop safety-veto development without threshold sweep"
+}

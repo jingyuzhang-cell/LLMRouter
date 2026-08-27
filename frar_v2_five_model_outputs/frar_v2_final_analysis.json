@@ -1,0 +1,312 @@
+{
+  "diagnostics": {
+    "test_quality_by_single_model": {
+      "deepseek-chat": 0.6585932914180794,
+      "glm-5.2": 0.6104391432397941,
+      "qwen-plus": 0.6274882301146568,
+      "qwen-turbo": 0.6070478604905811,
+      "gemini-2.5-flash": 0.7794642857142857
+    },
+    "posthoc_test_best_single": "gemini-2.5-flash",
+    "posthoc_test_best_single_quality": 0.7794642857142857,
+    "quality_oracle": 0.8940441850631801,
+    "quality_oracle_gap": {
+      "best_single": 0.26655595494852324,
+      "route_pairwise": 0.12154361340471997,
+      "frar_v2": 0.12574783431153735
+    },
+    "frar_selection_change_vs_posthoc_test_best": 0.7428571428571429,
+    "pairwise_cv_mean_auc": 0.7869749691861349,
+    "pairwise_cv_mean_accuracy": 0.8230000000000001
+  },
+  "risk_selection": {
+    "route_pairwise": {
+      "medium": {
+        "deepseek-chat": 60
+      },
+      "high": {
+        "gemini-2.5-flash": 38,
+        "qwen-plus": 2
+      },
+      "low": {
+        "deepseek-chat": 40
+      }
+    },
+    "frar_v2": {
+      "medium": {
+        "deepseek-chat": 60
+      },
+      "high": {
+        "gemini-2.5-flash": 36,
+        "qwen-plus": 4
+      },
+      "low": {
+        "deepseek-chat": 40
+      }
+    }
+  },
+  "paired_bootstrap": {
+    "best_single": {
+      "quality_frar_minus_baseline": {
+        "mean": 0.14080812063698603,
+        "ci95_low": 0.10518679287887035,
+        "ci95_high": 0.17665148879204673,
+        "p_two_sided": 0.0
+      },
+      "utility_frar_minus_baseline": {
+        "mean": 0.04392321138858949,
+        "ci95_low": 0.026005533935861736,
+        "ci95_high": 0.06202368509145793,
+        "p_two_sided": 0.0
+      },
+      "failure_baseline_minus_frar": {
+        "mean": 0.1738095238095238,
+        "ci95_low": 0.1261904761904762,
+        "ci95_high": 0.22142857142857142,
+        "p_two_sided": 0.0
+      }
+    },
+    "cost_only": {
+      "quality_frar_minus_baseline": {
+        "mean": 0.1612484902610616,
+        "ci95_low": 0.12387419444984794,
+        "ci95_high": 0.19840662875063003,
+        "p_two_sided": 0.0
+      },
+      "utility_frar_minus_baseline": {
+        "mean": 0.020943112274697022,
+        "ci95_low": 0.000581691317261954,
+        "ci95_high": 0.04120944072680537,
+        "p_two_sided": 0.045
+      },
+      "failure_baseline_minus_frar": {
+        "mean": 0.2119047619047619,
+        "ci95_low": 0.1595238095238095,
+        "ci95_high": 0.2642857142857143,
+        "p_two_sided": 0.0
+      }
+    },
+    "utility_only": {
+      "quality_frar_minus_baseline": {
+        "mean": 0.1612484902610616,
+        "ci95_low": 0.12387419444984794,
+        "ci95_high": 0.19840662875063003,
+        "p_two_sided": 0.0
+      },
+      "utility_frar_minus_baseline": {
+        "mean": 0.020943112274697022,
+        "ci95_low": 0.000581691317261954,
+        "ci95_high": 0.04120944072680537,
+        "p_two_sided": 0.045
+      },
+      "failure_baseline_minus_frar": {
+        "mean": 0.2119047619047619,
+        "ci95_low": 0.1595238095238095,
+        "ci95_high": 0.2642857142857143,
+        "p_two_sided": 0.0
+      }
+    },
+    "rank_safety": {
+      "quality_frar_minus_baseline": {
+        "mean": 0.15575569316202997,
+        "ci95_low": 0.12019557943839297,
+        "ci95_high": 0.19174358634187288,
+        "p_two_sided": 0.0
+      },
+      "utility_frar_minus_baseline": {
+        "mean": 0.021004189900321546,
+        "ci95_low": 0.001024596691942742,
+        "ci95_high": 0.041055916447371194,
+        "p_two_sided": 0.0416
+      },
+      "failure_baseline_minus_frar": {
+        "mean": 0.1880952380952381,
+        "ci95_low": 0.14047619047619045,
+        "ci95_high": 0.2357142857142857,
+        "p_two_sided": 0.0
+      }
+    },
+    "route_pairwise": {
+      "quality_frar_minus_baseline": {
+        "mean": -0.004204220906817429,
+        "ci95_low": -0.011025428008828267,
+        "ci95_high": 0.0,
+        "p_two_sided": 0.2666
+      },
+      "utility_frar_minus_baseline": {
+        "mean": -0.0019275282365428304,
+        "ci95_low": -0.0050393349630804204,
+        "ci95_high": 0.0,
+        "p_two_sided": 0.2666
+      },
+      "failure_baseline_minus_frar": {
+        "mean": -0.0047619047619047615,
+        "ci95_low": -0.011904761904761904,
+        "ci95_high": 0.0,
+        "p_two_sided": 0.2666
+      }
+    },
+    "random": {
+      "quality_frar_minus_baseline": {
+        "mean": 0.13104071004934767,
+        "ci95_low": 0.09088183254233013,
+        "ci95_high": 0.17028154627318187,
+        "p_two_sided": 0.0
+      },
+      "utility_frar_minus_baseline": {
+        "mean": 0.06567809059798546,
+        "ci95_low": 0.044757265609757554,
+        "ci95_high": 0.08645588448112884,
+        "p_two_sided": 0.0
+      },
+      "failure_baseline_minus_frar": {
+        "mean": 0.18571428571428572,
+        "ci95_low": 0.13095238095238093,
+        "ci95_high": 0.2404761904761905,
+        "p_two_sided": 0.0
+      }
+    }
+  },
+  "frozen_frar_v1_ablation": {
+    "n_tasks": 140,
+    "mean_quality": 0.626901608307671,
+    "failure_rate": 0.21904761904761902,
+    "high_risk_failure_rate": 0.5416666666666666,
+    "mean_cost_usd": 0.00012492775238095237,
+    "mean_latency_ms": 295429.7888809524,
+    "mean_utility": 0.6651424495820096,
+    "mean_regret": 0.02451722623365969
+  },
+  "five_model_metrics": {
+    "random": {
+      "n_tasks": 140,
+      "mean_quality": 0.6372556407022951,
+      "failure_rate": 0.24285714285714285,
+      "high_risk_failure_rate": 0.4833333333333333,
+      "mean_cost_usd": 0.0012504721476190477,
+      "mean_latency_ms": 246639.88926190478,
+      "mean_utility": 0.6269295340183065,
+      "mean_regret": 0.13037888573838435,
+      "selection_counts": {
+        "gemini-2.5-flash": 23,
+        "qwen-turbo": 34,
+        "glm-5.2": 28,
+        "qwen-plus": 29,
+        "deepseek-chat": 26
+      },
+      "selection_change_vs_best_single": 0.7928571428571428
+    },
+    "best_single": {
+      "n_tasks": 140,
+      "mean_quality": 0.6274882301146568,
+      "failure_rate": 0.23095238095238096,
+      "high_risk_failure_rate": 0.5416666666666666,
+      "mean_cost_usd": 0.00022576673809523808,
+      "mean_latency_ms": 295345.98328571423,
+      "mean_utility": 0.6486844132277026,
+      "mean_regret": 0.10862400652898836,
+      "selection_counts": {
+        "qwen-plus": 140
+      }
+    },
+    "cost_only": {
+      "n_tasks": 140,
+      "mean_quality": 0.6070478604905811,
+      "failure_rate": 0.2690476190476191,
+      "high_risk_failure_rate": 0.6,
+      "mean_cost_usd": 1.4734466666666668e-05,
+      "mean_latency_ms": 297131.90614285716,
+      "mean_utility": 0.671664512341595,
+      "mean_regret": 0.08564390741509591,
+      "selection_counts": {
+        "qwen-turbo": 140
+      },
+      "selection_change_vs_best_single": 1.0
+    },
+    "route_pairwise": {
+      "n_tasks": 140,
+      "mean_quality": 0.7725005716584601,
+      "failure_rate": 0.05238095238095238,
+      "high_risk_failure_rate": 0.075,
+      "mean_cost_usd": 0.00047735590476190483,
+      "mean_latency_ms": 161716.5819047619,
+      "mean_utility": 0.6945351528528348,
+      "mean_regret": 0.06277326690385605,
+      "selection_counts": {
+        "deepseek-chat": 100,
+        "gemini-2.5-flash": 38,
+        "qwen-plus": 2
+      },
+      "selection_change_vs_best_single": 0.9857142857142858
+    },
+    "utility_only": {
+      "n_tasks": 140,
+      "mean_quality": 0.6070478604905811,
+      "failure_rate": 0.2690476190476191,
+      "high_risk_failure_rate": 0.6,
+      "mean_cost_usd": 1.4734466666666668e-05,
+      "mean_latency_ms": 297131.90614285716,
+      "mean_utility": 0.671664512341595,
+      "mean_regret": 0.08564390741509591,
+      "selection_counts": {
+        "qwen-turbo": 140
+      },
+      "selection_change_vs_best_single": 1.0
+    },
+    "rank_safety": {
+      "n_tasks": 140,
+      "mean_quality": 0.6125406575896127,
+      "failure_rate": 0.2452380952380952,
+      "high_risk_failure_rate": 0.5166666666666666,
+      "mean_cost_usd": 2.824214761904762e-05,
+      "mean_latency_ms": 296729.2324761905,
+      "mean_utility": 0.6716034347159704,
+      "mean_regret": 0.08570498504072041,
+      "selection_counts": {
+        "qwen-turbo": 104,
+        "qwen-plus": 36
+      },
+      "selection_change_vs_best_single": 0.7428571428571429
+    },
+    "frar_v2": {
+      "n_tasks": 140,
+      "mean_quality": 0.7682963507516427,
+      "failure_rate": 0.05714285714285714,
+      "high_risk_failure_rate": 0.09166666666666665,
+      "mean_cost_usd": 0.0004760307380952381,
+      "mean_latency_ms": 169799.46704761902,
+      "mean_utility": 0.6926076246162919,
+      "mean_regret": 0.06470079514039888,
+      "selection_counts": {
+        "deepseek-chat": 100,
+        "gemini-2.5-flash": 36,
+        "qwen-plus": 4
+      },
+      "selection_change_vs_best_single": 0.9714285714285714
+    },
+    "oracle": {
+      "n_tasks": 140,
+      "mean_quality": 0.8742457258349619,
+      "failure_rate": 0.038095238095238085,
+      "high_risk_failure_rate": 0.049999999999999996,
+      "mean_cost_usd": 0.00043704436190476195,
+      "mean_latency_ms": 80009.13947619048,
+      "mean_utility": 0.7573084197566909,
+      "mean_regret": 0.0,
+      "selection_counts": {
+        "gemini-2.5-flash": 92,
+        "deepseek-chat": 6,
+        "qwen-turbo": 33,
+        "qwen-plus": 9
+      },
+      "selection_change_vs_best_single": 0.9357142857142857
+    }
+  },
+  "interpretation": {
+    "routability_established": true,
+    "compatibility_router_success": true,
+    "fixed_weight_frar_v2_beats_training_selected_best_single": true,
+    "fixed_weight_frar_v2_beats_pure_pairwise": false,
+    "warning": "The illustrative 0.6/0.3/0.1 mixture underperforms pure pairwise compatibility; do not tune weights on v2 test outcomes."
+  }
+}

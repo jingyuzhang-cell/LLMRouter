@@ -1,0 +1,43 @@
+{
+  "version": "phase-c1-structural-interaction-v1",
+  "status": "FROZEN_BEFORE_C1_EXECUTION",
+  "objective": "learn task-model compatibility without dataset or task-type identity priors",
+  "v2_role": "distribution_shift_diagnostic_only",
+  "v2_prohibited_uses": [
+    "feature selection",
+    "hyperparameter selection",
+    "gate selection",
+    "FRAR weight selection",
+    "confirmatory claim"
+  ],
+  "development_split": "target-support-dev-split-v1",
+  "features": {
+    "allowed": [
+      "question/context/evidence lengths",
+      "table rows/columns/cells",
+      "numeric and percentage counts",
+      "arithmetic/multi-span/multi-hop indicators",
+      "evidence-span count and density",
+      "entity/citation/regulation/ambiguity indicators",
+      "retrieval burden",
+      "risk-level indicators"
+    ],
+    "forbidden": ["dataset ID", "task-type ID", "model outcomes", "gold answer", "v2 outcomes"]
+  },
+  "target": "pairwise delta utility residual after subtracting the training-pair global mean",
+  "predictor": "StandardScaler + Ridge(alpha=10)",
+  "aggregation": "least-squares Bradley-Terry latent score with zero-sum constraint",
+  "pairwise_tie_margin": 0.01,
+  "primary_gates": {
+    "development_validation_gap_recovery_min": 0.20,
+    "development_validation_utility_strictly_above_best_single": true
+  },
+  "secondary_gates": {
+    "pairwise_accuracy_lift_min": 0.03,
+    "oof_gap_recovery_min": 0.20,
+    "oracle_match_lift_min": 0.05,
+    "bootstrap_positive_probability_min": 0.95
+  },
+  "diagnostics_only": ["selection entropy", "selection counts", "leave-one-task-group-out"],
+  "final_confirmatory": "new v3 selected and collected only after C1 and any FRAR method are frozen"
+}
