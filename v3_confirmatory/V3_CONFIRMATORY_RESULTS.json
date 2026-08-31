@@ -1,0 +1,85 @@
+{
+  "status": "V3_CONFIRMATORY_FAIL",
+  "protocol_sha256": "ccaf4e7d2cab34667df8f6a06fcd987b95ec6c692802573340dae453e436552e",
+  "matrix_sha256": "66a13ce033b3b127fab658f4595826cb08c42aed5503f46706fd75b11ca3e457",
+  "decisions_sha256": "37443f84d696618f899c220669974eb99927e2d5f820515275a46c5f179e32de",
+  "training_tasks": 419,
+  "v3_tasks": 120,
+  "training_baseline_model": "qwen-plus",
+  "method": "frozen C3 noise-aware selective advantage, 90% LCB",
+  "metrics": {
+    "router_utility": 0.7766834951944445,
+    "best_single_utility": 0.7856213986111112,
+    "oracle_utility": 0.8306443658888888,
+    "oracle_gap": 0.04502296727777755,
+    "gap_recovery": -0.1985187551394073,
+    "delta_utility": -0.008937903416666669,
+    "delta_utility_ci95": [
+      -0.028591403822222215,
+      0.009354165759027774
+    ],
+    "bootstrap_probability_router_above_best": 0.1728,
+    "router_quality": 0.7955858333333333,
+    "best_single_quality": 0.8188512499999999,
+    "router_cost_usd": 0.00016225502222222223,
+    "best_single_cost_usd": 0.00010978738888888888,
+    "router_latency_ms": 375021.46547222225,
+    "best_single_latency_ms": 373551.0713055556,
+    "router_failure": 0.19166666666666668,
+    "best_single_failure": 0.16666666666666666,
+    "router_high_risk_failure": 0.25,
+    "best_single_high_risk_failure": 0.25,
+    "oracle_match": 0.31666666666666665,
+    "selection_counts": {
+      "deepseek-chat": 20,
+      "qwen-turbo": 14,
+      "qwen-plus": 77,
+      "gemini-2.5-flash": 6,
+      "glm-5.2": 3
+    },
+    "switch_count": 43,
+    "beneficial_switch_count": 15,
+    "harmful_switch_count": 28,
+    "beneficial_mean_gain": 0.08896008200000002,
+    "harmful_mean_loss": -0.08596248714285713,
+    "net_switch_utility": -1.07254841
+  },
+  "conditional": {
+    "TAT-medium": {
+      "n": 60,
+      "router_utility": 0.8015002090555556,
+      "best_single_utility": 0.8088265652777777,
+      "oracle_utility": 0.8756907685,
+      "gap_recovery": -0.1095706801122427,
+      "router_failure": 0.18333333333333332,
+      "best_single_failure": 0.15
+    },
+    "TAT-low": {
+      "n": 20,
+      "router_utility": 0.7999075583333334,
+      "best_single_utility": 0.8230991616666667,
+      "oracle_utility": 0.8478156623333332,
+      "gap_recovery": -0.9383044811278812,
+      "router_failure": 0.1,
+      "best_single_failure": 0.05
+    },
+    "Obli-high": {
+      "n": 40,
+      "router_utility": 0.7278463928333333,
+      "best_single_utility": 0.7320747670833333,
+      "oracle_utility": 0.75448911375,
+      "gap_recovery": -0.18864588439190066,
+      "router_failure": 0.25,
+      "best_single_failure": 0.25
+    }
+  },
+  "gates": {
+    "gap_recovery_ge_0.20": false,
+    "bootstrap_probability_ge_0.95": false,
+    "failure_router_le_best": false,
+    "high_risk_failure_router_le_best": true,
+    "pass": false
+  },
+  "frar_run": false,
+  "method_or_threshold_changed_after_v3": false
+}

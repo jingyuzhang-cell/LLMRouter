@@ -1,0 +1,28 @@
+{
+  "version": "phase-c6-response-aware-cascade-v1",
+  "status": "FROZEN_BEFORE_C6_EXECUTION",
+  "role": "post-C5-development-only-task-grouped-oof",
+  "anchor": "qwen-plus",
+  "specialist_candidates": ["deepseek-chat", "gemini-2.5-flash"],
+  "external_api_calls": 0,
+  "v3_outcomes_used": false,
+  "unit": "task-repeat anchor response",
+  "outer_cv": "KFold over 419 unique tasks; all three repeats of a task remain in the same fold",
+  "target": "anchor repeat failure = reliability < 1 or quality < 0.6",
+  "observable_inputs": ["question", "context", "table", "anchor answer", "risk level"],
+  "forbidden_inputs": ["gold answer", "derivation", "evidence annotations", "judge scores", "candidate outcomes", "v3 outcomes"],
+  "verifier": "class-balanced LogisticRegression(C=1, max_iter=2000) on train-fitted word TF-IDF plus deterministic response-consistency features",
+  "thresholds": {"low_or_medium_risk": 0.5, "high_risk": 0.35},
+  "specialist_selection": "one specialist per outer fold, selected only on training task-repeat mean utility",
+  "decision": "accept anchor below the risk-specific predicted-failure threshold; otherwise escalate",
+  "bootstrap_unit": "task after averaging its three repeat outcomes",
+  "bootstrap_samples": 10000,
+  "development_gate": {
+    "utility_above_anchor": true,
+    "bootstrap_probability_delta_positive_min": 0.9,
+    "failure_not_above_anchor": true,
+    "high_risk_failure_not_above_anchor": true
+  },
+  "pass_action": "freeze architecture, then prepare a new untouched v4 protocol before collecting outcomes",
+  "fail_action": "do not tune on v3; audit verifier recall and escalation precision on development data"
+}

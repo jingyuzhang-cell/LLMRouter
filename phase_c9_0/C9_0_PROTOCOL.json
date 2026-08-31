@@ -1,0 +1,17 @@
+{
+  "version": "phase-c9.0-capability-stratified-development-pool-v1",
+  "status": "FROZEN_BEFORE_POOL_CONSTRUCTION",
+  "target_tasks": 600,
+  "tasks_per_primary_stratum": 60,
+  "source_policy": "local raw financial QA sources only; no routing-result or response files",
+  "outcome_blind": true,
+  "exclude_exact_question_overlap_with": ["combined 509 development/validation tasks", "v3 confirmatory tasks"],
+  "near_duplicate_audit": "character 3-5 gram TF-IDF cosine against excluded prior tasks; flag >=0.85",
+  "within_pool_duplicate_policy": "normalized-question exact duplicates forbidden; near duplicates >=0.90 flagged",
+  "sampling_seed": 20260831,
+  "split": {"development_train": 480, "support_matched_validation": 120},
+  "split_policy": "12 validation tasks per primary stratum selected by stable seeded hash",
+  "external_api_calls": 0,
+  "model_outcomes_read": false,
+  "next_step": "manual blind review of flagged overlaps and capability assignments before any five-model call"
+}

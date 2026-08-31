@@ -1,0 +1,52 @@
+{
+  "version": "phase-c4-capability-requirement-v1",
+  "status": "FROZEN_BEFORE_C4_EXECUTION",
+  "role": "post-v3-development-only-nested-oof",
+  "motivation": "v3 utility gate failed; follow the predeclared capability-requirement branch",
+  "development_tasks": 419,
+  "external_api_calls": 0,
+  "v3_outcomes_used_for_training_or_selection": false,
+  "models": [
+    "deepseek-chat",
+    "glm-5.2",
+    "qwen-plus",
+    "qwen-turbo",
+    "gemini-2.5-flash"
+  ],
+  "observable_requirement_dimensions": [
+    "numerical",
+    "table",
+    "long_context",
+    "multi_hop",
+    "compliance",
+    "evidence_synthesis"
+  ],
+  "forbidden_features": [
+    "gold answer",
+    "gold derivation",
+    "evidence annotations",
+    "model response",
+    "judge score",
+    "utility or failure outcome",
+    "dataset ID",
+    "task-type ID",
+    "v3 outcomes"
+  ],
+  "outer_cv": "KFold(n_splits=5, shuffle=true, random_state=20260830)",
+  "inner_ensemble": "five train-only KFold fits; validation predictions are averaged",
+  "fold_baseline": "best single model by outer-train mean utility only",
+  "capability_estimator": "multi-output Ridge(alpha=10) from standardized six-dimensional requirements to utility",
+  "capability_definition": "the six train-fold Ridge coefficients for each model",
+  "advantage": "predicted candidate utility minus predicted fold-local baseline utility",
+  "selection_rule": "switch only when the maximum one-sided 90% inner-ensemble advantage LCB is above zero",
+  "bootstrap_unit": "task",
+  "bootstrap_samples": 10000,
+  "development_gate": {
+    "gap_recovery_strictly_above": 0,
+    "bootstrap_probability_delta_utility_positive_min": 0.90,
+    "failure_rate_max_above_best_single": 0.0,
+    "high_risk_failure_rate_max_above_best_single": 0.0
+  },
+  "pass_action": "freeze method and prepare a new outcome-blind v4 holdout before collecting outcomes",
+  "fail_action": "stop adding router complexity and report the routability-learnability gap"
+}

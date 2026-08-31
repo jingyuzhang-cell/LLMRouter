@@ -1,0 +1,33 @@
+{
+  "version": "phase-c7.1-signal-sufficiency-audit-v1",
+  "status": "FROZEN_BEFORE_C7_1_EXECUTION",
+  "role": "development-only diagnostic; no router selection or tuning",
+  "tasks": 419,
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+  "anchor": "qwen-plus",
+  "prediction_source": "phase_c7/C7_OOF_DECISIONS.jsonl",
+  "outcome_source": "existing three-repeat frozen development matrix",
+  "external_api_calls": 0,
+  "v3_outcomes_used": false,
+  "questions": [
+    "How large is the true top1-top2 mean-quality margin relative to OOF prediction error?",
+    "Which models have predictable absolute quality?",
+    "Are model advantages over Qwen-plus predictable in correlation and sign?",
+    "How stable are winners and pairwise advantages across repeats?"
+  ],
+  "metrics": {
+    "absolute": ["per-model MAE", "per-model RMSE", "per-model Spearman"],
+    "routing": ["advantage MAE", "advantage Spearman", "AUC for advantage > 0", "sign accuracy on non-ties"],
+    "margin": ["top1-top2 mean-quality margin quantiles", "fraction margin above prediction MAE", "margin-to-repeat-noise SNR"],
+    "stability": ["same winner all three repeats", "pairwise sign agreement", "cross-repeat replicable oracle gap"]
+  },
+  "bootstrap_unit": "task with all model/repeat outcomes paired",
+  "bootstrap_samples": 10000,
+  "decision_rule": {
+    "signal_insufficient": "median true margin below global OOF MAE and no non-anchor advantage reaches both AUC >= 0.65 and Spearman >= 0.20",
+    "stable_headroom": "cross-repeat replicable oracle gap > 0.02",
+    "next_if_both": "collect capability-stratified, input-structure-sampled development data; do not tune the current router",
+    "next_if_not_stable": "improve repeat/evaluation system before new routing data",
+    "next_if_predictable": "freeze a capability-aware router protocol on a new support-matched development validation"
+  }
+}

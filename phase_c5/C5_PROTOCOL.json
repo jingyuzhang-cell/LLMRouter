@@ -1,0 +1,28 @@
+{
+  "version": "phase-c5-routability-noise-ceiling-v1",
+  "status": "FROZEN_BEFORE_C5_EXECUTION",
+  "role": "development-only measurement audit",
+  "development_tasks": 419,
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+  "repeats": 3,
+  "external_api_calls": 0,
+  "v3_outcomes_used": false,
+  "cross_repeat_folds": [
+    "select on repeats 1+2; evaluate on repeat 0",
+    "select on repeats 0+2; evaluate on repeat 1",
+    "select on repeats 0+1; evaluate on repeat 2"
+  ],
+  "replicable_oracle": "per task, select the highest mean-utility model on the two selection repeats and score it on the held-out repeat",
+  "cross_repeat_best_single": "select one global model by mean utility across all tasks on the two selection repeats and score it on the held-out repeat",
+  "observed_oracle": "per task, select and score the best model on the same held-out repeat",
+  "stable_gap": "replicable oracle minus cross-repeat best single",
+  "noise_gap": "observed oracle minus replicable oracle",
+  "winner_ties": "deterministic model order; exact ties additionally reported",
+  "snr": "aggregate top1-top2 mean-utility margin divided by sqrt(sample variance top1 + sample variance top2 + 1e-6)",
+  "bootstrap_unit": "task with all model/repeat outcomes kept paired",
+  "bootstrap_samples": 10000,
+  "stable_gap_decision_threshold": 0.02,
+  "branch_if_stable_gap_ge_threshold": "pre-routing observables are insufficient; develop response-aware accept-vs-escalate cascade on development data only",
+  "branch_if_stable_gap_lt_threshold": "treat apparent routability as substantially noise-inflated; repair measurement before new routing work",
+  "specialist_pool_audit": "training-only cross-repeat stable complementarity of the anchor plus every one- and two-specialist subset"
+}

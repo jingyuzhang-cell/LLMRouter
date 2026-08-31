@@ -1,0 +1,26 @@
+{
+  "version": "phase-c8-router-learning-paradigm-benchmark-v1",
+  "status": "FROZEN_BEFORE_C8_EXECUTION",
+  "role": "development-only fair comparison on the existing frozen repeat matrix",
+  "tasks": 419,
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+  "repeats": 3,
+  "external_api_calls": 0,
+  "v3_outcomes_used": false,
+  "router_inputs": ["question", "context", "table"],
+  "forbidden_inputs": ["gold_answer", "derivation", "evidence", "dataset", "task_type", "risk_level", "responses", "judge scores", "v3 outcomes"],
+  "shared_features": "fold-local word TF-IDF (1,2) plus character TF-IDF (3,5)",
+  "shared_outer_cv": "KFold(5, shuffle=True, random_state=20260831) over unique tasks",
+  "targets": {
+    "hard_classification": "argmax of three-repeat mean quality",
+    "pairwise_preference": "for every model pair, fraction of aligned repeats won plus half credit for ties",
+    "performance_prediction": "three-repeat mean quality for every model"
+  },
+  "primary_selection_objective": "quality only; cost and latency excluded to isolate learning paradigm",
+  "primary_metrics": ["quality_mae where applicable", "pairwise_accuracy", "oracle_match", "quality_gain_vs_fold_best_single", "utility_gain_vs_fold_best_single"],
+  "bootstrap_unit": "task with model and repeat outcomes paired",
+  "bootstrap_samples": 10000,
+  "selection_rule": "select the model with highest predicted class probability, reconstructed pairwise score, or predicted quality",
+  "decision_rule": "report comparison without post-result tuning; multi-objective deployment remains a separate layer",
+  "next_action_if_no_method_passes": "do not add Router capacity or DAG; acquire new capability-contrast development tasks and reserve a new untouched holdout"
+}

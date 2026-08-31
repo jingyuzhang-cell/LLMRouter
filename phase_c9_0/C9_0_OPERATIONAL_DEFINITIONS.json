@@ -1,0 +1,20 @@
+{
+  "version": "c9-capability-operational-definitions-v1",
+  "status": "FROZEN_BEFORE_CONSTRUCT_REVIEW",
+  "precision_gates": {"default": 0.85, "compliance_regulation_reasoning": 0.90},
+  "definitions": {
+    "simple_extraction": "Answer is recoverable from one span or cell with no arithmetic and no dependent hop.",
+    "numerical_arithmetic": "Requires an explicit arithmetic, percentage, or ratio operation with depth at most two.",
+    "multi_step_numerical_reasoning": "Requires at least two dependent numerical operations or intermediate variables.",
+    "cross_row_column_table_reasoning": "Requires evidence from at least two different table row/column/cell groups.",
+    "table_text_hybrid_reasoning": "Both table evidence and prose evidence are necessary; either alone is insufficient.",
+    "long_context_understanding": "Rendered question context contains at least 2000 observable tokens.",
+    "multi_hop_reasoning": "Evidence 1 yields an intermediate fact needed to identify or interpret Evidence 2.",
+    "evidence_synthesis": "Answer integrates at least two independent, parallel evidence units without requiring a dependent chain.",
+    "compliance_regulation_reasoning": "Answer requires applying an obligation, prohibition, permission, eligibility condition, regulatory threshold, exception, or compliance-status rule; mere extraction of regulatory text is insufficient.",
+    "ambiguity_negation_exception": "A negation, exception, only-if condition, or genuine ambiguity changes the answer; incidental lexical occurrence is insufficient."
+  },
+  "long_context_token_threshold": 2000,
+  "review_visibility": ["task_id", "question", "context", "table", "proposed_capability", "source_dataset"],
+  "hidden_during_review": ["split", "model_names", "responses", "quality", "winner", "utility", "C7", "C8"]
+}

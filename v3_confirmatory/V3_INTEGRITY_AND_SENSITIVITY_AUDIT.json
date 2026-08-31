@@ -1,0 +1,91 @@
+{
+  "status": "V3_CONFIRMATORY_FAIL_WITH_PROTOCOL_DEVIATIONS",
+  "immutable_original_result": "V3_CONFIRMATORY_FAIL",
+  "structural_integrity": {
+    "repeat_rows": 1800,
+    "aggregate_rows": 600,
+    "decision_rows": 120,
+    "missing_keys": 0,
+    "duplicate_keys": 0,
+    "protocol_hash_matches_sidecar": true,
+    "tasks_hash_matches_sidecar": true,
+    "matrix_hash_matches_manifest": true
+  },
+  "protocol_deviations": [
+    {
+      "id": "unbounded_transport_recovery",
+      "severity": "material",
+      "finding": "Recovery continued through round 8 without a pre-frozen retry cap.",
+      "max_observed_recovery_round": 8,
+      "persistent_failure_attempt_counts_in_failure_log": {
+        "c590809e-0d49-462f-9246-73d4ee142290|glm-5.2|0": 8,
+        "c590809e-0d49-462f-9246-73d4ee142290|glm-5.2|1": 8,
+        "c590809e-0d49-462f-9246-73d4ee142290|glm-5.2|2": 8,
+        "4a5cd042-becf-4547-9367-2baf82cb0c1c|glm-5.2|2": 8
+      },
+      "interpretation": "Do not retry or replace these outcomes after v3 unblinding. Preserve them as provider failures."
+    },
+    {
+      "id": "gold_answer_feature_schema_violation",
+      "severity": "material",
+      "finding": "The frozen C3 schema forbids gold answer, but manual() reads gold_answer to derive three answer-type features.",
+      "static_source_evidence": true,
+      "interpretation": "C3 is not deployment-clean as implemented; C4 removes gold and evidence annotations."
+    }
+  ],
+  "persistent_provider_failures": {
+    "count": 4,
+    "keys": [
+      [
+        "c590809e-0d49-462f-9246-73d4ee142290",
+        "glm-5.2",
+        0
+      ],
+      [
+        "c590809e-0d49-462f-9246-73d4ee142290",
+        "glm-5.2",
+        1
+      ],
+      [
+        "c590809e-0d49-462f-9246-73d4ee142290",
+        "glm-5.2",
+        2
+      ],
+      [
+        "4a5cd042-becf-4547-9367-2baf82cb0c1c",
+        "glm-5.2",
+        2
+      ]
+    ],
+    "selected_by_router_count": 0
+  },
+  "reported_analysis": {
+    "router_utility": 0.7766834951944445,
+    "best_single_utility": 0.7856213986111112,
+    "oracle_utility": 0.8306443658888888,
+    "gap_recovery": -0.1985187551394073,
+    "bootstrap_probability_router_above_best": 0.1728,
+    "router_failure": 0.19166666666666668,
+    "best_single_failure": 0.16666666666666666,
+    "router_high_risk_failure": 0.25,
+    "best_single_high_risk_failure": 0.25
+  },
+  "optimistic_fixed_decision_sensitivity": {
+    "router_utility": 0.7766834951944445,
+    "best_single_utility": 0.7856213986111112,
+    "oracle_utility": 0.8306443658888888,
+    "gap_recovery": -0.1985187551394073,
+    "bootstrap_probability_router_above_best": 0.1728,
+    "router_failure": 0.19166666666666668,
+    "best_single_failure": 0.16666666666666666,
+    "router_high_risk_failure": 0.25,
+    "best_single_high_risk_failure": 0.25
+  },
+  "sensitivity_definition": "All four persistent empty GLM repeats are set to quality=1 and reliability=1; frozen routing decisions are not changed.",
+  "confirmatory_conclusion_changes_under_optimistic_sensitivity": false,
+  "post_unblinding_actions": [
+    "No v3 response was overwritten.",
+    "No C3 threshold or model was changed.",
+    "v3 is not reused as confirmation for C4 or later methods."
+  ]
+}

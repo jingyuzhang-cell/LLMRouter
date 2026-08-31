@@ -1,0 +1,119 @@
+{
+  "status": "C7_1_AUDIT_COMPLETE",
+  "decision": "PREREGISTER_CAPABILITY_AWARE_ROUTER_ON_NEW_VALIDATION",
+  "integrity": {
+    "tasks": 419,
+    "models": 5,
+    "repeats": 3,
+    "v3_outcomes_used": false,
+    "external_api_calls": 0,
+    "prediction_rows_reused_without_refit": 419,
+    "protocol_sha256": "e6902aeca417e5146b6eebe000cc38a85a94ac0d163a5f1de3e02509a9ce7c47"
+  },
+  "margin_vs_error": {
+    "quantiles": {
+      "0": 0.0,
+      "0.1": 0.0,
+      "0.25": 0.0,
+      "0.5": 0.0,
+      "0.75": 0.09635000000000005,
+      "0.9": 0.22972000000000006,
+      "1": 1.0
+    },
+    "mean": 0.07576268894192523,
+    "global_quality_mae": 0.24199116077976224,
+    "fraction_margin_above_global_mae": 0.09069212410501193,
+    "fraction_margin_above_0_10": 0.2458233890214797,
+    "median_margin_to_prediction_mae_ratio": 0.0,
+    "fraction_margin_noise_snr_below_1": 0.7732696897374701,
+    "median_margin_noise_snr": 0.0
+  },
+  "per_model_predictability": {
+    "deepseek-chat": {
+      "mae": 0.20926898748437703,
+      "rmse": 0.2556982622023006,
+      "spearman": 0.5849363480957859,
+      "actual_std": 0.28765481802679077,
+      "prediction_std": 0.07926021751495295
+    },
+    "glm-5.2": {
+      "mae": 0.21087875125628489,
+      "rmse": 0.25456757233699445,
+      "spearman": 0.5399534196411185,
+      "actual_std": 0.28670208834688554,
+      "prediction_std": 0.08256911510190149
+    },
+    "qwen-plus": {
+      "mae": 0.2064836628157299,
+      "rmse": 0.27102203440744876,
+      "spearman": 0.4788004944197898,
+      "actual_std": 0.27827820753917887,
+      "prediction_std": 0.04090215632372847
+    },
+    "qwen-turbo": {
+      "mae": 0.26120661321469346,
+      "rmse": 0.3119017021534115,
+      "spearman": 0.4672505259456391,
+      "actual_std": 0.33541307208159055,
+      "prediction_std": 0.0765043454518667
+    },
+    "gemini-2.5-flash": {
+      "mae": 0.3221177891277258,
+      "rmse": 0.3741413546239421,
+      "spearman": 0.24218893244233924,
+      "actual_std": 0.3917038878357348,
+      "prediction_std": 0.07844892934884815
+    }
+  },
+  "advantage_vs_qwen_plus": {
+    "deepseek-chat": {
+      "mae": 0.1549014078481314,
+      "spearman": 0.40968049268473605,
+      "auc_advantage_gt_0": 0.4543873729266988,
+      "sign_accuracy_non_ties": 0.7347826086956522,
+      "positive_prevalence": 0.15035799522673032,
+      "actual_advantage_std": 0.2801412034998562
+    },
+    "glm-5.2": {
+      "mae": 0.15388534964311876,
+      "spearman": 0.3703526523015386,
+      "auc_advantage_gt_0": 0.46468708114238577,
+      "sign_accuracy_non_ties": 0.7836734693877551,
+      "positive_prevalence": 0.12649164677804295,
+      "actual_advantage_std": 0.26832199682589697
+    },
+    "qwen-turbo": {
+      "mae": 0.19612381069962825,
+      "spearman": 0.35236993446984916,
+      "auc_advantage_gt_0": 0.4428840913854538,
+      "sign_accuracy_non_ties": 0.7851239669421488,
+      "positive_prevalence": 0.12410501193317422,
+      "actual_advantage_std": 0.3129405618447334
+    },
+    "gemini-2.5-flash": {
+      "mae": 0.28769404881168403,
+      "spearman": 0.29096000531153465,
+      "auc_advantage_gt_0": 0.6896647270712108,
+      "sign_accuracy_non_ties": 0.9340659340659341,
+      "positive_prevalence": 0.04295942720763723,
+      "actual_advantage_std": 0.3725534180462547
+    }
+  },
+  "repeat_stability": {
+    "same_winner_all_three_repeats": 0.6921241050119332,
+    "all_three_repeats_same_pairwise_sign": 0.7665871121718377,
+    "cross_repeat_replicable_oracle_gap": 0.054542760540970514,
+    "noise_induced_oracle_gap": 0.032444948289578446,
+    "stable_gap_ci95": [
+      0.03430413484486873,
+      0.07556922732696898
+    ]
+  },
+  "decision_evidence": {
+    "signal_insufficient": false,
+    "stable_headroom": true,
+    "predictable_non_anchor_advantages": [
+      "gemini-2.5-flash"
+    ]
+  }
+}

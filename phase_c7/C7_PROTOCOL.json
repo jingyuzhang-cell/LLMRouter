@@ -1,0 +1,32 @@
+{
+  "version": "phase-c7-soft-performance-action-router-v1",
+  "status": "FROZEN_BEFORE_C7_EXECUTION",
+  "role": "development-only grouped out-of-fold evaluation",
+  "motivation": "C4 recovered 0.95% of the oracle gap and C6 showed that anchor-failure prediction is not action aligned",
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+  "anchor": "qwen-plus",
+  "development_tasks": 419,
+  "external_api_calls": 0,
+  "v3_outcomes_used": false,
+  "observable_inputs": ["question", "context", "table"],
+  "forbidden_inputs": ["gold_answer", "derivation", "evidence", "dataset", "task_type", "candidate responses", "judge scores", "v3 outcomes"],
+  "quality_target": "per-task per-model mean quality over three frozen repeats; continuous rather than winner class",
+  "quality_predictor": "fold-local word+character TF-IDF Ridge; one shared query representation with five model outputs",
+  "decision_layer": "predicted quality plus fold-local model cost, latency, and reliability profiles; no cost or latency in the quality loss",
+  "utility_weights": {"quality": 0.45, "cost": 0.2, "latency": 0.15, "reliability": 0.2},
+  "near_best_tolerance": 0.02,
+  "catastrophic_switch_margin": 0.05,
+  "catastrophic_risk_max": 0.25,
+  "catastrophic_risk_estimator": "training-only Beta-smoothed empirical probability for each anchor-to-candidate action",
+  "outer_cv": "KFold(5, shuffle=True, random_state=20260831) over unique tasks",
+  "bootstrap_unit": "task with all models and repeats paired",
+  "bootstrap_samples": 10000,
+  "development_gate": {
+    "utility_above_fold_local_best_single": true,
+    "bootstrap_probability_delta_positive_min": 0.9,
+    "failure_not_above_fold_local_best_single": true,
+    "high_risk_failure_not_above_fold_local_best_single": true
+  },
+  "pass_action": "freeze implementation and preregister a new untouched v4 confirmation",
+  "fail_action": "report the failure; do not tune thresholds or use v3 for model selection"
+}

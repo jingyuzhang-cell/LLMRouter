@@ -1,0 +1,21 @@
+{
+  "amendment_id": "C9_0_PROTOCOL_AMENDMENT_001",
+  "timing": "before_any_model_evaluation_or_response_collection",
+  "reason": "Strict table-text necessity cannot be established from inference-time observable fields without using gold evidence or answer-source annotations.",
+  "replacement": {
+    "from": "table_text_hybrid_reasoning",
+    "to": "hierarchical_table_reasoning"
+  },
+  "hierarchical_table_definition": "A visible parent-child row hierarchy or multi-level column header exists, the question requires traversing that hierarchy, and a single-cell lookup is insufficient.",
+  "multi_step_definition": "There exist at least two primitive operations where the second operation depends on an intermediate result produced by the first.",
+  "frozen_unchanged_strata": [
+    "simple_extraction", "numerical_arithmetic", "cross_row_column_table_reasoning",
+    "long_context_understanding", "multi_hop_reasoning", "evidence_synthesis",
+    "compliance_regulation_reasoning", "ambiguity_negation_exception"
+  ],
+  "allowed_multihiertt_selection_fields": ["uid", "qa.question", "paragraphs", "tables"],
+  "forbidden_multihiertt_selection_fields": ["qa.answer", "qa.program", "qa.text_evidence", "qa.table_evidence", "qa.question_type"],
+  "outcome_accessed": false,
+  "model_response_accessed": false,
+  "api_calls": 0
+}

@@ -1,0 +1,30 @@
+{
+  "status": "C9_0_CONSTRUCT_REVIEW_FAIL",
+  "blind_review_policy": {
+    "compliance_reviewed": 60,
+    "other_strata_reviewed_each": 20,
+    "split_hidden": true,
+    "outcomes_hidden": true,
+    "model_names_hidden": true
+  },
+  "results": {
+    "simple_extraction": {"reviewed": 20, "valid": 19, "precision": 0.95, "gate": 0.85, "pass": true},
+    "numerical_arithmetic": {"reviewed": 20, "valid": 15, "precision": 0.75, "gate": 0.85, "pass": false},
+    "multi_step_numerical_reasoning": {"reviewed": 20, "valid": 4, "precision": 0.20, "gate": 0.85, "pass": false},
+    "cross_row_column_table_reasoning": {"reviewed": 20, "valid": 20, "precision": 1.0, "gate": 0.85, "pass": true},
+    "table_text_hybrid_reasoning": {"reviewed": 20, "valid": 0, "precision": 0.0, "gate": 0.85, "pass": false},
+    "long_context_understanding": {"reviewed": 60, "valid": 9, "precision": 0.15, "gate": 0.85, "pass": false, "criterion": "context_token_count >= 2000"},
+    "multi_hop_reasoning": {"reviewed": 20, "valid": 5, "precision": 0.25, "gate": 0.85, "pass": false},
+    "evidence_synthesis": {"reviewed": 20, "valid": 3, "precision": 0.15, "gate": 0.85, "pass": false},
+    "compliance_regulation_reasoning": {"reviewed": 60, "valid": 54, "precision": 0.90, "gate": 0.90, "pass": true},
+    "ambiguity_negation_exception": {"reviewed": 20, "valid": 1, "precision": 0.05, "gate": 0.85, "pass": false}
+  },
+  "passed_strata": ["simple_extraction", "cross_row_column_table_reasoning", "compliance_regulation_reasoning"],
+  "failed_strata": [
+    "numerical_arithmetic", "multi_step_numerical_reasoning", "table_text_hybrid_reasoning",
+    "long_context_understanding", "multi_hop_reasoning", "evidence_synthesis", "ambiguity_negation_exception"
+  ],
+  "decision": "REBUILD_FAILED_STRATA_ONLY_BEFORE_API",
+  "outcome_access": false,
+  "external_api_calls": 0
+}
