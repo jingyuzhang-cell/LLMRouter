@@ -1,0 +1,279 @@
+{
+  "version": "e2.1-confirmatory-node-specialization-v2",
+  "status": "READY_FOR_SHA256_FINALIZATION",
+  "power_analysis_completed": true,
+  "power_analysis_basis": "E2 exploratory N1 signal (Mean heuristic Δ = +0.117) informed realistic effect size estimate",
+
+  "experimental_chain": "E1.1_FAIL → E2_EXPLORATORY_POSITIVE → E2.1-A_OBJECTIVE_CONFIRMATION → E2.1-B_CAUSAL_VALIDATION → E2.2_ROUTER",
+
+  "finalized_parameters": {
+    "e2_1_a_tasks": 105,
+    "power_analysis": {
+      "minimum_effect_size": 0.04,
+      "estimated_sd": 0.16,
+      "target_power": 0.70,
+      "expected_power": 0.718,
+      "ci_width_95": 0.0612,
+      "ci_lower_bound_for_effect_0.04": 0.0094
+    },
+    "justification": "Achieves 71.8% power for effect size 0.04 based on E2 exploratory signal, with adequate precision (CI lower > 0)"
+  },
+
+  "e2_1_a_protocol": {
+    "primary_validation_layer": "Node-level Specialization Confirmation",
+
+    "tasks": {
+      "final_n": 105,
+      "power_analysis_completed": "BEFORE protocol finalization, outcome-blind",
+      "sources": ["FinLongDocQA", "TAT-QA", "FinanceBench", "long-context-financial-tasks"],
+      "selection_criteria": "Outcome-blind based on observable complexity, balanced across sources",
+      "diversity_requirement": "Representative distribution of evidence localization complexity"
+    },
+
+    "models": {
+      "candidates": ["qwen-plus", "glm-5.2", "deepseek"],
+      "anchor": "qwen-plus",
+      "repeats": 3,
+      "repeat_design": "Rotating held-out: (1,2)→3, (1,3)→2, (2,3)→1",
+      "total_estimated_calls": "105 × 3 × 3 = 945 N1 evidence calls",
+      "estimated_cost": "$4-5"
+    },
+
+    "primary_node": {
+      "node_id": "n1",
+      "node_type": "evidence_localization",
+      "output_format": "STRUCTURED_EVIDENCE_IDS_ONLY",
+      "required_output_schema": {
+        "evidence_ids": ["string IDs: docX_pY_sZ (text), tableA_rB_cC (tabular)"]
+      },
+      "prohibited_output": "Free-form text, explanations, evidence descriptions, reasoning",
+      "scoring_target": "Evidence ID retrieval capability, NOT language generation quality"
+    },
+
+    "gold_annotation": {
+      "required_fields": {
+        "gold_evidence_set": ["canonical evidence IDs"],
+        "acceptable_alternative_sets": [
+          {
+            "evidence_ids": ["equivalent evidence IDs"],
+            "equivalence_explanation": "brief justification of equivalence"
+          }
+        ]
+      },
+      "quality_control": {
+        "method": "Dual-annotation for 10-task subset (9.5%)",
+        "iaa_metric": "Mean Evidence F1 between annotators",
+        "iaa_threshold": 0.85,
+        "below_threshold_action": "Third senior annotator adjudication"
+      }
+    },
+
+    "scoring_system": {
+      "predicted_set": "Model output evidence IDs",
+      "gold_sets": "Union of gold_evidence_set and all acceptable_alternative_sets",
+      "calculations": {
+        "precision": "|Predicted ∩ Gold| / |Predicted|",
+        "recall": "|Predicted ∩ Gold| / |Gold|",
+        "task_quality": "max over gold sets of 2×P×R/(P+R)"
+      },
+      "tie_handling": {
+        "epsilon": 0.01,
+        "definition": "|Q₁ - Q₂| < 0.01 considered tie",
+        "margin_calculation": "Margin = Q_(1) - Q_(2), Tie Rate reported"
+      }
+    },
+
+    "primary_endpoint": {
+      "metric": "Stable Semantic Oracle Gap (G_N1)",
+      "semantic_quality": "Objective Evidence F1",
+      "calculation": "G_N1 = Q^stable-oracle_N1 - Q^best-single_N1",
+      "primary_pass_gate": "G_N1 ≥ 0.04 AND bootstrap 95% CI_lower(G_N1) > 0",
+      "statistical_requirement": "Both effect size and statistical significance must be met"
+    },
+
+    "secondary_endpoints": {
+      "stable_specialist_opportunity_rate": {
+        "metric": "S_N1",
+        "supporting_threshold": "S_N1 ≥ 10%",
+        "role": "Confirms specialist opportunity exists (supporting evidence)"
+      },
+      "margin_analysis": {
+        "metrics": ["Mean Margin", "Median Margin", "Tie Rate"],
+        "supporting_requirement": "Median Margin > 0",
+        "role": "Shows signal strength and separation (supporting evidence)"
+      },
+      "held_out_reversal_rate": {
+        "metric": "R_N1 (Held-out Top1–Top2 Reversal Rate)",
+        "role": "Stability diagnostic - REPORT ONLY, no success/fail gate"
+      }
+    },
+
+    "success_criteria": {
+      "primary_requirement": "G_N1 ≥ 0.04 AND 95% CI_lower(G_N1) > 0",
+      "secondary_support": "S_N1 ≥ 10% AND Median Margin > 0",
+      "overall_pass": "Primary requirement AND secondary support",
+      "fail_action": "STOP N1 hypothesis, exploratory signal was heuristic-driven"
+    },
+
+    "statistical_analysis": {
+      "method": "Task-level paired bootstrap (10,000 samples)",
+      "ci_level": 95,
+      "repeat_handling": "Average across three rotation schemes",
+      "multiple_comparison": "Bonferroni correction for secondary endpoints"
+    }
+  },
+
+  "e2_1_b_protocol": {
+    "conditional_execution": "ONLY if E2.1-A primary requirement PASS",
+
+    "experimental_design": {
+      "type": "Controlled variable - only N1 varies",
+      "tasks": "30-task PRE-FIXED subset from 105 (hash-based, outcome-blind)",
+      "selection_method": "Deterministic hash selection BEFORE any E2.1-A model results",
+      "selection_seed": 20260901
+    },
+
+    "arms": {
+      "arm_a": {
+        "name": "Qwen+ Baseline",
+        "n1_model": "qwen-plus",
+        "n2_n3_n4_model": "qwen-plus"
+      },
+      "arm_b": {
+        "name": "GLM-5.2 @ N1",
+        "n1_model": "glm-5.2",
+        "n2_n3_n4_model": "qwen-plus"
+      },
+      "arm_c": {
+        "name": "DeepSeek @ N1",
+        "n1_model": "deepseek",
+        "n2_n3_n4_model": "qwen-plus"
+      },
+      "arm_d": {
+        "name": "Gold Evidence @ N1",
+        "n1_input": "Human gold evidence IDs (no model call)",
+        "n2_n3_n4_model": "qwen-plus",
+        "purpose": "Theoretical ceiling for N1 improvement"
+      }
+    },
+
+    "downstream_control": {
+      "frozen_settings": {
+        "temperature": "Fixed provider default",
+        "seed": "Fixed if supported",
+        "prompts": "Identical across all arms",
+        "repeats": 3,
+        "analysis": "Task-level paired comparison"
+      },
+      "rationale": "Isolate causal effect of N1, minimize downstream sampling noise"
+    },
+
+    "call_calculation": {
+      "n1_model_calls": "3 arms × 30 tasks × 3 repeats = 270 calls",
+      "downstream_calls": "4 arms × 30 tasks × 3 nodes × 3 repeats = 1080 calls",
+      "total_planned_calls": "270 + 1080 = 1350 calls",
+      "hard_limits": {
+        "max_calls": 1500,
+        "max_cost_usd": 8.0
+      }
+    },
+
+    "causal_metrics": {
+      "specialist_gains": {
+        "glm_vs_qwen": "Q_final(GLM@N1) - Q_final(Qwen@N1)",
+        "deepseek_vs_qwen": "Q_final(DeepSeek@N1) - Q_final(Qwen@N1)"
+      },
+      "theoretical_ceiling": {
+        "gold_vs_qwen": "Q_final(Gold@N1) - Q_final(Qwen@N1)",
+        "interpretation": "Maximum possible N1 improvement"
+      },
+      "primary_question": "Mean ΔQ_final > 0 with 95% CI_lower > 0?",
+      "secondary_question": "Positive delta rate ≥ 60%?"
+    },
+
+    "success_criteria": {
+      "primary": "Mean ΔQ_final > 0 AND 95% CI_lower(ΔQ_final) > 0",
+      "secondary": "Positive delta rate ≥ 60%",
+      "ceiling_check": "Gold@N1 shows meaningful improvement (confirms N1 is bottleneck)",
+      "cost_benefit": "Quality gain justified by cost increase",
+      "fail_action": "Specialization exists but lacks end-to-end value"
+    }
+  },
+
+  "predefined_outcomes": {
+    "outcome_a_full_support": {
+      "conditions": [
+        "E2.1-A: G_N1 ≥ 0.04 AND CI_lower > 0",
+        "E2.1-B: ΔQ_final > 0 AND CI_lower > 0"
+      ],
+      "interpretation": "Objective node specialization exists AND provides end-to-end value",
+      "action": "Proceed to E2.2 Router training"
+    },
+    "outcome_b_node_only": {
+      "conditions": [
+        "E2.1-A: G_N1 ≥ 0.04 AND CI_lower > 0",
+        "E2.1-B: ΔQ_final ≤ 0 OR CI includes 0"
+      ],
+      "interpretation": "Specialization exists but final quality gain not established",
+      "action": "Investigate bottleneck transmission, do not train full router"
+    },
+    "outcome_c_no_confirmation": {
+      "conditions": [
+        "E2.1-A: G_N1 < 0.04 OR CI_lower ≤ 0"
+      ],
+      "interpretation": "Objective node-level specialization not confirmed",
+      "action": "STOP N1 hypothesis, exploratory signal was heuristic-driven"
+    }
+  },
+
+  "prohibited_actions": {
+    "current_30_task_reuse": "PERMANENTLY SEALED - Cannot enter E2.1",
+    "router_training": "FORBIDDEN until both E2.1-A and E2.1-B PASS",
+    "post_hoc_threshold_adjustment": "FORBIDDEN after seeing any model results",
+    "sample_size_post_hoc_increase": "FORBIDDEN to 'fix' borderline results",
+    "outcome_based_subset_selection": "FORBIDDEN for E2.1-B 30-task selection"
+  },
+
+  "frozen_parameters": {
+    "e2_1_a_tasks": 105,
+    "e2_1_b_tasks": 30,
+    "tie_epsilon": 0.01,
+    "iaa_threshold": 0.85,
+    "minimum_effect_size": 0.04,
+    "secondary_opportunity_threshold": 0.10,
+    "selection_seed": 20260901,
+    "repeats": 3,
+    "primary_gate": "G_N1 ≥ 0.04 AND CI_lower > 0",
+    "rotation_scheme": "Three-way rotating held-out: (1,2)→3, (1,3)→2, (2,3)→1"
+  },
+
+  "documentation_requirements": {
+    "pre_registration": "All analysis plans frozen BEFORE execution",
+    "sha256_archival": "Final protocol archived with SHA256 after power analysis",
+    "transparency": "All limitations explicitly reported",
+    "reproducibility": "Complete pipeline version-controlled"
+  },
+
+  "scientific_contribution_statement": "We establish a controlled decomposition-to-routing causal chain in complex financial reasoning through objective evidence-level validation and end-to-end causal testing.",
+
+  "final_execution_order": [
+    "Blind power/precision analysis (COMPLETED)",
+    "Determine final N = 105",
+    "Freeze complete E2.1-A/B protocol",
+    "Calculate SHA256",
+    "Gold evidence dual annotation",
+    "IAA calculation and adjudication",
+    "E2.1-A execution (945 calls)",
+    "E2.1-A PASS/FAIL gate",
+    "E2.1-B execution ONLY if PASS (1350 calls)",
+    "E2.1-B PASS/FAIL gate",
+    "E2.2 router training ONLY if both PASS"
+  ],
+
+  "status_summary": {
+    "e2_stage_1": "PERMANENTLY SEALED as EXPLORATORY-POSITIVE",
+    "e2_1_power_analysis": "COMPLETED - N=105 recommended",
+    "e2_1_protocol": "READY FOR SHA256 FINALIZATION",
+    "next_action": "Calculate SHA256 and begin execution"
+  }
+}

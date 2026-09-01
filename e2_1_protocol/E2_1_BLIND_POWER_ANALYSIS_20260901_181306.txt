@@ -1,0 +1,88 @@
+================================================================================
+E2.1 BLIND POWER/PRECISION ANALYSIS
+================================================================================
+
+ANALYSIS PURPOSE:
+  - Determine appropriate sample size for E2.1-A BEFORE protocol finalization
+  - Outcome-blind: No E2.1 model results used in analysis
+  - Based on minimum effect size: G_N1 >= 0.03
+  - Target: 80% power with 95% confidence
+
+ANALYSIS PARAMETERS:
+  - Minimum effect size: 0.03 (Stable Semantic Oracle Gap)
+  - Alpha: 0.05 (95% confidence interval)
+  - Target power: 0.80 (80% statistical power)
+  - Models: 3 (qwen-plus, glm-5.2, deepseek)
+  - Repeats: 3 (rotating held-out design)
+  - Quality metric: Evidence F1 (0.0 to 1.0 scale)
+  - Estimated SD of paired differences: 0.20 (conservative)
+
+CANDIDATE SAMPLE SIZE ANALYSIS:
+
+N      Power      CI Width     CI Lower     Adequate  
+------------------------------------------------------
+40     0.152     0.1240      -0.0320      ❌ NO      
+50     0.180     0.1109      -0.0254      ❌ NO      
+60     0.208     0.1012      -0.0206      ❌ NO      
+70     0.236     0.0937      -0.0169      ❌ NO      
+80     0.263     0.0877      -0.0138      ❌ NO      
+90     0.291     0.0826      -0.0113      ❌ NO      
+100    0.318     0.0784      -0.0092      ❌ NO      
+
+NO CANDIDATE SIZE MEETS REQUIREMENTS
+  - Consider increasing minimum effect size or accepting lower power
+
+SENSITIVITY ANALYSIS:
+
+Effect Size Sensitivity (at N=60):
+Effect Size     Power      CI Width     Adequate  
+-----------------------------------------------
+0.020           0.119     0.1012      ❌         
+0.025           0.159     0.1012      ❌         
+0.030           0.208     0.1012      ❌         
+0.035           0.266     0.1012      ❌         
+0.040           0.332     0.1012      ❌         
+
+SD Estimate Sensitivity (at N=60, effect=0.03):
+SD Estimate     Cohens d     Power      Adequate  
+-----------------------------------------------
+0.15            0.200        0.332     ❌         
+0.18            0.167        0.246     ❌         
+0.20            0.150        0.208     ❌         
+0.22            0.136        0.180     ❌         
+0.25            0.120        0.150     ❌         
+
+FINAL RECOMMENDATION:
+
+❌ RECONSIDER EXPERIMENTAL DESIGN
+
+Rationale:
+  - No sample size up to 100 tasks achieves desired power
+  - Consider:
+    * Increasing minimum effect size (e.g., 0.04)
+    * Accepting lower power (e.g., 70%)
+    * Using more sensitive statistical methods
+
+IMPLEMENTATION GUIDANCE:
+
+Next Steps:
+  1. Update E2.1_PROTOCOL_FINAL.json with final N
+  2. Calculate SHA256 of finalized protocol
+  3. Begin gold evidence annotation for N tasks
+  4. Execute E2.1-A with frozen parameters
+
+Cost Implications:
+
+STATISTICAL ASSUMPTIONS:
+  - Paired comparison design (specialist vs anchor)
+  - Evidence F1 differences follow approximately normal distribution
+  - Conservative SD estimate (0.20) accounts for task heterogeneity
+  - Bootstrap CI will provide robustness to distribution assumptions
+
+LIMITATIONS:
+  - Analysis based on estimated SD, not empirical data
+  - Actual power may differ if true SD differs from estimate
+  - Evidence F1 may have different distribution than assumed
+  - Multiple comparisons across models not fully accounted for
+
+================================================================================
