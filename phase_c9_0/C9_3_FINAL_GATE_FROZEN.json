@@ -1,0 +1,31 @@
+{
+  "version": "C9.3-final-gate-v1",
+  "status": "FROZEN_BEFORE_COMPLETE_C9_2_LABELS",
+  "primary_metric": "stable_semantic_oracle_gap",
+  "definition": "Cross-repeat taskwise oracle selected on the other two repeats minus the cross-repeat best single model, evaluated on the held-out repeat and averaged over all tasks and folds.",
+  "stop_rule": {
+    "condition": "stable_semantic_oracle_gap < 0.02",
+    "decision": "STOP_WHOLE_QUERY_ROUTING_AND_ADVANCE_DECOMPOSITION_AWARE_SUBTASK_ROUTING"
+  },
+  "continue_rule": {
+    "condition": "stable_semantic_oracle_gap >= 0.02",
+    "decision": "WHOLE_QUERY_ROUTING_REMAINS_ELIGIBLE_FOR_NEXT_PREREGISTERED_GATE"
+  },
+  "secondary_diagnostics": [
+    "stable_reversal_rate",
+    "top1_top2_margin_mean",
+    "top1_top2_margin_median",
+    "held_out_tie_rate"
+  ],
+  "secondary_diagnostics_change_primary_gate": false,
+  "threshold_tuning_after_labels": false,
+  "required_population": "all 480 C9 development tasks with protocol-valid semantic labels",
+  "forbidden_before_gate": [
+    "new Router training",
+    "new model API collection",
+    "Wave 2 access",
+    "formal DAG experiment",
+    "v4",
+    "threshold adjustment"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "version": "C9.1-response-handling-v1",
+  "frozen_at_completed_keys": 380,
+  "scope": "Wave 1 development_train only",
+  "planned_final_keys": 7200,
+  "primary_key": ["task_id", "model", "repeat"],
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+  "repeats": 3,
+  "max_attempts_per_key": 3,
+  "rules": {
+    "failure_after_max_attempts": "permanent_provider_failure",
+    "empty_response": "failure_without_extra_collection",
+    "transient_429_503_connection": "retry_up_to_frozen_maximum_then_failure",
+    "prompt_change_and_rerun": "prohibited",
+    "model_version_change": "prohibited",
+    "failed_task_deletion": "prohibited",
+    "performance_motivated_rerun": "prohibited",
+    "poor_answer_rerun": "prohibited"
+  },
+  "delivered_quality": "successful judge quality; zero for final provider failure",
+  "task_model_quality": "mean of exactly three delivered-quality repeats",
+  "reliability": "successful repeats divided by three",
+  "cost": "sum of billed cost over all attempts",
+  "service_latency": "sum of provider-call wall time over all attempts; queue wait and retry backoff excluded",
+  "frozen_legacy_exception": {
+    "affected_key_count": 1,
+    "key": ["c9_009750dce5e0921e0e79", "glm-5.2", 2],
+    "reason": "The first collector stored only the final attempt usage before this accounting protocol was frozen.",
+    "cost_rule": "three times the recorded final-attempt cost because all three attempts used the identical prompt and returned empty content",
+    "latency_rule": "use recorded end-to-end wall time as a conservative upper bound",
+    "rerun": false
+  },
+  "interruption_note": "At protocol freeze, up to four in-flight HTTP requests were cancelled. Their billing status is not observable; they are operational events, not completed keys, and no response outcome was inspected.",
+  "training_before_7200_final_states": false,
+  "validation_outcomes_accessed": false
+}

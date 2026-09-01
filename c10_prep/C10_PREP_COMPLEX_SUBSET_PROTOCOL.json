@@ -1,0 +1,28 @@
+{
+  "version": "C10-prep-input-complexity-v1",
+  "status": "FROZEN_WITHOUT_MODEL_OUTPUTS",
+  "population": "480 C9 development_train tasks",
+  "selection_size": 120,
+  "selection_fraction": 0.25,
+  "features": [
+    "query_token_count",
+    "context_token_count",
+    "table_cell_count",
+    "numeric_count",
+    "reasoning_cue_count",
+    "cross_reference_count",
+    "context_dispersion_proxy"
+  ],
+  "transform": "log1p then within-development empirical percentile rank per feature",
+  "score": "unweighted mean of seven percentile ranks",
+  "selection": "highest 120 scores; SHA-256(task_id) ascending tie break",
+  "forbidden_inputs": [
+    "candidate response",
+    "quality label",
+    "provider success",
+    "model identity",
+    "cost",
+    "latency"
+  ],
+  "source_sha256": "d145be5e78e9fcc14affc75c31669a263426a3c449d2244f57d49e594087fa69"
+}

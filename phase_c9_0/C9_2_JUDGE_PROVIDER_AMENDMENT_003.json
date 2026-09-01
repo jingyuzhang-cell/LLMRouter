@@ -1,0 +1,64 @@
+{
+  "version": "C9.2-judge-provider-amendment-003",
+  "status": "FROZEN_BEFORE_MULTI_JUDGE_FEASIBILITY_CALLS",
+  "evaluation_design": "Multi-LLM Judge Triangulation",
+  "reason": "No independent human reviewers are available and the original GPT-4o judge produced zero successful labels.",
+  "judges": {
+    "primary": "doubao-seed-2.1-turbo",
+    "secondary": "qwen-max",
+    "sensitivity": "glm-4-flash"
+  },
+  "candidate_pool_members": [
+    "deepseek-chat",
+    "glm-5.2",
+    "qwen-plus",
+    "qwen-turbo",
+    "gemini-2.5-flash"
+  ],
+  "family_overlap_disclosure": {
+    "qwen-max": ["qwen-plus", "qwen-turbo"],
+    "glm-4-flash": ["glm-5.2"],
+    "doubao-seed-2.1-turbo": []
+  },
+  "formal_consensus_if_calibration_passes": "median of three integer 0-4 scores, retaining every raw judge score",
+  "high_disagreement": "max score minus min score >= 2",
+  "required_sensitivity_outputs": [
+    "Doubao-only C9.3",
+    "Qwen-only C9.3",
+    "GLM-only C9.3",
+    "consensus C9.3",
+    "consensus excluding Qwen-family judge",
+    "consensus excluding GLM-family judge",
+    "candidate-family score-deviation audit"
+  ],
+  "stage_0_feasibility": {
+    "groups": 3,
+    "source": "first three groups in frozen C9_2_REPLACEMENT_JUDGE_PROBE_MANIFEST.json",
+    "per_call_timeout_seconds": 90,
+    "minimum_success_per_judge": 2,
+    "fail_closed": true
+  },
+  "stage_1_calibration": {
+    "groups": 15,
+    "activation": "all three judges pass stage_0_feasibility",
+    "parse_success_min": 0.95,
+    "pairwise_within_one_agreement_min": 0.80,
+    "pairwise_mean_absolute_disagreement_max": 0.75,
+    "duplicate_exact_agreement_min": 0.80,
+    "order_perturbation_mean_absolute_disagreement_max": 0.50
+  },
+  "unchanged": [
+    "frozen 810 judge groups",
+    "candidate answers and eligibility",
+    "0-4 rubric",
+    "temperature 0",
+    "model-identity blinding",
+    "C9.3 metric definitions",
+    "stable semantic oracle gap threshold 0.02"
+  ],
+  "formal_labels_created": false,
+  "human_gold_claim_allowed": false,
+  "router_training": false,
+  "wave_2_access": false,
+  "dag_execution": false
+}

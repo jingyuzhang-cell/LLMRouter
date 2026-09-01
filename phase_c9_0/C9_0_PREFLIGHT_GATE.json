@@ -1,16 +1,29 @@
 {
-  "status": "C9_0_PREFLIGHT_FAIL",
-  "api_authorized": false,
+  "status": "C9_0_PREFLIGHT_PASS",
+  "api_authorized": true,
+  "protocol_amendment": "C9_0_PROTOCOL_AMENDMENT_001",
   "gates": {
+    "ten_capability_strata_pass": true,
+    "construct_precision_passes": true,
     "historical_exact_overlap_zero": true,
-    "unresolved_harmful_near_duplicate_zero": false,
-    "document_split_overlap_zero": true,
-    "table_split_overlap_zero": true,
-    "template_split_overlap_zero": true,
-    "capability_precision_passes": false,
-    "no_outcome_access": true
+    "pool_exact_duplicate_zero": true,
+    "unresolved_near_duplicate_zero": true,
+    "document_train_validation_overlap_zero": true,
+    "table_train_validation_overlap_zero": true,
+    "template_train_validation_overlap_zero": true,
+    "model_outcome_access": false,
+    "gold_or_evidence_used_for_selection": false,
+    "external_model_calls": 0
   },
-  "split": {"development_train": 480, "support_matched_validation": 120},
-  "required_action": "Complete context confirmation for the multi-step numerical shortlist; add an outcome-blind source or author a preregistered task set whose observable inputs prove joint table-and-prose necessity; apply the completed near-duplicate adjudication; then rebuild the pool and rerun grouped split and construct gates.",
-  "prohibited_action": "Do not start the 600 x 5 x 3 response collection."
+  "split": {
+    "development_train": 480,
+    "support_matched_validation": 120,
+    "per_capability_train": 48,
+    "per_capability_validation": 12
+  },
+  "response_collection_plan": {
+    "wave_1": "480 x 5 x 3 = 7200",
+    "wave_2": "120 x 5 x 3 = 1800",
+    "validation_policy": "one-shot development validation"
+  }
 }

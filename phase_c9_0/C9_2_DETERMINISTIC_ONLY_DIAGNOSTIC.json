@@ -1,0 +1,122 @@
+{
+  "status": "C9_2_DETERMINISTIC_ONLY_DIAGNOSTIC_COMPLETE",
+  "decision_role": "early diagnostic only; final whole-query C9 decision requires all 480 task semantic labels",
+  "definitions": {
+    "stable_oracle_gap": "For each held-out repeat, select each task's top model using the other two repeats; subtract the held-out score of the globally best single model learned on those repeats; average over tasks and folds.",
+    "stable_reversal_rate": "Across task x held-out-repeat folds, rate at which the top-1 model selected on the other two repeats scores strictly below that selection-time top-2 model on the held-out repeat.",
+    "top1_top2_margin": "Difference between the highest and second-highest three-repeat mean score for each task."
+  },
+  "integrity": {
+    "deterministic_tasks": 210,
+    "route_counts": {
+      "deterministic_numeric": 175,
+      "deterministic_normalized_exact_token_f1": 34,
+      "deterministic_normalized_exact": 1
+    },
+    "models": 5,
+    "repeats": 3,
+    "semantic_complete_case_tasks": 78,
+    "semantic_incomplete_tasks": 132,
+    "semantic_complete_case_rate": 0.37142857142857144,
+    "judge_calls": 0,
+    "router_training": false,
+    "wave_2_access": false,
+    "dag_run": false
+  },
+  "primary_preliminary_semantic": {
+    "label": "semantic_quality_complete_case",
+    "tasks": 78,
+    "stable_oracle_gap": 0.009605598479050171,
+    "stable_oracle_gap_ci95_task_bootstrap": [
+      -0.0016791615919029116,
+      0.028050563501035575
+    ],
+    "probability_stable_oracle_gap_positive": 0.9148,
+    "stable_reversal_rate": 0.03418803418803419,
+    "held_out_tie_rate": 0.7991452991452992,
+    "top1_top2_margin": {
+      "mean": 0.0226675790459009,
+      "median": 0.0,
+      "quantiles": {
+        "0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.0,
+        "0.75": 0.0,
+        "0.9": 0.05603174603174598,
+        "1": 0.39070096652612263
+      }
+    },
+    "folds": [
+      {
+        "held_out_repeat": 0,
+        "best_single_model": "qwen-turbo",
+        "stable_oracle_gap": 0.013219312186040057,
+        "top1_top2_reversal_rate": 0.038461538461538464,
+        "top1_top2_held_out_tie_rate": 0.7948717948717948
+      },
+      {
+        "held_out_repeat": 1,
+        "best_single_model": "qwen-turbo",
+        "stable_oracle_gap": 0.010403935576903027,
+        "top1_top2_reversal_rate": 0.0641025641025641,
+        "top1_top2_held_out_tie_rate": 0.7692307692307693
+      },
+      {
+        "held_out_repeat": 2,
+        "best_single_model": "qwen-turbo",
+        "stable_oracle_gap": 0.005193547674207431,
+        "top1_top2_reversal_rate": 0.0,
+        "top1_top2_held_out_tie_rate": 0.8333333333333334
+      }
+    ]
+  },
+  "delivered_quality_sensitivity": {
+    "label": "delivered_quality_all_deterministic_tasks",
+    "tasks": 210,
+    "stable_oracle_gap": 0.01205768134701083,
+    "stable_oracle_gap_ci95_task_bootstrap": [
+      0.0031897456994004632,
+      0.022748815827677286
+    ],
+    "probability_stable_oracle_gap_positive": 0.9982,
+    "stable_reversal_rate": 0.026984126984126985,
+    "held_out_tie_rate": 0.8476190476190476,
+    "top1_top2_margin": {
+      "mean": 0.02434143946446908,
+      "median": 0.0,
+      "quantiles": {
+        "0": 0.0,
+        "0.1": 0.0,
+        "0.25": 0.0,
+        "0.5": 0.0,
+        "0.75": 0.0,
+        "0.9": 0.057874736101336866,
+        "1": 0.5098566308243727
+      }
+    },
+    "folds": [
+      {
+        "held_out_repeat": 0,
+        "best_single_model": "qwen-turbo",
+        "stable_oracle_gap": 0.012320325996491889,
+        "top1_top2_reversal_rate": 0.023809523809523808,
+        "top1_top2_held_out_tie_rate": 0.8476190476190476
+      },
+      {
+        "held_out_repeat": 1,
+        "best_single_model": "qwen-turbo",
+        "stable_oracle_gap": 0.008048520238817629,
+        "top1_top2_reversal_rate": 0.047619047619047616,
+        "top1_top2_held_out_tie_rate": 0.8380952380952381
+      },
+      {
+        "held_out_repeat": 2,
+        "best_single_model": "qwen-turbo",
+        "stable_oracle_gap": 0.015804197805722963,
+        "top1_top2_reversal_rate": 0.009523809523809525,
+        "top1_top2_held_out_tie_rate": 0.8571428571428571
+      }
+    ]
+  }
+}

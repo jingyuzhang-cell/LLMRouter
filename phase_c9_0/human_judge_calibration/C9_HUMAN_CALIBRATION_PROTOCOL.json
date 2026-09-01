@@ -1,0 +1,37 @@
+{
+  "version": "C9-human-judge-calibration-v1",
+  "status": "FROZEN_BEFORE_HUMAN_SCORING",
+  "purpose": "Select an operational replacement judge by agreement with human-calibrated semantic scores, never by downstream C9 routability results.",
+  "groups": 30,
+  "expected_candidate_answers": 123,
+  "selection": "outcome-blind deterministic round-robin across primary capability x candidate-count x input-context-length tercile strata",
+  "selection_seed": "C9-HUMAN-JUDGE-CALIBRATION-v1|20260901",
+  "reviewers": 2,
+  "independent_review_required": true,
+  "adjudication_trigger": "absolute score disagreement > 1",
+  "adjudication_rule": "A third adjudicator assigns the final 0-4 score after seeing both reasons but not model identity; for disagreements <=1, rounded mean with halves rounded toward the more conservative lower score.",
+  "judge_selection_forbidden_inputs": [
+    "C9 stable gap",
+    "specialist opportunity",
+    "candidate model ranking",
+    "router outcome"
+  ],
+  "judge_validity_gates": {
+    "parse_success_min": 0.95,
+    "human_within_one_agreement_min": 0.8,
+    "human_mae_max": 0.75,
+    "duplicate_exact_agreement_min": 0.8,
+    "order_perturbation_mae_max": 0.5,
+    "family_bias_review_required": true
+  },
+  "formal_c9_labels_created": false,
+  "model_calls": 0,
+  "router_training": false,
+  "wave_2_access": false,
+  "dag_execution": false,
+  "source_hashes": {
+    "tasks": "d145be5e78e9fcc14affc75c31669a263426a3c449d2244f57d49e594087fa69",
+    "responses": "5034741a2c4d17cebba4760111e93467f726dd01a780cca15e178ca26dcb00d0",
+    "routes": "b38fc3357fa13b3ccdc14cac5bd4d8c96e65a14ca14d1136a433d01a4dce4a4b"
+  }
+}

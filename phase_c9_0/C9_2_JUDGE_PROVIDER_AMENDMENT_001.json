@@ -1,0 +1,43 @@
+{
+  "version": "C9.2-judge-provider-amendment-001",
+  "status": "FROZEN_BEFORE_FIRST_REPLACEMENT_JUDGE_CALL",
+  "reason": "The frozen gpt-4o primary judge produced zero successful labels and is unavailable because API credits cannot be restored.",
+  "superseded_primary_judge": "gpt-4o",
+  "superseded_successful_groups": 0,
+  "replacement_primary_judge": "doubao-seed-2.1-turbo",
+  "replacement_secondary_audit_judge": "gemini-2.5-pro",
+  "candidate_pool_members": [
+    "deepseek-chat",
+    "glm-5.2",
+    "qwen-plus",
+    "qwen-turbo",
+    "gemini-2.5-flash"
+  ],
+  "unchanged": [
+    "810 frozen task_id x repeat_id groups",
+    "candidate answers and successful-response eligibility",
+    "deterministic SHA-256 primary blind permutation",
+    "0-4 rubric and normalized semantic quality",
+    "temperature 0",
+    "JSON schema and independent scoring rule",
+    "deterministic labels",
+    "C9.3 metrics and stable-gap threshold"
+  ],
+  "migration_rule": "If calibration passes, replacement primary evaluates all 810 groups from the beginning. Never mix replacement labels with GPT-4o labels.",
+  "gpt_failure_rule": "The 289 GPT-4o failure events remain archived, are never mapped to quality zero, and do not consume replacement-judge attempt budgets.",
+  "calibration": {
+    "groups": 15,
+    "selection": "lowest SHA-256 within primary capability x candidate-count strata, allocated deterministically",
+    "labels_formal": false,
+    "primary_parse_success_min": 0.95,
+    "secondary_parse_success_min": 0.95,
+    "primary_duplicate_exact_agreement_min": 0.80,
+    "primary_order_perturbation_mean_absolute_disagreement_max": 0.50,
+    "cross_judge_within_one_point_agreement_min": 0.80,
+    "cross_judge_mean_absolute_disagreement_max": 0.75,
+    "gate_rule": "All parse gates and at least three of four agreement gates must pass; otherwise stop before formal labels."
+  },
+  "router_training": false,
+  "wave_2_access": false,
+  "dag_execution": false
+}

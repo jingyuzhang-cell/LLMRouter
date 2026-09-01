@@ -1,0 +1,109 @@
+{
+  "version": "C9.2-quality-evaluation-v1",
+  "status": "FROZEN_BEFORE_FIRST_CANDIDATE_ANSWER_READ",
+  "frozen_at": "2026-08-31T12:50:28.751487+00:00",
+  "candidate_models": [
+    "deepseek-chat",
+    "glm-5.2",
+    "qwen-plus",
+    "qwen-turbo",
+    "gemini-2.5-flash"
+  ],
+  "development_tasks": 480,
+  "repeat_keys": 7200,
+  "successful_response_keys": 6216,
+  "provider_failure_keys": 984,
+  "wave_2_access": false,
+  "task_route_manifest": "C9_2_EVALUATION_ROUTE_MANIFEST.jsonl",
+  "task_route_manifest_sha256": "b38fc3357fa13b3ccdc14cac5bd4d8c96e65a14ca14d1136a433d01a4dce4a4b",
+  "routing_counts_by_task": {
+    "deterministic_normalized_exact": 1,
+    "deterministic_normalized_exact_token_f1": 34,
+    "deterministic_numeric": 175,
+    "independent_judge_0_4": 270
+  },
+  "layer_1_deterministic": {
+    "eligibility_frozen_from_task_and_reference_only": true,
+    "numeric_rule": "Parse a single reference and candidate numeric value after comma/currency normalization; accept percent equivalence (x% versus x/100) and absolute error <= max(1e-6, 1e-4*abs(reference)). Otherwise 0.",
+    "normalized_exact_rule": "Unicode/case/whitespace/punctuation normalization; exact match is 1, otherwise 0.",
+    "short_extraction_rule": "For simple_extraction references <=12 tokens, use max(normalized exact match, token F1).",
+    "llm_judge_calls": 0
+  },
+  "layers_2_3_independent_judge": {
+    "primary_judge": "gpt-4o",
+    "candidate_pool_member": false,
+    "temperature": 0,
+    "rubric": {
+      "4": "fully correct; key conclusion and reasoning supported",
+      "3": "mostly correct; minor omission does not change main conclusion",
+      "2": "partly correct; material omission or local error",
+      "1": "little correct content; main conclusion wrong",
+      "0": "incorrect, irrelevant, or no valid answer"
+    },
+    "normalized_semantic_quality": "integer_score/4",
+    "reference_mode": "Question + full observable context/table + reference answer when available + blinded candidates",
+    "no_reference_mode": "Question + full observable context/table + blinded candidates; context-grounded correctness/support only; no candidate consensus pseudo-gold",
+    "batch_unit": "task_id x repeat_id; all successful candidate answers in one request",
+    "model_id_hidden": true,
+    "candidate_order": "deterministic SHA-256 permutation keyed by protocol seed, task_id, repeat_id",
+    "score_independently_not_rank": true,
+    "json_schema": {
+      "group_id": "string",
+      "scores": [
+        {
+          "label": "A..E",
+          "score": "integer 0..4",
+          "reason": "short string"
+        }
+      ]
+    },
+    "judge_failure_rule": "up to 3 attempts for transport/parse failure; unresolved judge failure leaves labels missing and blocks matrix; never map evaluator failure to semantic or delivered quality 0"
+  },
+  "reliability_audit": {
+    "sample": "lowest SHA-256 10% of judge groups, frozen before answer read",
+    "secondary_judge": "gpt-4o-mini",
+    "candidate_pool_member": false,
+    "candidate_order": "independent deterministic SHA-256 permutation",
+    "metrics": [
+      "Pearson correlation",
+      "Spearman correlation",
+      "mean absolute disagreement",
+      "exact agreement",
+      "within-one-point agreement"
+    ],
+    "role": "diagnostic only; primary gpt-4o score is not replaced or averaged"
+  },
+  "provider_failure_rule": {
+    "sent_to_judge": false,
+    "semantic_quality": null,
+    "delivered_quality": 0.0
+  },
+  "quality_targets": {
+    "primary_operational_analysis": "delivered_quality",
+    "performance_predictor_training_target": "semantic_quality on successful responses only",
+    "secondary_diagnostic": "success-conditional semantic quality and runtime reliability"
+  },
+  "performance_matrix": {
+    "rows": 2400,
+    "fields": [
+      "task_id",
+      "model_id",
+      "capability",
+      "leakage_group_id",
+      "semantic_quality_mean",
+      "semantic_quality_std",
+      "semantic_success_count",
+      "delivered_quality_mean",
+      "delivered_quality_std",
+      "reliability",
+      "failure_count",
+      "cost_total_mean",
+      "service_latency_mean",
+      "provider_degraded"
+    ]
+  },
+  "forbidden_until_quality_matrix_complete": [
+    "Router training",
+    "Wave 2 access"
+  ]
+}

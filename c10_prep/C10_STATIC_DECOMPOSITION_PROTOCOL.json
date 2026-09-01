@@ -1,0 +1,113 @@
+{
+  "version": "C10-static-decomposition-v1",
+  "status": "FROZEN_BEFORE_ANY_C10_MODEL_CALL_OR_DECOMPOSITION",
+  "phase": "C10-P1 Whole-query vs Atomic-subtask Routability",
+  "development_population": "C10_PILOT_60.jsonl",
+  "reserved_population": "C10_REMAINING_60.jsonl",
+  "objective": "Test whether static capability-pure decomposition increases stable routability relative to the matched whole query.",
+  "decomposition": {
+    "mode": "static_once_then_frozen",
+    "target_nodes_per_task": [3, 4],
+    "allowed_node_types": [
+      "evidence_localization",
+      "extraction",
+      "numerical_reasoning",
+      "regulatory_compliance",
+      "comparison",
+      "evidence_synthesis"
+    ],
+    "single_primary_capability_required": true,
+    "node_prompt_self_contained_given_declared_inputs": true,
+    "dependency_ids_required": true,
+    "final_composition_node_required": true,
+    "dynamic_replanning": false,
+    "model_routing_during_decomposition": false,
+    "model_outputs_visible_to_decomposer": false,
+    "c9_scores_visible_to_decomposer": false
+  },
+  "node_schema": {
+    "required": [
+      "task_id",
+      "node_id",
+      "node_type",
+      "primary_capability",
+      "instruction",
+      "declared_inputs",
+      "depends_on",
+      "expected_output_type",
+      "verification_rule",
+      "is_final_composition"
+    ]
+  },
+  "atomicity_checks": {
+    "one_primary_capability": true,
+    "one_verifiable_output": true,
+    "no_conjoined_independent_questions": true,
+    "no_hidden_access_to_gold_or_candidate_outputs": true,
+    "capability_purity_comparison": "mean subtask capability purity must exceed matched whole-query capability purity"
+  },
+  "review": {
+    "independent_reviewers": 2,
+    "blind_to_model_identity_and_outcomes": true,
+    "adjudicate_disagreement": true,
+    "report_node_count_agreement": true,
+    "report_primary_capability_agreement": true,
+    "report_dependency_edge_agreement": true
+  },
+  "matched_measurement": {
+    "candidate_models": [
+      "deepseek-chat",
+      "glm-5.2",
+      "qwen-plus",
+      "qwen-turbo",
+      "gemini-2.5-flash"
+    ],
+    "repeats": 3,
+    "same_judge_rubric_as_C9": true,
+    "primary_metrics": [
+      "stable_semantic_oracle_gap",
+      "stable_reversal_rate",
+      "top1_top2_margin_mean",
+      "top1_top2_margin_median",
+      "tie_rate",
+      "winner_entropy",
+      "stable_specialist_opportunity_rate"
+    ],
+    "bootstrap_unit_primary": "whole_query_with_all_derived_subtasks",
+    "paired_whole_vs_subtask": true
+  },
+  "metric_directions": {
+    "stable_semantic_oracle_gap": "higher_is_better",
+    "stable_reversal_rate": "lower_is_more_stable; identical to frozen C9 definition where selection-time top1 loses to selection-time top2 on held-out repeat",
+    "top1_top2_margin": "higher_is_better",
+    "tie_rate": "lower_is_better",
+    "stable_specialist_opportunity_rate": "higher_is_better; fraction of units with a cross-repeat-stable non-global-best winner"
+  },
+  "hypotheses": {
+    "H1": "stable_gap_subtask > stable_gap_whole",
+    "H2": "margin_subtask > margin_whole",
+    "H3": "tie_rate_subtask < tie_rate_whole"
+  },
+  "success_gate": {
+    "strong_support": [
+      "stable_gap_subtask - stable_gap_whole >= 0.03",
+      "stable_specialist_opportunity_rate_subtask >= 0.10",
+      "median_margin_subtask > 0"
+    ],
+    "moderate_support": [
+      "stable_gap_subtask > stable_gap_whole",
+      "paired task-bootstrap confidence interval or posterior evidence provides preregistered strong positive support"
+    ],
+    "fail": "stable_gap_subtask <= stable_gap_whole within the preregistered equivalence region; do not advance to formal Dynamic/DAG experiments",
+    "equivalence_region": [-0.01, 0.01]
+  },
+  "forbidden_in_C10_P1": [
+    "Router training",
+    "Dynamic decomposition",
+    "DAG replanning",
+    "global Q/C/T/R scheduling",
+    "threshold tuning",
+    "reserved-60 access for development"
+  ],
+  "activation_condition": "Complete C9.3 and observe STOP_WHOLE_QUERY_ROUTING under the frozen C9.3 gate."
+}
