@@ -1,0 +1,76 @@
+================================================================================
+E2 STAGE 1 SIGNAL AUDIT - NODE-LEVEL ANALYSIS
+================================================================================
+
+EXPERIMENT STATUS:
+  E1.1: FAIL (passing_specialists: [])
+  E2 Stage 1: COMPLETE (480/480 outcomes)
+  Type: Exploratory decomposition mechanism experiment
+  Scoring: Heuristic for N1-N3, Objective for N4
+  Delta threshold: ±0.05
+
+NODE TYPE SPECIFIC ANALYSIS:
+
+Node Type                      Mean Δ     Median Δ   Δ>5%     Stable Switch   Harmful    95% CI               N     
+--------------------------------------------------------------------------------------------------------------------
+N1 Evidence Localization       0.117    0.000    48.3%   43.3%        0.0%     [0.065, 0.165]       60    
+N2 Structured Extraction       0.013    0.000    45.0%   33.3%        3.3%     [-0.057, 0.080]      60    
+N3 Reasoning/Compliance        0.020    0.000    36.7%   16.7%        10.0%     [-0.045, 0.083]      60    
+N4 Final Synthesis             0.057    0.000    23.3%   16.7%        3.3%     [-0.020, 0.132]      60    
+
+KEY FINDINGS:
+
+1. BEST NODE TYPE: N1 Evidence Localization
+   - Stable Switch Rate: 43.3%
+   - Mean Δ(GLM-Qwen+): 0.117
+   - Median Δ: 0.000
+   - Δ>5% Prevalence: 48.3%
+
+2. WORST NODE TYPE: N3 Reasoning/Compliance
+   - Stable Switch Rate: 16.7%
+   - Mean Δ(GLM-Qwen+): 0.020
+   - Median Δ: 0.000
+
+3. SIGNAL STRENGTH CLASSIFICATION:
+   - Strong signal (≥10% stable switch, Δ>0): 4 node type(s)
+     * N1 Evidence Localization: 43.3% stable switch, Δ=0.117
+     * N2 Structured Extraction: 33.3% stable switch, Δ=0.013
+     * N3 Reasoning/Compliance: 16.7% stable switch, Δ=0.020
+     * N4 Final Synthesis: 16.7% stable switch, Δ=0.057
+   - Moderate signal (5-10% stable switch, Δ>0): 0 node type(s)
+   - Weak/No signal (<5% stable switch or Δ≤0): 0 node type(s)
+
+4. CONFIDENCE INTERVAL ANALYSIS:
+   - Positive 95% CI (confidently >0): 1 node type(s)
+     * N1 Evidence Localization: [0.065, 0.165]
+   - CI straddles 0 (uncertain): 3 node type(s)
+     * N2 Structured Extraction: [-0.057, 0.080]
+     * N3 Reasoning/Compliance: [-0.045, 0.083]
+     * N4 Final Synthesis: [-0.020, 0.132]
+   - Negative 95% CI (confidently <0): 0 node type(s)
+
+EXPLORATORY CONCLUSION:
+
+✅ E2-PASS-for-followup: Evidence of node-level specialization
+
+Rationale:
+  - 4 node type(s) show ≥10% stable switch rate with positive mean Δ
+  - Best performing node: N1 Evidence Localization
+    * Stable Switch Rate: 43.3%
+    * Mean Δ: 0.117
+    * Median Δ: 0.000
+  - 1 node type(s) have 95% CI confidently above 0
+  - Harmful switch rates are controlled
+
+Recommendation:
+  → Design formal 3-repeat confirmatory decomposition experiment
+  → Target strong-signal node types for focused analysis
+  → Refine heuristic scoring for intermediate nodes
+  → Establish held-out reversal metrics with proper repeat structure
+
+METHODOLOGICAL NOTES:
+  - N1-N3 scored using heuristic methods (content completeness, structure)
+  - N4 scored using objective_score (gold answer matching)
+  - 2-repeat structure limits held-out reversal analysis
+  - Exploratory nature: results should inform future 3-repeat experiments
+================================================================================

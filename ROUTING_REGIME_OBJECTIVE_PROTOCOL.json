@@ -1,0 +1,51 @@
+{
+  "version": "routing-regime-objective-benchmark-v1",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "purpose": "Compare static, request-dynamic, and DAG-aware routing under one, two, and four objectives without changing the original routing scope.",
+  "evidence_roles": {
+    "request_routing": "empirical replay on 419 tasks x 5 models x 3 repeats",
+    "dag_routing": "mechanism simulation built from empirical node outcomes; not end-to-end semantic DAG evidence"
+  },
+  "data": {
+    "tasks": 419,
+    "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+    "repeats": 3,
+    "reserved_v3_access": false,
+    "external_calls": 0
+  },
+  "objectives": {
+    "single": "maximize quality",
+    "dual": "maximize 0.70 quality + 0.30 normalized cost efficiency",
+    "multi": "maximize 0.45 quality + 0.20 cost efficiency + 0.15 latency efficiency + 0.20 reliability"
+  },
+  "regimes": {
+    "static": "one fold-training-optimal model for every held-out task",
+    "dynamic": "request-feature OOF prediction of every objective component, then per-task selection",
+    "oracle": "held-out per-task ex-post upper bound; never a deployable policy",
+    "dag_static": "one fold-training-optimal model for every node",
+    "dag_dynamic": "independent OOF dynamic choice at each node",
+    "dag_adaptive": "OOF dynamic choice plus one retry with the next-ranked model after an empirical failure"
+  },
+  "cross_validation": "shared KFold(5, shuffle=True, random_state=20260902) over tasks",
+  "features": "fold-local word TF-IDF(1,2) plus character TF-IDF(3,5), request-time fields only",
+  "dag_replay": {
+    "construction": "deterministic groups of four held-out empirical tasks",
+    "topology": "diamond: n0 -> {n1,n2} -> n3",
+    "quality": "mean node quality, zero for an unrecovered failed node",
+    "cost": "sum node costs including retry",
+    "latency": "critical-path latency including retry",
+    "success": "all nodes reliable and quality >= 0.6 after optional retry"
+  },
+  "uncertainty": "10000 paired task bootstrap samples; DAG bootstrap uses workflow as unit",
+  "primary_comparisons": [
+    "dynamic minus static for each objective cardinality",
+    "oracle minus static headroom for each objective cardinality",
+    "DAG adaptive minus DAG dynamic success and utility, with cost and critical-path latency deltas"
+  ],
+  "integrity": [
+    "no gold answers or outcome labels in router features",
+    "all preprocessing fitted inside outer folds",
+    "same folds for every regime and objective",
+    "simulation claims kept separate from empirical request-routing claims"
+  ]
+}

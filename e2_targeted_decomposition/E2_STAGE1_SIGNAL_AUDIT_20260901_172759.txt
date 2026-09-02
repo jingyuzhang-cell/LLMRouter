@@ -1,0 +1,76 @@
+================================================================================
+E2 STAGE 1 SIGNAL AUDIT - EXPLORATORY DECOMPOSITION PILOT
+================================================================================
+
+EXPERIMENT STATUS:
+  E1.1: FAIL (passing_specialists: [])
+  E2 Stage 1: COMPLETE (480/480 outcomes)
+  Type: Exploratory decomposition mechanism experiment
+  Repeats: 2 (incompatible with held-out reversal metrics)
+  Delta threshold: ±0.05
+
+OVERALL RESULTS (All Node Types):
+  Mean Δ(GLM-Qwen+): 0.000
+  Median Δ(GLM-Qwen+): 0.000
+  Δ > 0.05 prevalence: 0.000%
+  Mean Qwen+ quality: 0.000
+  Mean GLM quality: 0.000
+  Two-repeat Stable Switch Rate: 0.000%
+  Two-repeat Harmful Switch Rate: 0.000%
+  95% Bootstrap CI: [0.000, 0.000]
+  Sample size: 240 task-node-repeat combinations
+
+NODE TYPE SPECIFIC ANALYSIS:
+
+Node Type       Mean Δ     Median Δ   Δ>5%     Stable Switch   Harmful Switch  95% CI               N     
+----------------------------------------------------------------------------------------------------------
+N1 Extraction   0.000      0.000      0.000   % 0.000          % 0.000          % [0.000, 0.000]       60    
+N2 Numerical    0.000      0.000      0.000   % 0.000          % 0.000          % [0.000, 0.000]       60    
+N3 Reasoning    0.000      0.000      0.000   % 0.000          % 0.000          % [0.000, 0.000]       60    
+N4 Synthesis    0.000      0.000      0.000   % 0.000          % 0.000          % [0.000, 0.000]       60    
+
+KEY FINDINGS:
+
+1. BEST NODE TYPE: N1 Extraction
+   - Stable Switch Rate: 0.000%
+   - Mean Δ: 0.000
+   - Median Δ: 0.000
+
+2. WORST NODE TYPE: N1 Extraction
+   - Stable Switch Rate: 0.000%
+   - Mean Δ: 0.000
+   - Median Δ: 0.000
+
+3. SIGNAL STRENGTH CLASSIFICATION:
+   - Strong signal nodes (≥10% stable switch, Δ>0): 0
+   - Moderate signal nodes (5-10% stable switch, Δ>0): 0
+   - Weak/No signal nodes: 4
+     * N1 Extraction: low stable switch
+     * N2 Numerical: low stable switch
+     * N3 Reasoning: low stable switch
+     * N4 Synthesis: low stable switch
+
+4. CONFIDENCE INTERVAL ANALYSIS:
+   - Positive 95% CI (confidently >0): 0 node types
+   - CI straddles 0 (uncertain): 4 node types
+     * N1 Extraction: [0.000, 0.000]
+     * N2 Numerical: [0.000, 0.000]
+     * N3 Reasoning: [0.000, 0.000]
+     * N4 Synthesis: [0.000, 0.000]
+   - Negative 95% CI (confidently <0): 0 node types
+
+EXPLORATORY CONCLUSION:
+
+❌ E2-FAIL: No evidence of node-level specialization
+
+Rationale:
+  - All node types show <5% stable switch rate or non-positive mean Δ
+  - Confidence intervals largely straddle or are below 0
+  - Decomposition does not appear to enhance routing signal
+
+Recommendation:
+  → STOP decomposition expansion
+  → Reconsider whole-query routing approach
+  → Investigate alternative decomposition strategies
+
+================================================================================

@@ -1,0 +1,22 @@
+{
+  "version": "e2-execution-amendment-001",
+  "status": "FROZEN_AFTER_PROVIDER_FAILURE_AND_BEFORE_RETRY",
+  "trigger": "glm-5.2 returned empty content twice while reporting 385 completion tokens under max_tokens=384 for the same n2 key.",
+  "diagnosis": "The reasoning-enabled provider exhausted the completion budget before emitting final content.",
+  "changes": {
+    "qwen-plus_max_tokens": 384,
+    "glm-5.2_max_tokens": 768,
+    "maximum_total_attempts_per_key": 4
+  },
+  "prohibited_workaround": "Do not extract or score hidden reasoning_content as the answer.",
+  "unchanged": [
+    "prompts",
+    "temperature=0",
+    "candidate pool",
+    "task population",
+    "two repeats",
+    "$5 total hard cap",
+    "scoring and stage gate"
+  ],
+  "resume_policy": "Reuse every successful node; retry only missing or failed keys."
+}

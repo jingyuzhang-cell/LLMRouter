@@ -1,0 +1,27 @@
+{
+  "version": "e1.2-switch-learnability-v1",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "role": "Remediation after E1.1 showed stable action value but insufficient enrichment from five hand-written strata.",
+  "population": "Same 419 development tasks; no untouched validation or C9 access.",
+  "anchor": "qwen-plus",
+  "candidate_specialists": ["deepseek-chat", "glm-5.2", "qwen-turbo", "gemini-2.5-flash"],
+  "positive_label": "specialist exceeds anchor by >0.05 on at least two of three repeats",
+  "observable_inputs": ["question", "context", "table"],
+  "forbidden_inputs": ["dataset", "task_type", "gold_answer", "evidence", "risk_level", "model responses", "judge scores"],
+  "feature_variants": ["structure", "tfidf", "combined"],
+  "outer_evaluation": "Stratified 5-fold OOF over unique tasks.",
+  "inner_threshold_selection": "Three-fold OOF inside each outer training fold; maximize training-only mean action gain over thresholds 0.50..0.95 subject to harmful-switch rate <=0.25 and at least max(5,2%) switches.",
+  "classifier": "class-balanced logistic regression",
+  "bootstrap": {"unit": "task", "samples": 10000, "seed": 20260901},
+  "gate_per_specialist_variant": {
+    "minimum_oof_switch_rate": 0.02,
+    "minimum_pr_auc_lift_over_prevalence": 1.25,
+    "minimum_action_gain": 0.0,
+    "minimum_gain_ci95_lower": 0.0,
+    "maximum_harmful_switch_rate": 0.25
+  },
+  "overall_gate": "At least one specialist-feature variant passes every gate.",
+  "selection_rule": "Among passing variants choose highest OOF action gain; ties prefer structure, then combined, then tfidf.",
+  "pass_action": "Freeze the selected anchor-specialist switch router and run a final untouched cross-repeat action audit.",
+  "failure_action": "Do not collect broad data; construct a targeted decomposition pilot from stable-positive, anchor-positive, and unstable tasks."
+}

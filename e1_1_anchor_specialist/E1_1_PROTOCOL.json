@@ -1,0 +1,24 @@
+{
+  "version": "e1.1-anchor-specialist-v1",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "role": "Development-only action-aligned audit; no router fitting, test access, or API calls.",
+  "population": "The same 419 tasks and 6285 frozen outcomes used by E1.",
+  "anchor": "qwen-plus",
+  "candidate_specialists": ["deepseek-chat", "glm-5.2", "qwen-turbo", "gemini-2.5-flash"],
+  "meaningful_advantage_delta": 0.05,
+  "stable_switch_definition": "candidate exceeds anchor by more than 0.05 in at least two of three repeats",
+  "cross_repeat_policy": "For each held repeat, switch only when candidate mean advantage on the other two repeats exceeds 0.05; evaluate gain and harm on the held repeat.",
+  "harmful_switch_definition": "A selected switch whose held-repeat candidate quality is more than 0.05 below anchor.",
+  "observable_structure_strata": ["has_table", "long_context", "numeric_dense", "calculation_cues", "compliance_cues"],
+  "bootstrap": {"unit": "task", "samples": 10000, "seed": 20260901},
+  "gate_per_specialist": {
+    "minimum_stable_switch_rate": 0.05,
+    "minimum_cross_repeat_gain": 0.0,
+    "minimum_gain_ci95_lower": 0.0,
+    "maximum_harmful_switch_rate_among_switches": 0.25,
+    "minimum_observable_stratum_enrichment": 1.5
+  },
+  "overall_gate": "At least one specialist passes every per-specialist condition.",
+  "pass_action": "Freeze anchor plus passing specialists and construct three-level switch labels.",
+  "failure_action": "Stop router fitting and repair evaluation granularity or candidate specialization."
+}

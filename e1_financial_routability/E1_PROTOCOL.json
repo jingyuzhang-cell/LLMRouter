@@ -1,0 +1,31 @@
+{
+  "version": "e1-financial-routability-v1",
+  "status": "FROZEN_BEFORE_E1_EXECUTION",
+  "role": "Read-only routability audit; no router fitting and no new model or judge calls.",
+  "population": "The 419 complete development tasks used by C7/C8, each with five models and three frozen repeats.",
+  "c9_policy": "C9 is excluded because C9.3 requires complete semantic labels for all 480 tasks and those labels are not yet complete.",
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+  "primary_outcome": "quality averaged over three repeats",
+  "metrics": [
+    "best_single_quality",
+    "observed_oracle_quality_and_gap",
+    "cross_repeat_replicable_oracle_gap",
+    "top1_top2_margin",
+    "strict_non_tie_rate",
+    "canonical_and_exclusive_winner_distribution",
+    "pairwise_model_performance_correlation",
+    "stable_unique_winner_rate_and_distribution",
+    "query_bootstrap_confidence_intervals"
+  ],
+  "subgroups": ["dataset", "task_type"],
+  "bootstrap": {"unit": "task with all models and repeats paired", "samples": 10000, "seed": 20260901},
+  "gate": {
+    "minimum_observed_oracle_gap": 0.03,
+    "minimum_strict_non_tie_rate": 0.30,
+    "minimum_models_with_stable_unique_win_share_ge_0.10": 2,
+    "minimum_cross_repeat_replicable_oracle_gap": 0.02,
+    "minimum_probability_stable_gap_positive": 0.90
+  },
+  "pass_action": "Proceed to a 100-150 task decomposition pilot without expanding the full dataset.",
+  "fail_action": "Stop before decomposition-scale construction and repair task granularity, model pool, or evaluation stability."
+}

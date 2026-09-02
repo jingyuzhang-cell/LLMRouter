@@ -1,0 +1,15 @@
+{
+  "version": "e2-execution-amendment-003",
+  "status": "FROZEN_AFTER_SECOND_TOKEN_EXHAUSTION_AND_BEFORE_RETRY",
+  "trigger": "A second glm-5.2 extraction node returned empty content twice with exactly 769 completion tokens under max_tokens=768.",
+  "diagnosis": "GLM extraction-node reasoning systematically exhausts the generic GLM completion allowance.",
+  "change": "Set max_tokens=1536 only for glm-5.2 n2 extraction nodes.",
+  "unchanged_limits": {
+    "qwen-plus_max_tokens": 384,
+    "glm_other_nodes_max_tokens": 768,
+    "maximum_total_attempts_per_key": 4,
+    "maximum_external_calls": 520,
+    "maximum_total_cost_usd": 5.0
+  },
+  "prohibited": "Do not read or score reasoning_content as answer content."
+}

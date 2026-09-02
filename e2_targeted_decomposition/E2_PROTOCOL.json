@@ -1,0 +1,45 @@
+{
+  "version": "e2-targeted-static-decomposition-v1",
+  "status": "FROZEN_BEFORE_MANIFEST_CONSTRUCTION_OR_MODEL_CALLS",
+  "role": "Development pilot after whole-query switch learnability failed E1.2.",
+  "source_population": "The same 419 complete financial development tasks.",
+  "sample_size": 120,
+  "mutually_exclusive_strata": {
+    "stable_specialist": "At least one non-anchor model exceeds qwen-plus by >0.05 in at least two repeats; rank by maximum mean specialist advantage.",
+    "stable_anchor": "qwen-plus is the unique winner in all three repeats and task is not stable_specialist; rank by minimum repeated margin over the strongest competitor.",
+    "unstable": "Per-repeat canonical winner is not identical across all three repeats and task is in neither prior stratum; rank by winner entropy then mean top-two margin ascending."
+  },
+  "tasks_per_stratum": 40,
+  "decomposition": {
+    "nodes_per_task": 4,
+    "mode": "deterministic input-only templates by observable table presence",
+    "model_outputs_visible": false,
+    "gold_and_evidence_visible": false,
+    "router_used": false,
+    "node_types": ["evidence_localization", "extraction", "numerical_reasoning_or_regulatory_compliance", "evidence_synthesis"]
+  },
+  "candidate_models_for_measurement": ["qwen-plus", "glm-5.2"],
+  "candidate_pool_reason": "E1.2 found the strongest observable learnability for GLM versus qwen-plus; two-model measurement minimizes calls.",
+  "measurement_plan": {
+    "stage_1_tasks": 30,
+    "stage_1_composition": "10 per stratum",
+    "repeats": 2,
+    "estimated_candidate_calls": 480,
+    "advance_to_all_120_only_if": "subtask stable gap exceeds matched whole-query stable gap and harmful-switch opportunity is below 0.25"
+  },
+  "manifest_gate": [
+    "exactly 120 unique tasks and 480 unique nodes",
+    "40 tasks per stratum",
+    "four nodes per task",
+    "one primary capability per node",
+    "all dependencies exist and graph is acyclic",
+    "final composition node exists exactly once",
+    "no gold, evidence, response, score, dataset, or task_type fields in node prompts"
+  ],
+  "external_call_policy": "Manifest construction is offline. Candidate execution requires configured provider credentials and explicit cost-bearing execution availability.",
+  "success_gate": {
+    "minimum_subtask_minus_whole_stable_gap": 0.01,
+    "minimum_subtask_specialist_opportunity_rate": 0.10,
+    "maximum_harmful_switch_rate": 0.25
+  }
+}

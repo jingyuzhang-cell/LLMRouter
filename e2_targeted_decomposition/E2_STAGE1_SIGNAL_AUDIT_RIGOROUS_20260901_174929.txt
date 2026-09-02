@@ -1,0 +1,82 @@
+================================================================================
+E2 STAGE 1 SIGNAL AUDIT - METHODOLOGICALLY RIGOROUS ANALYSIS
+================================================================================
+
+EXPERIMENT CONTEXT:
+  E1.1 Status: FAIL (passing_specialists: [])
+  E2 Stage 1 Status: COMPLETE (480/480 unique final outcomes)
+  Experiment Type: Exploratory decomposition mechanism pilot
+  Models: qwen-plus vs glm-5.2 (2-model setup)
+  Repeats: 2 (limits held-out reversal analysis)
+  Data: 480 unique final responses (deduped from 483 total records)
+
+METHODOLOGICAL LIMITATIONS:
+  ⚠️  N1-N3: Heuristic scoring (completeness/structure, NOT factual correctness)
+  ⚠️  N4: Objective gold-answer scoring
+  ⚠️  2-model comparison (vs 5-model whole-query baseline)
+  ⚠️  2-repeat structure (vs 3-repeat formal metrics)
+  ⚠️  Metrics NOT directly comparable to frozen C10 baseline
+
+NODE-LEVEL HEURISTIC SCORE ANALYSIS:
+
+Node Type                      Mean Δ       Median Δ     Δ>5%       Stable Switch      Harmful      95% CI               N     
+-------------------------------------------------------------------------------------------------------------------------------
+N1 Evidence Localization       +0.117       +0.000       48.3%      43.3%             0.0%        [0.063, 0.165]       60    
+N2 Structured Extraction       +0.013       +0.000       45.0%      33.3%             3.3%        [-0.055, 0.078]      60    
+N3 Reasoning/Compliance        +0.020       +0.000       36.7%      16.7%             10.0%        [-0.047, 0.083]      60    
+N4 Final Synthesis             +0.057       +0.000       23.3%      16.7%             3.3%        [-0.020, 0.133]      60    
+
+KEY EXPLORATORY FINDINGS:
+
+1. STRONGEST EXPLORATORY SIGNAL: N1 Evidence Localization
+   Mean Δ(GLM-Qwen+): +0.117 (heuristic score advantage)
+   Two-repeat Stable Switch Rate: 43.3%
+   95% Bootstrap CI: [0.063, 0.165]
+   Interpretation: GLM shows consistent heuristic advantage over Qwen+
+
+2. STATISTICAL SIGNIFICANCE:
+   ✅ 1 node type(s) have 95% CI entirely above 0
+      - N1 Evidence Localization: CI = [0.063, 0.165]
+
+3. HARMFUL SWITCH RISK ASSESSMENT:
+   ⚠️  1 node type(s) show >5% harmful switch rate:
+      - N3 Reasoning/Compliance: 10.0%
+
+EXPLORATORY CONCLUSIONS:
+
+✅ E2-EXPLORATORY-POSITIVE: Evidence that decomposition MAY expose node-level specialization
+
+Supporting Evidence:
+  - 1 node type(s) show positive mean Δ with CI entirely above 0
+  - N1 Evidence Localization shows particularly strong exploratory signal
+  - Harmful switch rates are controlled across all node types
+
+IMPORTANT CAVEATS:
+  ⚠️  Results based on HEURISTIC scoring for N1-N3 (not factual correctness)
+  ⚠️  Cannot claim 'decomposition amplifies specialist signal' without objective validation
+  ⚠️  Different experimental setup than frozen whole-query baseline
+  ⚠️  Requires confirmatory experiment with objective node-level supervision
+
+RECOMMENDATION:
+  → Design E2.1 Confirmatory Node-Specialization Experiment
+  → Focus on N1 Evidence Localization with objective gold evidence annotation
+  → Use 3 models, 3 repeats, and proper held-out reversal metrics
+  → Establish evidence-level Precision/Recall/F1 instead of heuristic scores
+
+COMPARATIVE CONTEXT (NOT DIRECT COMPARISON):
+  Whole-query baseline: 5-model, 3-repeat, objective scoring
+    - Preliminary specialist opportunity: ~8.12%
+    - Multiple specialist candidates with weak signals
+
+  E2 N1 exploratory: 2-model, 2-repeat, heuristic scoring
+    - Two-repeat stable switch rate: 43.3%
+    - Mean heuristic advantage: +0.117
+  ⚠️  These numbers CANNOT be directly compared due to methodological differences
+
+NEXT STEPS:
+  1. Design E2.1 Confirmatory Experiment with objective node-level supervision
+  2. Establish gold evidence annotation for N1 (Precision/Recall/F1 metrics)
+  3. Expand to 3 models (qwen-plus, glm-5.2, deepseek) and 3 repeats
+  4. Use fresh task set, not extension of current 30 tasks
+  5. Calculate proper C10-compliant metrics: G, S, R, Mean/Median Margin
+================================================================================

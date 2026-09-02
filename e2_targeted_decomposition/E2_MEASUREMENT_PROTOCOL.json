@@ -1,0 +1,29 @@
+{
+  "version": "e2-stage1-measurement-v1",
+  "status": "FROZEN_BEFORE_ANY_E2_PROVIDER_RESPONSE",
+  "population": "E2_STAGE1_30: ten tasks from each targeted stratum.",
+  "candidate_models": ["qwen-plus", "glm-5.2"],
+  "repeats": 2,
+  "primary_scored_output": "n4 final composition answer",
+  "scorer": "The project's frozen deterministic objective_score with the established empty-marker safety wrapper.",
+  "intermediate_node_policy": "n1-n3 are execution traces and are not assigned quality scores because no node-specific gold labels exist.",
+  "whole_query_comparator": "Historical frozen outcomes for the same task, model, and first two repeat indices; this is a development diagnostic rather than a contemporaneous confirmatory comparison.",
+  "primary_metrics": [
+    "decomposition best-single quality",
+    "decomposition observed oracle gap",
+    "decomposition cross-repeat stable gap",
+    "historical whole-query cross-repeat stable gap",
+    "paired difference in task-level oracle advantage",
+    "specialist opportunity rate",
+    "harmful specialist rate"
+  ],
+  "bootstrap": {"unit": "task with both models and repeats paired", "samples": 10000, "seed": 20260901},
+  "stage1_gate": {
+    "minimum_decomposition_minus_whole_stable_gap": 0.01,
+    "minimum_specialist_opportunity_rate": 0.10,
+    "maximum_harmful_specialist_rate": 0.25,
+    "minimum_provider_success_rate": 0.98
+  },
+  "interpretation_limit": "Passing supports expansion to all 120 tasks; it does not establish node-level routing learnability or final confirmatory efficacy.",
+  "external_judge_calls": 0
+}

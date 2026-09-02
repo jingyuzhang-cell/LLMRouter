@@ -1,0 +1,16 @@
+{
+  "version": "e2-execution-amendment-004",
+  "status": "FROZEN_AFTER_N3_TOKEN_EXHAUSTION_AND_BEFORE_RETRY",
+  "evidence": [
+    "glm n2 succeeded at 1395 completion tokens after its limit was raised to 1536",
+    "glm n3 then returned empty content twice at exactly 769 completion tokens under limit 768"
+  ],
+  "change": "Set max_tokens=1536 for every glm-5.2 node.",
+  "unchanged_limits": {
+    "qwen-plus_max_tokens": 384,
+    "maximum_total_attempts_per_key": 4,
+    "maximum_external_calls": 520,
+    "maximum_total_cost_usd": 5.0
+  },
+  "unchanged_experiment": ["tasks", "prompts", "models", "repeats", "scoring", "stage gate"]
+}

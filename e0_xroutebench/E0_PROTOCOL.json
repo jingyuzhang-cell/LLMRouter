@@ -1,0 +1,53 @@
+{
+  "version": "e0-xroutebench-sanity-v1",
+  "status": "FROZEN_BEFORE_E0_EXECUTION",
+  "objective": "Validate the existing routing implementation on a public routing benchmark before any additional financial-data collection or model calls.",
+  "dataset": {
+    "source": "ulab-ai/xRouteBench",
+    "config": "llmrouter_generic",
+    "split_policy": "Use the official train split for fitting and the official test split exactly once for evaluation.",
+    "observed_train_queries": 4489,
+    "observed_test_queries": 3729,
+    "rows_per_query": 18,
+    "note": "The downloaded artifact contains 4489 train queries although the dataset card states 4487; artifact counts and hashes are authoritative for this run."
+  },
+  "data_sha256": {
+    "llmrouter_generic_train.parquet": "c7165f3d82fed3ce97cbf1e8104e3be3ece1f24f13c0c27e11aae8ea3afcef8b",
+    "llmrouter_generic_test.parquet": "1c470e2656221da4f12ef76d545f561a0a6eac69cb34220ccfeec3585c2ef200",
+    "llm_candidates.parquet": "be9ad0bc2fc12c674016057b3f32225d2f55cc03c69e7bd0abeedb6f94d79e9e"
+  },
+  "candidate_models": [
+    "qwen2.5-7b-instruct",
+    "gemma-2-9b-it",
+    "gpt-oss-20b",
+    "mistral-small-3-24b-instruct",
+    "llama3-70b-instruct",
+    "qwen3-next-80b-a3b-instruct",
+    "qwen3-coder-next",
+    "deepseek-v3.1"
+  ],
+  "candidate_selection_rule": "Eight models selected before inspecting test performance, using only candidate metadata to cover distinct architectures and scales from 7B to 671B.",
+  "observable_router_input": ["query"],
+  "forbidden_router_input": ["task_name", "ground_truth", "metric", "choices", "response", "performance", "token counts", "latency", "test-derived model statistics"],
+  "methods": ["best_single", "oracle", "random", "majority_winner", "hard_classification", "performance_prediction"],
+  "models": {
+    "text_features": "train-fitted word (1,2) and char_wb (3,5) TF-IDF",
+    "hard_classification": "class-balanced logistic regression over canonical argmax labels",
+    "performance_prediction": "multi-output Ridge regression over per-model performance"
+  },
+  "tie_policy": "A canonical label uses the first tied model in frozen candidate order; routing accuracy is also reported tie-aware.",
+  "random_seeds": [20260901, 20260902, 20260903, 20260904, 20260905],
+  "bootstrap": {"unit": "query with all candidate outcomes paired", "samples_per_seed": 10000},
+  "primary_metric": "mean performance",
+  "gate": {
+    "minimum_oracle_gap": 0.03,
+    "minimum_mean_gap_recovery": 0.15,
+    "require_all_learned_seed_gap_recovery_positive": true,
+    "minimum_bootstrap_probability_gain_positive": 0.9
+  },
+  "pairwise_status": "DEFERRED_UNTIL_INITIAL_E0_RESULTS",
+  "external_model_api_calls": 0,
+  "financial_assets_modified": false,
+  "failure_action": "Stop before E1 and diagnose implementation, target construction, candidate pool, or benchmark signal.",
+  "pass_action": "Freeze E0 artifacts, then begin E1 financial routability audit without collecting new responses."
+}

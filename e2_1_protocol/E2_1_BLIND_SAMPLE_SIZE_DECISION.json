@@ -1,0 +1,115 @@
+{
+  "analysis": "E2.1-A outcome-blind power/precision analysis",
+  "status": "SAMPLE_SIZE_DETERMINED_PROTOCOL_NOT_YET_SHA256_FROZEN",
+  "outcome_blindness": {
+    "uses_e2_outcomes": false,
+    "uses_e2_1_outcomes": false,
+    "inputs": "Planning constants only; script performs no data-file reads."
+  },
+  "estimand_planning_approximation": "Task-level paired contribution to Stable Semantic Oracle Gap; two-sided noncentral-t approximation. Confirmatory CI remains the pre-specified task-level paired bootstrap.",
+  "fixed_inputs": {
+    "minimum_relevant_gap": 0.03,
+    "alpha_two_sided": 0.05,
+    "target_power": 0.8,
+    "planning_sd_of_paired_task_differences": 0.2,
+    "planning_sd_basis": "Pre-outcome conservative design assumption for bounded Evidence-F1 paired task differences; not estimated from the sealed E2 30 tasks."
+  },
+  "decision": {
+    "exact_minimum_n": 351,
+    "rounding_rule": "Round upward to the next multiple of 10",
+    "final_e2_1_a_n": 360,
+    "operating_characteristics_at_final_n": {
+      "n": 360,
+      "planning_sd": 0.2,
+      "standardized_effect": 0.15,
+      "power": 0.8101549356217613,
+      "expected_ci_lower_at_gap_0_03": 0.009270279746576536,
+      "expected_ci_width_95": 0.041459440506846926,
+      "meets_power": true,
+      "expected_ci_lower_positive": true
+    },
+    "e2_1_a_planned_calls": 3240
+  },
+  "sensitivity_by_planning_sd": {
+    "0.15": {
+      "minimum_n": 199,
+      "operating_characteristics": {
+        "n": 199,
+        "planning_sd": 0.15,
+        "standardized_effect": 0.2,
+        "power": 0.8016910240370655,
+        "expected_ci_lower_at_gap_0_03": 0.009031108110208408,
+        "expected_ci_width_95": 0.04193778377958318,
+        "meets_power": true,
+        "expected_ci_lower_positive": true
+      }
+    },
+    "0.16": {
+      "minimum_n": 226,
+      "operating_characteristics": {
+        "n": 226,
+        "planning_sd": 0.16,
+        "standardized_effect": 0.1875,
+        "power": 0.8014276635867186,
+        "expected_ci_lower_at_gap_0_03": 0.009027211696537023,
+        "expected_ci_width_95": 0.04194557660692595,
+        "meets_power": true,
+        "expected_ci_lower_positive": true
+      }
+    },
+    "0.18": {
+      "minimum_n": 285,
+      "operating_characteristics": {
+        "n": 285,
+        "planning_sd": 0.18,
+        "standardized_effect": 0.16666666666666666,
+        "power": 0.800712736617662,
+        "expected_ci_lower_at_gap_0_03": 0.009012878543345443,
+        "expected_ci_width_95": 0.04197424291330911,
+        "meets_power": true,
+        "expected_ci_lower_positive": true
+      }
+    },
+    "0.20": {
+      "minimum_n": 351,
+      "operating_characteristics": {
+        "n": 351,
+        "planning_sd": 0.2,
+        "standardized_effect": 0.15,
+        "power": 0.8002653636827299,
+        "expected_ci_lower_at_gap_0_03": 0.009004370074865764,
+        "expected_ci_width_95": 0.04199125985026847,
+        "meets_power": true,
+        "expected_ci_lower_positive": true
+      }
+    },
+    "0.22": {
+      "minimum_n": 425,
+      "operating_characteristics": {
+        "n": 425,
+        "planning_sd": 0.22,
+        "standardized_effect": 0.13636363636363635,
+        "power": 0.8009096495948422,
+        "expected_ci_lower_at_gap_0_03": 0.009024236935958517,
+        "expected_ci_width_95": 0.041951526128082964,
+        "meets_power": true,
+        "expected_ci_lower_positive": true
+      }
+    },
+    "0.25": {
+      "minimum_n": 547,
+      "operating_characteristics": {
+        "n": 547,
+        "planning_sd": 0.25,
+        "standardized_effect": 0.12,
+        "power": 0.8000118035419452,
+        "expected_ci_lower_at_gap_0_03": 0.00900295372792798,
+        "expected_ci_width_95": 0.04199409254414404,
+        "meets_power": true,
+        "expected_ci_lower_positive": true
+      }
+    }
+  },
+  "important_interpretation": "CI lower > 0 is an observed-data PASS condition, not guaranteed by sample size. The expected lower bound is evaluated at a true gap of 0.03.",
+  "next_step": "Insert N=360 and all final A/B rules into the protocol, freeze it, then calculate a new SHA256 before annotation or model calls."
+}
