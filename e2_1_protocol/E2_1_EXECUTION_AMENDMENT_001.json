@@ -1,0 +1,22 @@
+{
+  "version": "E2.1-execution-amendment-001",
+  "timestamp_utc": "2026-09-02T01:50:00Z",
+  "status": "FROZEN_BEFORE_RESUMED_RETRY_COLLECTION",
+  "reason": "The original 3420-call operational cap was exhausted by provider failures, principally qwen-plus account-arrears responses and GLM HTTP 429 responses, before the frozen 3240-cell successful matrix was complete.",
+  "observed_at_amendment": {
+    "successful_unique_cells": 2404,
+    "required_cells": 3240,
+    "remaining_cells": 836,
+    "remaining_by_model": {"qwen-plus": 216, "glm-5.2": 604, "deepseek": 16},
+    "cumulative_cost_usd": 40.9894
+  },
+  "changes": {
+    "max_provider_attempts": 5000,
+    "cost_cap_usd": 375.0,
+    "model_subset_resume_flag": true,
+    "glm_concurrency": 1,
+    "retry_backoff": "429 and transient transport failures: up to 3 in-call attempts with 5, 15, and 30 second waits"
+  },
+  "unchanged": ["task population", "candidate pages", "models", "three repeats", "prompts", "inference profiles", "scoring", "analysis", "success gates"],
+  "interpretation": "This amendment restores the originally intended complete matrix; it does not add observations, tune outcomes, or change hypotheses."
+}

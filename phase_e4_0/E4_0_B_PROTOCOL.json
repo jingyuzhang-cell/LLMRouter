@@ -1,0 +1,55 @@
+{
+  "version": "E4.0-B-balanced-exploration-v1",
+  "status": "FROZEN_BEFORE_ANY_EXPLORATION_CALL",
+  "parent": "phase_e4_0/E4_0_PROTOCOL.json",
+  "split": {
+    "method": "SHA256('E4.0-B0|20260902|'+task_id), ascending",
+    "exploration_train": 40,
+    "internal_holdout": 20,
+    "outcome_blind": true,
+    "C10_remaining_60_accessed": false
+  },
+  "exploration": {
+    "trajectories_per_task": 5,
+    "nodes_per_trajectory": 4,
+    "planned_node_calls": 800,
+    "assignment": "independent seeded permutation of five models for every task x node across trajectory indices",
+    "behavior_probability": 0.2,
+    "action_depends_on_state": false,
+    "transition": "every downstream node consumes the actual upstream output from its own trajectory",
+    "provider_interleaving": "choose among dependency-ready trajectory nodes by frozen random priority; never batch by model"
+  },
+  "log_contract": {
+    "pre_action": ["task_id", "trajectory_id", "node_id", "node_type", "request_features", "pre_action_state", "selected_model", "behavior_probability", "randomization_seed"],
+    "post_action": ["provider_success", "provider_error", "format_valid", "output", "first_token_latency_ms", "total_latency_ms", "cost_usd", "tokens", "timestamp", "attempt"],
+    "trajectory_final": ["workflow_completed", "N4_final_quality_semantic", "N4_final_quality_delivered", "total_cost_usd", "critical_path_latency_ms"]
+  },
+  "failure_semantics": {
+    "provider_failure_semantic_quality": "missing",
+    "provider_failure_delivered_quality": 0,
+    "provider_failure_reliability": 0
+  },
+  "learning": {
+    "target": "trajectory final return-to-go, initially final semantic quality",
+    "observed_action_only": true,
+    "counterfactual_labels_forbidden": true,
+    "request_only_features": ["task request features", "node type", "selected model"],
+    "state_aware_features": ["same request-only features", "pre_action_state"],
+    "estimator_and_hyperparameters_identical": true
+  },
+  "internal_evaluation": {
+    "fresh_execution": true,
+    "tasks": 20,
+    "policies": ["static_best_single", "static_node_type", "dynamic_request_only", "dynamic_state_aware"],
+    "repeats": 3,
+    "planned_node_calls": 960
+  },
+  "oracle_amendment": {
+    "oracle_node_assignment_removed_from_primary": true,
+    "diagnostic_only": "candidate_trajectory_oracle over the five actually executed full trajectories",
+    "theoretical_oracle_claim_forbidden": true
+  },
+  "primary_gate": "paired task-bootstrap 95% CI lower bound of state-aware minus request-only final quality > 0",
+  "reliability_gate": "state-aware completion improves and final quality is non-inferior; report cost and critical-path latency",
+  "external_calls_before_this_freeze": 0
+}

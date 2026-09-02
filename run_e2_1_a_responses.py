@@ -24,7 +24,7 @@ SMOKE_EVENTS = DATA / "E2_1_A_SMOKE_EVENTS.jsonl"
 MODELS = ("qwen-plus", "glm-5.2", "deepseek")
 API_MODEL = {"qwen-plus": "qwen-plus", "glm-5.2": "glm-5.2", "deepseek": "deepseek-chat"}
 REPEATS = range(3)
-MAX_CALLS = 3420
+MAX_CALLS = 5000
 MAX_COST = 375.0
 PAGE_PATTERN = re.compile(r"(?m)^# Page (\d+)\s*$")
 
@@ -89,6 +89,7 @@ async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--smoke-task-index", type=int, default=0)
+    parser.add_argument("--models", nargs="+", choices=MODELS, default=list(MODELS))
     args = parser.parse_args()
     if os.system(f"{sys.executable} {ROOT / 'e2_1_preflight.py'} >/dev/null") != 0:
         raise SystemExit("E2.1 preflight failed")
@@ -123,7 +124,7 @@ async def main() -> None:
         complete.add((x["task_id"], x["model"], int(x["repeat"])))
     page_cache = {}
     global_sem = asyncio.Semaphore(6)
-    model_sem = {model: asyncio.Semaphore(2) for model in MODELS}
+    model_sem = {model: asyncio.Semaphore(1 if model == "glm-5.2" else 2) for model in MODELS}
 
     async def invoke(model: str, prompt: str):
         if model != "glm-5.2":
@@ -160,15 +161,23 @@ async def main() -> None:
         started = time.perf_counter()
         answer, usage, error = "", {}, None
         calls += 1
-        try:
-            async with global_sem, model_sem[model]:
-                result = await invoke(model, prompt)
-            answer = answer_from_result(result)
-            usage = usage_from_result(result, prompt, answer)
-            if not answer.strip():
-                raise RuntimeError("empty answer")
-        except Exception as exc:
-            error = str(exc)[:1000]
+        for attempt, delay in enumerate((0, 5, 15, 30)):
+            if delay:
+                await asyncio.sleep(delay)
+            try:
+                async with global_sem, model_sem[model]:
+                    result = await invoke(model, prompt)
+                answer = answer_from_result(result)
+                usage = usage_from_result(result, prompt, answer)
+                if not answer.strip():
+                    raise RuntimeError("empty answer")
+                error = None
+                break
+            except Exception as exc:
+                error = str(exc)[:1000]
+                transient = "429" in error or "disconnected" in error.lower() or "timeout" in error.lower()
+                if not transient or attempt == 3:
+                    break
         billed = float(cost_usd(cfg, API_MODEL[model], usage)) if usage else 0.0
         spent += billed
         event = {
@@ -202,7 +211,7 @@ async def main() -> None:
         batch = units[start:start + 4]
         await asyncio.gather(*(
             call_one(task, model, repeat)
-            for task, repeat in batch for model in MODELS
+            for task, repeat in batch for model in args.models
         ))
         completed_units = min(start + len(batch), len(units))
         if completed_units % 30 < 4 or args.smoke:

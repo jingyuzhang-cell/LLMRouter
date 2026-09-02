@@ -1,0 +1,43 @@
+{
+  "version": "E4.0-real-financial-dag-benchmark-v1",
+  "status": "FROZEN_BEFORE_ANY_E4_MODEL_CALL",
+  "role": "development pilot for state-aware routing on real dependent nodes from one complex financial task",
+  "population": {
+    "tasks": 60,
+    "source": "c10_prep/C10_PILOT_60.jsonl joined to phase_c9_0/C9_DEV_TASKS.jsonl",
+    "reserved_holdout": "c10_prep/C10_REMAINING_60.jsonl",
+    "reserved_holdout_accessed": false
+  },
+  "dag": {
+    "topology": "N1 -> N2 -> N3 -> N4",
+    "nodes": {
+      "N1": "evidence_localization",
+      "N2": "structured_extraction",
+      "N3": "financial_reasoning",
+      "N4": "final_synthesis"
+    },
+    "true_dependency": "Each node after N1 receives the actual upstream output; N4 must produce the final answer from N3 and cited evidence, not independently answer the original task."
+  },
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo", "gemini-2.5-flash"],
+  "methods": ["static_best_single", "static_node_type", "dynamic_request_only", "dynamic_state_aware", "oracle_node_assignment"],
+  "primary_comparison": "dynamic_state_aware minus dynamic_request_only",
+  "state_boundary": {
+    "allowed_pre_route": ["task observable features", "node type", "dependency count", "upstream provider_success", "upstream format_valid", "upstream output_length", "upstream evidence_count", "upstream extraction_field_count", "upstream confidence", "upstream latency_ms", "cumulative_cost_usd", "remaining_budget_usd", "retry_count"],
+    "forbidden": ["current-node realized latency", "current-node provider failure", "current-node output", "reference answer", "judge score", "gold evidence", "future-node state"]
+  },
+  "objectives_deferred_to_E4_2": ["Q", "Q+C", "Q+T", "Q+C+T+R"],
+  "E4_0_primary_objective": "Q+C+T+R with frozen weights [0.45,0.20,0.15,0.20]",
+  "metrics": {
+    "quality": "semantic score of N4 final answer against isolated reference answer",
+    "cost": "sum of all executed node call costs",
+    "latency": "critical-path sum for this sequential DAG",
+    "reliability": "workflow completion indicator"
+  },
+  "gates": {
+    "state_information": "paired task-bootstrap 95% CI lower bound of state-aware minus request-only score > 0",
+    "dag_routing": "state-aware minus static is significantly positive for at least one core objective",
+    "adaptive": "deferred to E4.1; completion gain must be reported with cost and latency deltas"
+  },
+  "external_api_calls_for_preparation": 0,
+  "reference_policy": "Reference answers are evaluator-only and are excluded from DAG manifests, prompts, router features, and runtime state."
+}

@@ -1,0 +1,30 @@
+{
+  "version": "E3.0-objective-geometry-audit-v1",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "role": "development-only objective attribution and routability geometry audit",
+  "data": "419 tasks x 5 models x 3 repeats from the existing frozen development matrix",
+  "external_api_calls": 0,
+  "reserved_v3_access": false,
+  "shared_outer_cv": "KFold(5, shuffle=True, random_state=20260902)",
+  "shared_router": "fold-local word TF-IDF(1,2) + character TF-IDF(3,5) -> multi-output Ridge(alpha=20)",
+  "objectives": {
+    "Q": [1.0, 0.0, 0.0, 0.0],
+    "Q+C": [0.7, 0.3, 0.0, 0.0],
+    "Q+T": [0.7, 0.0, 0.3, 0.0],
+    "Q+R": [0.7, 0.0, 0.0, 0.3],
+    "Q+C+T": [0.6, 0.2, 0.2, 0.0],
+    "Q+C+R": [0.6, 0.2, 0.0, 0.2],
+    "Q+T+R": [0.6, 0.0, 0.2, 0.2],
+    "Q+C+T+R": [0.45, 0.2, 0.15, 0.2]
+  },
+  "component_order": ["quality", "cost_efficiency", "latency_efficiency", "reliability"],
+  "normalization": {"cost_efficiency": "1-min(cost_usd/0.02,1)", "latency_efficiency": "1-min(latency_ms/10000,1)"},
+  "methods": {
+    "static": "fold-training mean objective-optimal single model",
+    "dynamic": "held-out request-specific predicted component scalarization",
+    "oracle": "held-out ex-post task-optimal model"
+  },
+  "geometry_metrics": ["oracle_winner_entropy", "largest_winner_share", "median_top1_top2_margin", "tie_rate_at_0.01", "stable_winner_rate", "query_crossover_rate", "oracle_headroom"],
+  "uncertainty": "10000 paired task bootstraps, seed 20260902",
+  "interpretation_rule": "Do not tune weights or router from this audit. Explain objective-conditioned routability; retain negative results."
+}

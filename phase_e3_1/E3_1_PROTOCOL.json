@@ -1,0 +1,20 @@
+{
+  "version": "E3.1-quality-constrained-dual-v1",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "role": "development-only dual-objective decision-layer comparison",
+  "data_and_folds": "identical to frozen E3.0; 419 tasks, five models, three repeats, shared 5-fold OOF",
+  "external_api_calls": 0,
+  "reserved_v3_access": false,
+  "predictor": "unchanged E3.0 fold-local TF-IDF plus Ridge component predictor",
+  "baselines": ["static weighted sum 0.7Q+0.3Ceff", "dynamic weighted sum 0.7Qhat+0.3Ceff_hat"],
+  "quality_constrained": {
+    "rule": "among models with Qhat >= max(Qhat)-tau, select highest predicted cost efficiency",
+    "tau": [0.0, 0.02, 0.05, 0.1],
+    "selection": "report every frozen operating point; do not select tau from these outcomes"
+  },
+  "tchebycheff": "Pareto-filter predicted (Q,Ceff), then minimize max(0.7 normalized quality shortfall, 0.3 normalized cost-efficiency shortfall)",
+  "oracle": "ex-post quality-constrained cheapest model at each frozen tau; upper bound only",
+  "metrics": ["quality", "cost_usd", "cost_saving_vs_static", "quality_delta_vs_static", "weighted_sum_utility", "actual_pareto_selection_rate", "normalized_weighted_sum_regret"],
+  "uncertainty": "10000 paired task bootstraps for quality and cost deltas",
+  "stop_rule": "If all deployable quality-constrained points with nonnegative mean quality delta save less than 5% cost, stop dual-method expansion and retain the negative result."
+}

@@ -1,0 +1,29 @@
+{
+  "version": "E3.2-query-model-interaction-v1",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "data": "unchanged 419 tasks x 5 models x 3 repeats development matrix",
+  "external_api_calls": 0,
+  "reserved_v3_access": false,
+  "outer_cv": "exact E3.0 KFold(5, shuffle=True, random_state=20260902)",
+  "features": {
+    "F0": "unchanged E3.0 fold-local word+character TF-IDF component Ridge",
+    "F1": "fold-scaled request structural features",
+    "F2": "fold-local word+character TF-IDF followed by TruncatedSVD(64)",
+    "F3": "F2 embedding plus F1 structural features",
+    "F4": "F3 plus fold-training model profile, model one-hot, and explicit structural x model-profile interactions"
+  },
+  "targets": ["quality", "log1p_latency_ms", "reliability", "log1p_cost_micro_usd"],
+  "forbidden_targets": ["winner", "utility"],
+  "objectives": {
+    "primary": {"name": "Q+C+T+R", "weights": [0.45, 0.2, 0.15, 0.2]},
+    "mechanism": {"name": "Q+T", "weights": [0.7, 0.0, 0.3, 0.0]},
+    "diagnostic": {"name": "Q", "weights": [1.0, 0.0, 0.0, 0.0]}
+  },
+  "prediction_metrics": ["quality_mae", "quality_spearman", "latency_log_mae", "latency_spearman", "reliability_brier", "reliability_auc", "cost_mae", "cost_relative_error"],
+  "routing_metrics": ["score", "delta_vs_static", "delta_vs_F0", "paired_bootstrap_ci95", "gap_recovery", "quality", "cost", "latency", "reliability", "selection_counts", "switch_coverage", "harmful_switch_rate"],
+  "bootstrap": "10000 paired task samples, seed 20260902",
+  "incremental_gate": {
+    "strong_continue": "F4-F0 primary score >= 0.003 and paired 95% CI lower > 0 and F4 gap recovery > F0 gap recovery",
+    "otherwise": "stop expanding router architecture; do not try cross-attention, GNN, or Transformer"
+  }
+}
