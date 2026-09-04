@@ -5,7 +5,7 @@ from datetime import datetime,timezone
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent; OUT=ROOT/'phase_e4_0'; PROJECT=ROOT/'autodl-tmp/LLMRouter-extracted/LLMRouter-main/LLMRouter-main'; CONFIG=PROJECT/'configs/openclaw_multi_provider.yaml'
 PLAN=OUT/'E4_0_B_EXPLORATION_PLAN.jsonl'; SPLIT=OUT/'E4_0_B_SPLIT.json'; SOURCE=ROOT/'phase_c9_0/C9_DEV_TASKS.jsonl'; EVENTS=OUT/'E4_0_B_EXPLORATION_EVENTS.jsonl'; LOG=OUT/'E4_0_B_EXPLORATION_NODE_LOG.jsonl'
-MODELS=('deepseek-chat','glm-5.2','qwen-plus','qwen-turbo','gemini-2.5-flash'); API={'deepseek-chat':'deepseek-chat','glm-5.2':'glm-5.2','qwen-plus':'qwen-plus','qwen-turbo':'qwen-turbo','gemini-2.5-flash':'gemini-2.5-flash'}; NODES=('N1','N2','N3','N4'); MAX_ATTEMPTS=1000; MAX_COST=375.0
+MODELS=('deepseek-chat','glm-5.2','qwen-plus','qwen-turbo','gemini-2.5-flash'); API={'deepseek-chat':'deepseek-chat','glm-5.2':'glm-5.2','qwen-plus':'qwen-plus','qwen-turbo':'qwen-turbo','gemini-2.5-flash':'gemini-2.5-flash'}; NODES=('N1','N2','N3','N4'); MAX_ATTEMPTS=1000; MAX_COST=10.0
 def rows(p): return [json.loads(x) for x in p.read_text().splitlines() if x.strip()] if p.exists() else []
 def load_env():
  p=ROOT/'.env'

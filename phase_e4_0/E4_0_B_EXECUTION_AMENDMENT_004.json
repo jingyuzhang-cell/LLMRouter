@@ -1,0 +1,21 @@
+{
+  "version": "E4.0-B-execution-amendment-004",
+  "status": "FROZEN_BEFORE_FORMAL_640_COLLECTION",
+  "reason": "Outcome-blind provider execution compatibility correction",
+  "deepseek": {
+    "change": "Remove obsolete local 64K context assumption and use current documented provider context capability",
+    "version_drift": "E3-to-E4 provider alias/version drift explicitly acknowledged; cross-phase absolute-score causal claims forbidden",
+    "required_log": ["requested_model_alias", "provider_returned_model", "provider_endpoint", "execution_timestamp", "local_context_limit", "input_tokens", "max_tokens", "finish_reason"]
+  },
+  "glm-5.2": {
+    "thinking_mode": "unchanged provider default",
+    "n1_nonbinding_calibration_ladder": [8192, 16384, 32768],
+    "advance_only_if": ["finish_reason=length", "generation_ceiling_binding=true", "empty semantic content", "invalid JSON"],
+    "stop_at_first": "provider_success and nonempty content and format_valid and nonbinding",
+    "semantic_evidence_accuracy_access_forbidden": true
+  },
+  "unchanged": ["40 exploration tasks", "20 holdout tasks", "640 outcome keys", "four-model assignment", "exact transition balance", "behavior_probability=0.25", "action independent of state", "DAG topology", "prompts", "JSON schema", "temperature", "thinking behavior", "state schema", "evaluation gate"],
+  "collection_checkpoints": [50, 100, 200, 400, 640],
+  "collection_gate_inputs": ["final outcomes", "API attempts", "provider success", "format valid", "truncation", "retry rate", "cost per outcome", "model balance", "transition balance", "latency by time block"],
+  "semantic_quality_access_during_collection": false
+}

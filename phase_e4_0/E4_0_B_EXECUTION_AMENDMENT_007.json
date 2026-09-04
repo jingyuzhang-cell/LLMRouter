@@ -1,0 +1,66 @@
+{
+  "version": "E4.0-B-execution-amendment-007",
+  "status": "FROZEN_PREFLIGHT_EVIDENCE_RECONCILIATION",
+  "scope": "outcome-blind preflight evidence reconciliation only",
+  "outcome_blind": true,
+  "semantic_quality_accessed": false,
+  "reserved_holdout_accessed": false,
+  "external_api_calls_during_reconciliation": 2,
+  "external_api_calls_during_effective_preflight_construction": 0,
+  "scientific_definition_unchanged": [
+    "tasks", "40/20 split", "640-key plan", "four-model pool", "assignments",
+    "transition balance", "prompts", "schemas", "state vocabulary", "token-ceiling rules",
+    "retry logic", "cost cap", "evaluation gates", "semantic scoring"
+  ],
+  "authorized_change": {
+    "runner_function": "preflight_passed",
+    "description": "validate the provenance-aware effective preflight, all four per-model PASS entries, and every source SHA256",
+    "provider_execution_path_changed": false
+  },
+  "same_task_calibration": {
+    "frozen_task_id": "c9_5520e79f10692ace1df3",
+    "node": "N1",
+    "prompt_builder": "run_e4_0_b_exploration.prompt",
+    "schema": "unchanged frozen N1 schema",
+    "temperature": 0,
+    "thinking_mode": "provider_default_unchanged",
+    "models": ["deepseek-chat", "glm-5.2"],
+    "status": "PASS",
+    "attempts": 2,
+    "cost_usd": 0.1495365,
+    "semantic_quality_dependent_tuning": false
+  },
+  "evidence_provenance": {
+    "qwen-plus": "phase_e4_0_v2/E4_0_B_V2_LONG_N1_PREFLIGHT.json",
+    "qwen-turbo": "phase_e4_0_v2/E4_0_B_V2_LONG_N1_PREFLIGHT.json",
+    "deepseek-chat": "phase_e4_0_v2/E4_0_B_V2_DS_GLM_ORIGINAL_PREFLIGHT_CALIBRATION.json",
+    "glm-5.2": "phase_e4_0_v2/E4_0_B_V2_DS_GLM_ORIGINAL_PREFLIGHT_CALIBRATION.json"
+  },
+  "source_sha256": {
+    "phase_e4_0_v2/E4_0_B_V2_LONG_N1_PREFLIGHT.json": "cfee622a6d4532dd7b16a3cecd1ff64f6169410bc8c25fe5f6e8f7a43d1bbdc6",
+    "phase_e4_0_v2/E4_0_B_V2_DS_GLM_CALIBRATION.json": "a66b6bb2debd897549c0f7bec6f971814b606e7ea50ae8a4cddeef348516c71d",
+    "phase_e4_0_v2/E4_0_B_V2_DS_GLM_ORIGINAL_PREFLIGHT_CALIBRATION.json": "2c0b75e4dd95e381dc6cf51eb1394afe7d8f0ca8242aa01a8cd13f53c0aa2946",
+    "phase_e4_0_v2/E4_0_B_V2_EFFECTIVE_PREFLIGHT.json": "e11206e09d1ceb177cce1c9797eed0c88d122a3b270633888111e34172e9a436"
+  },
+  "frozen_execution_code_sha256": {
+    "run_e4_0_b_v2_controlled.py": "32c42b77e4cdc78cd200e3a62bdf0889f67519b4920f16182024c9e347913164",
+    "build_e4_0_b_v2_effective_preflight.py": "ec68a59a9278c2d48ff4c863a154194275407ce3ef719428fc45d70bad8af671",
+    "run_e4_0_b_v2_ds_glm_original_preflight.py": "9734c81b03626f5b44ca1a0e393d119f46c29e7c039960a4e95fe16effcd0151"
+  },
+  "runner_sha256": {
+    "old_amendment_006": "46e6f9ad1c8bc701885b550832375126b8c7ee462f42c67654d5c8b344d72198",
+    "new_amendment_007": "32c42b77e4cdc78cd200e3a62bdf0889f67519b4920f16182024c9e347913164"
+  },
+  "verification_test_sha256": {
+    "tests/test_e4_0_effective_preflight.py": "4cb11ad33a02a11a99b07396bd38d3796ed7567095180cc8ed26b696fd5a5093"
+  },
+  "unchanged_plan_split_sha256": {
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7"
+  },
+  "historical_evidence_preserved": {
+    "original_long_n1_preflight_status": "FAIL",
+    "original_long_n1_preflight_modified": false,
+    "prior_ds_glm_calibration_modified": false
+  }
+}

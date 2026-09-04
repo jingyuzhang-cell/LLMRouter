@@ -1,0 +1,93 @@
+{
+  "status": "E2_1_A_FAIL",
+  "integrity": {
+    "tasks": 360,
+    "raw_response_rows": 4291,
+    "unique_latest_rows": 3240,
+    "expected_rows": 3240
+  },
+  "primary": {
+    "G_N1": 0.0825,
+    "bootstrap_95_ci": [
+      0.06521571869488535,
+      0.10044554673721341
+    ],
+    "threshold": 0.03,
+    "pass": true
+  },
+  "secondary": {
+    "S_N1": 0.26944444444444443,
+    "median_margin": 0.0,
+    "pass": false
+  },
+  "diagnostic": {
+    "heldout_top1_top2_reversal_rate": 0.18527918781725888
+  },
+  "model_metrics": {
+    "qwen-plus": {
+      "strict_f1_mean": 0.5910141093474427,
+      "strict_precision_mean": 0.6506481481481482,
+      "strict_recall_mean": 0.5854938271604938,
+      "neighbor_tolerant_f1_mean": 0.3437613569558014,
+      "invalid_format_rate": 0.001851851851851852,
+      "provider_failure_rate": 0.0
+    },
+    "glm-5.2": {
+      "strict_f1_mean": 0.5929938271604938,
+      "strict_precision_mean": 0.6813271604938271,
+      "strict_recall_mean": 0.5516975308641975,
+      "neighbor_tolerant_f1_mean": 0.32934096253540696,
+      "invalid_format_rate": 0.0,
+      "provider_failure_rate": 0.0
+    },
+    "deepseek": {
+      "strict_f1_mean": 0.6045767195767197,
+      "strict_precision_mean": 0.6687962962962962,
+      "strict_recall_mean": 0.5819444444444445,
+      "neighbor_tolerant_f1_mean": 0.34838664421997756,
+      "invalid_format_rate": 0.0,
+      "provider_failure_rate": 0.0
+    }
+  },
+  "rotations": [
+    {
+      "train_repeats": [
+        0,
+        1
+      ],
+      "heldout_repeat": 2,
+      "best_single_model": "deepseek",
+      "stable_oracle_mean": 0.6907539682539683,
+      "best_single_mean": 0.6067724867724867,
+      "gap": 0.08398148148148155
+    },
+    {
+      "train_repeats": [
+        0,
+        2
+      ],
+      "heldout_repeat": 1,
+      "best_single_model": "deepseek",
+      "stable_oracle_mean": 0.6824603174603175,
+      "best_single_mean": 0.6019576719576719,
+      "gap": 0.08050264550264563
+    },
+    {
+      "train_repeats": [
+        1,
+        2
+      ],
+      "heldout_repeat": 0,
+      "best_single_model": "deepseek",
+      "stable_oracle_mean": 0.688015873015873,
+      "best_single_mean": 0.605,
+      "gap": 0.08301587301587299
+    }
+  ],
+  "overall_pass": false,
+  "next_action": "STOP_N1_HYPOTHESIS_NO_ROUTER_TRAINING",
+  "definitions": {
+    "S_N1": "Task rate where a non-anchor model beats qwen-plus by at least 0.01 in all three repeats.",
+    "median_margin": "Median task-level gap between top two models after averaging each model over repeats."
+  }
+}

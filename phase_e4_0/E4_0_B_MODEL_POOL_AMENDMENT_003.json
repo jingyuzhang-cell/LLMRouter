@@ -1,0 +1,15 @@
+{
+  "version": "E4.0-B-model-pool-amendment-003",
+  "status": "FROZEN_AFTER_BRIDGE_PASS_BEFORE_V2_API_CALLS",
+  "reason": "gemini-2.5-flash became externally unavailable before E4 semantic outcomes were inspected",
+  "decision_basis": "provider availability and preregistered offline four-model bridge gate only",
+  "outcome_blind": true,
+  "bridge": {"result": "PASS", "multi_oracle_headroom": 0.044892704582338905, "largest_winner_share": 0.4677804295942721, "tie_rate_at_0_01": 0.3914081145584726},
+  "v2_models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo"],
+  "v2_design": {"tasks": 40, "trajectories_per_task": 4, "nodes": 4, "expected_outcomes": 640, "behavior_probability": 0.25, "adjacent_transition_pair_count": 10},
+  "old_five_model_observations": {"api_attempts": 20, "successful_keys": 12, "classification": "engineering/pre-amendment observations", "excluded_from_v2_training": true, "excluded_from_v2_evaluation": true},
+  "primary": "N4 final semantic quality; paired StateAware minus RequestOnly bootstrap CI lower bound > 0",
+  "multiobjective_scope": "deferred to E4.2",
+  "internal_evaluation_stage_1": {"policies": ["request-only", "state-aware"], "tasks": 20, "repeats": 2, "nodes": 4, "planned_calls": 320},
+  "unchanged": ["task split", "DAG nodes", "node prompts", "state definition", "outcome-blind collection gates", "reserved C10 remaining-60 untouched"]
+}

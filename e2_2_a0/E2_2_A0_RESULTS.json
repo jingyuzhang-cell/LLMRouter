@@ -1,0 +1,165 @@
+{
+  "advantage_mae": 0.14575283758976124,
+  "advantage_spearman": 0.01597414799893314,
+  "anchor": "deepseek",
+  "anchor_f1": 0.6045767195767197,
+  "confirmatory_claim_allowed": false,
+  "coverage": 0.1527777777777778,
+  "decision": "STOP_E2_2",
+  "experiment": "E2.2-A0",
+  "go_conditions": {
+    "coverage_ge_0_10": true,
+    "harmful_switch_better_than_matched_random": false,
+    "oof_selective_gain_gt_zero": true,
+    "predictability_above_no_information": true
+  },
+  "grouped_bootstrap_95_ci": [
+    -0.00978205942128839,
+    0.010313088512241057
+  ],
+  "grouping_unit": "company",
+  "groups": 258,
+  "harmful_switch_95_ucb_wilson": 0.3437028664047817,
+  "harmful_switch_comparison_rule": "learned HSR < matched-random 95% simulation interval lower bound",
+  "harmful_switch_improves_over_random": false,
+  "harmful_switch_rate": 0.21818181818181817,
+  "matched_random": {
+    "gain_95_interval": [
+      -0.01031283068783069,
+      0.006512896825396822
+    ],
+    "hsr_95_interval": [
+      0.13114754098360656,
+      0.33962264150943394
+    ],
+    "matched_coverage": 0.1527777777777778,
+    "mean_gain": -0.0019190123456790129,
+    "mean_harmful_switch_rate": 0.2293364815488115,
+    "simulations": 2000
+  },
+  "new_api_calls": 0,
+  "opportunity_auprc": 0.2965262525729361,
+  "opportunity_prevalence": 0.23333333333333334,
+  "oracle_gap": 0.09516754850088183,
+  "oracle_gap_recovery": 0.0010656041512231375,
+  "outer_folds": [
+    {
+      "inner_selective_gain": 0.008272707231040564,
+      "lcb_quantile": 0.2,
+      "outer_fold": 0,
+      "selected_model": "hgb_l2_0.1_leaves_7",
+      "tau": 0.01,
+      "test_groups": 51,
+      "test_n": 72,
+      "train_groups": 207,
+      "train_n": 288
+    },
+    {
+      "inner_selective_gain": 0.014478615520282186,
+      "lcb_quantile": 0.3,
+      "outer_fold": 1,
+      "selected_model": "hgb_l2_10_leaves_7",
+      "tau": 0.0,
+      "test_groups": 51,
+      "test_n": 72,
+      "train_groups": 207,
+      "train_n": 288
+    },
+    {
+      "inner_selective_gain": 0.018209876543209873,
+      "lcb_quantile": 0.3,
+      "outer_fold": 2,
+      "selected_model": "hgb_l2_1_leaves_7",
+      "tau": 0.0,
+      "test_groups": 52,
+      "test_n": 72,
+      "train_groups": 206,
+      "train_n": 288
+    },
+    {
+      "inner_selective_gain": 0.00010471781305114698,
+      "lcb_quantile": 0.2,
+      "outer_fold": 3,
+      "selected_model": "hgb_l2_1_leaves_15",
+      "tau": 0.0,
+      "test_groups": 52,
+      "test_n": 72,
+      "train_groups": 206,
+      "train_n": 288
+    },
+    {
+      "inner_selective_gain": 0.003075396825396823,
+      "lcb_quantile": 0.3,
+      "outer_fold": 4,
+      "selected_model": "ridge_alpha_0.1",
+      "tau": 0.0,
+      "test_groups": 52,
+      "test_n": 72,
+      "train_groups": 206,
+      "train_n": 288
+    }
+  ],
+  "predictability_above_no_information": true,
+  "predicted_advantage_mean": -0.0741055102298204,
+  "resources": {
+    "mean_cost_delta_usd": 0.0031813074907407406,
+    "mean_latency_delta_seconds": 0.3442456481481481,
+    "note": "No single utility scalar is selected because lambda_cost and lambda_latency were not prospectively frozen.",
+    "utility_sensitivity": [
+      {
+        "lambda_cost_per_usd": 0.0,
+        "lambda_latency_per_second": 0.0,
+        "mean_utility_delta": 0.00010141093474426895
+      },
+      {
+        "lambda_cost_per_usd": 0.0,
+        "lambda_latency_per_second": 0.001,
+        "mean_utility_delta": -0.00024283471340387974
+      },
+      {
+        "lambda_cost_per_usd": 0.0,
+        "lambda_latency_per_second": 0.005,
+        "mean_utility_delta": -0.0016198173059964725
+      },
+      {
+        "lambda_cost_per_usd": 1.0,
+        "lambda_latency_per_second": 0.0,
+        "mean_utility_delta": -0.003079896555996471
+      },
+      {
+        "lambda_cost_per_usd": 1.0,
+        "lambda_latency_per_second": 0.001,
+        "mean_utility_delta": -0.0034241422041446203
+      },
+      {
+        "lambda_cost_per_usd": 1.0,
+        "lambda_latency_per_second": 0.005,
+        "mean_utility_delta": -0.004801124796737214
+      },
+      {
+        "lambda_cost_per_usd": 5.0,
+        "lambda_latency_per_second": 0.0,
+        "mean_utility_delta": -0.015805126518959434
+      },
+      {
+        "lambda_cost_per_usd": 5.0,
+        "lambda_latency_per_second": 0.001,
+        "mean_utility_delta": -0.01614937216710758
+      },
+      {
+        "lambda_cost_per_usd": 5.0,
+        "lambda_latency_per_second": 0.005,
+        "mean_utility_delta": -0.017526354759700175
+      }
+    ]
+  },
+  "selective_f1": 0.6046781305114638,
+  "selective_gain": 0.00010141093474426895,
+  "specialists": [
+    "glm-5.2",
+    "qwen-plus"
+  ],
+  "status": "RETROSPECTIVE_DEVELOPMENT",
+  "switch_count": 55,
+  "tasks": 360
+}

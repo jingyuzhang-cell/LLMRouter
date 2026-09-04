@@ -1,0 +1,21 @@
+{
+  "version": "E3.0-four-model-matched-pool-bridge-v1",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "reason": "Gemini 2.5 provider deprecation; availability-driven and outcome-blind.",
+  "data": "419 tasks x 4 matched models x 3 frozen repeats; no API calls",
+  "models": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo"],
+  "excluded_model": "gemini-2.5-flash",
+  "methods": "Identical to frozen E3.0: shared folds, TF-IDF, Ridge(alpha=20), normalization, weights and bootstrap.",
+  "reported_objectives": ["Q", "Q+T", "Q+C+T+R"],
+  "reported_metrics": ["static", "dynamic", "oracle", "dynamic_minus_static", "oracle_headroom", "gap_recovery", "winner_entropy", "largest_winner_share", "median_margin", "tie_rate"],
+  "continuation_gate": {
+    "objective": "Q+C+T+R",
+    "oracle_headroom_gt": 0.03,
+    "largest_winner_share_lt": 0.75,
+    "tie_rate_at_0_01_lte": 0.70,
+    "dynamic_significance_not_required": true
+  },
+  "semantic_e4_outcomes_accessed": false,
+  "external_api_calls": 0,
+  "reserved_confirmatory_access": false
+}

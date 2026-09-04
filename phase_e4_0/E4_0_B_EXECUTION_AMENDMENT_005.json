@@ -1,0 +1,132 @@
+{
+  "version": "E4.0-B-execution-amendment-005",
+  "status": "FROZEN_BEFORE_FORMAL_640_COLLECTION",
+  "frozen_at_utc": "2026-09-03T08:02:40Z",
+  "reason": "Outcome-blind runtime-control finalization before a clean formal collection restart",
+  "scientific_protocol_unchanged": true,
+  "unchanged": [
+    "40 exploration tasks and frozen split",
+    "20 internal holdout tasks kept inaccessible during collection",
+    "160 trajectories and 640 formal outcome keys",
+    "four-model node assignments",
+    "deterministic exact model and transition balance",
+    "behavior_probability=0.25",
+    "assignment independent of execution state",
+    "N1-N2-N3-N4 DAG topology and same-trajectory lineage",
+    "prompts and output schemas",
+    "temperature=0",
+    "provider-default thinking behavior",
+    "frozen pre-route state contract",
+    "scoring protocol and primary paired-bootstrap gate"
+  ],
+  "runtime_controls": {
+    "global_concurrency": 4,
+    "per_provider_concurrency": 1,
+    "request_timeouts_seconds": {
+      "N1": 240,
+      "N2": 120,
+      "N3": 120,
+      "N4": 120
+    },
+    "timeout_uniform_across_models_within_node": true,
+    "max_attempts_per_outcome_key": 3,
+    "retry_backoff_seconds": [30, 120],
+    "cost_hard_cap_usd": 10.0
+  },
+  "latency_estimand": {
+    "T_runtime": "T_provider + T_retry",
+    "T_provider": "sum of provider request latency across attempts for one outcome key",
+    "T_retry": "sum of preregistered retry backoff preceding attempts for one outcome key",
+    "T_queue": "collector scheduler queue wait, recorded separately and excluded from workflow runtime"
+  },
+  "required_attempt_telemetry": [
+    "requested_model_alias",
+    "provider_returned_model",
+    "provider",
+    "provider_endpoint",
+    "execution_control_version",
+    "configured_context_limit",
+    "max_tokens",
+    "thinking_mode",
+    "finish_reason",
+    "attempt",
+    "provider_latency_ms",
+    "retry_backoff_ms",
+    "scheduler_queue_wait_ms",
+    "timeout_seconds",
+    "tokens",
+    "cost_usd",
+    "execution_timestamp"
+  ],
+  "thinking_mode_log_value": "provider_default_unchanged",
+  "shake_down_exclusion": {
+    "source_attempt_count": 4,
+    "source_final_outcome_count": 2,
+    "occurred_before_execution_control_finalization": true,
+    "semantic_correctness_or_quality_score_used": false,
+    "collection_control_selected_from_outcome_quality": false,
+    "archive_only": true,
+    "excluded_from_formal_training_and_evaluation": true,
+    "formal_restart": "0/640"
+  },
+  "frozen_artifact_sha256": {
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7",
+    "phase_e4_0_v2/E4_0_B_V2_LONG_N1_PREFLIGHT.json": "cfee622a6d4532dd7b16a3cecd1ff64f6169410bc8c25fe5f6e8f7a43d1bbdc6",
+    "phase_e4_0_v2/E4_0_B_V2_DS_GLM_CALIBRATION.json": "a66b6bb2debd897549c0f7bec6f971814b606e7ea50ae8a4cddeef348516c71d"
+  },
+  "frozen_execution_code_sha256": {
+    "run_e4_0_b_v2_controlled.py": "27f4146f672ef6aa4aa79f323ff7dd4a0e67faac853ca9f518dceef0e067be66",
+    "phase_e4_0/execution_controls.py": "1c673a42f8e88dbd838fd4b43dd55f45292b2718805d092b31801f25ee4a6afe",
+    "autodl-tmp/LLMRouter-extracted/LLMRouter-main/LLMRouter-main/openclaw_router/server.py": "da2eb066106cfd3e420e2c3f2881a939b9c9f8a37668cd6c4f411056455bb0c5"
+  },
+  "verification_test_sha256": {
+    "tests/test_e4_0_execution_controls.py": "bba884b119d2b0593420fd3a7b8ead7bebd3c16ffa677613292b60b427446db0"
+  },
+  "preflight": {
+    "four_model_long_N1_gate": "4/4 PASS before this amendment",
+    "additional_preflight_forbidden": true
+  },
+  "collection_checkpoints": [50, 100, 200, 400, 640],
+  "checkpoint_behavior": "PASS automatically continues; FAIL freezes collection",
+  "checkpoint_hard_stop_gates": {
+    "actual_total_cost_usd": "<=10",
+    "projected_total_cost_usd": "<=10",
+    "model_progress_gap": "<=20",
+    "overall_terminal_format_valid_rate": ">=0.95",
+    "attempt_generation_ceiling_binding_rate": "<=0.02",
+    "provider_outage": "for any provider with at least 5 terminal outcomes, provider_success_rate>=0.50",
+    "duplicate_formal_successes": 0,
+    "duplicate_terminal_records": 0,
+    "required_attempt_telemetry_missing": 0,
+    "frozen_plan_assignment_mismatches": 0,
+    "at_640": "all frozen outcome keys and transition chains complete"
+  },
+  "engineering_only_collection_audit": [
+    "counts and unique keys",
+    "attempts and retries",
+    "provider success and outage signals",
+    "JSON parse and node-schema validity",
+    "generation ceiling binding",
+    "cost and projected cost",
+    "model assignment and transition progress",
+    "provider/model/node/time-block latency decomposition",
+    "model/version telemetry completeness"
+  ],
+  "forbidden_until_640_collection_audit_passes": [
+    "semantic correctness or quality scoring",
+    "gold-answer or gold-evidence comparison",
+    "model capability comparison from collected outputs",
+    "prompt, schema, state-feature, model-pool, or assignment modification",
+    "B2 estimator fitting or hyperparameter selection",
+    "internal holdout access or execution"
+  ],
+  "post_collection_sequence": [
+    "collection integrity audit",
+    "semantic scoring authorization",
+    "request-only versus state-aware B2 with identical estimator and hyperparameters",
+    "state-value predictability diagnostic including N1 negative control",
+    "frozen 20-task fresh policy execution only after B2 freeze"
+  ],
+  "outcome_neutrality": "A null or negative state-aware result closes or narrows the semantic claim; no protocol change may target a positive result."
+}

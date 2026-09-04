@@ -1,0 +1,40 @@
+{
+  "version": "progrouter-style-e4-baseline-v1",
+  "status": "OUTCOME_BLIND_SCAFFOLD_FROZEN_BEFORE_E4_COMPLETION",
+  "method_source": "arXiv:2608.25992",
+  "exact_official_reproduction": false,
+  "changes_to_e4_collection": false,
+  "data": {
+    "exploration_plan": "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl",
+    "node_log": "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_NODE_LOG.jsonl",
+    "required_unique_outcomes_before_training": 640,
+    "semantic_outcomes_accessed_at_freeze": false,
+    "reserved_holdout_accessed_at_freeze": false
+  },
+  "stages": [
+    {
+      "name": "request_only",
+      "features": ["observable request features", "node type", "candidate model"]
+    },
+    {
+      "name": "progress_lite",
+      "features": ["all request_only features", "frozen pre_action_state", "four deterministic progress views"]
+    }
+  ],
+  "fairness": {
+    "same_estimator": "HistGradientBoostingRegressor",
+    "same_hyperparameters": true,
+    "group_unit": "task_id",
+    "counterfactual_labels": false,
+    "target": "observed trajectory final return-to-go"
+  },
+  "advance_gate": "Implement dual-path semantic predictor and meta-gating only if progress_lite beats request_only under the frozen E4 internal evaluation gate.",
+  "primary_claim": "State-aware routing improves over request-only routing in the frozen financial DAG.",
+  "forbidden": [
+    "change E4 tasks, assignments, prompts, schemas, model pool, or collection policy",
+    "train before 640 unique terminal outcomes",
+    "use C10 remaining holdout during development",
+    "describe this implementation as an exact official reproduction"
+  ]
+}
+

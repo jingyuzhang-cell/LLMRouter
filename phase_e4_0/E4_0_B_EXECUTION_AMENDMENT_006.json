@@ -1,0 +1,76 @@
+{
+  "version": "E4.0-B-execution-amendment-006",
+  "status": "FROZEN_ENGINEERING_REPAIR_BEFORE_RESUME",
+  "outcome_blind": true,
+  "semantic_quality_inspected": false,
+  "reserved_holdout_accessed": false,
+  "external_api_calls_during_amendment": 0,
+  "unchanged_experiment_definition": {
+    "exploration_tasks": 40,
+    "internal_holdout_tasks": 20,
+    "model_pool": ["deepseek-chat", "glm-5.2", "qwen-plus", "qwen-turbo"],
+    "formal_outcome_keys": 640,
+    "assignment": "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl",
+    "node_model_strata": 16,
+    "adjacent_transition_balance": "frozen exact balance",
+    "behavior_probability": 0.25,
+    "action_depends_on_state": false,
+    "dag": ["N1", "N2", "N3", "N4"],
+    "prompts": "unchanged",
+    "temperature": 0,
+    "thinking_mode": "provider_default_unchanged",
+    "primary_evaluation_gate": "unchanged"
+  },
+  "generation_ceiling": {
+    "glm_n1_initial_max_tokens": 16384,
+    "glm_n1_escalation_max_tokens": 32768,
+    "glm_n2_max_tokens": 4096,
+    "escalation_only_if": ["finish_reason == length", "generation_ceiling_binding == true", "empty output caused by generation ceiling"],
+    "semantic_quality_based_escalation_forbidden": true,
+    "thinking_mode_change_forbidden": true
+  },
+  "validity_semantics": {
+    "fields": ["provider_success", "json_parse_valid", "node_schema_valid"],
+    "canonicalization": ["numeric string confidence to float", "scalar answer to string", "designated scalar list member to string"],
+    "lossless_deterministic_only": true,
+    "semantic_repair_forbidden": true,
+    "evidence_injection_forbidden": true,
+    "llm_repair_forbidden": true,
+    "genuine_model_schema_failure_is_experimental_outcome": true,
+    "schema_valid_rate_is_resume_hard_gate": false
+  },
+  "runtime_state_vocabulary": ["upstream_provider_success", "upstream_schema_valid", "upstream_evidence_count", "upstream_extraction_field_count", "upstream_confidence", "upstream_output_length", "upstream_latency_ms", "cumulative_cost_usd", "remaining_budget_usd", "retry_count"],
+  "cost_projection": {
+    "method": "sum over frozen node-model strata of 40 times stratum mean cost",
+    "unobserved_strata": "pre-registered conservative engineering estimate with uncertainty",
+    "hard_cost_cap_usd": 10.0,
+    "quality_based_budget_change_forbidden": true
+  },
+  "preserve_and_recollect": {
+    "existing_outcomes_must_be_preserved": true,
+    "canonical_key": ["task_id", "trajectory_id", "node_id"],
+    "allowed_reasons": ["demonstrated_generation_ceiling_binding", "provider_or_runtime_implementation_defect", "persistence_or_logging_corruption", "execution_implementation_defect"],
+    "forbidden_reasons": ["schema_noncompliance", "bad_answer", "low_confidence", "weak_evidence", "semantic_quality"],
+    "successful_unaffected_key_never_reexecutes": true
+  },
+  "frozen_artifact_sha256": {
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7"
+  },
+  "frozen_execution_code_sha256": {
+    "run_e4_0_b_v2_controlled.py": "46e6f9ad1c8bc701885b550832375126b8c7ee462f42c67654d5c8b344d72198",
+    "phase_e4_0/execution_controls.py": "476fb6a0f1bc4ff7d3add243a914fa3cb734c3df17dd4d40dc44d5f15361cb11",
+    "phase_e4_0/interfaces.py": "038334c731fcaecb778af5281afcb41fa387cbb67661d2009c9bedb392288bfd"
+  },
+  "verification_test_sha256": {
+    "tests/test_e4_0_execution_controls.py": "7941f6fe657c375cebc3c0aa34b3025a90312d7ff4a7cc18d5bbad264606f467"
+  },
+  "audit_requirements": {
+    "audit_only_must_not_call_external_api": true,
+    "audit_only_must_report_semantic_quality_accessed_false": true,
+    "audit_only_must_report_reserved_holdout_accessed_false": true,
+    "resume_hard_gates": ["deterministic_revalidation_completed", "validator_implementation_verified", "terminal_retained_artificial_ceiling_count_equals_zero", "telemetry_complete", "duplicates_equal_zero", "assignment_and_lineage_correct", "cost_gate_pass", "no_execution_implementation_defect"],
+    "historical_attempt_truncation_rate_is_diagnostic": true,
+    "terminal_engineering_binding_rate_scope": "current KEEP terminal outcomes only"
+  }
+}

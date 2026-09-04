@@ -1,0 +1,132 @@
+{
+  "version": "paper-experiment-ledger-v1",
+  "generated_at": "2026-09-04T16:00:50.893915+00:00",
+  "policy": "Raw artifacts are immutable; claims advance only through frozen gates.",
+  "experiments": {
+    "E2.1-A": {
+      "status": "CONFIRMATORY_FAIL",
+      "claim_role": "confirmatory node-specialization gate",
+      "protocol": {
+        "path": "e2_1_PROTOCOL_FINAL.json",
+        "sha256": "4b1b0d6998c8870d1573b55abed3e98e4f1e8c6528961134bdc72852e04c9843"
+      },
+      "matrix": {
+        "tasks": 360,
+        "models": [
+          "qwen-plus",
+          "glm-5.2",
+          "deepseek"
+        ],
+        "repeats": 3,
+        "expected_cells": 3240,
+        "raw_response_rows": 4291,
+        "unique_expected_keys_recorded": 3240,
+        "eligible_provider_success_keys": 3240,
+        "format_valid_keys": 3238,
+        "missing_record_keys": 0,
+        "unresolved_success_keys": 0,
+        "duplicate_or_retry_rows": 1051,
+        "out_of_matrix_keys": 0,
+        "malformed_rows": 0,
+        "by_model": {
+          "qwen-plus": {
+            "expected": 1080,
+            "recorded": 1080,
+            "eligible_provider_success": 1080,
+            "format_valid": 1078,
+            "unresolved": 0
+          },
+          "glm-5.2": {
+            "expected": 1080,
+            "recorded": 1080,
+            "eligible_provider_success": 1080,
+            "format_valid": 1080,
+            "unresolved": 0
+          },
+          "deepseek": {
+            "expected": 1080,
+            "recorded": 1080,
+            "eligible_provider_success": 1080,
+            "format_valid": 1080,
+            "unresolved": 0
+          }
+        }
+      },
+      "events": {
+        "rows": 4291,
+        "cost_usd": 71.81442951
+      },
+      "top_failure_reasons": [
+        [
+          "Client error '429 Too Many Requests' for url 'https://open.bigmodel.cn/api/paas/v4/chat/completions'\nFor more information check: https://developer.mozilla.org/e",
+          630
+        ],
+        [
+          "400: {\"error\":{\"message\":\"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code",
+          327
+        ],
+        [
+          "empty answer",
+          33
+        ],
+        [
+          "Server disconnected without sending a response.",
+          32
+        ]
+      ],
+      "analysis": {
+        "result_exists": true,
+        "allowed_now": false,
+        "overall_pass": false,
+        "next_action": "retain frozen FAIL; do not run E2.1-B"
+      },
+      "artifacts": {
+        "tasks_sha256": "c30c2bab9eeed44e13931c37d90515bdf5a85688f54931cf7553ba530ddec6e5",
+        "responses_sha256": "b893d0d668ef96c91ddcb6da94a1dd52f5dc46ff029375b5787a89eb02e3e371",
+        "events_sha256": "2aadce2f3634c5080806c8f411b49b142f831c75521c5a665a4cab1623261cfd"
+      }
+    },
+    "E2.2-A0": {
+      "status": "RETROSPECTIVE_DEVELOPMENT",
+      "claim_role": "leakage-controlled selective specialist routing feasibility",
+      "anchor": "deepseek",
+      "specialists": ["glm-5.2", "qwen-plus"],
+      "new_api_calls": 0,
+      "grouping_unit": "company",
+      "decision": "STOP_E2_2",
+      "confirmatory_claim_allowed": false,
+      "next_action": "do not collect fresh E2.2 data and do not retune A0",
+      "artifacts": {
+        "protocol": "e2_2_a0/E2_2_A0_PROTOCOL.json",
+        "feature_leakage_audit": "e2_2_a0/E2_2_A0_FEATURE_LEAKAGE_AUDIT.json",
+        "results": "e2_2_a0/E2_2_A0_RESULTS.json",
+        "power_analysis": "e2_2_a0/E2_2_A0_POWER_ANALYSIS.json",
+        "expert_summary": "e2_2_a0/E2_2_A0_EXPERT_SUMMARY.md"
+      }
+    },
+    "C9": {
+      "status": "CALIBRATION_ONLY_NO_FORMAL_LABELS",
+      "formal_labels_created": 0,
+      "gate_required_tasks": 480,
+      "claim_allowed": false,
+      "next_action": "do not use C9 as paper outcome until the frozen semantic label matrix is complete",
+      "artifact_sha256": "799faf3dfc3abe115f21a6b90615e9f984b39d2271e65031474f1ca642ba1339"
+    },
+    "E4.0-B-v2": {
+      "status": "EXPLORATORY_COLLECTION_REQUIRES_FAILURE_AND_PROVENANCE_AUDIT",
+      "event_rows": 528,
+      "provider_failures": 360,
+      "connection_failures": 355,
+      "model_alias_mismatches": [
+        {
+          "selected_model": "deepseek-chat",
+          "returned_model": "deepseek-v4-flash",
+          "count": 49
+        }
+      ],
+      "confirmatory_claim_allowed": false,
+      "next_action": "separate infrastructure failures and freeze actual model-version provenance before scoring",
+      "artifact_sha256": "ea7420a01cc8352974d66f74f1cf0997b6bfba001d442cfa0c24672030e42aec"
+    }
+  }
+}

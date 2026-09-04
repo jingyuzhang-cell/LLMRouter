@@ -1,0 +1,48 @@
+{
+  "anchor": "deepseek",
+  "confirmatory_claim_allowed": false,
+  "created_at": "2026-09-04T16:45:44.838766+00:00",
+  "evaluation": "5-fold outer GroupKFold by company; all selection in 4-fold inner GroupKFold",
+  "experiment": "E2.2-A0",
+  "go_rule": [
+    "oof_selective_gain_gt_zero",
+    "coverage_ge_0_10",
+    "harmful_switch_better_than_matched_random",
+    "predictability_above_no_information"
+  ],
+  "lcb_quantiles": [
+    0.1,
+    0.2,
+    0.3
+  ],
+  "models": [
+    "ridge_alpha_0.1",
+    "ridge_alpha_1",
+    "ridge_alpha_10",
+    "ridge_alpha_100",
+    "hgb_l2_0.1_leaves_7",
+    "hgb_l2_0.1_leaves_15",
+    "hgb_l2_1_leaves_7",
+    "hgb_l2_1_leaves_15",
+    "hgb_l2_10_leaves_7",
+    "hgb_l2_10_leaves_15"
+  ],
+  "new_provider_calls_permitted": false,
+  "policy": "switch to specialist with maximal training-calibrated lower advantage estimate iff it exceeds inner-selected tau; otherwise anchor",
+  "source_data": "e2_1_protocol/E2_1_A_FRESH_360_TASKS.jsonl",
+  "source_experiment_status": "CONFIRMATORY_FAIL",
+  "specialists": [
+    "glm-5.2",
+    "qwen-plus"
+  ],
+  "status": "RETROSPECTIVE_DEVELOPMENT",
+  "target": "mean three-repeat strict N1 Evidence-F1 advantage relative to deepseek",
+  "tau_candidates": [
+    0.0,
+    0.01,
+    0.03,
+    0.05
+  ],
+  "utility": "sensitivity grid only because resource tradeoff weights were not prospectively frozen",
+  "version": "1.0"
+}

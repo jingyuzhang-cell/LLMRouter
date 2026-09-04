@@ -1,0 +1,134 @@
+{
+  "protocol_id": "E4.1-state-observability-gate-v1",
+  "status": "FROZEN_BEFORE_E4_640_AND_BEFORE_SEMANTIC_LABEL_ACCESS",
+  "frozen_at": "2026-09-04T17:14:57.548690+00:00",
+  "role": "development gate; not confirmatory paper evidence",
+  "scientific_question": "Does runtime workflow state make model-action value more learnable than request and node information alone?",
+  "data": {
+    "collection": "E4.0-B-v2",
+    "required_unique_terminal_outcomes": 640,
+    "tasks": 40,
+    "trajectories_per_task": 4,
+    "nodes": [
+      "N1",
+      "N2",
+      "N3",
+      "N4"
+    ],
+    "models": [
+      "deepseek-chat",
+      "glm-5.2",
+      "qwen-plus",
+      "qwen-turbo"
+    ],
+    "known_behavior_probability": 0.25,
+    "grouping_unit": "leakage_group_id",
+    "observed_groups": 40,
+    "reserved_holdout_accessed_at_freeze": false
+  },
+  "quality_labels": {
+    "primary": "model-identity-blinded median of three integer 0-4 judge ratings, normalized by /4",
+    "judges": [
+      "doubao-seed-2.1-turbo",
+      "qwen-max",
+      "glm-4-flash"
+    ],
+    "candidate_failure_delivered_quality": 0,
+    "evaluator_failure": "missing and blocks complete-matrix analysis; never map to zero",
+    "sensitivity": [
+      "Doubao-only",
+      "consensus excluding Qwen-family judge",
+      "consensus excluding GLM-family judge"
+    ],
+    "reference_answers": "evaluator-only; forbidden from router features"
+  },
+  "prediction_target": "observed trajectory N4 delivered semantic quality as return-to-go for each observed node action",
+  "feature_sets": {
+    "request_only": [
+      "frozen observable request features",
+      "node one-hot",
+      "candidate-model one-hot"
+    ],
+    "state_aware": [
+      "all request_only",
+      "frozen pre_action_state fields"
+    ],
+    "shuffled_state": [
+      "state_aware with state permuted across tasks within outer-train node strata; 100 fixed-seed permutations"
+    ],
+    "ablations": {
+      "S0": "request_only",
+      "S1": "+ upstream provider/schema",
+      "S2": "+ evidence/extraction/confidence/output length",
+      "S3": "+ cost/latency/budget/retry",
+      "S4": "full state"
+    }
+  },
+  "estimator": {
+    "family": "HistGradientBoostingRegressor",
+    "identical_across_request_and_state": true,
+    "hyperparameters": {
+      "learning_rate": 0.05,
+      "max_iter": 200,
+      "max_leaf_nodes": 15,
+      "l2_regularization": 1.0,
+      "min_samples_leaf": 20,
+      "random_state": 20260905
+    },
+    "model_selection_after_labels": false
+  },
+  "cross_fitting": {
+    "outer": "5-fold deterministic GroupKFold by leakage_group_id",
+    "all preprocessing_fit_on_outer_train_only": true,
+    "all predictions_for_evaluation_are_oof": true,
+    "trajectory_and_nodes_from_same_task_never_cross_folds": true
+  },
+  "offline_policy": {
+    "action": "argmax model-specific OOF predicted return",
+    "scope": "one-step intervention conditional on behavior-policy state; not an end-to-end causal policy claim",
+    "primary_ope": "cross-fitted doubly robust with known propensity 0.25",
+    "sensitivity_ope": [
+      "IPS",
+      "SNIPS"
+    ],
+    "cluster_uncertainty": "10000 leakage-group bootstrap replicates",
+    "report": [
+      "effective sample size",
+      "max weight",
+      "action coverage",
+      "per-node value",
+      "overall value"
+    ]
+  },
+  "go_gate": {
+    "co_primary_predictability": "group-bootstrap 95% CI lower bound of RequestOnly absolute error minus StateAware absolute error > 0",
+    "co_primary_policy": "group-bootstrap 95% CI lower bound of DR(StateAware)-DR(RequestOnly) > 0",
+    "mechanism_safety": "DR(StateAware)-DR(ShuffledState) > 0 and mean N2-N4 state advantage > N1 state advantage",
+    "decision": "GO only if both co-primary gates and mechanism_safety pass; otherwise STOP complex state-aware routing without retuning"
+  },
+  "after_go": [
+    "freeze learned policies",
+    "execute pre-existing 20-task internal holdout with paired policies",
+    "only then implement ProgRouter-style and SelectiveStateAware"
+  ],
+  "after_stop": "report heterogeneity-observability gap; do not add complex routers",
+  "confirmatory_requirement": "A positive offline gate alone is insufficient. Paper-level causal claim requires fresh task-group isolated policy execution and paired group-bootstrap CI lower bound > 0.",
+  "forbidden": [
+    "semantic labels before 640 engineering audit passes",
+    "counterfactual labels for unobserved actions",
+    "row-level random split",
+    "trajectory/node rows as independent bootstrap units",
+    "post-action current-node fields as inputs",
+    "reference/gold/judge score as inputs",
+    "threshold or model retuning after OOF results",
+    "reserved C10 remaining-60 access during development"
+  ],
+  "frozen_inputs_sha256": {
+    "progrouter_reproduction/features.py": "f2d6198fde47cd6bb053c30f2ab49d2611addfd510b30bf68a0431426a2bb47d",
+    "phase_e4_0/interfaces.py": "038334c731fcaecb778af5281afcb41fa387cbb67661d2009c9bedb392288bfd",
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7"
+  },
+  "semantic_outcomes_accessed_during_freeze": false,
+  "external_api_calls_during_freeze": 0
+}

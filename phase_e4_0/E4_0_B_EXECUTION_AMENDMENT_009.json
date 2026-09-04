@@ -1,0 +1,67 @@
+{
+  "version": "E4.0-B-execution-amendment-009",
+  "status": "FROZEN_EXECUTION_CONTROL_CLOSURE",
+  "scope": "final execution-control closure for the remaining GLM N2 ceiling-bound recovery and active-terminal duplicate audit",
+  "outcome_blind": true,
+  "semantic_quality_accessed": false,
+  "reserved_holdout_accessed": false,
+  "scientific_definition_changed": false,
+  "formal_collection_membership_changed": false,
+  "authorized_change": {
+    "glm_n2_generation_ceiling_ladder": [4096, 8192, 16384],
+    "escalation_preconditions": {
+      "finish_reason": "length",
+      "generation_ceiling_binding": true
+    },
+    "maximum_additional_escalation_attempts": 2,
+    "execution_reason": "ENGINEERING_CEILING_ESCALATION",
+    "execution_control_version": "E4.0-B-execution-amendment-009",
+    "normal_retry_policy_changed": false,
+    "provider_execution_path_changed": false,
+    "prompt_schema_temperature_thinking_changed": false,
+    "semantic_based_escalation_forbidden": true,
+    "remaining_recovery_scope": {
+      "recollect_key": ["c9_f124a01f37f67ae49cdb", "c9_f124a01f37f67ae49cdb:V2T3", "N2"],
+      "pending_initial_key": ["c9_d3ff77c9870ceda4a8e5", "c9_d3ff77c9870ceda4a8e5:V2T2", "N1"]
+    }
+  },
+  "duplicate_audit_contract": {
+    "reported_fields": [
+      "historical_duplicate_record_count",
+      "historical_duplicate_success_count",
+      "active_duplicate_terminal_count"
+    ],
+    "hard_gate_field": "active_duplicate_terminal_count",
+    "history_is_preserved": true,
+    "older_attempts_are_superseded": true,
+    "same_attempt_competing_active_terminals_fail": true
+  },
+  "stop_condition": "run audit-only immediately after the remaining two canonical keys and stop before 100",
+  "verification": {
+    "pytest": "39 passed",
+    "pre_recovery_audit_gate_pass": true,
+    "pre_recovery_unique_final_outcomes": 49,
+    "pre_recovery_api_attempts": 55,
+    "pre_recovery_historical_duplicate_record_count": 2,
+    "pre_recovery_historical_duplicate_success_count": 2,
+    "pre_recovery_active_duplicate_terminal_count": 0,
+    "pre_recovery_terminal_engineering_binding_count": 0
+  },
+  "frozen_execution_code_sha256": {
+    "run_e4_0_b_v2_controlled.py": "9ae72d452304dac847a5ea53e4222443106b31c153b33b27e5660ed509ff3c19",
+    "phase_e4_0/execution_controls.py": "ad5679b195853aa1dbd547998a69c08489e07b687e39de6bc3919c6ec24de8e5",
+    "phase_e4_0/interfaces.py": "038334c731fcaecb778af5281afcb41fa387cbb67661d2009c9bedb392288bfd"
+  },
+  "verification_test_sha256": {
+    "tests/test_e4_0_effective_preflight.py": "765df58a746ae0cedb430c29e896344ff7da596b8719de7999452d6c9c5b6f42",
+    "tests/test_e4_0_execution_controls.py": "81871e1c50f1e4d1af53002d65f4a826fa522b9d407b397cc28b593bdc252a3d"
+  },
+  "unchanged_control_sha256": {
+    "phase_e4_0/E4_0_B_EXECUTION_AMENDMENT_006.json": "97e4cd2663a6d006b01be35c067606b6f5b3ba5abbc0ca707d9fd96e6865a65f",
+    "phase_e4_0/E4_0_B_EXECUTION_AMENDMENT_007.json": "1a5e4babec28e0d2c102052a885d4aa6be960ecf92bd8af5ef41e49b475bc5fd",
+    "phase_e4_0/E4_0_B_EXECUTION_AMENDMENT_008.json": "a7bb09746fb45026e58630bc477b4629ad076a182341e841cf7c22d25cd6b972",
+    "phase_e4_0_v2/E4_0_B_V2_EFFECTIVE_PREFLIGHT.json": "e11206e09d1ceb177cce1c9797eed0c88d122a3b270633888111e34172e9a436",
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7"
+  }
+}

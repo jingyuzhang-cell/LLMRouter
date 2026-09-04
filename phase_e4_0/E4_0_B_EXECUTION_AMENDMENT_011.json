@@ -1,0 +1,99 @@
+{
+  "version": "E4.0-B-execution-amendment-011",
+  "status": "FROZEN_UNIFIED_GENERATION_CEILING_CLOSURE",
+  "scope": "final outcome-blind execution-only generation-ceiling closure at checkpoint 400",
+  "outcome_blind": true,
+  "semantic_quality_accessed": false,
+  "reserved_holdout_accessed": false,
+  "scientific_definition_changed": false,
+  "external_api_calls_during_construction": 0,
+  "root_cause": "first observed binding response was accepted terminal before the prior history-triggered ladder could activate",
+  "policy": {
+    "ladders": {
+      "N1": [
+        16384,
+        32768,
+        65536
+      ],
+      "N2": [
+        4096,
+        8192,
+        16384,
+        32768
+      ],
+      "N3": [
+        1600,
+        3200,
+        6400,
+        12800
+      ],
+      "N4": [
+        1200,
+        2400,
+        4800,
+        9600
+      ]
+    },
+    "applies_to_all_assigned_models": true,
+    "required_trigger": {
+      "finish_reason": "length",
+      "generation_ceiling_binding": true
+    },
+    "first_binding_is_nonterminal_when_higher_ladder_step_exists": true,
+    "recovery_scope_source": "outcome-blind engineering recollection manifest only",
+    "task_id_specific_rules": false,
+    "stop_on_first_non_binding_completion": true,
+    "fail_closed_if_highest_ceiling_remains_binding": true,
+    "execution_reason": "ENGINEERING_CEILING_ESCALATION"
+  },
+  "forbidden_escalation_inputs": [
+    "task_id",
+    "semantic_quality",
+    "reference",
+    "gold",
+    "schema_validity",
+    "answer_correctness",
+    "confidence",
+    "evidence_quality"
+  ],
+  "unchanged": [
+    "prompts",
+    "schemas",
+    "model_pool",
+    "model_assignments",
+    "behavior_probability",
+    "state_vocabulary",
+    "temperature",
+    "thinking_mode",
+    "provider_selection",
+    "normal_retry_logic",
+    "cost_accounting",
+    "evaluation_gates",
+    "plan",
+    "split"
+  ],
+  "pre_recovery": {
+    "checkpoint": 400,
+    "recollect_count": 6,
+    "audit_path": "phase_e4_0_v2/E4_0_B_V2_AMENDMENT_011_PRE_RECOVERY_AUDIT.json",
+    "audit_sha256": "f66b6a094e0cfa04b77fe137a6bfb39ac002fe1501e18b93902541033e6ca27d"
+  },
+  "verification": {
+    "pytest": "27 passed",
+    "test_command": "python -m pytest -q tests/test_e4_0_effective_preflight.py tests/test_e4_0_execution_controls.py"
+  },
+  "frozen_execution_code_sha256": {
+    "run_e4_0_b_v2_controlled.py": "b2c732d6215e0c7d0d11c9faaa8bbde6dfd8be0dff0950e21be31848af6273a3",
+    "phase_e4_0/execution_controls.py": "ad5679b195853aa1dbd547998a69c08489e07b687e39de6bc3919c6ec24de8e5",
+    "phase_e4_0/interfaces.py": "038334c731fcaecb778af5281afcb41fa387cbb67661d2009c9bedb392288bfd"
+  },
+  "verification_test_sha256": {
+    "tests/test_e4_0_effective_preflight.py": "8f4883760b12282f3a7c621a0d20e174f529feadce04ab46f9918e7c77ad8d98",
+    "tests/test_e4_0_execution_controls.py": "81871e1c50f1e4d1af53002d65f4a826fa522b9d407b397cc28b593bdc252a3d"
+  },
+  "unchanged_control_sha256": {
+    "phase_e4_0/E4_0_B_EXECUTION_AMENDMENT_010.json": "2dcd0702e44a823ca3df405be0d43c31cac30c47136085b220fca5a4d5479553",
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": "E4.0-B-execution-amendment-002",
+  "status": "FROZEN_BEFORE_RESUMING_FORMAL_EXPLORATION",
+  "reason": "The original USD 375 value was a catastrophic safety ceiling, not an expected experiment budget.",
+  "cost": {"original_catastrophic_ceiling_usd": 375, "new_hard_cost_cap_usd": 10, "future_increase_rule": "Observed engineering cost only; never experimental effect."},
+  "outcome_identity": ["task_id", "trajectory_id", "node_id"],
+  "expected_outcome_keys": 800,
+  "outcome_states": ["SUCCESS", "PERMANENT_FAILURE", "PENDING"],
+  "resume": {"successful_keys_never_reexecuted": true, "max_attempts_per_key": 3, "api_attempts_separate": true},
+  "provider_controls": {"preflight_required": ["glm-5.2", "gemini-2.5-flash", "qwen-plus"], "backoff_seconds": [30, 120], "three_429_cooldown_seconds": 600},
+  "scheduler": {"dependency_aware_ready_queue": true, "same_trajectory_upstream_final_required": true, "max_completed_model_gap": 20},
+  "collection_health": {"interval": 50, "engineering_only": true, "semantic_quality_access_forbidden": true, "projected_cost_gate_usd": 10},
+  "failure_semantics": {"semantic_quality": null, "delivered_quality": 0},
+  "unchanged": ["tasks", "800 keys", "trajectories", "nodes", "model assignments", "prompts", "schemas", "temperature", "state definition", "outcomes", "N1 contexts"]
+}

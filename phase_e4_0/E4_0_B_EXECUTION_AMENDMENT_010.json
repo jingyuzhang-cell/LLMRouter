@@ -1,0 +1,66 @@
+{
+  "version": "E4.0-B-execution-amendment-010",
+  "status": "FROZEN_GENERATION_CEILING_POLICY_CLOSURE",
+  "scope": "final outcome-blind node-level generation-ceiling policy closure",
+  "outcome_blind": true,
+  "semantic_quality_accessed": false,
+  "reserved_holdout_accessed": false,
+  "scientific_definition_changed": false,
+  "policy": {
+    "N1_existing_policy_unchanged": true,
+    "N2_existing_policy_unchanged": true,
+    "N3_max_tokens_ladder": [1600, 3200, 6400],
+    "N4_max_tokens_ladder": [1200, 2400, 4800],
+    "applies_to_all_assigned_models": true,
+    "required_trigger": {
+      "finish_reason": "length",
+      "generation_ceiling_binding": true
+    },
+    "maximum_engineering_escalations_per_canonical_key": 2,
+    "stop_on_first_non_binding_completion": true,
+    "fail_closed_if_final_ceiling_remains_binding": true,
+    "execution_reason": "ENGINEERING_CEILING_ESCALATION",
+    "execution_control_version": "E4.0-B-execution-amendment-010",
+    "required_transition_telemetry": ["previous_max_tokens", "new_max_tokens", "generation_ceiling_binding"]
+  },
+  "forbidden_escalation_inputs": [
+    "semantic_quality", "reference", "gold", "schema_validity",
+    "answer_correctness", "confidence", "evidence_quality"
+  ],
+  "unchanged": [
+    "prompts", "schemas", "model_pool", "model_assignments",
+    "behavior_probability", "state_vocabulary", "temperature",
+    "thinking_mode", "provider_selection", "normal_retry_logic",
+    "cost_accounting", "evaluation_gates", "plan", "split"
+  ],
+  "authorized_initial_recovery_keys": [
+    ["c9_8399c2ea076354fdaf6d", "c9_8399c2ea076354fdaf6d:V2T1", "N4"],
+    ["c9_fbb620acce40675a352b", "c9_fbb620acce40675a352b:V2T1", "N3"]
+  ],
+  "historical_attempts_preserved": true,
+  "verification": {
+    "pytest": "42 passed",
+    "pre_recovery_audit_gate_pass": true,
+    "pre_recovery_valid_terminal_outcomes": 98,
+    "pre_recovery_api_attempts": 106,
+    "pre_recovery_recollect_count": 2,
+    "active_duplicate_terminal_count": 0,
+    "retained_terminal_artificial_binding_count": 0,
+    "semantic_quality_accessed": false,
+    "reserved_holdout_accessed": false
+  },
+  "frozen_execution_code_sha256": {
+    "run_e4_0_b_v2_controlled.py": "1ef095f46b57846097833504043358d782439b17701d4d7beb9358ee569a5eec",
+    "phase_e4_0/execution_controls.py": "ad5679b195853aa1dbd547998a69c08489e07b687e39de6bc3919c6ec24de8e5",
+    "phase_e4_0/interfaces.py": "038334c731fcaecb778af5281afcb41fa387cbb67661d2009c9bedb392288bfd"
+  },
+  "verification_test_sha256": {
+    "tests/test_e4_0_effective_preflight.py": "494284b2750a6f79f256174c0318e09c230c66c1f8063d789d82d681978899cf",
+    "tests/test_e4_0_execution_controls.py": "81871e1c50f1e4d1af53002d65f4a826fa522b9d407b397cc28b593bdc252a3d"
+  },
+  "unchanged_control_sha256": {
+    "phase_e4_0/E4_0_B_EXECUTION_AMENDMENT_009.json": "17c28408f1725118049b1eba0c1a9576c633959f842055aa5f71b7f59430402d",
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7"
+  }
+}
