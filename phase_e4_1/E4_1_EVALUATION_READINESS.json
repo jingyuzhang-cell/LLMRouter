@@ -1,0 +1,100 @@
+{
+  "machine_calibration_status": "MACHINE_CALIBRATION_FAIL",
+  "scope": "15-group base machine calibration only; not final scorer validity",
+  "human_reviewer_calibration_status": "UNAVAILABLE",
+  "per_judge": {
+    "doubao": {
+      "successful_groups": 13,
+      "expected_groups": 15,
+      "parse_success_rate": 0.8666666666666667,
+      "missing_rate": 0.13333333333333333,
+      "latest_failure_types": {
+        "TimeoutError": 2
+      },
+      "historical_failed_call_types": {
+        "TimeoutError": 4
+      }
+    },
+    "qwen-max": {
+      "successful_groups": 15,
+      "expected_groups": 15,
+      "parse_success_rate": 1.0,
+      "missing_rate": 0.0,
+      "latest_failure_types": {},
+      "historical_failed_call_types": {}
+    },
+    "glm-4-flash": {
+      "successful_groups": 10,
+      "expected_groups": 15,
+      "parse_success_rate": 0.6666666666666666,
+      "missing_rate": 0.3333333333333333,
+      "latest_failure_types": {
+        "ValueError": 3,
+        "JSONDecodeError": 2
+      },
+      "historical_failed_call_types": {
+        "ValueError": 15,
+        "JSONDecodeError": 2
+      }
+    }
+  },
+  "all_three_successful_groups": 8,
+  "agreement_population": "same groups and candidate answers successfully scored by all three judges",
+  "pairwise_agreement_on_common_population": {
+    "doubao__qwen-max": {
+      "common_candidate_scores": 34,
+      "exact_agreement": 0.5294117647058824,
+      "within_one_agreement": 0.8529411764705882,
+      "mean_absolute_disagreement": 0.6176470588235294,
+      "quadratic_weighted_kappa": 0.6800242865816636,
+      "spearman": 0.5328446870927346,
+      "gate_pass": true
+    },
+    "doubao__glm-4-flash": {
+      "common_candidate_scores": 34,
+      "exact_agreement": 0.5588235294117647,
+      "within_one_agreement": 0.8529411764705882,
+      "mean_absolute_disagreement": 0.6176470588235294,
+      "quadratic_weighted_kappa": 0.61288223812622,
+      "spearman": 0.6216088290318634,
+      "gate_pass": true
+    },
+    "qwen-max__glm-4-flash": {
+      "common_candidate_scores": 34,
+      "exact_agreement": 0.7058823529411765,
+      "within_one_agreement": 0.9411764705882353,
+      "mean_absolute_disagreement": 0.35294117647058826,
+      "quadratic_weighted_kappa": 0.811373092926491,
+      "spearman": 0.8706614420983887,
+      "gate_pass": true
+    }
+  },
+  "frozen_thresholds": {
+    "parse_success_min": 0.95,
+    "pairwise_within_one_min": 0.8,
+    "pairwise_mae_max": 0.75
+  },
+  "stability_calibration_status": "NOT_RUN_THIS_CLOSURE",
+  "final_semantic_scorer_frozen": false,
+  "formal_e4_semantic_scoring_started": false,
+  "router_training_started": false,
+  "reserved_holdout_accessed": false,
+  "new_calibration_samples": 0,
+  "prompt_or_threshold_changed": false,
+  "event_source_sha256": "3ad2c89ad1f9248ea107b906fac1f772e5f6d74384148a13c7164a9e1877ed52",
+  "evaluation_amendment": "E4_1_EVALUATION_AMENDMENT_001.json",
+  "new_api_calls_this_turn": 7,
+  "diagnostic_calls": 2,
+  "format_recovery_calls": 5,
+  "raw_calibration_records_unchanged": true,
+  "formal_scorer_ready": false,
+  "remaining_blockers": [
+    "Doubao: 2 unresolved calibration timeouts; one same-setting diagnostic also timed out at 90 seconds.",
+    "GLM: 5 unresolved calibration groups; partial label coverage and malformed JSON remain after strict normalization.",
+    "Deterministic numeric subset: unit/scale and extraction contracts not yet validated; numeric references alone do not establish scorer readiness."
+  ],
+  "next_allowed_work": [
+    "Source-grounded numeric unit/scale contract validation without candidate output access.",
+    "Further judge repair requires a separate frozen engineering policy; no score imputation or threshold relaxation."
+  ]
+}

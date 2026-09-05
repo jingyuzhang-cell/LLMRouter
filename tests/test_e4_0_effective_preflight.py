@@ -147,6 +147,9 @@ def test_amendment_011_unified_ladders_and_first_binding_control():
         first = {"finish_reason": "length", "generation_ceiling_binding": True, "max_tokens": ladder[0]}
         assert amendment_011_binding_can_continue(node, first)
         assert amendment_011_escalation_allowed(node, [first])
+        provider_stop_binding = {**first, "finish_reason": "stop"}
+        assert amendment_011_escalation_allowed(node, [provider_stop_binding])
+        assert amendment_011_next_level(node, [provider_stop_binding]) == 1
         assert amendment_011_next_level(node, [first]) == 1
         final = {**first, "max_tokens": ladder[-1]}
         assert not amendment_011_binding_can_continue(node, final)

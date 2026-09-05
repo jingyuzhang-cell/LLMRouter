@@ -21,7 +21,7 @@ Raw rows: 4291; duplicate/retry rows: 1051; missing keys: 0.
 ## Other branches
 
 - **C9 — CALIBRATION_ONLY_NO_FORMAL_LABELS**: formal labels created = 0; not eligible for a paper outcome claim.
-- **E4.0-B-v2 — EXPLORATORY_COLLECTION_REQUIRES_FAILURE_AND_PROVENANCE_AUDIT**: 360 provider failures, including 355 connection failures; not yet eligible for confirmatory scoring.
+- **E4.0-B-v2 — COMPLETE**: final 640 engineering audit PASS; 640 canonical outcomes, 0 missing keys, 0 active duplicate terminals, 0 terminal ceiling bindings. Collection engineering CLOSED. Judge calibration and scorer freeze remain separate; semantic scoring has not started.
 
 ## Frozen next action
 

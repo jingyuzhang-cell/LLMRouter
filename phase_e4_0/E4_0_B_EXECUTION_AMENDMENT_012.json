@@ -1,0 +1,58 @@
+{
+  "version": "E4.0-B-execution-amendment-012",
+  "status": "FROZEN_PROVIDER_NORMALIZED_CEILING_CLOSURE",
+  "scope": "final outcome-blind provider-normalized ceiling closure after 640 attempted keys",
+  "outcome_blind": true,
+  "semantic_quality_accessed": false,
+  "reserved_holdout_accessed": false,
+  "scientific_definition_changed": false,
+  "external_api_calls_during_construction": 0,
+  "root_cause": "provider returned finish_reason=stop while completion usage exactly met max_tokens; normalized generation_ceiling_binding was true but Amendment-011 redundantly required raw finish_reason=length",
+  "policy": {
+    "ladders_unchanged_from_amendment_011": true,
+    "trigger": "generation_ceiling_binding=true as computed by frozen normalization",
+    "raw_finish_reason_is_not_a_second_gate": true,
+    "applies_to_all_nodes_and_models": true,
+    "first_binding_nonterminal_if_higher_ladder_step_exists": true,
+    "stop_on_first_non_binding_completion": true,
+    "fail_closed_at_highest_ladder": true,
+    "task_id_specific_rules": false,
+    "recovery_scope": "outcome-blind recollection manifest only"
+  },
+  "forbidden_inputs": [
+    "task_id",
+    "semantic_quality",
+    "reference",
+    "gold",
+    "schema_validity",
+    "answer_correctness",
+    "confidence",
+    "evidence_quality"
+  ],
+  "pre_recovery": {
+    "unique_final_outcomes_after_exclusion": 639,
+    "recollect_count": 1,
+    "audit_path": "phase_e4_0_v2/E4_0_B_V2_AMENDMENT_012_PRE_RECOVERY_AUDIT.json",
+    "audit_sha256": "3606619e46f29424755287dd870a1f5d33ebddcb4f3cf02254fd9d8531e6cb73"
+  },
+  "verification": {
+    "pytest": "34 passed",
+    "includes_provider_stop_binding_regression": true
+  },
+  "frozen_execution_code_sha256": {
+    "run_e4_0_b_v2_controlled.py": "c469582da3caefad7124ceac95233da2bbdbbce2c4cd055372ef48afd99fba2a",
+    "phase_e4_0/execution_controls.py": "ad5679b195853aa1dbd547998a69c08489e07b687e39de6bc3919c6ec24de8e5",
+    "phase_e4_0/interfaces.py": "038334c731fcaecb778af5281afcb41fa387cbb67661d2009c9bedb392288bfd"
+  },
+  "verification_test_sha256": {
+    "tests/test_e4_0_effective_preflight.py": "30b8b95bd5287a0c3cbb48eccec456a0a853827f5ec5ec104bbfc392e2bac7fe",
+    "tests/test_e4_0_execution_controls.py": "81871e1c50f1e4d1af53002d65f4a826fa522b9d407b397cc28b593bdc252a3d",
+    "tests/test_progrouter_reproduction.py": "d3d302151bb6f6670f27a621fb5a511583e8c1e501f3f837f193f3d2c0d4af09",
+    "tests/test_progrouter_ope.py": "cfad05dd93ad22aa127decb47d3391ebd5c1b5f40ed35a5bcdca815299cde73a"
+  },
+  "unchanged_control_sha256": {
+    "phase_e4_0/E4_0_B_EXECUTION_AMENDMENT_011.json": "5604fdd20cc355cff8b3e2db0d2fc719963a91578feb30440e3344d60aae330c",
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7"
+  }
+}

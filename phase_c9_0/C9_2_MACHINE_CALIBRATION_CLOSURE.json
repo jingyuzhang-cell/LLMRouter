@@ -1,0 +1,95 @@
+{
+  "machine_calibration_status": "MACHINE_CALIBRATION_FAIL",
+  "scope": "15-group base machine calibration only; not final scorer validity",
+  "human_reviewer_calibration_status": "PENDING_HUMAN_REVIEW",
+  "per_judge": {
+    "doubao": {
+      "successful_groups": 13,
+      "expected_groups": 15,
+      "parse_success_rate": 0.8666666666666667,
+      "missing_rate": 0.13333333333333333,
+      "latest_failure_types": {
+        "TimeoutError": 2
+      },
+      "historical_failed_call_types": {
+        "TimeoutError": 4
+      }
+    },
+    "qwen-max": {
+      "successful_groups": 15,
+      "expected_groups": 15,
+      "parse_success_rate": 1.0,
+      "missing_rate": 0.0,
+      "latest_failure_types": {},
+      "historical_failed_call_types": {}
+    },
+    "glm-4-flash": {
+      "successful_groups": 9,
+      "expected_groups": 15,
+      "parse_success_rate": 0.6,
+      "missing_rate": 0.4,
+      "latest_failure_types": {
+        "ValueError": 6
+      },
+      "historical_failed_call_types": {
+        "ValueError": 12
+      }
+    }
+  },
+  "all_three_successful_groups": 8,
+  "agreement_population": "same groups and candidate answers successfully scored by all three judges",
+  "pairwise_agreement_on_common_population": {
+    "doubao__qwen-max": {
+      "common_candidate_scores": 34,
+      "exact_agreement": 0.5294117647058824,
+      "within_one_agreement": 0.8529411764705882,
+      "mean_absolute_disagreement": 0.6176470588235294,
+      "quadratic_weighted_kappa": 0.6800242865816636,
+      "spearman": 0.5328446870927346,
+      "gate_pass": true
+    },
+    "doubao__glm-4-flash": {
+      "common_candidate_scores": 34,
+      "exact_agreement": 0.5588235294117647,
+      "within_one_agreement": 0.8529411764705882,
+      "mean_absolute_disagreement": 0.6176470588235294,
+      "quadratic_weighted_kappa": 0.61288223812622,
+      "spearman": 0.6216088290318634,
+      "gate_pass": true
+    },
+    "qwen-max__glm-4-flash": {
+      "common_candidate_scores": 34,
+      "exact_agreement": 0.7058823529411765,
+      "within_one_agreement": 0.9411764705882353,
+      "mean_absolute_disagreement": 0.35294117647058826,
+      "quadratic_weighted_kappa": 0.811373092926491,
+      "spearman": 0.8706614420983887,
+      "gate_pass": true
+    }
+  },
+  "frozen_thresholds": {
+    "parse_success_min": 0.95,
+    "pairwise_within_one_min": 0.8,
+    "pairwise_mae_max": 0.75
+  },
+  "stability_calibration_status": "NOT_RUN_THIS_CLOSURE",
+  "final_semantic_scorer_frozen": false,
+  "formal_e4_semantic_scoring_started": false,
+  "router_training_started": false,
+  "reserved_holdout_accessed": false,
+  "new_calibration_samples": 0,
+  "prompt_or_threshold_changed": false,
+  "event_source_sha256": "bcdf2485ba5718659d3bf07b6c7de47b6e6624386eec13ead76fda2fb4d1da74",
+  "retry_audit": {
+    "prior_event_rows": 45,
+    "new_calls": 8,
+    "new_calls_by_judge": {
+      "doubao": 2,
+      "glm-4-flash": 6
+    },
+    "successful_calls_retried": 0,
+    "recovered_calls": 0,
+    "new_samples": 0
+  },
+  "legacy_collection_result_warning": "BASE_COLLECTION_COMPLETE and judge_pass in the collection harness use the 3-group stage-0 count>=2 threshold; they are not the 15-group calibration gate. This closure and BASE_ANALYSIS apply the frozen 95% parse threshold."
+}

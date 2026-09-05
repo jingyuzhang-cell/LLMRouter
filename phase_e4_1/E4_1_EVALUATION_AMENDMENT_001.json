@@ -1,0 +1,54 @@
+{
+  "version": "E4.1-evaluation-amendment-001",
+  "status": "FROZEN_EVALUATION_ROUTE_BEFORE_E4_LABEL_ACCESS",
+  "frozen_at": "2026-09-05T02:19:23.134001+00:00",
+  "authorization": "User confirmed no human reviewers and explicitly authorized deterministic-primary / machine-secondary route.",
+  "scope": "Evaluation only; collection engineering remains CLOSED.",
+  "human_calibration": "UNAVAILABLE",
+  "human_gold_claim_allowed": false,
+  "human_templates_preserved": true,
+  "supersedes": "Human review prerequisite for this E4 evaluation route only; historical protocols retained.",
+  "primary_metric": "Unit-aware deterministic final N4 delivered correctness on predeclared numeric-reference-eligible tasks only. Not whole-E4 semantic quality.",
+  "deterministic_eligibility": "17 tasks identified exclusively from existing task/reference route; 68 trajectories. Eligibility cannot depend on candidate outputs or model performance.",
+  "deterministic_readiness_gate": "Freeze per-task unit/scale contracts and reference-independent final-answer extraction; synthetic tests before candidate output access. No scanning answers for a gold-matching number.",
+  "numeric_tolerance": "Retain existing C9 absolute error <= max(1e-6,1e-4*abs(reference)) in reference units; percent/ratio conversion requires explicit task-unit contract, never blind factor-100 matching.",
+  "secondary_metric": "Machine-judged final-answer quality on all applicable tasks after machine calibration and stability gates; median of three 0-4 scores divided by 4. Report independently from deterministic endpoint.",
+  "machine_judges": [
+    "doubao",
+    "qwen-max",
+    "glm-4-flash"
+  ],
+  "machine_gates": "Existing Amendment-003 parse/agreement/duplicate/order-stability thresholds unchanged; no replacement by a two-family-only consensus.",
+  "machine_sensitivity": [
+    "each judge separately",
+    "exclude Qwen-family judge",
+    "exclude GLM-family judge",
+    "family deviation and disagreement rates"
+  ],
+  "missing_evaluator_labels": "Missing, never zero; block corresponding analysis.",
+  "provider_failure": "delivered quality zero; semantic correctness unavailable",
+  "workflow_validity": "Must define mechanically from frozen interface contract before labels; do not tune against judged answer quality.",
+  "target": "Final N4 delivered quality propagated as RTG, endpoint-specific.",
+  "learning_controls": "Existing estimator, grouped folds, bootstrap, no post-result retuning and GO/STOP rules retained. Subset experiments labeled development only.",
+  "inference_scope": "Numeric subset cannot establish whole-E4 effect; one-step OPE cannot establish full adaptive-workflow causal value.",
+  "holdout": "No reserved holdout access in this amendment.",
+  "judge_format_repair": {
+    "allowed": "Only deterministic syntax normalization with exact label coverage and unchanged integer scores/reasons; raw response preserved.",
+    "implementation": "phase_e4_1/judge_format_normalization.py",
+    "tests": "9 passed",
+    "original_prompt_dimensions_thresholds_unchanged": true
+  },
+  "final_scorer_frozen": false,
+  "formal_e4_scoring_started": false,
+  "router_training_started": false,
+  "artifact_sha256": {
+    "phase_e4_1/E4_1_STATE_OBSERVABILITY_PROTOCOL.json": "50204f649c460bc23bcdc7465b73d3e3bd80a2056f3bf6ee6f76b19254bedfd4",
+    "phase_c9_0/C9_2_QUALITY_EVALUATION_PROTOCOL.json": "8ebc58739c1c41e865d664ed307d3a2b930e4e0a4cc6bad6e9ee0af25ded6fe4",
+    "phase_c9_0/C9_2_JUDGE_PROVIDER_AMENDMENT_003.json": "f4fdfe538da1137ca0d4bb479e4c088e5ea589f2fc91c78c4d49206c7ac2fbca",
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7",
+    "phase_e4_1/E4_1_DETERMINISTIC_COVERAGE_AUDIT.json": "39a27bd410d5d51762f16d729cfa995cebe8553479494fd7c735e29f72df4b0a",
+    "phase_e4_1/judge_format_normalization.py": "3c488de685fd30afe1f3c7083c029dba7751adbfac7fa61ed85bdc18319d750d",
+    "tests/test_e4_judge_format_normalization.py": "d2b85febe3065ac59a3f8514f8db5eee48e9fec94559aa5ae5aa12a571acf077"
+  }
+}

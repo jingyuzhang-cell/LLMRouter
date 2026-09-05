@@ -60,7 +60,7 @@ PREFLIGHT_AMENDMENT = ROOT / "phase_e4_0" / "E4_0_B_EXECUTION_AMENDMENT_007.json
 RECOVERY_AMENDMENT = ROOT / "phase_e4_0" / "E4_0_B_EXECUTION_AMENDMENT_008.json"
 EXECUTION_CLOSURE_AMENDMENT = ROOT / "phase_e4_0" / "E4_0_B_EXECUTION_AMENDMENT_009.json"
 CEILING_POLICY_AMENDMENT = ROOT / "phase_e4_0" / "E4_0_B_EXECUTION_AMENDMENT_010.json"
-FINAL_CEILING_AMENDMENT = ROOT / "phase_e4_0" / "E4_0_B_EXECUTION_AMENDMENT_011.json"
+FINAL_CEILING_AMENDMENT = ROOT / "phase_e4_0" / "E4_0_B_EXECUTION_AMENDMENT_012.json"
 CALIBRATION = OUT / "E4_0_B_V2_DS_GLM_CALIBRATION.json"
 AUDITS = OUT / "collection_health_audits"
 AMENDMENT = ROOT / "phase_e4_0" / "E4_0_B_EXECUTION_AMENDMENT_006.json"
@@ -145,7 +145,7 @@ def amendment_010_escalation_allowed(node, key_events):
     )
 
 
-AMENDMENT_011_VERSION = "E4.0-B-execution-amendment-011"
+AMENDMENT_011_VERSION = "E4.0-B-execution-amendment-012"
 CEILING_LADDERS = {
     "N1": (16384, 32768, 65536),
     "N2": (4096, 8192, 16384, 32768),
@@ -157,8 +157,7 @@ def amendment_011_next_level(node, key_events):
     ladder = CEILING_LADDERS[node]
     binding_ceilings = [
         int(event.get("max_tokens") or 0) for event in key_events
-        if event.get("finish_reason") == "length"
-        and event.get("generation_ceiling_binding") is True
+        if event.get("generation_ceiling_binding") is True
     ]
     if not binding_ceilings:
         return 0
@@ -167,15 +166,13 @@ def amendment_011_next_level(node, key_events):
 
 def amendment_011_escalation_allowed(node, key_events):
     return amendment_011_next_level(node, key_events) < len(CEILING_LADDERS[node]) and any(
-        event.get("finish_reason") == "length"
-        and event.get("generation_ceiling_binding") is True
+        event.get("generation_ceiling_binding") is True
         for event in key_events
     )
 
 def amendment_011_binding_can_continue(node, event):
     return (
-        event.get("finish_reason") == "length"
-        and event.get("generation_ceiling_binding") is True
+        event.get("generation_ceiling_binding") is True
         and int(event.get("max_tokens") or 0) < CEILING_LADDERS[node][-1]
     )
 
@@ -498,10 +495,10 @@ async def main():
     if ceiling_policy_amendment.get("status") != "FROZEN_GENERATION_CEILING_POLICY_CLOSURE":
         raise RuntimeError("Amendment 010 is not frozen")
     if not FINAL_CEILING_AMENDMENT.exists():
-        raise RuntimeError("Amendment 011 unified generation-ceiling closure is missing")
+        raise RuntimeError("Amendment 012 provider-normalized generation-ceiling closure is missing")
     final_ceiling_amendment = json.loads(FINAL_CEILING_AMENDMENT.read_text())
-    if final_ceiling_amendment.get("status") != "FROZEN_UNIFIED_GENERATION_CEILING_CLOSURE":
-        raise RuntimeError("Amendment 011 is not frozen")
+    if final_ceiling_amendment.get("status") != "FROZEN_PROVIDER_NORMALIZED_CEILING_CLOSURE":
+        raise RuntimeError("Amendment 012 is not frozen")
     amended_code = final_ceiling_amendment.get("frozen_execution_code_sha256", {})
     for path in (Path(__file__).resolve(), ROOT / "phase_e4_0" / "execution_controls.py", ROOT / "phase_e4_0" / "interfaces.py"):
         relative = str(path.relative_to(ROOT))
