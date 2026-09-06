@@ -1,0 +1,25 @@
+{
+  "status": "READY",
+  "python": "3.12.3",
+  "platform": "Linux-5.15.0-94-generic-x86_64-with-glibc2.35",
+  "environment": "/root/routing_reproduction/cascade_routerbench/.venv",
+  "dependencies": "requirements-cpu.txt",
+  "deviation": "Python 3.12.3 venv instead of suggested Python 3.11 Conda; default Conda mirror failed",
+  "logs": [
+    "environment-install.log",
+    "pip-install.log",
+    "pip-cpu-install.log",
+    "pip-pinned-install.log",
+    "logs/torch-download.log"
+  ],
+  "cpu_adjustment": "Use torch 2.4.0+cpu and omit unused CUDA/triton wheels; all other upstream pins retained",
+  "installation_method": "Pinned inventory installed separately from publisher-checksummed torch CPU wheel; pip check required before run",
+  "torch_wheel_sha256": "78dbf5f2789933a7ea2dabeead4daa44679b1e0d8eb35ddb7071c8ab7b181eb3",
+  "omitted_unused_packages": [
+    "xgboost 2.1.1 (not imported; entails unused NCCL)",
+    "tokencost 0.1.12 (not imported)"
+  ],
+  "pip_check": "No broken requirements found",
+  "selection_import": "PASS",
+  "resolved_versions": "requirements-resolved.txt"
+}

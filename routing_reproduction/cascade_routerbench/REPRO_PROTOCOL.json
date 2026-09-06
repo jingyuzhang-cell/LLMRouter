@@ -1,0 +1,91 @@
+{
+  "status": "FROZEN_BEFORE_RESULTS",
+  "scope": "Independent R1 reproduction only",
+  "repositories": {
+    "cascade-routing": "1788b904a42aa586d555784be240b344868480d2",
+    "routerbench": "cc67d1008bd8f3cf1e8040cc3ba4034d31b93c0c"
+  },
+  "no_new_llm_api": true,
+  "protected_experiments": "No writes outside this project to LLMRouter/E4/C9/E2/E3",
+  "smoke": {
+    "dataset": "GSM8K",
+    "shot": 0,
+    "model_indices": [
+      9,
+      4,
+      5
+    ],
+    "noise": "low",
+    "numpy_seed": 0,
+    "test_size": 0.95,
+    "split_seed": 42,
+    "subset_filter": "Filter GSM8K before official split",
+    "algorithm": "Unmodified scripts/routerbench.py via run_reproduction.py input adapter",
+    "n_iterations": 10,
+    "n_cores": 50,
+    "max_lambda": 10000,
+    "max_depth": 5,
+    "n_samples": 100,
+    "dataset_field": "eval_name",
+    "dataset_value": "grade-school-math"
+  },
+  "gate": "Smoke PASS iff upstream Cascade Routing AUC > Routing AUC and > Cascade baseline AUC. No retuning on failure.",
+  "extension": {
+    "datasets": [
+      "MMLU",
+      "GSM8K",
+      "MBPP"
+    ],
+    "pools": [
+      [
+        9,
+        4,
+        5
+      ],
+      [
+        0,
+        9,
+        4,
+        3,
+        5
+      ],
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    ],
+    "condition": "Only after smoke PASS",
+    "overall_gate": "At least 5 of the 9 preselected dataset/pool settings jointly exceed both baselines by upstream AUC",
+    "noise": "low",
+    "shot": 0
+  },
+  "metrics": {
+    "quality": "Mean published model performance",
+    "total_cost": "Mean realized cost times held-out sample count; cascades include all calls",
+    "normalized_cost": "Mean realized cost divided by maximum held-out single-model mean cost within pool",
+    "auc": "Upstream auc_all including its original endpoints and normalization",
+    "static": "Single model selected by highest training mean quality; no single-point AUC",
+    "oracle": "Mean per-query maximum published quality; cost and AUC undefined"
+  },
+  "caveats": [
+    "GroundTruthQualityComputer uses noisy ground truth, not a deployable learned predictor.",
+    "GSM8K subset is not directly comparable with full RouterBench paper scores.",
+    "Upstream budget grid uses held-out single-model aggregates; retained for fidelity and disclosed."
+  ],
+  "failure_policy": "Repair environment, paths, or data versions only; never algorithms, thresholds, or splits.",
+  "data_sources": [
+    "https://files.sri.inf.ethz.ch/cascade-routing/data.tar.gz",
+    "https://huggingface.co/datasets/withmartian/routerbench/tree/784021482c3f320c6619ed4b3bb3b41a21424fcb"
+  ],
+  "data_source_selected": "Verified official RouterBench Hugging Face zero-shot pickle, converted to CSV; author archive not used",
+  "source_equivalence_limit": "Direct RouterBench release verified; byte identity with CSV in authors full archive has not been established."
+}
