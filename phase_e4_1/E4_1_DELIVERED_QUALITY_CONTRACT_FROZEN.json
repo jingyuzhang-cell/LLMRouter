@@ -1,0 +1,57 @@
+{
+  "version": "E4.1-delivered-quality-contract-frozen-v1",
+  "status": "FROZEN_BEFORE_E4_LABEL_ACCESS",
+  "frozen_at": "2026-09-05",
+  "rule": "Q_delivered = Q_final if workflow_valid else 0.0",
+  "scope": "Final N4 terminal outcome of each trajectory. N1-N3 inherit RTG_t = Q_final(N4) per E4_1_STATE_OBSERVABILITY_PROTOCOL.json, so workflow_valid is evaluated once per trajectory at N4.",
+  "workflow_valid_definition": "workflow_valid(record) = provider_success AND json_parse_valid AND node_schema_valid_N4 AND NOT generation_ceiling_binding AND NOT execution_defect. Every field is read from the frozen execution contract (post_action_outcome + raw_output); NONE is derived from a judge score or reference answer.",
+  "conditions": [
+    {
+      "field": "post_action_outcome.provider_success",
+      "source": "phase_e4_0/execution_controls.py::classify",
+      "meaning": "provider returned a usable response",
+      "required": true
+    },
+    {
+      "field": "json_parse_valid",
+      "source": "phase_e4_0/execution_controls.py::parse_json_object",
+      "meaning": "raw_output is a JSON object (required final schema parseable)",
+      "required": true
+    },
+    {
+      "field": "node_schema_valid_N4",
+      "source": "phase_e4_0/execution_controls.py::node_schema_valid('N4', canonicalized)",
+      "meaning": "required final schema: keys == {answer, citations, confidence}; answer is a non-empty string; citations is a list of strings; confidence is a number in [0,1]. The required final answer field is therefore non-empty.",
+      "required": true
+    },
+    {
+      "field": "NOT post_action_outcome.generation_ceiling_binding",
+      "source": "phase_e4_0/execution_controls.py::generation_ceiling_binding / ceiling_escalation_allowed",
+      "meaning": "no retained artificial generation ceiling (the outcome was not truncated at max_tokens). Recollection manifest must classify the key as KEEP without demonstrated_generation_ceiling_binding.",
+      "required": true
+    },
+    {
+      "field": "NOT post_action_outcome.execution_defect",
+      "source": "phase_e4_0/execution_controls.py::classify_recollection (execution_implementation_defect)",
+      "meaning": "no engineering failure state flagged on the terminal attempt",
+      "required": true
+    }
+  ],
+  "on_delivery_failure": {
+    "Q_delivered": 0.0,
+    "semantic_correctness": "unavailable (not 0 by semantic measure; the delivered quality is 0 because nothing was validly delivered)",
+    "judge_call": "skipped; candidate answers with workflow_valid == false are not sent to the semantic judge"
+  },
+  "on_delivery_success": {
+    "Q_final": "machine_judged semantic quality of the N4 answer (qwen-max primary, 0-4 normalized to [0,1]) for open tasks; or deterministic correctness (0/1) for the 17 deterministic-eligible tasks.",
+    "Q_delivered": "Q_final * 1.0"
+  },
+  "independence_guarantee": "workflow_valid is computed entirely from frozen execution/interface telemetry. It is evaluated BEFORE any judge call and is not a function of the judge score. A candidate is never marked invalid because its judge score is low, and never marked valid because its judge score is high.",
+  "forbidden": [
+    "using judge_score, reference_answer, or post_action_outcome.current_node_result in the workflow_valid predicate",
+    "marking a generation-ceiling-bound outcome as validly delivered",
+    "marking an execution_defect outcome as validly delivered",
+    "imputing Q_final for a delivery failure"
+  ],
+  "candidate_outputs_accessed_during_freeze": false
+}

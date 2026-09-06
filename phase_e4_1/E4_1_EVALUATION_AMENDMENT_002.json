@@ -1,0 +1,158 @@
+{
+  "version": "E4.1-evaluation-amendment-002",
+  "status": "FROZEN_METRIC_REDEFINITION_BEFORE_E4_LABEL_ACCESS",
+  "frozen_at": "2026-09-05T02:42:35.000000+00:00",
+  "authorization": "Operationalizes the deterministic-primary / machine-secondary route the user already authorized in E4_1_EVALUATION_AMENDMENT_001, given the engineering evidence in E4_SCORER_FREEZE_READINESS: Qwen-Max stable (15/15, parse 1.0), GLM-4-flash failures are multi-candidate-induced and fixable via atomic scoring, Doubao-seed-2.1-turbo persistently times out at 90s. No new judge introduced. No human scoring introduced.",
+  "scope": "E4 evaluation route secondary metric and machine-judge gate structure only. Collection engineering remains CLOSED. Does not retroactively alter C9.2 historical artifacts (C9_2_QUALITY_EVALUATION_PROTOCOL.json, C9_2_JUDGE_PROVIDER_AMENDMENT_003.json remain the frozen record of the C9 route).",
+  "supersedes": {
+    "E4_1_EVALUATION_AMENDMENT_001.json": "Replaces the secondary_metric definition ('median of three 0-4 scores divided by 4') and the machine_gates clause ('Existing Amendment-003 ... thresholds unchanged; no replacement by a two-family-only consensus') FOR THE E4 ROUTE ONLY. All other Amendment-001 clauses retained.",
+    "C9_2_JUDGE_PROVIDER_AMENDMENT_003.json": "Replaces the formal_consensus_if_calibration_passes ('median of three integer 0-4 scores') and the implicit three-judge consensus requirement FOR THE E4 ROUTE ONLY. Amendment-003 remains the frozen rule for the C9 route."
+  },
+
+  "primary_metric": "Unchanged from Amendment-001: unit-aware deterministic final N4 delivered correctness on the 17 predeclared numeric-reference-eligible tasks only. Not whole-E4 semantic quality. Tolerance unchanged: max(1e-6, 1e-4*abs(reference)) in reference units; percent/ratio conversion requires explicit per-task unit contract (delivered by B1).",
+
+  "secondary_metric": {
+    "name": "machine_judged_final_answer_quality",
+    "limitation_label": "machine-judged semantic quality, without human validation",
+    "judges": {
+      "primary": "qwen-max",
+      "independent_secondary": "glm-4-flash",
+      "unavailable": "doubao-seed-2.1-turbo"
+    },
+    "frozen_label_definition": "For each open-task candidate, the frozen machine semantic quality endpoint is the qwen-max integer 0-4 score divided by 4. qwen-max is the single primary judge; its score is NOT median-averaged with GLM or Doubao.",
+    "glm_role": "GLM-4-flash is EITHER (a) a valid independent sensitivity judge on a COMPLETE or near-complete label set after passing its frozen atomic-calibration gate, OR (b) ENGINEERING_UNAVAILABLE. There is no third state. GLM is reported INDEPENDENTLY as sensitivity / cross-check, never averaged into the primary endpoint. Partial-subset GLM scoring ('use where it succeeded') is FORBIDDEN as formal sensitivity evidence because it introduces non-random missingness bias.",
+    "glm_gate_outcome": "If GLM fails the frozen atomic calibration gate it is marked ENGINEERING_UNAVAILABLE and repair stops; it is not kept retrying and is not used as a secondary. If it passes, the GLM sensitivity arm is reported on the complete (or near-complete, with explicit missingness disclosure) labeled population.",
+    "doubao_role": "doubao-seed-2.1-turbo is ENGINEERING_UNAVAILABLE (TimeoutError at 90s; observed 90067ms). It is not used as a primary or secondary judge for the E4 route. It is retained ONLY as the Doubao-only sensitivity arm where its labels exist; missing Doubao labels block only that sensitivity arm, never the primary endpoint.",
+    "raw_score_retention": "Every raw judge response and every parsed integer score is preserved. No score imputation. No threshold relaxation. No replacement of a missing judge by a consensus of the remaining two.",
+    "applies_to": "All 23 open_semantic tasks (the 23 = 18 no-reference + 5 reference-but-non-numeric) identified outcome-blind in E4_1_DETERMINISTIC_COVERAGE_AUDIT.json. Only the 160 final N4 trajectory outcomes (40 tasks x 4 trajectories) are scored; N1-N3 inherit RTG_t = Q_final per E4_1_STATE_OBSERVABILITY_PROTOCOL.json."
+  },
+
+  "machine_gates": {
+    "note": "Replaces the three-judge consensus gate with per-judge gates. No threshold value is relaxed relative to Amendment-003; the structure changes from consensus-of-three to primary-plus-independent-secondary because two of three judges cannot meet the parse gate.",
+    "qwen-max": { "parse_success_min": 0.95, "status": "MET", "observed_parse_success_rate": 1.0, "groups_successful": "15/15" },
+    "glm-4-flash": {
+      "gate": "FROZEN_BEFORE_CALLS",
+      "parse_completeness_min": 0.95,
+      "no_missing_labels_required": true,
+      "agreement_not_worse_than": "frozen Amendment-003 calibration requirement (pairwise within-one >= 0.80, mae <= 0.75) on the qwen/glm common population",
+      "status": "PENDING_VERIFICATION",
+      "condition": "Atomic one-answer-per-call prompting only; rubric, 0-4 scale, temperature 0, and prompt SEMANTICS unchanged; only serialization/granularity changes from multi-candidate to one-candidate-per-call. Reuse parse_scores with labels=[single_label]; parser unchanged.",
+      "test_scope": "The 5 previously failed calibration groups only.",
+      "observed_multicandidate_parse_success_rate": 0.6667,
+      "root_cause_of_multicandidate_failure": "partial-label coverage and self-atomized multi-block output under multi-candidate prompting",
+      "on_fail": "GLM = ENGINEERING_UNAVAILABLE; stop repair; do not retry."
+    },
+    "doubao-seed-2.1-turbo": { "gate": "NONE", "status": "ENGINEERING_UNAVAILABLE", "evidence": "TimeoutError at 90s, observed 90067ms; 2 unresolved in closure, 4 historical." },
+    "agreement_gate_on_common_population": "Retain Amendment-001 pairwise metrics (within-one, mae, spearman) as DIAGNOSTIC, reported on the qwen/glm common population; not a blocking consensus gate for the E4 route."
+  },
+
+  "machine_sensitivity": {
+    "purpose": "Probe judge bias and family confounding directly. These are the judge-bias checks; state shuffling is NOT a judge-bias check (see mechanism_clause below).",
+    "outputs": [
+      "qwen-max-only endpoint (primary)",
+      "glm-4-flash-only (where atomic labels exist)",
+      "qwen-vs-glm agreement on common population: exact, within-one, mae, spearman, quadratic-weighted-kappa",
+      "leave-one-judge-out: endpoint-excluding-GLM (i.e., qwen-primary alone, already the primary) and glm-only sensitivity",
+      "candidate-family score-deviation audit (qwen-plus/qwen-turbo and glm-5.2 family overlap disclosure retained from Amendment-003)"
+    ]
+  },
+
+  "deterministic_secondary_cross_check": {
+    "note": "On the 17 deterministic-eligible tasks, the deterministic score (B1+B2) and the qwen-max machine score are both computed and reported independently. Disagreement is diagnostic; the deterministic endpoint is primary on those tasks, the qwen score is a cross-check and a bridge to the 23 open tasks."
+  },
+
+  "mechanism_clause": {
+    "state_shuffling": "Observability mechanism test only: checks whether real runtime state carries information beyond request+node. It is NOT a check on qwen-max length/format/style preference and does NOT substitute for human validity.",
+    "judge_bias_checks": "Qwen-Max length/format/style bias is checked via (a) agreement with the deterministic subset on the 17 deterministic-eligible tasks, (b) qwen-vs-glm agreement and leave-one-judge-out sensitivity above, (c) candidate-family score-deviation audit. These are reported regardless of the GO/STOP result."
+  },
+
+  "depth_analysis_clause": {
+    "rtg_scope": "RTG_t = Q_final(N4) for all of N1-N4. For the paper question 'how much value does state at different depths bring to the final workflow return', every node uses the same-trajectory final RTG. Local per-node N1/N2/N3 semantic labels are added ONLY if a local-mechanism question ('why does N2 extract better, why does N3 reason better') is asked. Not added in this freeze."
+  },
+
+  "judge_format_repair": {
+    "allowed": "Unchanged from Amendment-001: only deterministic syntax normalization with exact label coverage and unchanged integer scores/reasons; raw response preserved.",
+    "implementation": "phase_e4_1/judge_format_normalization.py (parse_scores)",
+    "atomic_scoring_implementation": "To be added by B4: a single-candidate variant of prompt_for plus an aggregation loop calling parse_scores with a single-element labels list. Parser unchanged.",
+    "tests": "9 existing tests pass; atomic path covered by test_wrapped_array_and_literal_newlines (labels=['A'])."
+  },
+
+  "workflow_validity_clause": {
+    "delivered_quality": "Q_delivered = Q_final * I(valid delivery). The mechanical valid-delivery rule is finalized from phase_e4_0/interfaces.py frozen fields by B5 before labels. Provider failure -> delivered quality 0, semantic correctness unavailable (unchanged)."
+  },
+
+  "pre_freeze_conditions": {
+    "B1": "Freeze per-task unit/scale/multiple-valid-representation contracts for the 17 deterministic-eligible tasks (E4_1_NUMERIC_UNIT_CONTRACT_PENDING.json -> frozen).",
+    "B2": "Implement reference-independent final-answer extractor for the deterministic layer with synthetic tests before candidate output access.",
+    "B3": "RESOLVED by this amendment.",
+    "B4": "Implement GLM atomic-scoring call loop and verify parse_success >= 0.95 on the 5 previously failed calibration groups.",
+    "B5": "Finalize mechanical workflow-validity rule for Q_delivered from interfaces.py."
+  },
+
+  "final_scorer_frozen": false,
+  "formal_e4_scoring_started": false,
+  "router_training_started": false,
+  "reserved_holdout_accessed": false,
+  "human_gold_claim_allowed": false,
+
+  "forbidden": [
+    "score imputation for a missing or unavailable judge",
+    "threshold relaxation to make a failing judge pass",
+    "median or mean averaging of qwen-max with GLM/Doubao as the endpoint",
+    "post-result decision to average qwen-max with GLM based on StateAware gains or any downstream outcome",
+    "using GLM only on its successful subset as formal sensitivity evidence (non-random missingness bias)",
+    "partial 'use-where-available' GLM scoring; GLM is either complete/near-complete sensitivity or ENGINEERING_UNAVAILABLE",
+    "using GLM as primary while Qwen-Max is available",
+    "treating state shuffling as proof of judge validity or absence of judge bias",
+    "scanning candidate answers for a gold-matching number (deterministic extractor must be reference-independent)",
+    "changing rubric, 0-4 scale, temperature, or prompt semantics for the atomic GLM path (only serialization/granularity may change)",
+    "continuing to retry GLM repair after a frozen-gate failure",
+    "semantic labels before B1, B2, B4, B5 close",
+    "reserved holdout access during development",
+    "router training or DAG execution before labels and the GO gate"
+  ],
+
+  "completion_gate": {
+    "rule": "All of the following must hold before any formal E4 semantic outcome is accessed. Only then is the final scorer artifact frozen and formal E4 scoring permitted to begin.",
+    "conditions": [
+      "Amendment-002 frozen",
+      "17/17 deterministic unit/scale contracts frozen (B1)",
+      "reference-independent deterministic extractor tests PASS (B2)",
+      "Qwen-Max primary route frozen",
+      "GLM status resolved to SECONDARY_READY or ENGINEERING_UNAVAILABLE (B4)",
+      "Doubao = ENGINEERING_UNAVAILABLE",
+      "delivered-quality contract frozen (B5)",
+      "reserved holdout untouched",
+      "router training not started"
+    ],
+    "on_pass": "freeze final scorer artifact; formal E4 scoring may begin on the 160 final N4 outcomes. Do NOT yet train RequestOnly/StateAware."
+  },
+
+  "final_report_format": {
+    "only_these_fields_reported": [
+      "Amendment-002 path/hash",
+      "deterministic contracts ready count (out of 17)",
+      "extractor tests (pass/fail)",
+      "Qwen-Max status",
+      "GLM atomic calibration result",
+      "Doubao status",
+      "final scorer frozen? (true/false)",
+      "formal E4 outcome accessed? (false until completion gate passes)",
+      "reserved holdout accessed? (must be false)",
+      "READY_FOR_160_FINAL_SCORING (true/false)"
+    ]
+  },
+
+  "audit_trail": {
+    "readiness_audit": "phase_e4_1/E4_SCORER_FREEZE_READINESS.json",
+    "superseded_amendments": ["E4_1_EVALUATION_AMENDMENT_001.json", "C9_2_JUDGE_PROVIDER_AMENDMENT_003.json"]
+  },
+
+  "artifact_sha256": {
+    "phase_e4_1/E4_SCORER_FREEZE_READINESS.json": "46bd0471583fbc0738d92ce6cc319db1a10a76602b366cf15b2ac6c403b73b7f",
+    "phase_e4_1/E4_SCORER_FREEZE_READINESS.md": "f470578e30caefd0dbf8337a0943891b861dd633f6d1c164da83efccc8f72c67",
+    "phase_e4_1/E4_1_EVALUATION_AMENDMENT_001.json": "9421e9108fed6e5d275686f37c25b58ec8a92fec211093a2652aa5a175877828",
+    "phase_c9_0/C9_2_JUDGE_PROVIDER_AMENDMENT_003.json": "f4fdfe538da1137ca0d4bb479e4c088e5ea589f2fc91c78c4d49206c7ac2fbca",
+    "phase_e4_1/E4_1_DETERMINISTIC_COVERAGE_AUDIT.json": "39a27bd410d5d51762f16d729cfa995cebe8553479494fd7c735e29f72df4b0a"
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "version": "E5-execution-v1",
+  "status": "FROZEN_BEFORE_NEW_WHOLE_QUERY_CALLS",
+  "frozen_at": "2026-09-05T05:50:08.530964+00:00",
+  "budget": {
+    "total_usd": 10,
+    "includes": [
+      "generation",
+      "judging",
+      "unknown-billing reservations"
+    ],
+    "authorization": "User explicitly approved $10 hard cap",
+    "prices": "configured USD per million; unknown billing retains conservative full-context/output reservation",
+    "limitation": "Local accounting bound under configured prices, not a provider-enforced account spending limit"
+  },
+  "development": {
+    "tasks": 40,
+    "models": [
+      "deepseek-chat",
+      "glm-5.2",
+      "qwen-plus",
+      "qwen-turbo"
+    ],
+    "whole_query_repeats": 1,
+    "whole_query_calls_base": 160,
+    "old_480_records_role": "historical only, incompatible final interface; not silently adapted"
+  },
+  "common_delivery": "Frozen N4 schema and provider success, no terminal artificial ceiling binding; same rule all regimes",
+  "whole_query_prompt": "phase_e5_unified/common.py::whole_prompt",
+  "dag_prompt": "existing frozen E4 N1-N4 prompts, real chain execution; final validator identical",
+  "generation_controls": {
+    "temperature": 0,
+    "provider_concurrency": 1,
+    "whole_query_timeout_seconds": 120,
+    "whole_query_ceiling_ladder": [
+      1200,
+      2400,
+      4800,
+      9600
+    ],
+    "provider_error_attempt_limit": 3,
+    "backoff_seconds": [
+      30,
+      120
+    ],
+    "schema_or_quality_retries": false,
+    "escalation_trigger": "normalized generation_ceiling_binding only"
+  },
+  "metrics": {
+    "Q": "frozen E4 deterministic 17 + disclosed Qwen-only 23; keep stratum-specific endpoints",
+    "R": "common final delivery validity",
+    "C": "sum actual known generation costs; unknown-billing upper bounds flagged",
+    "T": "sum generation service + retry backoff + separately measured routing overhead; shared experimental queue excluded and not called wall-clock end-to-end",
+    "cost_efficiency": "1-min(C/0.02,1)",
+    "latency_efficiency": "1-min(T_ms/10000,1)",
+    "normalization_source": "unchanged E3 constants, applied to full workflow rather than per-node; saturation reported without retuning",
+    "judge_cost": "in total budget, excluded from policy-serving cost"
+  },
+  "training": {
+    "estimator": "HistGradientBoostingRegressor",
+    "parameters": {
+      "learning_rate": 0.05,
+      "max_iter": 200,
+      "max_leaf_nodes": 15,
+      "l2_regularization": 1.0,
+      "min_samples_leaf": 20,
+      "random_state": 20260905
+    },
+    "objectives": {
+      "Q": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "Q+T": [
+        0.7,
+        0,
+        0.3,
+        0
+      ],
+      "Q+C+T+R": [
+        0.45,
+        0.2,
+        0.15,
+        0.2
+      ]
+    },
+    "features": "same frozen observable request numeric fields + candidate model + node; no runtime state",
+    "cross_validation": "sklearn GroupKFold(5) by leakage_group_id",
+    "DAG_target": "observed final-trajectory utility for node-specific action predictor; association-based model, not identified causal node advantage",
+    "tuning": "none; all targets and parameters frozen before new development outputs",
+    "policy_evaluation": "OOF policies frozen then real execution; no simulated counterfactual concatenation"
+  },
+  "validation": "Development only until independent task-group exposure audit completed; old internal holdout has historical responses for 20/20 IDs",
+  "stateaware": "no expansion; no reuse of invalid Phase-D OPE estimators",
+  "artifact_sha256": {
+    "phase_e5_unified/common.py": "95c14b0f5fe4a0ef15964971b8102acbb6b4a46a11e8e77296e594266789f506",
+    "phase_e5_unified/execute.py": "b391db1ebba42a7d0e1508b19cb964c8a5036d8a85dd9819bdb857d37bd526b4",
+    "phase_e5_unified/DEVELOPMENT_TASKS.jsonl": "7e75ff8b79319d488721a662a83eed679c4430215d0d6943f5f8d960aba87f9a",
+    "phase_e4_1/deterministic_extractor.py": "91516b4156bacc3919a0d66d47ac1b3532e75d14f6e10abd5ef0d23191665763",
+    "phase_e4_1/E4_1_NUMERIC_UNIT_CONTRACT_FROZEN.json": "d4da830e96cd73c63d355cbf18407bb76fa338eba58d2af851938b10e9d0fc53",
+    "phase_e4_1/judge_format_normalization.py": "3c488de685fd30afe1f3c7083c029dba7751adbfac7fa61ed85bdc18319d750d",
+    "phase_e4_1/run_phase_a_final_scoring.py": "f5c5735ff2dd768dea3f967bdc8e4f310f6273d4ef02a6d16eaae8ba59082ddf",
+    "phase_e4_0/execution_controls.py": "ad5679b195853aa1dbd547998a69c08489e07b687e39de6bc3919c6ec24de8e5",
+    "run_e4_0_b_exploration.py": "aeb2d67b2484d64777578dfaa764edbcde1a16cd0f6e731a0ae3953fd81ebd8f"
+  }
+}

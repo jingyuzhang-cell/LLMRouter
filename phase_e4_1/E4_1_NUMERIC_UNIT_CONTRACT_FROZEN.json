@@ -1,0 +1,43 @@
+{
+  "version": "E4.1-numeric-unit-contract-frozen-v1",
+  "status": "FROZEN_BEFORE_CANDIDATE_OUTPUT_ACCESS",
+  "frozen_at": "2026-09-05",
+  "supersedes": "phase_e4_1/E4_1_NUMERIC_UNIT_CONTRACT_PENDING.json",
+  "source_of_units": "Derived from each task's question wording + source table/context scale header (e.g. '($ in millions)', '(in thousands)'). No candidate outputs were accessed. No units inferred from candidate answers.",
+  "global_rules": {
+    "tolerance": "absolute error <= max(1e-6, 1e-4*abs(canonical_value)) in canonical units (unchanged from C9.2 / Amendment-001).",
+    "percent_rule": "canonical unit is percent-points. Accept candidate 'X' and 'X%' (strip '%'). NO blind factor-100 matching: a bare decimal is taken at face value, never multiplied by 100 to reach the reference (C9.2: 'never blind factor-100 matching'). Explicit 'X/100' decimal-fraction form is accepted only when the candidate text explicitly frames the number as the decimal fraction of the percent.",
+    "ratio_rule": "dimensionless ratio; candidate 'X' taken at face value. No unit conversion.",
+    "currency_per_share_rule": "USD per share; accept 'X', '$X', 'X per share'. No scale conversion (per-share is absolute).",
+    "currency_amount_rule": "canonical is the source-document scale (millions or thousands). Candidate numbers are normalized to the canonical scale via explicit scale suffixes (million/billion/thousand/M/B/K) or comma/currency stripping. A bare number is assumed to already be in the source scale. This is unit normalization of a single stated answer, NOT scanning the answer for the number closest to gold.",
+    "rounding_rule": "candidate values rounded to <=4 decimal places match if within tolerance. No rejection on rounding precision alone.",
+    "sign_rule": "signed comparison; a candidate with the wrong sign is wrong (no abs-value matching) unless the question frames the answer as a magnitude.",
+    "multiple_valid_representations": "documented per-task where applicable; the extractor applies the declared equivalences, no others.",
+    "extraction_is_reference_independent": "the extractor reads the candidate's STATED final answer (with its declared unit/scale), normalizes via these rules, and compares. It does not search the candidate text for the number closest to the reference."
+  },
+  "tasks": [
+    { "task_id": "c9_4227d4b18f8fa7755c29", "source_dataset": "FinLongDocQA", "quantity_kind": "currency_per_share", "canonical_value": 93.22, "unit": "USD per share", "scale": 1, "tolerance": 0.0093221, "source_evidence": "question: 'corporate capital allocation charge per share'" },
+    { "task_id": "c9_4c21fc5143ea20b04f9b", "source_dataset": "FinLongDocQA", "quantity_kind": "percent", "canonical_value": 0.96, "unit": "percent-points", "scale": 1, "tolerance": 0.0000961, "source_evidence": "question: 'What percentage...repurchased'; 0.96 = 0.96 percent" },
+    { "task_id": "c9_5520e79f10692ace1df3", "source_dataset": "FinLongDocQA", "quantity_kind": "ratio", "canonical_value": 1.74, "unit": "ratio", "scale": 1, "tolerance": 0.000174, "source_evidence": "question: 'ratio of operating income to SG&A expense'" },
+    { "task_id": "c9_60cb15bf9004fa5b2917", "source_dataset": "FinLongDocQA", "quantity_kind": "percent", "canonical_value": 10.43, "unit": "percent-points", "scale": 1, "tolerance": 0.0010431, "source_evidence": "question: 'What percentage of consolidated net income...consumed'" },
+    { "task_id": "c9_657d2946f00636d51622", "source_dataset": "FinLongDocQA", "quantity_kind": "percent", "canonical_value": 43.99, "unit": "percent-points", "scale": 1, "tolerance": 0.0043991, "source_evidence": "question: 'What percentage of 2024 operating income...recognized in Q2'" },
+    { "task_id": "c9_8399c2ea076354fdaf6d", "source_dataset": "FinLongDocQA", "quantity_kind": "currency_amount", "canonical_value": 11.1, "unit": "USD millions", "scale": 1000000, "tolerance": 0.0011100, "source_evidence": "context table header: '($ in millions, except per share amounts)'" },
+    { "task_id": "c9_95727b96621f7ad4c0ee", "source_dataset": "FinLongDocQA", "quantity_kind": "ratio", "canonical_value": 1.23, "unit": "ratio", "scale": 1, "tolerance": 0.0001230, "source_evidence": "question: 'ratio of rationalization charges to impairment charges'" },
+    { "task_id": "c9_9c25a77cafd2c2c2590f", "source_dataset": "FinLongDocQA", "quantity_kind": "currency_per_share", "canonical_value": 6.65, "unit": "USD per share", "scale": 1, "tolerance": 0.0006650, "source_evidence": "question: 'cash acquisition cost per common share'" },
+    { "task_id": "c9_a1a86f28e10ca5286228", "source_dataset": "FinLongDocQA", "quantity_kind": "percent", "canonical_value": 17.59, "unit": "percent-points", "scale": 1, "tolerance": 0.0017591, "source_evidence": "question: 'What percentage of total assets...is cash'" },
+    { "task_id": "c9_a3771a28b0531e341182", "source_dataset": "FinLongDocQA", "quantity_kind": "percent", "canonical_value": 18.63, "unit": "percent-points", "scale": 1, "tolerance": 0.0018631, "source_evidence": "question: 'return on assets (ROA)...fiscal 2023'; ROA reported in percent" },
+    { "task_id": "c9_aa72583db54f2135fc63", "source_dataset": "FinLongDocQA", "quantity_kind": "percent", "canonical_value": 6.51, "unit": "percent-points", "scale": 1, "tolerance": 0.0006510, "source_evidence": "question: 'interest and fees yield...in percentage'" },
+    { "task_id": "c9_aed3d4017ac1b22fd36f", "source_dataset": "FinLongDocQA", "quantity_kind": "ratio", "canonical_value": 0.79, "unit": "ratio", "scale": 1, "tolerance": 0.0000790, "source_evidence": "question: 'Free Cash Flow Conversion Ratio'" },
+    { "task_id": "c9_b344acd88ec8dcd70357", "source_dataset": "FinLongDocQA", "quantity_kind": "percent", "canonical_value": 2.09, "unit": "percent-points", "scale": 1, "tolerance": 0.0002090, "source_evidence": "question: 'What percentage of net sales...invested in R&D'" },
+    { "task_id": "c9_b746211333f0d7fd3ed6", "source_dataset": "FinLongDocQA", "quantity_kind": "ratio", "canonical_value": 44.78, "unit": "ratio (employees per shareholder)", "scale": 1, "tolerance": 0.0044780, "source_evidence": "question: 'number of employees per record shareholder'" },
+    { "task_id": "c9_b92f57a948deaaa9b9e3", "source_dataset": "FinLongDocQA", "quantity_kind": "percent", "canonical_value": 10.96, "unit": "percent-points", "scale": 1, "tolerance": 0.0010960, "source_evidence": "question: 'What percentage of total shareholders equity...net accounts receivable'" },
+    { "task_id": "c9_d348703a46b76301d955", "source_dataset": "TAT-QA", "quantity_kind": "currency_amount", "canonical_value": 15712, "unit": "USD thousands", "scale": 1000, "tolerance": 1.5712, "source_evidence": "source table row '(in thousands)'; R&D 2019 $87,608 - 2018 $71,896 = 15,712" },
+    { "task_id": "c9_d3f2dded12a8f45defa5", "source_dataset": "FinLongDocQA", "quantity_kind": "ratio", "canonical_value": 75.08, "unit": "ratio", "scale": 1, "tolerance": 0.0075080, "source_evidence": "question: 'ratio of combined management fee revenue to net investment income'" }
+  ],
+  "summary": {
+    "total_deterministic_eligible": 17,
+    "frozen_ready": 17,
+    "by_quantity_kind": { "percent": 8, "ratio": 5, "currency_per_share": 2, "currency_amount": 2 },
+    "candidate_outputs_accessed": false
+  }
+}

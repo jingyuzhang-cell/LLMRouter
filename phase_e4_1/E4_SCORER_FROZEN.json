@@ -1,0 +1,29 @@
+{
+  "version": "E4.1-scorer-frozen-v1",
+  "status": "FROZEN",
+  "frozen_at": "2026-09-05",
+  "completion_gate_evaluation": {
+    "Amendment-002_frozen": { "pass": true, "artifact": "phase_e4_1/E4_1_EVALUATION_AMENDMENT_002.json", "sha256": "f0be8f122464a029e14926b06aad0637619880f939da6bdefadd751d9000db7e" },
+    "deterministic_unit_contracts": { "pass": true, "frozen_ready": "17/17", "artifact": "phase_e4_1/E4_1_NUMERIC_UNIT_CONTRACT_FROZEN.json", "sha256": "d4da830e96cd73c63d355cbf18407bb76fa338eba58d2af851938b10e9d0fc53" },
+    "deterministic_extractor_tests": { "pass": true, "passed": "16/16", "module": "phase_e4_1/deterministic_extractor.py", "tests": "tests/test_e4_deterministic_extractor.py" },
+    "qwen_max_primary_route": { "pass": true, "parse_success_rate": 1.0, "groups_successful": "15/15", "gate_parse_0_95": "MET", "label": "integer 0-4 normalized to [0,1]" },
+    "glm_status_resolved": { "pass": true, "resolved_to": "ENGINEERING_UNAVAILABLE", "b4_parse_completeness": 1.0, "b4_within_one_agreement": 0.6667, "b4_mae": 0.9444, "b4_gate": "agreement failed (within-one < 0.80, mae > 0.75)", "artifact": "phase_e4_1/B4_GLM_ATOMIC_CALIBRATION_RESULT.json", "note": "atomic scoring fully fixed the parse problem but GLM agreement with Qwen-Max is too poor on the 5 hard groups; repair stopped per frozen rule, not retried." },
+    "doubao_status": { "pass": true, "resolved_to": "ENGINEERING_UNAVAILABLE", "evidence": "TimeoutError at 90s (observed 90067ms)" },
+    "delivered_quality_contract": { "pass": true, "artifact": "phase_e4_1/E4_1_DELIVERED_QUALITY_CONTRACT_FROZEN.json", "sha256": "5c7a0e60f5c6cb795ce12306b8877fbe4daceda10964bd4701094bec33889f86" },
+    "reserved_holdout_untouched": { "pass": true },
+    "router_training_not_started": { "pass": true }
+  },
+  "final_scorer_frozen": true,
+  "formal_e4_semantic_outcome_accessed": false,
+  "reserved_holdout_accessed": false,
+  "READY_FOR_160_FINAL_SCORING": true,
+  "frozen_scorer_definition": {
+    "deterministic_layer_17_tasks": "phase_e4_1/deterministic_extractor.py::score_deterministic against E4_1_NUMERIC_UNIT_CONTRACT_FROZEN.json; returns 0/1.",
+    "machine_semantic_layer_23_open_tasks": "qwen-max single primary judge, integer 0-4 normalized to [0,1]; NO secondary judge (GLM and Doubao both ENGINEERING_UNAVAILABLE).",
+    "delivered_quality": "Q_delivered = Q_final if workflow_valid else 0 (E4_1_DELIVERED_QUALITY_CONTRACT_FROZEN.json).",
+    "rtg_propagation": "RTG_t = Q_final(N4) for N1-N4 (E4_1_STATE_OBSERVABILITY_PROTOCOL.json).",
+    "scoring_scope": "160 final N4 outcomes (40 tasks x 4 trajectories) only; N1-N3 inherit RTG."
+  },
+  "single_judge_limitation": "With GLM and Doubao both ENGINEERING_UNAVAILABLE, the 23 open-task semantic endpoint rests on Qwen-Max as the SOLE machine judge. Judge-bias probing is reduced to: (a) deterministic-subset agreement on the 17 deterministic-eligible tasks (Qwen vs the deterministic score), and (b) the candidate-family score-deviation audit. The qwen-vs-glm leave-one-judge-out sensitivity arm is NOT available. This is the strongest form of the 'machine-judged semantic quality, without human validation' limitation already declared in Amendment-002; it does not block the freeze but must be reported in the paper.",
+  "next_step": "160 final labels -> RTG_t propagation -> RequestOnly vs SimpleStateAware only (no ProgRouter/Selective/Multi-objective until the GO gate passes)."
+}

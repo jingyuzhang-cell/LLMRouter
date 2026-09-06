@@ -1,0 +1,54 @@
+{
+  "status": "NOT_READY_FOR_UNIFIED_FINAL_EXECUTION",
+  "development_tasks": 40,
+  "common_models": [
+    "deepseek-chat",
+    "glm-5.2",
+    "qwen-plus",
+    "qwen-turbo"
+  ],
+  "whole_query_records": 480,
+  "expected_whole_query_records": 480,
+  "missing_whole_query_keys": 0,
+  "duplicate_whole_query_keys": 0,
+  "dag_trajectories": 160,
+  "dag_terminal_nodes": 640,
+  "dag_sequence_support_per_task": [
+    4
+  ],
+  "possible_four_model_four_node_sequences": 256,
+  "node_propensity_warning": "0.25 is marginal node coverage only. Given task and prior assigned model the next assignment is deterministic in the frozen ladder; it is not conditional sequential propensity 0.25.",
+  "joint_policy_value_identified_from_existing_logs": false,
+  "legacy_request_evidence": {
+    "tasks": 419,
+    "models": 5,
+    "role": "historical experiment; not a row in the 40-task 4-model unified table"
+  },
+  "stateaware_evidence_status": "QUARANTINED_PENDING_ESTIMATOR_CORRECTION",
+  "stateaware_audit_findings": [
+    "policy_value uses mean q(observed action) for DR baseline instead of q(target policy).",
+    "StateAware action selection compares predictions from different realized trajectory states rather than all candidate actions at the same decision state.",
+    "bootstrap samples duplicate tasks but collapses matched correction to unique sampled tasks, changing weights.",
+    "bootstrap error difference is StateAware minus RequestOnly whereas protocol improvement is RequestOnly minus StateAware.",
+    "state shuffle is global before cross-fitting, rather than training-fold-local.",
+    "reported N2 DR point difference -0.0715357 differs from bootstrap mean -0.0454886; bootstrap mean is not the point estimate."
+  ],
+  "blockers": [
+    "Common final-answer delivery contract and inference settings are not yet shared between historical whole-query and DAG execution.",
+    "DAG full-policy outcome must be obtained by actual execution; cannot splice outcomes from incompatible upstream histories.",
+    "Objective-specific policy artifacts and paired execution manifest must be frozen before final validation.",
+    "Internal holdout freshness needs lineage/leakage-group audit; do not assume the named 20-task holdout is fresh across all historical training."
+  ],
+  "new_api_calls": 0,
+  "holdout_outcomes_accessed": false,
+  "label_values_used_for_policy_selection": false,
+  "input_sha256": {
+    "ROUTING_REGIME_OBJECTIVE_PROTOCOL.json": "b02ab0d07ff7a28d5c82312ec5f09ef312893c6feb050079215c879b250a8c32",
+    "phase_e3_0/E3_0_PROTOCOL.json": "492de515eb904ea06ce4c274b7247ad1b6262a4a957540b5675d94a90012f115",
+    "phase_e4_0_v2/E4_0_B_V2_SPLIT.json": "9abd0e74960b800c9ee266baed2a3a524b5b5bd41390686b50e58ba7805112d7",
+    "phase_e4_0_v2/E4_0_B_V2_EXPLORATION_PLAN.jsonl": "d8db57022aabde50853ca202eaf20563cd5d148a29f688596d082a9594522b6f",
+    "phase_e4_1/E4_SCORER_FROZEN.json": "b1e45997ec6abc3ab60074dfbcd798807ec9ed9c12b4b8dc059afe83bebb1d3f",
+    "phase_e4_1/E4_PHASE_D_MAIN_EXPERIMENT.json": "66e4d8fdd6186c0cad51949bbcd6c4961085cd18f48fc59eaa96df3037647fc9",
+    "phase_e4_1/run_phase_d_main_experiment.py": "bfc9a6a57ad32e1dd823089cc3928a0d78d35b53975c629ad42870715b51262a"
+  }
+}

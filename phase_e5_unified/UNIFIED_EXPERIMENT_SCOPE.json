@@ -1,0 +1,94 @@
+{
+  "version": "E5-unified-static-dynamic-dag-scope-v1",
+  "status": "SCOPE_FROZEN_EXECUTION_PROTOCOL_PENDING",
+  "frozen_at": "2026-09-05T05:43:03.853861+00:00",
+  "paper_mainline": [
+    "Static",
+    "Request-level Dynamic",
+    "Node-level DAG",
+    "Multi-objective"
+  ],
+  "stateaware_role": "Ablation only; no new state-aware methods; historical Phase-D statistics quarantined pending correctness repair. STOP expansion preserved, but no claim of proven ineffectiveness.",
+  "primary_questions": [
+    "Does request-level Dynamic outperform Static?",
+    "Does actually executed node-level DAG outperform whole-query Dynamic?",
+    "How do Q, Q+T, and Q+C+T+R change the preferred routing granularity?"
+  ],
+  "common_model_pool": [
+    "deepseek-chat",
+    "glm-5.2",
+    "qwen-plus",
+    "qwen-turbo"
+  ],
+  "development_tasks_source": "phase_e4_0_v2/E4_0_B_V2_SPLIT.json:exploration_train_task_ids",
+  "objectives": {
+    "Q": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "Q+T": [
+      0.7,
+      0,
+      0.3,
+      0
+    ],
+    "Q+C+T+R": [
+      0.45,
+      0.2,
+      0.15,
+      0.2
+    ]
+  },
+  "component_order": [
+    "Q",
+    "cost_efficiency",
+    "latency_efficiency",
+    "R"
+  ],
+  "objective_weight_source": "phase_e3_0/E3_0_PROTOCOL.json",
+  "resource_normalization_status": "Must freeze shared end-to-end units and scales before unified policy training; never per-regime normalize. Historical clipped normalization cannot be silently changed or mixed.",
+  "regimes": {
+    "Static": "One model per objective selected only on development/training groups, one full-task call.",
+    "Dynamic": "Request-only predictor chooses one model per task and objective, one full-task call.",
+    "DAG": "Request features + node + candidate model; no runtime state. Execute N1->N2->N3->N4 with real upstream outputs, one model decision per node."
+  },
+  "metric_contract": {
+    "Q": "Same final-answer scorer and delivery-validity contract across regimes; deterministic and machine-judged strata reported separately.",
+    "C": "Total end-to-end billed inference cost including failed attempts/retries and router overhead where applicable. Scorer costs accounted separately.",
+    "T": "Actual end-to-end workflow time including retries/backoff and routing; N1->N4 is a chain, not diamond-parallel latency. Queue/service diagnostics retained.",
+    "R": "One common objective delivery-validity predicate; not Q threshold, not a mean of node reliabilities."
+  },
+  "scorer": "Reuse current frozen numeric scorer and disclosed Qwen-Max machine endpoint only after common interface applicability audit; no human-validation claim.",
+  "fairness_requirements": [
+    "Same evaluation tasks, source context, model versions/providers, budgets, timeout/retry policy, and final response interface.",
+    "Shared grouped training/validation partitions across objectives/regimes.",
+    "Do not treat 3 historical whole-query repeats and 4 exploration DAG paths as paired repeats of learned policies.",
+    "Deduplicate actual execution only when complete prompt/model/settings/upstream-history hashes match; retain paired metric accounting.",
+    "No synthetic counterfactual node outputs or DR estimate presented as realized full-DAG quality."
+  ],
+  "main_table": "For each optimization target, one table of Static/Dynamic/DAG with Q, cost, end-to-end latency, R, Q+T utility and Q+C+T+R utility. Optimization target and reported metrics explicitly distinguished.",
+  "uncertainty": "Paired leakage-group bootstrap for actual executed arms; prespecify repeat aggregation and multiplicity across the three targets before confirmatory labels.",
+  "holdout": "Freeze learned policies and full execution manifest first; audit prior exposure and leakage groups before treating any existing internal holdout as fresh. No holdout outcomes accessed at this stage.",
+  "pre_execution_gates": [
+    "Common final-answer delivery contract and inference settings are not yet shared between historical whole-query and DAG execution.",
+    "DAG full-policy outcome must be obtained by actual execution; cannot splice outcomes from incompatible upstream histories.",
+    "Objective-specific policy artifacts and paired execution manifest must be frozen before final validation.",
+    "Internal holdout freshness needs lineage/leakage-group audit; do not assume the named 20-task holdout is fresh across all historical training."
+  ],
+  "execution_order": [
+    "Finalize common interface, metric normalization, and lineage audit.",
+    "Produce shared-scored development matrices and freeze the three-objective policy bank.",
+    "Build and validate paired real-execution manifest.",
+    "Execute unified comparison; no post-result retuning.",
+    "Freeze independent holdout validation; report all objectives and failures."
+  ],
+  "explicitly_not_authorized_by_this_file": [
+    "Reopen completed E4 collection engineering",
+    "Treat StateAware GO gate as prerequisite to the restored paper mainline",
+    "Claim E5 completed from historical incomparable tables"
+  ],
+  "external_api_calls_this_stage": 0,
+  "readiness_audit_sha256": "20bdce1de3134cf1c03a19463fbb5ca0f7b3592feee2e20917878877afdd4c4c"
+}

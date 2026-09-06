@@ -1,0 +1,125 @@
+{
+  "per_depth": {
+    "N1": {
+      "request_only": {
+        "V_DM": 0.3787924250881739,
+        "V_IPS": 0.31875,
+        "V_SNIPS": 0.31875,
+        "V_DR": 0.20200225399440938,
+        "abs_err": 0.31936832136469684,
+        "n_tasks": 40
+      },
+      "state_aware": {
+        "V_DM": 0.3787924250881739,
+        "V_IPS": 0.31875,
+        "V_SNIPS": 0.31875,
+        "V_DR": 0.20200225399440938,
+        "abs_err": 0.31936832136469684,
+        "n_tasks": 40
+      }
+    },
+    "N2": {
+      "request_only": {
+        "V_DM": 0.40698922215723227,
+        "V_IPS": 0.2875,
+        "V_SNIPS": 0.2875,
+        "V_DR": 0.15282276163438088,
+        "abs_err": 0.3325183929962401,
+        "n_tasks": 40
+      },
+      "state_aware": {
+        "V_DM": 0.45784546593298064,
+        "V_IPS": 0.26875,
+        "V_SNIPS": 0.26875,
+        "V_DR": 0.08128702956013387,
+        "abs_err": 0.3246074955221605,
+        "n_tasks": 40
+      }
+    },
+    "N3": {
+      "request_only": {
+        "V_DM": 0.39615452551540453,
+        "V_IPS": 0.26875,
+        "V_SNIPS": 0.26875,
+        "V_DR": 0.15098120888042804,
+        "abs_err": 0.3182374054748831,
+        "n_tasks": 40
+      },
+      "state_aware": {
+        "V_DM": 0.4287517658410119,
+        "V_IPS": 0.26875,
+        "V_SNIPS": 0.26875,
+        "V_DR": 0.10518184984331036,
+        "abs_err": 0.3282106719696988,
+        "n_tasks": 40
+      }
+    },
+    "N4": {
+      "request_only": {
+        "V_DM": 0.40698922215723227,
+        "V_IPS": 0.2875,
+        "V_SNIPS": 0.2875,
+        "V_DR": 0.15282276163438088,
+        "abs_err": 0.33251839299624014,
+        "n_tasks": 40
+      },
+      "state_aware": {
+        "V_DM": 0.45039897975626725,
+        "V_IPS": 0.3125,
+        "V_SNIPS": 0.3125,
+        "V_DR": 0.12420098200383874,
+        "abs_err": 0.3277315873086045,
+        "n_tasks": 40
+      }
+    }
+  },
+  "version": "E4.1-phase-D-main-experiment-v1",
+  "protocol": "E4_1_STATE_OBSERVABILITY_PROTOCOL.json",
+  "primary_depth": "N2",
+  "propensity": 0.25,
+  "n_bootstrap": 10000,
+  "n_shuffle": 100,
+  "state_advantage_by_depth": {
+    "N1": 0.0,
+    "N2": -0.07153573207424702,
+    "N3": -0.04579935903711768,
+    "N4": -0.028621779630542146
+  },
+  "co_primary_predictability_pooled": {
+    "abs_err_request_only": 0.32566062820801506,
+    "abs_err_state_aware": 0.3249795190412902,
+    "diff_RequestOnly_minus_StateAware": 0.0006811091667248692
+  },
+  "co_primary_bootstrap_primary_depth": {
+    "DR_diff_mean": -0.0454885937018194,
+    "DR_diff_CI_lo": -0.11069622540948833,
+    "DR_diff_CI_hi": 0.02174446955215587,
+    "abs_err_diff_mean": -0.007863189682360635,
+    "abs_err_diff_CI_lo": -0.03625861545781667,
+    "abs_err_diff_CI_hi": 0.02013048244142521
+  },
+  "mechanism_shuffled_state": {
+    "DR_shuffled_mean": 0.10319399184659699,
+    "DR_shuffled_p025": 0.002513693196125759,
+    "DR_shuffled_p975": 0.20771532842630944,
+    "n_perm": 100
+  },
+  "mechanism_depth_pattern": {
+    "N1_advantage": 0.0,
+    "mean_N2_N4_advantage": -0.04865229024730228,
+    "N2_N4_gt_N1": false
+  },
+  "go_gate": {
+    "co_primary_predictability_pass": false,
+    "co_primary_policy_pass": false,
+    "mechanism_safety_pass": false,
+    "mechanism_DR_StateAware_minus_DR_Shuffled": -0.02190696228646312,
+    "decision": "STOP"
+  },
+  "limitations": [
+    "Single machine judge (Qwen-Max) for 23 open tasks; no human validation; GLM/Doubao unavailable.",
+    "Delivery-validity is model-confounded (frozen strict N4 schema): only 83/160 N4 outcomes workflow_valid; Q_delivered=0 for the other 77 (frozen strict N4 schema). State-aware routing may partly exploit delivery validity rather than semantic quality.",
+    "Development gate, not confirmatory paper evidence (per protocol role).",
+    "Co-primary policy evaluated at pre-specified depth N2; all depths reported."
+  ]
+}

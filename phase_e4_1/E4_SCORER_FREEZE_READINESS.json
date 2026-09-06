@@ -1,0 +1,145 @@
+{
+  "status": "READY_PENDING_PRE_FREEZE_CONDITIONS",
+  "audit_date": "2026-09-05",
+  "audit_scope": "read-only; no scorer modification; no formal E4 semantic outcomes accessed; no reserved holdout; no router training; no new judge; no human scoring",
+  "verdict_one_line": "Cannot freeze yet: deterministic unit contracts (B1), final-answer extractor (B2), and a reconciliation amendment (B3) remain. Qwen-Max is stable; GLM is fixable via atomic scoring with the existing parser; Doubao is engineering-unavailable.",
+
+  "frozen_rules_reusable": [
+    {
+      "artifact": "phase_e4_1/E4_1_STATE_OBSERVABILITY_PROTOCOL.json",
+      "status": "FROZEN_BEFORE_E4_640_AND_BEFORE_SEMANTIC_LABEL_ACCESS",
+      "what": "RTG_t = Q_final(N4) propagated to N1-N3; 5-fold GroupKFold by leakage_group_id; HistGradientBoostingRegressor with frozen hyperparams; DR primary + IPS/SNIPS sensitivity; 10000 leakage-group bootstrap; GO/STOP = co-primary predictability + co-primary policy + mechanism_safety; state shuffling = observability mechanism test.",
+      "alignment_with_plan": "fully aligned; reusable as-is"
+    },
+    {
+      "artifact": "phase_e4_1/E4_1_EVALUATION_AMENDMENT_001.json",
+      "status": "FROZEN_EVALUATION_ROUTE_BEFORE_E4_LABEL_ACCESS",
+      "what": "Deterministic-primary route on 17 numeric-reference-eligible tasks; numeric_tolerance = max(1e-6, 1e-4*abs(reference)) in reference units; percent/ratio requires explicit task-unit contract; judge format repair = strict score-preserving normalization only; sensitivity = each judge / excl-Qwen / excl-GLM; user authorization for deterministic-primary + machine-secondary already on file; human calibration UNAVAILABLE.",
+      "alignment_with_plan": "secondary_metric definition ('median of three 0-4 scores /4') CONFLICTS with Qwen-primary plan; machine_gates clause forbids two-family-only consensus replacement. Needs Amendment-002."
+    },
+    {
+      "artifact": "phase_c9_0/C9_2_QUALITY_EVALUATION_PROTOCOL.json + phase_c9_0/C9_2_JUDGE_PROVIDER_AMENDMENT_003.json",
+      "status": "FROZEN",
+      "what": "0-4 rubric (4 fully correct ... 0 incorrect); temperature 0; model-identity blinding; deterministic SHA-256 candidate permutation; batch_unit = task_id x repeat_id; formal_consensus = median of three retaining every raw score; gates: parse_success_min 0.95, pairwise_within_one_min 0.80, pairwise_mae_max 0.75, duplicate_exact_agreement_min 0.80, order_perturbation_mae_max 0.50; required sensitivity outputs incl. consensus-excluding-Qwen and excluding-GLM.",
+      "alignment_with_plan": "rubric/blinding/order reusable; 'median of three / no two-family consensus' gate conflicts with Qwen-primary plan and must be amended."
+    }
+  ],
+
+  "reusable_code": [
+    {
+      "path": "phase_e4_1/judge_format_normalization.py",
+      "symbol": "parse_scores(raw, labels)",
+      "reusable_as_is": true,
+      "note": "Strict score-preserving normalizer: repairs literal newlines / escaped apostrophes, strips ```json fences, validates exact label-set coverage, integer 0-4 scores, non-empty reasons. Already validates single-label responses (labels=['A'] path used in tests). 9 tests pass. NO modification needed for atomic scoring."
+    },
+    {
+      "path": "run_c9_multi_judge_feasibility.py",
+      "symbols": "LLMBackend, OpenClawConfig.from_yaml, extract_message_text, prompt_for, read_jsonl",
+      "reusable_as_is": true,
+      "note": "Judge call infra via openclaw_router (configs/openclaw_multi_provider.yaml). prompt_for is multi-candidate (all candidates per request) and must be SPLIT into a single-candidate atomic variant for GLM. The old loose parse() here is superseded by phase_e4_1.judge_format_normalization.parse_scores; do not reintroduce it."
+    },
+    {
+      "path": "phase_e4_0/interfaces.py",
+      "symbols": "workflow-validity dataclass fields incl. upstream_schema_valid",
+      "reusable_as_is": true,
+      "note": "Frozen interface; delivered-quality mechanical rule (Q_delivered = Q_final * I(valid delivery)) must be finalized from these fields per Amendment-001 workflow_validity clause before labels."
+    }
+  ],
+
+  "deterministic_scoring": {
+    "total_tasks": 40,
+    "eligible_tasks": 17,
+    "coverage": 0.425,
+    "frozen_ready_tasks_now": 0,
+    "why_not_17": "All 17 are status REQUIRES_SOURCE_UNIT_VALIDATION (reference_unit=null, answer_scale=null) in E4_1_NUMERIC_UNIT_CONTRACT_PENDING.json. Eligibility is outcome-blind and frozen, but unit/scale contracts are unvalidated and the reference-independent final-answer extractor is not yet implemented. candidate_outputs_accessed=false.",
+    "pending_to_reach_17": "Freeze per-task unit + scale + multiple-valid-representation rules (e.g. 0.15 vs 15%, rounding, abs/rel tolerance) and build the extractor, validated by synthetic tests before any candidate output access."
+  },
+
+  "judge_engineering_status": {
+    "qwen-max": {
+      "calibration_groups_successful": "15/15",
+      "parse_success_rate": 1.0,
+      "missing_rate": 0.0,
+      "gate_parse_success_0_95": "PASS",
+      "pairwise_agreement": "within-one 0.94, spearman 0.87 vs GLM; 0.85 within-one vs Doubao",
+      "role_under_plan": "PRIMARY",
+      "stable": true
+    },
+    "glm-4-flash": {
+      "calibration_groups_successful": "10/15",
+      "parse_success_rate": 0.6667,
+      "missing_rate": 0.3333,
+      "failure_types": "ValueError (partial label coverage: returns subset of expected labels) and JSONDecodeError (self-atomized multi-block: emits one {\"scores\":[...]} per label in a single response)",
+      "gate_parse_success_0_95": "FAIL",
+      "root_cause": "multi-candidate prompting; GLM returns partial or per-label-segmented output when asked to score several candidates at once",
+      "role_under_plan": "CONDITIONAL_SECONDARY",
+      "path_to_stable": "atomic one-answer-per-call scoring removes the root failure mode; verify parse_success >= 0.95 on failed groups after switch"
+    },
+    "doubao": {
+      "calibration_groups_successful": "13/15",
+      "parse_success_rate": 0.8667,
+      "missing_rate": 0.1333,
+      "failure_types": "TimeoutError (observed latency 90067ms at 90s timeout; 2 unresolved in closure, 4 historical)",
+      "gate_parse_success_0_95": "FAIL",
+      "role_under_plan": "ENGINEERING_UNAVAILABLE",
+      "path": "flag unavailable; do not block main experiment; retain in leave-one-judge-out sensitivity as the Doubao-only arm"
+    }
+  },
+
+  "glm_normalization_atomic_sufficiency": {
+    "sufficient_in_principle": true,
+    "evidence": "parse_scores uses set(got)==set(labels) and len equality; calling it with labels=['X'] accepts a single-row {\"scores\":[{\"label\":\"X\",...}]} or bare-array response. The two observed GLM failure classes (partial-label, self-atomized multi-block) are induced by multi-candidate prompting and vanish under one-candidate-per-call. The existing test_wrapped_array_and_literal_newlines already exercises the single-label path.",
+    "missing_implementation": "An atomic call-orchestration loop: call GLM once per candidate with a single-label expectation, then aggregate per group. Requires a single-candidate variant of prompt_for. The parser (judge_format_normalization.parse_scores) is unchanged.",
+    "verification_required": "Re-run the 5 failed GLM calibration groups under atomic prompting and confirm parse_success meets the 0.95 gate before treating GLM as a live secondary."
+  },
+
+  "remaining_blockers_before_freeze": [
+    {
+      "id": "B1",
+      "type": "engineering (no API, no outcome access)",
+      "block": "Freeze per-task unit/scale/multiple-valid-representation contracts for the 17 deterministic-eligible tasks; all currently REQUIRES_SOURCE_UNIT_VALIDATION.",
+      "artifact": "phase_e4_1/E4_1_NUMERIC_UNIT_CONTRACT_PENDING.json"
+    },
+    {
+      "id": "B2",
+      "type": "engineering (no API, no outcome access)",
+      "block": "Implement reference-independent final-answer extractor for the deterministic layer (Amendment-001 deterministic_readiness_gate); not yet present.",
+      "artifact": "to be built (reuse C9 deterministic_numeric rule text as spec)"
+    },
+    {
+      "id": "B3",
+      "type": "protocol amendment (user authorization already on file in Amendment-001)",
+      "block": "Reconcile the frozen 'median of three 0-4 /4' secondary metric and the 'no two-family-only consensus' clause (Amendment-003 + Amendment-001) with the Qwen-Max-primary + GLM-atomic-secondary + Doubao-unavailable plan, via E4_1_EVALUATION_AMENDMENT_002. Retain every raw judge score and the leave-one-judge-out sensitivity outputs.",
+      "artifact": "phase_c9_0/C9_2_JUDGE_PROVIDER_AMENDMENT_003.json + phase_e4_1/E4_1_EVALUATION_AMENDMENT_001.json"
+    },
+    {
+      "id": "B4",
+      "type": "engineering (small, API-bounded to calibration groups only)",
+      "block": "Implement the GLM atomic-scoring call loop (single-candidate prompt_for variant) and verify parse_success >= 0.95 on the previously failed calibration groups; parser unchanged.",
+      "artifact": "run_e4_judge_format_recovery.py / run_c9_multi_judge_feasibility.py"
+    },
+    {
+      "id": "B5",
+      "type": "engineering (small, no API)",
+      "block": "Finalize the mechanical workflow-validity rule for Q_delivered = Q_final * I(valid delivery) from the frozen interfaces.py fields (Amendment-001 workflow_validity clause).",
+      "artifact": "phase_e4_0/interfaces.py"
+    }
+  ],
+
+  "can_freeze_per_plan": {
+    "plan": "deterministic + Qwen-Max primary + GLM secondary (atomic) + Doubao unavailable",
+    "answer": "NOT YET. Three pre-freeze conditions remain: B1 (deterministic unit contracts), B2 (final-answer extractor), B3 (Amendment-002 reconciling the median-of-three / no-two-family-consensus rule). B4 (GLM atomic loop) and B5 (workflow-validity rule) are small and proceed in parallel. None requires a new judge, human scoring, holdout access, or router training.",
+    "after_blockers": "freeze scorer -> label 160 final N4 outcomes (40 tasks x 4 trajectories) -> propagate RTG_t = Q_final to N1-N3 -> run RequestOnly vs SimpleStateAware only."
+  },
+
+  "constraints_honored": {
+    "read_only_no_code_modified": true,
+    "formal_e4_semantic_outcomes_accessed": false,
+    "new_judges_added": 0,
+    "human_scoring_added": 0,
+    "reserved_holdout_accessed": false,
+    "router_training_started": false,
+    "state_shuffling_role_stated_correctly": "observability mechanism test; NOT a judge-bias substitute. Judge bias is checked via the deterministic subset, Qwen/GLM agreement, and leave-one-judge-out sensitivity (each judge / excl-Qwen / excl-GLM).",
+    "depth_analysis_labels_stance": "RTG_t = Q_final is sufficient for final-return-value depth analysis; local N1-N3 semantic labels are added only if a local-mechanism question ('why does N2 extract better') is asked. Not added now."
+  }
+}
