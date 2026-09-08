@@ -1,0 +1,127 @@
+{
+  "role": "exploratory development only; no parameter selection or holdout claims",
+  "seed": 20260831,
+  "folds": 5,
+  "tasks": 419,
+  "models": [
+    "deepseek-chat",
+    "glm-5.2",
+    "qwen-plus",
+    "qwen-turbo",
+    "gemini-2.5-flash"
+  ],
+  "grid": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0.1
+    ],
+    [
+      0,
+      0.5
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0.1,
+      0
+    ],
+    [
+      0.1,
+      0.1
+    ],
+    [
+      0.1,
+      0.5
+    ],
+    [
+      0.1,
+      1
+    ],
+    [
+      0.5,
+      0
+    ],
+    [
+      0.5,
+      0.1
+    ],
+    [
+      0.5,
+      0.5
+    ],
+    [
+      0.5,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0.1
+    ],
+    [
+      1,
+      0.5
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      2,
+      0.1
+    ],
+    [
+      2,
+      0.5
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      5,
+      0.1
+    ],
+    [
+      5,
+      0.5
+    ],
+    [
+      5,
+      1
+    ]
+  ],
+  "knn_k": 20,
+  "ridge_alpha": 20,
+  "features": "fold-local word/char TF-IDF; request text only",
+  "normalization": "train-fold median positive cost and latency; no test outcome normalization",
+  "selection": "predict Q,C,L then maximize Q-lambda*C/scale_C-mu*L/scale_L",
+  "inference_forbidden": [
+    "answers",
+    "difficulty derived from outcomes",
+    "test costs",
+    "test latency",
+    "test quality"
+  ],
+  "input_sha256": {
+    "/root/phase_c8/C8_PERFORMANCE_MATRIX.jsonl": "bf532e816f303a941afa8d20cb97fc970292a979239b3ce84e651ea1e29e4413",
+    "/root/target_support_expansion_v1/combined_509_tasks_frozen.jsonl": "e175fc81bdd87725e1f903ee6b68cc6cf46dd3b0f9ea803cf3708487228aa18a"
+  }
+}

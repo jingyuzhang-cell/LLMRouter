@@ -1,0 +1,239 @@
+{
+  "math500": {
+    "train_n": 126,
+    "train_outcome_counts": {
+      "a_only": 116,
+      "b_only": 10,
+      "both_right": 0,
+      "both_wrong": 0
+    },
+    "train_informative_frac": 1.0,
+    "test_n": 100,
+    "test_outcome_counts": {
+      "a_only": 21,
+      "b_only": 6,
+      "both_right": 47,
+      "both_wrong": 26
+    },
+    "test_informative_frac": 0.27,
+    "gap": {
+      "best_single": 0.68,
+      "oracle": 0.74,
+      "headroom": 0.06,
+      "headroom_equals_minority_only_frac": 0.06,
+      "headroom_note": "binary scores: headroom == (minority-only wins)/n; recovering it requires finding exactly those queries"
+    },
+    "minority_train_count": 10,
+    "D3_knn_winner_consistency": {
+      "5": {
+        "acc": 0.7777777777777778,
+        "majority_baseline": 0.7777777777777778,
+        "mean_neighbor_b_win_frac": 0.0519
+      },
+      "10": {
+        "acc": 0.7777777777777778,
+        "majority_baseline": 0.7777777777777778,
+        "mean_neighbor_b_win_frac": 0.0593
+      },
+      "25": {
+        "acc": 0.7777777777777778,
+        "majority_baseline": 0.7777777777777778,
+        "mean_neighbor_b_win_frac": 0.077
+      }
+    },
+    "D4_informative_separability": {
+      "logreg": {
+        "cv_auc": 0.3379,
+        "cv_acc": 0.9206349206349206
+      },
+      "svm_rbf": {
+        "cv_auc": 0.4957,
+        "cv_acc": 0.9206349206349206
+      },
+      "majority_baseline": 0.9206,
+      "n_train_informative": 126,
+      "note": "can embeddings even separate winners among informative queries"
+    },
+    "D5_probabilistic_router": {
+      "cv_train_auc_of_probe": 0.3379,
+      "test_auc_of_probe": 0.555,
+      "best_tau_test_accuracy": 0.68,
+      "best_single": 0.68,
+      "gap_recovery": 0.0,
+      "E_max_p_bound_on_train": 0.9207,
+      "note": "even an oracle-thresholded linear prob model recovers ~0 -> not an objective problem alone"
+    },
+    "D6_control_outcome_predictability": {
+      "pooled_cv_acc": 0.6062,
+      "pooled_majority_baseline": 0.6062,
+      "classes": {
+        "a_only": 137,
+        "b_only": 16,
+        "both_right": 47,
+        "both_wrong": 26
+      },
+      "note": "pooled train+test CV probes representation content: embeddings predict outcome/difficulty above chance while winner stays ~chance -> feature carries query type, not winner"
+    },
+    "D4_pooled_winner_cv_auc": 0.5374,
+    "D4_pooled_winner_majority": 0.8954,
+    "D4_pooled_n": 153
+  },
+  "mbpp": {
+    "train_n": 231,
+    "train_outcome_counts": {
+      "a_only": 178,
+      "b_only": 53,
+      "both_right": 0,
+      "both_wrong": 0
+    },
+    "train_informative_frac": 1.0,
+    "test_n": 195,
+    "test_outcome_counts": {
+      "a_only": 48,
+      "b_only": 7,
+      "both_right": 82,
+      "both_wrong": 58
+    },
+    "test_informative_frac": 0.2821,
+    "gap": {
+      "best_single": 0.6667,
+      "oracle": 0.7026,
+      "headroom": 0.0359,
+      "headroom_equals_minority_only_frac": 0.035897435897435895,
+      "headroom_note": "binary scores: headroom == (minority-only wins)/n; recovering it requires finding exactly those queries"
+    },
+    "minority_train_count": 53,
+    "D3_knn_winner_consistency": {
+      "5": {
+        "acc": 0.8727272727272727,
+        "majority_baseline": 0.8727272727272728,
+        "mean_neighbor_b_win_frac": 0.1455
+      },
+      "10": {
+        "acc": 0.8727272727272727,
+        "majority_baseline": 0.8727272727272728,
+        "mean_neighbor_b_win_frac": 0.1636
+      },
+      "25": {
+        "acc": 0.8727272727272727,
+        "majority_baseline": 0.8727272727272728,
+        "mean_neighbor_b_win_frac": 0.1927
+      }
+    },
+    "D4_informative_separability": {
+      "logreg": {
+        "cv_auc": 0.5626,
+        "cv_acc": 0.7705627705627706
+      },
+      "svm_rbf": {
+        "cv_auc": 0.5389,
+        "cv_acc": 0.7662337662337663
+      },
+      "majority_baseline": 0.7706,
+      "n_train_informative": 231,
+      "note": "can embeddings even separate winners among informative queries"
+    },
+    "D5_probabilistic_router": {
+      "cv_train_auc_of_probe": 0.5626,
+      "test_auc_of_probe": 0.6163,
+      "best_tau_test_accuracy": 0.6667,
+      "best_single": 0.6667,
+      "gap_recovery": 0.0,
+      "E_max_p_bound_on_train": 0.7728,
+      "note": "even an oracle-thresholded linear prob model recovers ~0 -> not an objective problem alone"
+    },
+    "D6_control_outcome_predictability": {
+      "pooled_cv_acc": 0.5305,
+      "pooled_majority_baseline": 0.5305,
+      "classes": {
+        "a_only": 226,
+        "b_only": 60,
+        "both_right": 82,
+        "both_wrong": 58
+      },
+      "note": "pooled train+test CV probes representation content: embeddings predict outcome/difficulty above chance while winner stays ~chance -> feature carries query type, not winner"
+    },
+    "D4_pooled_winner_cv_auc": 0.6081,
+    "D4_pooled_winner_majority": 0.7902,
+    "D4_pooled_n": 286
+  },
+  "mmlupro": {
+    "train_n": 227,
+    "train_outcome_counts": {
+      "a_only": 83,
+      "b_only": 144,
+      "both_right": 0,
+      "both_wrong": 0
+    },
+    "train_informative_frac": 1.0,
+    "test_n": 200,
+    "test_outcome_counts": {
+      "a_only": 20,
+      "b_only": 44,
+      "both_right": 64,
+      "both_wrong": 72
+    },
+    "test_informative_frac": 0.32,
+    "gap": {
+      "best_single": 0.54,
+      "oracle": 0.64,
+      "headroom": 0.1,
+      "headroom_equals_minority_only_frac": 0.1,
+      "headroom_note": "binary scores: headroom == (minority-only wins)/n; recovering it requires finding exactly those queries"
+    },
+    "minority_train_count": 83,
+    "D3_knn_winner_consistency": {
+      "5": {
+        "acc": 0.703125,
+        "majority_baseline": 0.6875,
+        "mean_neighbor_b_win_frac": 0.6969
+      },
+      "10": {
+        "acc": 0.703125,
+        "majority_baseline": 0.6875,
+        "mean_neighbor_b_win_frac": 0.6875
+      },
+      "25": {
+        "acc": 0.6875,
+        "majority_baseline": 0.6875,
+        "mean_neighbor_b_win_frac": 0.6819
+      }
+    },
+    "D4_informative_separability": {
+      "logreg": {
+        "cv_auc": 0.6079,
+        "cv_acc": 0.6343612334801763
+      },
+      "svm_rbf": {
+        "cv_auc": 0.6145,
+        "cv_acc": 0.6211453744493393
+      },
+      "majority_baseline": 0.6344,
+      "n_train_informative": 227,
+      "note": "can embeddings even separate winners among informative queries"
+    },
+    "D5_probabilistic_router": {
+      "cv_train_auc_of_probe": 0.6079,
+      "test_auc_of_probe": 0.5782,
+      "best_tau_test_accuracy": 0.555,
+      "best_single": 0.54,
+      "gap_recovery": 0.15,
+      "E_max_p_bound_on_train": 0.6348,
+      "note": "even an oracle-thresholded linear prob model recovers ~0 -> not an objective problem alone"
+    },
+    "D6_control_outcome_predictability": {
+      "pooled_cv_acc": 0.4473,
+      "pooled_majority_baseline": 0.4403,
+      "classes": {
+        "a_only": 103,
+        "b_only": 188,
+        "both_right": 64,
+        "both_wrong": 72
+      },
+      "note": "pooled train+test CV probes representation content: embeddings predict outcome/difficulty above chance while winner stays ~chance -> feature carries query type, not winner"
+    },
+    "D4_pooled_winner_cv_auc": 0.6245,
+    "D4_pooled_winner_majority": 0.646,
+    "D4_pooled_n": 291
+  }
+}

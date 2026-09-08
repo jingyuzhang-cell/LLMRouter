@@ -1,0 +1,55 @@
+{
+  "protocol_id": "R3_COLLECTION_PROTOCOL_v1.1",
+  "supersedes": "R3_COLLECTION_PROTOCOL_v1.0 (2026-09-08)",
+  "frozen_at": "2026-09-08",
+  "status": "FROZEN",
+  "doc": "R3_COLLECTION_PROTOCOL_V1.md + R3_SCHEMA_V1_1.md",
+  "schema_doc": "R3_SCHEMA_V1_1.md",
+  "json_schema": "schema/r3_record.schema.json",
+  "mysql_ddl": "schema/mysql_ddl.sql (one-way mirror; JSONL canonical)",
+
+  "v1_0_to_v1_1": [
+    "quality per-task: math=exact_match, code=pass@1, knowledge=option_match (NO judge); only arenahard uses judge (qwen-max)",
+    "latency fields: total_ms/ttft_ms/decode_ms/tokens_per_second/source; paper metric = Phase 2 all-local vLLM; Phase 1 auxiliary only",
+    "new utility_scores reserve: 24 frozen (lam,mu) combos, per-query min-max normalized cost/latency, computed at freeze",
+    "pool unchanged (4 slots)",
+    "scale plan: 5000 v1 -> gates -> 20000 v2"
+  ],
+  "known_tension_declared": "binary GT labels cap accuracy-axis headroom (R2C lesson); compensated by arenahard graded judge + continuous cost/latency axes; judge prompt frozen for optional retro-labeling without schema change",
+
+  "datasets": [
+    {"task_type": "math", "dataset": "gsm8k", "quota": 2112, "source": "HF openai/gsm8k via hf-mirror (test 1319 + train first 793), sha256 frozen at download", "gt": "#### number", "quality": "exact_match"},
+    {"task_type": "code", "dataset": "mbpp", "quota": 974, "source": "llmrouterbench_r2/data/bench/mbpp (all)", "gt": "test cases", "quality": "pass@1_sandbox"},
+    {"task_type": "code", "dataset": "humaneval", "quota": 164, "source": "llmrouterbench_r2/data/bench/humaneval (all)", "gt": "canonical+tests", "quality": "pass@1_sandbox"},
+    {"task_type": "knowledge", "dataset": "mmlupro", "quota": 1000, "source": "llmrouterbench_r2/data/bench/mmlupro/test_1000", "gt": "option letter", "quality": "option_match"},
+    {"task_type": "general", "dataset": "arenahard", "quota": 750, "source": "llmrouterbench_r2/data/bench/arenahard (all)", "gt": null, "quality": "judge_qwen-max (rubric 0-10 anchored, /10)"}
+  ],
+  "total_quota": 5000,
+  "v2_expansion": "gsm8k train remainder ~6.7k, mmlupro test_3000 ~2k, bench: mathbench/livecodebench/livemathbench/bbh/gpqa/simpleqa; schema unchanged",
+
+  "pool": [
+    {"slot": "small", "model": "Qwen/Qwen2.5-3B-Instruct", "serving_phase1": "local vLLM (HF cache)"},
+    {"slot": "medium", "model": "Qwen/Qwen2.5-7B-Instruct", "serving_phase1": "local vLLM fp16"},
+    {"slot": "large", "model": "Qwen/Qwen2.5-14B-Instruct", "serving_phase1": "local vLLM on-the-fly FP8"},
+    {"slot": "reasoning", "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B", "serving_phase1": "DashScope API deepseek-r1-distill-qwen-14b (probe 200)"}
+  ],
+
+  "generation": {"temperature": 0.0, "top_p": 1.0, "max_tokens": {"math": 4096, "code": 2048, "knowledge": 2048, "general": 4096}, "streaming": true, "retries": 3, "failed_recorded_not_dropped": true, "resume": "skip completed (query_id, model)"},
+
+  "utility": {"formula": "utility = final - lam*Cnorm - mu*Tnorm; Cnorm = usd/max_pool_usd_per_query; Tnorm = total_ms/max_pool_total_ms_per_query", "grid": "lam in {0,0.1,0.5,1,2,5} x mu in {0,0.1,0.5,1} = 24 combos", "computed_at": "freeze", "recomputable_from_raw": true},
+
+  "latency": {"phase1_fields": "total_ms/ttft_ms/decode_ms/tokens_per_second/source", "phase1_role": "auxiliary only (mixed deployment)", "phase2_paper_metric": "all-local vLLM FP8 batch=1 sequential: TTFT/TPOT/total"},
+
+  "split": {"method": "prompt-level 0.8/0.2 seed 42 stratified by dataset", "frozen_with_sha256": true},
+
+  "collector_layout": ["collect/validate_dataset.py (FIRST)", "collect/datasets/sources.py", "collect/models/qwen_client.py", "collect/models/deepseek_client.py", "collect/runner.py", "collect/metrics.py", "collect/storage.py", "collect/freeze.py", "collect/price_table.json", "collect/judge_prompts/v1.md"],
+
+  "validator_two_levels": {
+    "schema_level": "JSON Schema per line; 4 slots; frozen model set; field domains; unique query_id; prompt dedup",
+    "trainability_level": "ok-rate >= 99% of 20000 slots; latency 100%; final label 100%; utility 24 combos; split frozen & disjoint; sha256 manifest match"
+  },
+
+  "gates_before_training": ["validator B-level all PASS", "human spot-check 5% agreement report", "price table frozen"],
+
+  "scale_gates_v1_to_20k": ["reward predictor val loss converges", "oracle gap recovery > 0 at some (lam,mu)", "cost-axis Pareto dominance over Best Single on val"]
+}

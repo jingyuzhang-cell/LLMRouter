@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "elapsed_seconds": 5.9,
+  "protocol": "frozen R2A binary protocol (R2_PROTOCOL + AMENDMENT_001/002); no API calls, no new embeddings",
+  "pool": "Fin-R1 (model_a) vs cogito-v1-preview-llama-8B (model_b)",
+  "methods": {
+    "random": "uniform coin, np.random.RandomState(0)",
+    "best_single": "train-mean-score selected",
+    "knn": "RouterBench KNNRouter algorithm, cosine k=50",
+    "mlp": "RouterBench MLPRouter algorithm, per-model MLPRegressor (100,100,100) relu lr .001 max_iter 200 rs 1234",
+    "oracle": "per-query max score"
+  },
+  "metrics": "accuracy=mean routed score; cost=mean routed USD; latency NOT RECORDED in frozen data -> None",
+  "validation_gate": "best_single and oracle reproduce r2a_local/STATIC_VS_DYNAMIC.json exactly (all 3 tasks)",
+  "winner_stats_note": "printed a_only/b_only/both_right/both_wrong per task (Step-1 oracle-gap context)"
+}

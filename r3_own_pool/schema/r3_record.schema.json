@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "R3 Multi-objective Router Dataset Record v1.1",
+  "type": "object",
+  "required": ["query_id", "task_type", "difficulty", "query", "ground_truth", "responses"],
+  "properties": {
+    "query_id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "task_type": {"enum": ["math", "code", "knowledge", "general"]},
+    "difficulty": {"enum": ["easy", "medium", "hard"]},
+    "query": {"type": "string", "minLength": 1},
+    "ground_truth": {"type": ["string", "null"]},
+    "responses": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["model", "answer", "thinking", "quality", "cost", "latency", "utility_scores", "status"],
+        "properties": {
+          "model": {"enum": [
+            "Qwen/Qwen2.5-3B-Instruct",
+            "Qwen/Qwen2.5-7B-Instruct",
+            "Qwen/Qwen2.5-14B-Instruct",
+            "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B"
+          ]},
+          "answer": {"type": ["string", "null"]},
+          "thinking": {"type": ["string", "null"]},
+          "quality": {
+            "type": "object",
+            "required": ["auto_score", "auto_correct", "judge_score", "judge", "final", "quality_source"],
+            "properties": {
+              "auto_score": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+              "auto_correct": {"type": ["boolean", "null"]},
+              "judge_score": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+              "judge": {"type": ["string", "null"]},
+              "final": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+              "quality_source": {"enum": ["exact_match", "pass@1", "option_match", "judge_qwen-max"]}
+            }
+          },
+          "cost": {
+            "type": "object",
+            "required": ["tokens_input", "tokens_output", "tokens_estimated", "price_input_per_mtok", "price_output_per_mtok", "usd"],
+            "properties": {
+              "tokens_input": {"type": ["integer", "null"], "minimum": 0},
+              "tokens_output": {"type": ["integer", "null"], "minimum": 0},
+              "tokens_estimated": {"type": "boolean"},
+              "price_input_per_mtok": {"type": ["number", "null"], "minimum": 0},
+              "price_output_per_mtok": {"type": ["number", "null"], "minimum": 0},
+              "usd": {"type": ["number", "null"], "minimum": 0}
+            }
+          },
+          "latency": {
+            "type": "object",
+            "required": ["total_ms", "ttft_ms", "decode_ms", "tokens_per_second", "source"],
+            "properties": {
+              "total_ms": {"type": ["number", "null"], "minimum": 0},
+              "ttft_ms": {"type": ["number", "null"], "minimum": 0},
+              "decode_ms": {"type": ["number", "null"], "minimum": 0},
+              "tokens_per_second": {"type": ["number", "null"], "minimum": 0},
+              "source": {"enum": ["local_4090_vllm", "dashscope_api", "phase2_local_vllm"]}
+            }
+          },
+          "utility_scores": {
+            "type": "object",
+            "description": "24 frozen (lambda, mu) combos; keys lam{L}_mu{M}, L in {0,0.1,0.5,1,2,5}, M in {0,0.1,0.5,1}",
+            "patternProperties": {
+              "^lam(0|0\\.1|0\\.5|1|2|5)_mu(0|0\\.1|0\\.5|1)$": {"type": ["number", "null"]}
+            },
+            "additionalProperties": false,
+            "minProperties": 24,
+            "maxProperties": 24
+          },
+          "status": {"enum": ["ok", "failed", "truncated", "parse_failed"]}
+        }
+      }
+    }
+  }
+}

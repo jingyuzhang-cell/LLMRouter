@@ -1,0 +1,142 @@
+{
+  "status": "PASS",
+  "started": "2026-09-08T10:09:56",
+  "elapsed_seconds": 654.3,
+  "embedding_model": "all-MiniLM-L6-v2",
+  "embedding_backend": "local sentence_transformers (CPU), official EmbeddingCache local_mode",
+  "data": {
+    "path": "/root/routing_reproduction/cascade_routerbench/data/routerbench_0shot.pkl",
+    "sha256": "ba4f77f19517610a707c374e99322d7750c30fc4ae7ff5527888595a1e65d36d"
+  },
+  "split": "R1 frozen 5/95 seed 42, indices read verbatim from runs/*/SMOKE_METADATA.json",
+  "routers": {
+    "random": "uniform over pool, np.random.RandomState(0) per setting",
+    "knn": "official KNNRouter, cosine; n_neighbors=50 (official default), capped to n_train where the frozen 5/95 split has <50 train samples (modern sklearn raises where older sklearn auto-capped)",
+    "mlp": "official MLPRouter, hidden (100,100,100), relu, lr 0.001, max_iter 200, random_state 1234"
+  },
+  "wtp_grid": "official routerbench/utils.py WILLINGNESS_TO_PAY (32 points)",
+  "adaptation": "model quality columns (graded scores) cast object->float before use; no other data changes",
+  "auc": "upstream auc_all (cascade-routing/src/selection/utils.py), baseline = per-model test means",
+  "settings": {
+    "gsm8k_3": {
+      "dataset": "gsm8k",
+      "pool": [
+        "mistralai/mixtral-8x7b-chat",
+        "gpt-3.5-turbo-1106",
+        "gpt-4-1106-preview"
+      ],
+      "n_train": 372,
+      "n_test": 7078
+    },
+    "gsm8k_5": {
+      "dataset": "gsm8k",
+      "pool": [
+        "WizardLM/WizardLM-13B-V1.2",
+        "mistralai/mixtral-8x7b-chat",
+        "gpt-3.5-turbo-1106",
+        "claude-v2",
+        "gpt-4-1106-preview"
+      ],
+      "n_train": 372,
+      "n_test": 7078
+    },
+    "gsm8k_11": {
+      "dataset": "gsm8k",
+      "pool": [
+        "WizardLM/WizardLM-13B-V1.2",
+        "claude-instant-v1",
+        "claude-v1",
+        "claude-v2",
+        "gpt-3.5-turbo-1106",
+        "gpt-4-1106-preview",
+        "meta/code-llama-instruct-34b-chat",
+        "meta/llama-2-70b-chat",
+        "mistralai/mistral-7b-chat",
+        "mistralai/mixtral-8x7b-chat",
+        "zero-one-ai/Yi-34B-Chat"
+      ],
+      "n_train": 372,
+      "n_test": 7078
+    },
+    "mbpp_3": {
+      "dataset": "mbpp",
+      "pool": [
+        "mistralai/mixtral-8x7b-chat",
+        "gpt-3.5-turbo-1106",
+        "gpt-4-1106-preview"
+      ],
+      "n_train": 21,
+      "n_test": 406
+    },
+    "mbpp_5": {
+      "dataset": "mbpp",
+      "pool": [
+        "WizardLM/WizardLM-13B-V1.2",
+        "mistralai/mixtral-8x7b-chat",
+        "gpt-3.5-turbo-1106",
+        "claude-v2",
+        "gpt-4-1106-preview"
+      ],
+      "n_train": 21,
+      "n_test": 406
+    },
+    "mbpp_11": {
+      "dataset": "mbpp",
+      "pool": [
+        "WizardLM/WizardLM-13B-V1.2",
+        "claude-instant-v1",
+        "claude-v1",
+        "claude-v2",
+        "gpt-3.5-turbo-1106",
+        "gpt-4-1106-preview",
+        "meta/code-llama-instruct-34b-chat",
+        "meta/llama-2-70b-chat",
+        "mistralai/mistral-7b-chat",
+        "mistralai/mixtral-8x7b-chat",
+        "zero-one-ai/Yi-34B-Chat"
+      ],
+      "n_train": 21,
+      "n_test": 406
+    },
+    "mmlu_3": {
+      "dataset": "mmlu",
+      "pool": [
+        "mistralai/mixtral-8x7b-chat",
+        "gpt-3.5-turbo-1106",
+        "gpt-4-1106-preview"
+      ],
+      "n_train": 702,
+      "n_test": 13340
+    },
+    "mmlu_5": {
+      "dataset": "mmlu",
+      "pool": [
+        "WizardLM/WizardLM-13B-V1.2",
+        "mistralai/mixtral-8x7b-chat",
+        "gpt-3.5-turbo-1106",
+        "claude-v2",
+        "gpt-4-1106-preview"
+      ],
+      "n_train": 702,
+      "n_test": 13340
+    },
+    "mmlu_11": {
+      "dataset": "mmlu",
+      "pool": [
+        "WizardLM/WizardLM-13B-V1.2",
+        "claude-instant-v1",
+        "claude-v1",
+        "claude-v2",
+        "gpt-3.5-turbo-1106",
+        "gpt-4-1106-preview",
+        "meta/code-llama-instruct-34b-chat",
+        "meta/llama-2-70b-chat",
+        "mistralai/mistral-7b-chat",
+        "mistralai/mixtral-8x7b-chat",
+        "zero-one-ai/Yi-34B-Chat"
+      ],
+      "n_train": 702,
+      "n_test": 13340
+    }
+  }
+}
