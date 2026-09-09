@@ -1,0 +1,82 @@
+{
+  "cohort_queries": 5000,
+  "split_counts": {
+    "train": 3500,
+    "validation": 750,
+    "test": 750
+  },
+  "split_sha256": "94ad53494fec77a3003d1ed77fe04bbafac0d120290a99cbf4a0b81c049463c5",
+  "raw": {
+    "expected_queries": 5000,
+    "expected_response_cells": 20000,
+    "slots": {
+      "small": {
+        "recorded_unique": 500,
+        "ok": 496,
+        "missing": 4500,
+        "statuses": {
+          "ok": 496,
+          "truncated": 4
+        }
+      },
+      "medium": {
+        "recorded_unique": 4791,
+        "ok": 4778,
+        "missing": 209,
+        "statuses": {
+          "ok": 4778,
+          "truncated": 13
+        }
+      },
+      "large": {
+        "recorded_unique": 5000,
+        "ok": 4993,
+        "missing": 0,
+        "statuses": {
+          "ok": 4993,
+          "truncated": 7
+        }
+      },
+      "reasoning": {
+        "recorded_unique": 2659,
+        "ok": 2659,
+        "missing": 2341,
+        "statuses": {
+          "ok": 2659
+        }
+      }
+    },
+    "four_slot_queries_recorded": 500,
+    "four_slot_queries_ok": 493,
+    "lanes": {
+      "local": {
+        "lane": "local",
+        "phase": "BLOCKED",
+        "updated_at": 1788858951.5702715,
+        "reason": "medium exited 1; see /root/r3_own_pool/data/full_run_v2/medium.log"
+      },
+      "reasoning": {
+        "lane": "reasoning",
+        "phase": "COLLECTING",
+        "updated_at": 1788855947.8755863,
+        "slot": "reasoning",
+        "pid": 16985,
+        "retry": false,
+        "log": "/root/r3_own_pool/data/full_run_v2/reasoning.log"
+      }
+    },
+    "training_ready": false,
+    "note": "Raw coverage only; quality, cost provenance, split/hash and scoring validation must pass separately."
+  },
+  "gates": {
+    "raw_matrix_complete": false,
+    "cohort_hash_and_split": true,
+    "scoring_complete": "not_certified",
+    "cost_provenance_verified": "not_certified",
+    "code_sandbox_verified": "not_certified",
+    "holdout_uncontaminated": "not_certified"
+  },
+  "training_ready": false,
+  "next_step": "Complete raw collection and independently audit scoring, cost basis, sandbox and holdout history; fit requires a hash-bound gate document.",
+  "note": "No outcome-quality metrics inspected; stale lane status can disagree with live processes."
+}

@@ -1,4 +1,7 @@
 #!/bin/bash
+# V2 migration guard: preserve legacy source below for provenance, never auto-open v1 full results.
+printf "%s\n" "Legacy postprocessor retired. Use router_v2 scoring/freeze/fit/evaluate after explicit v2 data gates." >&2
+exit 2
 # Autonomous full pipeline: waits for BOTH collection lines, then runs
 # metrics -> judge -> freeze -> validate -> A1-A3 analysis -> router train/eval.
 # Detached; survives session exits. Logs to r3_own_pool/collect/logs/pipeline.log.

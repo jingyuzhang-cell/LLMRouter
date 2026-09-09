@@ -25,11 +25,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--sample", type=int, default=200)
     ap.add_argument("--input", default=str(R.parent / "data" / "judged.jsonl"))
+    ap.add_argument("--split", default=str(R.parent / "data/cohort_full_v2/split.json"))
     a = ap.parse_args()
-    recs = [json.loads(l) for l in pathlib.Path(a.input).read_text().splitlines() if l.strip()]
+    train_ids = set(json.loads(pathlib.Path(a.split).read_text())["train"])
+    recs = [json.loads(l) for l in pathlib.Path(a.input).read_text().split("\n") if l.strip()]
     slots = []
     for r in recs:
-        if r["dataset"] != "arenahard":
+        if r["query_id"] not in train_ids or r["dataset"] != "arenahard":
             continue
         for s in r["responses"]:
             if s["quality"].get("judge_score") is not None and s.get("answer"):
@@ -73,6 +75,7 @@ def main():
         if all(o_rank[s] == n_rank[s] for s in slots_):
             ord_ok += 1
     report = dict(
+        partition="train",
         judge="qwen-max", rubric="judge_prompts/v1.md", n_sample=len(pairs),
         n_rescored=len(ok),
         exact_match_on_10=round(exact, 4), within_0_1=round(w1, 4), within_0_2=round(w2, 4),

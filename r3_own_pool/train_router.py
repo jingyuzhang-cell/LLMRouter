@@ -75,6 +75,7 @@ class HybridUtilityRouter(nn.Module):
         return self.net(q)
 
     def fit(self, Q_in, M_in, Y_in, epochs=60, batch_q=64, verbose=False):
+        self.train()
         n_q = Q_in.shape[0]
         for ep in range(epochs):
             perm = np.random.RandomState(SEED + ep).permutation(n_q)
@@ -102,8 +103,14 @@ class HybridUtilityRouter(nn.Module):
                 print(f"  ep{ep}: loss {tot/max(1,n_q//batch_q):.4f}", flush=True)
 
     def predict_all(self, Q_in):
-        with torch.no_grad():
-            return self.predict_batch(torch.tensor(Q_in)).numpy()
+        was_training = self.training
+        self.eval()
+        try:
+            with torch.no_grad():
+                result = self.predict_batch(torch.tensor(Q_in, dtype=torch.float32)).numpy()
+                return result if self.pure_rank else result.clip(0, 1)
+        finally:
+            self.train(was_training)
 
 
 def main():
@@ -112,6 +119,8 @@ def main():
     ap.add_argument("--alpha", type=float, default=None,
                     help="None = select from grid on carved val split")
     a = ap.parse_args()
+    if a.frozen != "pilot_v1":
+        raise ValueError("Legacy pilot trainer cannot evaluate full data: FULL_V2_EXECUTION_PROTOCOL.md requires explicit 3500/750/750 split, resource predictors and cost/data gates. Use pilot_v1 for smoke checks only.")
     fr = R / "data/frozen"
     recs = [json.loads(l) for l in (fr / f"{a.frozen}.jsonl").read_text().splitlines() if l.strip()]
     split = json.loads((fr / "split.json").read_text())
@@ -148,7 +157,7 @@ def main():
     # cost/latency profiles from TRAIN only (deployment prior)
     c_prof = np.nanmedian(Cm[keep_tr], 0)
     t_prof = np.nanmedian(Tm[keep_tr], 0)
-    cn, tn = c_prof / c_prof.max(), t_prof / t_prof.max()
+    cn, tn = c_prof / max(c_prof.max(), 1e-12), t_prof / max(t_prof.max(), 1e-12)
 
     res = {}
     def rep(name, choice, extra=None):
@@ -156,7 +165,7 @@ def main():
         cost = float(Cte[np.arange(n), choice].mean())
         lat = float(Tte[np.arange(n), choice].mean())
         dist = np.bincount(choice, minlength=4) / n
-        res[name] = dict(accuracy=round(acc, 4), cost_usd=round(cost, 7),
+        res[name] = dict(accuracy=acc, cost_usd=round(cost, 7),
                          latency_ms=round(lat, 1),
                          routing={NAME[SLOTS[j]]: round(float(dist[j]), 3) for j in range(4)},
                          **(extra or {}))
@@ -165,7 +174,7 @@ def main():
     rep("Random", rng.randint(0, 4, n))
     best = int(np.nanmean(Qtr, 0).argmax())
     rep("Best Single", np.full(n, best), extra={"model": NAME[SLOTS[best]]})
-    res["Oracle"] = dict(accuracy=round(float(Qte.max(1).mean()), 4))
+    res["Oracle"] = dict(accuracy=float(Qte.max(1).mean()))
 
     # KNN
     kk = min(50, len(keep_tr))
@@ -228,7 +237,7 @@ def main():
     hy.fit(Xtr, np.arange(4), Qtr, epochs=60)  # refit on full train with chosen alpha
     P = hy.predict_all(Xte)
     rep(f"Hybrid(lam=0,alpha={say_alpha:g})", P.argmax(1))
-    res["Hybrid(lam=0)"] = res.pop(f"Hybrid(lam=0,alpha={say_alpha:g}")  # canonical key
+    res["Hybrid(lam=0)"] = res.pop(f"Hybrid(lam=0,alpha={say_alpha:g})")  # canonical key
 
     # ablation ladder: A query-only / B +model / C +utility / D +rank (alpha>0)
     hy0 = HybridUtilityRouter(alpha=say_alpha, use_m_emb=False)
@@ -243,10 +252,10 @@ def main():
         res["D:Hybrid-rank(lam=0)"] = res["Hybrid(lam=0)"]
 
     # ---- paper metrics: gap recovery / iso-quality cost / behavior shift ----
-    acc_bs = res["Best Single"]["accuracy"]
-    acc_or = res["Oracle"]["accuracy"]
+    acc_bs = float(Qte[:, best].mean())
+    acc_or = float(Qte.max(1).mean())
     def gap_recovery(acc):
-        return round((acc - acc_bs) / max(acc_or - acc_bs, 1e-9), 4)
+        return float((acc - acc_bs) / (acc_or - acc_bs)) if acc_or > acc_bs + 1e-12 else None
     for k in list(res):
         if isinstance(res[k], dict) and "accuracy" in res[k] and k != "Oracle":
             res[k]["gap_recovery"] = gap_recovery(res[k]["accuracy"])
@@ -256,12 +265,41 @@ def main():
     for lam in LAMS:
         for mu in MUS:
             ch = (P - lam * cn[None, :] - mu * tn[None, :]).argmax(1)
-            sweep.append(dict(lam=lam, mu=mu, **{k: v for k, v in
+            # Profile utility and realized resources are deliberately separate.
+            penalty = lam * cn + mu * tn
+            actual_u = Qte - penalty
+            baseline = int((Qtr.mean(0) - penalty).argmax())
+            value = actual_u[np.arange(n), ch]
+            base_value = actual_u[:, baseline]
+            oracle_value = actual_u.max(1)
+            gap = float((oracle_value - base_value).mean())
+            delta = value - base_value
+            boot = np.random.default_rng(SEED).integers(n, size=(2000, n))
+            extra_u = dict(profile_utility=float(value.mean()),
+                           utility_best_single_slot=SLOTS[baseline],
+                           utility_gain=float(delta.mean()),
+                           utility_gain_ci95=np.quantile(delta[boot].mean(1), [.025, .975]).tolist(),
+                           utility_oracle_gap=gap,
+                           utility_gap_recovery=float(delta.mean()/gap) if gap > 1e-12 else None,
+                           routing_fraction=(np.bincount(ch, minlength=4)/n).tolist())
+            sweep.append(dict(lam=lam, mu=mu, **extra_u, **{k: v for k, v in
                              dict(accuracy=round(float(Qte[np.arange(n), ch].mean()), 4),
                                   cost_usd=round(float(Cte[np.arange(n), ch].mean()), 7),
                                   latency_ms=round(float(Tte[np.arange(n), ch].mean()), 1)).items()}))
     behavior = {f"lam={lam},mu=0": {NAME[SLOTS[j]]: round(float(((P - lam*cn[None,:]).argmax(1) == j).mean()), 3)
                                     for j in range(4)} for lam in (0, 0.5, 1, 5)}
+    # explicit epsilon-margin cost tie-break (decision-layer rule, no retraining):
+    # among models within eps of the predicted-best quality, pick the cheapest (profile cost)
+    eps_points = []
+    for eps in (0.01, 0.02, 0.05):
+        top = P.max(1, keepdims=True)
+        within = P >= top - eps
+        ch = np.array([int(np.argmin(np.where(within[i], cn, np.inf))) for i in range(n)])
+        eps_points.append(dict(eps=eps,
+                               accuracy=round(float(Qte[np.arange(n), ch].mean()), 4),
+                               cost_usd=round(float(Cte[np.arange(n), ch].mean()), 7),
+                               latency_ms=round(float(Tte[np.arange(n), ch].mean()), 1),
+                               gap_recovery=gap_recovery(float(Qte[np.arange(n), ch].mean()))))
     # paper metric 3: iso-quality cost reduction (points at least as good as Best Single)
     iso = []
     for pt in sweep:
@@ -275,7 +313,9 @@ def main():
         oracle_gap_recovery_hybrid_nom=res["A:Hybrid-noM(lam=0)"].get("gap_recovery"),
         conditioning_gain_accuracy=round(res["Hybrid(lam=0)"]["accuracy"] - res["A:Hybrid-noM(lam=0)"]["accuracy"], 4),
         alpha_selected=say_alpha, alpha_val_routing=val_report,
-        iso_quality_points=iso[:5],
+        iso_quality_points_descriptive_only=iso,
+        iso_quality_note="Test-filtered exploratory points with delta=0.005; not a validated noninferiority claim or deployable selected policy.",
+        tie_break_epsilon=eps_points,
     )
     # generalization: per-task-type accuracy for key methods (cross-domain signal)
     tt_te = np.array([recs[keep_te[i]]["task_type"] for i in range(len(keep_te))])
@@ -319,7 +359,7 @@ def main():
     tie_mask = Qte == qmax
     oracle_cost = float(np.mean([Cte[i][tie_mask[i]].min() for i in range(n)]))
     pareto_curve = dict(
-        single_models=[dict(model=NAME[SLOTS[j]], cost_usd=float(c_prof[j]),
+        single_models=[dict(model=NAME[SLOTS[j]], cost_usd=float(Cte[:, j].mean()),
                             quality=float(Qte[:, j].mean())) for j in range(4)],
         router=[dict(lam=p["lam"], mu=p["mu"], cost_usd=p["cost_usd"],
                      accuracy=p["accuracy"]) for p in sweep],
@@ -333,6 +373,11 @@ def main():
                methods=res, sweep=sweep, behavior_shift=behavior, paper_metrics=paper_metrics,
                per_task_accuracy=per_task, task_holdout=task_holdout, pareto_curve=pareto_curve,
                alpha=a.alpha, note="pipeline smoke on pilot; conclusions await full 5000x4")
+    np.savez_compressed(R / f"ROUTER_PREDICTIONS_{a.frozen}.npz",
+                        query_ids=np.array([ids[i] for i in keep_te]),
+                        predicted_quality=P, outcomes_quality=Qte,
+                        outcomes_cost=Cte, outcomes_latency=Tte,
+                        train_cost_profile=c_prof, train_latency_profile=t_prof)
     (R / f"ROUTER_RESULT_{a.frozen}.json").write_text(json.dumps(out, indent=2))
     print(json.dumps(res, indent=1))
     print("behavior_shift:", json.dumps(behavior, indent=1))

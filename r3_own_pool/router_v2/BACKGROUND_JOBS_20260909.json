@@ -1,0 +1,47 @@
+{
+  "phase": "STARTED",
+  "jobs": [
+    {
+      "name": "code_train_scoring",
+      "pid": 8256,
+      "command": [
+        "/root/autodl-tmp/llmrouterbench_r2_venv/bin/python",
+        "-m",
+        "router_v2.score_code",
+        "--output",
+        "/root/r3_own_pool/data/scored_code_train_v2"
+      ],
+      "log": "/root/r3_own_pool/data/scored_code_train_v2/batch.log",
+      "started_at": 1788917963.5480025
+    },
+    {
+      "name": "gte_query_embeddings_recovery",
+      "pid": 8257,
+      "command": [
+        "/root/autodl-tmp/llmrouterbench_r2_venv/bin/python",
+        "-m",
+        "router_v2.embed_queries",
+        "encode",
+        "--output",
+        "/root/r3_own_pool/data/embeddings_full_v2_recovery1",
+        "--wait"
+      ],
+      "log": "/root/r3_own_pool/data/embeddings_full_v2_recovery1/job.log",
+      "started_at": 1788917963.5491836
+    },
+    {
+      "name": "train_auto_scoring_resume",
+      "pid": 8258,
+      "command": [
+        "/root/autodl-tmp/llmrouterbench_r2_venv/bin/python",
+        "-m",
+        "router_v2.watch_scoring",
+        "--output",
+        "/root/r3_own_pool/data/scored_train_v2"
+      ],
+      "log": "/root/r3_own_pool/data/scored_train_v2/watcher.log",
+      "started_at": 1788917963.5499804
+    }
+  ],
+  "no_external_api_calls": true
+}

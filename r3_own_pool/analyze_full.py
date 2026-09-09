@@ -25,8 +25,10 @@ NAME = {"small": "Qwen2.5-3B", "medium": "Qwen2.5-7B", "large": "Qwen2.5-14B",
         "reasoning": "DS-R1-Distill-14B"}
 
 
-def load(path):
-    recs = [json.loads(l) for l in (path).read_text().splitlines() if l.strip()]
+def load(path, allowed=None):
+    recs = [json.loads(l) for l in (path).read_text().split("\n") if l.strip()]
+    if allowed is not None:
+        recs = [r for r in recs if r["query_id"] in allowed]
     by = [{s["slot"]: s for s in r["responses"]} for r in recs]
     rows = []
     for i, r in enumerate(recs):
@@ -61,8 +63,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", default=str(R / "data/judged_full.jsonl"))
     ap.add_argument("--tag", default="full")
+    ap.add_argument("--split", default=str(R / "data/cohort_full_v2/split.json"))
+    ap.add_argument("--partition", choices=("train", "validation"), default="train")
     a = ap.parse_args()
-    df = load(pathlib.Path(a.input))
+    split = json.loads(pathlib.Path(a.split).read_text())
+    a.tag = f"{a.tag}_{a.partition}"
+    df = load(pathlib.Path(a.input), set(split[a.partition]))
+    if df.empty:
+        raise ValueError("No rows in requested development partition")
     df.to_csv(R / f"{a.tag}_matrix.csv", index=False)
     qcols = [f"q_{NAME[s]}" for s in SLOTS]
     complete = df[qcols].notna().all(1)
@@ -76,7 +84,7 @@ def main():
     tasks = d["task_type"].to_numpy()
     datasets = d["dataset"].to_numpy()
 
-    L = [f"# {a.tag} 5000x4 Routing Opportunity Analysis (pre-registered A1-A3)", "",
+    L = [f"# {a.tag} Development Routing Opportunity Analysis (A1-A3)", "",
          f"Queries analyzed: {len(d)} (complete labels)", ""]
 
     # A1 oracle gap by task
@@ -165,10 +173,13 @@ def main():
     # status
     from collections import Counter
     st = Counter()
-    for line in pathlib.Path(a.input).read_text().splitlines():
+    for line in pathlib.Path(a.input).read_text().split("\n"):
         if not line.strip():
             continue
-        for s in json.loads(line)["responses"]:
+        rec = json.loads(line)
+        if rec["query_id"] not in set(split[a.partition]):
+            continue
+        for s in rec["responses"]:
             st[(s["slot"], s.get("status"))] += 1
     L += ["## Collection status", "", "| slot | ok | truncated | failed | parse_failed |", "|---|---|---|---|---|"]
     for s in SLOTS:

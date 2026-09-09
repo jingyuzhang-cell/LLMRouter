@@ -76,14 +76,87 @@ Router），**不是**"Router → 非 Router"。失败分析只作为 Motivation
 
 ## 8. v2 路线（记录备查，v1 结果出来前不实施）
 
-- Query Encoder 升级：contrastive routing encoder（正：query+best model，负：
-  query+bad model）——若 v1 显示 gte 冻结嵌入是瓶颈则启动
-- Leave-one-model-out 泛化：需要 model embedding 来自模型特征编码器（能力
-  profile → MLP）而非 id-based nn.Embedding（id 版对未见模型结构上无 embedding，
-  无法做 LOMO）；与 contrastive encoder 同期评估
+v2 表示学习阶梯（按投入递增，全部等 GRR 决策树触发；核心叙事：从 query
+representation 升级为 **query-model compatibility representation**）：
+- V2a query features concat：embedding + task_type + length + difficulty 预测头
+  （多难度维度：math/code/reasoning difficulty scores）
+- V2b contrastive routing encoder（正：query+best model；负：query+bad model，
+  CLIP 式对齐；直接修 kNN 失败的局部性问题）
+- V2c capability-init model encoder：m_emb 用模型能力向量初始化（reasoning/
+  coding/math/cost/latency），或直接以能力向量为输入 —— 同时解锁 LOMO
+  （id-nn.Embedding 结构上无法对未见模型出嵌入）
+- V2d cross-encoder（query + model description 联合 Transformer 交互编码）：
+  表达力最强、推理成本最高，v2 末位选项
 - 红线不变：NO RL / GNN / LLM-agent / winner classifier
 
+Related Work 对应（论文用）：Query Encoder ↔ LLM routing embedding；difficulty
+encoder ↔ IRT-Router；model encoder + FiLM 融合 ↔ EquiRouter；contrastive ↔
+router embedding alignment；ranking loss ↔ EquiRouter。
+论文表述：针对现有 LLM Router 忽略 query-model 双向匹配关系的问题，设计模型
+条件化表示学习模块，通过联合编码任务语义与模型能力特征，学习 query-model
+compatibility representation。
+
+## 10. MA-Router 总体架构图（冻结版 + v2 扩展点）
+
+```
+                        Query
+                          |
+                   Query Encoder            [v1: gte-Qwen2 fp16 冻结]
+                          |
+                        h_q ──────────────┐ (V2a: + task/length/difficulty concat)
+                                          │ (V2b: contrastive 对齐后的空间)
+   模型槽位 id / (V2c: 能力向量)           │
+          |                               │
+   Model Encoder [v1: nn.Embedding(4,64)  │
+     可学习=latent capability repr]       │
+          |                               │
+        h_m ──────────────┐               │
+                          ↓               ↓
+                     Fusion MLP (3584+64 → 256 → 128 → 1)
+                          |
+                    Q̂(q, m)  ×4 槽       [V2d: cross-encoder 替代]
+                          |
+              L = L_q(MSE) + α·L_rank(pairwise hinge)
+                          |
+        ┌──── 决策层（不学习）────┐
+        |  Cost/Latency profile  |
+        |  U = Q̂ − λC − μL       |   ← Pareto-aware：λ,μ = 策略控制量
+        |  ε-tiebreak: |ΔQ̂|<ε → 最便宜 |
+        └──────────┬─────────────┘
+                   ↓
+              select model
+```
+
+## 11. 文献支撑映射（Related Work 素材；引用前需核实条目）
+
+| 文献 | 思想 | 对应 MA-Router 组件 |
+|---|---|---|
+| RouteLLM (ICLR 2025) | preference data 学强弱模型胜负概率 | 我们已在 R2A 复现；binary 偏好对路线被 R2C 证伪（tie 丢弃根因） |
+| ICL-Router (AAAI 2026?) | model representation 参与路由 | Model Encoder（m_emb）——需核实条目 |
+| IRT-Router | 模型能力画像 × query 需求匹配 | V2c capability-init model encoder——需核实条目 |
+| EquiRouter / "When Routing Collapses" | model-conditioned representation；objective-decision mismatch | 消融梯子 A/B 直接验证 conditioning 增益——需核实条目 |
+| CLIP 式对比学习 | (query, best/bad model) 正负对齐 | V2b（若 A 消融证明表征瓶颈） |
+
+⚠️ 除 RouteLLM 外的三篇条目在写论文引用前必须逐篇核实真实性与准确出处（顾问转述
+可能失真）；设计本身不依赖这些引用成立——它由我们的 R2C/R2D 诊断链独立推导。
+
+优先级（用户定）：model-conditioned ★★★★★ / pairwise ranking ★★★★★ /
+difficulty encoder ★★★★ / contrastive ★★★★ / 单纯加数据 ★★。
+
 ## 9. 论文包装口径（用户 2026-09-08 钉死）
+
+- **问题表述（一句话）**：现有 Router 将 LLM 视为离散类别标签，而非具有不同
+  能力边界与成本属性的决策对象，导致 query→model 匹配关系难以学习。
+- **题目候选**：
+  1) Learning Model-conditioned Utility Representations for Multi-objective LLM Routing
+  2) MA-Router: Model-aware Multi-objective Ranking Router for Efficient LLM Selection
+- **三贡献**：① 发现阶段——winner-based routing 的 label compression + model
+  ignorance（R2C/R2D 诊断链 + 5000×4 响应池证据）；② model-conditioned
+  representation learning（query + model capability 联合编码 → compatibility）；
+  ③ Pareto-aware decision mechanism（quality-cost-latency 三目标）。
+- difficulty encoder / contrastive 不进主模型，只作 V2 ablation/extension。
+- m_emb 表述为 **latent model capability representation, learned end-to-end
+  through the routing objective**（不是人工能力标签）
 
 - m_emb 表述为 **latent model capability representation, learned end-to-end
   through the routing objective**（不是人工能力标签）

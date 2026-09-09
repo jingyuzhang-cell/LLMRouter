@@ -65,7 +65,8 @@ def wait_healthy(timeout=1800, process=None):
 def collect_local(slot):
     cfg = SLOTS[slot]
     model, path = cfg["model"], cfg["path"]()
-    rows = [r for r in source_rows() if r["query_id"] not in storage.done_ids(slot, retry_failed=ARGS.retry_failed)]
+    done = storage.done_ids(slot, retry_failed=ARGS.retry_failed)
+    rows = [r for r in source_rows() if r["query_id"] not in done]
     if not rows:
         print(f"[{slot}] nothing to do"); return
     cmd = ["/root/autodl-tmp/r3_venv/bin/vllm", "serve", path,
@@ -104,7 +105,8 @@ def collect_local(slot):
 def collect_api(slot):
     cfg = SLOTS[slot]
     model, serving_id = cfg["model"], cfg.get("serving_id", cfg["model"])
-    rows = [r for r in source_rows() if r["query_id"] not in storage.done_ids(slot, retry_failed=ARGS.retry_failed)]
+    done = storage.done_ids(slot, retry_failed=ARGS.retry_failed)
+    rows = [r for r in source_rows() if r["query_id"] not in done]
     print(f"[{slot}] {model} via DashScope ({len(rows)} to collect)", flush=True)
     if not rows:
         return
@@ -118,7 +120,7 @@ def collect_api(slot):
         done += 1
         if done % 25 == 0:
             print(f"[{slot}] {done}/{len(rows)}", flush=True)
-    clients.collect_parallel(client, serving_id, rows, n_threads=4, on_done=cb)
+    clients.collect_parallel(client, serving_id, rows, n_threads=48, on_done=cb)
     storage.update_manifest(slot, model, len(storage.done_ids(slot)))
 
 

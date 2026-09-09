@@ -21,7 +21,9 @@ MUS = (0, 0.1, 0.5, 1)
 
 
 def freeze(version):
-    recs = [json.loads(l) for l in (DATA / "judged.jsonl").read_text().splitlines() if l.strip()]
+    if version != "pilot_v1":
+        raise ValueError("Legacy freeze is pilot-only: full v2 must preserve cohort_full_v2/split.json and pass explicit scoring/cost gates; do not regenerate an 80/20 split.")
+    recs = [json.loads(l) for l in (DATA / "judged.jsonl").read_text().split("\n") if l.strip()]
 
     # 1) utility: per-query min-max normalize cost/latency across the 4 slots
     for rec in recs:
