@@ -1,0 +1,35 @@
+{
+  "role": "exploratory_train_only_rank_ablation",
+  "source": "/root/r3_own_pool/router_v2/objective_clean_grouped_20260910",
+  "source_files": {
+    "RESULTS.json": "88416ee01e55c77774f4863428f6f9ff1875514c766bc047158a8836d8643056",
+    "PROTOCOL.json": "797b6620b0749f0a3d08790ec5c847f8e1c1979d93ce69d088c145ece29fcf38",
+    "OOF.npz": "e0d13714a4fdfea6c1a7942e57615e6b0b7e63ee73fdf8d4bf662436aae7950c"
+  },
+  "implementation": {
+    "/root/r3_own_pool/router_v2/diagnose_rank_signal.py": "09e1f6d75a7966b21baa66909ecf749fd77da111004aa61be9b0d63b05cb0998",
+    "/root/r3_own_pool/router_v2/experiment.py": "884e7a05f9a1a79c03e1e2c22848097617692682ade83ab371d77a0550c83b54",
+    "/root/r3_own_pool/router_v2/core.py": "164739b4f92b2246e0f569bedd2b4c04a1eabde2beeb1b8058ec3dfe5adb68cc",
+    "/root/r3_own_pool/train_router.py": "1d5ec886a58d2c609e879e1d8b2a94fa01567a7ff64feb1143ba257033a03ff2"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "epochs": 60,
+  "alphas": [
+    0.0,
+    0.5
+  ],
+  "architecture": "Same Hybrid model-conditioned network, optimizer, initialization and minibatch order",
+  "primary_comparison": "alpha .5 minus alpha 0; both compared with frozen DatasetBest and Ridge",
+  "selection": "No hyperparameter, seed or epoch selection from OOF outcomes",
+  "limits": [
+    "Training-only development experiment following Ridge diagnosis; not independent confirmation",
+    "Objective scored subset; no open-ended quality or cost/latency claims",
+    "Same queries and folds across seeds; sample count is not multiplied by seeds",
+    "Paired bootstrap conditional on fitted OOF models, not retraining uncertainty",
+    "Fixed 60-epoch budget by default, not an optimized architecture comparison"
+  ]
+}

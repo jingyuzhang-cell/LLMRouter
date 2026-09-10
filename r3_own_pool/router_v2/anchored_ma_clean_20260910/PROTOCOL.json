@@ -1,0 +1,48 @@
+{
+  "role": "exploratory_clean_train_nested_group_anchored_ma",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "epochs": [
+    0,
+    5,
+    15,
+    30
+  ],
+  "thresholds": [
+    0.0,
+    0.02,
+    0.05,
+    0.1,
+    2.0
+  ],
+  "source_files": {
+    "PROTOCOL.json": "797b6620b0749f0a3d08790ec5c847f8e1c1979d93ce69d088c145ece29fcf38",
+    "RESULTS.json": "88416ee01e55c77774f4863428f6f9ff1875514c766bc047158a8836d8643056",
+    "OOF.npz": "e0d13714a4fdfea6c1a7942e57615e6b0b7e63ee73fdf8d4bf662436aae7950c"
+  },
+  "groups_sha256": "89bbb75a1df5d7f83120cf2e4b153234530f1ef704e210a9047521ac6b134fdf",
+  "code_sha256": {
+    "/root/r3_own_pool/router_v2/anchored_ma.py": "0d707ac38334274f5b02e3a4a53a1325f515d66f459a1cc1ff2da75e128d8fae",
+    "/root/r3_own_pool/router_v2/diagnose_rank_signal.py": "09e1f6d75a7966b21baa66909ecf749fd77da111004aa61be9b0d63b05cb0998",
+    "/root/r3_own_pool/router_v2/integrity.py": "a4dbe7835b933a0805fd1abdeb00fe27c0c051dfb683c975893f55012c3a2ac5",
+    "/root/r3_own_pool/router_v2/core.py": "164739b4f92b2246e0f569bedd2b4c04a1eabde2beeb1b8058ec3dfe5adb68cc"
+  },
+  "ridge_alpha": 20.0,
+  "svd_dimensions": 64,
+  "correction_cap": 0.1,
+  "weight_decay": 0.01,
+  "learning_rate": 0.001,
+  "loss": "MSE + .5 query-centered MSE + .1 correction L2",
+  "selection": "Inner group OOF routed quality; ties earlier epoch then larger threshold; epoch0 is Ridge, threshold2 is train BestSingle",
+  "primary": "AnchoredMA versus RidgeGuard; both also compared with frozen Ridge and DatasetBest",
+  "limits": [
+    "Adaptive original-train development; no independent confirmation",
+    "Dataset identity only for split stratification and diagnostic baseline, not predictor inputs",
+    "Only query features, training labels, and training cost-free quality predictions",
+    "Epoch0/base predictions on fitting rows are in-sample Ridge; inner/outer evaluation remain held out",
+    "Conditional paired intervals do not include retraining uncertainty; all seeds reported"
+  ]
+}

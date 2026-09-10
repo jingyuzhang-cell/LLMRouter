@@ -1,5 +1,7 @@
 # R3 v2：训练、验证冻结与独立评估
 
+> 2026-09-10 污染审计更新：原750题test已有真实开封记录，旧full_v2/GATE.json的未污染声明不能继续使用。旧objective_signal_20260909含175个客观任务故障零分；后续实验应使用data/train_matrix_clean_audit_20260910/TRAIN_MATRIX.jsonl与objective_clean_grouped_20260910。见[污染审计与修复验证](contamination_audit_20260910b/REPORT.md)；历史结果保留追溯，不能拼接为新方法效果。
+
 实现服务于“旧 Router → 模型条件化多目标 Router”主线。尚无真实全量性能结果。当前默认 TF-IDF/SVD 只用于低成本开发；传入有 query hash 的冻结 GTE 嵌入才能沿用既有表示方案。Transformer 基线仍待独立实现/冻结，不能把当前比较称为完整论文 baseline 表。
 
 ## 已实现的实验

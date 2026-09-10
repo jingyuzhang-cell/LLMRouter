@@ -130,7 +130,8 @@ def fit(args):
     out = Path(args.output)
     out.mkdir(parents=True, exist_ok=False)
     source_files = [Path(__file__), Path(__file__).with_name('core.py'),
-                    Path(__file__).with_name('data.py'), Path(__file__).parents[1]/'train_router.py']
+                    Path(__file__).with_name('data.py'), Path(__file__).with_name('integrity.py'),
+                    Path(__file__).parents[1]/'train_router.py']
     protocol = dict(seed=args.seed, epochs=args.epochs, alphas=ALPHAS, grid=GRID,
         quality_delta=quality_delta, role=gate.get('role', 'development_until_all_preregistered_baselines_complete'),
         encoder=gate.get('embedding_provenance', 'TF-IDF/SVD development'),

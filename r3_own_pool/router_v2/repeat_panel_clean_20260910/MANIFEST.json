@@ -1,0 +1,35 @@
+{
+  "role": "train_only_repeat_stability_panel_large_vs_reasoning",
+  "source": "/root/r3_own_pool/router_v2/objective_clean_grouped_20260910",
+  "source_files": {
+    "PROTOCOL.json": "797b6620b0749f0a3d08790ec5c847f8e1c1979d93ce69d088c145ece29fcf38",
+    "RESULTS.json": "88416ee01e55c77774f4863428f6f9ff1875514c766bc047158a8836d8643056",
+    "OOF.npz": "e0d13714a4fdfea6c1a7942e57615e6b0b7e63ee73fdf8d4bf662436aae7950c"
+  },
+  "n_panel": 97,
+  "target_slots": [
+    "large",
+    "reasoning"
+  ],
+  "planned_repeats_per_slot": 5,
+  "selection": {
+    "strict_per_side": 20,
+    "near_tie": 40,
+    "high_regret": 40,
+    "sorts": [
+      "observed strict pair labels balanced by side, closest predicted pair margin first",
+      "near tie by absolute Ridge predicted reasoning-large margin, high regret as tie-breaker",
+      "high regret where large or reasoning is in the current oracle set"
+    ]
+  },
+  "collection_warning": "The existing production client uses temperature=0.0. Temperature-0 repeats measure backend/judge stability; stochastic repeat labels require an explicit nonzero sampling protocol and are not directly the same deployment distribution.",
+  "limits": [
+    "Panel selection uses original train objective labels only and is for development.",
+    "PANEL.jsonl is blind to current labels; PRIVATE_KEY.jsonl must not be used by repeat collection workers.",
+    "No model generation, judge call, validation label, or test label is used by this script."
+  ],
+  "files": {
+    "PANEL.jsonl": "5d4e84e456401fb760aaea17ce0d154f40d77e2a63404b514600b18c682c01eb",
+    "PRIVATE_KEY.jsonl": "80ac323d77819fd149d5aba499ee6db5da87cee3dcde3c683edd9b9e00182e6c"
+  }
+}

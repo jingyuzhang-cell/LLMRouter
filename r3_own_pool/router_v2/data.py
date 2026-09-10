@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import numpy as np
 from .core import SLOTS
+from .integrity import require_valid_quality, normalize_prompt, known_exposure
 
 
 def sha(path):
@@ -51,6 +52,8 @@ def matrix(by, ids):
     values = []
     for qid in ids:
         by_slot = {s['slot']: s for s in by[qid]['responses']}
+        for response in by_slot.values():
+            require_valid_quality(response)
         values.append([[by_slot[s]['quality']['final'], by_slot[s]['cost']['usd'],
                         by_slot[s]['latency']['total_ms']] for s in SLOTS])
     y = np.asarray(values, dtype=float)
@@ -72,4 +75,9 @@ def verify_gate(gate_path, outcome_path, cohort_dir):
             raise ValueError('Data gate not satisfied: ' + key)
     if gate.get('currency') != 'USD' or not gate.get('cost_basis'):
         raise ValueError('Current schema requires documented common USD cost basis')
+    if gate.get('role') != 'synthetic_smoke':
+        cohort, split = load_cohort(cohort_dir)
+        exposed_ids, exposed_text, _ = known_exposure(Path(__file__).resolve().parents[1])
+        if any(q in exposed_ids or normalize_prompt(cohort[q]['query']) in exposed_text for q in split['test']):
+            raise ValueError('Known pilot or prior test exposure; holdout_uncontaminated cannot override evidence')
     return gate

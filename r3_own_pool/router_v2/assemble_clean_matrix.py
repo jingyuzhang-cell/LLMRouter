@@ -1,4 +1,13 @@
-"""Auditable train-only matrix snapshot; does not certify costs or open test labels."""
+"""Clean train matrix snapshot: infrastructure failures are missing labels, never zero quality.
+
+Contamination audit 2026-09-10: 633/14000 train cells carried quality=0 from
+DashScope arrearage ('Access denied' HTTP 400) during reasoning collection, not
+model behavior. After re-collection this builder rebinds labels from the v3
+caches and marks any cell whose generation still failed as missing:
+quality.final=None, quality_source='infrastructure_failure_missing'. Cached
+zero-for-failure policies in scorer/judge journals are unchanged; the policy
+conversion happens here, at the auditable matrix layer.
+"""
 import argparse
 from collections import Counter
 import hashlib
@@ -52,8 +61,8 @@ def main():
     ap.add_argument('--output',required=True)
     args=ap.parse_args();out=Path(args.output);out.mkdir(parents=True,exist_ok=False)
     cohort,split=load_cohort(ROOT/'data/cohort_full_v2')
-    paths=[ROOT/'data/scored_train_v2/SCORES.jsonl',ROOT/'data/scored_code_train_v2/SCORES.jsonl',
-           ROOT/'data/scored_code_numpy_train_v2/SCORES.jsonl',ROOT/'data/judged_train_primary_v2/ATTEMPTS.jsonl']
+    paths=[ROOT/'data/scored_train_v3/SCORES.jsonl',ROOT/'data/scored_code_train_v3/SCORES.jsonl',
+           ROOT/'data/scored_code_numpy_train_v3/SCORES.jsonl',ROOT/'data/judged_train_primary_v3/ATTEMPTS.jsonl']
     snapshots=[snapshot(path) for path in paths]
     labels=merge_labels(*(item[0] for item in snapshots))
     raw={slot:storage.canonical_rows(ROOT/'data/raw'/f'{slot}.jsonl') for slot in SLOTS}
@@ -72,24 +81,34 @@ def main():
                 record['responses'].append(dict(slot=slot,status='not_collected',quality={'final':None},cost={'usd':None},latency={'total_ms':None}))
                 continue
             rh=digest(response)
+            infrastructure_failure=(response.get('status')=='failed')
             selected=labels.get((qid,slot,sh,rh))
             kind,label=selected if selected else ('unscored',{})
+            if label.get('evaluation_status')=='generation_failure' or label.get('event')=='generation_failure':
+                infrastructure_failure=True
             quality=label.get('quality')
-            if response.get('status') == 'failed' or label.get('evaluation_status') == 'generation_failure' or label.get('event') == 'generation_failure':
+            if infrastructure_failure:
+                # Clean policy: an infrastructure-induced generation failure is a
+                # missing label, not evidence of model quality.
                 quality=None;kind='infrastructure_failure_missing'
             if quality is not None and (not math.isfinite(quality) or not 0<=quality<=1):
                 raise ValueError('Invalid cached quality')
             if quality is None:
-                complete=False;counts['missing_label']+=1;per['missing_label']+=1
+                complete=False
+                if kind=='infrastructure_failure_missing':
+                    counts['infrastructure_failure_missing']+=1;per['infrastructure_failure_missing']+=1
+                else:
+                    counts['missing_label']+=1;per['missing_label']+=1
             else:
                 counts['labeled_cells']+=1;per['labeled_cells']+=1
             flags=[]
+            if infrastructure_failure:flags.append('infrastructure_failure')
             if label.get('rubric',{}).get('components_consistent') is False:
                 flags.append('judge_components_inconsistent');counts['judge_components_inconsistent']+=1
             record['responses'].append(dict(slot=slot,model=response.get('model'),status=response.get('status'),
                 quality=dict(final=quality,quality_source=kind,flags=flags),
                 cost=response.get('cost') or {},latency=response.get('latency') or {},
-                response_sha256=rh,source_sha256=sh,evaluation_status=label.get('evaluation_status',label.get('event','unscored'))))
+                response_sha256=rh,source_sha256=sh,evaluation_status='generation_failure_missing' if infrastructure_failure else label.get('evaluation_status',label.get('event','unscored'))))
         counts['complete_label_queries']+=int(complete)
         records.append(record)
     target=out/'TRAIN_MATRIX.jsonl'
@@ -112,12 +131,16 @@ def main():
     report=dict(partition='train',queries=len(records),expected_cells=4*len(records),counts=dict(counts),
         by_dataset={k:dict(v) for k,v in by_dataset.items()},embedding=embedding,
         matrix_sha256=sha(target),cache_snapshots={str(p):info for p,(_,info) in zip(paths,snapshots)},
+        failure_policy='Infrastructure-induced generation failures (provider arrearage/access denials) are missing labels; never quality zero.',
+        decontamination=dict(audited_against='train_matrix_snapshot_20260909c',
+            contaminated_cells_there=633,cause='DashScope arrearage during reasoning collection',
+            remediation='reasoning re-collected 2026-09-10; labels rebound from v3 caches'),
         formal_training_ready=False,test_labels_loaded=False,original_split_modified=False,
         remaining=['Missing raw/labels shown above','Judge reliability incl. component inconsistency',
                    'Common verified monetary cost basis','Independent-confirmation protocol after pilot exposure'],
-        failure_policy='Failed generation labels are missing for model-quality training; reliability is evaluated separately',
-        note='Read-only label-coverage snapshot; costs inherited from unverified legacy proxies; no utility/quality aggregate and no test evaluation.')
+        note='Read-only clean label snapshot after infrastructure-failure decontamination; no utility/quality aggregate and no test evaluation.')
     write_json(out/'MANIFEST.json',report)
-    print(json.dumps({k:report[k] for k in ('queries','expected_cells','counts','by_dataset','embedding','formal_training_ready')},indent=2))
+    print(json.dumps({k:report[k] for k in ('queries','expected_cells','counts','by_dataset','embedding','failure_policy')},indent=2))
+
 
 if __name__=='__main__':main()

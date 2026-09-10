@@ -13,6 +13,7 @@ import numpy as np
 from .core import SLOTS, paired_ci
 from .data import read_rows, sha
 from .diagnose_rank_signal import load_inputs
+from .integrity import fold_cost_profiles
 
 DEFAULT_EPS = (0.0, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2)
 DEFAULT_DELTAS = (0.0, 0.05, 0.1)
@@ -69,6 +70,9 @@ def effective_gap_report(y, choices, baseline, deltas):
             "conditional_oracle_gap": float(gap.mean()) if mask.any() else None,
             "conditional_gain": float(gain.mean()) if mask.any() else None,
             "conditional_gap_recovery": float(gain.mean() / gap.mean()) if mask.any() and gap.mean() > 1e-12 else None,
+            "outside_opportunity_net_gain": float((actual[~mask]-base[~mask]).sum()/len(y)),
+            "all_query_net_gain": float((actual-base).mean()),
+            "net_gap_recovery": float((actual-base).mean()/((oracle-base).mean())) if (oracle-base).mean()>0 else None,
             "all_query_effective_gap": float((oracle[mask] - base[mask]).sum() / len(y)),
             "all_query_effective_gain": float((actual[mask] - base[mask]).sum() / len(y)),
         }
@@ -177,7 +181,7 @@ def write_report(out, result):
     chosen = result["selected_tieaware_policy"]
     lines += [
         "",
-        f"Selected exploratory policy under max quality loss {100*result['selection']['max_quality_loss']:.2f} pp: `{chosen}`.",
+        "No epsilon selected on these evaluation outcomes; this grid is descriptive development evidence.",
         "",
         "## Large vs Reasoning Effective Pair Gap",
         "",
@@ -212,6 +216,7 @@ def run(args):
     baseline = frozen["DatasetBest"].astype(int)
     matrix_path = matrix_path_from_source(source)
     costs, latencies = cost_latency_for_ids(matrix_path, ids)
+    decision_costs = fold_cost_profiles(costs, frozen["folds"])
     out.mkdir(parents=True, exist_ok=False)
     protocol = {
         "role": "exploratory_train_only_effective_gap_tieaware",
@@ -221,11 +226,12 @@ def run(args):
         "implementation_sha256": sha(__file__),
         "epsilons": args.eps,
         "effective_gap_deltas": args.deltas,
-        "selection": f"largest cost saving among tie-aware eps policies with mean quality loss <= {args.max_quality_loss}",
+        "selection": "No selection on evaluated OOF labels; report all predeclared epsilons descriptively",
+        "decision_costs": "Per-slot means from other OOF folds only; actual held-query cost used only for evaluation",
         "limits": [
             "Original train objective subset only; no validation/test labels loaded.",
             "Cost and latency are the existing matrix fields and remain proxy/provenance-limited for local models.",
-            "Epsilon is selected on train OOF outcomes for development, not as independent confirmation.",
+            "Epsilons are not selected on these OOF outcomes; nested selection or a frozen independent evaluation is required.",
             "Binary objective scores make delta>0 equivalent to strict accuracy improvement for quality labels.",
         ],
     }
@@ -235,9 +241,9 @@ def run(args):
         "query_ridge_argmax": pred.argmax(1).astype(int),
     }
     for eps in args.eps:
-        choices[f"tieaware_eps{eps}"] = tieaware_choice(pred, costs, eps)
+        choices[f"tieaware_eps{eps}"] = tieaware_choice(pred, decision_costs, eps)
     reports = {key: policy_report(y, costs, latencies, choice, baseline, args.deltas) for key, choice in choices.items()}
-    selected = select_eps(reports, args.max_quality_loss)
+    selected = None
     result = {
         "role": protocol["role"],
         "n": int(len(y)),
@@ -245,12 +251,12 @@ def run(args):
         "policies": reports,
         "selected_tieaware_policy": selected,
         "selection": {"max_quality_loss": args.max_quality_loss},
-        "large_vs_reasoning_effective_pair_gap": pair_margin_report(y, costs, (3, 2), args.deltas),
+        "large_vs_reasoning_effective_pair_gap": pair_margin_report(y, decision_costs, (3, 2), args.deltas),
         "validation_labels_loaded": False,
         "test_labels_loaded": False,
         "files": {"PROTOCOL.json": sha(out / "PROTOCOL.json")},
     }
-    np.savez_compressed(out / "CHOICES.npz", ids=frozen["ids"], **choices)
+    np.savez_compressed(out / "CHOICES.npz", ids=frozen["ids"], decision_costs=decision_costs, **choices)
     result["files"]["CHOICES.npz"] = sha(out / "CHOICES.npz")
     (out / "RESULTS.json").write_text(json.dumps(result, indent=2) + "\n")
     write_report(out, result)

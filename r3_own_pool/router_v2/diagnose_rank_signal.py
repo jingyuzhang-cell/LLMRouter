@@ -5,7 +5,8 @@ from pathlib import Path
 import time
 import numpy as np
 import torch
-from .data import load_cohort, sha
+from .data import load_cohort, sha, read_rows
+from .integrity import require_valid_quality
 from .core import paired_ci
 from .experiment import Router
 
@@ -34,6 +35,12 @@ def load_inputs(source):
     with np.load(embedding_path, allow_pickle=False) as data:
         index = {qid: i for i, qid in enumerate(data['ids'].tolist())}
         x = data['vectors'][[index[qid] for qid in ids]].astype('float32')
+    matrix_paths = [p for p in inputs if p.endswith('.jsonl') and Path(p).name != 'queries.jsonl']
+    for path in matrix_paths:
+        for row in read_rows(path):
+            if row['query_id'] in set(ids):
+                for response in row['responses']:
+                    require_valid_quality(response)
     y = frozen['quality']
     if not np.isfinite(x).all() or y.shape != (len(ids), 4) or not np.isin(y, [0, 1]).all():
         raise ValueError('Invalid features or quality')

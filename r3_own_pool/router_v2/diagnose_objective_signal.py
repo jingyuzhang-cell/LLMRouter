@@ -4,9 +4,10 @@ import json
 from pathlib import Path
 import numpy as np
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, StratifiedGroupKFold
 from .data import load_cohort, read_rows, sha
 from .core import SLOTS, paired_ci
+from .integrity import require_valid_quality
 
 
 def run(args):
@@ -18,17 +19,26 @@ def run(args):
     ids = [r['query_id'] for r in records]
     if len(ids) != len(set(ids)) or set(ids) != set(split['train']):
         raise ValueError('Input must contain exactly original train IDs')
+    excluded_ids_path = getattr(args, "exclude_ids", None)
+    excluded_ids = set(json.loads(Path(excluded_ids_path).read_text())) if excluded_ids_path else set()
+    if not excluded_ids <= set(split["train"]):
+        raise ValueError("Excluded IDs must be original train IDs")
     selected, excluded = [], {}
     for row in records:
         qid = row['query_id']
         if row['query'] != cohort[qid]['query'] or row['dataset'] != cohort[qid]['dataset']:
             raise ValueError('Source mismatch')
+        if qid in excluded_ids:
+            excluded['predeclared_exposure_exclusion'] = excluded.get('predeclared_exposure_exclusion', 0) + 1
+            continue
         if row['dataset'] not in {'gsm8k', 'mmlupro', 'humaneval', 'mbpp'}:
             excluded[row['dataset']] = excluded.get(row['dataset'], 0) + 1
             continue
         slots = {r['slot']: r for r in row['responses']}
         if len(row['responses']) != 4 or set(slots) != set(SLOTS):
             raise ValueError('Incomplete slots')
+        for response in slots.values():
+            require_valid_quality(response)
         labels = [slots[s]['quality']['final'] for s in SLOTS]
         if any(v not in (0, 1) for v in labels):
             raise ValueError('Objective labels must be complete binary outcomes')
@@ -47,7 +57,14 @@ def run(args):
             raise ValueError('Invalid embeddings')
     y = np.array([r[2] for r in selected], dtype=float)
     datasets = np.array([r[1] for r in selected])
-    protocol = dict(role='exploratory_train_only_objective_signal', seed=42, folds=3,
+    group_path = getattr(args, 'groups', None)
+    groups = None
+    if group_path:
+        grouping = json.loads(Path(group_path).read_text())
+        if grouping['queries_sha256'] != sha(Path(args.cohort)/'queries.jsonl'):
+            raise ValueError('Prompt grouping hash mismatch')
+        groups = np.array([grouping['groups'][r[0]] for r in selected])
+    protocol = dict(excluded_ids_sha256=sha(excluded_ids_path) if excluded_ids_path else None, prompt_groups_sha256=sha(group_path) if group_path else None, role='exploratory_train_only_objective_signal', seed=42, folds=3,
         ridge_alpha=20., selection='No hyperparameter search; fold-training means only for baselines',
         input_sha256={str(Path(p).resolve()): sha(p) for p in (args.matrix, args.embeddings,
             Path(args.cohort)/'queries.jsonl', Path(args.cohort)/'split.json')},
@@ -63,7 +80,11 @@ def run(args):
     decisions = {name: np.zeros(len(y), dtype=int) for name in ('Ridge', 'BestSingle', 'DatasetBest')}
     predictions = np.zeros_like(y)
     folds = np.zeros(len(y), dtype=int)
-    for fold, (tr, va) in enumerate(StratifiedKFold(3, shuffle=True, random_state=42).split(x, datasets)):
+    splitter = (StratifiedGroupKFold(3, shuffle=True, random_state=42).split(x, datasets, groups)
+                if groups is not None else StratifiedKFold(3, shuffle=True, random_state=42).split(x, datasets))
+    for fold, (tr, va) in enumerate(splitter):
+        if groups is not None and set(groups[tr]) & set(groups[va]):
+            raise ValueError('Prompt groups cross OOF folds')
         model = Ridge(alpha=20.).fit(x[tr], y[tr])
         predictions[va] = model.predict(x[va]).clip(0, 1)
         decisions['Ridge'][va] = predictions[va].argmax(1)
@@ -104,6 +125,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('matrix', 'cohort', 'embeddings', 'output'):
         parser.add_argument('--'+name, required=True)
+    parser.add_argument('--groups', help='Hash-bound label-free prompt groups for grouped OOF')
+    parser.add_argument('--exclude-ids', help='Predeclared exposure IDs for development sensitivity only')
     run(parser.parse_args())
 
 

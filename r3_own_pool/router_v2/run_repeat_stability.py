@@ -8,6 +8,7 @@ import argparse
 import fcntl
 import hashlib
 import json
+import math
 import os
 import pathlib
 import subprocess
@@ -43,11 +44,14 @@ def sha(path):
 def read_jsonl(path):
     if not pathlib.Path(path).exists():
         return []
-    return [json.loads(line) for line in pathlib.Path(path).read_text().splitlines() if line.strip()]
+    return [json.loads(line) for line in pathlib.Path(path).read_text().split('\n') if line.strip()]
 
 
 def write_protocol(out, args):
     protocol = {
+        "label_protocol_version": 2,
+        "scorer_sha256": sha(__file__),
+        "cohort_sha256": sha(ROOT / "data/cohort_full_v2/queries.jsonl"),
         "role": "repeat_stability_collection_large_vs_reasoning",
         "panel": str(pathlib.Path(args.panel).resolve()),
         "panel_sha256": sha(args.panel),
@@ -68,6 +72,8 @@ def write_protocol(out, args):
     path = out / "PROTOCOL.json"
     if path.exists():
         old = json.loads(path.read_text())
+        if old.get("label_protocol_version") != 2:
+            raise RuntimeError("Legacy repeat scores are invalid; use a new output directory")
         comparable = {k: old[k] for k in protocol if k in old and k != "slot"}
         expected = {k: protocol[k] for k in comparable}
         if comparable != expected:
@@ -86,29 +92,40 @@ def done_keys(path):
     return {(r["query_id"], r["slot"], int(r["repeat_index"])) for r in read_jsonl(path)}
 
 
+def bind_panel(panel, cohort_dir):
+    from .data import load_cohort
+    cohort, split = load_cohort(cohort_dir)
+    if len({r['query_id'] for r in panel}) != len(panel):
+        raise ValueError('Duplicate repeat panel ID')
+    rows=[]
+    for row in panel:
+        qid=row['query_id']
+        if qid not in set(split['train']) or row['query'] != cohort[qid]['query']:
+            raise ValueError('Repeat panel must match original train query')
+        if any(row[k] != cohort[qid][k] for k in ('dataset','task_type')):
+            raise ValueError('Repeat panel metadata mismatch')
+        rows.append({**row, 'ground_truth':cohort[qid]['ground_truth']})
+    return rows
+
+
 def score_answer(row, answer, status):
-    if status != "ok" or not answer:
-        return {"quality": 0.0, "evaluation_status": "generation_failure" if status == "failed" else "parse_failed"}
-    sys.path.insert(0, str(COLLECT))
-    import metrics
-    dataset = row["dataset"]
-    if dataset == "gsm8k":
-        score = metrics.exact_match_math(answer, row.get("ground_truth"))
-    elif dataset == "mmlupro":
-        score = metrics.option_match(answer, row.get("ground_truth"))
-    elif dataset == "mbpp":
-        score = metrics.pass_at1_mbpp(answer, row.get("ground_truth"))
-    elif dataset == "humaneval":
-        score = metrics.pass_at1_humaneval(answer, row.get("ground_truth"))
+    if row.get('ground_truth') is None:
+        raise ValueError('Missing ground truth: never silently score a blind panel')
+    if status == 'failed':
+        return {'quality':None, 'evaluation_status':'infrastructure_failure_missing'}
+    # A truncated but delivered answer is evaluated as delivered.
+    if row['dataset'] in ('mbpp','humaneval'):
+        from .score_code import score
     else:
-        raise RuntimeError(f"Unsupported repeat-stability dataset: {dataset}")
-    if score is None:
-        return {"quality": 0.0, "evaluation_status": "parse_failed"}
-    return {"quality": float(score), "evaluation_status": "scored"}
+        from .score_available import score
+    result=score(row, {'answer':answer, 'status':status})
+    if result is None: raise ValueError('Unsupported repeat dataset')
+    return result
 
 
 def generate(client, model, row, temperature, top_p, max_retries):
     last_err = None
+    opener = request.build_opener(request.ProxyHandler({})) if client.get("local") else request
     for attempt in range(max_retries):
         try:
             t0 = time.perf_counter()
@@ -126,7 +143,7 @@ def generate(client, model, row, temperature, top_p, max_retries):
             if client.get("api_key"):
                 headers["Authorization"] = f"Bearer {client['api_key']}"
             req = request.Request(client["base_url"] + "/chat/completions", data=payload, headers=headers, method="POST")
-            with request.urlopen(req, timeout=client.get("timeout", 240)) as resp:
+            with opener.open(req, timeout=client.get("timeout", 240)) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
             total = time.perf_counter() - t0
             choice = data["choices"][0]
@@ -205,7 +222,7 @@ def local_client(slot, out):
     log = open(log_dir / f"vllm_{slot}.log", "a")
     proc = subprocess.Popen(cmd, cwd=str(COLLECT), env=env, stdout=log, stderr=subprocess.STDOUT)
     wait_healthy(proc)
-    return {"base_url": f"http://127.0.0.1:{PORT}/v1", "api_key": "local", "timeout": 240}, proc, log
+    return {"base_url": f"http://127.0.0.1:{PORT}/v1", "api_key": "local", "timeout": 240, "local": True}, proc, log
 
 
 def api_client():
@@ -222,7 +239,14 @@ def collect(args):
     out = pathlib.Path(args.output).resolve()
     out.mkdir(parents=True, exist_ok=True)
     write_protocol(out, args)
-    panel = read_jsonl(args.panel)
+    panel = bind_panel(read_jsonl(args.panel), ROOT/'data/cohort_full_v2')
+    if any(r['dataset'] in ('mbpp','humaneval') for r in panel):
+        from .code_sandbox import verify_runtime
+        runtime_hash=verify_runtime()
+        probe=json.loads((ROOT/'router_v2/CODE_SANDBOX_PROBE_V3.json').read_text())
+        if probe.get('status') != 'PASS' or probe.get('runtime_manifest_sha256') != runtime_hash:
+            raise RuntimeError('Audited code scoring runtime required')
+    cohort_signature = sha(ROOT / "data/cohort_full_v2/queries.jsonl")
     raw_path = out / f"{args.slot}.jsonl"
     complete = done_keys(raw_path)
     targets = [(row, repeat) for row in panel for repeat in range(args.repeats) if (row["query_id"], args.slot, repeat) not in complete]
@@ -250,6 +274,10 @@ def collect(args):
                     slot_out = generate(client, model, row, args.temperature, args.top_p, args.max_retries)
                     score = score_answer(row, slot_out.get("answer"), slot_out.get("status"))
                     record = {
+                        "cohort_sha256": cohort_signature,
+                        "label_protocol_version": 2,
+                        "panel_sha256": sha(args.panel),
+                        "scorer_sha256": sha(__file__),
                         "query_id": row["query_id"],
                         "panel_index": row["panel_index"],
                         "dataset": row["dataset"],
@@ -284,17 +312,36 @@ def collect(args):
 
 def aggregate(args):
     out = pathlib.Path(args.output).resolve()
+    out.mkdir(parents=True, exist_ok=True)
     panel = {r["query_id"]: r for r in read_jsonl(args.panel)}
     rows = read_jsonl(out / "large.jsonl") + read_jsonl(out / "reasoning.jsonl")
-    grouped = defaultdict(lambda: defaultdict(list))
+    grouped = defaultdict(lambda: defaultdict(dict))
+    invalid_repeats = 0
+    expected_panel_sha = sha(args.panel)
+    expected_scorer_sha = sha(__file__)
+    expected_cohort_sha = sha(ROOT / "data/cohort_full_v2/queries.jsonl")
     for row in rows:
         if row["query_id"] in panel and row["slot"] in ("large", "reasoning"):
-            grouped[row["query_id"]][row["slot"]].append(row)
+            if (row.get('label_protocol_version') != 2
+                    or row.get('panel_sha256') != expected_panel_sha
+                    or row.get('scorer_sha256') != expected_scorer_sha
+                    or row.get('cohort_sha256') != expected_cohort_sha
+                    or row.get('temperature') != args.temperature or row.get('top_p') != args.top_p
+                    or row.get('status') == 'failed' or row.get('quality') is None
+                    or not isinstance(row.get('quality'), (int,float))
+                    or not math.isfinite(row['quality']) or not 0 <= row['quality'] <= 1
+                    or row.get('evaluation_status') not in ('scored','answer_parse_failed')):
+                invalid_repeats += 1
+                continue
+            idx=int(row['repeat_index'])
+            if idx not in range(args.repeats): raise ValueError('Invalid repeat index')
+            if idx in grouped[row['query_id']][row['slot']]: raise ValueError('Duplicate repeat index')
+            grouped[row['query_id']][row['slot']][idx]=row
     labels = []
     incomplete = []
     for qid in sorted(panel):
-        large = grouped[qid]["large"]
-        reasoning = grouped[qid]["reasoning"]
+        large = [r for _,r in sorted(grouped[qid]["large"].items())]
+        reasoning = [r for _,r in sorted(grouped[qid]["reasoning"].items())]
         if len(large) < args.repeats or len(reasoning) < args.repeats:
             incomplete.append({"query_id": qid, "large": len(large), "reasoning": len(reasoning)})
             continue
@@ -325,6 +372,8 @@ def aggregate(args):
             "task_type": panel[qid]["task_type"],
             "strata": panel[qid]["strata"],
             "comparisons": comparisons,
+            "independent_generations_per_slot": args.repeats,
+            "cross_products_are_independent": False,
             "reasoning_win_rate": r_rate,
             "large_win_rate": l_rate,
             "tie_rate": t_rate,
@@ -337,19 +386,37 @@ def aggregate(args):
     with (out / "STABLE_LABELS.jsonl").open("w") as f:
         for row in labels:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    stable_pairs = []
+    for row in labels:
+        if row["stable_label"] == "reasoning>large":
+            stable_pairs.append({**row, "winner": "reasoning", "loser": "large"})
+        elif row["stable_label"] == "large>reasoning":
+            stable_pairs.append({**row, "winner": "large", "loser": "reasoning"})
+    with (out / "stable_pairs.jsonl").open("w") as f:
+        for row in stable_pairs:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
     from collections import Counter
     summary = {
         "role": "repeat_stability_labels_large_vs_reasoning",
         "n_panel": len(panel),
+        "invalid_repeats_excluded": invalid_repeats,
+        "stability_interpretation": "Empirical threshold from 5 generations per slot; 25 dependent comparisons are not 25 independent observations",
         "n_complete": len(labels),
         "n_incomplete": len(incomplete),
         "stable_threshold": args.stable_threshold,
         "label_counts": dict(Counter(r["stable_label"] for r in labels)),
+        "stable_pair_count": len(stable_pairs),
+        "stable_pair_ratio": len(stable_pairs) / len(labels) if labels else None,
+        "discard_count": sum(1 for r in labels if r["stable_label"] == "unstable_or_tie"),
+        "discard_ratio": sum(1 for r in labels if r["stable_label"] == "unstable_or_tie") / len(labels) if labels else None,
         "mean_reasoning_win_rate": sum(r["reasoning_win_rate"] for r in labels) / len(labels) if labels else None,
         "mean_large_win_rate": sum(r["large_win_rate"] for r in labels) / len(labels) if labels else None,
         "mean_tie_rate": sum(r["tie_rate"] for r in labels) / len(labels) if labels else None,
         "incomplete": incomplete[:20],
-        "files": {"STABLE_LABELS.jsonl": sha(out / "STABLE_LABELS.jsonl")},
+        "files": {
+            "STABLE_LABELS.jsonl": sha(out / "STABLE_LABELS.jsonl"),
+            "stable_pairs.jsonl": sha(out / "stable_pairs.jsonl"),
+        },
     }
     (out / "LABEL_SUMMARY.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2), flush=True)
