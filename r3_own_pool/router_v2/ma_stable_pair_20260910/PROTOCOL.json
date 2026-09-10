@@ -1,0 +1,44 @@
+{
+  "role": "fold_isolated_repeat_label_ma_development",
+  "mode": "stable",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "epochs": 15,
+  "threshold": 0.05,
+  "arms": [
+    "old_winner_all",
+    "old_pair_panel",
+    "repeat_mean_panel",
+    "stable_pair",
+    "old_pair_stable_matched"
+  ],
+  "source": "/root/r3_own_pool/router_v2/objective_verified_20260910",
+  "panel_dir": "/root/r3_own_pool/router_v2/repeat_fold_panel_20260910",
+  "panel_manifest_sha256": "922a17995a807cdd479f505991ba9af507a1fb6d10475f990492381e507c687a",
+  "source_files": {
+    "PROTOCOL.json": "fef0ad35f649ed8e7a8f97a429177eeaded64d3fbba14bf9658ae01a2a5050d5",
+    "OOF.npz": "e0d13714a4fdfea6c1a7942e57615e6b0b7e63ee73fdf8d4bf662436aae7950c",
+    "RESULTS.json": "fc8c881b72431cfd7814888239e9b372107297e0e151aabcf45f07f1373ccaad"
+  },
+  "repeat_summary_sha256": "eabcd14d510153efaa3290e47f92ce7b10e7d9fcbb681bd55237afbf6802e3ef",
+  "implementation": {
+    "/root/r3_own_pool/router_v2/train_repeat_pair_ma.py": "a25327d74e267a44378d527ab00bfad66be341a254fb9b24dae951b414639d4c",
+    "/root/r3_own_pool/router_v2/anchored_ma.py": "0d707ac38334274f5b02e3a4a53a1325f515d66f459a1cc1ff2da75e128d8fae"
+  },
+  "architecture": "Same 64-dimensional train-only SVD and Ridge-anchored model-conditioned adapter, cap .1, AdamW .001, 15 epochs",
+  "selection": "Fixed epochs/threshold/seeds before this run; panel selection restricted to each outer training fold",
+  "primary": "stable_pair minus old_pair_stable_matched; also report original winner, repeat means, RidgeGuard and DatasetBest",
+  "tie_policy": "Original argmax labels break ties by slot order, deliberately retained as old-label control",
+  "fallback": "Ridge predictions when a supervised pair arm has fewer than five examples per class; count every fallback",
+  "limits": [
+    "Development OOF only; all original test outcomes retired",
+    "Transfer from temperature .7 repeat labels to original temperature 0 evaluation; not same-distribution stability",
+    "Only stable-vs-old matched arms isolate label direction on the same queries",
+    "Smaller adapter is a new controlled ablation, not the old 967425-parameter architecture",
+    "DatasetBest uses dataset metadata as diagnostic baseline; not a general online feature",
+    "Paired CIs condition on OOF fits and do not include retraining uncertainty"
+  ]
+}

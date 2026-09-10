@@ -1,0 +1,118 @@
+{
+  "role": "experiment_A_net_gap_recovery_development",
+  "n": 2975,
+  "oracle_quality": 0.9284033613445378,
+  "dataset_best_quality": 0.8712605042016807,
+  "oracle_gap": 0.05714285714285714,
+  "opportunity_queries": 170,
+  "methods": {
+    "DatasetBest": {
+      "quality": 0.8712605042016807,
+      "gain_vs_dataset_best": 0.0,
+      "gain_ci95": [
+        0.0,
+        0.0
+      ],
+      "oracle_gap_vs_dataset_best": 0.05714285714285714,
+      "gap_recovery": 0.0,
+      "gap_recovery_ci95": [
+        0.0,
+        0.0
+      ],
+      "bootstrap_zero_denominator_draws": 0,
+      "seed_count": 1,
+      "mean_seed_wins": 0.0,
+      "mean_seed_losses": 0.0,
+      "per_seed_gain": [
+        0.0
+      ],
+      "groups": 2972
+    },
+    "Ridge": {
+      "quality": 0.8719327731092437,
+      "gain_vs_dataset_best": 0.0006722689075630252,
+      "gain_ci95": [
+        -0.004033681282805756,
+        0.005378151260504202
+      ],
+      "oracle_gap_vs_dataset_best": 0.05714285714285714,
+      "gap_recovery": 0.011764705882352941,
+      "gap_recovery_ci95": [
+        -0.07516244767789516,
+        0.09303283925376943
+      ],
+      "bootstrap_zero_denominator_draws": 0,
+      "seed_count": 1,
+      "mean_seed_wins": 27.0,
+      "mean_seed_losses": 25.0,
+      "per_seed_gain": [
+        0.0006722689075630252
+      ],
+      "groups": 2972
+    },
+    "MA(raw)": {
+      "quality": 0.8731652661064426,
+      "gain_vs_dataset_best": 0.0019047619047619045,
+      "gain_ci95": [
+        -0.0020174848688634837,
+        0.005932492775575244
+      ],
+      "oracle_gap_vs_dataset_best": 0.05714285714285714,
+      "gap_recovery": 0.03333333333333333,
+      "gap_recovery_ci95": [
+        -0.03728618421052631,
+        0.09731592372716559
+      ],
+      "bootstrap_zero_denominator_draws": 0,
+      "seed_count": 3,
+      "mean_seed_wins": 22.0,
+      "mean_seed_losses": 16.333333333333332,
+      "per_seed_gain": [
+        0.0030252100840336134,
+        0.0,
+        0.002689075630252101
+      ],
+      "groups": 2972
+    },
+    "MA(original winner)": {
+      "quality": 0.8357422969187676,
+      "gain_vs_dataset_best": -0.03551820728291316,
+      "gain_ci95": [
+        -0.04365455920447427,
+        -0.028113563191457084
+      ],
+      "oracle_gap_vs_dataset_best": 0.05714285714285714,
+      "gap_recovery": -0.6215686274509803,
+      "gap_recovery_ci95": [
+        -0.8211511573714465,
+        -0.4663115586899355
+      ],
+      "bootstrap_zero_denominator_draws": 0,
+      "seed_count": 3,
+      "mean_seed_wins": 21.666666666666668,
+      "mean_seed_losses": 127.33333333333333,
+      "per_seed_gain": [
+        -0.03596638655462185,
+        -0.03563025210084034,
+        -0.03495798319327731
+      ],
+      "groups": 2972
+    }
+  },
+  "ma_stable_status": "NOT_RUN_MISSING_REASONING_REPEATS",
+  "stable_trained_fold_seed_runs": null,
+  "formula": "(Q_method-Q_DatasetBest)/(Q_Oracle-Q_DatasetBest)",
+  "limits": [
+    "Signed all-query net gain; losses outside opportunity queries are included.",
+    "Group bootstrap recalculates numerator and denominator in the same resample.",
+    "Intervals condition on fitted OOF models, not retraining uncertainty; three seeds do not triple n.",
+    "Raw-panel versus stable changes sample filtering as well as labels; matched control isolates label direction.",
+    "Original-train development only; no independent test confirmation."
+  ],
+  "evidence": {
+    "router_v2/objective_verified_20260910/RESULTS.json": "fc8c881b72431cfd7814888239e9b372107297e0e151aabcf45f07f1373ccaad",
+    "router_v2/ma_repeat_controls_20260910/RESULTS.json": "b4c59eab0d60c2b86e3dc8f9377c9ccea5864febcb9ba8633030cb2fb9375450",
+    "router_v2/contamination_audit_20260910b/PROMPT_GROUPS.json": "89bbb75a1df5d7f83120cf2e4b153234530f1ef704e210a9047521ac6b134fdf"
+  },
+  "reporter_sha256": "6ea6a38345b4529f480986b257a8555a53a4709687133b9a525bf220c82895f6"
+}

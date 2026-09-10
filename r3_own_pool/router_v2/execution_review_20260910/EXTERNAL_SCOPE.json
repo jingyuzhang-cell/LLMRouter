@@ -1,0 +1,55 @@
+{
+  "status": "AWAITING_EXPLICIT_EXTERNAL_DATA_AUTHORIZATION",
+  "destination": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "generation_repair": {
+    "model": "deepseek-r1-distill-qwen-14b",
+    "cells": 10,
+    "partitions": {
+      "train": 8,
+      "validation": 1,
+      "test": 1
+    },
+    "dataset": "arenahard",
+    "data_sent": "query only",
+    "max_transport_attempts_per_cell": 2,
+    "temperature": 0.0,
+    "correctness_based_retries": false
+  },
+  "repeat_generation": {
+    "model": "deepseek-r1-distill-qwen-14b",
+    "queries": 113,
+    "partition": "train",
+    "repeats": 5,
+    "generations": 565,
+    "temperature": 0.7,
+    "top_p": 1.0,
+    "data_sent": "query only; no ground truth",
+    "max_transport_attempts_per_repeat": 2,
+    "panel": "/root/r3_own_pool/router_v2/repeat_fold_panel_20260910/PANEL.jsonl",
+    "panel_sha256": "3587481c9213489e546fe0ed8c64c9b8e00adeef97a0896bd584c88dd81d5990"
+  },
+  "open_ended_grading": {
+    "model": "qwen-max",
+    "cells_after_repair": 650,
+    "partitions": {
+      "train": 458,
+      "validation": 96,
+      "test": 96
+    },
+    "data_sent": "ArenaHard question and complete candidate answer",
+    "max_attempts_per_exact_response": 2,
+    "quality_policy": "first valid grade; no higher-score selection",
+    "historical_attempt_budget_inherited": true
+  },
+  "constraints": [
+    "Existing account credentials remain local; provider receives the listed dataset content.",
+    "API calls incur charges. No external requests are executed by this audit.",
+    "Original test is retired development history; filling its matrix does not make it independent."
+  ],
+  "approval_review_rejections": [
+    "reasoning repair data egress lacked explicit current authorization",
+    "train ArenaHard grading egress rejected despite historical authorization file"
+  ],
+  "latest_user_request": "补reasoning repeat 113题×5次，补650个开放题评分，随后固定MA对照；Gap Recovery为主指标",
+  "latest_approval_review": "Rejected: experiment scope accepted, but explicit authorization naming the external DashScope destination was still required by automatic review."
+}

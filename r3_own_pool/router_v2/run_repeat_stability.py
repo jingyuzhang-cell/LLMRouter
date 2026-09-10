@@ -15,6 +15,7 @@ import subprocess
 import sys
 import time
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from urllib import request, error
 
@@ -50,6 +51,7 @@ def read_jsonl(path):
 def write_protocol(out, args):
     protocol = {
         "label_protocol_version": 2,
+        "workers": args.workers,
         "scorer_sha256": sha(__file__),
         "cohort_sha256": sha(ROOT / "data/cohort_full_v2/queries.jsonl"),
         "role": "repeat_stability_collection_large_vs_reasoning",
@@ -89,7 +91,7 @@ def write_protocol(out, args):
 
 
 def done_keys(path):
-    return {(r["query_id"], r["slot"], int(r["repeat_index"])) for r in read_jsonl(path)}
+    return {(r["query_id"], r["slot"], int(r["repeat_index"])) for r in read_jsonl(path) if r.get("status") in ("ok", "truncated", "parse_failed") and not r.get("error")}
 
 
 def bind_panel(panel, cohort_dir):
@@ -125,7 +127,7 @@ def score_answer(row, answer, status):
 
 def generate(client, model, row, temperature, top_p, max_retries):
     last_err = None
-    opener = request.build_opener(request.ProxyHandler({})) if client.get("local") else request
+    opener = request.build_opener(request.ProxyHandler({})) if client.get("local") else request.build_opener()
     for attempt in range(max_retries):
         try:
             t0 = time.perf_counter()
@@ -253,8 +255,8 @@ def collect(args):
     print(json.dumps({"slot": args.slot, "to_collect": len(targets), "raw": str(raw_path)}, indent=2), flush=True)
     if not targets:
         return
-    lock_name = "local_gpu" if SLOTS[args.slot]["local"] else "reasoning_api"
-    lock_path = out / f"{lock_name}.lock"
+    lock_name = "local_gpu" if SLOTS[args.slot]["local"] else "reasoning"
+    lock_path = COLLECT / "logs" / f"{lock_name}.lock"
     with open(lock_path, "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         lock.write(str(os.getpid()))
@@ -269,9 +271,11 @@ def collect(args):
                 client = api_client()
             model = SLOTS[args.slot]["served"]
             count = 0
-            with raw_path.open("a") as f:
-                for row, repeat in targets:
-                    slot_out = generate(client, model, row, args.temperature, args.top_p, args.max_retries)
+            with raw_path.open("a") as f, ThreadPoolExecutor(max_workers=args.workers) as pool:
+                pending = {pool.submit(generate, client, model, row, args.temperature, args.top_p, args.max_retries): (row, repeat) for row, repeat in targets}
+                for future in as_completed(pending):
+                    row, repeat = pending[future]
+                    slot_out = future.result()
                     score = score_answer(row, slot_out.get("answer"), slot_out.get("status"))
                     record = {
                         "cohort_sha256": cohort_signature,
@@ -413,6 +417,12 @@ def aggregate(args):
         "mean_large_win_rate": sum(r["large_win_rate"] for r in labels) / len(labels) if labels else None,
         "mean_tie_rate": sum(r["tie_rate"] for r in labels) / len(labels) if labels else None,
         "incomplete": incomplete[:20],
+        "source_files": {p.name: sha(p) for p in (out / "large.jsonl", out / "reasoning.jsonl") if p.exists()},
+        "panel_sha256": expected_panel_sha,
+        "scorer_sha256": expected_scorer_sha,
+        "temperature": args.temperature,
+        "top_p": args.top_p,
+        "repeats": args.repeats,
         "files": {
             "STABLE_LABELS.jsonl": sha(out / "STABLE_LABELS.jsonl"),
             "stable_pairs.jsonl": sha(out / "stable_pairs.jsonl"),
@@ -432,6 +442,7 @@ def main():
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--top-p", type=float, default=1.0)
     parser.add_argument("--max-retries", type=int, default=2)
+    parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--stable-threshold", type=float, default=0.8)
     args = parser.parse_args()
     if args.mode == "collect":
