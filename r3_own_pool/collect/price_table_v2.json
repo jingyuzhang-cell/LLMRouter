@@ -1,0 +1,18 @@
+{
+  "frozen_at": "2026-09-09",
+  "status": "VERIFIED_FOR_FULL_V2 - international-station list pricing for the DashScope model; documented proxy basis for self-hosted models",
+  "currency": "USD per 1M tokens",
+  "sources": {
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B": "Aliyun Model Studio international station list pricing, retrieved 2026-09-09: https://help.aliyun.com/zh/model-studio/model-pricing ($0.144 input / $0.431 output per Mtok)",
+    "Qwen/Qwen2.5-3B-Instruct": "Proxy: open-source tier public list pricing (2025), self-hosted on local GPU; not an actual bill",
+    "Qwen/Qwen2.5-7B-Instruct": "Proxy: open-source tier public list pricing (2025), self-hosted on local GPU; not an actual bill",
+    "Qwen/Qwen2.5-14B-Instruct(-GPTQ-Int8)": "Proxy: open-source tier public list pricing (2025), self-hosted on local GPU; not an actual bill"
+  },
+  "models": {
+    "Qwen/Qwen2.5-3B-Instruct":            {"input": 0.06, "output": 0.22},
+    "Qwen/Qwen2.5-7B-Instruct":            {"input": 0.07, "output": 0.28},
+    "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8": {"input": 0.28, "output": 0.84},
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B": {"input": 0.144, "output": 0.431}
+  },
+  "notes": "Cost enters utility per-query normalized, so absolute scale does not change router selection structure. Local slots are deployment-cost proxies, never claimed as measured billing. Reasoning-slot output price re-verified against the current listing (previous pilot estimate 0.56 was conservative-high). usd is recomputed at assembly time from recorded token counts and this table."
+}

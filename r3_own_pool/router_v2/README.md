@@ -77,3 +77,12 @@
 - `watch_code.py`已启动每300秒补评新到达训练代码。与数学/选择题、judge watcher共同运行。41项回归测试通过。真正的独立测试与多目标收益结论尚未产生。
 
 训练 judge 的只读敏感性检查已加入：`python -m router_v2.audit_judge_sensitivity --output <new-directory>`。它报告主总分与分项总和对标签及同题排序的影响，不替换标签或认证可靠性。首次结果及后续处理原则见 [JUDGE_SENSITIVITY_20260909.md](JUDGE_SENSITIVITY_20260909.md)。
+
+
+## 论文实验准备更新：质量容忍度与并列分类对照
+
+`fit --quality-delta 0.01` 将允许的归一化质量下降固定为0.01；默认仍为0。参数必须为[0,1]内有限数值，同时用于validation操作点选择、train固定混合约束和test非劣判断，并封存在PROTOCOL.json。evaluate没有覆盖该参数的入口。新端点应在查看确认结果之前指定，不能通过重开test挑容忍度。
+
+新增MLPWinnerTieAware：对同题所有质量最大模型均分目标概率，采用交叉熵训练query-only分类器，推理以预测概率选模型。原MLPWinner仍保留，明确其argmax训练标签按槽顺序打破并列。新分类器与原sklearn分类器架构不同，比较不能单独归因为并列目标；新分类器与NoModelEmbedding共享网络结构，但目标与推理规则不同。仅在质量偏好报告该分类器，不将类别概率用作多目标质量分数。
+
+本次修改未运行真实训练或测试。多seed共同封存、容量匹配、资源计量与独立复评仍待完成。修改前已封存实验会因源码hash改变而拒绝评估；不得改写旧hash绕过检查。

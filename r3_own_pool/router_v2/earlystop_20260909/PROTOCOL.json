@@ -1,0 +1,32 @@
+{
+  "role": "exploratory_train_only_nested_earlystop",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "inner_fraction": 0.2,
+  "epoch_candidates": [
+    1,
+    5,
+    10,
+    20,
+    40,
+    60
+  ],
+  "selection": "Min inner-validation MSE; tie chooses earliest; refit on all outer-training rows",
+  "source_oof_sha256": "64347702529dd5c3e78bf3496ab9ed34b9e06408b9303efc8a3fa02b45b5aa09",
+  "implementation": {
+    "/root/r3_own_pool/router_v2/diagnose_earlystop.py": "fa700d033d6f7f707ff525691360f1d7b38a28e9f6891213fc93b00efbc5a17e",
+    "/root/r3_own_pool/router_v2/diagnose_mechanism.py": "0d44a9d85b673d1b769f8c9ade160f8f9b416524c09543cb73ede28f450bcfb2",
+    "/root/r3_own_pool/router_v2/experiment.py": "884e7a05f9a1a79c03e1e2c22848097617692682ade83ab371d77a0550c83b54",
+    "/root/r3_own_pool/router_v2/core.py": "164739b4f92b2246e0f569bedd2b4c04a1eabde2beeb1b8058ec3dfe5adb68cc",
+    "/root/r3_own_pool/train_router.py": "1d5ec886a58d2c609e879e1d8b2a94fa01567a7ff64feb1143ba257033a03ff2"
+  },
+  "architecture": "Original Hybrid, alpha=0; only training duration selection changes",
+  "limits": [
+    "Extra inner fitting compute versus fixed-epoch control",
+    "No outer-fold labels used for epoch selection",
+    "Training-only exploratory evidence, not independent confirmation"
+  ]
+}

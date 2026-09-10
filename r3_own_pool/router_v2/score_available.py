@@ -45,8 +45,8 @@ def score(source, raw):
 
 
 def run(cohort_dir, raw_dir, output, partition='train'):
-    if partition not in ('train','validation'):
-        raise ValueError('This development scorer cannot open test labels')
+    if partition not in ('train','validation','test'):
+        raise ValueError('Unknown partition; test requires the operator-authorized sealed run')
     cohort,split=load_cohort(cohort_dir)
     out=Path(output);out.mkdir(parents=True,exist_ok=True)
     lock=(out/'scoring.lock').open('a+')

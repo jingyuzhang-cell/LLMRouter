@@ -1,0 +1,45 @@
+{
+  "role": "exploratory_nested_gap_improvement",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "outer_folds": "Exact earlier three folds",
+  "inner_folds": 3,
+  "families": [
+    "linear",
+    "rbf",
+    "dataset_residual_linear",
+    "dataset_residual_rbf"
+  ],
+  "alphas": [
+    0.01,
+    0.1,
+    1.0,
+    20.0,
+    100.0
+  ],
+  "gammas": [
+    1.0,
+    4.0,
+    16.0
+  ],
+  "thresholds": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+  ],
+  "selection": "Inner OOF routed quality only; ties prefer higher alpha, higher guard threshold, lower gamma",
+  "source_sha256": "64347702529dd5c3e78bf3496ab9ed34b9e06408b9303efc8a3fa02b45b5aa09",
+  "implementation_sha256": "889599368063ad7707ca1496026319facbe4760954346bfe3ee0c898a4dc78fa",
+  "primary": "Query-only linear/RBF versus earlier Ridge and dataset diagnostic baseline",
+  "limits": [
+    "Adaptive development after previous OOF results; not independent confirmation",
+    "Dataset residual families require privileged dataset identity; diagnostic upper comparison, not deployment claim",
+    "Validation/test labels are never loaded",
+    "Binary objective subset only; no cost/latency claims",
+    "All candidates and seeds reported; no best outer-fold hyperparameter selection"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "role": "exploratory_nested_text_gap",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "families": [
+    "text",
+    "text_gte"
+  ],
+  "alphas": [
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "beta": {
+    "text": [
+      0.0
+    ],
+    "text_gte": [
+      0.25,
+      1.0,
+      4.0
+    ]
+  },
+  "thresholds": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+  ],
+  "feature": "word TF-IDF unigram/bigram min_df2 max20000 sublinear tf, vocabulary/idf fitted separately inside every inner-training fold",
+  "selection": "Inner OOF routed quality; conservative ties",
+  "source_oof_sha256": "64347702529dd5c3e78bf3496ab9ed34b9e06408b9303efc8a3fa02b45b5aa09",
+  "implementation_sha256": "2c4b0e2a6f25307326fc40bfd0690b8ce191ce8d655091b995bca1ff88df9032",
+  "limits": [
+    "Adaptive train-only development, not independent confirmation",
+    "No answer/ground-truth features",
+    "No validation/test labels",
+    "No cost claims"
+  ]
+}

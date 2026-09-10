@@ -1,0 +1,64 @@
+{
+ "role": "exploratory_train_only_gap_null",
+ "n": 2975,
+ "n_perm": 2000,
+ "seed": 42,
+ "observed": {
+  "oracle": 0.9227,
+  "dataset_best": 0.8491,
+  "within_task_gap": 0.0736
+ },
+ "null": {
+  "mean": 0.1386,
+  "sd": 0.0059,
+  "p95": 0.1482,
+  "pct_null_ge_observed": 100.0
+ },
+ "per_dataset": {
+  "gsm8k": {
+   "n": 1479,
+   "rates": {
+    "small": 0.8857,
+    "medium": 0.931,
+    "large": 0.9554,
+    "reasoning": 0.9533
+   },
+   "observed_within_gap": 0.025
+  },
+  "humaneval": {
+   "n": 115,
+   "rates": {
+    "small": 0.6348,
+    "medium": 0.7826,
+    "large": 0.8,
+    "reasoning": 0.9478
+   },
+   "observed_within_gap": 0.0261
+  },
+  "mbpp": {
+   "n": 682,
+   "rates": {
+    "small": 0.5938,
+    "medium": 0.6789,
+    "large": 0.7449,
+    "reasoning": 0.8196
+   },
+   "observed_within_gap": 0.0997
+  },
+  "mmlupro": {
+   "n": 699,
+   "rates": {
+    "small": 0.4378,
+    "medium": 0.5522,
+    "large": 0.6366,
+    "reasoning": 0.5465
+   },
+   "observed_within_gap": 0.1588
+  }
+ },
+ "interpretation": "observed within-task gap >= null 95th pct => excess query-level disagreement structure exists (potentially learnable); close to null mean => gap is max-of-noise, not predictable ex ante",
+ "limits": [
+  "independent-Bernoulli null also destroys shared difficulty; all-wrong/all-right queries contribute ~0 to this gap by construction",
+  "arenahard excluded (judge-graded continuous labels); binary objective only"
+ ]
+}

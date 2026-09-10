@@ -53,11 +53,13 @@ def append(stream,event):
     stream.write(json.dumps(event,ensure_ascii=False)+'\n');stream.flush();os.fsync(stream.fileno())
 
 
-def build_tasks(cohort_dir,raw_dir,protocol_hash):
+def build_tasks(cohort_dir,raw_dir,protocol_hash,partition='train'):
+    if partition not in ('train','validation','test'):
+        raise ValueError('Unknown partition; test requires the operator-authorized sealed run')
     cohort,split=load_cohort(cohort_dir)
     raw={s:storage.canonical_rows(Path(raw_dir)/f'{s}.jsonl') for s in SLOTS}
     tasks=[];missing=0
-    for qid in sorted(split['train']):
+    for qid in sorted(split[partition]):
         source=cohort[qid]
         if source['dataset']!='arenahard':continue
         for slot in SLOTS:
@@ -69,11 +71,11 @@ def build_tasks(cohort_dir,raw_dir,protocol_hash):
     return tasks,missing
 
 
-def run(cohort_dir,raw_dir,out,client,max_new_calls=10000):
+def run(cohort_dir,raw_dir,out,client,max_new_calls=10000,partition='train'):
     out=Path(out);out.mkdir(parents=True,exist_ok=True)
     with (out/'JUDGE.lock').open('a+') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-        protocol=dict(model='qwen-max',partition='train',temperature=0,max_output_tokens=256,
+        protocol=dict(model='qwen-max',partition=partition,temperature=0,max_output_tokens=256,
             attempts_per_response=2,sdk_retries=0,full_question=True,full_answer=True,
             source_sha256=sha(Path(__file__)),rubric_sha256=sha(ROOT/'collect/judge_prompts/v1.md'),
             query_sha256=sha(Path(cohort_dir)/'queries.jsonl'),split_sha256=sha(Path(cohort_dir)/'split.json'),
@@ -83,7 +85,7 @@ def run(cohort_dir,raw_dir,out,client,max_new_calls=10000):
         p=out/'PROTOCOL.json'
         if p.exists() and json.loads(p.read_text())!=protocol:raise ValueError('Judge protocol changed')
         if not p.exists():write_json(p,protocol)
-        tasks,missing=build_tasks(cohort_dir,raw_dir,digest(protocol))
+        tasks,missing=build_tasks(cohort_dir,raw_dir,digest(protocol),partition)
         journal=out/'ATTEMPTS.jsonl'
         counts,terminal=replay(journal)
         calls=0;consecutive_errors=0

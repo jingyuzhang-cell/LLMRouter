@@ -43,8 +43,13 @@ class ScoringTests(unittest.TestCase):
             self.assertEqual([r['query_id'] for r in cached],['0'])
             path.write_text(json.dumps(dict(query_id='0',status='ok',answer='#### 43'))+'\n')
             self.assertEqual(run(cohort,raw,root/'out')['new_records'],1)
-            with self.assertRaisesRegex(ValueError,'cannot open test'):
-                run(cohort,raw,root/'forbidden','test')
+            with self.assertRaisesRegex(ValueError,'Unknown partition'):
+                run(cohort,raw,root/'forbidden','bogus')
+            # Test partition is scorable only as the operator-authorized sealed run (2026-09-09).
+            path.write_text(json.dumps(dict(query_id='2',status='ok',answer='#### 42'))+'\n')
+            sealed=run(cohort,raw,root/'sealed','test')
+            self.assertEqual([json.loads(l)['query_id'] for l in (root/'sealed/SCORES.jsonl').read_text().split('\n') if l],['2'])
+            self.assertEqual(sealed['partition'],'test')
             protocol=root/'out/PROTOCOL.json'
             protocol.write_text('{}')
             with self.assertRaisesRegex(ValueError,'protocol changed'):

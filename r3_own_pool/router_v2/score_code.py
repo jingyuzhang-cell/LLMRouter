@@ -1,4 +1,4 @@
-"""Train-only code scoring with audited local OS controls; no network calls."""
+"""Train/validation code scoring with audited local OS controls; no network calls; test labels not opened."""
 import argparse
 import ast
 from collections import Counter
@@ -54,7 +54,9 @@ def score(source,response,executor=execute):
     return dict(quality=float(result['passed']),evaluation_status='scored',execution=result)
 
 
-def run(cohort_dir,raw_dir,out,probe_path,max_new=10000):
+def run(cohort_dir,raw_dir,out,probe_path,max_new=10000,partition='train'):
+    if partition not in ('train','validation','test'):
+        raise ValueError('Unknown partition; test requires the operator-authorized sealed run')
     out=Path(out);out.mkdir(parents=True,exist_ok=True)
     with (out/'CODE.lock').open('a+') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
@@ -63,7 +65,7 @@ def run(cohort_dir,raw_dir,out,probe_path,max_new=10000):
         if probe.get('status')!='PASS' or probe.get('runtime_manifest_sha256')!=runtime_hash:
             raise ValueError('Sandbox probe must pass on this exact runtime')
         cohort,split=load_cohort(cohort_dir)
-        protocol=dict(partition='train',datasets=['mbpp','humaneval'],
+        protocol=dict(partition=partition,datasets=['mbpp','humaneval'],
             query_sha256=sha(Path(cohort_dir)/'queries.jsonl'),split_sha256=sha(Path(cohort_dir)/'split.json'),
             source_sha256={p.name:sha(p) for p in [Path(__file__),Path(__file__).with_name('code_sandbox.py'),ROOT/'collect/metrics.py']},
             runtime_manifest_sha256=runtime_hash,probe_sha256=sha(probe_path),
@@ -82,7 +84,7 @@ def run(cohort_dir,raw_dir,out,probe_path,max_new=10000):
         with journal.open('a') as stream:
             for slot in SLOTS:
                 raw=storage.canonical_rows(Path(raw_dir)/f'{slot}.jsonl')
-                for qid in sorted(split['train']):
+                for qid in sorted(split[partition]):
                     source=cohort[qid]
                     if source['dataset'] not in ('mbpp','humaneval'):continue
                     if qid not in raw:missing+=1;continue
@@ -91,7 +93,7 @@ def run(cohort_dir,raw_dir,out,probe_path,max_new=10000):
                     if key in seen:continue
                     if new>=max_new:continue
                     outcome=score(source,response)
-                    record=dict(key=key,query_id=qid,slot=slot,dataset=source['dataset'],partition='train',
+                    record=dict(key=key,query_id=qid,slot=slot,dataset=source['dataset'],partition=partition,
                         source_sha256=digest(source),response_sha256=digest(response),
                         generation_status=response.get('status'),**outcome)
                     stream.write(json.dumps(record,ensure_ascii=False)+'\n');stream.flush()
@@ -110,9 +112,10 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--output',required=True)
     ap.add_argument('--probe',default=str(ROOT/'router_v2/CODE_SANDBOX_PROBE_V3.json'))
+    ap.add_argument('--partition',default='train',choices=['train','validation','test'])
     ap.add_argument('--max-new',type=int,default=10000)
     a=ap.parse_args()
     if a.max_new<0:raise ValueError('Negative record limit')
-    print(json.dumps(run(ROOT/'data/cohort_full_v2',ROOT/'data/raw',a.output,a.probe,a.max_new),indent=2))
+    print(json.dumps(run(ROOT/'data/cohort_full_v2',ROOT/'data/raw',a.output,a.probe,a.max_new,a.partition),indent=2))
 
 if __name__=='__main__':main()

@@ -1,0 +1,139 @@
+{
+  "seed": 42,
+  "epochs": 60,
+  "alphas": [
+    0.0,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "grid": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.1
+    ],
+    [
+      0.0,
+      0.5
+    ],
+    [
+      0.0,
+      1.0
+    ],
+    [
+      0.1,
+      0.0
+    ],
+    [
+      0.1,
+      0.1
+    ],
+    [
+      0.1,
+      0.5
+    ],
+    [
+      0.1,
+      1.0
+    ],
+    [
+      0.5,
+      0.0
+    ],
+    [
+      0.5,
+      0.1
+    ],
+    [
+      0.5,
+      0.5
+    ],
+    [
+      0.5,
+      1.0
+    ],
+    [
+      1.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.1
+    ],
+    [
+      1.0,
+      0.5
+    ],
+    [
+      1.0,
+      1.0
+    ],
+    [
+      2.0,
+      0.0
+    ],
+    [
+      2.0,
+      0.1
+    ],
+    [
+      2.0,
+      0.5
+    ],
+    [
+      2.0,
+      1.0
+    ],
+    [
+      5.0,
+      0.0
+    ],
+    [
+      5.0,
+      0.1
+    ],
+    [
+      5.0,
+      0.5
+    ],
+    [
+      5.0,
+      1.0
+    ]
+  ],
+  "quality_delta": 0.0,
+  "role": "development",
+  "encoder": "TF-IDF/SVD development",
+  "input_sha256": {
+    "/root/r3_own_pool/data/frozen/full_v2/outcomes.jsonl": "4cd46710a33437f2e8af45aff2453fd835841a938e142e2c549c763282a121fe",
+    "/root/r3_own_pool/data/frozen/full_v2/GATE.json": "6a695826c8c2777d65b5718dcca33ca718f12e4970c5589de95181ab79d4eafa",
+    "/root/r3_own_pool/data/cohort_full_v2/queries.jsonl": "d2508b429f36c76e0cf752fa7ff90db4d288e87f63a6e67c79488ddda2097af9",
+    "/root/r3_own_pool/data/cohort_full_v2/split.json": "94ad53494fec77a3003d1ed77fe04bbafac0d120290a99cbf4a0b81c049463c5",
+    "/root/r3_own_pool/data/cohort_full_v2/MANIFEST.json": "1e915ec7c3094fdef14aaf39bc66239d0cd9cb7d648c14d03ee6c21ede06f010",
+    "/root/r3_own_pool/data/embeddings_full_v2_recovery1/EMBEDDINGS.npz": "e9d0778efd9223edb708d80623350ed01e8474ae17721dcc82ae676b96cfe055"
+  },
+  "source_sha256": {
+    "/root/r3_own_pool/router_v2/experiment.py": "884e7a05f9a1a79c03e1e2c22848097617692682ade83ab371d77a0550c83b54",
+    "/root/r3_own_pool/router_v2/core.py": "164739b4f92b2246e0f569bedd2b4c04a1eabde2beeb1b8058ec3dfe5adb68cc",
+    "/root/r3_own_pool/router_v2/data.py": "39930a20682cacdc40728d70678152928a7131232cdeb48e09fdfa6a20c715dd",
+    "/root/r3_own_pool/train_router.py": "1d5ec886a58d2c609e879e1d8b2a94fa01567a7ff64feb1143ba257033a03ff2"
+  },
+  "scale": "Train median positive C/L",
+  "fit_labels": "train only",
+  "selection": "validation only; per-preference alpha and independent constrained operating point",
+  "costs": {
+    "currency": "USD",
+    "basis": "usd = recorded tokens x collect/price_table_v2.json (sha256-bound). DashScope model re-verified against Aliyun Model Studio international list pricing 2026-09-09 ($0.144/$0.431 per Mtok). Self-hosted Qwen slots are documented list-price proxies, not measured bills. Failed generations: unbilled => usd 0.0, total_ms 0.0, flagged generation_failure_zero_resource (wall time of failed attempts not instrumented)."
+  },
+  "limitations": [
+    "Finite grid, not complete Pareto frontier",
+    "Fixed-seed conditional query bootstrap; not training variance or simultaneous intervals",
+    "Transformer baseline not yet implemented; no claim of complete main-paper comparison",
+    "Current features are fixed-model-pool; no unseen-model or held-out-source claim",
+    "Conditional resource means, no latency SLO guarantee; encoder/dispatch overhead excluded"
+  ]
+}

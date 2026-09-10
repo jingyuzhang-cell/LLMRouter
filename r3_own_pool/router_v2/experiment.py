@@ -21,6 +21,39 @@ from train_router import HybridUtilityRouter
 ALPHAS = (0., .25, .5, 1.)
 
 
+class TieAwareWinner(HybridUtilityRouter):
+    """Query-only classifier with uniform probability mass on all quality maxima."""
+    def __init__(self, q_dim, seed=42):
+        super().__init__(q_dim=q_dim, seed=seed, use_m_emb=False)
+
+    def fit(self, x, y, epochs=60, seed=42):
+        self.train()
+        rng = np.random.default_rng(seed)
+        target = torch.tensor(y, dtype=torch.float32)
+        winners = (target == target.max(1, keepdim=True).values).float()
+        probabilities = winners / winners.sum(1, keepdim=True)
+        for _ in range(epochs):
+            order = rng.permutation(len(x))
+            for start in range(0, len(x), 64):
+                idx = order[start:start+64]
+                logits = self.predict_batch(torch.tensor(x[idx], dtype=torch.float32))
+                loss = -(probabilities[idx] * torch.log_softmax(logits, dim=1)).sum(1).mean()
+                self.opt.zero_grad()
+                loss.backward()
+                self.opt.step()
+        return self
+
+    def predict_all(self, x):
+        was_training = self.training
+        self.eval()
+        try:
+            with torch.no_grad():
+                logits = self.predict_batch(torch.tensor(x, dtype=torch.float32))
+                return torch.softmax(logits, dim=1).numpy()
+        finally:
+            self.train(was_training)
+
+
 class Router(HybridUtilityRouter):
     def fit(self, x, y, epochs=60, seed=42):
         self.train()
@@ -84,6 +117,9 @@ def select_alpha(candidates, validation_y, scales, preference):
 
 
 def fit(args):
+    quality_delta = getattr(args, 'quality_delta', 0.)
+    if not np.isfinite(quality_delta) or not 0 <= quality_delta <= 1:
+        raise ValueError('quality_delta must be finite and in [0, 1]')
     cohort, split = load_cohort(args.cohort)
     gate = verify_gate(args.gate, args.outcomes, args.cohort)
     if gate.get('role') != 'synthetic_smoke':
@@ -96,7 +132,7 @@ def fit(args):
     source_files = [Path(__file__), Path(__file__).with_name('core.py'),
                     Path(__file__).with_name('data.py'), Path(__file__).parents[1]/'train_router.py']
     protocol = dict(seed=args.seed, epochs=args.epochs, alphas=ALPHAS, grid=GRID,
-        quality_delta=0., role=gate.get('role', 'development_until_all_preregistered_baselines_complete'),
+        quality_delta=quality_delta, role=gate.get('role', 'development_until_all_preregistered_baselines_complete'),
         encoder=gate.get('embedding_provenance', 'TF-IDF/SVD development'),
         input_sha256={str(Path(p).resolve()): sha(p) for p in
                       [args.outcomes, args.gate, Path(args.cohort)/'queries.jsonl',
@@ -153,6 +189,8 @@ def fit(args):
     winner = MLPClassifier(hidden_layer_sizes=(128,64), max_iter=args.epochs,
                            random_state=args.seed, early_stopping=False)
     win_v, win_e = add('MLPWinner', winner, train_y[:, :, 0].argmax(1))
+    tie_model = TieAwareWinner(q_dim=xt.shape[1], seed=args.seed)
+    tie_v, tie_e = add('MLPWinnerTieAware', tie_model, train_y[:, :, 0], neural=True)
     ranking = Router(q_dim=xt.shape[1], seed=args.seed, alpha=1., pure_rank=True)
     rank_v, rank_e = add('RankingOnly', ranking, train_y[:, :, 0], neural=True)
     for family, use_m in [('Hybrid', True), ('NoModelEmbedding', False)]:
@@ -177,7 +215,7 @@ def fit(args):
         names = [f'{family}_alpha{a:g}' for a in ALPHAS] if family in ('Hybrid','NoModelEmbedding') else [family]
         points = []
         for name in names:
-            point = select_operating_point(val[name], validation_y, train_y, scales)
+            point = select_operating_point(val[name], validation_y, train_y, scales, delta=quality_delta)
             point['prediction_key'] = name
             decision = (route(val[name], GRID[point['grid_index']], scales) if point['kind']=='grid'
                         else np.full(len(xv), point['baseline_slot']))
@@ -185,13 +223,13 @@ def fit(args):
             points.append(point)
         selection['constrained'][family] = min(points, key=lambda p: p['validation_cost'])
     baseline = int(train_y[:, :, 0].mean(0).argmax())
-    mixture = zero_mixture(train_y, baseline, scales)
+    mixture = zero_mixture(train_y, baseline, scales, delta=quality_delta)
     np.savez_compressed(out/'PREDICTIONS.npz', test_ids=np.array(split['test']),
                         train_y=train_y, scales=scales, zero_mixture=mixture,
-                        winner_choices=win_e.astype(int), ranking_choices=rank_e.argmax(1),
+                        winner_choices=win_e.astype(int), tie_winner_choices=tie_e.argmax(1), ranking_choices=rank_e.argmax(1),
                         **{'pred_'+k:v for k,v in test.items()})
     np.savez_compressed(out/'VALIDATION_PREDICTIONS.npz', ids=np.array(split['validation']),
-                        outcomes=validation_y, winner_choices=win_v.astype(int), ranking_choices=rank_v.argmax(1),
+                        outcomes=validation_y, tie_winner_choices=tie_v.argmax(1), winner_choices=win_v.astype(int), ranking_choices=rank_v.argmax(1),
                         **{'pred_'+k:v for k,v in val.items()})
     (out/'SELECTION.json').write_text(json.dumps(selection, indent=2))
     sealed = {name:sha(out/name) for name in ('PROTOCOL.json','PREDICTIONS.npz','SELECTION.json','VALIDATION_PREDICTIONS.npz')}
@@ -239,6 +277,7 @@ def evaluate(args):
         if g == 0:
             # Ranking logits and winner ids are not calibrated multiobjective utilities.
             policies['MLPWinner'] = data['winner_choices']
+            policies['MLPWinnerTieAware'] = data['tie_winner_choices']
             policies['RankingOnly'] = data['ranking_choices']
         for name, decisions in policies.items():
             report = evaluate_policy(y,decisions,train_y,pref,scales)
@@ -258,7 +297,7 @@ def evaluate(args):
         constrained[name] = dict(frozen_policy=point,
             **constrained_metrics(y,decisions,point['baseline_slot'],point['delta']))
     baseline = int(train_y[:,:,0].mean(0).argmax())
-    constrained['ZeroMixture'] = constrained_metrics(y,np.tile(data['zero_mixture'],(len(y),1)),baseline,0.)
+    constrained['ZeroMixture'] = constrained_metrics(y,np.tile(data['zero_mixture'],(len(y),1)),baseline,protocol['quality_delta'])
     # Three-axis nondominance is descriptive only, never a test-selected policy.
     learned = [row for row in rows if row['method']=='Hybrid']
     frontier = []
@@ -298,6 +337,8 @@ def main():
             p.add_argument('--embeddings',default=None)
             p.add_argument('--seed',type=int,default=42)
             p.add_argument('--epochs',type=int,default=60)
+            p.add_argument('--quality-delta',type=float,default=0.,
+                           help='Predeclared quality noninferiority margin in [0,1]; sealed at fit.')
     args = parser.parse_args()
     (fit if args.stage=='fit' else evaluate)(args)
 

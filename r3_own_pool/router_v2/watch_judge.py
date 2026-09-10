@@ -13,6 +13,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--output',required=True)
     ap.add_argument('--primary',action='store_true',help='Use hash-bound primary-score amendment and inherited attempt budget')
+    ap.add_argument('--partition',default='train',choices=['train','validation','test'],help='train uses the amendment path; validation/test start a fresh primary-score journal (test only for the operator-authorized sealed run)')
     ap.add_argument('--deadline-hours',type=float,default=24.)
     ap.add_argument('--interval',type=float,default=300.)
     args=ap.parse_args()
@@ -20,6 +21,9 @@ def main():
     if args.primary:
         from .judge_primary import run_with_history
         run_fn=run_with_history
+    elif args.partition!='train':
+        from .judge_primary import run as run_primary
+        def run_fn(c,r,o,cl,max_new_calls): return run_primary(c,r,o,cl,max_new_calls,partition=args.partition)
     if args.deadline_hours<=0 or args.interval<1:raise ValueError('Invalid polling limits')
     out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
     with (out/'WATCHER.lock').open('a+') as lock:

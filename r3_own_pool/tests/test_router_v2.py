@@ -15,7 +15,7 @@ from sklearn.exceptions import ConvergenceWarning
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from router_v2.core import rank_loss, route, scales_from_train, evaluate_policy, select_operating_point, zero_mixture
 from router_v2.data import sha, load_cohort, load_outcomes, matrix, verify_gate, read_rows
-from router_v2.experiment import fit, evaluate
+from router_v2.experiment import fit, evaluate, TieAwareWinner
 from router_v2.freeze import freeze as freeze_v2
 
 
@@ -111,6 +111,31 @@ class V2Tests(unittest.TestCase):
         p=zero_mixture(y,0,np.ones(3))
         self.assertAlmostEqual(p[0],1)
 
+    def test_quality_margin_changes_feasibility(self):
+        y = np.ones((12, 4, 3))
+        y[:, :, 1] = [10., 1., 10., 10.]
+        y[:, 1, 0] = .995
+        strict = select_operating_point(y, y, y, np.ones(3), delta=0.)
+        relaxed = select_operating_point(y, y, y, np.ones(3), delta=.01)
+        self.assertEqual(strict['kind'], 'best_single')
+        self.assertEqual(relaxed['kind'], 'grid')
+        self.assertAlmostEqual(zero_mixture(y, 0, np.ones(3), delta=.01)[1], 1.)
+        self.assertAlmostEqual(zero_mixture(y, 0, np.ones(3), delta=0.)[1], 0.)
+
+    def test_invalid_margin_rejected_before_read(self):
+        for value in (-.1, 1.1, float('nan'), float('inf')):
+            with self.assertRaisesRegex(ValueError, 'quality_delta'):
+                fit(argparse.Namespace(quality_delta=value))
+
+    def test_tie_classifier_uniform_target_has_no_slot_preference(self):
+        model = TieAwareWinner(q_dim=2)
+        for parameter in model.parameters():
+            torch.nn.init.zeros_(parameter)
+        x = np.zeros((4, 2), dtype='float32')
+        model.fit(x, np.ones((4, 4)), epochs=1)
+        np.testing.assert_allclose(model.predict_all(x), .25)
+        self.assertTrue(model.training)
+
     def test_input_guards(self):
         with tempfile.TemporaryDirectory() as tmp:
             args, records, gate=fixture(Path(tmp))
@@ -132,6 +157,7 @@ class V2Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, warnings.catch_warnings(), contextlib.redirect_stdout(io.StringIO()):
             warnings.simplefilter('ignore',ConvergenceWarning)
             args,records,gate=fixture(Path(tmp))
+            args.quality_delta = .01
             fit(args)
             first=Path(args.output)
             self.assertFalse((first/'TEST_OPENED.json').exists())
@@ -140,6 +166,9 @@ class V2Tests(unittest.TestCase):
             evaluate(args)
             result=json.loads((first/'RESULTS.json').read_text())
             self.assertEqual(result['n_test'],16)
+            self.assertEqual(json.loads((first/'PROTOCOL.json').read_text())['quality_delta'], .01)
+            self.assertTrue(all(p['delta'] == .01 for p in selection['constrained'].values()))
+            self.assertEqual(sum(r['method']=='MLPWinnerTieAware' for r in result['sweep']), 1)
             self.assertEqual(sum(r['method']=='Hybrid' for r in result['sweep']),24)
             self.assertEqual(result['role'],'synthetic_smoke')
             with self.assertRaises(FileExistsError):
