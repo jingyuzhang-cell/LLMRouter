@@ -58,3 +58,8 @@ P0采集中，当前记录快照：{"large": 1406, "reasoning": 135}。large本�
 用户回复“是”，确认剩余1865次DashScope/R1生成及费用。reasoning采集已启动并收到首批结果；准备后台自动完成分布检查和P1分析，MA不自动训练。
 
 P1按最新要求补充非零ΔQ辅助AUC、20组全局Shuffle和20组学科内Shuffle的完整回归/排序指标，所有tie继续参与回归。修正学科遍历为排序以使置换跨进程可复现。6项单测通过；尚无真实P1结果。
+
+
+### 20:12 采集提速修订（用户授权）
+
+mmlu_utility_repeats_400 reasoning 线并发 8→24：纯吞吐参数，温度/模型/重复数/传输预算均未动；协议文件同步更新并留 data/mmlu_utility_repeats_400/PROTOCOL_AMENDMENT.json 审计。停止/重启经尾部完整性校验（389 行无损，续采 1611 目标）。效果 2.6→4.9-7.5/min（DashScope 软流控下单流变慢，收益次线性），错误 0。新增 router_v2/watch_utility_panel.py 实时视图（终端 --interval / 网页 --http 8899，只读）。
