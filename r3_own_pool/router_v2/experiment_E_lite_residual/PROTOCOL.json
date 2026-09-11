@@ -1,0 +1,32 @@
+{
+  "role": "development_only_simple_continuous_quality_MA",
+  "architecture": "residual: train-only SVD16 standardized latent features; closed-form Ridge latent model-difference embedding; residual uses tanh and fixed0.25 correction on Ridge1",
+  "target": "continuous empirical delta; residual target uses inner3-fold group OOF base predictions; all ties retained",
+  "svd_components": 16,
+  "latent_ridge_alpha": 20.0,
+  "residual_scale": 0.25,
+  "inner_group_folds": 3,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "ridge_alpha": 1,
+  "selection": "fixed fold-local allowlists; no tuning or early stopping on outer outcomes",
+  "decision": "argmax mean quality, exact prediction tie -> large",
+  "primary": "400 selected-panel repeated quality; BestSingle and DatasetBest identical on single-dataset MMLU panel",
+  "secondary": "2975 historical objective temp0 transfer; replace only MMLU decisions; nonMMLU keep fold DatasetBest for learned routers",
+  "limits": [
+    "Not an independent test; original test exposed",
+    "Historical transfer and repeat panel use different outcomes; do not mix gap denominators",
+    "No cost/latency benefit claimed",
+    "Fixed3 seeds all reported; no winner seed selection"
+  ],
+  "inputs": {
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/MANIFEST.json": "da38baa7cea77744d4c4d7e0e91ba48430a1c4c2f343719876bea21470314549",
+    "/root/r3_own_pool/data/mmlu_utility_repeats_400_recovered_b/DISTRIBUTION_STATUS.json": "5c0492a6f42d5fdf88c053aac06050d99d844e350656b551bea357ee55408915",
+    "/root/r3_own_pool/router_v2/mmlu_learnability_400_recovered_b/PROTOCOL.json": "ce2dd9fd81d0b269a1dce3f4f6c46b1dd6cb835b7ed81717a630428c3608bd89",
+    "/root/r3_own_pool/router_v2/mmlu_learnability_400_recovered_b/RESULTS.json": "abfd06a96525747ed12a89b722752f370efee637974319ca50a97edf523484ae",
+    "/root/r3_own_pool/router_v2/ma_lite_residual.py": "8a1b122b45379b0189d1b9956f1980a2dd62d51022f1a422209e46b6e2e76f2c"
+  }
+}

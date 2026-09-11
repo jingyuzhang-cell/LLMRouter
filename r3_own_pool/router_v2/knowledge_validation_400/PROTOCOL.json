@@ -1,0 +1,32 @@
+{
+  "role": "train-only expanded knowledge routability diagnostic",
+  "seed": 20260915,
+  "n": 400,
+  "dataset": "mmlupro",
+  "selection": "uniform random from original train MMLU-Pro, excluding all 120 pilot IDs; no outcomes read",
+  "slots": [
+    "medium",
+    "large",
+    "coder",
+    "reasoning"
+  ],
+  "generation": "single response per model/query; reuse existing single responses for medium/large/reasoning; generate coder only",
+  "coder_temperature": 0.0,
+  "coder_top_p": 1.0,
+  "gate": {
+    "oracle_gap_strictly_greater_than": 0.08,
+    "winner_entropy_strictly_greater_than": 0.7
+  },
+  "gate_action": "READY_FOR_MA only if both pass; never train MA in this stage",
+  "panel_sha256": "89ed44af7385adfb67be7c8820c70d5f798acbc6bc8c3638314c2d203ee65438",
+  "cohort_sha256": "d2508b429f36c76e0cf752fa7ff90db4d288e87f63a6e67c79488ddda2097af9",
+  "split_sha256": "94ad53494fec77a3003d1ed77fe04bbafac0d120290a99cbf4a0b81c049463c5",
+  "fold_source_sha256": "e0d13714a4fdfea6c1a7942e57615e6b0b7e63ee73fdf8d4bf662436aae7950c",
+  "groups_sha256": "89bbb75a1df5d7f83120cf2e4b153234530f1ef704e210a9047521ac6b134fdf",
+  "pilot_panel_sha256": "01d7b11246dbac5f3be917345c68ae0c94a2c947591339cf4b0aab2014b325c7",
+  "limits": [
+    "Development diagnostic drawn from original train, not an independent paper test set.",
+    "Historical responses and Coder generation use different collection dates and serving stacks.",
+    "All four MMLU-Pro answers are rescored with the same explicit-option parser."
+  ]
+}

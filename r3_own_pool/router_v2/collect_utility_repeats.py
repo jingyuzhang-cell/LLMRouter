@@ -15,7 +15,7 @@ def prepare(panel_dir,out):
  panel=engine.bind_panel(engine.read_jsonl(panel_dir/'PANEL.jsonl'),ROOT/'data/cohort_full_v2')
  protocol=dict(panel_manifest_sha256=sha(panel_dir/'MANIFEST.json'),panel_sha256=sha(panel_dir/'PANEL.jsonl'),
   cohort_sha256=sha(ROOT/'data/cohort_full_v2/queries.jsonl'),engine_sha256=sha(engine.__file__),
-  repeats=5,temperature=.7,top_p=1.,workers=8,max_transport_attempts=2,
+  repeats=5,temperature=.7,top_p=1.,workers=12,max_transport_attempts=2,
   quality_target='mean and distribution; no hard stable filter',monetary_cost='not_verified; store raw token counts',
   max_tokens_by_task_type=engine.MAX_TOKENS)
  out.mkdir(parents=True,exist_ok=True);p=out/'COLLECTION_PROTOCOL.json'
@@ -62,7 +62,7 @@ def collect(panel_dir,out,slot):
    status=dict(slot=slot,targets=len(targets),new_completed=0,consecutive_errors=0,phase='RUNNING')
    def save(): (out/(slot+'_STATUS.json')).write_text(json.dumps(status,indent=2)+'\n')
    save();print(json.dumps(status),flush=True);iterator=iter(targets);stop=False
-   with path.open('a') as stream,ThreadPoolExecutor(max_workers=8) as pool:
+   with path.open('a') as stream,ThreadPoolExecutor(max_workers=12) as pool:
     pending={}
     def submit():
      item=next(iterator,None)
@@ -70,7 +70,7 @@ def collect(panel_dir,out,slot):
      r,k=item
      future=pool.submit(engine.generate,client,engine.SLOTS[slot]['served'],r,.7,1.,2)
      pending[future]=(r,k)
-    for _ in range(8):submit()
+    for _ in range(12):submit()
     while pending:
      ready,_=wait(pending,return_when=FIRST_COMPLETED)
      for future in ready:

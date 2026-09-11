@@ -1,0 +1,191 @@
+{
+  "n": 120,
+  "pools": {
+    "old_pair": {
+      "slots": [
+        "large",
+        "reasoning"
+      ],
+      "oracle": 0.8666666666666667,
+      "gap": 0.03333333333333333,
+      "methods": {
+        "BestSingle": {
+          "quality": 0.8,
+          "regret": 0.06666666666666667,
+          "gain_vs_datasetbest": -0.03333333333333333,
+          "gain_ci95": [
+            -0.06666666666666667,
+            -0.008333333333333333
+          ],
+          "gap_recovery": -1.0,
+          "selection_counts": {
+            "large": 42,
+            "reasoning": 78
+          }
+        },
+        "DatasetBest": {
+          "quality": 0.8333333333333334,
+          "regret": 0.03333333333333333,
+          "gain_vs_datasetbest": 0.0,
+          "gain_ci95": [
+            0.0,
+            0.0
+          ],
+          "gap_recovery": 0.0,
+          "selection_counts": {
+            "large": 86,
+            "reasoning": 34
+          }
+        },
+        "Ridge": {
+          "quality": 0.8416666666666667,
+          "regret": 0.025,
+          "gain_vs_datasetbest": 0.008333333333333333,
+          "gain_ci95": [
+            0.0,
+            0.025
+          ],
+          "gap_recovery": 0.25,
+          "selection_counts": {
+            "large": 52,
+            "reasoning": 68
+          }
+        }
+      }
+    },
+    "proposed_three": {
+      "slots": [
+        "medium",
+        "glm",
+        "reasoning"
+      ],
+      "oracle": 0.875,
+      "gap": 0.058333333333333334,
+      "methods": {
+        "BestSingle": {
+          "quality": 0.825,
+          "regret": 0.05,
+          "gain_vs_datasetbest": 0.008333333333333333,
+          "gain_ci95": [
+            -0.025,
+            0.05
+          ],
+          "gap_recovery": 0.14285714285714285,
+          "selection_counts": {
+            "medium": 0,
+            "glm": 0,
+            "reasoning": 120
+          }
+        },
+        "DatasetBest": {
+          "quality": 0.8166666666666667,
+          "regret": 0.058333333333333334,
+          "gain_vs_datasetbest": 0.0,
+          "gain_ci95": [
+            0.0,
+            0.0
+          ],
+          "gap_recovery": 0.0,
+          "selection_counts": {
+            "medium": 47,
+            "glm": 0,
+            "reasoning": 73
+          }
+        },
+        "Ridge": {
+          "quality": 0.825,
+          "regret": 0.05,
+          "gain_vs_datasetbest": 0.008333333333333333,
+          "gain_ci95": [
+            -0.025,
+            0.04187499999999886
+          ],
+          "gap_recovery": 0.14285714285714285,
+          "selection_counts": {
+            "medium": 19,
+            "glm": 0,
+            "reasoning": 101
+          }
+        }
+      }
+    },
+    "full_four": {
+      "slots": [
+        "medium",
+        "large",
+        "glm",
+        "reasoning"
+      ],
+      "oracle": 0.8916666666666667,
+      "gap": 0.041666666666666664,
+      "methods": {
+        "BestSingle": {
+          "quality": 0.8,
+          "regret": 0.09166666666666666,
+          "gain_vs_datasetbest": -0.05,
+          "gain_ci95": [
+            -0.09166666666666666,
+            -0.016666666666666666
+          ],
+          "gap_recovery": -1.2000000000000002,
+          "selection_counts": {
+            "medium": 0,
+            "large": 42,
+            "glm": 0,
+            "reasoning": 78
+          }
+        },
+        "DatasetBest": {
+          "quality": 0.85,
+          "regret": 0.041666666666666664,
+          "gain_vs_datasetbest": 0.0,
+          "gain_ci95": [
+            0.0,
+            0.0
+          ],
+          "gap_recovery": 0.0,
+          "selection_counts": {
+            "medium": 20,
+            "large": 80,
+            "glm": 0,
+            "reasoning": 20
+          }
+        },
+        "Ridge": {
+          "quality": 0.8333333333333334,
+          "regret": 0.058333333333333334,
+          "gain_vs_datasetbest": -0.016666666666666666,
+          "gain_ci95": [
+            -0.041666666666666664,
+            0.0
+          ],
+          "gap_recovery": -0.4,
+          "selection_counts": {
+            "medium": 3,
+            "large": 49,
+            "glm": 0,
+            "reasoning": 68
+          }
+        }
+      }
+    }
+  },
+  "unique_strict_wins": {
+    "medium": 2,
+    "large": 2,
+    "glm": 1,
+    "reasoning": 4
+  },
+  "per_model_quality": {
+    "medium": 0.7583333333333333,
+    "large": 0.8083333333333333,
+    "glm": 0.44166666666666665,
+    "reasoning": 0.825
+  },
+  "limits": [
+    "Random stratified original-train pilot, one generation per query/model; no repeat stability claim",
+    "Fixed Ridge alpha1, group-isolated inherited folds, no outer tuning",
+    "Small sample and inherited deployment/quantization differences; latency not a matched-load comparison",
+    "Original test exposed, not independent confirmation"
+  ]
+}

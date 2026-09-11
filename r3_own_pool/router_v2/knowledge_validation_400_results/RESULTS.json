@@ -1,0 +1,58 @@
+{
+  "diagnostic": {
+    "n": 400,
+    "accuracy": {
+      "medium": 0.575,
+      "large": 0.6525,
+      "coder": 0.46,
+      "reasoning": 0.76
+    },
+    "oracle_accuracy": 0.8475,
+    "datasetbest_oof_accuracy": 0.76,
+    "oracle_gap": 0.0875,
+    "oracle_gap_count": 35,
+    "winner_entropy_unique_normalized": 0.8087508161186104,
+    "unique_winner_ratio": 0.16,
+    "unique_winner_count": 64,
+    "unique_wins": {
+      "medium": 9,
+      "large": 9,
+      "coder": 8,
+      "reasoning": 38
+    },
+    "mean_model_correlation": 0.4878173733369824,
+    "pair_correlations": {
+      "medium / large": 0.6045705642426823,
+      "medium / coder": 0.5093772479580178,
+      "medium / reasoning": 0.44049617760832926,
+      "large / coder": 0.4101970168406285,
+      "large / reasoning": 0.5610551652236635,
+      "coder / reasoning": 0.4012080681485725
+    },
+    "all_correct": 147,
+    "all_wrong": 61
+  },
+  "gate": {
+    "oracle_gap_gt_8pct": true,
+    "winner_entropy_gt_0_7": true,
+    "pass": true,
+    "next_action": "READY_FOR_MA_DESIGN"
+  },
+  "sources": {
+    "panel": "89ed44af7385adfb67be7c8820c70d5f798acbc6bc8c3638314c2d203ee65438",
+    "panel_protocol": "89e32258dea9b1a71bd091fb91022ed097e549dd9627099af1a40689bb3a11d2",
+    "coder": "ac84eec2dfc7eae159f6f4f469b64193d94bcb9c55d3828f1977bc5fcb1ff6b2",
+    "collector_and_analysis": "61d08574df244f2701d0d67976a2f435ead7c207312e19683c644641c8a72c9a"
+  },
+  "definitions": {
+    "oracle_gap": "Oracle accuracy minus held-fold BestSingle/DatasetBest for this one-dataset panel",
+    "winner_entropy": "normalized Shannon entropy across strict unique-winner model counts",
+    "unique_winner_ratio": "fraction with exactly one correct model",
+    "model_correlation": "mean defined pairwise Pearson/phi correlation of binary correctness"
+  },
+  "limits": [
+    "Original-train development diagnostic; not independent confirmation.",
+    "Single samples estimate realized correctness, not expected utility variance.",
+    "MA is not trained by this pipeline."
+  ]
+}

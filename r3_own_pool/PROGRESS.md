@@ -63,3 +63,63 @@ P1按最新要求补充非零ΔQ辅助AUC、20组全局Shuffle和20组学科内S
 ### 20:12 采集提速修订（用户授权）
 
 mmlu_utility_repeats_400 reasoning 线并发 8→24：纯吞吐参数，温度/模型/重复数/传输预算均未动；协议文件同步更新并留 data/mmlu_utility_repeats_400/PROTOCOL_AMENDMENT.json 审计。停止/重启经尾部完整性校验（389 行无损，续采 1611 目标）。效果 2.6→4.9-7.5/min（DashScope 软流控下单流变慢，收益次线性），错误 0。新增 router_v2/watch_utility_panel.py 实时视图（终端 --interval / 网页 --http 8899，只读）。
+
+
+## 400题进度与污染复核
+见 router_v2/panel_audit_20260911/REPORT.md。有效large2000、reasoning1441，完整283pair；41条reasoning失败保留null，涉及14题，普通重启不会修复已耗尽位置。冻结哈希、原train来源和三折ID/已知近重复组隔离通过。并发变更影响延迟可比性；原test仍属已暴露历史。P1尚未启动。
+
+
+## 执行失败修复准备与诊断
+用户要求直接执行下一步。43条当前失败（19超时、24 HTTP400），已冻结独立修复批次，每位置最多新增一次，含已发送的单次诊断。诊断仍等待响应；修复守护进程先等诊断成功，再等原采集锁，遇新失败停止。原始日志不修改；齐全后在独立合并目录执行P1，不训练MA。见data/mmlu_utility_repair_20260911/README.md。
+
+
+## 低并发恢复已安排
+12并发原采集连续3次失败，已自然熔断退出，无强杀在途请求。独立修复持有API锁串行运行。新增resume_mmlu_low_concurrency等待修复结束再以2并发补未落盘位置；保留原43位置修复预算，不再重试它们；冻结后的新增失败位置最多补1次，普通未落盘位置沿用最多2次。所有请求先记预算，再发送。若修复再次服务失败则续采也停，不反复自动重启。完整后输出独立recovered矩阵并运行P1，不启动MA。状态data/mmlu_utility_resume_20260911/STATUS.json。
+
+
+## 2026-09-11 恢复批次B
+检查确认原修复与续采均已停止，看板进程也不在。用户要求未完成就继续，已启动独立恢复B：冻结558个当前缺失位置，每处最多新增1次，2并发，读取超时1200秒，保留原始/修复日志及独立预算。新进程已发出前2次请求；连续3失败停止；400pair齐全后自动合并来源验证及P1，不训练MA。看板8900已恢复并纳入B记录。
+
+
+## 400题采集与P1完成
+两侧2000条，400完整pair。完成后来源/折隔离审计通过。P1结果mmlu_learnability_400_recovered_b：Ridge1 R²0.022、Spearman0.145、AUC0.603，优于学科内20/20打乱对照，开发门禁通过；仅弱信号，未训练MA。补充分布与审计见该目录DISTRIBUTION_AUDIT_REPORT.md。
+
+
+## 实验B简单MA已实跑
+query GTE3584+learned model8，共享64-ReLU-1-sigmoid，连续质量MSE；固定50epochs，三折三seed，无外折调参。400题repeat面板RidgeDelta恢复14.29%，MA平均0.37%；2975题历史迁移Ridge6.47%，MA0%。MA基本固定选reasoning，未证明优于DatasetBest或Ridge。输入来源、预测argmax、折隔离和质量指标复算通过。见router_v2/experiment_B_simple_quality_ma/REPORT.md。
+
+
+## 实验C：固定ΔQ损失对照完成
+模型、50epochs、三折三seed与B相同，仅loss改为quality MSE+1×delta MSE。面板MA平均Gap Recovery8.97%，历史2975题迁移1.57%，均低于Ridge的14.29%/6.47%，恢复区间均覆盖0。未挑最佳seed或继续外折搜索权重。输入哈希、B/C相同折名单、argmax验证与配对差异已保存PAIRED_VALIDATION.json。
+
+
+## Experiment D完成
+B/C检查既有checkpoint训练及折外ΔQ拟合；C训练R²0.743、折外−0.067，过拟合。直接pairwise回归及固定0.1ranking各三折三seed完成，未超过Ridge。全结果与拟合诊断见experiment_D_fit_diagnosis/REPORT.md。
+
+
+## Residual uncertainty gating完成
+固定100次group bootstrap残差头、2.5/97.5分位门禁，3seeds全部回退Ridge，面板14.29%、历史6.47%。未门禁残差面板15.20%、历史6.86%。错误切换为0同时正确切换为0，Switch Accuracy未定义而非100%。E2交叉拟合Ridge误差纠正已包含在Residual中。见experiment_F_residual_gating/SWITCH_REPORT.md。
+
+
+## GLM 120题筛查完成
+采集120/120；修复分析器对旧quality.final与新标量quality的格式兼容，失败标签仍拒绝。三组预定分析完成且来源与指标复算通过。GLM43/120、独有正确1题；三/四模型Ridge均未选GLM。旧双模型Ridge101/120、拟议三模型99/120、四模型100/120。保留7条截断，不追加生成；下一优先级为部署/代码输出适配诊断，再决定是否扩展重复。详见router_v2/pool4_pilot_results/SCREENING_REPORT.md。
+
+
+## GLM评测提取修复与120题离线重评分
+用户要求不扩大实验，仅重评分GLM。保留原文与Qwen/R1标签，新增rescore_glm_pilot.py及逐条审计，提取规则测试、隔离执行运行时检查、原始哈希与折/指标复算通过。GLM43→53/120。结果见router_v2/pool4_rescore_results_v1/RESCORE_REPORT.md；模型本体能力判断仍受部署异常未排除的限制。
+
+
+## Coder下一阶段启动
+用户指定Qwen2.5-Coder-7B→同120题pilot→accuracy/unique wins/winner distribution/oracle gap→模型池→400题utility→MA。使用官方Qwen2.5-Coder-7B-Instruct固定revision c03e6d358207e414f1eca0bb1891e29f1db0e242，下载进程与自动pilot流程已启动。保留所有原始生成，沿用修正提取与官方测试。400题混合面板草案仅按ID/任务类型预选，未发起生成，等待面板选择及pilot结果决定模型池。
+
+
+## Coder120题完成与模型池决策
+120/120，来源哈希和路由指标独立复算通过。Coder82/120，代码30/40，全五模型独有正确1题；四模型增加Coder时Oracle106→107/120，Ridge100/120不变。按用户此前独有正确>10%的筛选标准，不将Coder/GLM推进扩大utility；保留历史三模型作为参考池，不能宣称学得路由优越。400/MA尚未启动，当前候选未通过进入条件。详见coder_pilot_results/VALIDATION_AND_DECISION.json。
+
+
+## Baseline归档与单模型替换结论
+按用户最新指示保留全部旧结果，归档router_v2/model_pool_baseline_20260911，清单哈希复核通过。GLM→Coder单替换pilot已完成，无需重跑；四模型gap均4.17pp、Ridge均83.33%、候选unique均1/120。满足情况B，暂停400/repeat/MA，下一方向为benchmark覆盖与更大能力差异审查。
+
+
+## 路由可行性诊断完成
+现四模型分任务折外Oracle−DatasetBest：代码2.5pp、数学0、知识10pp（4/40）。知识独有赢家6/40、归一化严格赢家熵0.959，代码严格赢家全部R1；总体低gap掩盖知识子集空间。下一优先级知识/MMLU-Pro，更大样本验证后再决定MA，不整体更换benchmark。详见router_v2/pool_routability_diagnosis/REPORT.md。

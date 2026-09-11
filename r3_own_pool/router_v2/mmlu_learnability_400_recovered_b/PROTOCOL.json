@@ -1,0 +1,24 @@
+{
+  "role": "P1_selected_panel_learnability_before_MA",
+  "primary": "GTE_Ridge1 MSE versus subject baseline; same-query group-isolated outer evaluation",
+  "ridge_alphas": [
+    1,
+    20
+  ],
+  "shuffle_controls": 20,
+  "global_shuffle_controls": 20,
+  "supervision": "400 paired repeat empirical quality differences; each fold uses its original fold-local selection only",
+  "resources": "P0 requires both model quality, tokens, latency. Tokens are resource proxy, not verified monetary cost.",
+  "inputs": {
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/MANIFEST.json": "da38baa7cea77744d4c4d7e0e91ba48430a1c4c2f343719876bea21470314549",
+    "/root/r3_own_pool/data/mmlu_utility_repeats_400_recovered_b/DISTRIBUTION_STATUS.json": "5c0492a6f42d5fdf88c053aac06050d99d844e350656b551bea357ee55408915",
+    "/root/r3_own_pool/router_v2/mmlu_learnability.py": "bd457175bb710dba1309f9048aefd39fe3791c92ecbd5e09edf1109dadc4ee31"
+  },
+  "limits": [
+    "Selected opportunity-enriched panel; not representative of all MMLU-Pro and not independent confirmation.",
+    "Coarse task is knowledge for all queries; task baseline is training-fold mean. Subject parsed from query only.",
+    "Pairwise outcomes are noisy averages of five draws; prediction MSE includes sampling noise.",
+    "Null labels shuffled within training subjects preserve task signals. Null rank is diagnostic, not a calibrated formal p-value.",
+    "No MA or expected-utility router trained; no historical val/test outcomes loaded."
+  ]
+}
