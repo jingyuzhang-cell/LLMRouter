@@ -1,0 +1,31 @@
+{
+  "role": "prospective confirmation of frozen Query-only Ridge",
+  "selection": "exhaustive set of train MMLU-Pro queries absent from pilot120, uniform knowledge400, and utility400; no outcome filtering",
+  "n": 100,
+  "primary_estimand": "paired mean expected-quality gain of frozen Ridge route versus R1 baseline under five temperature-.7 draws",
+  "primary_method": "Ridge(alpha=1) fit once on all corrected four-model utility400 repeat means; argmax fixed before confirmation generation",
+  "secondary": "selection distribution and per-subject paired gain; no oracle claim unless all four models are later collected",
+  "slots": [
+    "medium",
+    "large",
+    "coder",
+    "reasoning"
+  ],
+  "repeats": 5,
+  "temperature": 0.7,
+  "top_p": 1.0,
+  "source_sha256": {
+    "train_panel": "23914c75665b2e3133d1782cac8a822aeaa8dc0660598857f14c35100401536e",
+    "labels": "0f7efbcd91f70e549141cff135074d2e629ee531581681b3a4adac7b10ccf6c5",
+    "embeddings": "e9d0778efd9223edb708d80623350ed01e8474ae17721dcc82ae676b96cfe055",
+    "panel": "4f80e45b75be27845c5c2ca1ae6b2ebc083ba65d905db6f82fc5a17ff6b1cd72",
+    "decisions": "1cface87897285daf89a607908ebb23f8818503af8124ca9a0e8e3c6f68c9da8",
+    "freezer": "42f460fc486005f057867393f4d01f11a799edbf3ba9301d137ed45a5100906b"
+  },
+  "limits": [
+    "All queries belong to original train split; prospective outcomes are new, but this is not a public benchmark test split.",
+    "Only 100 unused train MMLU-Pro queries remain, limiting power.",
+    "Primary evaluation must include every frozen query and may not tune alpha, features, choices, or thresholds."
+  ],
+  "analysis_plan_sha256": "fb248771b74a56a2be6b22f32d6c6781c6c45717c17c8b04fa339d9033cc1e42"
+}

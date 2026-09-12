@@ -1,0 +1,26 @@
+{
+  "role": "selected-panel fold-local method-development diagnostic; not representative or final test",
+  "outer_training": "frozen per-fold allowlists from FOLD_SELECTION.json; each evaluation query uses its source OOF fold",
+  "inner_validation": "subject-stratified 20% within the fold-local development allowlist",
+  "methods": [
+    "BestSingle",
+    "DatasetBest",
+    "QueryOnlyRidge",
+    "PairwiseRidge",
+    "RepeatPairwiseMA 3 seeds",
+    "TwoStageResidualGate"
+  ],
+  "pairwise_target": "0.5+(mean_i-mean_j)/2 soft-label BCE",
+  "gate": "class-balanced any-alternative-beats-R1 logistic; fixed threshold grid selected on inner validation; residual Ridge alternative selector",
+  "source_sha256": {
+    "manifest": "da38baa7cea77744d4c4d7e0e91ba48430a1c4c2f343719876bea21470314549",
+    "selection": "08da6b67785a8552efc916a3b166fe32a72ea9c4e3c0f081ef6ce0c08668c5e7",
+    "labels": "0f7efbcd91f70e549141cff135074d2e629ee531581681b3a4adac7b10ccf6c5",
+    "trainer": "d0dcadd84a166ef739e3bdff5ca2c960ece2dcea3b1101bdf4c4361a200c8d2b"
+  },
+  "limits": [
+    "Opportunity-enriched development panel; no population-level MMLU claim.",
+    "Five repeats add label precision but not independent query count.",
+    "A newly frozen representative panel is required after method selection."
+  ]
+}

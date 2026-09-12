@@ -1,0 +1,28 @@
+{
+  "role": "outcome-enriched repeat-label training diagnostic",
+  "selection": "intersection of current 400-query model-disagreement set and prior complete large/reasoning five-repeat panel",
+  "n": 115,
+  "models": [
+    "medium",
+    "large",
+    "coder",
+    "reasoning"
+  ],
+  "repeats": 5,
+  "temperature": 0.7,
+  "top_p": 1.0,
+  "reuse": "all five large/reasoning generations; rescore raw answers with common explicit-option parser",
+  "new_generation": "five medium and five coder responses per query; bounded two transport attempts",
+  "target": "continuous empirical quality and pair preference 0.5 + (mean_i-mean_j)/2",
+  "panel_sha256": "b29e9defcad41e6c66b77c4066bb0b3c53f22508a6f35300f160a718aa2e762b",
+  "current_panel_sha256": "89ed44af7385adfb67be7c8820c70d5f798acbc6bc8c3638314c2d203ee65438",
+  "prior_repeat_panel_sha256": "23914c75665b2e3133d1782cac8a822aeaa8dc0660598857f14c35100401536e",
+  "diagnostic_sha256": "f65052e5579b7ff5fe028d399ce36e2007b6f16bee9f1fec5eb6f27b95128cd8",
+  "cohort_sha256": "d2508b429f36c76e0cf752fa7ff90db4d288e87f63a6e67c79488ddda2097af9",
+  "split_sha256": "94ad53494fec77a3003d1ed77fe04bbafac0d120290a99cbf4a0b81c049463c5",
+  "limits": [
+    "Queries are deliberately selected using observed single-generation disagreement; this is training enrichment, not representative evaluation.",
+    "Repeated labels reduce outcome noise but do not increase query diversity beyond 115.",
+    "No inference latency or monetary-cost comparison across different serving stacks."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "role": "development-only nested pairwise compatibility experiment",
+  "models": [
+    "medium",
+    "large",
+    "coder",
+    "reasoning"
+  ],
+  "target": "strict pair winner; tied model pairs excluded from pairwise loss, retained in routed accuracy evaluation",
+  "pair_balance": "inverse win/loss frequency within each unordered pair, learned from the relevant training partition",
+  "pairwise_ma": "shared s(e_q,e_m); logit(i>j)=s(q,i)-s(q,j), exactly antisymmetric",
+  "router": "argmax model compatibility score",
+  "inner_validation": "deterministic label-free subject-stratified 20%; choose epoch 1..100 by balanced pair BCE",
+  "refit": "reinitialize and train on all outer development queries for selected epoch",
+  "pairwise_ridge": "six independent alpha=1 delta regressions with pair-balanced weights; signed Borda aggregation",
+  "query_ridge": "four-output alpha=1 utility regression",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "baselines": [
+    "BestSingle",
+    "DatasetBest",
+    "QueryOnlyRidge",
+    "PairwiseRidge",
+    "PairwiseMA"
+  ],
+  "source_sha256": {
+    "diagnostic_results": "c2753c3536b1dbb787cd0942597d05447eb087d4551a3cccf8007ac178da0934",
+    "diagnostic_npz": "f65052e5579b7ff5fe028d399ce36e2007b6f16bee9f1fec5eb6f27b95128cd8",
+    "panel": "89ed44af7385adfb67be7c8820c70d5f798acbc6bc8c3638314c2d203ee65438",
+    "embeddings": "e9d0778efd9223edb708d80623350ed01e8474ae17721dcc82ae676b96cfe055",
+    "trainer": "e4dafde810a9757a48b48a6f3f3438ecbfac93a9e74e30272e64f186fdcf8c6e"
+  },
+  "limits": [
+    "This 400-query dataset was already inspected before this method was proposed; outer folds are development estimates, not untouched tests.",
+    "Single binary outcomes do not estimate expected utility or repeat stability.",
+    "Any subsequent method choice based on this result requires a new frozen confirmation panel."
+  ]
+}

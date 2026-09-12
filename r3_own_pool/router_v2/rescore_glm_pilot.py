@@ -7,6 +7,8 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'data/pool4_glm_rescore_v1'
 
 def extract_option(text):
+    boxed=re.findall(r'\\boxed\s*\{\s*([A-J])\s*\}',text or '',re.I)
+    if boxed:return boxed[-1].upper()
     # Explicit answer marker accepts markdown, math delimiters and multiline answers.
     clean=re.sub(r'[*`$]','',text)
     clean=re.sub(r'\\boxed\{([A-J])\}',r'\1',clean)
@@ -33,9 +35,9 @@ def extract_code(text):
     return code
 
 def self_test():
-    for s in ['The answer is C because it follows.','Answer: $C','答案：C','**Answer:** (C)','The correct answer is:\n\nC. text','The most appropriate next step is:\n\nC. text\n\nThis follows.']:
+    for s in ['The answer is C because it follows.','Answer: $C','答案：C','**Answer:** (C)','The correct answer is:\n\nC. text','The most appropriate next step is:\n\nC. text\n\nThis follows.','Thus, the answer is \\[ \\boxed{C} \\]','C. concise answer text']:
         assert extract_option(s)=='C',s
-    for s in ['A. one\nB. two\nC. three','Answer cannot be determined.','Calculate area A.']:
+    for s in ['A. one\nB. two\nC. three','Answer cannot be determined.','Calculate area A.','The numeric result is \\boxed{3}.']:
         assert extract_option(s) is None,s
     text='Explanation\n```python\ndef f(x):\n    return x\n\n# Test cases\nassert f(1)) == 1\n```\nEnd'
     assert extract_code(text)=='def f(x):\n    return x\n'

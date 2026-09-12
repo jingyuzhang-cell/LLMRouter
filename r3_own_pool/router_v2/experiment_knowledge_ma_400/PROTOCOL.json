@@ -1,0 +1,40 @@
+{
+  "role": "train-only four-model MMLU-Pro MA after frozen diagnostic gate",
+  "target": "single-generation binary realized utility U(q,m); no repeat-mean or variance claim",
+  "inputs": "e_q=frozen normalized GTE 3584; e_m=learned embedding table 4x8",
+  "architecture": "concat(e_q,e_m) -> Linear64 -> ReLU -> Linear1 -> sigmoid, shared across models",
+  "loss": "MSE over all four model utilities; ties retained",
+  "epochs": 50,
+  "batch_size": 32,
+  "learning_rate": 0.001,
+  "weight_decay": 0.01,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "ridge": "multi-output Ridge alpha=1 on query embedding only",
+  "folds": "inherited three group-isolated folds; no outer-fold tuning or early stopping",
+  "baselines": [
+    "BestSingle",
+    "DatasetBest",
+    "QueryOnlyRidge",
+    "MA"
+  ],
+  "note": "BestSingle and DatasetBest are identical because every query is MMLU-Pro.",
+  "goal": "20%-30% gap recovery is an evaluation target, not a pass condition or guaranteed result.",
+  "source_sha256": {
+    "diagnostic_results": "c2753c3536b1dbb787cd0942597d05447eb087d4551a3cccf8007ac178da0934",
+    "diagnostic_npz": "f65052e5579b7ff5fe028d399ce36e2007b6f16bee9f1fec5eb6f27b95128cd8",
+    "panel": "89ed44af7385adfb67be7c8820c70d5f798acbc6bc8c3638314c2d203ee65438",
+    "panel_protocol": "89e32258dea9b1a71bd091fb91022ed097e549dd9627099af1a40689bb3a11d2",
+    "query_embeddings": "e9d0778efd9223edb708d80623350ed01e8474ae17721dcc82ae676b96cfe055",
+    "trainer": "0b9887218617f5890e98fb5ad673a5eed138f26adf4ba91d1717d2a32570375b"
+  },
+  "limits": [
+    "Development-only original-train panel, selected after a 120-query directional diagnosis.",
+    "The same 400 outcomes triggered the gate and evaluate MA; this is not independent confirmation.",
+    "Single responses do not estimate expected-utility variance or repeat stability.",
+    "Historical and Coder responses were served at different times/stacks; no latency or cost comparison."
+  ]
+}

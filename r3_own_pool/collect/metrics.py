@@ -56,14 +56,28 @@ def exact_match_math(answer, gt, tol=1e-4):
 
 
 def extract_option(text):
+    # A boxed option is an explicit final-answer form commonly emitted by math-
+    # heavy chat models. Restrict the payload to one option letter so boxed
+    # intermediate numeric work cannot be mistaken for a multiple-choice answer.
+    boxed = re.findall(r"\\boxed\s*\{\s*([A-J])\s*\}", text or "", re.I)
+    if boxed:
+        return boxed[-1].upper()
     m = re.findall(r"[Aa]nswer\s*(?:is|:)?\s*\(?([A-J])\)?", text or "")
     if m:
-        return m[-1]
+        return m[-1].upper()
     lines = [l.strip() for l in (text or "").splitlines() if l.strip()]
     for line in reversed(lines[-3:]):
         m = re.fullmatch(r"\(?([A-J])\)?\.?", line)
         if m:
-            return m.group(1)
+            return m.group(1).upper()
+    # Accept a response that consists of a single option-prefixed paragraph,
+    # e.g. "A. Reptiles ...". Reject copied option lists by requiring exactly
+    # one option-prefixed line in the entire response.
+    prefixed = [re.match(r"^\s*([A-J])[.)]\s+\S", line, re.I)
+                for line in (text or "").splitlines()]
+    prefixed = [match for match in prefixed if match]
+    if len(prefixed) == 1 and lines and re.match(r"^\s*[A-J][.)]\s+\S", lines[0], re.I):
+        return prefixed[0].group(1).upper()
     return None
 
 

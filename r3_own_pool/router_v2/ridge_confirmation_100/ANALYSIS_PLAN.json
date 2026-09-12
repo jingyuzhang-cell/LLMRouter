@@ -1,0 +1,22 @@
+{
+  "frozen_before_outcome_inspection": true,
+  "primary_population": "all 100 exhaustively unused train-split MMLU-Pro queries",
+  "primary_estimand": "mean over queries of (five-draw mean quality of frozen selected route minus five-draw mean quality of R1)",
+  "scoring": "common explicit-option parser; generation failures, truncations without an extractable answer, and parse failures score zero; no correctness-based retry",
+  "uncertainty": "two-sided 95% prompt-group bootstrap CI with 2000 resamples and seed 42",
+  "decision_rule": {
+    "positive_confirmation": "primary gain CI lower bound > 0",
+    "supportive_only": "primary point estimate > 0 but CI includes 0",
+    "not_confirmed": "primary point estimate <= 0"
+  },
+  "secondary": [
+    "conditional mean gain on the 10 queries routed away from R1",
+    "win/tie/loss counts on those switched queries",
+    "parse-failure audit"
+  ],
+  "forbidden": [
+    "changing Ridge alpha, embeddings, training labels, model pool, decisions, or panel after viewing confirmation outcomes",
+    "dropping failed or inconvenient queries",
+    "claiming Oracle Gap without collecting all four models"
+  ]
+}
