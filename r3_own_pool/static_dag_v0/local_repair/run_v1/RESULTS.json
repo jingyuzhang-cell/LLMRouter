@@ -1,0 +1,73 @@
+{
+  "arms": {
+    "static": {
+      "quality": 0.275,
+      "success_rate": 0.15,
+      "tokens": 22883,
+      "logical_calls": 78,
+      "repair_calls": 0,
+      "mean_request_service_seconds": 6.18310982035473,
+      "mean_validator_seconds": 0.0,
+      "repair_tokens": 0
+    },
+    "local_repair": {
+      "quality": 0.35,
+      "success_rate": 0.2,
+      "tokens": 38944,
+      "logical_calls": 121,
+      "repair_calls": 41,
+      "mean_request_service_seconds": 9.045059787016362,
+      "mean_validator_seconds": 0.00011501694098114967,
+      "repair_tokens": 15671
+    },
+    "tool_only": {
+      "quality": 1.0,
+      "success_rate": 1.0,
+      "tokens": 0,
+      "logical_calls": 0,
+      "repair_calls": 0,
+      "mean_wall_seconds": 0.0007268179208040238
+    }
+  },
+  "paired_repair_minus_static": {
+    "success": {
+      "delta": 0.05,
+      "ci95": [
+        0.0,
+        0.15
+      ]
+    },
+    "quality": {
+      "delta": 0.075,
+      "ci95": [
+        0.0,
+        0.2
+      ]
+    }
+  },
+  "task_recovery": {
+    "recovered": 1,
+    "baseline_failed": 17,
+    "rate": 0.058823529411764705,
+    "regressed": 0
+  },
+  "node_repair": {
+    "attempted": 41,
+    "contract_passed": 2
+  },
+  "physical_requests": 122,
+  "physical_tokens": 39328,
+  "execution": {
+    "physical_requests": 122,
+    "wall_seconds": 119.78608060441911,
+    "model_startup_seconds": 46.10035924613476,
+    "unix_time": 1789401234.0363
+  },
+  "limitations": [
+    "Fresh tasks within an already inspected constructed family, not untouched external benchmark.",
+    "Executable verifier completely solves this arithmetic family; tool baseline is essential.",
+    "Repair receives more compute than static; no attribution to specific feedback versus retry budget alone.",
+    "Shared exact requests couple the arms; logical latency is service accounting, not isolated end-to-end measurement.",
+    "All assignments large: no evidence of model routing gain, dynamic planning gain or Pareto optimality."
+  ]
+}

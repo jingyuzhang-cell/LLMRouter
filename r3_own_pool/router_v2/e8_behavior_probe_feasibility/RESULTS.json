@@ -1,0 +1,223 @@
+{
+  "experiment": "E8 Behavior-Probe Feasibility",
+  "n": 400,
+  "rotations": 20,
+  "reference": {
+    "anchor_queryonly_eq": 0.735,
+    "in_protocol_a_eq": 0.73225,
+    "bestsingle_eq": 0.7240000000000001
+  },
+  "methods": {
+    "A_query": {
+      "expected_quality": 0.73225,
+      "switch": {
+        "away_rotations": 1220,
+        "total_rotations": 8000,
+        "precision": 0.13278688524590163,
+        "recall": 0.16804979253112035
+      },
+      "helped_vs_a": {
+        "helped": 0,
+        "harmed": 0,
+        "per_rotation_helped": 0,
+        "per_rotation_harmed": 0
+      },
+      "selection_counts": {
+        "medium": 20,
+        "large": 1200,
+        "coder": 0,
+        "reasoning": 6780
+      },
+      "vs_queryonly": {
+        "mean": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci98333_bonferroni": [
+          0.0,
+          0.0
+        ]
+      },
+      "vs_frozen_anchor": {
+        "mean": -0.0027500000000000003,
+        "ci95": [
+          -0.00825,
+          0.0029999999999999988
+        ]
+      },
+      "success": false
+    },
+    "B_medium_probe": {
+      "expected_quality": 0.708,
+      "switch": {
+        "away_rotations": 1917,
+        "total_rotations": 8000,
+        "precision": 0.09181011997913406,
+        "recall": 0.1825726141078838
+      },
+      "helped_vs_a": {
+        "helped": 24,
+        "harmed": 98,
+        "per_rotation_helped": 98,
+        "per_rotation_harmed": 292
+      },
+      "selection_counts": {
+        "medium": 207,
+        "large": 1644,
+        "coder": 66,
+        "reasoning": 6083
+      },
+      "vs_queryonly": {
+        "mean": -0.024250000000000004,
+        "ci95": [
+          -0.03375,
+          -0.015375000000000003
+        ],
+        "ci98333_bonferroni": [
+          -0.03595937499999997,
+          -0.013250000000000001
+        ]
+      },
+      "vs_frozen_anchor": {
+        "mean": -0.027000000000000003,
+        "ci95": [
+          -0.037875,
+          -0.01675
+        ]
+      },
+      "success": false
+    },
+    "C_large_probe": {
+      "expected_quality": 0.7128749999999999,
+      "switch": {
+        "away_rotations": 1955,
+        "total_rotations": 8000,
+        "precision": 0.09360613810741689,
+        "recall": 0.18983402489626555
+      },
+      "helped_vs_a": {
+        "helped": 20,
+        "harmed": 71,
+        "per_rotation_helped": 90,
+        "per_rotation_harmed": 245
+      },
+      "selection_counts": {
+        "medium": 150,
+        "large": 1769,
+        "coder": 36,
+        "reasoning": 6045
+      },
+      "vs_queryonly": {
+        "mean": -0.019375,
+        "ci95": [
+          -0.029500000000000002,
+          -0.010375
+        ],
+        "ci98333_bonferroni": [
+          -0.03175000000000001,
+          -0.008375000000000004
+        ]
+      },
+      "vs_frozen_anchor": {
+        "mean": -0.022125000000000002,
+        "ci95": [
+          -0.0335,
+          -0.011871875000000044
+        ]
+      },
+      "success": false
+    },
+    "D_joint_probe": {
+      "expected_quality": 0.6988749999999999,
+      "switch": {
+        "away_rotations": 2657,
+        "total_rotations": 8000,
+        "precision": 0.08129469326307866,
+        "recall": 0.22406639004149378
+      },
+      "helped_vs_a": {
+        "helped": 36,
+        "harmed": 128,
+        "per_rotation_helped": 145,
+        "per_rotation_harmed": 412
+      },
+      "selection_counts": {
+        "medium": 514,
+        "large": 1961,
+        "coder": 182,
+        "reasoning": 5343
+      },
+      "vs_queryonly": {
+        "mean": -0.033375,
+        "ci95": [
+          -0.044000000000000004,
+          -0.022625000000000006
+        ],
+        "ci98333_bonferroni": [
+          -0.04650000000000001,
+          -0.02029062499999987
+        ]
+      },
+      "vs_frozen_anchor": {
+        "mean": -0.036125000000000004,
+        "ci95": [
+          -0.04825,
+          -0.02412187500000005
+        ]
+      },
+      "success": false
+    }
+  },
+  "contrasts": {
+    "D_minus_B": {
+      "mean": -0.009125000000000005,
+      "ci95": [
+        -0.016125000000000004,
+        -0.0020000000000000035
+      ]
+    },
+    "D_minus_C": {
+      "mean": -0.014000000000000004,
+      "ci95": [
+        -0.021750000000000005,
+        -0.0060000000000000045
+      ]
+    }
+  },
+  "passed": [],
+  "verdict": "no_behavior_gain_consider_stronger_probes_or_stop",
+  "probe_cost": {
+    "medium": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "tokens_output_p50": 396.5,
+      "latency_ms_p50": 6855.05,
+      "answer_chars_p50": 1588.0
+    },
+    "large": {
+      "model": "Qwen/Qwen2.5-14B-Instruct",
+      "tokens_output_p50": 405.5,
+      "latency_ms_p50": 8059.6,
+      "answer_chars_p50": 1691.5
+    },
+    "coder": {
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "tokens_output_p50": 441.0,
+      "latency_ms_p50": 7603.05,
+      "answer_chars_p50": 1744.0
+    },
+    "reasoning": {
+      "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+      "tokens_output_p50": 2071.0,
+      "latency_ms_p50": 65329.15,
+      "answer_chars_p50": 2006.0
+    }
+  },
+  "decision": {
+    "criterion": "EQ>73.50% anchor AND paired CI95 lower>0 vs in-protocol A; precision/recall/helped-harmed are diagnostics only",
+    "expansion_executed": false,
+    "next_experiment_started": false
+  },
+  "protocol_sha256": "50839f2e016d435b9a05ffcb4f90ebf48cf0eba32f4080c43e34d5e41af013e5",
+  "predictions_sha256": "b543c1ead5afea8c0e58061b03933c9330733c2bdd3ab098813c635316378f01"
+}

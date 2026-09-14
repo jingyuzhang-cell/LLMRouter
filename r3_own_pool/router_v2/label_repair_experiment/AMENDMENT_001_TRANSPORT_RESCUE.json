@@ -1,0 +1,51 @@
+{
+  "amendment_id": "AMENDMENT_001_TRANSPORT_RESCUE",
+  "adopted_unix_time": 1789388305.044331,
+  "experiment": "label_repair_experiment",
+  "scope": "R1 (reasoning slot) transport-level missing positions only",
+  "trigger": {
+    "positions": [
+      {
+        "query_id": "mmlupro_0113",
+        "repeat_index": 7,
+        "attempts": 2,
+        "outcome": "transport timeout (~600s), no scorable answer, status=failed, quality=null"
+      },
+      {
+        "query_id": "mmlupro_0113",
+        "repeat_index": 9,
+        "attempts": 2,
+        "outcome": "transport timeout (~600s), no scorable answer, status=failed, quality=null"
+      }
+    ],
+    "basis": "transport failure only; generation parameters were never adjusted based on answer content",
+    "note": "these positions are model-output timeouts, not wrong answers; recording them as 0 would contaminate labels"
+  },
+  "rule": {
+    "eligibility": "any R1 position whose first two transport attempts both produced no scorable answer",
+    "rescue_attempts": 1,
+    "max_wait_seconds": 1800,
+    "unchanged": [
+      "model",
+      "revision",
+      "prompt (PANEL verbatim)",
+      "temperature=0.7",
+      "top_p=1.0",
+      "max_tokens=2048",
+      "scorer (rescore_glm_pilot.extract_option vs ground_truth)",
+      "query selection list",
+      "statistical plan"
+    ],
+    "on_third_failure": "position remains missing (quality=null); NEVER scored as 0",
+    "total_R1_transport_attempts_cap": 2060,
+    "rescue_counts_inside_cap": true
+  },
+  "timing_statement": {
+    "adopted_before_final_label_audit": true,
+    "adopted_before_router_retraining": true,
+    "decision_based_on_repaired_label_effects": false,
+    "concurrent_with_main_collection": "rescue writes to raw/reasoning_RESCUE.jsonl and raw/reasoning_ATTEMPTS_RESCUE.jsonl (attempt=3, amendment-referenced); merged into raw/reasoning.jsonl only after the main collector terminates, replacing the quality=null rows for the same keys"
+  },
+  "stop_condition": "if rescue-eligible positions exceed a few percent of R1 positions, collection pauses and service health is re-evaluated instead of patching toward a superficially complete panel",
+  "current_eligible_fraction": "2/1030 = 0.19%"
+}

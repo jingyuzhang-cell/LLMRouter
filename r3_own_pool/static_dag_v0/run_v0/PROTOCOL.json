@@ -1,0 +1,53 @@
+{
+  "version": "static_dag_v0",
+  "role": "synthetic_business_workflow_pilot",
+  "n_tasks": 20,
+  "n_nodes_per_task": 4,
+  "max_requests": 80,
+  "models": {
+    "medium": {
+      "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+      "served": "Qwen/Qwen2.5-7B-Instruct"
+    },
+    "large": {
+      "path": "/root/autodl-tmp/models/Qwen2.5-14B-Instruct-GPTQ-Int8",
+      "served": "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8"
+    },
+    "coder": {
+      "path": "/root/autodl-tmp/models/Qwen2.5-Coder-7B-Instruct",
+      "served": "Qwen/Qwen2.5-Coder-7B-Instruct"
+    }
+  },
+  "seed": 20260915,
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 512,
+  "timeout_seconds": 180,
+  "concurrency": 4,
+  "retries": 0,
+  "local_repair": false,
+  "dynamic_replanning": false,
+  "decomposition": "deterministic domain template; not learned decomposition",
+  "routing": "Q - 0.05*C_tokens/1000 - 0.05*L_seconds/10; fixed input-only initial assignments",
+  "profile_limitations": "Uncalibrated global priors from actively selected MMLU queries, transferred to procurement nodes; not GTE or a newly trained router.",
+  "cost_basis": "Measured token usage, not money or actual GPU billing. Resource wall time separately recorded.",
+  "latency_basis": "Observed per-task batch sojourn includes model startup/queueing. Service critical path is a diagnostic, not observed parallel latency.",
+  "quality": "Final vendor and exact total each 0.5; task success requires both. Infrastructure missing is not semantic zero. No evaluator truth used during execution.",
+  "scope": "20 one-family constructed tasks test mechanics, not generalization, superiority, or Pareto claims.",
+  "code_and_inputs": {
+    "/root/r3_own_pool/static_dag_v0/run.py": "770e3aabfabda2cc1faf476277448050c5e6bc747b848c6861eb227204c96f5b",
+    "/root/r3_own_pool/static_dag_v0/core.py": "46fdd6eccf62d195b3cc34a04db720ebd9cef4473a1db099cabee5c7724bf872",
+    "/root/r3_own_pool/static_dag_v0/run_v0/TASKS.json": "8b14d46a4c35cacc6d01dc2fe6d05a45823d984b7467b492f1a8e4e969ad91e5",
+    "/root/r3_own_pool/static_dag_v0/run_v0/PROFILES.json": "4fcfe80e100c66a32020f10179df67d1b5f7c4c2d1d11152159a42d8ce750246",
+    "/root/r3_own_pool/static_dag_v0/run_v0/PLANS.json": "709ea5db75ce987deb7638f0bc73df619c2627fff1b36952f83f438d22596b40"
+  },
+  "profile_sources": {
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/medium.jsonl": "149c3905d371e0e9d45007dc7fbbb33b3d0766698c6870e07a2d54f92c886d83",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/medium_MODEL_PROVENANCE.json": "5041de9c5091540230b1931fc00e6b1df284ca88095bcdca15e1dff062d5a410",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/large.jsonl": "d9375c94ed0919c7b2661ce3d0172bcf23f8dfde002c2cf544fa1ffca98d99e0",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/large_MODEL_PROVENANCE.json": "6c25ea71bf13b6033b2a786647ed248fcadc6d97c463177fb6728611d452c8b1",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/coder.jsonl": "370ad12e4dfc3fe2a56dc9bba3e405e0f536fe43adfd25facbd708c78e37888f",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/coder_MODEL_PROVENANCE.json": "c6e5054afba33a1bdd18edff39c6ee2ee995c3dfe5c80b2f68f6db7902a9c371"
+  },
+  "created_unix": 1789400510.1742437
+}

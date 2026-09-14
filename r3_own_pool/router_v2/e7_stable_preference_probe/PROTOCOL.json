@@ -1,0 +1,80 @@
+{
+  "experiment": "E7 Stable Preference Representation Probe",
+  "representations": [
+    "R0_gte",
+    "R1_gte_struct",
+    "R2_qwen",
+    "R3_all"
+  ],
+  "question": "Does the query representation carry enough signal to decide when to leave R1 (reasoning), and for whom?",
+  "labels": {
+    "source": "corrected 5-repeat utility panel (E6-verified)",
+    "stable_advantage": "mean5(m)>mean5(reasoning) AND #{r: V(q,m,r)>=V(q,reasoning,r)} >= 4/5",
+    "should_switch": "any stable advantage among medium/large/coder",
+    "which_alternative": "argmax over stable m by (mean5 delta, consistency, slot order)",
+    "counts": {
+      "switch_queries": 77,
+      "stable_pairs": 118,
+      "which_distribution": {
+        "medium": 27,
+        "large": 36,
+        "coder": 14
+      }
+    },
+    "decomposed_oracle_eq": 0.81,
+    "note": "Decomposed oracle equals the 81.00% hindsight oracle: the two-stage split is lossless."
+  },
+  "representations_detail": {
+    "R0_gte": "frozen Original GTE-Qwen2-7B-instruct embedding (same features as A in E6)",
+    "R1_gte_struct": "R0 + 15 deterministic structural features + 14 subject one-hot (control)",
+    "R2_qwen": "Qwen2.5-7B-Instruct final-layer hidden state, raw panel text, masked mean pool, no generation",
+    "R3_all": "concatenation of R1 blocks and R2",
+    "structural": "log stem/total chars, n options, digit & math-symbol counts+densities, $ count, code-hint count, newlines, option length mean/max, ends-?, Wh-start, stem words; frozen char sets in code"
+  },
+  "classifier": {
+    "stage1": "StandardScaler(dev) + L2 logistic C=1.0 lbfgs, threshold 0.5 frozen",
+    "stage2": "same estimator on dev stable-switch queries only; argmax over available classes",
+    "no_pca": "PCA not used; identical pipeline across representations",
+    "fit": "scaler/logistic/threshold fitted or fixed on development fold only",
+    "sensitivity": "threshold=development switch base rate reported as non-decisional sensitivity"
+  },
+  "folds": "E6 frozen 3 outer folds verbatim",
+  "success": "EQ>73.50% (E6 A_QueryOnly) AND paired query bootstrap CI95 lower>0 vs A; sole criterion, AUC/F1 are diagnostics only",
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20260914,
+    "unit": "400 unique queries",
+    "bonferroni": "98.75% intervals for 4 representations vs A reported as context"
+  },
+  "branches": {
+    "on_pass": "integrate the winning representation back into the MA router",
+    "on_fail": "stop pure query-only static routing; move to query -> cheap model probe/partial response -> routing"
+  },
+  "constraints": [
+    "No new model answers except local Qwen forward passes",
+    "No threshold/hyperparameter search",
+    "No PCA/MLP/deeper networks",
+    "No additional queries",
+    "No outer-test selection"
+  ],
+  "packages": {
+    "numpy": "2.3.2",
+    "scikit-learn": "1.9.0"
+  },
+  "hashes": {
+    "/root/r3_own_pool/router_v2/run_e7_stable_preference_probe.py": "9da9d8da410d8aa73d830c69c0e23387413d51af058a71adc152ecd44a7aa5ba",
+    "/root/r3_own_pool/router_v2/summarize_e7_stable_preference_probe.py": "08b3711067cf18de25b89ff1c19412e0a247904fbbbb3a40b5fc00833a62116c",
+    "/root/r3_own_pool/router_v2/test_e7_stable_preference_probe.py": "6eac38edc207dca735577b0b64450386505352e359d9cbd9a2e998f3d3847a43",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/INPUTS.npz": "64c13348c78dc595ad1f2d7842507e51f09412c49c6f8cbf21dfbfd9aa42a402",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/PROTOCOL.json": "04af6a0c26c10cc52dfe16eb8cf11005926d4781267f002e60ccd38620430beb",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/PREDICTIONS_FROZEN.json": "e5e163ad16c755752affd2610088c4ceb58bac70b7fecc913fa8847e7f5abe19",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/MANIFEST.json": "da38baa7cea77744d4c4d7e0e91ba48430a1c4c2f343719876bea21470314549",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/PANEL.jsonl": "23914c75665b2e3133d1782cac8a822aeaa8dc0660598857f14c35100401536e",
+    "/root/r3_own_pool/data/repeat_compatibility_400_rescore_v1/EXPECTED_UTILITY_LABELS.jsonl": "0f7efbcd91f70e549141cff135074d2e629ee531581681b3a4adac7b10ccf6c5",
+    "/root/r3_own_pool/router_v2/e7_stable_preference_probe/EMBEDDINGS_QWEN.npz": "9c13d415227be37036d4b31a44e149a9a33fb6e82dc8413120a17a43222e102e",
+    "/root/r3_own_pool/router_v2/e7_stable_preference_probe/ENCODER_PROVENANCE.json": "69d23522690392ee268aa521aa2d6769bb051f8eb65baf62f35f51f6895a9661",
+    "/root/r3_own_pool/router_v2/e7_stable_preference_probe/INPUTS.npz": "055eb17dd167062c048f197dd3f3176d413cf011606534f46c3334cc931a6fe1",
+    "/root/r3_own_pool/router_v2/e7_stable_preference_probe/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222"
+  }
+}

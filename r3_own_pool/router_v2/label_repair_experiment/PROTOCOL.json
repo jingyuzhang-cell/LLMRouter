@@ -1,0 +1,158 @@
+{
+  "experiment": "Label Repair Experiment: final controlled supervision-resolution gate",
+  "selection": {
+    "original_uncertain": 286,
+    "selected_queries": 103,
+    "quota_per_development_fold": 40,
+    "rule": "Descending sum of three marginal sign-preference expected information gains after10 beta-binomial future repeats; boundary proximity to0.9/0.1 then query_id tie-breaks.",
+    "eig": "Exact discrete expectation over11×11 future counts under Jeffreys Beta posterior, not router predictions. Sum of marginal pair EIG is a ranking heuristic, not joint information gain.",
+    "isolation": "Each fold ranks only its own uncertain development IDs. Collect union. A fold may use15-repeat training labels only for its own40 selected IDs, even if another fold repaired additional IDs in its development set."
+  },
+  "sampling": {
+    "old_repeats": 5,
+    "new_repeats": 10,
+    "total": 15,
+    "slots": [
+      "medium",
+      "large",
+      "coder",
+      "reasoning"
+    ],
+    "temperature": 0.7,
+    "top_p": 1.0,
+    "max_tokens": 2048,
+    "new_repeat_indices": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "model_configs": {
+      "medium": {
+        "served": "Qwen/Qwen2.5-7B-Instruct",
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+        "revision": "a09a35458c702b33eeacc393d103063234e8bc28"
+      },
+      "large": {
+        "served": "Qwen/Qwen2.5-14B-Instruct",
+        "model": "Qwen/Qwen2.5-14B-Instruct",
+        "path": "/root/autodl-tmp/models/Qwen2.5-14B-Instruct-GPTQ-Int8",
+        "revision": "local GPTQ Int8 checkpoint, hashes frozen"
+      },
+      "coder": {
+        "served": "Qwen/Qwen2.5-Coder-7B-Instruct",
+        "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+        "path": "/root/autodl-tmp/models/Qwen2.5-Coder-7B-Instruct",
+        "revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242"
+      },
+      "reasoning": {
+        "served": "deepseek-r1-distill-qwen-14b",
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+        "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "revision": "provider alias; exact backend weights not independently verifiable"
+      }
+    },
+    "local_workers": 4,
+    "api_workers": 4,
+    "maximum_transport_attempts_per_position": 2,
+    "nominal_generations": 4120,
+    "external_nominal_calls": 1030,
+    "external_maximum_attempts": 2060,
+    "failure_rule": "Record intent before every request; first successful delivered response retained. No correctness-based retries; at most2 transport attempts per position. Three consecutive failed positions stop a slot. Orphan/terminal positions never automatically restarted.",
+    "transport_failure": "Missing, not quality0. Delivered nonempty truncated/unparseable response is scored as delivered, with original corrected parser.",
+    "api_model_drift": "Alias only; record provider model/fingerprint and metadata. Additional repeats assume unchanged generation distribution; batch shift diagnostics reported, no iid proof."
+  },
+  "router": {
+    "methods": [
+      "QueryOnlyRidge",
+      "RepeatPairwiseMA"
+    ],
+    "representation": "frozen original-prompt GTE",
+    "ridge_alpha": 1.0,
+    "MA": "Unchanged E5/mainline RepeatPairwiseMA fit(), objective, learned embedding8,hidden64,optimizer,inner epoch rule",
+    "optimization_seeds": [
+      42,
+      43,
+      44
+    ],
+    "baseline": "Refit original5-label controls and freeze predictions before collection. Repaired condition changes only fold-eligible query label means5→15. Same seeds/splits/training algorithm.",
+    "primary_evaluation": "Selected union queries: only newly generated10-repeat mean on each original outer test fold. Compare frozen original-label vs repaired-label routers using exactly the same new outcomes.",
+    "secondary_evaluation": "All400 OOF queries using common15-repeat means on repaired union and5-repeat means elsewhere; both old/new evaluated identically. Existing5-only evaluation also shown.",
+    "no_loss_reweighting": true,
+    "no_new_embeddings": true
+  },
+  "audit": {
+    "prior": "Jeffreys Beta(k+.5,n-k+.5)",
+    "confidence": 0.9,
+    "margin": 0.1,
+    "hierarchy": "same E9 switch→stay→tie→uncertain; now n is5 or15, never hardcoded5",
+    "outputs": [
+      "uncertain→switch/stay/tie/uncertain",
+      "strict-margin switch count",
+      "per-fold effective switch positives",
+      "posterior entropy change",
+      "old5/new10 batch mean shifts"
+    ],
+    "caution": "Remaining uncertainty is not proof of near-tie; tie claim requires posterior band evidence. Fresh100 incomplete alternative panel and confidence oracle are not population or learnability proof."
+  },
+  "inference": {
+    "bootstrap_queries": 10000,
+    "seed": 20260914,
+    "unit": "query; MA scores averaged across3 fixed optimization seeds, not3 independent samples",
+    "primary_comparisons": [
+      "repaired MA−original MA",
+      "repaired Ridge−original Ridge"
+    ],
+    "success": "Positive paired mean improvement and pointwise CI95 lower>0; report97.5% intervals for two primary contrasts as sensitivity, no outcome-based changes.",
+    "limitations": [
+      "Same400 previously selected development queries, not new-query external confirmation. Primary target is the actively selected uncertain subset.",
+      "Same-query new labels excluded from its assigned outer training fold; baseline and repaired models share evaluation outcomes.",
+      "Positive intervention effect supports supervision resolution for this recipe, not unique causal attribution; unchanged near-ties, finite power and API time drift remain possible."
+    ]
+  },
+  "stop": "One bounded intervention only. No extra repeats beyond15, no newqueries/encoder/loss/router search, no GitHub push, no automatic subsequent experiment.",
+  "source_class_counts": {
+    "switch": 50,
+    "stay": 64,
+    "tie": 0,
+    "uncertain": 286
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.0",
+    "torch": "2.8.0+cu128"
+  },
+  "hashes": {
+    "/root/r3_own_pool/router_v2/label_repair_plan.py": "23c9bed65f672e761875afc667073f217535e11e2bfe47e4358c720a0feefbf2",
+    "/root/r3_own_pool/router_v2/collect_label_repair.py": "d07124ef79c7edc1f184d08896d1a5cc5521201736cb23ca6005a1d2f1d7e189",
+    "/root/r3_own_pool/router_v2/analyze_label_repair.py": "e3465cc3902b8b5270f1398eea8d2a27bffe0dd5a4ca28383466cea81af03ad9",
+    "/root/r3_own_pool/router_v2/train_repeat_pairwise_compatibility_115.py": "3cb525f8dad442b51295cc8be3a2cb6b83bebe796fddbe10f02bcd909590ba9c",
+    "/root/r3_own_pool/router_v2/run_repeat_stability.py": "7675810142f31197778350fb1525e8ffe6b72cf3a401e316ad8d9f14926776e7",
+    "/root/r3_own_pool/router_v2/rescore_glm_pilot.py": "d044b1e573d11c6e7cc9efbae0167829ba1a00886a9ba8adb007c914e211c080",
+    "/root/r3_own_pool/router_v2/score_available.py": "3a307a240aa36efbce47bdb212a3bdd630fd5c84c482d77c2d463c3dd165353b",
+    "/root/r3_own_pool/router_v2/run_e9_routing_label_audit.py": "ba36f12e62bef62a09e5bf23cd5177342d80bd9e838b13c267f4deaabd556df3",
+    "/root/r3_own_pool/router_v2/data.py": "d718a2b5b03a9fb1fec1077f03aefda82f09b319da7ceb5f5c1846cfd85134e4",
+    "/root/r3_own_pool/router_v2/e9_routing_label_audit/PROTOCOL.json": "c39a0fdd8236278ba910a286938d974ebcfc08c5c14b17655ef2b01dde798157",
+    "/root/r3_own_pool/router_v2/e9_routing_label_audit/PER_QUERY.jsonl": "7e710e74e01bd93a697a14a599193a455fc5cb35f0b00111ac8dbe20e63fa2f2",
+    "/root/r3_own_pool/router_v2/e9_routing_label_audit/RESULTS.json": "aec538c780bcbb4d1f0784efcb6cfded03cf2b55c48eee90c370dcd2d035fad9",
+    "/root/r3_own_pool/router_v2/e5_independent_query_learning_curve/INPUTS.npz": "589a73e16bf2c0214c9e211230c1d3cc0e95d382590107185476e66c34c0c0e0",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/PREDICTIONS.npz": "d5960317eba873cade341c6435d39f4c6a87790c59d7144f38276d7e0a0e1db8",
+    "/root/r3_own_pool/data/repeat_compatibility_400_rescore_v1/EXPECTED_UTILITY_LABELS.jsonl": "0f7efbcd91f70e549141cff135074d2e629ee531581681b3a4adac7b10ccf6c5",
+    "/root/r3_own_pool/data/cohort_full_v2/queries.jsonl": "d2508b429f36c76e0cf752fa7ff90db4d288e87f63a6e67c79488ddda2097af9",
+    "/root/r3_own_pool/data/cohort_full_v2/split.json": "94ad53494fec77a3003d1ed77fe04bbafac0d120290a99cbf4a0b81c049463c5",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/PANEL.jsonl": "41af0071d3f7c9495b810fc10fadacbeed3a8913559066e85e6f80ca0af1563e",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/SELECTION_SCORES.jsonl": "18af33d00c5c0f429501dceb10ec508075d9c4004092d5ea2f45c9b1db4ee2d9",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/FOLD_REPAIR_SELECTION.json": "daeeaad5334eb073a5ad25f61640caf8b4b32e64ae42bfc9bf0610246097e377",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/INPUTS.npz": "894a7efc2fdf481b56c354e2b42f16947eda235483b0821c67e1a1189583b984",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/LOCAL_MODEL_MANIFEST.json": "42e0429348d5fdebfc425affb51b359c4ca9e85d8b347f531cab583bdc27cc52"
+  }
+}

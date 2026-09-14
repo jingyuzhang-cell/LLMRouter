@@ -1,0 +1,2522 @@
+[
+  {
+    "task_id": "repair_new_000",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 630.1669902912622,
+            "L_seconds": 6.914375316502317,
+            "score": 0.6154731719611777
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 594.1145631067961,
+            "L_seconds": 7.063412229779891,
+            "score": 0.6514820650646929
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 593.4330097087379,
+            "L_seconds": 6.295045074001801,
+            "score": 0.6262317649212532
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_001",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 630.1669902912622,
+            "L_seconds": 6.914375316502317,
+            "score": 0.6154731719611777
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 594.1145631067961,
+            "L_seconds": 7.063412229779891,
+            "score": 0.6514820650646929
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 593.4330097087379,
+            "L_seconds": 6.295045074001801,
+            "score": 0.6262317649212532
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_002",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 630.1669902912622,
+            "L_seconds": 6.914375316502317,
+            "score": 0.6154731719611777
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 594.1145631067961,
+            "L_seconds": 7.063412229779891,
+            "score": 0.6514820650646929
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 593.4330097087379,
+            "L_seconds": 6.295045074001801,
+            "score": 0.6262317649212532
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_003",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_004",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_005",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_006",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_007",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_008",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_009",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_010",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_011",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_012",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 630.1669902912622,
+            "L_seconds": 6.914375316502317,
+            "score": 0.6154731719611777
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 594.1145631067961,
+            "L_seconds": 7.063412229779891,
+            "score": 0.6514820650646929
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 593.4330097087379,
+            "L_seconds": 6.295045074001801,
+            "score": 0.6262317649212532
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_013",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_014",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 630.1669902912622,
+            "L_seconds": 6.914375316502317,
+            "score": 0.6154731719611777
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 594.1145631067961,
+            "L_seconds": 7.063412229779891,
+            "score": 0.6514820650646929
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 593.4330097087379,
+            "L_seconds": 6.295045074001801,
+            "score": 0.6262317649212532
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_015",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 630.1669902912622,
+            "L_seconds": 6.914375316502317,
+            "score": 0.6154731719611777
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 594.1145631067961,
+            "L_seconds": 7.063412229779891,
+            "score": 0.6514820650646929
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 593.4330097087379,
+            "L_seconds": 6.295045074001801,
+            "score": 0.6262317649212532
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_016",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_017",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 629.1669902912622,
+            "L_seconds": 6.903403025945958,
+            "score": 0.6155780334139596
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 593.1145631067961,
+            "L_seconds": 7.051523256392597,
+            "score": 0.6515915099316293
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 592.4330097087379,
+            "L_seconds": 6.284437229525654,
+            "score": 0.626334804143634
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_018",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 630.1669902912622,
+            "L_seconds": 6.914375316502317,
+            "score": 0.6154731719611777
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 594.1145631067961,
+            "L_seconds": 7.063412229779891,
+            "score": 0.6514820650646929
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 593.4330097087379,
+            "L_seconds": 6.295045074001801,
+            "score": 0.6262317649212532
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  },
+  {
+    "task_id": "repair_new_019",
+    "nodes": [
+      {
+        "id": "demand",
+        "deps": [],
+        "instruction": "Sum each department demand, subtract stock, and add reserve. Return {\"units\": integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 491.16699029126215,
+            "L_seconds": 5.389226929168344,
+            "score": 0.6300489138978476
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 455.11456310679614,
+            "L_seconds": 5.410844928946167,
+            "score": 0.6666949015688615
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 454.43300970873787,
+            "L_seconds": 4.820554691817443,
+            "score": 0.6405542168321751
+          }
+        }
+      },
+      {
+        "id": "quotes",
+        "deps": [],
+        "instruction": "Normalize each supplier quote. effective_unit_cents = unit_cents - discount_cents. shipping_cents = freight_cents + handling_cents. Return {\"quotes\":[{\"vendor\":string,\"unit_cents\":integer,\"shipping_cents\":integer,\"capacity\":integer,\"days\":integer}]} for ALL suppliers. Preserve capacity and days.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 630.1669902912622,
+            "L_seconds": 6.914375316502317,
+            "score": 0.6154731719611777
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 594.1145631067961,
+            "L_seconds": 7.063412229779891,
+            "score": 0.6514820650646929
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 593.4330097087379,
+            "L_seconds": 6.295045074001801,
+            "score": 0.6262317649212532
+          }
+        }
+      },
+      {
+        "id": "feasibility",
+        "deps": [
+          "demand",
+          "quotes"
+        ],
+        "instruction": "Use predecessor units and quotes. total_cents = units * unit_cents + shipping_cents. A supplier is eligible iff capacity >= units AND days <= deadline_days AND total_cents <= budget_cents. Return {\"options\":[{\"vendor\":string,\"total_cents\":integer,\"eligible\":boolean}]} for ALL suppliers.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 717.1669902912622,
+            "L_seconds": 7.868964594905596,
+            "score": 0.6063502255691613
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 681.1145631067961,
+            "L_seconds": 8.09775291447438,
+            "score": 0.6419603616412204
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 680.4330097087379,
+            "L_seconds": 7.217927543426542,
+            "score": 0.6172673525741295
+          }
+        }
+      },
+      {
+        "id": "decision",
+        "deps": [
+          "feasibility"
+        ],
+        "instruction": "Select the eligible supplier with smallest total_cents, breaking ties alphabetically by vendor. If none is eligible, use vendor NONE and total_cents 0. Return {\"vendor\":string,\"total_cents\":integer}.",
+        "model": "large",
+        "predictions": {
+          "coder": {
+            "Q": 0.6815533980582524,
+            "C_tokens": 596.1669902912622,
+            "L_seconds": 6.541317437586094,
+            "score": 0.6190384613557588
+          },
+          "large": {
+            "Q": 0.7165048543689321,
+            "C_tokens": 560.1145631067961,
+            "L_seconds": 6.659187134611929,
+            "score": 0.6552031905405326
+          },
+          "medium": {
+            "Q": 0.6873786407766991,
+            "C_tokens": 559.4330097087379,
+            "L_seconds": 5.934378361812821,
+            "score": 0.629735098482198
+          }
+        }
+      }
+    ],
+    "layers": [
+      [
+        "demand",
+        "quotes"
+      ],
+      [
+        "feasibility"
+      ],
+      [
+        "decision"
+      ]
+    ]
+  }
+]

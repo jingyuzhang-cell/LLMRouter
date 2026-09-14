@@ -1,0 +1,61 @@
+{
+  "role": "exploratory ablation on an already-used, opportunity-enriched development panel",
+  "variants": [
+    "Original",
+    "Content",
+    "Stem",
+    "Options",
+    "SplitConcat"
+  ],
+  "alpha": 1.0,
+  "slots": [
+    "medium",
+    "large",
+    "coder",
+    "reasoning"
+  ],
+  "primary": "SplitConcat minus Original, query-fold-disjoint leave-one-repeat-out EQ",
+  "secondary": "Each variant minus development-selected BestSingle; five-repeat-mean OOF",
+  "encoder": "Same local GTE, fp16, batch1, normalized, no instruction prompt, no truncation",
+  "inputs": "Subject retained identically in all three new text views; no response or correct answer",
+  "concatenation": "concat(unit Stem, unit Options)/sqrt(2); unit norm, equal-weight sum of kernels",
+  "folds": "Exact original frozen development allowlists; no new label-driven splits",
+  "repeats": "Fit four repeats on development queries; evaluate fifth on disjoint queries; average 5 rotations",
+  "selection": "No tuning, best-variant selection, thresholds, or new confirmation-set evaluation",
+  "bootstrap": {
+    "seed": 20260914,
+    "resamples": 10000,
+    "unit": "prompt group",
+    "intervals": "95% paired; 98.75% Bonferroni intervals for four alternatives vs Original"
+  },
+  "permutation": {
+    "count": 39,
+    "seed": 20260914,
+    "target": "SplitConcat gain over BestSingle",
+    "procedure": "Jointly shuffle all model/repeat labels within subject in each development fold; test unchanged",
+    "role": "Diagnostic rank under restricted shuffles; not confirmatory p-value for adaptively selected panel"
+  },
+  "limits": [
+    "Existing selected panel is not representative or independent confirmation.",
+    "Intervals condition on fitted models; repeat positions may not be temporally exchangeable.",
+    "Concatenation also changes dimensionality/kernel; no architecture-only causal claim.",
+    "Repeated runs do not increase independent query count. No cost/latency utility claim."
+  ],
+  "hashes": {
+    "/root/r3_own_pool/router_v2/experiment_e4_representation.py": "7d105e1ed22faa63f0144b69d8d4fd68db8403555f1e09ded14266329b83189f",
+    "/root/r3_own_pool/router_v2/e4_representation_20260914/TEXTS.jsonl": "5c007edcdff5ab9ddc6ade15d7949a1e0f1cf799c89eee87bc03fa4613c76263",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/PANEL.jsonl": "23914c75665b2e3133d1782cac8a822aeaa8dc0660598857f14c35100401536e",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/MANIFEST.json": "da38baa7cea77744d4c4d7e0e91ba48430a1c4c2f343719876bea21470314549",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/FOLD_SELECTION.json": "08da6b67785a8552efc916a3b166fe32a72ea9c4e3c0f081ef6ce0c08668c5e7",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/PREDICTIONS.npz": "d5960317eba873cade341c6435d39f4c6a87790c59d7144f38276d7e0a0e1db8",
+    "/root/r3_own_pool/data/repeat_compatibility_400_rescore_v1/EXPECTED_UTILITY_LABELS.jsonl": "0f7efbcd91f70e549141cff135074d2e629ee531581681b3a4adac7b10ccf6c5",
+    "/root/r3_own_pool/data/embeddings_full_v2_recovery1/PLAN.json": "e59e53d4ad5c3a098a09335e88c4fcf4847f9330d6e31afa6d1eeb3b8ea8a370",
+    "/root/r3_own_pool/data/embeddings_full_v2_recovery1/PROVENANCE.json": "cdcdb5528d23631b4abc662a4f5d8ed246e0e2ac9e4cd54d443e81cab96be155",
+    "/root/r3_own_pool/data/embeddings_full_v2_recovery1/EMBEDDINGS.npz": "e9d0778efd9223edb708d80623350ed01e8474ae17721dcc82ae676b96cfe055",
+    "/root/r3_own_pool/router_v2/contamination_audit_20260910b/PROMPT_GROUPS.json": "89bbb75a1df5d7f83120cf2e4b153234530f1ef704e210a9047521ac6b134fdf",
+    "/root/r3_own_pool/router_v2/e3_repeat_generalization_20260914/PER_QUERY.npz": "9eb6130625844419e34993f3b3987a1dedd2417e64b72fefef4f5b528e77e980",
+    "/root/r3_own_pool/router_v2/diagnose_rank_signal.py": "09e1f6d75a7966b21baa66909ecf749fd77da111004aa61be9b0d63b05cb0998",
+    "/root/r3_own_pool/router_v2/data.py": "d718a2b5b03a9fb1fec1077f03aefda82f09b319da7ceb5f5c1846cfd85134e4"
+  }
+}

@@ -123,3 +123,9 @@ B/C检查既有checkpoint训练及折外ΔQ拟合；C训练R²0.743、折外−0
 
 ## 路由可行性诊断完成
 现四模型分任务折外Oracle−DatasetBest：代码2.5pp、数学0、知识10pp（4/40）。知识独有赢家6/40、归一化严格赢家熵0.959，代码严格赢家全部R1；总体低gap掩盖知识子集空间。下一优先级知识/MMLU-Pro，更大样本验证后再决定MA，不整体更换benchmark。详见router_v2/pool_routability_diagnosis/REPORT.md。
+
+## 2026-09-14：E3 与 E4 离线诊断完成
+
+E3 在400题冻结分折上做跨重复监督学习曲线：四重复Ridge质量73.20%，相对固定模型+0.80pp，95%区间[-0.20,1.90]。同题重复辅助选择仅属诊断，旧E2的41%不能解释为已识别的生成噪声比例。见 router_v2/e3_repeat_generalization_20260914/REPORT.md。
+
+E4 固定 GTE/Ridge，对原始提示、去模板内容、题干、选项、题干/选项拼接做消融。预定主比较SplitConcat−Original为+0.25pp，95%区间[-0.90,1.40]，未证明表示拆分带来可靠改善。1200个本地表示完成，无截断；4项测试及独立指标复算通过，无新增API调用。见 router_v2/e4_representation_20260914/REPORT.md 和 NEXT_STEP.md。下一建议是开发折内训练题目数量学习曲线，尚未执行；不扩大MA或宣布新方法已确认。

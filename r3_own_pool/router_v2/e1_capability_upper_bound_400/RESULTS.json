@@ -1,0 +1,161 @@
+{
+ "question": "Does true-subject capability lookup beat QueryOnly/BestSingle on frozen utility-400 folds?",
+ "folds_source": "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local",
+ "n": 400,
+ "slots": [
+  "medium",
+  "large",
+  "coder",
+  "reasoning"
+ ],
+ "oracle_eq": 0.81,
+ "bestsingle_eq": 0.724,
+ "prior_strength": 3,
+ "verdict": {
+  "beats_queryonly_point": false,
+  "beats_queryonly_ci": false,
+  "beats_bestsingle_point": false
+ },
+ "methods": {
+  "BestSingle": {
+   "expected_quality": 0.724,
+   "gap_recovery_pct": 0.0,
+   "regret_pp": 8.6,
+   "per_fold_eq": [
+    0.7379,
+    0.7398,
+    0.6948
+   ],
+   "selection": {
+    "medium": 0,
+    "large": 0,
+    "coder": 0,
+    "reasoning": 400
+   }
+  },
+  "QueryOnlyRidge": {
+   "expected_quality": 0.735,
+   "gap_recovery_pct": 12.79,
+   "regret_pp": 7.5,
+   "per_fold_eq": [
+    0.747,
+    0.7489,
+    0.7096
+   ],
+   "selection": {
+    "medium": 1,
+    "large": 53,
+    "coder": 0,
+    "reasoning": 346
+   }
+  },
+  "CapabilityLookupPure": {
+   "expected_quality": 0.708,
+   "gap_recovery_pct": -18.6,
+   "regret_pp": 10.2,
+   "per_fold_eq": [
+    0.697,
+    0.7188,
+    0.7081
+   ],
+   "selection": {
+    "medium": 0,
+    "large": 105,
+    "coder": 0,
+    "reasoning": 295
+   },
+   "vs_queryonly": {
+    "mean_diff_pp": -2.7,
+    "switched_n": 84,
+    "rescued": 12,
+    "harmed": 33,
+    "switch_ci95_pp": [
+     -4.55,
+     -1.0
+    ],
+    "pooled_diff_ci95_pp": [
+     -4.45,
+     -1.05
+    ]
+   }
+  },
+  "CapabilityLookupShrunk": {
+   "expected_quality": 0.717,
+   "gap_recovery_pct": -8.14,
+   "regret_pp": 9.3,
+   "per_fold_eq": [
+    0.7273,
+    0.7368,
+    0.6874
+   ],
+   "selection": {
+    "medium": 0,
+    "large": 54,
+    "coder": 0,
+    "reasoning": 346
+   },
+   "vs_queryonly": {
+    "mean_diff_pp": -1.8,
+    "switched_n": 60,
+    "rescued": 8,
+    "harmed": 21,
+    "switch_ci95_pp": [
+     -3.2,
+     -0.5
+    ],
+    "pooled_diff_ci95_pp": [
+     -3.2,
+     -0.5
+    ]
+   }
+  },
+  "PairwiseRidge": {
+   "expected_quality": 0.735,
+   "gap_recovery_pct": 12.79,
+   "regret_pp": 7.5,
+   "per_fold_eq": [
+    0.747,
+    0.7489,
+    0.7096
+   ],
+   "selection": {
+    "medium": 1,
+    "large": 53,
+    "coder": 0,
+    "reasoning": 346
+   }
+  },
+  "TwoStageResidualGate": {
+   "expected_quality": 0.719,
+   "gap_recovery_pct": -5.81,
+   "regret_pp": 9.1,
+   "per_fold_eq": [
+    0.7379,
+    0.7398,
+    0.68
+   ],
+   "selection": {
+    "medium": 0,
+    "large": 56,
+    "coder": 0,
+    "reasoning": 344
+   }
+  },
+  "RepeatPairwiseMA_3seed": {
+   "expected_quality": 0.7235,
+   "gap_recovery_pct": -0.58,
+   "regret_pp": 8.65,
+   "per_fold_eq": [
+    0.7394,
+    0.7398,
+    0.6919
+   ],
+   "selection": {
+    "medium": 1,
+    "large": 24,
+    "coder": 0,
+    "reasoning": 375
+   }
+  }
+ }
+}

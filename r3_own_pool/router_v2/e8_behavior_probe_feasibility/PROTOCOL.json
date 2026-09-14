@@ -1,0 +1,179 @@
+{
+  "experiment": "E8 Behavior-Probe Feasibility",
+  "arms": [
+    "A_query",
+    "B_medium_probe",
+    "C_large_probe",
+    "D_joint_probe"
+  ],
+  "question": "Does observing a cheap model actually run on the query (probe behavior) beat query-only routing?",
+  "alignment": "Repeat identity = file-order position in raw jsonl, the same axis as labels values; verified by exact reproduction of the E6 repeat matrix",
+  "rotations": {
+    "pairs": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        4,
+        3
+      ]
+    ],
+    "rule": "probe repeat p, evaluation repeat r, p!=r; remaining 3 repeats define the target",
+    "statistics": "Bootstrap unit is the query; rotations are averaged within query before any inference"
+  },
+  "target": "mean over the 3 target repeats of V(q,m)-V(q,R1), m in {medium,large,coder}; Ridge alpha=1 per delta head, R1 score fixed 0, first-max tie order medium<large<coder<reasoning",
+  "probe_features": {
+    "source": "raw repeat row of the probe model at repeat p only; never r, never target repeats, no ground truth",
+    "per_probe": "parse flags(2) + option one-hot A-J(10) + log answer chars + log tokens_output + log latency_ms + log tokens_per_second + finish=stop + status=ok (18 dims)",
+    "joint": "agreement one-hot(agree/disagree/either-unparsed) + |log-token gap| (4 dims)",
+    "arms": {
+      "A_query": "GTE query embedding only",
+      "B_medium_probe": "query + medium@p",
+      "C_large_probe": "query + large@p",
+      "D_joint_probe": "query + medium@p + large@p + joint"
+    }
+  },
+  "evaluation": "V(q, choice(q,p), r) averaged over the 20 rotations within each query; A_anchor = frozen E6 QueryOnly choices evaluated on identical rotations (rotation-mean equals its 73.50% mean5 EQ by construction)",
+  "cost_report": "median tokens_output and latency per slot from the raw runs (probe cost is paid on every query; routed model cost reported per selection)",
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20260914,
+    "unit": "400 unique queries",
+    "bonferroni": "98.33% intervals for B/C/D vs A reported as context"
+  },
+  "success": "EQ>73.50% (anchor) AND paired query bootstrap CI95 lower>0 vs in-protocol A; switch precision/recall and helped/harmed are diagnostics",
+  "inference_limits": [
+    "Historical latency/tokens are infra-specific proxies for probe cost, not re-measured.",
+    "Probe repeats were generated at temperature 0.7 like all repeats; a deployed probe sees one fresh draw.",
+    "Bootstrap conditions on fitted models; no full retraining uncertainty.",
+    "AUC-style classification metrics are not success criteria."
+  ],
+  "constraints": [
+    "Zero new generation",
+    "No ground truth in any probe feature",
+    "No threshold/hyperparameter search",
+    "No partial-CoT or complex probes in this version",
+    "No additional queries",
+    "No outer-test selection"
+  ],
+  "packages": {
+    "numpy": "2.3.2",
+    "scikit-learn": "1.9.0"
+  },
+  "slot_cost": {
+    "medium": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "tokens_output_p50": 396.5,
+      "latency_ms_p50": 6855.05,
+      "answer_chars_p50": 1588.0
+    },
+    "large": {
+      "model": "Qwen/Qwen2.5-14B-Instruct",
+      "tokens_output_p50": 405.5,
+      "latency_ms_p50": 8059.6,
+      "answer_chars_p50": 1691.5
+    },
+    "coder": {
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "tokens_output_p50": 441.0,
+      "latency_ms_p50": 7603.05,
+      "answer_chars_p50": 1744.0
+    },
+    "reasoning": {
+      "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+      "tokens_output_p50": 2071.0,
+      "latency_ms_p50": 65329.15,
+      "answer_chars_p50": 2006.0
+    }
+  },
+  "hashes": {
+    "/root/r3_own_pool/router_v2/run_e8_behavior_probe_feasibility.py": "81984a5c8a5792d3858deebb6c372c9731dc6c6f3b655d73fc08b97a4fae0e84",
+    "/root/r3_own_pool/router_v2/summarize_e8_behavior_probe_feasibility.py": "94183124a084718f44beaa63a4ae40d5a5813bf5c2dc88d41c0280d9e5cda0a1",
+    "/root/r3_own_pool/router_v2/test_e8_behavior_probe_feasibility.py": "44c3acc76a839e947ffcb97dc3940832f1e3bb575f45c7a7a63ea2956de2d5b2",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/INPUTS.npz": "64c13348c78dc595ad1f2d7842507e51f09412c49c6f8cbf21dfbfd9aa42a402",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/PROTOCOL.json": "04af6a0c26c10cc52dfe16eb8cf11005926d4781267f002e60ccd38620430beb",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/PREDICTIONS_FROZEN.json": "e5e163ad16c755752affd2610088c4ceb58bac70b7fecc913fa8847e7f5abe19",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/PREDICTIONS.npz": "67c35c6681c9aa8261e82ca5f080163142a2af8131ad90987a330a8541ff5bf0",
+    "/root/r3_own_pool/data/repeat_compatibility_400_rescore_v1/EXPECTED_UTILITY_LABELS.jsonl": "0f7efbcd91f70e549141cff135074d2e629ee531581681b3a4adac7b10ccf6c5",
+    "/root/r3_own_pool/data/repeat_compatibility_400/medium.jsonl": "f80e57e94035b17c31709740c7bc34a403a0f4c6f3fc588e0955ca27e65a25d7",
+    "/root/r3_own_pool/data/repeat_compatibility_400/large.jsonl": "3ffee2048e2ed04cab4a1822eaeb743d67cd49e2a46c33ea9a3575e179978acb",
+    "/root/r3_own_pool/data/repeat_compatibility_400/coder.jsonl": "8a300c0af47d99de1a610dbf42a5117aa96d99ac2228e29b685658a48e8ba5ca",
+    "/root/r3_own_pool/data/repeat_compatibility_400/reasoning.jsonl": "0eca4f279f52068912c45df62319d53e0d8b32172f77f59354f62de2284a850f",
+    "/root/r3_own_pool/router_v2/e8_behavior_probe_feasibility/INPUTS.npz": "64c13348c78dc595ad1f2d7842507e51f09412c49c6f8cbf21dfbfd9aa42a402",
+    "/root/r3_own_pool/router_v2/e8_behavior_probe_feasibility/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222"
+  }
+}

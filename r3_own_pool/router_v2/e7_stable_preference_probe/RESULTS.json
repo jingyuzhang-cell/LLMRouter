@@ -1,0 +1,214 @@
+{
+  "experiment": "E7 Stable Preference Representation Probe",
+  "n": 400,
+  "reference": {
+    "bestsingle_eq": 0.7240000000000001,
+    "queryonly_eq": 0.735,
+    "decomposed_oracle_eq": 0.81
+  },
+  "methods": {
+    "R0_gte": {
+      "stage1": {
+        "roc_auc": 0.6018656266334286,
+        "pr_auc": 0.2733535684602614,
+        "recall_at_05": 0.11688311688311688,
+        "precision_at_05": 0.32142857142857145,
+        "predicted_switch": 28,
+        "true_switch": 77
+      },
+      "stage2_on_true_switch": {
+        "n": 77,
+        "accuracy": 0.06493506493506493,
+        "macro_f1": 0.08003048780487805
+      },
+      "stage2_unconditional_on_true_switch": {
+        "n": 77,
+        "accuracy": 0.33766233766233766,
+        "macro_f1": 0.25925925925925924,
+        "note": "stage-2 classifier on all true switch queries, ungated by the stage-1 threshold"
+      },
+      "expected_quality": 0.7225,
+      "sensitivity_expected_quality": 0.7175,
+      "vs_queryonly": {
+        "mean": -0.0125,
+        "ci95": [
+          -0.0235,
+          -0.0019999999999999996
+        ],
+        "ci9875_bonferroni": [
+          -0.027000000000000003,
+          0.0005000000000000003
+        ]
+      },
+      "vs_bestsingle": -0.0015000000000000002,
+      "gap_recovery": -0.01744186046511695,
+      "success_vs_queryonly": false,
+      "selection_counts": {
+        "medium": 9,
+        "large": 17,
+        "coder": 2,
+        "reasoning": 372
+      },
+      "switch_decisions": {
+        "route_away_from_r1": 28,
+        "helped": 7,
+        "harmed": 17
+      }
+    },
+    "R1_gte_struct": {
+      "stage1": {
+        "roc_auc": 0.6020666639861686,
+        "pr_auc": 0.27368541643043154,
+        "recall_at_05": 0.12987012987012986,
+        "precision_at_05": 0.3448275862068966,
+        "predicted_switch": 29,
+        "true_switch": 77
+      },
+      "stage2_on_true_switch": {
+        "n": 77,
+        "accuracy": 0.06493506493506493,
+        "macro_f1": 0.07886904761904762
+      },
+      "stage2_unconditional_on_true_switch": {
+        "n": 77,
+        "accuracy": 0.3246753246753247,
+        "macro_f1": 0.25193325193325194,
+        "note": "stage-2 classifier on all true switch queries, ungated by the stage-1 threshold"
+      },
+      "expected_quality": 0.7204999999999999,
+      "sensitivity_expected_quality": 0.7155,
+      "vs_queryonly": {
+        "mean": -0.014499999999999999,
+        "ci95": [
+          -0.0265,
+          -0.003499999999999999
+        ],
+        "ci9875_bonferroni": [
+          -0.03,
+          -0.0005000000000000002
+        ]
+      },
+      "vs_bestsingle": -0.0035000000000000005,
+      "gap_recovery": -0.04069767441860664,
+      "success_vs_queryonly": false,
+      "selection_counts": {
+        "medium": 9,
+        "large": 17,
+        "coder": 3,
+        "reasoning": 371
+      },
+      "switch_decisions": {
+        "route_away_from_r1": 29,
+        "helped": 7,
+        "harmed": 18
+      }
+    },
+    "R2_qwen": {
+      "stage1": {
+        "roc_auc": 0.49993968879417794,
+        "pr_auc": 0.22516429403364965,
+        "recall_at_05": 0.11688311688311688,
+        "precision_at_05": 0.2727272727272727,
+        "predicted_switch": 33,
+        "true_switch": 77
+      },
+      "stage2_on_true_switch": {
+        "n": 77,
+        "accuracy": 0.03896103896103896,
+        "macro_f1": 0.036585365853658534
+      },
+      "stage2_unconditional_on_true_switch": {
+        "n": 77,
+        "accuracy": 0.4025974025974026,
+        "macro_f1": 0.3633023735810113,
+        "note": "stage-2 classifier on all true switch queries, ungated by the stage-1 threshold"
+      },
+      "expected_quality": 0.715,
+      "sensitivity_expected_quality": 0.7119999999999999,
+      "vs_queryonly": {
+        "mean": -0.02,
+        "ci95": [
+          -0.0345,
+          -0.006999999999999999
+        ],
+        "ci9875_bonferroni": [
+          -0.039,
+          -0.003999999999999998
+        ]
+      },
+      "vs_bestsingle": -0.009,
+      "gap_recovery": -0.1046511627906991,
+      "success_vs_queryonly": false,
+      "selection_counts": {
+        "medium": 8,
+        "large": 21,
+        "coder": 4,
+        "reasoning": 367
+      },
+      "switch_decisions": {
+        "route_away_from_r1": 33,
+        "helped": 5,
+        "harmed": 17
+      }
+    },
+    "R3_all": {
+      "stage1": {
+        "roc_auc": 0.5805154597724257,
+        "pr_auc": 0.263159552143071,
+        "recall_at_05": 0.09090909090909091,
+        "precision_at_05": 0.25925925925925924,
+        "predicted_switch": 27,
+        "true_switch": 77
+      },
+      "stage2_on_true_switch": {
+        "n": 77,
+        "accuracy": 0.06493506493506493,
+        "macro_f1": 0.06097560975609756
+      },
+      "stage2_unconditional_on_true_switch": {
+        "n": 77,
+        "accuracy": 0.36363636363636365,
+        "macro_f1": 0.2858220211161388,
+        "note": "stage-2 classifier on all true switch queries, ungated by the stage-1 threshold"
+      },
+      "expected_quality": 0.7204999999999998,
+      "sensitivity_expected_quality": 0.7145,
+      "vs_queryonly": {
+        "mean": -0.014499999999999999,
+        "ci95": [
+          -0.026500000000000003,
+          -0.0030000000000000005
+        ],
+        "ci9875_bonferroni": [
+          -0.030000000000000002,
+          -0.0004999999999999999
+        ]
+      },
+      "vs_bestsingle": -0.0034999999999999996,
+      "gap_recovery": -0.04069767441860793,
+      "success_vs_queryonly": false,
+      "selection_counts": {
+        "medium": 8,
+        "large": 17,
+        "coder": 2,
+        "reasoning": 373
+      },
+      "switch_decisions": {
+        "route_away_from_r1": 27,
+        "helped": 5,
+        "harmed": 14
+      }
+    }
+  },
+  "passed": [],
+  "verdict": "no_representation_recovers_switch_signal_move_to_model_probe_routing",
+  "best_stage1_auc": "R1_gte_struct",
+  "decision": {
+    "criterion": "EQ>73.50% AND paired CI95 lower>0 vs E6 A_QueryOnly; AUC/F1 are diagnostics only",
+    "auc_not_eq_warning": "A higher switch AUC without EQ>QueryOnly is NOT router improvement",
+    "expansion_executed": false,
+    "next_experiment_started": false
+  },
+  "protocol_sha256": "2baeae4c7aa9bf2e0d6cf9e68cb02a37cb0c649612d4c2005733840bcf6abdae",
+  "predictions_sha256": "cfb5c07d47e6c2309250191446c496fa3f42c8d48c45066a9a0fd29a0e7f2e99"
+}

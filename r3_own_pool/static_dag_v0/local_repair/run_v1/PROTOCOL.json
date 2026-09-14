@@ -1,0 +1,40 @@
+{
+  "role": "fresh_within_template_local_repair_pilot",
+  "seed": 20260916,
+  "tasks": 20,
+  "arms": [
+    "static",
+    "local_repair",
+    "tool_only"
+  ],
+  "initial_model": "large",
+  "max_physical_requests": 240,
+  "max_logical_static_requests": 80,
+  "max_logical_repair_requests": 160,
+  "repair_limit_per_node": 1,
+  "temperature": 0,
+  "max_tokens": 512,
+  "concurrency": 4,
+  "transport_retries": 0,
+  "repair_trigger": "Invalid schema or node-local arithmetic/constraint violation; infrastructure failure aborts experiment.",
+  "acceptance": "Use repair if its contract passes; otherwise retain schema-valid original, or schema-valid repair if original unparseable; otherwise block descendants.",
+  "graph": "Unchanged demand/quotes -> feasibility -> decision. No ancestor retries, model switching or replanning.",
+  "sharing": "Exact identical initial requests shared across arms. Counterfactual logical token/service costs include shared work in each arm. Not independent repeated end-to-end runs.",
+  "feedback": "Only error field names from executable public local contracts; no hidden answer, correct value or final task label sent.",
+  "tool_baseline": "Execute same public contracts directly; demonstrates that this task family is deterministically solvable. Not a router method.",
+  "success": "Final vendor and exact integer total both correct; quality 0.5 per field.",
+  "statistics": "Paired task bootstrap 10000 resamples, seed20260916. Primary difference repair-static success rate; quality secondary. Conditional on this one new template sample and one response per unique prompt; no independent method-level runs.",
+  "cost": "Actual usage tokens. Full logical costs charged per arm, including failed repairs; physical unique tokens separately. No dollar billing.",
+  "latency": "Logical sum of request service times plus validator overhead per task; not measured isolated arm end-to-end latency. Shared batched experiment wall time separately.",
+  "stop": "No new router, prompt search, model selection, new task families, Dynamic DAG or GitHub push after this run.",
+  "bindings": {
+    "/root/r3_own_pool/static_dag_v0/repair.py": "4da6b2fde70686ac2fc69b277753f7aad4e7d95d4439f5239e886cc6f2697f4e",
+    "/root/r3_own_pool/static_dag_v0/core.py": "46fdd6eccf62d195b3cc34a04db720ebd9cef4473a1db099cabee5c7724bf872",
+    "/root/r3_own_pool/static_dag_v0/run.py": "770e3aabfabda2cc1faf476277448050c5e6bc747b848c6861eb227204c96f5b",
+    "/root/r3_own_pool/static_dag_v0/local_repair/run_v1/TASKS.json": "dde65c901e8e462ad136982cec57baa0b527e5bf6d191edfc42d5f13087275f1",
+    "/root/r3_own_pool/static_dag_v0/local_repair/run_v1/PLANS.json": "dc0fc9706847b09ef6ca4f8c0fedc18088bce04c1d29e376dca515a77720a8f1",
+    "/root/r3_own_pool/static_dag_v0/run_v0/PROFILES.json": "4fcfe80e100c66a32020f10179df67d1b5f7c4c2d1d11152159a42d8ce750246",
+    "/root/r3_own_pool/static_dag_v0/run_v0/TASKS.json": "8b14d46a4c35cacc6d01dc2fe6d05a45823d984b7467b492f1a8e4e969ad91e5"
+  },
+  "created_unix": 1789401098.0418904
+}

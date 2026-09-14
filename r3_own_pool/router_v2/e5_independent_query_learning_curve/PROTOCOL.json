@@ -1,0 +1,122 @@
+{
+  "experiment": "E5 Independent-Query Learning Curve",
+  "role": "existing opportunity-enriched development panel; not independent confirmation",
+  "methods": [
+    "BestSingle",
+    "QueryOnlyRidge",
+    "RepeatPairwiseMA"
+  ],
+  "representations": {
+    "primary": "Original frozen original-prompt GTE",
+    "secondary": "Content_secondary E4 template-removed GTE; never used for primary verdict"
+  },
+  "slots": [
+    "medium",
+    "large",
+    "coder",
+    "reasoning"
+  ],
+  "labels": "All five corrected repeat means retained for every selected query and model; no repeat splitting/filtering",
+  "N": [
+    "40",
+    "80",
+    "120",
+    "Full"
+  ],
+  "actual_full_n_by_fold": {
+    "0": 168,
+    "1": 168,
+    "2": 167
+  },
+  "subsampling_seeds": [
+    2026091400,
+    2026091401,
+    2026091402,
+    2026091403,
+    2026091404,
+    2026091405,
+    2026091406,
+    2026091407,
+    2026091408,
+    2026091409
+  ],
+  "optimization_seeds": [
+    42,
+    43,
+    44
+  ],
+  "sampling": "Nested within-subject permutations, largest proportional deficit allocation, fold-specific RNG; selected global indices sorted before fitting; no labels consulted",
+  "MA": "Import frozen fit() unchanged: model embedding8, shared64-ReLU-1; soft pairwise BCE; AdamW lr.001 weight_decay.01; batch64; inner validation epoch1..100 then refit on all sampled N",
+  "inner_validation": "Unmodified subject-stratified inner_split; minimum1 validation per represented subject, so validation fraction can exceed20% at small N",
+  "ridge_alpha": 1.0,
+  "bestsingle": "argmax of sampled development five-repeat mean; no test labels",
+  "ma_aggregation": "Mean realized utility over frozen optimization seeds42,43,44, not majority vote or averaged-logit deployment; all per-optimizer metrics retained",
+  "full_reuse": "Identical Full development/inner splits and optimizer seeds across subsampling seeds; compute once per fold/representation and reference it ten times. Full subsampling std is zero, not ten independent fits.",
+  "metrics": {
+    "train": "Resubstitution EQ on all sampled queries after final refit; pooled across fold training occurrences",
+    "test": "Query-weighted OOF EQ on the same400 queries for each subsampling seed",
+    "std": "Sample standard deviation (ddof=1) over10 subsampling-seed outcomes after averaging3 MA optimization seeds",
+    "gap_recovery": "(method EQ - matched-N BestSingle EQ)/(empirical five-repeat-max Oracle EQ - matched-N BestSingle EQ); paired numerator/denominator resampled",
+    "bootstrap": "10000 paired query-level resamples, seed20260914; average subsampling/optimization seeds within query before inference; no4000/12000 fictitious independent queries",
+    "train_gap": "Train EQ minus outer-test EQ; train query occurrence weights retained; descriptive conditional resampling, not independent holdout uncertainty"
+  },
+  "trend": "Adjacent-N marginal EQ and MA-Ridge changes, plus40-to-Full; no extrapolation or outer-test parameter choice",
+  "classification": {
+    "data_limited": "MA-Ridge40-to-Full CI lower>0 AND MA120-to-Full CI lower>0",
+    "representation_limited": "Ridge40-to-Full CI lower>0 AND MA-Ridge40-to-Full CI upper<0 AND MA40-to-Full CI includes0 or is negative; shorthand for frozen MA representation/objective recipe, not causal attribution to shared GTE",
+    "overfitting": "MA train40-to-Full CI lower>0 AND MA outer40-to-Full CI upper<=0; train-test gaps reported as additional overfitting diagnostics",
+    "inconclusive": "If the above sufficient patterns are absent or conflict; absence of significance is not proof of flatness/saturation"
+  },
+  "constraints": [
+    "No new model answers",
+    "No architecture/loss/hidden-size/rank/threshold changes",
+    "No outer-test tuning",
+    "No GitHub push",
+    "Stop after E5; no automatic next experiment"
+  ],
+  "limits": [
+    "Only approximately167-168 independent development queries per fold at Full, not400.",
+    "Already-used enriched panel; no representative benchmark or new-query confirmation claim.",
+    "Pointwise95% intervals, no multiplicity correction; conditional on fitted models, not a full retraining population interval.",
+    "Three-fold train sets overlap; training EQ is resubstitution and not a separate test sample.",
+    "No exact equivalence/plateau claim from a CI containing0."
+  ],
+  "packages": {
+    "numpy": "2.2.6",
+    "torch": "2.8.0+cu128",
+    "scikit-learn": "1.9.0"
+  },
+  "hashes": {
+    "/root/r3_own_pool/router_v2/run_e5_independent_query_learning_curve.py": "a9eac48a390eaebf460cfd53aa30221577aae273adc529677117b57c44bbaa4c",
+    "/root/r3_own_pool/router_v2/train_repeat_pairwise_compatibility_115.py": "3cb525f8dad442b51295cc8be3a2cb6b83bebe796fddbe10f02bcd909590ba9c",
+    "/root/r3_own_pool/router_v2/summarize_e5_independent_query_learning_curve.py": "cd304e4e3cc7223289be57a121e401ca9df08099e98c458237ab7423e008e8bf",
+    "/root/r3_own_pool/router_v2/diagnose_rank_signal.py": "09e1f6d75a7966b21baa66909ecf749fd77da111004aa61be9b0d63b05cb0998",
+    "/root/r3_own_pool/router_v2/data.py": "d718a2b5b03a9fb1fec1077f03aefda82f09b319da7ceb5f5c1846cfd85134e4",
+    "/root/r3_own_pool/router_v2/train_repeat_compatibility_400_fold_local.py": "d0dcadd84a166ef739e3bdff5ca2c960ece2dcea3b1101bdf4c4361a200c8d2b",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/PROTOCOL.json": "5dbfba499e420aea7bd1e0edcf7dddcc535cc4c2f2c41ebdf7db292fb61974bc",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/PREDICTIONS.npz": "d5960317eba873cade341c6435d39f4c6a87790c59d7144f38276d7e0a0e1db8",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/PANEL.jsonl": "23914c75665b2e3133d1782cac8a822aeaa8dc0660598857f14c35100401536e",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/MANIFEST.json": "da38baa7cea77744d4c4d7e0e91ba48430a1c4c2f343719876bea21470314549",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/FOLD_SELECTION.json": "08da6b67785a8552efc916a3b166fe32a72ea9c4e3c0f081ef6ce0c08668c5e7",
+    "/root/r3_own_pool/data/repeat_compatibility_400_rescore_v1/EXPECTED_UTILITY_LABELS.jsonl": "0f7efbcd91f70e549141cff135074d2e629ee531581681b3a4adac7b10ccf6c5",
+    "/root/r3_own_pool/router_v2/e4_representation_20260914/EMBEDDINGS.npz": "7bedf30576f3ab1d3de87d61789a196babd03e4466ea8944a947618d77a0c8fb",
+    "/root/r3_own_pool/router_v2/e4_representation_20260914/EMBEDDING_MANIFEST.json": "f33fa7759eda62b1479751ed72c61f058bcf10adb33f8064be7fcc97d83962de",
+    "/root/r3_own_pool/router_v2/e5_independent_query_learning_curve/SAMPLES.jsonl": "9c6e35ebcf16969063641a5ab56499461eef80d4728f76b440b03bf7ad8230b8",
+    "/root/r3_own_pool/router_v2/contamination_audit_20260910b/PROMPT_GROUPS.json": "89bbb75a1df5d7f83120cf2e4b153234530f1ef704e210a9047521ac6b134fdf",
+    "/root/r3_own_pool/data/clean_splits_verified_20260910b/TRAIN_MATRIX.jsonl": "0187446730895dec2ee943d861cc60c97f18f97badb17d61e5370a5305c7a0ec",
+    "/root/r3_own_pool/data/embeddings_full_v2_recovery1/EMBEDDINGS.npz": "e9d0778efd9223edb708d80623350ed01e8474ae17721dcc82ae676b96cfe055",
+    "/root/r3_own_pool/data/cohort_full_v2/queries.jsonl": "d2508b429f36c76e0cf752fa7ff90db4d288e87f63a6e67c79488ddda2097af9",
+    "/root/r3_own_pool/data/cohort_full_v2/split.json": "94ad53494fec77a3003d1ed77fe04bbafac0d120290a99cbf4a0b81c049463c5",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold0_seed42.pt": "4db518d29d3a13597b841918cd6c4dafddc623b51de7f9e7056c9a6967f1c3b0",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold0_seed43.pt": "d070113d55fc456953d2ad492aeeb0d550fae2117eee51b262b7ff1b6ea3f089",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold0_seed44.pt": "2a7dc4f1daccae54ba97b3a2609bf57b8b5ca56460f3f1101b6ca67eb3826814",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold1_seed42.pt": "0270fa8afe22bb98a64cdbb26ee5ed91bc7d3fe9b390a00bda239e77be3bde0b",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold1_seed43.pt": "c1a2c8c3006aeae0f1f7d336509925ad75ac094be77b0d8ebbae2a058f12ca42",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold1_seed44.pt": "1a7b1bbecac37a63d8affccd738308193bd1bfb214c502d8919358e3dd054146",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold2_seed42.pt": "bb94e1a596df5eafd481c3edfcd29f618d51c41a42360040688e07bd9fbe745c",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold2_seed43.pt": "0943228dab397bb34fbbf34636295a94424fe4e83a774e93cf2139387de472c0",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/model_fold2_seed44.pt": "d726576cd7a425cfd980370954f040f9adebe611d8f77af17f6adb7a9fea63f4",
+    "/root/r3_own_pool/router_v2/e5_independent_query_learning_curve/INPUTS.npz": "589a73e16bf2c0214c9e211230c1d3cc0e95d382590107185476e66c34c0c0e0"
+  }
+}

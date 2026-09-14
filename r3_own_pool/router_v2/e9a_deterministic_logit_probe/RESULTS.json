@@ -1,0 +1,115 @@
+{
+  "experiment": "E9a Deterministic Logit Probe",
+  "n": 400,
+  "reference": {
+    "anchor_queryonly_eq": 0.735,
+    "bestsingle_eq": 0.7240000000000001,
+    "hindsight_oracle_eq": 0.81,
+    "oracle_gap": 0.08600000000000002
+  },
+  "probe_diagnostics": {
+    "top1_equals_sampled_majority_rate": 0.22888283378746593,
+    "majority_exists": 0.9175
+  },
+  "methods": {
+    "A_query": {
+      "expected_quality": 0.735,
+      "gap_recovery": 0.12790697674418602,
+      "away": {
+        "rate": 0.135,
+        "count": 54,
+        "stable_switch_precision": 0.25925925925925924,
+        "stable_switch_recall": 0.18181818181818182
+      },
+      "vs_queryonly": {
+        "mean": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci975_bonferroni": [
+          0.0,
+          0.0
+        ]
+      },
+      "helped": 0,
+      "harmed": 0,
+      "selection_counts": {
+        "medium": 1,
+        "large": 53,
+        "coder": 0,
+        "reasoning": 346
+      },
+      "success": false
+    },
+    "B_logit_stats": {
+      "expected_quality": 0.7254999999999999,
+      "gap_recovery": 0.01744186046511628,
+      "away": {
+        "rate": 0.2,
+        "count": 80,
+        "stable_switch_precision": 0.2125,
+        "stable_switch_recall": 0.22077922077922077
+      },
+      "vs_queryonly": {
+        "mean": -0.0095,
+        "ci95": [
+          -0.0225,
+          0.003500000000000001
+        ],
+        "ci975_bonferroni": [
+          -0.024000000000000004,
+          0.0055000000000000005
+        ]
+      },
+      "helped": 11,
+      "harmed": 20,
+      "selection_counts": {
+        "medium": 6,
+        "large": 68,
+        "coder": 6,
+        "reasoning": 320
+      },
+      "success": false
+    },
+    "C_prob_vector": {
+      "expected_quality": 0.7264999999999999,
+      "gap_recovery": 0.029069767441860437,
+      "away": {
+        "rate": 0.1725,
+        "count": 69,
+        "stable_switch_precision": 0.2753623188405797,
+        "stable_switch_recall": 0.24675324675324675
+      },
+      "vs_queryonly": {
+        "mean": -0.0085,
+        "ci95": [
+          -0.020499999999999997,
+          0.003
+        ],
+        "ci975_bonferroni": [
+          -0.0225,
+          0.0045000000000000005
+        ]
+      },
+      "helped": 5,
+      "harmed": 12,
+      "selection_counts": {
+        "medium": 3,
+        "large": 65,
+        "coder": 1,
+        "reasoning": 331
+      },
+      "success": false
+    }
+  },
+  "passed": [],
+  "verdict": "logit_probe_fails_one_e9b_pilot_left_then_stop",
+  "decision": {
+    "criterion": "EQ>73.50% AND paired CI95 lower>0 vs A; diagnostics never decide",
+    "expansion_executed": false,
+    "next_experiment_started": false
+  },
+  "protocol_sha256": "a81235b143f990d2ba1d25a6172c603c87c0621e067a44b93f7ccc0d58f3729a",
+  "predictions_sha256": "2daa08162798240d1fd47aaaafcf22e8698468c086b7b5aa232b6a22d50545fa"
+}

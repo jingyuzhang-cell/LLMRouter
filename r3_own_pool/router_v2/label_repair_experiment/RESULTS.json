@@ -1,0 +1,493 @@
+{
+  "experiment": "Label Repair Experiment",
+  "audit": {
+    "selected_queries": 103,
+    "uncertain_to": {
+      "switch": 6,
+      "stay": 2,
+      "tie": 83,
+      "uncertain": 12
+    },
+    "resolved_fraction": 0.883495145631068,
+    "strict_switch_selected": 2,
+    "full400_after_counts": {
+      "switch": 56,
+      "stay": 66,
+      "tie": 83,
+      "uncertain": 195
+    },
+    "per_fold_effective_positives": [
+      {
+        "fold": 0,
+        "repaired_queries": 40,
+        "before_switch": 20,
+        "after_switch": 21,
+        "after_uncertain": 92,
+        "after_strict_switch": 12
+      },
+      {
+        "fold": 1,
+        "repaired_queries": 40,
+        "before_switch": 23,
+        "after_switch": 26,
+        "after_uncertain": 84,
+        "after_strict_switch": 16
+      },
+      {
+        "fold": 2,
+        "repaired_queries": 40,
+        "before_switch": 25,
+        "after_switch": 29,
+        "after_uncertain": 72,
+        "after_strict_switch": 16
+      }
+    ],
+    "mean_pair_entropy_before": 2.9325663155747157,
+    "mean_pair_entropy_after": 2.6134549463551657,
+    "warning": "Unresolved at15 is not proof of near-tie; confident-tie requires the frozen posterior band criterion."
+  },
+  "metrics": {
+    "primary_new10_selected": {
+      "n": 103,
+      "methods": {
+        "original_Ridge": {
+          "eq": 0.7203883495145631,
+          "gap_recovery": 9.912705577010323e-18,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.17475728155339806,
+            "coder": 0.0,
+            "reasoning": 0.8252427184466019
+          }
+        },
+        "original_MA": {
+          "eq": 0.7210355987055016,
+          "gap_recovery": 0.023809523809523926,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.08737864077669903,
+            "coder": 0.0,
+            "reasoning": 0.912621359223301
+          }
+        },
+        "original_BestSingle": {
+          "eq": 0.7203883495145631,
+          "gap_recovery": 0.0,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.0,
+            "coder": 0.0,
+            "reasoning": 1.0
+          }
+        },
+        "repaired_Ridge": {
+          "eq": 0.7184466019417476,
+          "gap_recovery": -0.07142857142857138,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.1941747572815534,
+            "coder": 0.0,
+            "reasoning": 0.8058252427184466
+          }
+        },
+        "repaired_MA": {
+          "eq": 0.7213592233009708,
+          "gap_recovery": 0.03571428571428583,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.07766990291262135,
+            "coder": 0.0,
+            "reasoning": 0.9223300970873787
+          }
+        },
+        "repaired_BestSingle": {
+          "eq": 0.7203883495145631,
+          "gap_recovery": 0.0,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.0,
+            "coder": 0.0,
+            "reasoning": 1.0
+          }
+        }
+      },
+      "comparisons": {
+        "MA_repaired_minus_original": {
+          "mean": 0.0003236245954692556,
+          "ci95": [
+            0.0,
+            0.0009708737864077667
+          ],
+          "ci975_two_primary": [
+            0.0,
+            0.0012944983818770225
+          ],
+          "success": false
+        },
+        "Ridge_repaired_minus_original": {
+          "mean": -0.0019417475728155335,
+          "ci95": [
+            -0.0058252427184466,
+            0.0
+          ],
+          "ci975_two_primary": [
+            -0.007766990291262134,
+            0.0
+          ],
+          "success": false
+        },
+        "repaired_MA_minus_repaired_Ridge": {
+          "mean": 0.0029126213592233032,
+          "ci95": [
+            1.212622235634273e-18,
+            0.007766990291262137
+          ],
+          "ci975_two_primary": [
+            5.389432158374546e-19,
+            0.008737864077669905
+          ],
+          "success": true
+        },
+        "repaired_MA_minus_original_Ridge": {
+          "mean": 0.00097087378640777,
+          "ci95": [
+            1.3473580395936365e-19,
+            0.002912621359223306
+          ],
+          "ci975_two_primary": [
+            -5.389432158374546e-19,
+            0.0038834951456310687
+          ],
+          "success": true
+        },
+        "repaired_Ridge_minus_original_BestSingle": {
+          "mean": -0.0019417475728155332,
+          "ci95": [
+            -0.006796116504854367,
+            0.0019417475728155341
+          ],
+          "ci975_two_primary": [
+            -0.007766990291262134,
+            0.0029126213592233015
+          ],
+          "success": false
+        }
+      },
+      "empirical_oracle_eq": 0.7475728155339806,
+      "original_bestsingle_eq": 0.7203883495145631
+    },
+    "secondary_common_repaired400": {
+      "n": 400,
+      "methods": {
+        "original_Ridge": {
+          "eq": 0.7363333106040955,
+          "gap_recovery": 0.12267657369375229,
+          "selection_fraction": {
+            "medium": 0.0025,
+            "large": 0.1325,
+            "coder": 0.0,
+            "reasoning": 0.865
+          }
+        },
+        "original_MA": {
+          "eq": 0.7257777452468872,
+          "gap_recovery": 0.004956627264618874,
+          "selection_fraction": {
+            "medium": 0.0016666666666666668,
+            "large": 0.07333333333333333,
+            "coder": 0.0,
+            "reasoning": 0.925
+          }
+        },
+        "original_BestSingle": {
+          "eq": 0.7253333330154419,
+          "gap_recovery": 0.0,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.0,
+            "coder": 0.0,
+            "reasoning": 1.0
+          }
+        },
+        "repaired_Ridge": {
+          "eq": 0.7368333339691162,
+          "gap_recovery": 0.1282527893781662,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.1375,
+            "coder": 0.0,
+            "reasoning": 0.8625
+          }
+        },
+        "repaired_MA": {
+          "eq": 0.7281666398048401,
+          "gap_recovery": 0.03159850835800171,
+          "selection_fraction": {
+            "medium": 0.0008333333333333334,
+            "large": 0.07666666666666666,
+            "coder": 0.0,
+            "reasoning": 0.9225
+          }
+        },
+        "repaired_BestSingle": {
+          "eq": 0.7253333330154419,
+          "gap_recovery": 0.0,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.0,
+            "coder": 0.0,
+            "reasoning": 1.0
+          }
+        }
+      },
+      "comparisons": {
+        "MA_repaired_minus_original": {
+          "mean": 0.0023888887371867895,
+          "ci95": [
+            -0.0005000002565793693,
+            0.005333332810550928
+          ],
+          "ci975_two_primary": [
+            -0.0010000001653679646,
+            0.00572222238406539
+          ],
+          "success": false
+        },
+        "Ridge_repaired_minus_original": {
+          "mean": 0.0005000001401640475,
+          "ci95": [
+            -0.001999999862164259,
+            0.004000000189989805
+          ],
+          "ci975_two_primary": [
+            -0.0024999999441206455,
+            0.004999999888241291
+          ],
+          "success": false
+        },
+        "repaired_MA_minus_repaired_Ridge": {
+          "mean": -0.00866666715592146,
+          "ci95": [
+            -0.01850000023841858,
+            0.00016666650481056422
+          ],
+          "ci975_two_primary": [
+            -0.019999999552965164,
+            0.0013333330876776016
+          ],
+          "success": false
+        },
+        "repaired_MA_minus_original_Ridge": {
+          "mean": -0.008166667073965073,
+          "ci95": [
+            -0.018000001087784767,
+            0.0006666669534752146
+          ],
+          "ci975_two_primary": [
+            -0.019502083724364638,
+            0.0021666663291398437
+          ],
+          "success": false
+        },
+        "repaired_Ridge_minus_original_BestSingle": {
+          "mean": 0.011500000953674316,
+          "ci95": [
+            0.0013333335518836975,
+            0.02266666851937771
+          ],
+          "ci975_two_primary": [
+            -1.508742537154034e-10,
+            0.024668750306591512
+          ],
+          "success": true
+        }
+      },
+      "empirical_oracle_eq": 0.8149999976158142,
+      "original_bestsingle_eq": 0.7253333330154419
+    },
+    "secondary_original5_400": {
+      "n": 400,
+      "methods": {
+        "original_Ridge": {
+          "eq": 0.7350000739097595,
+          "gap_recovery": 0.12790697813034058,
+          "selection_fraction": {
+            "medium": 0.0025,
+            "large": 0.1325,
+            "coder": 0.0,
+            "reasoning": 0.865
+          }
+        },
+        "original_MA": {
+          "eq": 0.7243333458900452,
+          "gap_recovery": 0.0038759668823331594,
+          "selection_fraction": {
+            "medium": 0.0016666666666666668,
+            "large": 0.07333333333333333,
+            "coder": 0.0,
+            "reasoning": 0.925
+          }
+        },
+        "original_BestSingle": {
+          "eq": 0.7239999175071716,
+          "gap_recovery": 0.0,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.0,
+            "coder": 0.0,
+            "reasoning": 1.0
+          }
+        },
+        "repaired_Ridge": {
+          "eq": 0.7355000376701355,
+          "gap_recovery": 0.13372091948986053,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.1375,
+            "coder": 0.0,
+            "reasoning": 0.8625
+          }
+        },
+        "repaired_MA": {
+          "eq": 0.7266666293144226,
+          "gap_recovery": 0.03100774437189102,
+          "selection_fraction": {
+            "medium": 0.0008333333333333334,
+            "large": 0.07666666666666666,
+            "coder": 0.0,
+            "reasoning": 0.9225
+          }
+        },
+        "repaired_BestSingle": {
+          "eq": 0.7239999175071716,
+          "gap_recovery": 0.0,
+          "selection_fraction": {
+            "medium": 0.0,
+            "large": 0.0,
+            "coder": 0.0,
+            "reasoning": 1.0
+          }
+        }
+      },
+      "comparisons": {
+        "MA_repaired_minus_original": {
+          "mean": 0.0023333332501351833,
+          "ci95": [
+            -0.000500000489410013,
+            0.005333332810550928
+          ],
+          "ci975_two_primary": [
+            -0.001000000280328095,
+            0.00566666666418314
+          ],
+          "success": false
+        },
+        "Ridge_repaired_minus_original": {
+          "mean": 0.0005000001401640475,
+          "ci95": [
+            -0.001999999862164259,
+            0.004000000189989805
+          ],
+          "ci975_two_primary": [
+            -0.0024999999441206455,
+            0.004999999888241291
+          ],
+          "success": false
+        },
+        "repaired_MA_minus_repaired_Ridge": {
+          "mean": -0.008833333849906921,
+          "ci95": [
+            -0.01850000210106373,
+            -4.4517218106279667e-10
+          ],
+          "ci975_two_primary": [
+            -0.02016666904091835,
+            0.0011666661594063044
+          ],
+          "success": false
+        },
+        "repaired_MA_minus_original_Ridge": {
+          "mean": -0.008333333767950535,
+          "ci95": [
+            -0.018166668713092804,
+            0.0006666661967756227
+          ],
+          "ci975_two_primary": [
+            -0.01966666616499424,
+            0.0020000000949949026
+          ],
+          "success": false
+        },
+        "repaired_Ridge_minus_original_BestSingle": {
+          "mean": 0.011500000022351742,
+          "ci95": [
+            0.001500000013038516,
+            0.023000000044703484
+          ],
+          "ci975_two_primary": [
+            -7.450580430390374e-11,
+            0.024506253050640588
+          ],
+          "success": true
+        }
+      },
+      "empirical_oracle_eq": 0.8100000023841858,
+      "original_bestsingle_eq": 0.7239999175071716
+    }
+  },
+  "batch_diagnostics": {
+    "medium": {
+      "old5_eq": 0.7009708737864078,
+      "new10_eq": 0.6873786407766991,
+      "difference": -0.013592233009708738,
+      "ci95": [
+        -0.038834951456310676,
+        0.010679611650485435
+      ],
+      "note": "Selected on old labels; regression-to-mean confounds this with provider/time drift. Not an iid test."
+    },
+    "large": {
+      "old5_eq": 0.7087378640776699,
+      "new10_eq": 0.7165048543689321,
+      "difference": 0.007766990291262134,
+      "ci95": [
+        -0.0019417475728155356,
+        0.019417475728155335
+      ],
+      "note": "Selected on old labels; regression-to-mean confounds this with provider/time drift. Not an iid test."
+    },
+    "coder": {
+      "old5_eq": 0.6951456310679611,
+      "new10_eq": 0.6815533980582524,
+      "difference": -0.013592233009708738,
+      "ci95": [
+        -0.031067961165048546,
+        0.0029126213592233
+      ],
+      "note": "Selected on old labels; regression-to-mean confounds this with provider/time drift. Not an iid test."
+    },
+    "reasoning": {
+      "old5_eq": 0.7126213592233009,
+      "new10_eq": 0.7203883495145631,
+      "difference": 0.007766990291262137,
+      "ci95": [
+        -0.005825242718446603,
+        0.025242718446601937
+      ],
+      "note": "Selected on old labels; regression-to-mean confounds this with provider/time drift. Not an iid test."
+    }
+  },
+  "decision": {
+    "interpretation": "no_confirmed_router_improvement_after_bounded_label_repair",
+    "MA_improved": false,
+    "Ridge_improved": false,
+    "no_unique_causal_attribution": true,
+    "unresolved_is_not_near_tie": true,
+    "final_gate_complete": true,
+    "next_experiment_started": false
+  },
+  "protocol_sha256": "8419fcbfcd14aba1d1473352cbac34e5f0301459bcc974f698c7ac89ecd465b7",
+  "baseline_predictions_sha256": "c6120091559f8a4b68e9c123563fd10776eba9d6c55159e82c998e68f7d8f98b",
+  "repaired_predictions_sha256": "4c499b2c0f142008370c67bb94549df154049e0c537f74aefe5166a2cbc104a5",
+  "labels_sha256": "83ce44b7033d605d322846fcf758f1349271b5060b0383b14c5239277af1db7e"
+}

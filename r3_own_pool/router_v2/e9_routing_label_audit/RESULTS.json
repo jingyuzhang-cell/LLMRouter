@@ -1,0 +1,100 @@
+{
+  "experiment": "E9 Routing Label Learnability Audit",
+  "n": 400,
+  "method": {
+    "prior": "Jeffreys Beta(k+0.5, 5-k+0.5) per query-model, independent",
+    "comparisons": "P(theta_m > theta_R1) via 1-D quadrature; no assumed repeat pairing",
+    "classification": "frozen hierarchy: switch if any p_win>0.9; stay if min p_stay>0.9; tie if P(|theta_best-theta_R1|<0.1)>0.9; else uncertain",
+    "switch_worthiness": "P(theta_m - theta_R1 > 0.1) > 0.9 reported as strict variant"
+  },
+  "four_numbers": {
+    "best_model_clear": 114,
+    "confident_tie": 0,
+    "undecidable_with_5_repeats": 286,
+    "reliable_switch_samples": {
+      "bayesian_switch": 50,
+      "strict_delta_switch": 31,
+      "e7_stable_rule": 77,
+      "overlap_bayesian_with_e7": 50
+    }
+  },
+  "class_counts": {
+    "switch": 50,
+    "stay": 64,
+    "tie": 0,
+    "uncertain": 286
+  },
+  "fold_effective_positives": [
+    {
+      "fold": 0,
+      "dev_n": 168,
+      "switch": 20,
+      "stay": 24,
+      "tie": 0,
+      "uncertain": 124,
+      "switch_by_alt": {
+        "medium": 7,
+        "large": 11,
+        "coder": 2
+      }
+    },
+    {
+      "fold": 1,
+      "dev_n": 168,
+      "switch": 23,
+      "stay": 25,
+      "tie": 0,
+      "uncertain": 120,
+      "switch_by_alt": {
+        "medium": 6,
+        "large": 11,
+        "coder": 6
+      }
+    },
+    {
+      "fold": 2,
+      "dev_n": 167,
+      "switch": 25,
+      "stay": 31,
+      "tie": 0,
+      "uncertain": 111,
+      "switch_by_alt": {
+        "medium": 11,
+        "large": 11,
+        "coder": 3
+      }
+    }
+  ],
+  "predictive_extension": {
+    "method": "posterior-predictive with 500 draws, seed 20260914; MC classes switch/stay/unresolved (tie folded into unresolved); last column = unresolved fraction among currently-uncertain queries",
+    "by_extra_repeats": {
+      "+5": {
+        "switch": 0.20526499999999998,
+        "stay": 0.19677,
+        "unresolved": 0.597965,
+        "unresolved_among_currently_uncertain": 0.7947132867132868
+      },
+      "+10": {
+        "switch": 0.23196999999999998,
+        "stay": 0.20092999999999997,
+        "unresolved": 0.5671,
+        "unresolved_among_currently_uncertain": 0.7482447552447552
+      },
+      "+15": {
+        "switch": 0.27198,
+        "stay": 0.221145,
+        "unresolved": 0.506875,
+        "unresolved_among_currently_uncertain": 0.6690979020979022
+      }
+    }
+  },
+  "hashes": {
+    "inputs": "64c13348c78dc595ad1f2d7842507e51f09412c49c6f8cbf21dfbfd9aa42a402",
+    "code": "ba36f12e62bef62a09e5bf23cd5177342d80bd9e838b13c267f4deaabd556df3",
+    "protocol_reference": "04af6a0c26c10cc52dfe16eb8cf11005926d4781267f002e60ccd38620430beb"
+  },
+  "packages": {
+    "numpy": "2.3.2",
+    "scipy": "1.18.0"
+  }
+}

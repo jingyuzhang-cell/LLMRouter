@@ -1,0 +1,101 @@
+{
+  "experiment": "E6 Representation × Objective 2×2",
+  "arms": [
+    "A_QueryOnly",
+    "B_Capability",
+    "C_Stability",
+    "D_Capability_Stability"
+  ],
+  "A": "Identity-output model kernel + unweighted delta Ridge; algebraically same routing as frozen QueryOnly quality Ridge; verify all400 decisions",
+  "B": "Capability-difference model kernel + same unweighted delta objective",
+  "C": "Same identity-output kernel as A + stability-weighted delta objective",
+  "D": "Same capability kernel as B + exactly the weights of C",
+  "target": "mean5(q,m)-mean5(q,R1), m=medium,large,coder; R1 prediction fixed0",
+  "baseline_equivalence": "For identical X/alpha/intercepts, Ridge(Y_m-Y_R1)=Ridge(Y_m)-Ridge(Y_R1). Uniform delta regression preserves original A choices. Thus objective factor isolates weighting.",
+  "capability": {
+    "k": 8,
+    "kmeans_seed": 42,
+    "n_init": 10,
+    "algorithm": "lloyd",
+    "features": "frozen original-prompt GTE; KMeans fit only development X",
+    "profile": "c_m[k]=(sum_dev_region mean5(q,m)+5*global_dev_mean(m))/(n_region+5)",
+    "prior_count": 5.0,
+    "relative_profile": "d_m=c_m-c_R1",
+    "normalization": "One global multiplier sqrt(3/sum_m ||d_m||²); model-kernel trace3 matches identity. No whitening or held-out statistics."
+  },
+  "stability": {
+    "empirical_variance_ddof": 0,
+    "definition": "S(q,m)=clip(1-2*(Var5(q,m)+Var5(q,R1)),0,1)",
+    "raw_weight": "0.05+0.95*abs(delta)*S",
+    "floor": 0.05,
+    "normalization": "Divide by development mean separately for each alternative; every output has total weight N, keeping alpha scale fixed.",
+    "ties": "Every tie retained with strictly positive raw weight0.05; no filtering",
+    "limitation": "Five-draw empirical consistency heuristic, not true stability probability or a proven noise fraction. No assumed pairing of independent model repeat draws."
+  },
+  "predictor": {
+    "family": "linear bilinear query×model kernel Ridge; no MLP",
+    "kernel": "K((q,m),(q2,m2))=<e_q,e_q2>*<d_m,d_m2>",
+    "alpha": 1.0,
+    "intercept": "unpenalized in model-feature span, same solver in all four cells",
+    "capacity": "With3 independent alternative profiles, model-kernel rank3 spans the same linear heads as A; behavior profiles change sharing/regularization geometry, not the available query information.",
+    "no_additive_shortcut": "A purely additive linear f(e,c) has q-independent model ranking; explicit bilinear interaction is required."
+  },
+  "folds": "Exact frozen experiment_repeat_compatibility_400_fold_local full development/test IDs; no new inner search",
+  "fit": "12 fixed fits (4 arms×3 folds); all protocol parameters frozen before fitting. No seed/K/alpha/floor search.",
+  "tie_policy": "Original slot-order np.argmax: medium,large,coder,reasoning; no threshold tuning",
+  "metrics": [
+    "outer-test EQ",
+    "GapRecovery relative train-selected BestSingle and empirical mean5 Oracle",
+    "method-A gain",
+    "paired query bootstrap CI",
+    "factorial interaction D-B-C+A",
+    "selection distribution"
+  ],
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20260914,
+    "unit": "400 unique queries, paired across methods; numerator and denominator jointly recomputed for GapRecovery"
+  },
+  "success": "For each B/C/D: EQ>EQ_A AND pointwise paired bootstrap CI95 lower>0. Otherwise do not expand that scheme.",
+  "decisions": "B succeeds alone: supports capability intervention; C succeeds alone: supports weighting intervention; only D succeeds: joint scheme candidate, interaction separately tested; none succeeds: no scheme passes, not proof of equivalence.",
+  "inference_limits": [
+    "Development panel previously enriched and repeatedly used, not independent confirmation.",
+    "Pointwise95% CI is user-frozen success rule; report98.333% Bonferroni intervals as context, without changing rule.",
+    "No-significance is not equivalence; this2×2 cannot uniquely identify the causal failure of the former nonlinear learned-ID MA.",
+    "A is the requested QueryOnly anchor, not the old MA; B tests one behavior-prior representation and C one fixed weighting definition.",
+    "Profiles are learned from development outcomes as supervised representation learning; no outer labels contribute.",
+    "Bootstrap conditional on fitted models/regions, not full retraining uncertainty."
+  ],
+  "constraints": [
+    "Exactly A/B/C/D",
+    "No new model answers or embeddings",
+    "No additionalqueries",
+    "No MA/network/loss/rank/gate search",
+    "No outer-test selection",
+    "No GitHub push",
+    "No automatic expansion or next experiment"
+  ],
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.0"
+  },
+  "hashes": {
+    "/root/r3_own_pool/router_v2/run_e6_representation_objective_2x2.py": "8bb8ae4dffe6a0360e19be0ccbaa77087bb848b2803c8cc5033711756a10b12b",
+    "/root/r3_own_pool/router_v2/summarize_e6_representation_objective_2x2.py": "37892861641b6d5ec0e2c6279708b1cfeb30b4278ece92697839657cfa31dffd",
+    "/root/r3_own_pool/router_v2/data.py": "d718a2b5b03a9fb1fec1077f03aefda82f09b319da7ceb5f5c1846cfd85134e4",
+    "/root/r3_own_pool/router_v2/e5_independent_query_learning_curve/INPUTS.npz": "589a73e16bf2c0214c9e211230c1d3cc0e95d382590107185476e66c34c0c0e0",
+    "/root/r3_own_pool/router_v2/e5_independent_query_learning_curve/PROTOCOL.json": "cff7bd5315e09dfbc323fbb4521b3f729a6002f8a22bdaa7080c728e669db627",
+    "/root/r3_own_pool/router_v2/e5_independent_query_learning_curve/INDEPENDENT_VALIDATION.json": "4d929b1ddd6562a64984305aa999ee706b69ac62cd1ee4c7b246b09e00b11084",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/PREDICTIONS.npz": "d5960317eba873cade341c6435d39f4c6a87790c59d7144f38276d7e0a0e1db8",
+    "/root/r3_own_pool/router_v2/experiment_repeat_compatibility_400_fold_local/PROTOCOL.json": "5dbfba499e420aea7bd1e0edcf7dddcc535cc4c2f2c41ebdf7db292fb61974bc",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/MANIFEST.json": "da38baa7cea77744d4c4d7e0e91ba48430a1c4c2f343719876bea21470314549",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/PANEL.jsonl": "23914c75665b2e3133d1782cac8a822aeaa8dc0660598857f14c35100401536e",
+    "/root/r3_own_pool/router_v2/mmlu_utility_panel_400/FOLD_SELECTION.json": "08da6b67785a8552efc916a3b166fe32a72ea9c4e3c0f081ef6ce0c08668c5e7",
+    "/root/r3_own_pool/data/repeat_compatibility_400_rescore_v1/EXPECTED_UTILITY_LABELS.jsonl": "0f7efbcd91f70e549141cff135074d2e629ee531581681b3a4adac7b10ccf6c5",
+    "/root/r3_own_pool/router_v2/contamination_audit_20260910b/PROMPT_GROUPS.json": "89bbb75a1df5d7f83120cf2e4b153234530f1ef704e210a9047521ac6b134fdf",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/INPUTS.npz": "64c13348c78dc595ad1f2d7842507e51f09412c49c6f8cbf21dfbfd9aa42a402",
+    "/root/r3_own_pool/router_v2/e6_representation_objective_2x2/FOLDS.json": "574fa3f8a8232908a47192da1d9c039520fed9922639613b279361c4a5d94222"
+  }
+}

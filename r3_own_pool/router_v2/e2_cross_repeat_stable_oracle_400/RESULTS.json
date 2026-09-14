@@ -1,0 +1,54 @@
+{
+ "question": "How much of the hindsight oracle gap is cross-repeat stable per-query model preference?",
+ "n": 400,
+ "slots": [
+  "medium",
+  "large",
+  "coder",
+  "reasoning"
+ ],
+ "repeats": 5,
+ "bootstrap": 10000,
+ "tie_policy": "fallback to global best single (reasoning); fractional tie-average reported separately",
+ "numbers": {
+  "best_single_eq": 0.724,
+  "query_only_ridge_eq": 0.735,
+  "hindsight_oracle_eq": 0.81,
+  "stable_oracle_eq": 0.7745,
+  "stable_oracle_fractional_eq": 0.753
+ },
+ "gaps": {
+  "hindsight_gap_pp": 8.6,
+  "stable_gap_pp": 5.05,
+  "stable_fractional_gap_pp": 2.9,
+  "stable_over_hindsight_pct": 58.7,
+  "noise_fraction_pct": 41.3
+ },
+ "stable_selection_counts_rotations": {
+  "medium": 139,
+  "large": 178,
+  "coder": 71,
+  "reasoning": 1612
+ },
+ "tie_incidence_pct": 59.4,
+ "winner_consistency": {
+  "five_of_five": 339,
+  "four_of_five": 52,
+  "three_or_less": 9
+ },
+ "paired_bootstrap_ci95_pp": {
+  "stable_vs_bestsingle": [
+   3.05,
+   7.15
+  ],
+  "stable_vs_queryonly": [
+   2.15,
+   5.9
+  ]
+ },
+ "answers": {
+  "A_stable_share_of_hindsight_gap": 58.7,
+  "B_dominant_component": "stable heterogeneity",
+  "C_worth_finer_representation": true
+ }
+}
