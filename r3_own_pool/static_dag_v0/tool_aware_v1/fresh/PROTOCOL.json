@@ -1,0 +1,61 @@
+{
+  "role": "natural_financial_multistep_confirmation_and_shadow_audit",
+  "source": "/root/phase_c9_0/external/MultiHiertt-data/multihiertt_data/dev.json",
+  "n_tasks": 40,
+  "selection": "UID hash seed20260917; arithmetic >=2 program operations; full flattened report prompt <=5500 local tokens. No result-dependent selection.",
+  "freshness": "New to this DAG experiment, not certified untouched across entire workspace, prior models or pretraining. Existing external-project dataset is used.",
+  "nodes": [
+    "extraction:LLM",
+    "semantic:LLM",
+    "arithmetic:tool",
+    "verification:tool"
+  ],
+  "router_unchanged": true,
+  "router_pool": [
+    "medium",
+    "large",
+    "coder"
+  ],
+  "shadow_only": [
+    "reasoning"
+  ],
+  "unavailable": [
+    "small"
+  ],
+  "shadow_tasks": 10,
+  "max_requests": {
+    "routed": 80,
+    "large": 20,
+    "medium": 20,
+    "coder": 20,
+    "reasoning": 20
+  },
+  "temperature": 0,
+  "max_tokens": 512,
+  "concurrency": 4,
+  "retries": 0,
+  "api_timeout_seconds": 600,
+  "transport_failure": "Keep as missing, no replacement or retry; missing candidate evidence does not become zero-quality evidence.",
+  "shadow_semantic_input": "Same routed extraction facts; conditional node diagnostic, not alternative end-to-end route.",
+  "quality": "Numeric exactness tolerance max(1e-4,1e-4*abs(reference)); no posthoc percent rescaling. Overall includes failures as task unsuccessful; infrastructure availability separately reported.",
+  "extraction_accuracy": "All nonconstant numeric operands in reference program recovered among extracted fact values; diagnostic operand recall, not complete extraction correctness.",
+  "semantic_accuracy": "Expression executed on actual routed facts yields reference numeric answer; downstream conditional proxy, not isolated semantic correctness.",
+  "tool_accuracy": "Arithmetic matches independent restricted interpreter; verification implements syntax/range contract. Does not mean upstream semantics correct.",
+  "latency": "Measured routed first-layer queue/service/startup plus second-layer queue/service and tool processing; sum stage durations per task excludes shadow/model-switch gaps. Called amortized staged end-to-end, not independent online latency.",
+  "no_repair": true,
+  "no_dynamic": true,
+  "no_tuning": true,
+  "created_unix": 1789401914.2702315,
+  "bindings": {
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1.py": "67554b92fc1c5d15b946580f6a1a7264d221a71006a2a62f21af8f9df9275f71",
+    "/root/r3_own_pool/static_dag_v0/core.py": "46fdd6eccf62d195b3cc34a04db720ebd9cef4473a1db099cabee5c7724bf872",
+    "/root/r3_own_pool/static_dag_v0/run.py": "770e3aabfabda2cc1faf476277448050c5e6bc747b848c6861eb227204c96f5b",
+    "/root/phase_c9_0/external/MultiHiertt-data/multihiertt_data/dev.json": "0100d9d6832901d0c8ffa3141e548e51c98ecf3ac144407f90d8182ab3bcb0a7",
+    "/root/r3_own_pool/static_dag_v0/run_v0/PROFILES.json": "4fcfe80e100c66a32020f10179df67d1b5f7c4c2d1d11152159a42d8ce750246",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/reasoning.jsonl": "7542f11b20ceaab0522826e59637ca393bad1bf2ccf7278cae7e097b7b9533b5",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/fresh/TASKS.json": "79183223c97ead921c9fb028cd1bf2953f5968a868d967c506e333e6ba7b9841",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/fresh/EVAL_ONLY.json": "216ca662d70bd66807691590a43de3fda0f188d134e824fc44d7043eabd6b436",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/fresh/PLANS.json": "eb458ac9ed3f672f977a72f738bbdd18387e2f96fabd381e8c1123e69c1950a8",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/fresh/SHADOW_IDS.json": "c12a9aa5308a34c92c24056f81b6d89557b65bb37c382efe995b4f8861a67955"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "experiment": "Feedback Memory v0 (sequential replay, zero generation)",
+  "frozen": {
+    "order": "TASKS.json order; intra-task extraction->reasoning->verification",
+    "memory_update": "Q_mem(type,m)=(S+1)/(N+2); only upstream_valid rows update",
+    "upstream_valid_note": "conditional table: all rows valid by construction",
+    "fusion": "Q_fb=(1-lambda)*Q_node+lambda*Q_mem with lambda=0.3 primary",
+    "selection": "frozen utility weights, dev C/L profiles"
+  },
+  "arms": {
+    "FrozenNodeRouter": {
+      "Q": 0.513184584178499,
+      "tokens": 1765.0486815415823,
+      "latency_s": 2.7167459629687647,
+      "utility": 0.4113484202865761
+    },
+    "FeedbackRouter": {
+      "Q": 0.5172413793103449,
+      "tokens": 1763.9797160243409,
+      "latency_s": 2.6988109360405566,
+      "utility": 0.41554833882892506
+    },
+    "NodeOracle": {
+      "Q": 0.5780933062880325,
+      "tokens": 1753.6004056795132,
+      "latency_s": 2.066902670990411,
+      "utility": 0.4800787726491047
+    }
+  },
+  "mechanism": {
+    "decision_changes": 36,
+    "helped": 2,
+    "harmed": 0,
+    "changed_examples": [
+      {
+        "node_id": "12efc4e07eee44f39b3473e03e003345:vfneg",
+        "node_type": "verification",
+        "frozen": "medium",
+        "feedback": "coder"
+      },
+      {
+        "node_id": "12efc4e07eee44f39b3473e03e003345:vfpos",
+        "node_type": "verification",
+        "frozen": "medium",
+        "feedback": "coder"
+      },
+      {
+        "node_id": "a97d21ab1fd644f7a67b7185033796ef:rs",
+        "node_type": "reasoning",
+        "frozen": "coder",
+        "feedback": "medium"
+      },
+      {
+        "node_id": "4046601ddf674a1c9f4507df6d2a972b:rs",
+        "node_type": "reasoning",
+        "frozen": "medium",
+        "feedback": "coder"
+      },
+      {
+        "node_id": "6f2c908fe17b498896ea24cbcaac2ae5:vfneg",
+        "node_type": "verification",
+        "frozen": "medium",
+        "feedback": "coder"
+      },
+      {
+        "node_id": "6f2c908fe17b498896ea24cbcaac2ae5:vfpos",
+        "node_type": "verification",
+        "frozen": "medium",
+        "feedback": "coder"
+      },
+      {
+        "node_id": "f2bd5fbbfbf34ae183e7c8dd77a0eb7a:rs",
+        "node_type": "reasoning",
+        "frozen": "medium",
+        "feedback": "coder"
+      },
+      {
+        "node_id": "cfbbc9aeca2945699682b332f7c83a39:rs",
+        "node_type": "reasoning",
+        "frozen": "medium",
+        "feedback": "coder"
+      }
+    ],
+    "final_memory": {
+      "extraction": {
+        "medium": [
+          0,
+          0
+        ],
+        "large": [
+          115,
+          193
+        ],
+        "coder": [
+          0,
+          0
+        ]
+      },
+      "reasoning": {
+        "medium": [
+          12,
+          58
+        ],
+        "large": [
+          0,
+          4
+        ],
+        "coder": [
+          11,
+          38
+        ]
+      },
+      "verification": {
+        "medium": [
+          4,
+          8
+        ],
+        "large": [
+          0,
+          1
+        ],
+        "coder": [
+          113,
+          191
+        ]
+      }
+    }
+  },
+  "feedback_minus_frozen": {
+    "Q_mean": 0.004056795131845842,
+    "ci95_task_cluster": [
+      0.0,
+      0.01
+    ]
+  },
+  "sensitivity_non_gating": {
+    "lambda=0.1": {
+      "Q": 0.513184584178499,
+      "tokens": 1764.478701825558,
+      "latency_s": 2.7135437056611145,
+      "utility": 0.4113929305589155
+    },
+    "lambda=0.5": {
+      "Q": 0.513184584178499,
+      "tokens": 1762.2758620689656,
+      "latency_s": 2.6566171518264388,
+      "utility": 0.4117877053159185
+    }
+  },
+  "gates": {
+    "v0_pass": "loop runs end-to-end; decision_changes=36>0",
+    "note": "no significance gate today; lambda and order seeds for later"
+  }
+}

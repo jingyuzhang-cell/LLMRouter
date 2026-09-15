@@ -1,0 +1,121 @@
+{
+  "candidates": {
+    "Always Large": {
+      "Q": 0.39553752535496955,
+      "C": 1842.1683569979716,
+      "L": 3.5064704853240363,
+      "calls": 1.0,
+      "deployable": true,
+      "note": "anchor",
+      "C_eff": 1842.1683569979716,
+      "L_eff": 3.5064704853240363
+    },
+    "Static Node Router": {
+      "Q": 0.513184584178499,
+      "C": 1765.0486815415823,
+      "L": 2.7167459629687647,
+      "calls": 1.0,
+      "deployable": true,
+      "note": "frozen node router",
+      "C_eff": 1765.0486815415823,
+      "L_eff": 2.7167459629687647
+    },
+    "Feedback v1 (state-aware)": {
+      "Q": 0.5557809330628803,
+      "C": 1800.8539553752535,
+      "L": 3.182091237629554,
+      "deployable": true,
+      "calls": 1.486815415821501,
+      "note": "memory-driven fallback",
+      "C_eff": 2677.5374224950524,
+      "L_eff": 4.73118230665814
+    },
+    "Dynamic-Reroute (perfect detection)": {
+      "Q": 0.5496957403651116,
+      "C": 1799.8296146044624,
+      "L": 3.136024021144964,
+      "deployable": false,
+      "calls": 1.486815415821501,
+      "note": "upper-bound detection; excluded from deployable sets",
+      "C_eff": 2676.0144168459856,
+      "L_eff": 4.662688859024866
+    },
+    "Type-aware Dynamic": {
+      "Q": 0.5253549695740365,
+      "C": 1777.4239350912778,
+      "L": null,
+      "deployable": true,
+      "calls": 1.3772819472616633,
+      "verifier_calls": 302,
+      "note": "verifier-gated on verification-type nodes only",
+      "C_eff": 2815.5595373772367,
+      "L_eff": null
+    },
+    "Oracle (upper bound)": {
+      "Q": 0.5780933062880325,
+      "C": 1743.5841784989857,
+      "L": 1.844927792053889,
+      "deployable": false,
+      "calls": 1.0,
+      "note": "hindsight",
+      "C_eff": 1743.5841784989857,
+      "L_eff": 1.844927792053889
+    }
+  },
+  "single_objective": {
+    "minC_s.t.Q>=0.5": {
+      "feasible": [
+        "Static Node Router",
+        "Feedback v1 (state-aware)",
+        "Type-aware Dynamic"
+      ],
+      "best": "Static Node Router"
+    },
+    "minC_s.t.Q>=0.52": {
+      "feasible": [
+        "Feedback v1 (state-aware)",
+        "Type-aware Dynamic"
+      ],
+      "best": "Feedback v1 (state-aware)"
+    },
+    "minC_s.t.Q>=0.55": {
+      "feasible": [
+        "Feedback v1 (state-aware)"
+      ],
+      "best": "Feedback v1 (state-aware)"
+    },
+    "maxQ_s.t.C<=median": {
+      "C_max": 2677.5374224950524,
+      "best": "Feedback v1 (state-aware)"
+    }
+  },
+  "bi_pareto": [
+    "Feedback v1 (state-aware)",
+    "Static Node Router"
+  ],
+  "tri_pareto": [
+    "Feedback v1 (state-aware)",
+    "Static Node Router"
+  ],
+  "followup_workload": {
+    "fresh": {
+      "calls_per_task": 4.0,
+      "token_reduction": null
+    },
+    "forest": {
+      "calls_per_task": 2.0,
+      "call_reduction": 0.5,
+      "token_reduction": 0.9140751414364511,
+      "executes": 19,
+      "responds": 19
+    },
+    "note": "follow-up workload; Q is execution-level (19/20), not benchmark-comparable"
+  },
+  "selected_final_plan": "Feedback v1 (state-aware)",
+  "assumptions": {
+    "verifier_tokens_per_call": 600,
+    "C_eff": "mean selected tokens x exec call multiplier + verifier overhead / n",
+    "L_eff": "mean per-node service latency x exec call multiplier",
+    "oracle_and_perfect_detection_excluded_from_deployable_sets": true
+  }
+}

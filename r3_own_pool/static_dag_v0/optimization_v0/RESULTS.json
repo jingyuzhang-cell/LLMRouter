@@ -1,0 +1,85 @@
+{
+  "experiment": "Optimization v0 (zero generation)",
+  "candidates": {
+    "Always Large": {
+      "Q": 0.4482758620689655,
+      "C": 1792.0202839756591,
+      "L": 11.709969645813107,
+      "deployable": true,
+      "kind": "single pick per node"
+    },
+    "Query Router": {
+      "Q": 0.44421906693711966,
+      "C": 1801.0851926977687,
+      "L": 10.185176304075867,
+      "deployable": true,
+      "kind": "single pick per node"
+    },
+    "Static Node Router": {
+      "Q": 0.513184584178499,
+      "C": 1765.0486815415823,
+      "L": 7.787239197455347,
+      "deployable": true,
+      "kind": "single pick per node"
+    },
+    "Feedback Router": {
+      "Q": 0.5172413793103449,
+      "C": 1763.9797160243409,
+      "L": 2.6988109360405566,
+      "deployable": true,
+      "kind": "per-node means from v0 replay"
+    },
+    "Dynamic-Reroute": {
+      "Q": 0.5496957403651116,
+      "C": 2676.0144168459856,
+      "L": 4.662688859024866,
+      "deployable": true,
+      "kind": "retry cost included via calls multiplier"
+    },
+    "Oracle (upper bound)": {
+      "Q": 0.5780933062880325,
+      "C": 1753.6004056795132,
+      "L": 5.986535390913486,
+      "deployable": false,
+      "kind": "hindsight; excluded from deployable sets"
+    }
+  },
+  "single_objective": {
+    "minC_suchthat_Q_ge": 0.5,
+    "feasible": [
+      "Static Node Router",
+      "Feedback Router",
+      "Dynamic-Reroute"
+    ],
+    "best": "Feedback Router",
+    "maxQ_suchthat_C_le": 1792.0202839756591,
+    "best_quality": "Feedback Router"
+  },
+  "bi_objective_pareto": [
+    "Dynamic-Reroute",
+    "Feedback Router"
+  ],
+  "tri_objective_pareto": [
+    "Dynamic-Reroute",
+    "Feedback Router"
+  ],
+  "tri_pareto_including_oracle": [
+    "Dynamic-Reroute",
+    "Feedback Router",
+    "Oracle (upper bound)"
+  ],
+  "selected_final_plan": "Feedback Router",
+  "pass_criteria": {
+    "candidates_measured": true,
+    "dominance_checked": true,
+    "pareto_sets_nonempty": true,
+    "best_plan_selected": true
+  },
+  "notes": [
+    "Oracle excluded from deployable Pareto by construction",
+    "L is mean per-task critical path (extraction parallel; reasoning/verification serial)",
+    "Dynamic-Reroute cost/latency inflated by its measured 1.49x calls multiplier",
+    "Feedback Router L is mean per-node service time (v0 table), not critical path"
+  ],
+  "PASS": true
+}

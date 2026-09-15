@@ -1,0 +1,50 @@
+{
+  "arms": {
+    "StaticOnly": {
+      "task_success": 0.22,
+      "quality": 0.5132,
+      "cost_per_node": 1765.0,
+      "latency_per_node": 2.717,
+      "recovery": 0.0,
+      "calls_multiplier": 1.0
+    },
+    "StaticFeedback": {
+      "task_success": 0.27,
+      "quality": 0.5558,
+      "cost_per_node": 2677.5,
+      "latency_per_node": 4.731,
+      "recovery": 0.6563,
+      "calls_multiplier": 1.487
+    },
+    "FullAdaptiveDAG": {
+      "task_success": 0.56,
+      "quality": 0.5801,
+      "cost_per_node": 3071.0,
+      "latency_per_node": 3.575,
+      "recovery": 1.0312,
+      "calls_multiplier": 1.219,
+      "recovery_note": "exceeds 1.0 because decompose is STRUCTURAL repair outside the model-selection oracle hypothesis space; the selection oracle is not an upper bound for it"
+    }
+  },
+  "followup_graph_forest": {
+    "reuse_rate": 0.5,
+    "call_reduction": 0.5,
+    "token_reduction": 0.9140751414364511,
+    "executes": "19/20",
+    "note": "follow-up round: Full Adaptive arm reuses extraction subgraphs (measured); Static arms re-execute fresh"
+  },
+  "arm3_internals": {
+    "verifier_calls": 308,
+    "reroutes": 108,
+    "decompose_triggers": 73,
+    "decompose_rescues": 29,
+    "wasted_replans": 28,
+    "missed": 2
+  },
+  "sampling_disclosures": {
+    "verifier": "confusion-matrix sampling from verifier_v1_1 measured rates",
+    "decompose": "rescue sampled at evidence_share 0.55 x rescue 0.6 (decompose_v1 measured 6/10 on evidence class)",
+    "rescue_q_modeling": "rescued reasoning nodes set to Q=1 (value==gold by success rule)"
+  },
+  "next_experiment_started": false
+}

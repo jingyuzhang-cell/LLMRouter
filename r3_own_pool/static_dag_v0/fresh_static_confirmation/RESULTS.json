@@ -1,0 +1,305 @@
+{
+  "tasks": 100,
+  "primary_nodes": 493,
+  "exploratory_nodes": 4,
+  "arms": {
+    "AlwaysLarge": {
+      "Q": 0.4482758620689655,
+      "tokens_total": 499102.0,
+      "tokens_per_task": 4991.02,
+      "deduplicated_calls": 400,
+      "mean_task_service_seconds": 11.709969645813107,
+      "legacy_mean_per_node_tokens": 1792.0202839756591,
+      "legacy_mean_per_node_latency": 3.5096773485299844,
+      "legacy_mean_per_node_utility": 0.34112646112753264,
+      "selection_counts": {
+        "medium": 0,
+        "large": 493,
+        "coder": 0
+      }
+    },
+    "QueryRouter": {
+      "Q": 0.44421906693711966,
+      "tokens_total": 498533.0,
+      "tokens_per_task": 4985.33,
+      "deduplicated_calls": 400,
+      "mean_task_service_seconds": 10.185176304075867,
+      "legacy_mean_per_node_tokens": 1801.0851926977687,
+      "legacy_mean_per_node_latency": 3.2587723423656962,
+      "legacy_mean_per_node_utility": 0.33787094559040276,
+      "selection_counts": {
+        "medium": 133,
+        "large": 276,
+        "coder": 84
+      }
+    },
+    "StaticCapability": {
+      "Q": 0.4482758620689655,
+      "tokens_total": 499102.0,
+      "tokens_per_task": 4991.02,
+      "deduplicated_calls": 400,
+      "mean_task_service_seconds": 11.709969645813107,
+      "legacy_mean_per_node_tokens": 1792.0202839756591,
+      "legacy_mean_per_node_latency": 3.5096773485299844,
+      "legacy_mean_per_node_utility": 0.34112646112753264,
+      "selection_counts": {
+        "medium": 0,
+        "large": 493,
+        "coder": 0
+      }
+    },
+    "FrozenNodeRouter": {
+      "Q": 0.513184584178499,
+      "tokens_total": 485643.0,
+      "tokens_per_task": 4856.43,
+      "deduplicated_calls": 400,
+      "mean_task_service_seconds": 7.787239197455347,
+      "legacy_mean_per_node_tokens": 1765.0486815415823,
+      "legacy_mean_per_node_latency": 2.7167459629687647,
+      "legacy_mean_per_node_utility": 0.4113484202865761,
+      "selection_counts": {
+        "medium": 93,
+        "large": 203,
+        "coder": 197
+      }
+    },
+    "NodeOracle": {
+      "Q": 0.5780933062880325,
+      "tokens_total": 521767.0,
+      "tokens_per_task": 5217.67,
+      "deduplicated_calls": 410,
+      "mean_task_service_seconds": 6.431712231244892,
+      "legacy_mean_per_node_tokens": 1753.6004056795132,
+      "legacy_mean_per_node_latency": 2.066902670990411,
+      "legacy_mean_per_node_utility": 0.48007877264910476,
+      "selection_counts": {
+        "medium": 147,
+        "large": 212,
+        "coder": 134
+      }
+    }
+  },
+  "contrasts": {
+    "FrozenNodeRouter_minus_QueryRouter": {
+      "Q_delta": 0.06896551724137934,
+      "Q_ci95": [
+        0.03434343434343434,
+        0.1048411987256073
+      ],
+      "tokens_per_task_delta": -128.9,
+      "tokens_ci95": [
+        -175.42049999999998,
+        -84.49800000000003
+      ],
+      "service_seconds_delta": -2.39793710662052,
+      "service_ci95": [
+        -3.4957404753831214,
+        -1.3556995524838569
+      ]
+    },
+    "FrozenNodeRouter_minus_AlwaysLarge": {
+      "Q_delta": 0.06490872210953347,
+      "Q_ci95": [
+        0.038617886178861804,
+        0.09127789046653145
+      ],
+      "tokens_per_task_delta": -134.59,
+      "tokens_ci95": [
+        -187.97299999999998,
+        -84.59875000000001
+      ],
+      "service_seconds_delta": -3.9227304483577607,
+      "service_ci95": [
+        -5.250831409849226,
+        -2.674696829491761
+      ]
+    },
+    "FrozenNodeRouter_minus_StaticCapability": {
+      "Q_delta": 0.06490872210953347,
+      "Q_ci95": [
+        0.038617886178861804,
+        0.09127789046653145
+      ],
+      "tokens_per_task_delta": -134.59,
+      "tokens_ci95": [
+        -187.97299999999998,
+        -84.59875000000001
+      ],
+      "service_seconds_delta": -3.9227304483577607,
+      "service_ci95": [
+        -5.250831409849226,
+        -2.674696829491761
+      ]
+    }
+  },
+  "by_type": {
+    "extraction": {
+      "n": 193,
+      "tasks": 100,
+      "exploratory": false,
+      "per_fixed_model": {
+        "medium": 0.37305699481865284,
+        "large": 0.5958549222797928,
+        "coder": 0.37823834196891193
+      },
+      "best_fixed_model": "large",
+      "Q_best_fixed": 0.5958549222797928,
+      "arms_Q": {
+        "AlwaysLarge": 0.5958549222797928,
+        "QueryRouter": 0.49740932642487046,
+        "StaticCapability": 0.5958549222797928,
+        "FrozenNodeRouter": 0.5958549222797928,
+        "NodeOracle": 0.694300518134715
+      },
+      "oracle_gap": 0.0984455958549223,
+      "oracle_gap_ci95": [
+        0.05154639175257725,
+        0.15104166666666663
+      ],
+      "positive_advantage_nodes": 19,
+      "positive_advantage_tasks": 14,
+      "quality_recovery": 0.0,
+      "recovery_ci95": [
+        0.0,
+        0.0
+      ],
+      "bootstrap_undefined_recovery": 0
+    },
+    "transformation": {
+      "n": 4,
+      "tasks": 4,
+      "exploratory": true,
+      "per_fixed_model": {
+        "medium": 1.0,
+        "large": 1.0,
+        "coder": 1.0
+      },
+      "best_fixed_model": "medium",
+      "Q_best_fixed": 1.0,
+      "arms_Q": {
+        "AlwaysLarge": 1.0,
+        "QueryRouter": 1.0,
+        "StaticCapability": 1.0,
+        "FrozenNodeRouter": 1.0,
+        "NodeOracle": 1.0
+      },
+      "oracle_gap": 0.0,
+      "oracle_gap_ci95": [
+        0.0,
+        0.0
+      ],
+      "positive_advantage_nodes": 0,
+      "positive_advantage_tasks": 0,
+      "quality_recovery": null,
+      "recovery_ci95": null,
+      "bootstrap_undefined_recovery": 10000
+    },
+    "reasoning": {
+      "n": 100,
+      "tasks": 100,
+      "exploratory": false,
+      "per_fixed_model": {
+        "medium": 0.19,
+        "large": 0.15,
+        "coder": 0.17
+      },
+      "best_fixed_model": "medium",
+      "Q_best_fixed": 0.19,
+      "arms_Q": {
+        "AlwaysLarge": 0.15,
+        "QueryRouter": 0.2,
+        "StaticCapability": 0.15,
+        "FrozenNodeRouter": 0.22,
+        "NodeOracle": 0.27
+      },
+      "oracle_gap": 0.08000000000000002,
+      "oracle_gap_ci95": [
+        0.03,
+        0.11000000000000001
+      ],
+      "positive_advantage_nodes": 8,
+      "positive_advantage_tasks": 8,
+      "quality_recovery": 0.3749999999999999,
+      "recovery_ci95": [
+        -0.4999999999999998,
+        0.7777777777777777
+      ],
+      "bootstrap_undefined_recovery": 2
+    },
+    "verification": {
+      "n": 200,
+      "tasks": 100,
+      "exploratory": false,
+      "per_fixed_model": {
+        "medium": 0.52,
+        "large": 0.455,
+        "coder": 0.59
+      },
+      "best_fixed_model": "coder",
+      "Q_best_fixed": 0.59,
+      "arms_Q": {
+        "AlwaysLarge": 0.455,
+        "QueryRouter": 0.515,
+        "StaticCapability": 0.455,
+        "FrozenNodeRouter": 0.58,
+        "NodeOracle": 0.62
+      },
+      "oracle_gap": 0.030000000000000027,
+      "oracle_gap_ci95": [
+        0.010000000000000009,
+        0.05500000000000005
+      ],
+      "positive_advantage_nodes": 6,
+      "positive_advantage_tasks": 6,
+      "quality_recovery": -0.3333333333333333,
+      "recovery_ci95": [
+        -1.5,
+        0.0
+      ],
+      "bootstrap_undefined_recovery": 31
+    }
+  },
+  "quality_recovery": {
+    "best_fixed_model": "large",
+    "Q_best_fixed": 0.4482758620689655,
+    "oracle_gap": 0.12981744421906694,
+    "recovery": 0.5,
+    "ci95": [
+      0.3281250000000002,
+      0.6527777777777773
+    ],
+    "undefined_bootstrap_samples": 0
+  },
+  "gates": {
+    "F1": true,
+    "F2_directional": true,
+    "F2_quality_path": true,
+    "F2_efficiency_path": false,
+    "F2_statistically_supported": true,
+    "F3": true,
+    "Static_stage_confirmed": true
+  },
+  "physical": {
+    "medium": {
+      "requests": 404,
+      "known_tokens": 510048
+    },
+    "large": {
+      "requests": 404,
+      "known_tokens": 499560
+    },
+    "coder": {
+      "requests": 404,
+      "known_tokens": 494124
+    }
+  },
+  "limitations": [
+    "This is a conditional node-table benchmark: gold facts for reasoning and gold/perturbed verification inputs; not deployed end-to-end DAG quality.",
+    "Fresh holdout is audited unused labelled train, not official test; audit covers two workspace roots, not pretraining or unknown external use.",
+    "Full-dev heads refit/exported with original alpha/features before fresh inference; original CV reproduced.",
+    "StaticCapability follows implemented global profile, not a per-node-type profile.",
+    "Question-length feature and quality scoring unchanged, including their limitations.",
+    "Primary transformation excluded; old46.2% was utility recovery, fresh number is quality recovery.",
+    "Per-call latency/service sum and deduplicated tokens are measured; end-to-end latency and dollar billing not established."
+  ]
+}

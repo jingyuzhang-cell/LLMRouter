@@ -1,0 +1,133 @@
+{
+  "tasks": 40,
+  "task_success_rate": 0.1,
+  "mean_quality": 0.1,
+  "total_tokens": 175356,
+  "token_coverage_tasks": 40,
+  "inference_cost": null,
+  "cost_basis": "tokens measured; local GPU monetary bill unavailable",
+  "mean_end_to_end_batch_seconds": 212.1476943075657,
+  "latency_scope": "Observed batch arrival through model queues, model loads, semantic stage, live tool/verification completion. Shared single GPU, not isolated per-task online latency.",
+  "tool_node_accuracy": 1.0,
+  "tool_accuracy_denominator": 30,
+  "tool_valid_execution_tasks": 30,
+  "verification_rejected_or_blocked": 10,
+  "llm_node_accuracy_proxy": 0.325,
+  "extraction_accuracy": 0.55,
+  "semantic_accuracy": 0.1,
+  "selection": {
+    "extraction": {
+      "small": 0,
+      "medium": 9,
+      "large": 31,
+      "reasoning": 0,
+      "coder": 0
+    },
+    "semantic": {
+      "small": 0,
+      "medium": 0,
+      "large": 40,
+      "reasoning": 0,
+      "coder": 0
+    }
+  },
+  "shadow_diagnostics": [
+    {
+      "model": "small",
+      "available": false,
+      "reason": "Checkpoint unavailable / no run",
+      "nodes": 0
+    },
+    {
+      "model": "medium",
+      "node_type": "extraction",
+      "available": true,
+      "requested": 10,
+      "delivered": 10,
+      "correct": 5,
+      "accuracy_delivered": 0.5,
+      "mean_actual_tokens": 4109.7,
+      "mean_actual_latency_s": 7.350275490619242
+    },
+    {
+      "model": "medium",
+      "node_type": "semantic",
+      "available": true,
+      "requested": 9,
+      "delivered": 9,
+      "correct": 0,
+      "accuracy_delivered": 0.0,
+      "mean_actual_tokens": 316.8888888888889,
+      "mean_actual_latency_s": 0.49760166679819423
+    },
+    {
+      "model": "large",
+      "node_type": "extraction",
+      "available": true,
+      "requested": 10,
+      "delivered": 10,
+      "correct": 7,
+      "accuracy_delivered": 0.7,
+      "mean_actual_tokens": 3962.2,
+      "mean_actual_latency_s": 6.913572887517512
+    },
+    {
+      "model": "large",
+      "node_type": "semantic",
+      "available": true,
+      "requested": 9,
+      "delivered": 9,
+      "correct": 0,
+      "accuracy_delivered": 0.0,
+      "mean_actual_tokens": 315.8888888888889,
+      "mean_actual_latency_s": 0.6376316431495879
+    },
+    {
+      "model": "reasoning",
+      "node_type": "extraction",
+      "available": true,
+      "requested": 10,
+      "delivered": 10,
+      "correct": 4,
+      "accuracy_delivered": 0.4,
+      "mean_actual_tokens": 4592.7,
+      "mean_actual_latency_s": 19.944862719997765
+    },
+    {
+      "model": "reasoning",
+      "node_type": "semantic",
+      "available": true,
+      "requested": 9,
+      "delivered": 9,
+      "correct": 0,
+      "accuracy_delivered": 0.0,
+      "mean_actual_tokens": 1282.2222222222222,
+      "mean_actual_latency_s": 19.532600255890024
+    },
+    {
+      "model": "coder",
+      "node_type": "extraction",
+      "available": true,
+      "requested": 10,
+      "delivered": 10,
+      "correct": 5,
+      "accuracy_delivered": 0.5,
+      "mean_actual_tokens": 4014.7,
+      "mean_actual_latency_s": 5.595063245110214
+    },
+    {
+      "model": "coder",
+      "node_type": "semantic",
+      "available": true,
+      "requested": 9,
+      "delivered": 9,
+      "correct": 0,
+      "accuracy_delivered": 0.0,
+      "mean_actual_tokens": 321.6666666666667,
+      "mean_actual_latency_s": 0.6114207491692569
+    }
+  ],
+  "small_unavailable": true,
+  "router_changed": false,
+  "success_gate_applicable": "Controlled 20-task ablation only. No Static/Repair results on these natural tasks; cannot claim a paired gain here."
+}

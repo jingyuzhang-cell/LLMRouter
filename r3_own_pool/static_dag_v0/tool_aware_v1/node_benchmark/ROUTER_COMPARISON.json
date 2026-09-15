@@ -1,0 +1,144 @@
+{
+  "arms": {
+    "AlwaysLarge": {
+      "Q": 0.40591397849462363,
+      "tokens": 1601.6129032258063,
+      "latency_s": 3.3521996634030935,
+      "utility": 0.3090723350163178,
+      "selection_counts": {
+        "medium": 0,
+        "large": 372,
+        "coder": 0
+      }
+    },
+    "QueryRouter": {
+      "Q": 0.3870967741935484,
+      "tokens": 1606.8629032258063,
+      "latency_s": 2.950722041855296,
+      "utility": 0.29200001882298154,
+      "selection_counts": {
+        "medium": 100,
+        "large": 182,
+        "coder": 90
+      }
+    },
+    "StaticCapability": {
+      "Q": 0.3763440860215054,
+      "tokens": 1602.497311827957,
+      "latency_s": 3.0514185411044425,
+      "utility": 0.2809621277245853,
+      "selection_counts": {
+        "medium": 0,
+        "large": 238,
+        "coder": 134
+      }
+    },
+    "NodeRouter": {
+      "Q": 0.4650537634408602,
+      "tokens": 1582.1478494623657,
+      "latency_s": 2.889254340506409,
+      "utility": 0.3715000992652098,
+      "selection_counts": {
+        "medium": 100,
+        "large": 128,
+        "coder": 144
+      }
+    },
+    "NodeOracle": {
+      "Q": 0.532258064516129,
+      "tokens": 1565.0,
+      "latency_s": 1.9838136745947264,
+      "utility": 0.4440889961431554,
+      "selection_counts": {
+        "medium": 150,
+        "large": 146,
+        "coder": 76
+      }
+    }
+  },
+  "contrasts": {
+    "NodeRouter_minus_QueryRouter_U": {
+      "mean": 0.06535688088649767,
+      "ci95": [
+        0.02760369791276192,
+        0.10378559591370225
+      ]
+    },
+    "NodeRouter_minus_QueryRouter_Q": {
+      "mean": 0.06417910447761194,
+      "ci95": [
+        0.026948590381426205,
+        0.10248963515754557
+      ]
+    },
+    "NodeRouter_minus_AlwaysLarge_U": {
+      "mean": 0.053720232331512616,
+      "ci95": [
+        0.01768693150647275,
+        0.09136641048324924
+      ]
+    },
+    "NodeRouter_minus_AlwaysLarge_Q": {
+      "mean": 0.051492537313432826,
+      "ci95": [
+        0.016001243781094524,
+        0.08864013266998341
+      ]
+    },
+    "NodeRouter_minus_StaticCapability_U": {
+      "mean": 0.07330483592304804,
+      "ci95": [
+        0.03392172680707657,
+        0.11403192878140364
+      ]
+    },
+    "NodeRouter_minus_StaticCapability_Q": {
+      "mean": 0.07222222222222222,
+      "ci95": [
+        0.033499170812603646,
+        0.1125207296849088
+      ]
+    }
+  },
+  "recovery_vs_best_fixed": {
+    "AlwaysLarge": 0.0,
+    "QueryRouter": -0.1264459960041388,
+    "StaticCapability": -0.2081980627955626,
+    "NodeRouter": 0.46237081948164915
+  },
+  "quality_by_type": {
+    "extraction": {
+      "AlwaysLarge": 0.5702479338842975,
+      "QueryRouter": 0.4297520661157025,
+      "StaticCapability": 0.45454545454545453,
+      "NodeRouter": 0.5537190082644629,
+      "NodeOracle": 0.6446280991735537
+    },
+    "transformation": {
+      "AlwaysLarge": 1.0,
+      "QueryRouter": 1.0,
+      "StaticCapability": 1.0,
+      "NodeRouter": 1.0,
+      "NodeOracle": 1.0
+    },
+    "reasoning": {
+      "AlwaysLarge": 0.13333333333333333,
+      "QueryRouter": 0.175,
+      "StaticCapability": 0.13333333333333333,
+      "NodeRouter": 0.21666666666666667,
+      "NodeOracle": 0.31666666666666665
+    },
+    "verification": {
+      "AlwaysLarge": 0.4583333333333333,
+      "QueryRouter": 0.5,
+      "StaticCapability": 0.48333333333333334,
+      "NodeRouter": 0.575,
+      "NodeOracle": 0.5916666666666667
+    }
+  },
+  "best_fixed_note": "recovery denominator uses the better of AlwaysLarge/StaticCapability",
+  "gates": {
+    "gate2": "NodeRouter>QueryRouter on utility CI95 lower>0, or equal quality at lower cost",
+    "gate3": "recovery fraction of oracle utility gap"
+  }
+}

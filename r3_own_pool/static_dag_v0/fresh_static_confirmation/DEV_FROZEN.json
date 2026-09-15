@@ -1,0 +1,80 @@
+{
+  "created_unix": 1789438546.4856446,
+  "role": "Dev-only full-development refit/export, before fresh sampling or generation. Old CV script did not serialize heads.",
+  "pool": [
+    "medium",
+    "large",
+    "coder"
+  ],
+  "types": [
+    "extraction",
+    "transformation",
+    "reasoning",
+    "verification"
+  ],
+  "ridge_alpha": 1.0,
+  "features": "Unchanged question GTE + 4type onehot + log1p(question character length); NOT node context length",
+  "static_capability": "Unchanged global dev quality/mean resource profile, NOT per-type profile",
+  "encoder": "/root/autodl-tmp/models/gte-Qwen2-7B-instruct-fp16",
+  "embedding_normalize": true,
+  "utility": {
+    "alpha": 1,
+    "beta": 5e-05,
+    "gamma": 0.005
+  },
+  "dev_tasks": 201,
+  "dev_nodes": 372,
+  "historical_cv_reproduced": {
+    "AlwaysLarge": {
+      "Q": 0.40591397849462363,
+      "utility": 0.3090723350163178,
+      "selection_counts": {
+        "medium": 0,
+        "large": 372,
+        "coder": 0
+      }
+    },
+    "StaticCapability": {
+      "Q": 0.3763440860215054,
+      "utility": 0.2809621277245853,
+      "selection_counts": {
+        "medium": 0,
+        "large": 238,
+        "coder": 134
+      }
+    },
+    "QueryRouter": {
+      "Q": 0.3870967741935484,
+      "utility": 0.29200001882298154,
+      "selection_counts": {
+        "medium": 100,
+        "large": 182,
+        "coder": 90
+      }
+    },
+    "NodeRouter": {
+      "Q": 0.4650537634408602,
+      "utility": 0.3715000992652098,
+      "selection_counts": {
+        "medium": 100,
+        "large": 128,
+        "coder": 144
+      }
+    }
+  },
+  "models_sha256": "c82f56e4491130c3a90c0627831b9a66f52ffc2602d727987d6cfe52bf77c1ed",
+  "bindings": {
+    "/root/r3_own_pool/static_dag_v0/node_router_compare.py": "d76d60c1c5367274f5f224de932ec3e8885b82b418a68bb72c41d7d07bf12d3e",
+    "/root/r3_own_pool/static_dag_v0/fresh_static_prepare.py": "fdafeddbd52415eef995a882f445e4b972c9c4e59939d50a40e1358726df3c13",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/node_benchmark/NODES.json": "fcbc0d8fd784c6db7179efae07dfdeb96ccc05446a0503c7cee28bd96eb7e985",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/node_benchmark/QUESTION_EMBEDDINGS.npz": "4589b078dca0d2a167c72f336effc9dd524fb1237ed9411a177ba8dc5b182988",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/node_benchmark/ROUTER_COMPARISON.json": "f7e5b96b9c0bdbc058ccda70f71fddfb8abf18d93ad6f2538bf5e917680d88d6",
+    "/root/r3_own_pool/static_dag_v0/node_gap_audit_full.py": "db3f654faf80352a19caef45fd6dd4e9e0ba12f1f01084b1acefe31a0287b50b",
+    "/root/r3_own_pool/static_dag_v0/node_benchmark_build.py": "f4cdd737aef023df1ffb5bd2ef36f9996ea7ae3d0c851e33eb906140bff98f0e",
+    "/root/r3_own_pool/static_dag_v0/node_benchmark_collect.py": "ef5984c647d9482e4541a1b4bb4210a5d8d9ce449141cb5e6e75f66106265a78",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1.py": "67554b92fc1c5d15b946580f6a1a7264d221a71006a2a62f21af8f9df9275f71",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/node_benchmark/medium_RESPONSES.jsonl": "c02ff9de215e851a949a9d2b039926ffaa0a6b69e96ed30b037fea02a4acd4e9",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/node_benchmark/large_RESPONSES.jsonl": "85dfaec82c0dcbbbe3697f8d4f5abb00317449154afebd159f93030dd1237344",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/node_benchmark/coder_RESPONSES.jsonl": "64e89a6b90df2f2b94e108668b235740ffc7749d0313feb143fb9bee1add8209"
+  }
+}

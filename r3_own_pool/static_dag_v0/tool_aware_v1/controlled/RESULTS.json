@@ -1,0 +1,47 @@
+{
+  "task_success_rate": 1.0,
+  "quality": 1.0,
+  "tokens": 0,
+  "inference_cost": 0,
+  "inference_cost_basis": "No model inference; tool CPU resource cost not monetized",
+  "mean_end_to_end_seconds": 1.2712553143501282e-05,
+  "tool_node_accuracy": 1.0,
+  "llm_node_accuracy": null,
+  "llm_nodes": 0,
+  "baselines": {
+    "static": {
+      "quality": 0.275,
+      "success_rate": 0.15,
+      "tokens": 22883,
+      "logical_calls": 78,
+      "repair_calls": 0,
+      "mean_request_service_seconds": 6.18310982035473,
+      "mean_validator_seconds": 0.0,
+      "repair_tokens": 0
+    },
+    "local_repair": {
+      "quality": 0.35,
+      "success_rate": 0.2,
+      "tokens": 38944,
+      "logical_calls": 121,
+      "repair_calls": 41,
+      "mean_request_service_seconds": 9.045059787016362,
+      "mean_validator_seconds": 0.00011501694098114967,
+      "repair_tokens": 15671
+    },
+    "tool_only": {
+      "quality": 1.0,
+      "success_rate": 1.0,
+      "tokens": 0,
+      "logical_calls": 0,
+      "repair_calls": 0,
+      "mean_wall_seconds": 0.0007268179208040238
+    }
+  },
+  "static_and_repair_end_to_end_latency": null,
+  "latency_limitation": "Historical controls have shared service accounting only; no comparable isolated end-to-end latency. Do not compare against tool wall time as a speedup.",
+  "success_gate": {
+    "quality_above_static": true,
+    "tokens_at_most_repair": true
+  }
+}

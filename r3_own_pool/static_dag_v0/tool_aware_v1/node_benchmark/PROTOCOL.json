@@ -1,0 +1,92 @@
+{
+  "role": "Phase 1 Node Capability Benchmark (construction only; generation pending budget approval)",
+  "source": "/root/phase_c9_0/external/MultiHiertt-data/multihiertt_data/dev.json",
+  "seed": "20260915",
+  "sampling": "UID-hash order under seed 20260915 with disjoint salts; frozen tool-aware v1 tasks excluded; overlap between type samples allowed and reported",
+  "node_types": {
+    "extraction": {
+      "n": 121,
+      "prompt": "v1 eprompt verbatim (one call per task; both operand nodes score the same response)",
+      "quality": "v1 operand recall: target operand recovered among parsed fact values (tolerance 1e-4 relative)"
+    },
+    "transformation": {
+      "n": 11,
+      "prompt": "unit/scale conversion of a single raw value (percent/millions), frozen instruction in builder",
+      "quality": "numeric closeness to gold conversion"
+    },
+    "reasoning": {
+      "n": 120,
+      "prompt": "v1 sprompt verbatim with GOLD facts (conditional quality; no upstream contamination)",
+      "quality": "executed expression on gold facts equals reference answer (v1 tolerance)"
+    },
+    "verification": {
+      "n": 120,
+      "prompt": "facts + candidate program + value; verdict yes/no (+ wrong operand index); gold/perturbed pairs",
+      "quality": "verdict matches expect_accept"
+    }
+  },
+  "runner": {
+    "models": [
+      "medium",
+      "large",
+      "coder",
+      "reasoning"
+    ],
+    "temperature": 0,
+    "max_tokens": 512,
+    "concurrency": 4,
+    "retries": 0,
+    "api_timeout_seconds": 600,
+    "transport_failure": "kept as missing, never scored as zero",
+    "calls_per_model": 316,
+    "total_calls": 1264,
+    "local_calls": 948,
+    "r1_dashscope_calls": 316
+  },
+  "router_experiment": {
+    "features": "deployment-observable only: node_type one-hot, task-question GTE embedding, input context token length, node position hints; gold programs/operands never used as features",
+    "arms": [
+      "Always Large",
+      "Query Router (question embedding only)",
+      "Static Capability Router (per-type model means)",
+      "Node Router",
+      "Node Oracle"
+    ],
+    "splits": "3 folds grouped by task_uid (no task crosses folds), seed frozen",
+    "utility": "alpha*Q - beta*C_tokens/1000 - gamma*L_seconds/10 with v1 frozen weights",
+    "comparisons": "paired bootstrap over tasks (10000, frozen seed); success = Node Router beats Query Router on utility with CI95 lower>0"
+  },
+  "constraints": [
+    "No generation in this step",
+    "No router retrained yet",
+    "No Dynamic DAG/feedback",
+    "Reasoning/verification nodes conditional on gold inputs by design"
+  ],
+  "created_unix": 1789436076.2157269,
+  "amendments": {
+    "adopted_unix_time": 1789436127.3877192,
+    "transformation": "exploratory stratum: 11 natural dev nodes, no train top-up this round; main conclusions rest on extraction/reasoning/verification",
+    "r1_role": "measured on every node for capability data only; frozen router candidate pool stays {medium, large, coder}; any pool expansion is a separate preregistered experiment",
+    "gates": {
+      "gate1": "node GAP exists: OracleNode>BestFixed on a major type, not driven by 1-2 nodes",
+      "gate2": "Node Router beats Query Router on quality, or matches quality at lower cost",
+      "gate3": "recovery=(Q_NodeRouter-Q_BestFixed)/(Q_OracleNode-Q_BestFixed) reported per type"
+    },
+    "post_collection_order": [
+      "node gap audit first",
+      "then 5-arm router comparison",
+      "stop and report"
+    ]
+  },
+  "prompt_templates": {
+    "transformation": "You are verifying a unit conversion for a financial analysis. {instruction} Return ONLY JSON {{\"value\": number}}.\nQUESTION (context only, do not re-answer it): {question}",
+    "verification": "Check this financial computation. Given the question, extracted facts, a proposed arithmetic expression, and its computed value, decide whether it correctly answers the question using accurate facts. If any fact value is wrong, reject and name its index. Return ONLY JSON {{\"verdict\":\"yes\"|\"no\",\"wrong_fact\":<fact index or null>}}.\nQUESTION: {question}\nFACTS: {facts}\nEXPRESSION: {expression}\nVALUE: {value}",
+    "extraction": "v1 eprompt verbatim",
+    "reasoning": "v1 sprompt verbatim with gold facts"
+  },
+  "bindings": {
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1/node_benchmark/NODES.json": "fcbc0d8fd784c6db7179efae07dfdeb96ccc05446a0503c7cee28bd96eb7e985",
+    "/root/r3_own_pool/static_dag_v0/node_benchmark_build.py": "f4cdd737aef023df1ffb5bd2ef36f9996ea7ae3d0c851e33eb906140bff98f0e",
+    "/root/r3_own_pool/static_dag_v0/node_benchmark_collect.py": "ef5984c647d9482e4541a1b4bb4210a5d8d9ce449141cb5e6e75f66106265a78"
+  }
+}

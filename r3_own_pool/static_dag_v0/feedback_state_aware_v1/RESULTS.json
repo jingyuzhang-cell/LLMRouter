@@ -1,0 +1,52 @@
+{
+  "experiment": "State-aware Feedback v1 (zero generation)",
+  "design": {
+    "initial_memory": "(type, length_bucket, model) Beta(1,1) online; lambda=0.3",
+    "failure_memory": "(type, model) reroute-state successes; fallback lambda=0.5; one fallback max",
+    "reference": "fallback no longer the frozen utility second-best"
+  },
+  "arms": {
+    "NodeRouter": {
+      "Q": 0.513184584178499,
+      "tokens": 1765.0486815415823,
+      "latency_s": 2.7167459629687647,
+      "utility": 0.4113484202865761
+    },
+    "FeedbackV0": {
+      "Q": 0.5152129817444219,
+      "tokens": 1764.9371196754564,
+      "latency_s": 2.7085203612544415,
+      "utility": 0.41342352395437687
+    },
+    "FeedbackV1": {
+      "Q": 0.5557809330628803,
+      "tokens": 1800.8539553752535,
+      "latency_s": 3.182091237629554,
+      "utility": 0.4498277791059698
+    },
+    "NodeOracle": {
+      "Q": 0.5780933062880325,
+      "tokens": 1753.6004056795132,
+      "latency_s": 2.066902670990411,
+      "utility": 0.48007877264910476
+    }
+  },
+  "dynamic_reroute_reference": {
+    "Q": 0.5496957403651116,
+    "tokens": 1799.8296146044624,
+    "latency_s": 3.136024021144964,
+    "utility": 0.4440241395291636,
+    "calls_multiplier": 1.486815415821501
+  },
+  "calls_multiplier_v1": 1.486815415821501,
+  "decision_changes_vs_v0": 224,
+  "helped_vs_v0": 20,
+  "harmed_vs_v0": 0,
+  "v1_minus_v0": {
+    "Q": 0.04056795131845842,
+    "ci95_task_cluster": [
+      0.022000000000000002,
+      0.06000000000000001
+    ]
+  }
+}

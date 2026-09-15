@@ -1,0 +1,174 @@
+{
+  "shadow_nodes": 20,
+  "policies": {
+    "Current Router": {
+      "node_quality": 0.25,
+      "mean_tokens": 2137.0,
+      "mean_latency_s": 3.5058106407523155,
+      "delivered_nodes": 19,
+      "n": 20,
+      "picks": [
+        "large",
+        "large",
+        "medium",
+        "large",
+        "medium",
+        "large",
+        "medium",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large",
+        "large"
+      ]
+    },
+    "Always Medium": {
+      "node_quality": 0.25,
+      "mean_tokens": 2197.45,
+      "mean_latency_s": 3.8990584953688083,
+      "delivered_nodes": 19,
+      "n": 20
+    },
+    "Always Large": {
+      "node_quality": 0.35,
+      "mean_tokens": 2123.25,
+      "mean_latency_s": 3.7437206831760705,
+      "delivered_nodes": 19,
+      "n": 20
+    },
+    "Always Coder": {
+      "node_quality": 0.25,
+      "mean_tokens": 2152.1,
+      "mean_latency_s": 3.0726709596812727,
+      "delivered_nodes": 19,
+      "n": 20
+    },
+    "Always Reasoning (R1 shadow)": {
+      "node_quality": 0.2,
+      "mean_tokens": 2873.35,
+      "mean_latency_s": 18.762101475149393,
+      "delivered_nodes": 19,
+      "n": 20
+    }
+  },
+  "oracle": {
+    "node_quality": 0.45,
+    "mean_regret": 0.2,
+    "zero_regret_nodes": 16,
+    "n": 20
+  },
+  "contrasts": {
+    "router_minus_medium": {
+      "mean": 0.0,
+      "ci95": [
+        -0.2,
+        0.2
+      ]
+    },
+    "router_minus_large": {
+      "mean": -0.1,
+      "ci95": [
+        -0.25,
+        0.0
+      ]
+    },
+    "router_minus_coder": {
+      "mean": 0.0,
+      "ci95": [
+        -0.2,
+        0.2
+      ]
+    },
+    "router_minus_reasoning": {
+      "mean": 0.05,
+      "ci95": [
+        -0.1,
+        0.2
+      ]
+    }
+  },
+  "calibration": {
+    "n_delivered_rows": 76,
+    "spearman": {
+      "quality": -0.013159033899195378,
+      "tokens": 0.9169742706368086,
+      "latency": 0.8920544652538743
+    },
+    "pearson": {
+      "tokens": 0.9159271221066114,
+      "latency": 0.5329029384893587
+    },
+    "mean_bias": {
+      "tokens_pred_minus_actual": 484.7138477261115,
+      "latency_pred_minus_actual": 40.55224871794789
+    },
+    "per_model": {
+      "medium": {
+        "n": 19,
+        "pred_q_mean": 0.6873786407766992,
+        "actual_acc": 0.2631578947368421,
+        "pred_tokens": 2404.0119570771585,
+        "actual_tokens": 2313.1052631578946,
+        "pred_latency": 25.501384959470965,
+        "actual_latency": 4.104272100388219
+      },
+      "large": {
+        "n": 19,
+        "pred_q_mean": 0.716504854368932,
+        "actual_acc": 0.3684210526315789,
+        "pred_tokens": 2404.6935104752174,
+        "actual_tokens": 2235.0,
+        "pred_latency": 28.58933715063597,
+        "actual_latency": 3.940758613869548
+      },
+      "coder": {
+        "n": 19,
+        "pred_q_mean": 0.6815533980582524,
+        "actual_acc": 0.2631578947368421,
+        "pred_tokens": 2440.745937659683,
+        "actual_tokens": 2265.3684210526317,
+        "pred_latency": 26.780573602256204,
+        "actual_latency": 3.2343904838750235
+      },
+      "reasoning": {
+        "n": 19,
+        "pred_q_mean": 0.7203883495145631,
+        "actual_acc": 0.21052631578947367,
+        "pred_tokens": 4527.456617271334,
+        "actual_tokens": 3024.5789473684213,
+        "pred_latency": 112.36670085771846,
+        "actual_latency": 19.749580500157254
+      }
+    }
+  },
+  "selection_driver": {
+    "n_nodes": 80,
+    "medium_selections": 9,
+    "medium_selection_node_types": {
+      "extraction": 9
+    },
+    "dQ_is_constant": true,
+    "dQ_value": -0.029126213592232997,
+    "medium_picks_mean_L_penalty_gap": -0.032035924421805445,
+    "medium_picks_mean_C_penalty_gap": -3.4077669902899286e-05,
+    "interpretation": "Q_medium - Q_large is a profile constant; a medium selection happens exactly when the combined C/L penalty gap exceeds that constant, i.e. selection is length/latency driven, not query-conditioned semantic routing"
+  },
+  "token_totals": {
+    "routed_actual_tokens": 175356,
+    "router_predicted_tokens": 184001.03106796116,
+    "always_large_predicted_tokens": 184007.16504854368
+  },
+  "small": {
+    "status": "unavailable_for_comparable_shadow_evaluation",
+    "required": false,
+    "note": "not part of the frozen router candidate pool (medium/large/coder); restore not attempted"
+  }
+}

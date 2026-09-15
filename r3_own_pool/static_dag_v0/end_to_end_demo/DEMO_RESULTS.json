@@ -1,0 +1,121 @@
+{
+  "log": {
+    "taskA": "cfbbc9aeca2945699682b332f7c83a39",
+    "taskB": "cf32d60d2c3043a194565b3fabf0dcfb",
+    "round1": {
+      "steps": [
+        {
+          "stage": "static_execution",
+          "nodes": [
+            "cfbbc9aeca2945699682b332f7c83a39:ex0",
+            "cfbbc9aeca2945699682b332f7c83a39:ex1",
+            "cfbbc9aeca2945699682b332f7c83a39:rs"
+          ],
+          "model": "medium",
+          "extraction_Q": [
+            0.0,
+            0.0
+          ],
+          "reasoning_Q": 0.0,
+          "status": "FAILED (real failure preserved)"
+        },
+        {
+          "stage": "feedback_memory_update",
+          "entry": {
+            "node_type": "reasoning",
+            "model": "medium",
+            "actual_q": 0.0
+          }
+        },
+        {
+          "stage": "diagnosis",
+          "verdict": "model-recoverable",
+          "policy": "single second-best reroute"
+        },
+        {
+          "stage": "reroute",
+          "model": "coder",
+          "reasoning_Q": 1.0,
+          "status": "RECOVERED"
+        },
+        {
+          "stage": "invalidate+recompute",
+          "node": "cfbbc9aeca2945699682b332f7c83a39:vfpos",
+          "old_stale": true,
+          "recomputed_Q": 0.0
+        }
+      ],
+      "final_answer": 7607.0,
+      "calls": 0,
+      "note": "executions read from frozen table (replay)"
+    },
+    "round2": {
+      "reused": [
+        "cfbbc9aeca2945699682b332f7c83a39:ex0",
+        "cfbbc9aeca2945699682b332f7c83a39:ex1",
+        "cfbbc9aeca2945699682b332f7c83a39:rs",
+        "cfbbc9aeca2945699682b332f7c83a39:vfpos",
+        "cfbbc9aeca2945699682b332f7c83a39:vfneg",
+        "cf32d60d2c3043a194565b3fabf0dcfb:rs"
+      ],
+      "reused_new_calls": 0,
+      "tool_comparison": {
+        "a": 7607.0,
+        "b": 8409670.0,
+        "larger": "b",
+        "difference": 8402063.0,
+        "executed_by": "TOOL (deterministic)"
+      }
+    },
+    "round3": {
+      "versions": {
+        "v1_value": 7607.0,
+        "v2_value": 7641.2,
+        "v1_kept": true
+      },
+      "invalidated": [
+        "verification"
+      ],
+      "recomputed_calls": 2,
+      "verdict": {
+        "accept": true
+      },
+      "forest_contents": [
+        "A_original(v1)",
+        "A_modified(v2)=7641.2",
+        "B",
+        "A_vs_B"
+      ]
+    },
+    "pareto": {
+      "plans": {
+        "Static(top model)": {
+          "Q": 0.2,
+          "C": 6895.0,
+          "L": 23.54341114498675
+        },
+        "Dynamic-Reroute": {
+          "Q": 0.4,
+          "C": 7126.0,
+          "L": 24.02191131003201
+        },
+        "Graph-Reuse": {
+          "Q": 0.4,
+          "C": 0.0,
+          "L": 0.0
+        },
+        "Oracle(non-deployable)": {
+          "Q": 0.8,
+          "C": 6121.0,
+          "L": 12.034582996740937
+        }
+      },
+      "demo_frontier": [
+        "Graph-Reuse"
+      ],
+      "selected": "Graph-Reuse"
+    }
+  },
+  "real_calls": 2,
+  "chain": "Task->Decomposition->NodeRouter->Static->Execution->Feedback->Dynamic(Reroute)->GraphForest(Reuse/Tool/Version)->Pareto->FinalAnswer"
+}

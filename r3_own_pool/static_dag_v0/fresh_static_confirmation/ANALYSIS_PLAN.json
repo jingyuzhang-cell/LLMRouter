@@ -1,0 +1,59 @@
+{
+  "created_unix": 1789438634.5257182,
+  "status": "Frozen analysis rules; fresh source selection pending user decision",
+  "target_tasks": 100,
+  "fresh_source": null,
+  "pool": [
+    "medium",
+    "large",
+    "coder"
+  ],
+  "r1_in_router": false,
+  "training": "All parameters already exported using dev only. Fresh inference reads NPZ coefficients, never calls fit.",
+  "node_types": {
+    "primary": [
+      "extraction",
+      "reasoning",
+      "verification"
+    ],
+    "exploratory": [
+      "transformation"
+    ]
+  },
+  "arms": [
+    "AlwaysLarge",
+    "QueryRouter",
+    "StaticCapability",
+    "FrozenNodeRouter",
+    "NodeOracle"
+  ],
+  "dev_model_sha256": "c82f56e4491130c3a90c0627831b9a66f52ffc2602d727987d6cfe52bf77c1ed",
+  "sample_seed": 20260915,
+  "bootstrap_seed": 20260915,
+  "bootstrap_replicates": 10000,
+  "aggregation": "Main mean over primary nodes. Bootstrap samples task UIDs and recomputes node-weighted means, preserving all within-task node dependence. Transformation excluded from main gates.",
+  "oracle": "Quality-max oracle over three models; ties choose largest realized frozen utility then fixed pool order. Utility oracle separately descriptive, not an extra deployed method.",
+  "best_fixed": "For F1/F3 only: max measured mean Q among three fixed models, recomputed within each bootstrap; hindsight diagnostic, never used for routing parameters.",
+  "F1": "At least one of Extraction/Reasoning has Q_qualityOracle > Q_bestFixed. Report task-paired CIs and contribution counts.",
+  "F2": {
+    "quality_path": "Q_NodeRouter > Q_QueryRouter AND Q_NodeRouter >= Q_AlwaysLarge",
+    "efficiency_path": "Q_NodeRouter > Q_QueryRouter AND abs(Q_NodeRouter-Q_AlwaysLarge)<=0.01 AND mean_tokens_NodeRouter < mean_tokens_AlwaysLarge",
+    "equivalence_margin_absolute_quality": 0.01,
+    "statistical_support": "Report query contrast CI95 lower>0; efficiency confirmation additionally requires AlwaysLarge quality contrast CI95 inside [-.01,.01] and token contrast CI95 upper<0. Directional gates and statistical confirmation reported separately."
+  },
+  "F3": "Quality recovery (Q_NodeRouter-Q_bestFixed)/(Q_qualityOracle-Q_bestFixed)>0. If denominator <=0, undefined/inconclusive, never force zero or divide by epsilon.",
+  "final_claim": "Only close Static evidence gate if F1/F2/F3 directional gates pass and Node-vs-Query CI95 lower>0. Otherwise report unconfirmed, do not tune or start Feedback.",
+  "cost": "Measured tokens/inference-call accounting, not monetary billing. Extraction operands sharing one response counted once in per-method physical execution cost; legacy per-node cost separately reported.",
+  "latency": "Per-call measured request latency and deduplicated per-task service sum. Conditional node-table replay cannot establish end-to-end DAG latency.",
+  "missing": "Transport failures retained as missing. Do not impute correctness/cost zero or delete silently; main complete-panel gate remains inconclusive if any required candidate cell is missing.",
+  "constraints": [
+    "no fresh fit",
+    "no encoder change",
+    "no node feature addition",
+    "no threshold tuning",
+    "no Router pool change",
+    "no Feedback",
+    "no Dynamic DAG",
+    "no GitHub push"
+  ]
+}

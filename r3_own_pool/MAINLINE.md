@@ -22,3 +22,11 @@ GAP、重复稳定性和 Label Repair 保留为前置实验，用于支持模型
 确定性工具基线20/20成功、零模型调用，表明此采购算术任务族首先应采用执行器类型选择：可计算节点交给工具，而非让LLM反复算数。其100%不代表自然复杂任务也能由这些规则解决。
 
 下一里程碑应是Tool-aware Static DAG与需要语义提取/推理的自然任务静态对照；在该基线和可检测失败机制站稳之前，不推进Graph Forest。现有采购pilot只保留为执行器回归测试，不当作动态规划创新主结果。新增里程碑尚未自动执行。
+
+## Fresh Static DAG Confirmation（当前执行）
+
+用户已明确授权：官方MultiHiertt test缺少标签，改用经工作区使用记录审计未参与开发的train任务，固定100题作为独立fresh holdout。参数和全部部署选择在fresh回答生成前封存，三个Router候选medium/large/coder各节点真实执行一次；R1不加入、不采集。本轮只比较Always Large、Query Router、Static Capability、Frozen Node Router和Node Oracle。
+
+[当前协议与结果目录](static_dag_v0/fresh_static_confirmation/README.md)。F1–F3均在固定统计规则下检验；不能按fresh结果改模型、阈值或特征。通过后才可把Static阶段证据冻结，不自动启动Feedback。
+
+后续路线明确为Static DAG → Feedback Memory → Dynamic DAG → Graph Forest → 单/双/多目标优化。Graph Forest定义为历史任务图/子图的可检索、可复用、可修改、可版本化集合，支持追问复用已有节点；动态DAG的新候选分支只是其中一部分，不能把Graph Forest缩减为本次候选beam。这里只记录路线，尚未实现或启动这些阶段。

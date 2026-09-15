@@ -1,0 +1,53 @@
+{
+  "question": "Does a learnable node-level model-preference GAP exist, and where?",
+  "shadow": {
+    "tasks": 10,
+    "nodes": 20,
+    "models": [
+      "medium",
+      "large",
+      "coder",
+      "reasoning"
+    ],
+    "small": "unavailable/not required"
+  },
+  "by_node_type": {
+    "extraction": {
+      "n_nodes": 10,
+      "accuracy": {
+        "medium": 0.5,
+        "large": 0.7,
+        "coder": 0.5,
+        "reasoning": 0.4
+      },
+      "oracle": 0.9,
+      "oracle_minus_best_policy": 0.20000000000000007,
+      "best_fixed_policy": "large",
+      "nodes_where_any_model_succeeds": 9
+    },
+    "semantic": {
+      "n_nodes": 10,
+      "accuracy": {
+        "medium": 0.0,
+        "large": 0.0,
+        "coder": 0.0,
+        "reasoning": 0.0
+      },
+      "oracle": 0.0,
+      "oracle_minus_best_policy": 0.0,
+      "best_fixed_policy": "medium",
+      "nodes_where_any_model_succeeds": 0
+    }
+  },
+  "semantic_failure_decomposition": {
+    "extraction_pass_semantic_pass": 0,
+    "extraction_pass_semantic_fail": 5,
+    "extraction_fail": 5
+  },
+  "verdict": {
+    "extraction": "heterogeneous and potentially learnable: oracle 0.9 vs best fixed (large) 0.7 over n=10; CI wide at this n",
+    "semantic": "uniform capability wall: every model fails every shadow semantic node (oracle 0.0); 5 of 10 failures are intrinsic (extraction passed, semantic still failed)",
+    "implication": "node-conditioned routing has signal only on extraction-type nodes in the current pool; semantic nodes need capability/decomposition work, not model selection"
+  },
+  "constraints": "Descriptive audit of the frozen v1 shadow subset; no new generation; no router retrained"
+}
