@@ -1,0 +1,39 @@
+{
+  "dev_benchmark": {
+    "Q": {
+      "QueryRouter": 0.3951612903225806,
+      "TypePrior": 0.4543010752688172,
+      "NodeRouter": 0.47043010752688175
+    },
+    "ci95": {
+      "NodeRouter_minus_TypePrior": [
+        0.005970149253731344,
+        0.050746268656716415
+      ],
+      "TypePrior_minus_QueryRouter": [
+        0.006216832504145937,
+        0.07968698175787725
+      ]
+    },
+    "folds": "3-fold grouped by task; TypePrior fit per fold"
+  },
+  "fresh_holdout": {
+    "Q": {
+      "QueryRouter": 0.44421906693711966,
+      "NodeRouter": 0.513184584178499,
+      "TypePrior": 0.5111561866125761
+    },
+    "ci95": {
+      "NodeRouter_minus_TypePrior": [
+        -0.008,
+        0.012000000000000002
+      ],
+      "TypePrior_minus_QueryRouter": [
+        0.0325,
+        0.10100000000000002
+      ]
+    },
+    "note": "TypePrior uses DEV-derived best-per-type (deployable, no holdout hindsight); dev best-per-type coincides with fresh best-per-type"
+  },
+  "conclusion": "node-level decomposition (type granularity) carries the gain; the GTE embedding adds ~0 (dev -1.1pp / fresh +0.2pp). Contribution repositioned accordingly in METHOD 3.3."
+}

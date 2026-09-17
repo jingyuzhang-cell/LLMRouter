@@ -70,7 +70,7 @@ def run():
         raise FileExistsError('type_aware_gate_ablation already exists')
     OUT.mkdir()
     nodes_all = json.loads((SRC / 'NODES.json').read_text())
-    matrix = dict(np.load(SRC / 'SCORED_MATRIX.npz', allow_pickle=False))
+    matrix = dict(np.load(SRC / 'SCORED_MATRIX_EXEC.npz', allow_pickle=False))
     emb = np.load(SRC / 'QUESTION_EMBEDDINGS.npz', allow_pickle=False)
     dev = np.load(SRC / 'DEV_MODELS.npz', allow_pickle=False)
     idx = [i for i, n in enumerate(nodes_all) if matrix['main'][i]]

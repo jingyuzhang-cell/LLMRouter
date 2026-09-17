@@ -1,0 +1,13 @@
+{
+ "table": {
+  "FullAdaptive_live": 0.34,
+  "OracleVerification": 0.34,
+  "OracleExtraction": 0.46,
+  "OracleBoth": 0.5
+ },
+ "semantics": "policy replay: live control flow kept; one component substituted per arm",
+ "oracle_verification_note": "fallback executed for real on tasks the live verifier wrongly accepted; decompose rescue kept where it fired",
+ "oracle_extraction_note": "outcome read from the frozen conditional table (gold facts) at the same final model; decompose rescues kept",
+ "positioning": "diagnosis only - explains why live success is 34%; not a headline result",
+ "finding": "Oracle Verification adds ZERO task-level gain: of the 24 wrongly-accepted tasks, real fallbacks rescued only 2 (these are multi-model failures - both initial and fallback models miss on the same live facts), offset by 2 None-verdict flips. Detection quality matters at NODE level (18.7% recovery) but not at TASK level because the residual failures are not recoverable by model substitution. Oracle Extraction is the dominant bottleneck (+12pp): upstream information grounding limits adaptive execution. Ceiling with both oracles: 50%."
+}

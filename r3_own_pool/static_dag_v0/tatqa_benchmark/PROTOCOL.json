@@ -1,0 +1,19 @@
+{
+  "role": "second-domain node-level routing validation (TAT-QA dev, never used in any prior experiment)",
+  "source": "/root/r3_own_pool/data/tatqa/tatqa_dataset_dev.json",
+  "seed": "20260916",
+  "tasks": 40,
+  "node_counts": {
+    "extraction": 80,
+    "reasoning": 40,
+    "verification": 80
+  },
+  "eligibility": "answer_type=arithmetic, derivation parseable, >=2 non-constant literals",
+  "gold": "exact evaluation of the dataset derivation expression (tolerance 1e-4 relative)",
+  "prompts": "identical frozen templates as the MultiHiertt benchmark (eprompt/sprompt/verification)",
+  "calls_per_model": 160,
+  "constraints": [
+    "No overlap with any prior workspace data",
+    "Models and decoding identical to main benchmark"
+  ]
+}

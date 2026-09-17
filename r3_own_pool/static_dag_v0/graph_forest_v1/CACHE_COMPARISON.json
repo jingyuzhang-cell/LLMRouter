@@ -1,0 +1,21 @@
+{
+ "workload": "20 follow-up tasks, each modifying ONE fact value (+10%) on a stored task",
+ "conditions": {
+  "no_reuse": {
+   "calls_per_task": 4.0,
+   "note": "full chain re-execution"
+  },
+  "output_cache_exact_match": {
+   "calls_per_task": 4.0,
+   "note": "ANY input modification misses the cache; identical to no-reuse on this workload. Only exact-repeat queries hit (0 new calls), where the forest is equally cheap."
+  },
+  "graph_forest": {
+   "calls_per_task": 2.0,
+   "call_reduction": 0.5,
+   "token_reduction": 0.9140751414364511,
+   "executes": "19/20",
+   "distinction": "stores nodes+edges+dependencies+versions, so it localizes the modification: extraction subgraph reused (0 calls), only reasoning+verification recomputed; correctness preserved 19/20"
+  }
+ },
+ "conclusion": "An output cache is operationally equivalent to no-reuse under modification queries; the forest benefit comes from dependency- and version-aware partial invalidation, not from memoization."
+}

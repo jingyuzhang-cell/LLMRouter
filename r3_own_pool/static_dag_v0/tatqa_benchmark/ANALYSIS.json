@@ -1,0 +1,64 @@
+{
+  "arms": {
+    "QueryRouter": 0.605,
+    "TypePrior": 0.64,
+    "NodeRouter": 0.61
+  },
+  "oracle": 0.75,
+  "best_fixed": {
+    "model": "coder",
+    "Q": 0.605
+  },
+  "ci95": {
+    "NodeRouter_minus_QueryRouter": [
+      -0.045,
+      0.05500000000000001
+    ],
+    "NodeRouter_minus_TypePrior": [
+      -0.065,
+      -0.005
+    ],
+    "TypePrior_minus_QueryRouter": [
+      -0.02,
+      0.09000000000000001
+    ]
+  },
+  "by_type": {
+    "extraction": {
+      "n": 80,
+      "per_model": {
+        "medium": 0.55,
+        "large": 0.725,
+        "coder": 0.6625
+      },
+      "oracle": 0.7875,
+      "gap": 0.0625,
+      "best": "large"
+    },
+    "reasoning": {
+      "n": 40,
+      "per_model": {
+        "medium": 0.325,
+        "large": 0.25,
+        "coder": 0.275
+      },
+      "oracle": 0.325,
+      "gap": 0.0,
+      "best": "medium"
+    },
+    "verification": {
+      "n": 80,
+      "per_model": {
+        "medium": 0.625,
+        "large": 0.6125,
+        "coder": 0.7125
+      },
+      "oracle": 0.925,
+      "gap": 0.2125,
+      "best": "coder"
+    }
+  },
+  "gap_analysis": {
+    "oracle_minus_best_fixed": 0.145
+  }
+}

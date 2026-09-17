@@ -1,0 +1,43 @@
+{
+ "dynamic": {
+  "reroute_recovery": {
+   "rescued": 2,
+   "static_failed": 38,
+   "rate": 0.053
+  },
+  "decompose_recovery": {
+   "rescued": 3,
+   "triggered": 9,
+   "rate": 0.333
+  },
+  "total_recovery": {
+   "rescued": 5,
+   "failed": 38,
+   "rate": 0.132
+  },
+  "recovery_efficiency": {
+   "feedback_pp_per_ktok": 8.42,
+   "full_pp_per_ktok": 8.67
+  },
+  "structure_delta": {
+   "decompose_replaces": "1 reasoning node -> D1(align)+D2(expr)+tool+D4(check)",
+   "nodes_added_per_trigger": 2,
+   "triggered_tasks": 9,
+   "bounded": "one decompose attempt per task, no recursion"
+  },
+  "zero_harm": {
+   "broken_tasks": 0
+  }
+ },
+ "forest_pruning": {
+  "policy": [
+   "time: evict graphs unreferenced beyond a retention window",
+   "quality: nodes with recorded success-rate < 0.5 (over >=3 uses) deprioritized from reuse candidates",
+   "similarity: isomorphic subgraphs merged, keeping highest-quality version"
+  ],
+  "demo": {
+   "store_size": "2 graphs, 4 nodes + 1 aggregate + versions",
+   "would_prune_now": "none: every node has success evidence or version semantics"
+  }
+ }
+}

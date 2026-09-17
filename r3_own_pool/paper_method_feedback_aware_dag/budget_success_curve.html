@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Budget–Success Curve</title>
+<style>
+.viz-root { color-scheme: light; --surface-1:#fcfcfb; --text-primary:#0b0b0b; --text-secondary:#52514e;
+  --text-muted:#75746f; --grid:#e8e7e3; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#4a3aa7; }
+@media (prefers-color-scheme: dark) {
+:root:where(:not([data-theme="light"])) .viz-root { color-scheme: dark; --surface-1:#1a1a19; --text-primary:#fff;
+  --text-secondary:#c3c2b7; --text-muted:#8f8e88; --grid:#33322f; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#9085e9; } }
+:root[data-theme="dark"] .viz-root { color-scheme: dark; --surface-1:#1a1a19; --text-primary:#fff;
+  --text-secondary:#c3c2b7; --text-muted:#8f8e88; --grid:#33322f; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#9085e9; }
+body { margin:0; background:var(--surface-1,#fcfcfb); font-family:"Helvetica Neue",Arial,"PingFang SC",sans-serif; }
+.viz-root { background:var(--surface-1); max-width:760px; margin:0 auto; padding:28px 20px 12px; }
+h1 { font-size:16px; color:var(--text-primary); margin:0 0 4px; font-weight:650; }
+p.sub { font-size:12.5px; color:var(--text-secondary); margin:0 0 18px; }
+.legend { display:flex; gap:18px; flex-wrap:wrap; font-size:12px; color:var(--text-secondary); margin:0 0 10px; }
+.legend span { display:inline-flex; align-items:center; gap:6px; }
+.legend i { width:14px; height:3px; border-radius:2px; display:inline-block; }
+svg text { font-family:inherit; }
+.tooltip { position:fixed; pointer-events:none; background:var(--surface-1); border:1px solid var(--grid);
+  border-radius:6px; padding:7px 10px; font-size:12px; color:var(--text-primary); box-shadow:0 2px 8px rgba(0,0,0,.12);
+  opacity:0; transition:opacity .08s; z-index:5; }
+.tooltip b { font-weight:650; }
+table.data { border-collapse:collapse; font-size:12px; color:var(--text-secondary); margin-top:14px; width:100%; }
+table.data th, table.data td { text-align:right; padding:4px 10px; border-bottom:1px solid var(--grid); }
+table.data th:first-child, table.data td:first-child { text-align:left; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+<h1>预算约束下的任务成功率</h1>
+<p class="sub">Live E2E（50 任务，实测成本）。每条横线 = 该策略自其成本点起可用；粗线为各预算下的最优可选（上包络）。单位收益：反馈 8.4、结构恢复 8.8 pp / 千 token。</p>
+<div class="legend">
+  <span><i style="background:var(--s2)"></i>Always Large</span>
+  <span><i style="background:var(--s1)"></i>Static（Node Router）</span>
+  <span><i style="background:var(--s3)"></i>+ Feedback</span>
+  <span><i style="background:var(--s4)"></i>Full Adaptive</span>
+  <span><i style="background:var(--text-muted);height:4px"></i>最优包络</span>
+</div>
+<svg id="chart" viewBox="0 0 720 400" width="100%" role="img" aria-label="预算-成功率曲线图"></svg>
+<table class="data">
+<tr><th>策略</th><th>tokens / 任务</th><th>Task Success</th><th>边际（pp / 千 token）</th></tr>
+<tr><td>Always Large</td><td>4,477</td><td>24%</td><td>—</td></tr>
+<tr><td>Static（Node Router）</td><td>4,484</td><td>24%</td><td>—</td></tr>
+<tr><td>+ Feedback</td><td>4,959</td><td>28%</td><td>8.4</td></tr>
+<tr><td>Full Adaptive</td><td>5,637</td><td>34%</td><td>8.8</td></tr>
+</table>
+</div>
+<div class="tooltip" id="tip"></div>
+<script>
+const X0=64, X1=690, Y0=32, Y1=340;
+const xmin=4400, xmax=5800, ymin=10, ymax=40;
+const X=v=>X0+(v-xmin)/(xmax-xmin)*(X1-X0);
+const Y=p=>Y1-(p-ymin)/(ymax-ymin)*(Y1-Y0);
+const S=getComputedStyle(document.querySelector('.viz-root'));
+const C={s1:S.getPropertyValue('--s1').trim(),s2:S.getPropertyValue('--s2').trim(),s3:S.getPropertyValue('--s3').trim(),
+         s4:S.getPropertyValue('--s4').trim(),grid:S.getPropertyValue('--grid').trim(),
+         tp:S.getPropertyValue('--text-primary').trim(),ts:S.getPropertyValue('--text-secondary').trim(),tm:S.getPropertyValue('--text-muted').trim()};
+const data=[
+ {name:'Always Large', cost:4477, succ:24, color:C.s2},
+ {name:'Static（Node Router）', cost:4484, succ:24, color:C.s1},
+ {name:'+ Feedback', cost:4959, succ:28, color:C.s3},
+ {name:'Full Adaptive', cost:5637, succ:34, color:C.s4}];
+const svg=document.getElementById('chart'), NS='http://www.w3.org/2000/svg';
+const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e;};
+// grid + axes (recessive)
+for(let p=10;p<=40;p+=5){el('line',{x1:X0,y1:Y(p),x2:X1,y2:Y(p),stroke:C.grid,'stroke-width':1});
+ el('text',{x:X0-8,y:Y(p)+4,'text-anchor':'end','font-size':11,fill:C.ts}).textContent=p+'%';}
+for(let t=4500;t<=5750;t+=250){el('line',{x1:X(t),y1:Y1,x2:X(t),y2:Y1+4,stroke:C.grid});
+ el('text',{x:X(t),y:Y1+18,'text-anchor':'middle','font-size':11,fill:C.ts}).textContent=(t/1000).toFixed(1)+'k';}
+el('text',{x:(X0+X1)/2,y:388,'text-anchor':'middle','font-size':12,fill:C.ts}).textContent='Token 预算 / 任务';
+el('text',{x:18,y:(Y0+Y1)/2,'text-anchor':'middle','font-size':12,fill:C.ts,transform:`rotate(-90 18 ${(Y0+Y1)/2})`}).textContent='Task Success';
+// strategy rays: thin 2px from cost point to right edge
+const tip=document.getElementById('tip');
+data.forEach(d=>{
+ el('line',{x1:X(d.cost),y1:Y(d.succ),x2:X1,y2:Y(d.succ),stroke:d.color,'stroke-width':2,'stroke-linecap':'round',opacity:.85});
+ const m=el('circle',{cx:X(d.cost),cy:Y(d.succ),r:6,fill:d.color,stroke:'var(--surface-1)','stroke-width':2,cursor:'pointer'});
+ m.addEventListener('mousemove',ev=>{tip.style.opacity=1;tip.style.left=(ev.clientX+14)+'px';tip.style.top=(ev.clientY-10)+'px';
+  tip.innerHTML=`<b>${d.name}</b><br>${d.succ}% @ ${d.cost.toLocaleString()} tokens/任务`;});
+ m.addEventListener('mouseleave',()=>tip.style.opacity=0);
+ // direct label at right of ray
+ el('text',{x:X1-6,y:Y(d.succ)-7,'text-anchor':'end','font-size':11.5,fill:C.ts,'font-weight':550}).textContent=`${d.name} · ${d.succ}%`;
+});
+// best-available envelope (step), 4px emphasized neutral
+const env=[[4477,24],[4959,28],[5637,34]];
+env.forEach((s,i)=>{
+ const x2=(i<env.length-1)?X(env[i+1][0]):X1;
+ el('line',{x1:X(s[0]),y1:Y(s[1]),x2:x2,y2:Y(s[1]),stroke:C.tm,'stroke-width':4,'stroke-linecap':'butt',opacity:.9});});
+env.forEach(s=>el('circle',{cx:X(s[0]),cy:Y(s[1]),r:4.5,fill:C.tm,stroke:'var(--surface-1)','stroke-width':2}));
+// budget ladder annotations
+[[5000,'≤5.0k → Feedback'],[5637,'≤5.6k → Full']].forEach(([x,lbl])=>{
+ el('line',{x1:X(x),y1:Y0,x2:X(x),y2:Y1,stroke:C.grid,'stroke-width':1,'stroke-dasharray':'3 3'});
+ el('text',{x:X(x)+5,y:Y0+12,'font-size':10.5,fill:C.tm}).textContent=lbl;});
+</script>
+</body>
+</html>

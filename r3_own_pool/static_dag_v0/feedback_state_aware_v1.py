@@ -38,7 +38,7 @@ def run():
     if OUT.exists():
         raise FileExistsError('feedback_state_aware_v1 already exists')
     nodes_all = json.loads((SRC / 'NODES.json').read_text())
-    matrix = dict(np.load(SRC / 'SCORED_MATRIX.npz', allow_pickle=False))
+    matrix = dict(np.load(SRC / 'SCORED_MATRIX_EXEC.npz', allow_pickle=False))
     emb = np.load(SRC / 'QUESTION_EMBEDDINGS.npz', allow_pickle=False)
     dev = np.load(SRC / 'DEV_MODELS.npz', allow_pickle=False)
     order = {t['uid']: k for k, t in enumerate(json.loads((SRC / 'TASKS.json').read_text()))}
