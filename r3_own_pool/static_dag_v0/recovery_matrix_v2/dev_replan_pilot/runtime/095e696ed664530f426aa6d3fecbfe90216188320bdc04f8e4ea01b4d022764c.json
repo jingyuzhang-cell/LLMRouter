@@ -1,0 +1,44 @@
+{
+  "valid": true,
+  "node_id": "61610e9a-13c4-4670-8616-c6218f7793ad:rs",
+  "task_uid": "61610e9a-13c4-4670-8616-c6218f7793ad",
+  "domain": "tatqa",
+  "question": "What was the change in the Basic net income per common share between 2018 and 2019?",
+  "context": "TABLE:\n | Year Ended March 31, | \n | 2019 | 2018\nNet sales | $5,563.7 | $5,875.0\nNet income (loss) | $542.0 | $(762.3)\nBasic net income (loss) per common share | $2.29 | $(3.27)\nDiluted net income (loss) per common share | $2.17 | $(3.27)\n\nPASSAGES:\n[0] {'uid': '4ca8c5fa-6eaa-40b7-bd3e-e4ff61521886', 'order': 1, 'text': 'Note 2. Business Acquisitions'}\n[1] {'uid': '69bcbdbe-d024-4aed-9b54-5ec54dc20c4b', 'order': 2, 'text': 'Acquisition of Microsemi'}\n[2] {'uid': '004c0a28-f9b0-4a9a-8bf2-4bdd8423bec8', 'order': 3, 'text': 'The following unaudited pro-forma consolidated results of operations for the fiscal year ended March 31, 2019 and 2018 assume the closing of the Microsemi acquisition occurred as of April 1, 2017. The pro-forma adjustments are mainly comprised of acquired inventory fair value costs and amortization of purchased intangible assets. The pro-forma results of operations are presented for informational purposes only and are not indicative of the results of operations that would have been achieved if the acquisition had taken place on April 1, 2017 or of results that may occur in the future (in millions except per share data):'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": []
+  },
+  "actual_extracted_facts": {
+    "facts": []
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":2.29,\"evidence\":\"Basic net income (loss) per common share | $2.29 | $(3.27)\"},\"{\"value\":-3.27,\"evidence\":\"Basic net income (loss) per common share | $2.29 | $(3.27)\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 284,
+      "source_key": "tq:61610e9a-13c4-4670-8616-c6218f7793ad:ext",
+      "response_sha256": "88c9a643ebeeeb6a4daac5e2bfc173e7218b997cf6f20931b664bd38a3c924a2"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v1 - v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v1 - v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 444,
+    "source_key": "tq:61610e9a-13c4-4670-8616-c6218f7793ad:rsn",
+    "response_sha256": "c255cad0ca3aab666f86f8b0557ca73baddfdf7d4576e99faab0c43b547f9e30"
+  },
+  "failure_state": {
+    "extraction_parse_error": "JSONDecodeError"
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "61610e9a-13c4-4670-8616-c6218f7793ad:rs"
+  }
+}

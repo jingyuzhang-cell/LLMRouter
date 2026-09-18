@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "74183d5d-7633-43b5-bd7b-f0894fbe2299:rs",
+  "task_uid": "74183d5d-7633-43b5-bd7b-f0894fbe2299",
+  "domain": "tatqa",
+  "question": "What was the percentage change in Total (loan) in 2019 from 2018?",
+  "context": "TABLE:\nUSDm | 2019 | 2018 | 2017\nVessel values including newbuildings (broker values) | 1,801.5 | 1,675.1 | 1,661.1\nTotal (value) | 1,801.5 | 1,675.1 | 1,661.1\nBorrowings | 863.4 | 754.7 | 753.9\n- Hereof debt regarding Land and buildings & Other plant and operating equipment | -8.7 | - | -\nCommitted CAPEX on newbuildings | 51.2 | 258.0 | 306.9\nLoans receivables | -4.6 | - | -\nCash and cash equivalents, including restricted cash | -72.5 | -127.4 | -134.2\nTotal (loan) | 828.8 | 885.3 | 926.6\nLoan-to-value (LTV) ratio | 46.0% | 52.9% | 55.8%\n\nPASSAGES:\n[0] {'uid': '64db8421-225b-4413-9f8b-efa8058ab4dd', 'order': 1, 'text': 'Loan-to-value (LTV): TORM defines Loan-to-value (LTV) ratio as Vessel values divided by net borrowings on the vessels.'}\n[1] {'uid': 'c985f729-5110-4209-8803-229cc244089b', 'order': 2, 'text': 'LTV describes the net debt ratio on the vessel, and is used by TORM to describe the financial situation, the liquidity risk as well as to express the future possibilities to raise new capital by new loan facilities.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 828.8,
+        "evidence": "Total (loan) | 828.8 | 885.3 | 926.6"
+      },
+      {
+        "value": 885.3,
+        "evidence": "Total (loan) | 828.8 | 885.3 | 926.6"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 828.8,
+        "evidence": "Total (loan) | 828.8 | 885.3 | 926.6"
+      },
+      {
+        "value": 885.3,
+        "evidence": "Total (loan) | 828.8 | 885.3 | 926.6"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":828.8,\"evidence\":\"Total (loan) | 828.8 | 885.3 | 926.6\"},{\"value\":885.3,\"evidence\":\"Total (loan) | 828.8 | 885.3 | 926.6\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 197,
+      "source_key": "tq:74183d5d-7633-43b5-bd7b-f0894fbe2299:ext",
+      "response_sha256": "e75eb757b40ebce3e0f5451d6e27aab48e8fde7914e6f3c16545f90726c619bf"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1 - v0) / v0 * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1 - v0) / v0 * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 357,
+    "source_key": "tq:74183d5d-7633-43b5-bd7b-f0894fbe2299:rsn",
+    "response_sha256": "19ab14d2378bf695827b0a9bdc72fd2b8a37427cd0a9a6b6663f13bf3a762b4e"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "74183d5d-7633-43b5-bd7b-f0894fbe2299:rs"
+  }
+}

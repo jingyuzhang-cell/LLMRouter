@@ -1,0 +1,44 @@
+{
+  "valid": true,
+  "node_id": "5f282807-f3fe-4efd-a4ef-b88a3d580bf9:rs",
+  "task_uid": "5f282807-f3fe-4efd-a4ef-b88a3d580bf9",
+  "domain": "tatqa",
+  "question": "What was the change in revenue from external customers from UK in 2019 from 2018?",
+  "context": "TABLE:\n | Year-ended 31 March 2019 | Year-ended 31 March 2018 Restated See note 2\nRevenue from external customers by country | $M | $M\nUK | 83.2 | 73.5\nUSA | 222.2 | 199.0\nGermany | 143.5 | 128.4\nOther countries | 261.7 | 238.1\nTotal revenue from external customers by country | 710.6 | 639.0\n\nPASSAGES:\n[0] {'uid': '9c76b718-8b93-4dc7-9580-7b8c1399498c', 'order': 1, 'text': '6 Segment Information continued'}\n[1] {'uid': '7c166c7b-1fc6-422e-9565-670ae20f0eff', 'order': 2, 'text': 'The Group’s revenue is diversified across its entire end customer base and no single end user accounted for greater than 10 per cent of the Group’s revenue in either 2018 or 2019. In 2019 two distributors accounted for 15 per cent each, and one distributor for 11 per cent of Group billings which were attributable to all segments of the Group (2018: three distributors accounted for 15 per cent, 14 per cent and 12 per cent each).'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": []
+  },
+  "actual_extracted_facts": {
+    "facts": []
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":83.2,\"evidence\":\"UK | 83.2 | 73.5\"},\"{\"value\":73.5,\"evidence\":\"UK | 83.2 | 73.5\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 199,
+      "source_key": "tq:5f282807-f3fe-4efd-a4ef-b88a3d580bf9:ext",
+      "response_sha256": "85249879ed9130b3ec5c01fed976d96b82fbe72a245d4a7d50c1bb317de7289b"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v1 - v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v1 - v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 359,
+    "source_key": "tq:5f282807-f3fe-4efd-a4ef-b88a3d580bf9:rsn",
+    "response_sha256": "c255cad0ca3aab666f86f8b0557ca73baddfdf7d4576e99faab0c43b547f9e30"
+  },
+  "failure_state": {
+    "extraction_parse_error": "JSONDecodeError"
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "5f282807-f3fe-4efd-a4ef-b88a3d580bf9:rs"
+  }
+}

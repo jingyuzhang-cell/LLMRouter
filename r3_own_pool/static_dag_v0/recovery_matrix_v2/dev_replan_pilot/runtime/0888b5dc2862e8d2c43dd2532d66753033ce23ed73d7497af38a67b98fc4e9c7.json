@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "0ae9262d-c0fd-4b56-b896-2b37f90810bc:rs",
+  "task_uid": "0ae9262d-c0fd-4b56-b896-2b37f90810bc",
+  "domain": "tatqa",
+  "question": "What was the percentage change in the amount for Ireland?",
+  "context": "TABLE:\n |  | 2019 | 2018\n | Note | £m | £m\nUK |  | 24.5 | 24.9\nIreland |  | 0.4 | 0.5\nTotal |  | 24.9 | 25.4\n\nPASSAGES:\n[0] {'uid': 'be0e92e9-bf09-4ee0-8f56-b2cf36b5f46d', 'order': 1, 'text': 'Credit risk'}\n[1] {'uid': 'c06b97d6-a851-442f-8ce9-486eaa984895', 'order': 2, 'text': 'The carrying amount of financial assets, previously recognised as loans and receivables under IAS 39 now classified as amortised cost under IFRS 9, represents the maximum credit exposure. The maximum exposure to credit risk at 31 March 2019 was £59.1m (2018: £56.5m).'}\n[2] {'uid': '5f527187-7e5a-440f-8cad-cf7611000d0b', 'order': 3, 'text': 'The maximum exposure to credit risk for trade receivables at the reporting date by geographic region was:'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 0.4,
+        "evidence": "\"Ireland |  | 0.4 | 0.5\""
+      },
+      {
+        "value": 0.5,
+        "evidence": "\"Ireland |  | 0.4 | 0.5\""
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 0.4,
+        "evidence": "\"Ireland |  | 0.4 | 0.5\""
+      },
+      {
+        "value": 0.5,
+        "evidence": "\"Ireland |  | 0.4 | 0.5\""
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":0.4,\"evidence\":\"\\\"Ireland |  | 0.4 | 0.5\\\"\"},{\"value\":0.5,\"evidence\":\"\\\"Ireland |  | 0.4 | 0.5\\\"\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 268,
+      "source_key": "tq:0ae9262d-c0fd-4b56-b896-2b37f90810bc:ext",
+      "response_sha256": "eba3e98c363c06cebfa2f8d24ddd4a18234027b696da4913725b6960767e439b"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1 - v0) * 100 / v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1 - v0) * 100 / v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 428,
+    "source_key": "tq:0ae9262d-c0fd-4b56-b896-2b37f90810bc:rsn",
+    "response_sha256": "fa96c18118eb5427cabfff64b6ed503aae4cace794a2c09ee23d48486daf03c4"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "0ae9262d-c0fd-4b56-b896-2b37f90810bc:rs"
+  }
+}

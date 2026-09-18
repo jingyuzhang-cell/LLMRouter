@@ -1,0 +1,175 @@
+{
+  "seed": 20260918,
+  "B": 10000,
+  "n": 40,
+  "rates": {
+    "retry_same": {
+      "n": 40,
+      "rate": 0.025,
+      "ci95": [
+        0.0,
+        0.0769
+      ]
+    },
+    "switch_model": {
+      "n": 40,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "evidence_retrieval": {
+      "n": 40,
+      "rate": 0.05,
+      "ci95": [
+        0.0,
+        0.1282
+      ]
+    },
+    "local_decompose": {
+      "n": 40,
+      "rate": 0.025,
+      "ci95": [
+        0.0,
+        0.0769
+      ]
+    },
+    "local_replan": {
+      "n": 40,
+      "rate": 0.025,
+      "ci95": [
+        0.0,
+        0.0769
+      ]
+    }
+  },
+  "ceiling": {
+    "oracle_frozen4": 0.1,
+    "oracle_frozen4_ci95": [
+      0.0244,
+      0.2
+    ],
+    "oracle_with_replan": 0.1,
+    "oracle_with_replan_ci95": [
+      0.0244,
+      0.2051
+    ],
+    "nodes_added_by_replan": 0,
+    "added_detail": []
+  },
+  "by_label": {
+    "evidence": {
+      "retry_same": {
+        "n": 16,
+        "ok": 0
+      },
+      "switch_model": {
+        "n": 16,
+        "ok": 0
+      },
+      "evidence_retrieval": {
+        "n": 16,
+        "ok": 0
+      },
+      "local_decompose": {
+        "n": 16,
+        "ok": 0
+      },
+      "local_replan": {
+        "n": 16,
+        "ok": 0
+      }
+    },
+    "reasoning": {
+      "retry_same": {
+        "n": 23,
+        "ok": 1
+      },
+      "switch_model": {
+        "n": 23,
+        "ok": 0
+      },
+      "evidence_retrieval": {
+        "n": 23,
+        "ok": 2
+      },
+      "local_decompose": {
+        "n": 23,
+        "ok": 1
+      },
+      "local_replan": {
+        "n": 23,
+        "ok": 1
+      }
+    },
+    "structural": {
+      "retry_same": {
+        "n": 1,
+        "ok": 0
+      },
+      "switch_model": {
+        "n": 1,
+        "ok": 0
+      },
+      "evidence_retrieval": {
+        "n": 1,
+        "ok": 0
+      },
+      "local_decompose": {
+        "n": 1,
+        "ok": 0
+      },
+      "local_replan": {
+        "n": 1,
+        "ok": 0
+      }
+    }
+  },
+  "replan_diagnostics": {
+    "executed": 40,
+    "plans_made": {
+      "1": 7,
+      "2": 33
+    },
+    "evidence_repaired": 29,
+    "executor_errors": 29,
+    "affected_nodes_hist": {
+      "5": 8,
+      "None": 29,
+      "2": 2,
+      "4": 1
+    }
+  },
+  "cost": {
+    "retry_same": {
+      "mean_tokens": 258.2,
+      "mean_dt": 0.317
+    },
+    "switch_model": {
+      "mean_tokens": 258.1,
+      "mean_dt": 0.368
+    },
+    "evidence_retrieval": {
+      "mean_tokens": 2554.7,
+      "mean_dt": 2.982
+    },
+    "local_decompose": {
+      "mean_tokens": 2668.4,
+      "mean_dt": 3.737
+    },
+    "local_replan": {
+      "mean_tokens": 5930.6,
+      "mean_dt": 5.505
+    },
+    "no_recovery": {
+      "mean_tokens": 0,
+      "mean_dt": 0
+    }
+  },
+  "go_no_go": {
+    "criterion": "replan must lift the frozen-4 oracle by more than 2 nodes of 40 (5pp) to continue",
+    "nodes_added_by_replan": 0,
+    "verdict": "NO-GO: write local replan as future work"
+  }
+}

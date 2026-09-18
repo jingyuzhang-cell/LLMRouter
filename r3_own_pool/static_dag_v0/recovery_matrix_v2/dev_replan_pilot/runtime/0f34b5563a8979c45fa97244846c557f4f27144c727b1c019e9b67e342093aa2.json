@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "9fce8f25-dd3b-4c50-9b7b-d200ced15ded:rs",
+  "task_uid": "9fce8f25-dd3b-4c50-9b7b-d200ced15ded",
+  "domain": "tatqa",
+  "question": "What is the percentage change in the finance costs expensed from 2018 to 2019?",
+  "context": "TABLE:\nConsolidated |  | \n | 2019 | 2018\n | US$000 | US$000\nProfit before income tax includes the following specific expenses: |  | \nIncluded in professional advice expense |  | \nCosts associated with acquisitions | 244 | 572\nFinance costs |  | \nInterest and finance charges paid/payable | 1 | 2\nUnwinding of the discount on provisions | 199 | 60\nFinance costs expensed | 200 | 62\nOperating leases included in income statement |  | \nOffice rent | 4,339 | 3,538\nEquipment | 12 | 16\nMotor vehicle | 51 | 96\nTotal expense relating to operating leases | 4,402 | 3,650\nPost-employment benefits |  | \nPost-employment benefits: defined contribution | 2,169 | 1,870\nResearch and development costs expensed |  | \nResearch and development costs incurred | 18,478 | 17,793\n\nPASSAGES:\n[0] {'uid': '707bf0f3-e1e8-4862-a90a-97fc6652e912', 'order': 1, 'text': 'Note 4. Expenses'}\n[1] {'uid': 'eb4738de-150c-4bf2-8a04-d12a6e0cbdba', 'order': 2, 'text': 'Accounting policy for expenses'}\n[2] {'uid': 'd50184b8-e32d-4490-9a79-756f06386fbc', 'order': 3, 'text': 'Operating lease costs'}\n[3] {'uid': '18d35f0b-d767-4451-be1f-7ae348efe80f', 'order': 4, 'text': 'Operating lease payments, net of any incentives received from the lessor, are charged to profit or loss on a straight-line basis over the term of the lease.'}\n[4] {'uid': '65d42a8f-b630-45ec-bb17-8e1c674d1775', 'order': 5, 'text': 'Finance costs'}\n[5] {'uid': 'e3682f98-c020-467b-9007-c9ebcf38e597', 'order': 6, 'text': 'All finance costs are expensed in the period in which they are incurred.'}\n[6] {'uid': '1c313f27-9240-48f8-8c66-cf7c52a1f90b', 'order': 7, 'text': 'Research and development costs'}\n[7] {'uid': 'ef290991-8ae5-4e05-a10b-6ad3f4b06940', 'order': 8, 'text': 'Expenditure on research activities, undertaken with the prospect of obtaining new technical knowledge and understanding, is recognised in the statement of profit or loss and other comprehensive income as an expense when it is incurred.'}\n[8] {'uid': 'd900744f-1710-4b76-b488-e061ff23849d', 'order': 9, 'text': 'Expenditure on development activities is charged as incurred, or deferred where these costs are directly associated with either integration of acquired technology or the development of new technology and it is determined that the technology has reached technological feasibility. Costs are deferred to future periods to the extent that they are expected beyond any reasonable doubt to be recoverable. The costs capitalised comprises directly attributable costs, including costs of materials, services and direct labour. Deferred costs are amortised from the date of commercial release on a straight-line basis over the period of the expected benefit, which varies from 2 to 10 years.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 200,
+        "evidence": "Finance costs expensed | 200 | 62"
+      },
+      {
+        "value": 62,
+        "evidence": "Finance costs expensed | 200 | 62"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 200,
+        "evidence": "Finance costs expensed | 200 | 62"
+      },
+      {
+        "value": 62,
+        "evidence": "Finance costs expensed | 200 | 62"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 200,\n      \"evidence\": \"Finance costs expensed | 200 | 62\"\n    },\n    {\n      \"value\": 62,\n      \"evidence\": \"Finance costs expensed | 200 | 62\"\n    }\n  ]\n}\n```",
+      "model": "medium",
+      "source_file": "static_dag_v0/tatqa_benchmark/medium_RESPONSES.jsonl",
+      "source_line": 149,
+      "source_key": "9fce8f25-dd3b-4c50-9b7b-d200ced15ded:extraction",
+      "response_sha256": "194e1c8e6dbc697f0838e788350f14e68e33d68888ac17b306df28cfaceac6b9"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1 - v0) / v0 * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1 - v0) / v0 * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/tatqa_benchmark/medium_RESPONSES.jsonl",
+    "source_line": 150,
+    "source_key": "9fce8f25-dd3b-4c50-9b7b-d200ced15ded:rs",
+    "response_sha256": "19ab14d2378bf695827b0a9bdc72fd2b8a37427cd0a9a6b6663f13bf3a762b4e"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "9fce8f25-dd3b-4c50-9b7b-d200ced15ded:rs"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "valid": true,
+  "node_id": "0a12160d-f72a-44ec-9c31-5815d81268a0:rs",
+  "task_uid": "0a12160d-f72a-44ec-9c31-5815d81268a0",
+  "domain": "tatqa",
+  "question": "What is the total stock-based compensation expense related to the RSUs recognised by the company between 2017 to 2019?",
+  "context": "TABLE:\n | 2019 |  | 2018 | \n | Number of Shares | Weighted Average Grant Date Fair Value | Number of Shares | Weighted Average Grant Date Fair Value\nNon-vested at beginning of year | 315,292 | $2.26 | 438,712 | $2.28\nShares granted | 253,113 | 2.17 | 200,000 | 3.16\nShares vested | 82,270 | 2.28 | 323,420 | 2.84\nNon-vested at end of year | 486,135 | $2.53 | 315,292 | $2.26\n\nPASSAGES:\n[0] {'uid': '5afcfda5-840a-42f2-985f-5454f0186b5d', 'order': 1, 'text': 'RESTRICTED STOCK UNITS'}\n[1] {'uid': 'c68089f4-030b-47af-81da-ea40656929ec', 'order': 2, 'text': 'The following is a summary of RSUs award activity for the years ended December 31, 2019 and 2018:'}\n[2] {'uid': 'f27d88cb-98a7-41dc-8bfc-1f3563d0cca4', 'order': 3, 'text': 'The Company estimates the fair value of the granted shares using the market price of the Company’s stock price at the grant date. For the years ended December 31, 2019, 2018 and 2017, the Company recognized $0.3 million, $0.9 million and $0.6 million, respectively of stock-based compensation expense related to the RSUs.'}\n[3] {'uid': '4604badf-196f-4d39-9c21-ba34eba222cd', 'order': 4, 'text': 'As of December 31, 2019, total compensation cost not yet recognized related to unvested RSUs was approximately $0.8 million, which is expected to be recognized over a weighted-average period of 2.3 years.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": []
+  },
+  "actual_extracted_facts": {
+    "facts": []
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":0.3,\"evidence\":\"The Company recognized $0.3 million, $0.9 million and $0.6 million, respectively of stock-based compensation expense related to the RSUs.\"},{\"value\":0.9,\"evidence\":\"The Company recognized $0.3 million, $0.9 million and $0.6 million, respectively of stock-based compensation expense related to the RSUs.\"},{\"value\":0.6,\"evidence\":\"The Company recognized $0.3 million, $0.9 million and $0.6 million, respectively of stock-based compensation expense related to the RSUs.\"}]}```",
+      "model": "medium",
+      "source_file": "static_dag_v0/tatqa_benchmark/medium_RESPONSES.jsonl",
+      "source_line": 53,
+      "source_key": "0a12160d-f72a-44ec-9c31-5815d81268a0:extraction",
+      "response_sha256": "a2591a1cc737bd8846ca6ba63946f2c7189a7e231b93183f8c6c4f0254634d5f"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v0+v1+v2\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v0+v1+v2\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/tatqa_benchmark/medium_RESPONSES.jsonl",
+    "source_line": 54,
+    "source_key": "0a12160d-f72a-44ec-9c31-5815d81268a0:rs",
+    "response_sha256": "7b42ab408fa2e845268ac7cdd65c0b835e30d4c1adf4f4d861ffdaa9e07402f6"
+  },
+  "failure_state": {
+    "extraction_parse_error": "JSONDecodeError"
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "0a12160d-f72a-44ec-9c31-5815d81268a0:rs"
+  }
+}

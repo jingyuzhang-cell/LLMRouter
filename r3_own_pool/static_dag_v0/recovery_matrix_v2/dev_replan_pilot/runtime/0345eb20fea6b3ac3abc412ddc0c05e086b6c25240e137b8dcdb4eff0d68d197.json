@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "25212463-2a2c-4df5-a97a-a0dc1268ebe1:rs",
+  "task_uid": "25212463-2a2c-4df5-a97a-a0dc1268ebe1",
+  "domain": "tatqa",
+  "question": "What was the change in finance leases between 2022 and 2023?",
+  "context": "TABLE:\n | Operating Leases | Finance Leases\n2021 | $138 | $6\n2022 | 135 | 6\n2023 | 120 | 7\n2024 | 94 | 7\n2025 | 70 | 7\nThereafter | 577 | 35\nTotal future minimum lease payments | 1,134 | 68\nLess: Imputed interest | (279) | (9)\nTotal lease liabilities(1) | $855 | $59\n\nPASSAGES:\n[0] {'uid': 'e6b86d9d-7fb2-4bb8-8fda-a486c84c851f', 'order': 1, 'text': 'The following represents VMware’s future minimum lease payments under non-cancellable operating and finance leases as of January 31, 2020 (table in millions):'}\n[1] {'uid': '0824f59b-36c9-41c6-beb9-53e2edeb17e0', 'order': 2, 'text': '(1) Total lease liabilities as of January 31, 2020 excluded legally binding lease payments for leases signed but not yet commenced of $361 million.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 1,
+        "evidence": "\"2022 | 135 | 6\" and \"2023 | 120 | 7\""
+      },
+      {
+        "value": 1,
+        "evidence": "\"2022 | 6 | 6\" and \"2023 | 7 | 7\""
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 1,
+        "evidence": "\"2022 | 135 | 6\" and \"2023 | 120 | 7\""
+      },
+      {
+        "value": 1,
+        "evidence": "\"2022 | 6 | 6\" and \"2023 | 7 | 7\""
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":1,\"evidence\":\"\\\"2022 | 135 | 6\\\" and \\\"2023 | 120 | 7\\\"\"},{\"value\":1,\"evidence\":\"\\\"2022 | 6 | 6\\\" and \\\"2023 | 7 | 7\\\"\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 164,
+      "source_key": "tq:25212463-2a2c-4df5-a97a-a0dc1268ebe1:ext",
+      "response_sha256": "6d5de2b407aeff12d981350f081df8e25dded370890fcb7e515d5713155550ad"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1-v0)/v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1-v0)/v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 324,
+    "source_key": "tq:25212463-2a2c-4df5-a97a-a0dc1268ebe1:rsn",
+    "response_sha256": "73d655f41b2188edd9c3a79b28c7bc47e42d50470affb59093452473f6e5691d"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "25212463-2a2c-4df5-a97a-a0dc1268ebe1:rs"
+  }
+}

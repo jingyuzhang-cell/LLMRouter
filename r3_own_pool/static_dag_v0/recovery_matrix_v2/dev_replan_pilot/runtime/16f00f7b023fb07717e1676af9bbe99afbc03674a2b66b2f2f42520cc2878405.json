@@ -1,0 +1,78 @@
+{
+  "valid": true,
+  "node_id": "14501a2e-1369-44f4-aa58-c5eb42c8d68b:ex0",
+  "task_uid": "14501a2e-1369-44f4-aa58-c5eb42c8d68b",
+  "domain": "tatqa",
+  "question": "What was the percentage change in Net income between 2018 and 2019?",
+  "context": "TABLE:\n | Year Ended March 31, | \n | 2019 | 2018\nNet sales | $5,563.7 | $5,875.0\nNet income (loss) | $542.0 | $(762.3)\nBasic net income (loss) per common share | $2.29 | $(3.27)\nDiluted net income (loss) per common share | $2.17 | $(3.27)\n\nPASSAGES:\n[0] {'uid': '4ca8c5fa-6eaa-40b7-bd3e-e4ff61521886', 'order': 1, 'text': 'Note 2. Business Acquisitions'}\n[1] {'uid': '69bcbdbe-d024-4aed-9b54-5ec54dc20c4b', 'order': 2, 'text': 'Acquisition of Microsemi'}\n[2] {'uid': '004c0a28-f9b0-4a9a-8bf2-4bdd8423bec8', 'order': 3, 'text': 'The following unaudited pro-forma consolidated results of operations for the fiscal year ended March 31, 2019 and 2018 assume the closing of the Microsemi acquisition occurred as of April 1, 2017. The pro-forma adjustments are mainly comprised of acquired inventory fair value costs and amortization of purchased intangible assets. The pro-forma results of operations are presented for informational purposes only and are not indicative of the results of operations that would have been achieved if the acquisition had taken place on April 1, 2017 or of results that may occur in the future (in millions except per share data):'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 542.0,
+        "evidence": "Net income (loss) | $542.0 | $(762.3)"
+      },
+      {
+        "value": -762.3,
+        "evidence": "Net income (loss) | $542.0 | $(762.3)"
+      },
+      {
+        "value": 2019,
+        "evidence": " | 2019 | 2018"
+      },
+      {
+        "value": 2018,
+        "evidence": " | 2019 | 2018"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 542.0,
+        "evidence": "Net income (loss) | $542.0 | $(762.3)"
+      },
+      {
+        "value": -762.3,
+        "evidence": "Net income (loss) | $542.0 | $(762.3)"
+      },
+      {
+        "value": 2019,
+        "evidence": " | 2019 | 2018"
+      },
+      {
+        "value": 2018,
+        "evidence": " | 2019 | 2018"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 542.0,\n      \"evidence\": \"Net income (loss) | $542.0 | $(762.3)\"\n    },\n    {\n      \"value\": -762.3,\n      \"evidence\": \"Net income (loss) | $542.0 | $(762.3)\"\n    },\n    {\n      \"value\": 2019,\n      \"evidence\": \" | 2019 | 2018\"\n    },\n    {\n      \"value\": 2018,\n      \"evidence\": \" | 2019 | 2018\"\n    }\n  ]\n}\n```",
+      "model": "medium",
+      "source_file": "static_dag_v0/tatqa_benchmark/medium_RESPONSES.jsonl",
+      "source_line": 57,
+      "source_key": "14501a2e-1369-44f4-aa58-c5eb42c8d68b:extraction",
+      "response_sha256": "35e1174357c44cf5968b5110f1a30c593a3edf9ccaf27496df7e7bdcc9176c35"
+    }
+  ],
+  "failed_node_output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 542.0,\n      \"evidence\": \"Net income (loss) | $542.0 | $(762.3)\"\n    },\n    {\n      \"value\": -762.3,\n      \"evidence\": \"Net income (loss) | $542.0 | $(762.3)\"\n    },\n    {\n      \"value\": 2019,\n      \"evidence\": \" | 2019 | 2018\"\n    },\n    {\n      \"value\": 2018,\n      \"evidence\": \" | 2019 | 2018\"\n    }\n  ]\n}\n```",
+  "failed_output_provenance": {
+    "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 542.0,\n      \"evidence\": \"Net income (loss) | $542.0 | $(762.3)\"\n    },\n    {\n      \"value\": -762.3,\n      \"evidence\": \"Net income (loss) | $542.0 | $(762.3)\"\n    },\n    {\n      \"value\": 2019,\n      \"evidence\": \" | 2019 | 2018\"\n    },\n    {\n      \"value\": 2018,\n      \"evidence\": \" | 2019 | 2018\"\n    }\n  ]\n}\n```",
+    "model": "medium",
+    "source_file": "static_dag_v0/tatqa_benchmark/medium_RESPONSES.jsonl",
+    "source_line": 57,
+    "source_key": "14501a2e-1369-44f4-aa58-c5eb42c8d68b:extraction",
+    "response_sha256": "35e1174357c44cf5968b5110f1a30c593a3edf9ccaf27496df7e7bdcc9176c35"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "14501a2e-1369-44f4-aa58-c5eb42c8d68b:ex0"
+  }
+}
