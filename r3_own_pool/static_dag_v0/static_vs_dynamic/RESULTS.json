@@ -1,0 +1,52 @@
+{
+  "seed": 20260918,
+  "B": 10000,
+  "panel": "fresh_static_confirmation 100-task confirmation set",
+  "tier": "replay over measured per-(node,model) Q/C/L; conditional-input caveat as in 5.4",
+  "budget_definition": "per-task token budget = 1.2 x Static arm realized tokens (frozen 20% headroom); violation = realized tokens exceed this budget; plan_exceed = realized tokens exceed the initial plan (no budget controller)",
+  "dynamic_definition": "feedback-conditioned downstream re-scheduling of model assignment + budget reallocation + verification adjustment; topology unchanged",
+  "static": {
+    "n": 100,
+    "success": 0.41,
+    "success_ci": [
+      0.31,
+      0.51
+    ],
+    "mean_tokens": 7020.5,
+    "mean_latency_s": 12.807,
+    "recovery_rate": 0.4316,
+    "failed_tasks": 95,
+    "downstream_realloc_rate": 0.0,
+    "budget_violation_rate": 0.0,
+    "plan_exceed_rate": 0.95,
+    "mean_realloc_nodes": 0.0
+  },
+  "dynamic": {
+    "n": 100,
+    "success": 0.4,
+    "success_ci": [
+      0.31,
+      0.5
+    ],
+    "mean_tokens": 7034.6,
+    "mean_latency_s": 13.258,
+    "recovery_rate": 0.4211,
+    "failed_tasks": 95,
+    "downstream_realloc_rate": 0.2632,
+    "budget_violation_rate": 0.0,
+    "plan_exceed_rate": 0.95,
+    "mean_realloc_nodes": 0.432
+  },
+  "paired": {
+    "dQ": [
+      -0.03,
+      0.0
+    ],
+    "dC": 14.1,
+    "dL": 0.451,
+    "reallocated_tasks": 25,
+    "dynamic_recovered": 0,
+    "static_recovered": 1
+  },
+  "note": "Dynamic+Forest equals Dynamic on this panel: distinct tasks offer no cross-task reuse opportunity; forest reuse evidence lives in 5.6 multi-turn workload"
+}
