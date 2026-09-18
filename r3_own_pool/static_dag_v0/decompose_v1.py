@@ -56,7 +56,7 @@ def exec_calc(expression, facts):
             return Fraction(str(n.value))
         if isinstance(n, ast.Name) and re.fullmatch(r'v[0-9]+', n.id):
             return Fraction(str(facts['facts'][int(n.id[1:])]['value']))
-        if isinstance(n, ast.UnaryOp) and isinstance(n.op, (ast.USub, ast.Uadd)):
+        if isinstance(n, ast.UnaryOp) and isinstance(n.op, (ast.USub, ast.UAdd)):
             return walk(n.operand) * (-1 if isinstance(n.op, ast.USub) else 1)
         if isinstance(n, ast.BinOp) and type(n.op) in funcs:
             return funcs[type(n.op)](walk(n.left), walk(n.right))
