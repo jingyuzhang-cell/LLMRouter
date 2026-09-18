@@ -1,0 +1,70 @@
+{
+  "valid": true,
+  "node_id": "68107102-0fdc-4e64-850f-8eda6bcc892a:ex0",
+  "task_uid": "68107102-0fdc-4e64-850f-8eda6bcc892a",
+  "domain": "tatqa",
+  "question": "What is the total federal tax expense between 2017 to 2019?",
+  "context": "TABLE:\n |  | Years Ended December 31, | 31,\n | 2019 | 2018 | 2017\nCurrent provision for income taxes: |  |  | \nState | $49 | $44 | $48\nForeign | 1,716 | 953 | 1,023\nTotal current | 1,765 | 997 | 1,071\nDeferred tax expense (benefit): |  |  | \nFederal | 3 | (13) | 26\nForeign | (361) | 98 | 109\nTotal deferred | (358) | 85 | 135\nProvision for income taxes | $1,407 | $1,082 | $1,206\n\nPASSAGES:\n[0] {'uid': 'e43116b9-6243-426a-9a83-74e618dea2b3', 'order': 1, 'text': 'The provision for income taxes consisted of the following'}\n[1] {'uid': '8a2a49d1-54e8-4fe8-8db3-d994a3184a9b', 'order': 2, 'text': '(in thousands)'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 3,
+        "evidence": "Federal | 3 | (13) | 26"
+      },
+      {
+        "value": -13,
+        "evidence": "Federal | 3 | (13) | 26"
+      },
+      {
+        "value": 26,
+        "evidence": "Federal | 3 | (13) | 26"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 3,
+        "evidence": "Federal | 3 | (13) | 26"
+      },
+      {
+        "value": -13,
+        "evidence": "Federal | 3 | (13) | 26"
+      },
+      {
+        "value": 26,
+        "evidence": "Federal | 3 | (13) | 26"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":3,\"evidence\":\"Federal | 3 | (13) | 26\"},{\"value\":-13,\"evidence\":\"Federal | 3 | (13) | 26\"},{\"value\":26,\"evidence\":\"Federal | 3 | (13) | 26\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 308,
+      "source_key": "tq:68107102-0fdc-4e64-850f-8eda6bcc892a:ext",
+      "response_sha256": "4a4d4a8d3529309496c95b3b941c7c2f953f03a3c830b305c7660ad05c90096d"
+    }
+  ],
+  "failed_node_output": "{\"facts\":[{\"value\":3,\"evidence\":\"Federal | 3 | (13) | 26\"},{\"value\":-13,\"evidence\":\"Federal | 3 | (13) | 26\"},{\"value\":26,\"evidence\":\"Federal | 3 | (13) | 26\"}]}",
+  "failed_output_provenance": {
+    "output": "{\"facts\":[{\"value\":3,\"evidence\":\"Federal | 3 | (13) | 26\"},{\"value\":-13,\"evidence\":\"Federal | 3 | (13) | 26\"},{\"value\":26,\"evidence\":\"Federal | 3 | (13) | 26\"}]}",
+    "model": "large",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 308,
+    "source_key": "tq:68107102-0fdc-4e64-850f-8eda6bcc892a:ext",
+    "response_sha256": "4a4d4a8d3529309496c95b3b941c7c2f953f03a3c830b305c7660ad05c90096d"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "68107102-0fdc-4e64-850f-8eda6bcc892a:ex0"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "valid": true,
+  "node_id": "1e20b997-cb3b-4bc5-93e6-b45dbe945fb5:rs",
+  "task_uid": "1e20b997-cb3b-4bc5-93e6-b45dbe945fb5",
+  "domain": "tatqa",
+  "question": "What was the change in Total Other in 2018 from 2017?",
+  "context": "TABLE:\n |  | Years Ended December 31, | \n | 2019 | 2018 | 2017\nAmericas: |  |  | \nUnited States | $614,493 | $668,580 | $644,870\nThe Philippines | 250,888 | 231,966 | 241,211\nCosta Rica | 127,078 | 127,963 | 132,542\nCanada | 99,037 | 102,353 | 112,367\nEl Salvador | 81,195 | 81,156 | 75,800\nOther | 123,969 | 118,620 | 118,853\nTotal Americas | 1,296,660 | 1,330,638 | 1,325,643\nEMEA: |  |  | \nGermany | 94,166 | 91,703 | 81,634\nOther | 223,847 | 203,251 | 178,649\nTotal EMEA | 318,013 | 294,954 | 260,283\nTotal Other | 89 | 95 | 82\n | $1,614,762 | $1,625,687 | $1,586,008\n\nPASSAGES:\n[0] {'uid': 'e171141b-286f-4ad4-a164-701f16cb1b29', 'order': 1, 'text': 'The Company’s top ten clients accounted for 42.2%, 44.2% and 46.9% of its consolidated revenues during the years ended December 31, 2019, 2018 and 2017, respectively.'}\n[1] {'uid': 'fb772515-643d-4fde-bfa0-cf7059360454', 'order': 2, 'text': 'The following table represents a disaggregation of revenue from contracts with customers by delivery location (in thousands):'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 3,
+        "evidence": "Total Other | 89 | 95 | 82"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 3,
+        "evidence": "Total Other | 89 | 95 | 82"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":3,\"evidence\":\"Total Other | 89 | 95 | 82\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 271,
+      "source_key": "tq:1e20b997-cb3b-4bc5-93e6-b45dbe945fb5:ext",
+      "response_sha256": "29149252403762c3aa1775e65880e546a9ff4544e435c74f1b007c0144d91bfa"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v1 - v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v1 - v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 431,
+    "source_key": "tq:1e20b997-cb3b-4bc5-93e6-b45dbe945fb5:rsn",
+    "response_sha256": "c255cad0ca3aab666f86f8b0557ca73baddfdf7d4576e99faab0c43b547f9e30"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "1e20b997-cb3b-4bc5-93e6-b45dbe945fb5:rs"
+  }
+}

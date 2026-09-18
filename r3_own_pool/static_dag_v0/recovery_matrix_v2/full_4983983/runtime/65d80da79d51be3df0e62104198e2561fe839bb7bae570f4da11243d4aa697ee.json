@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "82c155de-a907-4b3f-b89f-1984bd97ddc5:rs",
+  "task_uid": "82c155de-a907-4b3f-b89f-1984bd97ddc5",
+  "domain": "tatqa",
+  "question": "What is the percentage increase / (decrease) in the total from 2018 to 2019?",
+  "context": "TABLE:\n | December 31, | \n | 2019 | 2018\nFCC licenses | $ 136.2 | $ 120.6\nState licenses | 2.5 | 2.5\nTotal | $ 138.7 | $ 123.1\n\nPASSAGES:\n[0] {'uid': 'e2c82858-5633-4e9e-b2b7-173cdbcdccd6', 'order': 1, 'text': 'Indefinite-lived Intangible Assets'}\n[1] {'uid': 'b9c19d1b-dfa4-43f2-84ac-9c4eb5ed18a0', 'order': 2, 'text': 'The carrying amount of indefinite-lived intangible assets were as follows (in millions):'}\n[2] {'uid': 'a4d68f97-06bc-49ea-8060-32d753556ac8', 'order': 3, 'text': 'The Broadcasting segment strategically acquires assets across the United States, which results in the recording of FCC licenses. Providing the Company acts within the requirements and constraints of the regulatory authorities, the renewal and extension of these licenses is reasonably certain at minimal costs. Accordingly, we have concluded that the acquired FCC licenses are indefinite-lived intangible assets.'}\n[3] {'uid': 'f3fa9f76-13dc-4c95-ac9a-71a34950f6c2', 'order': 4, 'text': 'In 2019, FCC licenses increased $15.6 million, $18.2 million of which was through acquisitions, offset by $2.3 million of impairments and $0.3 million loss on the sale of licenses. Our Broadcasting segment recorded the impairment as a result of its decision to forfeit FCC licenses in certain lower-ranked markets, and does not expect any significant changes to future cash flows as a result of these forfeitures. The Company reports intangible impairment charges within the Asset impairment expense line of our Consolidated Statements of Operations.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 138.7,
+        "evidence": "Total | $ 138.7 | $ 123.1"
+      },
+      {
+        "value": 123.1,
+        "evidence": "Total | $ 138.7 | $ 123.1"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 138.7,
+        "evidence": "Total | $ 138.7 | $ 123.1"
+      },
+      {
+        "value": 123.1,
+        "evidence": "Total | $ 138.7 | $ 123.1"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 138.7,\n      \"evidence\": \"Total | $ 138.7 | $ 123.1\"\n    },\n    {\n      \"value\": 123.1,\n      \"evidence\": \"Total | $ 138.7 | $ 123.1\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 319,
+      "source_key": "tq:82c155de-a907-4b3f-b89f-1984bd97ddc5:ext",
+      "response_sha256": "0100d3e20471be77e21d1c74f4c99605f3bb0fb7863b5b18f412559807b13296"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"((v0 - v1) / v1) * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"((v0 - v1) / v1) * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 479,
+    "source_key": "tq:82c155de-a907-4b3f-b89f-1984bd97ddc5:rsn",
+    "response_sha256": "45283a644e5b76b4b0a0eb2a41a5700496ef885c44662e7591c60e31dcf6d9bb"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "82c155de-a907-4b3f-b89f-1984bd97ddc5:rs"
+  }
+}

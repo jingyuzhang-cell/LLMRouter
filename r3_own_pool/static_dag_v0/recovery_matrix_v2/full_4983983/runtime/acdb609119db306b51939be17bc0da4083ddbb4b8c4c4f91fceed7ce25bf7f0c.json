@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "8c0bb13b-4ba4-4349-a697-dd2ab11723f8:rs",
+  "task_uid": "8c0bb13b-4ba4-4349-a697-dd2ab11723f8",
+  "domain": "tatqa",
+  "question": "What was the percentage change in the WACC between 2018 and 2019?",
+  "context": "TABLE:\n | 2019 | 2018\nAdjusted operating income (tax effected) | $120.7 | $118.6\nAverage invested capital | 923.1 | $735.6\nAfter-tax ROIC | 13.1% | 16.1%\nWACC | 9.0% | 9.5%\nEconomic Return | 4.1% | 6.6%\n\nPASSAGES:\n[0] {'uid': 'eb6ece94-09a4-4359-98e6-ea154025c080', 'order': 1, 'text': 'Return on Invested Capital (\"ROIC\") and Economic Return. We use a financial model that is aligned with our business strategy and includes a ROIC goal of 500 basis points over our weighted average cost of capital (\"WACC\"), which we refer to as \"Economic Return.\" Our primary focus is on our Economic Return goal of 5.0%, which is designed to create shareholder value and generate sufficient cash to self-fund our targeted organic revenue growth rate of 12.0%. ROIC and Economic Return are non-GAAP financial measures.'}\n[1] {'uid': '694c1500-d6ad-454b-853f-54cebbbbdee7', 'order': 2, 'text': 'Non-GAAP financial measures, including ROIC and Economic Return, are used for internal management goals and decision making because such measures provide management and investors additional insight into financial performance. In particular, we provide ROIC and Economic Return because we believe they offer insight into the metrics that are driving management decisions because we view ROIC and Economic Return as important measures in evaluating the efficiency and effectiveness of our long-term capital requirements. We also use a derivative measure of ROIC as a performance criteria in determining certain elements of compensation, and certain compensation incentives are based on Economic Return performance.'}\n[2] {'uid': '0380b7ce-8fc8-4c9f-9c9a-276a24c402ef', 'order': 3, 'text': 'We define ROIC as tax-effected operating income before restructuring and other special items divided by average invested capital over a rolling five-quarter period for the fiscal year. Invested capital is defined as equity plus debt, less cash and cash equivalents. Other companies may not define or calculate ROIC in the same way. ROIC and other non-GAAP financial measures should be considered in addition to, not as a substitute for, measures of our financial performance prepared in accordance with U.S. generally accepted accounting principles (\"GAAP\").'}\n[3] {'uid': 'b06e3898-bdd9-4b97-9a76-7157e906464d', 'order': 4, 'text': 'We review our internal calculation of WACC annually. Our WACC was 9.0% for fiscal year 2019 and 9.5% for fiscal year 2018. By exercising discipline to generate ROIC in excess of our WACC, our goal is to create value for our shareholders. Fiscal 2019 ROIC of 13.1% reflects an Economic Return of 4.1%, based on our weighted average cost of capital of 9.0%, and fiscal 2018 ROIC of 16.1% reflects an Economic Return of 6.6%, based on our weighted average cost of capital of 9.5% for that fiscal year.'}\n[4] {'uid': 'dbac676b-f200-411a-8ac0-9565e9515436', 'order': 5, 'text': 'For a reconciliation of ROIC, Economic Return and adjusted operating income (tax effected) to our financial statements that were prepared using GAAP, see Exhibit 99.1 to this annual report on Form 10-K, which exhibit is incorporated herein by reference.'}\n[5] {'uid': 'e8c732a4-6ef1-46df-946c-8e880774fd63', 'order': 6, 'text': 'Refer to the table below, which includes the calculation of ROIC and Economic Return (dollars in millions) for the indicated periods:'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 9.0,
+        "evidence": "Our WACC was 9.0% for fiscal year 2019 and 9.5% for fiscal year 2018."
+      },
+      {
+        "value": 9.5,
+        "evidence": "Our WACC was 9.0% for fiscal year 2019 and 9.5% for fiscal year 2018."
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 9.0,
+        "evidence": "Our WACC was 9.0% for fiscal year 2019 and 9.5% for fiscal year 2018."
+      },
+      {
+        "value": 9.5,
+        "evidence": "Our WACC was 9.0% for fiscal year 2019 and 9.5% for fiscal year 2018."
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 9.0,\n      \"evidence\": \"Our WACC was 9.0% for fiscal year 2019 and 9.5% for fiscal year 2018.\"\n    },\n    {\n      \"value\": 9.5,\n      \"evidence\": \"Our WACC was 9.0% for fiscal year 2019 and 9.5% for fiscal year 2018.\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 318,
+      "source_key": "tq:8c0bb13b-4ba4-4349-a697-dd2ab11723f8:ext",
+      "response_sha256": "8e9358fea1fc457b8f6d24d991b5ab68e3dba4304d65ab24c25253e29a3bc96d"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1 - v0) * 100 / v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1 - v0) * 100 / v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 478,
+    "source_key": "tq:8c0bb13b-4ba4-4349-a697-dd2ab11723f8:rsn",
+    "response_sha256": "fa96c18118eb5427cabfff64b6ed503aae4cace794a2c09ee23d48486daf03c4"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "8c0bb13b-4ba4-4349-a697-dd2ab11723f8:rs"
+  }
+}

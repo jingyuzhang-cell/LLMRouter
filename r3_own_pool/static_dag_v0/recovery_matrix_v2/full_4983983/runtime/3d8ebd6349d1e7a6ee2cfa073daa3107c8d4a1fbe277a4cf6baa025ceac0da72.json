@@ -1,0 +1,54 @@
+{
+  "valid": true,
+  "node_id": "8b6a4479-3b77-4db7-a90c-8b1ca41a8997:rs",
+  "task_uid": "8b6a4479-3b77-4db7-a90c-8b1ca41a8997",
+  "domain": "tatqa",
+  "question": "What was the change in net debt from 2018 to 2019?",
+  "context": "TABLE:\n | 2019 | 2018\n | £m | £m\nAdjusted operating profit | 282.7 | 264.9\nDepreciation and amortisation of property, plant and equipment, software and development | 34.3 | 32.9\nEarnings before interest, tax, depreciation and amortisation | 317.0 | 297.8\nNet debt | 295.2 | 235.8\nNet debt to EBITDA | 0.9 | 0.8\n\nPASSAGES:\n[0] {'uid': '10eb96ff-03a6-498a-9565-15bb62036531', 'order': 1, 'text': '2 Alternative performance measures continued'}\n[1] {'uid': 'a8edae52-2c7f-4ad6-a9e2-73cc1fbcd8d1', 'order': 2, 'text': 'Net debt to earnings before interest, tax, depreciation and amortisation (EBITDA)'}\n[2] {'uid': 'faf2135a-4981-4a8a-9dfb-35cd181535fb', 'order': 3, 'text': 'To assess the size of the net debt balance relative to the size of the earnings for the Group, we analyse net debt as a proportion of EBITDA. EBITDA is calculated by adding back depreciation and amortisation of owned property, plant and equipment, software and development to adjusted operating profit. Net debt excludes IFRS 16 lease liabilities. The net debt to EBITDA ratio is calculated as follows:'}\n[3] {'uid': 'a5a3017c-6b86-4b37-8401-d51cb3256904', 'order': 4, 'text': 'The components of net debt are disclosed in Note 24.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 59.4,
+        "evidence": "Net debt | 295.2 | 235.8"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 59.4,
+        "evidence": "Net debt | 295.2 | 235.8"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\"facts\":[{\"value\":59.4,\"evidence\":\"Net debt | 295.2 | 235.8\"}]}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 252,
+      "source_key": "tq:8b6a4479-3b77-4db7-a90c-8b1ca41a8997:ext",
+      "response_sha256": "95396674cbecb3168ff90479ed00ac023aecb09fa5ca8c486c4b9fcb75c90bef"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v1 - v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v1 - v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 412,
+    "source_key": "tq:8b6a4479-3b77-4db7-a90c-8b1ca41a8997:rsn",
+    "response_sha256": "c255cad0ca3aab666f86f8b0557ca73baddfdf7d4576e99faab0c43b547f9e30"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "8b6a4479-3b77-4db7-a90c-8b1ca41a8997:rs"
+  }
+}

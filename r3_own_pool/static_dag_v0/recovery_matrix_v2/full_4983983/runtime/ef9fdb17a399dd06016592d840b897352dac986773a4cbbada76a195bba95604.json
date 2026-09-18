@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "8b2d5db2-7a47-4269-9df2-f44385bc0883:rs",
+  "task_uid": "8b2d5db2-7a47-4269-9df2-f44385bc0883",
+  "domain": "tatqa",
+  "question": "What is the percentage increase / (decrease) in PSUs granted from 2018 to 2019?",
+  "context": "TABLE:\n($ in millions) |  |  | \nFor the year ended December 31: | 2019 | 2018 | 2017\nRSUs |  |  | \nGranted | $674 | $583 | $484\nVested | 428 | 381 | 463\nPSUs |  |  | \nGranted | $164 | $118 | $113\nVested | 118 | 101 | 51\n\nPASSAGES:\n[0] {'uid': '9132369a-8d3a-4e71-bcba-923b90b9bbc3', 'order': 1, 'text': 'The total fair value of RSUs and PSUs granted and vested during the years ended December 31, 2019, 2018 and 2017 were as follows:'}\n[1] {'uid': '0612fe3f-d11c-4462-88bf-f621f30bff1d', 'order': 2, 'text': 'As of December 31, 2019, there was $1.1 billion of unrecognized compensation cost related to non-vested RSUs, which will be recognized on a straight-line basis over the remaining weighted average contractual term of approximately 2.5 years.'}\n[2] {'uid': '27daf063-84ff-40a9-8985-5391f794ace4', 'order': 3, 'text': 'In connection with vesting and release of RSUs and PSUs, the tax benefits realized by the company for the years ended December 31, 2019, 2018 and 2017 were $131 million, $117 million and $180 million, respectively.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 164,
+        "evidence": "Granted | $164 | $118 | $113"
+      },
+      {
+        "value": 118,
+        "evidence": "Granted | $164 | $118 | $113"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 164,
+        "evidence": "Granted | $164 | $118 | $113"
+      },
+      {
+        "value": 118,
+        "evidence": "Granted | $164 | $118 | $113"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":164,\"evidence\":\"Granted | $164 | $118 | $113\"},\n{\"value\":118,\"evidence\":\"Granted | $164 | $118 | $113\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 175,
+      "source_key": "tq:8b2d5db2-7a47-4269-9df2-f44385bc0883:ext",
+      "response_sha256": "8843ac86a147b704ff04cfa48d8051663d6ec0e167120ced1f1ccd24180bb3dd"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"((v1 - v0) / v0) * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"((v1 - v0) / v0) * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 335,
+    "source_key": "tq:8b2d5db2-7a47-4269-9df2-f44385bc0883:rsn",
+    "response_sha256": "582e9a3dbe64c63f38aad6302ac09496637770aac286a929dec4470834a4e811"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "8b2d5db2-7a47-4269-9df2-f44385bc0883:rs"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "valid": true,
+  "node_id": "64d8c7e4-99d6-4d2e-ac39-dbee2a0dbc85:rs",
+  "task_uid": "64d8c7e4-99d6-4d2e-ac39-dbee2a0dbc85",
+  "domain": "tatqa",
+  "question": "What is the sum of finance leases from 2020 to 2024?",
+  "context": "TABLE:\n | Operating Leases | Finance Leases\n | (Dollars in millions) | \n2020 | $460 | 47\n2021 | 361 | 28\n2022 | 308 | 22\n2023 | 265 | 22\n2024 | 194 | 21\nThereafter | 686 | 170\nTotal lease payments | 2,274 | 310\nLess: interest | (516) | (90)\nTotal | $1,758 | 220\nLess: current portion | (416) | (35)\nLong-term portion | $1,342 | 185\n\nPASSAGES:\n[0] {'uid': 'ab0fcefb-8dbf-46e1-b9e0-15d20f3eabda', 'order': 1, 'text': 'As of December 31, 2019, maturities of lease liabilities were as follows:'}\n[1] {'uid': 'e1159674-c4a0-41c0-855f-ff61dd2d5da6', 'order': 2, 'text': 'As of December 31, 2019, we had no material operating or finance leases that had not yet commenced.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 47,
+        "evidence": "47"
+      },
+      {
+        "value": 28,
+        "evidence": "28"
+      },
+      {
+        "value": 22,
+        "evidence": "22"
+      },
+      {
+        "value": 22,
+        "evidence": "22"
+      },
+      {
+        "value": 21,
+        "evidence": "21"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 47,
+        "evidence": "47"
+      },
+      {
+        "value": 28,
+        "evidence": "28"
+      },
+      {
+        "value": 22,
+        "evidence": "22"
+      },
+      {
+        "value": 22,
+        "evidence": "22"
+      },
+      {
+        "value": 21,
+        "evidence": "21"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":47,\"evidence\":\"47\"},{\"value\":28,\"evidence\":\"28\"},{\"value\":22,\"evidence\":\"22\"},{\"value\":22,\"evidence\":\"22\"},{\"value\":21,\"evidence\":\"21\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 167,
+      "source_key": "tq:64d8c7e4-99d6-4d2e-ac39-dbee2a0dbc85:ext",
+      "response_sha256": "385a8ea79bb23594b4d1bfc126248ba3ffa810865a26a615a59ec461c8794da6"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v0+v1+v2+v3+v4\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v0+v1+v2+v3+v4\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 327,
+    "source_key": "tq:64d8c7e4-99d6-4d2e-ac39-dbee2a0dbc85:rsn",
+    "response_sha256": "df07d5c112ee8433376f53bc35d4b61b6d2184da584c341a79f35587e1900baa"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "64d8c7e4-99d6-4d2e-ac39-dbee2a0dbc85:rs"
+  }
+}

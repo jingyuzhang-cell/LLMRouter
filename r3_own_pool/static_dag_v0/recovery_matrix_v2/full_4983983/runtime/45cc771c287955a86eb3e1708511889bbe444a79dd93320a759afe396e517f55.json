@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "8ada4c33-1bde-46cf-95ec-dc7938cd7521:rs",
+  "task_uid": "8ada4c33-1bde-46cf-95ec-dc7938cd7521",
+  "domain": "tatqa",
+  "question": "What was the percentage change in Recognized net actuarial (gain) loss in 2019 from 2018?",
+  "context": "TABLE:\n |  | Fiscal | \n | 2019 | 2018 | 2017\nService cost | $1,955 | $2,262 | $2,077\nInterest cost | 1,308 | 1,230 | 1,086\nExpected return on plan assets | (817) | (787) | (736)\nRecognized net actuarial (gain) loss | 470 | 240 | (236)\nForeign exchange impacts | (79) | (56) | (6)\nRecognition of curtailment gain due to plan freeze | — | (1,236) | —\nNet periodic pension cost | $2,837 | $1,653 | $2,185\n\nPASSAGES:\n[0] {'uid': 'b5903700-eb3f-45f9-9e72-3081de09cdd3', 'order': 1, 'text': '14. DEFINED BENEFIT PLANS'}\n[1] {'uid': '3533b925-df03-4f41-822f-086953eb40b9', 'order': 2, 'text': 'As a result of the Rofin acquisition, we have assumed all assets and liabilities of Rofin’s defined benefit plans for the Rofin-Sinar Laser, GmbH (‘‘RSL’’) and Rofin-Sinar Inc. (‘‘RS Inc.’’) employees. The U.S. plan began in fiscal 1995 and is partially funded. Any new employees hired after January 1, 2007, are not eligible for the RS Inc. pension plan. As is the customary practice with German companies, the German pension plan is unfunded. Any new employees hired after 2000 are not eligible for the RSL pension plan. The measurement date of these pension plans is September 30. For these pension plans, actuarial gains and losses are deferred into OCI and amortized over future periods.'}\n[2] {'uid': 'f5d0a40f-0c4d-4983-9b8e-5e69ffe9f0ee', 'order': 3, 'text': 'Effective January 1, 2012, the RS Inc. defined benefit plan was amended to exclude highly compensated employees, as defined by the Internal Revenue Service, from receiving future years of service under the RS Inc. defined benefit plan. A non-qualified defined benefit plan was created to replace the benefits lost by the employees that were otherwise excluded from the qualified defined benefit plan. Effective August 31, 2018 both the RS Inc. plans were amended to freeze all future compensation benefit accruals.'}\n[3] {'uid': 'b6500da9-9909-4478-bef9-34b3d0700459', 'order': 4, 'text': 'In addition, we have defined benefit plans in South Korea, Japan, Spain and Italy, covering all full-time employees with at least one year of service, and a defined benefit plan in Germany covering two individuals. As is the customary practice with European and Asian companies, the plans are unfunded, with the exception of the Spanish plan which is partially funded. We have elected to recognize all actuarial gains and losses on these plans immediately, as incurred. The measurement date of these defined benefit plans is September 30.'}\n[4] {'uid': '1f1d7ea2-0f0a-4e79-bce5-24a2ac81e92b', 'order': 5, 'text': 'For financial reporting purposes, the calculation of net periodic pension costs is based upon a number of actuarial assumptions including a discount rate for plan obligations, an assumed rate of return on pension assets and an assumed rate of compensation increase for employees covered by the plan. All of these assumptions were based upon management’s judgment, considering all known trends and uncertainties. Actual results that differ from these assumptions would impact future expense recognition and the cash funding requirements of our defined benefit plans.'}\n[5] {'uid': '7a1a8f57-db9f-4afd-a000-b0c43d7c764e', 'order': 6, 'text': 'Components of net periodic cost are as follows for fiscal 2019, 2018 and 2017 (in thousands):'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 470,
+        "evidence": "Recognized net actuarial (gain) loss | 470 | 240 | (236)"
+      },
+      {
+        "value": 240,
+        "evidence": "Recognized net actuarial (gain) loss | 470 | 240 | (236)"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 470,
+        "evidence": "Recognized net actuarial (gain) loss | 470 | 240 | (236)"
+      },
+      {
+        "value": 240,
+        "evidence": "Recognized net actuarial (gain) loss | 470 | 240 | (236)"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 470,\n      \"evidence\": \"Recognized net actuarial (gain) loss | 470 | 240 | (236)\"\n    },\n    {\n      \"value\": 240,\n      \"evidence\": \"Recognized net actuarial (gain) loss | 470 | 240 | (236)\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 214,
+      "source_key": "tq:8ada4c33-1bde-46cf-95ec-dc7938cd7521:ext",
+      "response_sha256": "e2b1485607cd7fb3ae90dda9169c9e5998c38085011c116f4572d6ba369cc192"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"((v1 - v0) / v0) * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"((v1 - v0) / v0) * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 374,
+    "source_key": "tq:8ada4c33-1bde-46cf-95ec-dc7938cd7521:rsn",
+    "response_sha256": "582e9a3dbe64c63f38aad6302ac09496637770aac286a929dec4470834a4e811"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "8ada4c33-1bde-46cf-95ec-dc7938cd7521:rs"
+  }
+}

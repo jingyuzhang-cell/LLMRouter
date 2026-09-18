@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "14381fab-36ac-482b-9f77-2c78f3f34ffb:rs",
+  "task_uid": "14381fab-36ac-482b-9f77-2c78f3f34ffb",
+  "domain": "tatqa",
+  "question": "What was the change in Additions in 2019 from 2018?",
+  "context": "TABLE:\n | 2019 | 2018\n | £m | £m\nAt beginning of the period | 1,212.9 | 1,210.5\nAdditions | 3.1 | 2.4\nAt end of the period | 1,216.0 | 1,212.9\n\nPASSAGES:\n[0] {'uid': '6cbff188-4f96-4161-8a0c-44a87dce5293', 'order': 1, 'text': '3. Investments in subsidiaries'}\n[1] {'uid': 'f1f878f9-da09-4146-bcd6-e312dd11d0fc', 'order': 2, 'text': 'The additions in the year and prior year relate to equity-settled share-based payments granted to the employees of subsidiary companies.'}\n[2] {'uid': '8eb4ae8f-e289-4f7d-97c4-156085e9bc6f', 'order': 3, 'text': 'Subsidiary undertakings are disclosed within note 35 to the consolidated financial statements.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 3.1,
+        "evidence": "Additions | 3.1 | 2.4"
+      },
+      {
+        "value": 2.4,
+        "evidence": "Additions | 3.1 | 2.4"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 3.1,
+        "evidence": "Additions | 3.1 | 2.4"
+      },
+      {
+        "value": 2.4,
+        "evidence": "Additions | 3.1 | 2.4"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":3.1,\"evidence\":\"Additions | 3.1 | 2.4\"},{\"value\":2.4,\"evidence\":\"Additions | 3.1 | 2.4\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 221,
+      "source_key": "tq:14381fab-36ac-482b-9f77-2c78f3f34ffb:ext",
+      "response_sha256": "6f5d6917e46d42a90664f532d7ff6af1b90fb4b22cc6107173e15c541a796884"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v0 - v1\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v0 - v1\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 381,
+    "source_key": "tq:14381fab-36ac-482b-9f77-2c78f3f34ffb:rsn",
+    "response_sha256": "47b8677276804817a306768e7ea1d889787d7f37df3ac2f76cbc50015767d4ae"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "14381fab-36ac-482b-9f77-2c78f3f34ffb:rs"
+  }
+}

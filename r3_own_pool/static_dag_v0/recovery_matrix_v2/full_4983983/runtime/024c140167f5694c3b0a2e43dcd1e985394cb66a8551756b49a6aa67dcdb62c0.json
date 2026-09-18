@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "56d8d92f-a555-4a26-a2ec-3dc9ad9795eb:rs",
+  "task_uid": "56d8d92f-a555-4a26-a2ec-3dc9ad9795eb",
+  "domain": "tatqa",
+  "question": "What was the change in the Trade accounts receivable between 2018 and 2019?",
+  "context": "TABLE:\n | March 31, | \n | 2019 | 2018\nTrade accounts receivable | $875.8 | $557.8\nOther | 6.8 | 8.1\nTotal accounts receivable, gross | 882.6 | 565.9\nLess allowance for doubtful accounts | 2.0 | 2.2\nTotal accounts receivable, net | $880.6 | $563.7\n\nPASSAGES:\n[0] {'uid': 'f619b4b1-8854-406e-9f83-49d3df779d36', 'order': 1, 'text': 'Note 8. Other Financial Statement Details'}\n[1] {'uid': '7857e88c-92c2-4aa0-bf98-2b4e74290a69', 'order': 2, 'text': 'Accounts Receivable'}\n[2] {'uid': '7058bd0e-eb0b-420c-87cb-167007a20e08', 'order': 3, 'text': 'Accounts receivable consists of the following (in millions):'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 875.8,
+        "evidence": "$875.8 | $557.8"
+      },
+      {
+        "value": 557.8,
+        "evidence": "$875.8 | $557.8"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 875.8,
+        "evidence": "$875.8 | $557.8"
+      },
+      {
+        "value": 557.8,
+        "evidence": "$875.8 | $557.8"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":875.8,\"evidence\":\"$875.8 | $557.8\"},{\"value\":557.8,\"evidence\":\"$875.8 | $557.8\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 260,
+      "source_key": "tq:56d8d92f-a555-4a26-a2ec-3dc9ad9795eb:ext",
+      "response_sha256": "045b4be66f479d3be233634b724538ca53457de2e4de998a97f34ea447daa015"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v0 - v1\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v0 - v1\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 420,
+    "source_key": "tq:56d8d92f-a555-4a26-a2ec-3dc9ad9795eb:rsn",
+    "response_sha256": "47b8677276804817a306768e7ea1d889787d7f37df3ac2f76cbc50015767d4ae"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "56d8d92f-a555-4a26-a2ec-3dc9ad9795eb:rs"
+  }
+}

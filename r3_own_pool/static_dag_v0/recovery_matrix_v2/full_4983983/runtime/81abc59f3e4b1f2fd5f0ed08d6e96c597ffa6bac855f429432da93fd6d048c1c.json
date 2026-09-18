@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "5c59c850-a720-4b1f-b703-9e1d9ff8e242:rs",
+  "task_uid": "5c59c850-a720-4b1f-b703-9e1d9ff8e242",
+  "domain": "tatqa",
+  "question": "What was the change in Accrued pension liabilities in 2019 from 2018?",
+  "context": "TABLE:\n | June 30, | \n($ in millions) | 2019 | 2018\nAccrued compensation and benefits | $71.2 | $83.3\nDerivative financial instruments | 16.7 | —\nAccrued postretirement benefits | 14.7 | 15.4\nDeferred revenue | 10.5 | 10.4\nAccrued interest expense | 10.4 | 10.4\nAccrued income taxes | 4.2 | 1.4\nAccrued pension liabilities | 3.4 | 3.3\nOther | 26.5 | 24.4\nTotal accrued liabilities | $157.6 | $148.6\n\nPASSAGES:\n[0] {'uid': '40b75917-36a6-40d9-8474-1621fe07167b', 'order': 1, 'text': '9. Accrued Liabilities'}\n[1] {'uid': '00995f78-6f57-43c9-ad36-3fa5995a34da', 'order': 2, 'text': 'Accrued liabilities consisted of the following as of June 30, 2019 and 2018:'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 3.4,
+        "evidence": "\"Accrued pension liabilities | 3.4 | 3.3\""
+      },
+      {
+        "value": 3.3,
+        "evidence": "\"Accrued pension liabilities | 3.4 | 3.3\""
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 3.4,
+        "evidence": "\"Accrued pension liabilities | 3.4 | 3.3\""
+      },
+      {
+        "value": 3.3,
+        "evidence": "\"Accrued pension liabilities | 3.4 | 3.3\""
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":3.4,\"evidence\":\"\\\"Accrued pension liabilities | 3.4 | 3.3\\\"\"},{\"value\":3.3,\"evidence\":\"\\\"Accrued pension liabilities | 3.4 | 3.3\\\"\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 191,
+      "source_key": "tq:5c59c850-a720-4b1f-b703-9e1d9ff8e242:ext",
+      "response_sha256": "7fbb3239c1aef88118abf65fbfe26241786cd5b2b8d7a0cfa25b2d9db03f2fe3"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v0 - v1\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v0 - v1\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 351,
+    "source_key": "tq:5c59c850-a720-4b1f-b703-9e1d9ff8e242:rsn",
+    "response_sha256": "47b8677276804817a306768e7ea1d889787d7f37df3ac2f76cbc50015767d4ae"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "5c59c850-a720-4b1f-b703-9e1d9ff8e242:rs"
+  }
+}

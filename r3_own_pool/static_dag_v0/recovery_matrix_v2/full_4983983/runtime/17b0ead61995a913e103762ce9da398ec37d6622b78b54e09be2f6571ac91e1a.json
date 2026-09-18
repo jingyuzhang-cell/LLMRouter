@@ -1,0 +1,78 @@
+{
+  "valid": true,
+  "node_id": "fb2036af-5359-4b80-975f-3604f1ad67d5:rs",
+  "task_uid": "fb2036af-5359-4b80-975f-3604f1ad67d5",
+  "domain": "tatqa",
+  "question": "What was the percentage of financial assets on which interest is earned over the total financial assets forEuro?",
+  "context": "TABLE:\n | Total | Fixed rate financial assets | Floating rate financial assets | Financial assets on which no interest is earned\n2019 | £m | £m | £m | £m\nSterling | 29.1 | – | 0.2 | 28.9\nEuro | 115.9 | 1.4 | 16.6 | 97.9\nUS dollar | 98.4 | 0.1 | 16.7 | 81.6\nRenminbi | 42.0 | – | 11.9 | 30.1\nOther | 146.5 | 5.3 | 10.5 | 130.7\nGroup total | 431.9 | 6.8 | 55.9 | 369.2\n\nPASSAGES:\n[0] {'uid': '9fc49db0-8a80-4e40-b971-ddb0871c4144', 'order': 1, 'text': '28 Derivatives and other financial instruments continued'}\n[1] {'uid': '01371584-d405-4e69-9f21-1e72ef521a53', 'order': 2, 'text': 'Interest rate risk profile of financial assets'}\n[2] {'uid': 'dc21ac76-83c4-43b7-9657-5ed57f92c1c1', 'order': 3, 'text': 'The interest rate profile of the financial assets of the Group as at 31st December was as follows:'}\n[3] {'uid': 'c3a36438-8c0e-416a-91de-092a1a779e98', 'order': 4, 'text': 'Financial assets on which no interest is earned comprise trade and other receivables and cash at bank.'}\n[4] {'uid': 'a44a9474-73f2-45d1-a1a8-ddab2bde2783', 'order': 5, 'text': 'Floating and fixed rate financial assets comprise cash at bank or cash placed on deposit.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 18.0,
+        "evidence": "16.6 £m Floating rate financial assets"
+      },
+      {
+        "value": 1.2,
+        "evidence": "1.4 £m Fixed rate financial assets"
+      },
+      {
+        "value": 17.8,
+        "evidence": "97.9 £m Financial assets on which no interest is earned"
+      },
+      {
+        "value": 115.9,
+        "evidence": "115.9 £m Total"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 18.0,
+        "evidence": "16.6 £m Floating rate financial assets"
+      },
+      {
+        "value": 1.2,
+        "evidence": "1.4 £m Fixed rate financial assets"
+      },
+      {
+        "value": 17.8,
+        "evidence": "97.9 £m Financial assets on which no interest is earned"
+      },
+      {
+        "value": 115.9,
+        "evidence": "115.9 £m Total"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 18.0,\n      \"evidence\": \"16.6 £m Floating rate financial assets\"\n    },\n    {\n      \"value\": 1.2,\n      \"evidence\": \"1.4 £m Fixed rate financial assets\"\n    },\n    {\n      \"value\": 17.8,\n      \"evidence\": \"97.9 £m Financial assets on which no interest is earned\"\n    },\n    {\n      \"value\": 115.9,\n      \"evidence\": \"115.9 £m Total\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 298,
+      "source_key": "tq:fb2036af-5359-4b80-975f-3604f1ad67d5:ext",
+      "response_sha256": "16c3da22ba3ac941b4aff32349941ded988606c61cb8f2a5d241f3456f5eabea"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v3 / v4) * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v3 / v4) * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 458,
+    "source_key": "tq:fb2036af-5359-4b80-975f-3604f1ad67d5:rsn",
+    "response_sha256": "cf8aa3bc973793f845f03d2f49fe4fcd055e684ebdae1dfb49e2bbc3e190d241"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "fb2036af-5359-4b80-975f-3604f1ad67d5:rs"
+  }
+}

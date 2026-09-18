@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "89e21fa8-60b1-4f4f-be8d-497733907f52:rs",
+  "task_uid": "89e21fa8-60b1-4f4f-be8d-497733907f52",
+  "domain": "tatqa",
+  "question": "What was the change in the Dilutive impact of employee equity award plans between 2018 and 2019?",
+  "context": "TABLE:\n |  | Year Ended | \n | April 26, 2019 | April 27, 2018 | April 28, 2017\nNumerator: |  |  | \nNet income | $ 1,169 | $ 116 | $ 481\nDenominator: |  |  | \nShares used in basic computation | 254 | 268 | 275\nDilutive impact of employee equity award plans | 5 | 8 | 6\nShares used in diluted computation | 259 | 276 | 281\nNet Income per Share: |  |  | \nBasic | $ 4.60 | $ 0.43 | $ 1.75\nDiluted | $ 4.51 | $ 0.42 | $ 1.71\n\nPASSAGES:\n[0] {'uid': '65de88de-695c-4d6d-b743-c1e0635ef7b0', 'order': 1, 'text': '15. Net Income per Share'}\n[1] {'uid': 'aeee7de4-7757-4977-9c35-fa98505ee2d8', 'order': 2, 'text': 'The following is a calculation of basic and diluted net income per share (in millions, except per share amounts):'}\n[2] {'uid': 'aed9776d-6a10-4cdb-a6ac-e597374b6e08', 'order': 3, 'text': 'Potential shares from outstanding employee equity awards totaling 1 million, 1 million and 6 million for fiscal 2019, 2018 and 2017, respectively, were excluded from the diluted net income per share calculations as their inclusion would have been anti-dilutive.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 5,
+        "evidence": "Dilutive impact of employee equity award plans | 5 | 8 | 6"
+      },
+      {
+        "value": 8,
+        "evidence": "Dilutive impact of employee equity award plans | 5 | 8 | 6"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 5,
+        "evidence": "Dilutive impact of employee equity award plans | 5 | 8 | 6"
+      },
+      {
+        "value": 8,
+        "evidence": "Dilutive impact of employee equity award plans | 5 | 8 | 6"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 5,\n      \"evidence\": \"Dilutive impact of employee equity award plans | 5 | 8 | 6\"\n    },\n    {\n      \"value\": 8,\n      \"evidence\": \"Dilutive impact of employee equity award plans | 5 | 8 | 6\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 314,
+      "source_key": "tq:89e21fa8-60b1-4f4f-be8d-497733907f52:ext",
+      "response_sha256": "2048fd2c351d2c1022c92d4c4bc0bc91b32932261c962c9970c3767377d3ac45"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v1 - v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v1 - v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 474,
+    "source_key": "tq:89e21fa8-60b1-4f4f-be8d-497733907f52:rsn",
+    "response_sha256": "c255cad0ca3aab666f86f8b0557ca73baddfdf7d4576e99faab0c43b547f9e30"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "89e21fa8-60b1-4f4f-be8d-497733907f52:rs"
+  }
+}

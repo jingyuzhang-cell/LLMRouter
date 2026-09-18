@@ -1,0 +1,70 @@
+{
+  "valid": true,
+  "node_id": "643cfcef-6d2c-4df7-b538-3588e28b58e1:rs",
+  "task_uid": "643cfcef-6d2c-4df7-b538-3588e28b58e1",
+  "domain": "tatqa",
+  "question": "What was the average losses recognized in other income (expense), net, across the 3 year period?",
+  "context": "TABLE:\n(In millions) |  |  | \nYear Ended June 30, | 2019 | 2018 | 2017\nEffective Portion |  |  | \nGains recognized in other comprehensive income (loss), net of tax of $1, $11, and $4 | $  159 | $  219 | $  328\nGains reclassified from accumulated other comprehensive income (loss) into revenue | 341 | 185 | 555\nAmount Excluded from Effectiveness Assessment and Ineffective Portion |  |  | \nLosses recognized in other income (expense), net | (64) | (255) | (389)\n\nPASSAGES:\n[0] {'uid': '76a5c695-3501-4a1e-ad24-c027bb11db81', 'order': 1, 'text': 'Cash Flow Hedge Gains (Losses)'}\n[1] {'uid': '5e3d1df6-ceed-4209-990a-f7703981bed9', 'order': 2, 'text': 'We recognized the following gains (losses) on foreign exchange contracts designated as cash flow hedges:'}\n[2] {'uid': '6d101462-a09a-4302-8f83-2a05d3cafd48', 'order': 3, 'text': 'We do not have any net derivative gains included in AOCI as of June 30, 2019 that will be reclassified into earnings within the following 12 months. No significant amounts of gains (losses) were reclassified from AOCI into earnings as a result of forecasted transactions that failed to occur during fiscal year 2019.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": -64,
+        "evidence": "Losses recognized in other income (expense), net | (64)"
+      },
+      {
+        "value": -255,
+        "evidence": "Losses recognized in other income (expense), net | (255)"
+      },
+      {
+        "value": -389,
+        "evidence": "Losses recognized in other income (expense), net | (389)"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": -64,
+        "evidence": "Losses recognized in other income (expense), net | (64)"
+      },
+      {
+        "value": -255,
+        "evidence": "Losses recognized in other income (expense), net | (255)"
+      },
+      {
+        "value": -389,
+        "evidence": "Losses recognized in other income (expense), net | (389)"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": -64,\n      \"evidence\": \"Losses recognized in other income (expense), net | (64)\"\n    },\n    {\n      \"value\": -255,\n      \"evidence\": \"Losses recognized in other income (expense), net | (255)\"\n    },\n    {\n      \"value\": -389,\n      \"evidence\": \"Losses recognized in other income (expense), net | (389)\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 312,
+      "source_key": "tq:643cfcef-6d2c-4df7-b538-3588e28b58e1:ext",
+      "response_sha256": "96150a88183e4e9d457b24809f9a990bb83a08ee72f42a892143a3ed9da29a5d"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(-64 + -255 + -389) / 3\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(-64 + -255 + -389) / 3\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 472,
+    "source_key": "tq:643cfcef-6d2c-4df7-b538-3588e28b58e1:rsn",
+    "response_sha256": "dd593ffa55c5cb4f89915c208f0e9d47c1e90ae79a1a424e2cf8709ca80fa02b"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "643cfcef-6d2c-4df7-b538-3588e28b58e1:rs"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "beb114d0-5ff6-452b-ae71-774f70b9cca5:rs",
+  "task_uid": "beb114d0-5ff6-452b-ae71-774f70b9cca5",
+  "domain": "tatqa",
+  "question": "What was the % change in gains reclassified from accumulated other comprehensive income (loss) into revenue from 2017 to 2018?",
+  "context": "TABLE:\n(In millions) |  |  | \nYear Ended June 30, | 2019 | 2018 | 2017\nEffective Portion |  |  | \nGains recognized in other comprehensive income (loss), net of tax of $1, $11, and $4 | $  159 | $  219 | $  328\nGains reclassified from accumulated other comprehensive income (loss) into revenue | 341 | 185 | 555\nAmount Excluded from Effectiveness Assessment and Ineffective Portion |  |  | \nLosses recognized in other income (expense), net | (64) | (255) | (389)\n\nPASSAGES:\n[0] {'uid': '76a5c695-3501-4a1e-ad24-c027bb11db81', 'order': 1, 'text': 'Cash Flow Hedge Gains (Losses)'}\n[1] {'uid': '5e3d1df6-ceed-4209-990a-f7703981bed9', 'order': 2, 'text': 'We recognized the following gains (losses) on foreign exchange contracts designated as cash flow hedges:'}\n[2] {'uid': '6d101462-a09a-4302-8f83-2a05d3cafd48', 'order': 3, 'text': 'We do not have any net derivative gains included in AOCI as of June 30, 2019 that will be reclassified into earnings within the following 12 months. No significant amounts of gains (losses) were reclassified from AOCI into earnings as a result of forecasted transactions that failed to occur during fiscal year 2019.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 185,
+        "evidence": "Gains reclassified from accumulated other comprehensive income (loss) into revenue | 341 | 185 | 555"
+      },
+      {
+        "value": 555,
+        "evidence": "Gains reclassified from accumulated other comprehensive income (loss) into revenue | 341 | 185 | 555"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 185,
+        "evidence": "Gains reclassified from accumulated other comprehensive income (loss) into revenue | 341 | 185 | 555"
+      },
+      {
+        "value": 555,
+        "evidence": "Gains reclassified from accumulated other comprehensive income (loss) into revenue | 341 | 185 | 555"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 185,\n      \"evidence\": \"Gains reclassified from accumulated other comprehensive income (loss) into revenue | 341 | 185 | 555\"\n    },\n    {\n      \"value\": 555,\n      \"evidence\": \"Gains reclassified from accumulated other comprehensive income (loss) into revenue | 341 | 185 | 555\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 238,
+      "source_key": "tq:beb114d0-5ff6-452b-ae71-774f70b9cca5:ext",
+      "response_sha256": "3895bf4809c2c8cdf75dafbb0670ad45f91d5b8c0904967eab01a1038658dabc"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1 - v0) / v0 * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1 - v0) / v0 * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 398,
+    "source_key": "tq:beb114d0-5ff6-452b-ae71-774f70b9cca5:rsn",
+    "response_sha256": "19ab14d2378bf695827b0a9bdc72fd2b8a37427cd0a9a6b6663f13bf3a762b4e"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "beb114d0-5ff6-452b-ae71-774f70b9cca5:rs"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "7639efef-c768-4631-95b5-382a0fde501d:rs",
+  "task_uid": "7639efef-c768-4631-95b5-382a0fde501d",
+  "domain": "tatqa",
+  "question": "What is the average incentive schemes between 2018 and 2019?",
+  "context": "TABLE:\n | 2019 €m | 2018 €m | 2017 €m\nSalaries and fees | 4 | 4 | 4\nIncentive schemes1 | 2 | 3 | 2\nOther benefits2 | – | 1 | 1\n | 6 | 8 | 7\n\nPASSAGES:\n[0] {'uid': '3fbf0692-aa50-4a45-b192-f71571b6ba04', 'order': 1, 'text': '22. Directors and key management compensation'}\n[1] {'uid': '651e652e-6ad2-4948-b3d9-41367a36f81b', 'order': 2, 'text': 'This note details the total amounts earned by the Company’s Directors and members of the Executive Committee.'}\n[2] {'uid': 'b7a48bf0-9d35-40b2-a84a-5dc4f9f34f56', 'order': 3, 'text': 'Directors'}\n[3] {'uid': '61e7571c-d979-4e73-99e5-0c97e08586cb', 'order': 4, 'text': 'Aggregate emoluments of the Directors of the Company were as follows:'}\n[4] {'uid': 'e0708d71-dc36-48ba-8dda-708b41f4ebca', 'order': 5, 'text': 'Notes: 1 Excludes gains from long-term incentive plans.'}\n[5] {'uid': 'ccfaea8b-12cd-439b-bfec-ff4ce3289228', 'order': 6, 'text': '2 Includes the value of the cash allowance taken by some individuals in lieu of pension contributions'}\n[6] {'uid': '6d62c0ab-d894-457a-99fc-2272b978c83e', 'order': 7, 'text': 'No Directors serving during the year exercised share options in the year ended 31 March 2019 (2018: one Director, gain €0.1 million; gain 2017: one Director, €0.7 million'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 2,
+        "evidence": "Incentive schemes1 | 2 | 3 | 2"
+      },
+      {
+        "value": 3,
+        "evidence": "Incentive schemes1 | 2 | 3 | 2"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 2,
+        "evidence": "Incentive schemes1 | 2 | 3 | 2"
+      },
+      {
+        "value": 3,
+        "evidence": "Incentive schemes1 | 2 | 3 | 2"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 2,\n      \"evidence\": \"Incentive schemes1 | 2 | 3 | 2\"\n    },\n    {\n      \"value\": 3,\n      \"evidence\": \"Incentive schemes1 | 2 | 3 | 2\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 263,
+      "source_key": "tq:7639efef-c768-4631-95b5-382a0fde501d:ext",
+      "response_sha256": "f445aaabcd47e8a2b516eee99c6e90d80f8d64dba3f6634f7251fc70b6f71f45"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v0 + v1) / 2\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v0 + v1) / 2\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 423,
+    "source_key": "tq:7639efef-c768-4631-95b5-382a0fde501d:rsn",
+    "response_sha256": "cb77cfa9994d2c626244be1b52cc56ed9c8668b6aed84a93dd2c3e58bae9dfcb"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "7639efef-c768-4631-95b5-382a0fde501d:rs"
+  }
+}

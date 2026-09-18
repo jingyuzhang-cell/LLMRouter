@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "8cf06f37-dccd-4b16-8f75-5359a9a55d93:rs",
+  "task_uid": "8cf06f37-dccd-4b16-8f75-5359a9a55d93",
+  "domain": "tatqa",
+  "question": "What was the percentage change in the average life expectancy for a male member aged 65 in 2019 from 2018?",
+  "context": "TABLE:\n | 2019 |  | 2018 | \n | Men | Women | Men | Women\n | Years | Years | Years | Years\nMember aged 65 (current life expectancy) | 86.8 | 88.9 | 87.3 | 89.3\nMember aged 45 (life expectancy at age 65) | 88.5 | 90.7 | 89.0 | 91.1\n\nPASSAGES:\n[0] {'uid': '2495f8bc-f093-480c-b569-30a87f4b94d6', 'order': 1, 'text': 'The Group has assumed that mortality will be in line with nationally published mortality table S2NA with CMI 2018 projections related to members’ years of birth with long-term rate of improvement of 1.5% per annum. These tables translate into an average life expectancy for a pensioner retiring at age 65 as follows:'}\n[1] {'uid': '360ef162-0413-4944-8331-e3b0dbf04de1', 'order': 2, 'text': 'It is assumed that 50% of non-retired members of the Scheme will commute the maximum amount of cash at retirement (2018: 50% of\\nnon-retired members of the Scheme will commute the maximum amount of cash at retirement).'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 86.8,
+        "evidence": "Member aged 65 (current life expectancy) | 86.8 | 88.9 | 87.3 | 89.3"
+      },
+      {
+        "value": 87.3,
+        "evidence": "Member aged 65 (current life expectancy) | 86.8 | 88.9 | 87.3 | 89.3"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 86.8,
+        "evidence": "Member aged 65 (current life expectancy) | 86.8 | 88.9 | 87.3 | 89.3"
+      },
+      {
+        "value": 87.3,
+        "evidence": "Member aged 65 (current life expectancy) | 86.8 | 88.9 | 87.3 | 89.3"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 86.8,\n      \"evidence\": \"Member aged 65 (current life expectancy) | 86.8 | 88.9 | 87.3 | 89.3\"\n    },\n    {\n      \"value\": 87.3,\n      \"evidence\": \"Member aged 65 (current life expectancy) | 86.8 | 88.9 | 87.3 | 89.3\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 183,
+      "source_key": "tq:8cf06f37-dccd-4b16-8f75-5359a9a55d93:ext",
+      "response_sha256": "208e6938ca74d069f53d5833075d7af211b5c6dfb9b4c1e47f79cb7bd3adeb74"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1 - v0) * 100 / v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1 - v0) * 100 / v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 343,
+    "source_key": "tq:8cf06f37-dccd-4b16-8f75-5359a9a55d93:rsn",
+    "response_sha256": "fa96c18118eb5427cabfff64b6ed503aae4cace794a2c09ee23d48486daf03c4"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "8cf06f37-dccd-4b16-8f75-5359a9a55d93:rs"
+  }
+}

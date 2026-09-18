@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "c0d6605c-50c2-42b1-94f6-c4c601559918:rs",
+  "task_uid": "c0d6605c-50c2-42b1-94f6-c4c601559918",
+  "domain": "tatqa",
+  "question": "What was the change in the State income taxes, net of federal tax benefit from 2017 to 2018?",
+  "context": "TABLE:\n |  | Year Ended | \n | January 3, 2020 | December 28, 2018 | December 29, 2017\n |  | (in millions) | \nAmount computed at the statutory federal income tax rate | $182 | $128 | $138\nState income taxes, net of federal tax benefit | 22 | 10 | 31\nExcess tax benefits from stock-based compensation | (11) | (9) | (12)\nResearch and development credits | (11) | (9) | (7)\nChange in valuation allowance for deferred tax assets | 6 | (49) | 7\nStock basis in subsidiary held for sale | 5 | (16) | —\nChange in accruals for uncertain tax positions | 4 | 1 | —\nDividends paid to employee stock ownership plan | (2) | (2) | (4)\nImpact of foreign operations | 2 | — | (4)\nTaxable conversion of a subsidiary | — | (17) | —\nChange in statutory federal tax rate | — | (10) | (125)\nCapitalized transaction costs | — | — | 9\nOther | (1) | 1 | (4)\nTotal | $196 | $28 | $29\nEffective income tax rate | 22.6% | 4.6% | 7.4%\n\nPASSAGES:\n[0] {'uid': '1cfb03dc-5aa5-423e-997f-a2857a633fe6', 'order': 1, 'text': 'A reconciliation of the provision for income taxes to the amount computed by applying the statutory federal income tax rate to income before income taxes for the periods presented was as follows:'}\n[1] {'uid': 'a73819e0-bd86-41cd-b230-07852e99cdae', 'order': 2, 'text': \"The Company's effective tax rate for fiscal 2019 was favorably impacted primarily by excess tax benefits related to employee stock-based payment transactions and federal research tax credits, partially offset by an increase in valuation allowances arising from foreign withholding tax and an increase in taxes related to the sale of the commercial cybersecurity business.\"}\n[2] {'uid': '39ee1332-7ef4-4e23-ae91-e09d7a84c060', 'order': 3, 'text': \"The Company's effective tax rate for fiscal 2018 was favorably impacted primarily by a decrease in valuation allowances arising from the taxable conversion of a subsidiary and the utilization of capital losses, an increase in deferred tax assets related to stock basis of a subsidiary held for sale, excess tax benefits related to employee stock-based payment transactions and federal research tax credits.\"}\n[3] {'uid': 'e7f752b0-03b8-4a27-9ea8-2544aec3edf1', 'order': 4, 'text': \"The Company's effective tax rate for fiscal 2017 was favorably impacted primarily by the Tax Act's reduction of the federal corporate tax rate from 35% to 21% applied to the Company's fiscal 2017 year-end deferred tax balances and excess tax benefits related to employee stock-based payment transactions.\"}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 10,
+        "evidence": "State income taxes, net of federal tax benefit | 22 | 10 | 31"
+      },
+      {
+        "value": 31,
+        "evidence": "State income taxes, net of federal tax benefit | 22 | 10 | 31"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 10,
+        "evidence": "State income taxes, net of federal tax benefit | 22 | 10 | 31"
+      },
+      {
+        "value": 31,
+        "evidence": "State income taxes, net of federal tax benefit | 22 | 10 | 31"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 10,\n      \"evidence\": \"State income taxes, net of federal tax benefit | 22 | 10 | 31\"\n    },\n    {\n      \"value\": 31,\n      \"evidence\": \"State income taxes, net of federal tax benefit | 22 | 10 | 31\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 258,
+      "source_key": "tq:c0d6605c-50c2-42b1-94f6-c4c601559918:ext",
+      "response_sha256": "a48ed6e01401d085fb093f4d9f1b49237c99c2d0c6b569a97df5c6c16c775c1d"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v1 - v0\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v1 - v0\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 418,
+    "source_key": "tq:c0d6605c-50c2-42b1-94f6-c4c601559918:rsn",
+    "response_sha256": "c255cad0ca3aab666f86f8b0557ca73baddfdf7d4576e99faab0c43b547f9e30"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "c0d6605c-50c2-42b1-94f6-c4c601559918:rs"
+  }
+}

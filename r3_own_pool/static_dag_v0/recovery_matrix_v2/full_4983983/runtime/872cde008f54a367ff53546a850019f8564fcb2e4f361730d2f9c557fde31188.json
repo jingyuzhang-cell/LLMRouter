@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "73f75537-695c-431d-a917-18071def0090:rs",
+  "task_uid": "73f75537-695c-431d-a917-18071def0090",
+  "domain": "tatqa",
+  "question": "What was the change in the leasehold external valuation % from 2018 to 2019?",
+  "context": "TABLE:\n | External valuation % | Internal valuation %\nYear ended 30 June 2019 |  | \nLeasehold | 23% | 77%\nFreehold | 38% | 62%\nYear ended 30 June 2018 |  | \nLeasehold | 60% | 40%\nFreehold | 27% | 73%\n\nPASSAGES:\n[0] {'uid': 'ca204a9c-7638-4be8-bdc9-862f381db451', 'order': 1, 'text': 'The table below details the percentage of the number of investment properties subject to internal and external valuations during the current and comparable reporting periods'}\n[1] {'uid': '29e3f09d-ec66-4317-b0a1-6ca2745ec1ad', 'order': 2, 'text': 'The Group also obtained external valuations on 31 freehold investment properties acquired during the year ended 30 June 2019 (year ended 30 June 2018: 19 freehold investment properties). These external valuations provide the basis of the Directors’ valuations applied to these properties at 30 June 2019 and 30 June 2018. Including these valuations, 51% of freehold investment properties were subject to external valuations during the year (year ended 30 June 2018: 43% of freehold investment properties).'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 23,
+        "evidence": "Leasehold | 23% | 77%"
+      },
+      {
+        "value": 60,
+        "evidence": "Leasehold | 60% | 40%"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 23,
+        "evidence": "Leasehold | 23% | 77%"
+      },
+      {
+        "value": 60,
+        "evidence": "Leasehold | 60% | 40%"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":23,\"evidence\":\"Leasehold | 23% | 77%\"},{\"value\":60,\"evidence\":\"Leasehold | 60% | 40%\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 205,
+      "source_key": "tq:73f75537-695c-431d-a917-18071def0090:ext",
+      "response_sha256": "5b0fff62a561fc5724d84f29e5f0aa1eb69e66394ec24691035ed368da2d8fda"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"((v1 - v0) / v0) * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"((v1 - v0) / v0) * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 365,
+    "source_key": "tq:73f75537-695c-431d-a917-18071def0090:rsn",
+    "response_sha256": "582e9a3dbe64c63f38aad6302ac09496637770aac286a929dec4470834a4e811"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "73f75537-695c-431d-a917-18071def0090:rs"
+  }
+}

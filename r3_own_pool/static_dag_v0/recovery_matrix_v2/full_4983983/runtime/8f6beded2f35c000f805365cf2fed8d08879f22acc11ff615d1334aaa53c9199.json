@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "acde36c6-c718-4bfc-ae8d-0083d3dab3f0:rs",
+  "task_uid": "acde36c6-c718-4bfc-ae8d-0083d3dab3f0",
+  "domain": "tatqa",
+  "question": "What was the percentage change in the Net income per diluted share between 2018 and 2019?",
+  "context": "TABLE:\n |  | Fiscal Years Ended March 31, | \n | 2019 | 2018 | 2017\nNumerator |  |  | \nNet income (1) | $206,587 | $254,127 | $47,157\nDenominator: |  |  | \nWeighted-average common shares outstanding: |  |  | \nBasic | 57,840 | 52,798 | 46,552\nAssumed conversion of employee stock grants | 1,242 | 2,291 | 2,235\nAssumed conversion of warrants | — | 3,551 | 6,602\nDiluted | $59,082 | $58,640 | $55,389\nNet income per basic share (1) | $3.57 | $4.81 | $1.01\nNet income per diluted share (1) | $3.50 | $4.33 | $0.85\n\nPASSAGES:\n[0] {'uid': 'f11a793c-c101-465d-bf45-6387e2387eab', 'order': 1, 'text': 'The following table presents the basic and diluted weighted-average number of shares of common stock (amounts in thousands, except per share data):'}\n[1] {'uid': 'b3118c44-4dd2-4b4e-816d-e112959939f6', 'order': 2, 'text': '(1) Fiscal years ending March 31, 2018 and 2017 adjusted due to the adoption of ASC 606.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 3.5,
+        "evidence": "$3.50 | $4.33 | $0.85"
+      },
+      {
+        "value": 4.33,
+        "evidence": "$3.50 | $4.33 | $0.85"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 3.5,
+        "evidence": "$3.50 | $4.33 | $0.85"
+      },
+      {
+        "value": 4.33,
+        "evidence": "$3.50 | $4.33 | $0.85"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "{\"facts\":[{\"value\":3.5,\"evidence\":\"$3.50 | $4.33 | $0.85\"},{\"value\":4.33,\"evidence\":\"$3.50 | $4.33 | $0.85\"}]}",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 173,
+      "source_key": "tq:acde36c6-c718-4bfc-ae8d-0083d3dab3f0:ext",
+      "response_sha256": "9cb4070885e16df4afa803523dbd8cc0a753bc0a552aee87b98762deb9ac55a9"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1 - v0) / v0 * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1 - v0) / v0 * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 333,
+    "source_key": "tq:acde36c6-c718-4bfc-ae8d-0083d3dab3f0:rsn",
+    "response_sha256": "19ab14d2378bf695827b0a9bdc72fd2b8a37427cd0a9a6b6663f13bf3a762b4e"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "acde36c6-c718-4bfc-ae8d-0083d3dab3f0:rs"
+  }
+}

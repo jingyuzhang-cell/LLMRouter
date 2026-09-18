@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "85bc877a-ecc1-4d1a-9e45-6ddb6d0a4dc3:rs",
+  "task_uid": "85bc877a-ecc1-4d1a-9e45-6ddb6d0a4dc3",
+  "domain": "tatqa",
+  "question": "What was the change in percentage of sales represented by net other income between 2018 and 2019?",
+  "context": "TABLE:\n | Year Ended December 31, | \n | 2019 | 2018\nSales | 100.0 % | 100.0 %\nGross profit | 40.0 | 50.9\nOperating expenses | 33.1 | 27.0\nOperating income from continuing operations | 6.9 | 23.9\nOther income (expense), net | 1.6 | 0.1\nIncome from continuing operations before income taxes | 8.5 | 24.0\nProvision for income taxes | 1.4 | 3.5\nIncome from continuing operations, net of income taxes | 7.2 % | 20.5 %\n\nPASSAGES:\n[0] {'uid': '659bec77-4ee8-415c-a602-b54ad13767f2', 'order': 1, 'text': 'Results of Continuing Operations'}\n[1] {'uid': 'ee52a5aa-6f44-436f-bfd9-a60ce5813a33', 'order': 2, 'text': 'The analysis presented below is organized to provide the information we believe will facilitate an understanding of our historical performance and relevant trends going forward, and should be read in conjunction with our Consolidated Financial Statements, including the notes thereto, in Item 8 \"Financial Statements and Supplementary Data\" of this Annual Report on Form 10 - K.'}\n[2] {'uid': '8e3181f2-c62b-4f05-8220-e1c1402d5d28', 'order': 3, 'text': 'The following table sets forth, for the periods indicated, the percentage of sales represented by certain items reflected in our Consolidated Statements of Operations:'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 1.6,
+        "evidence": "Other income (expense), net | 1.6 | 0.1"
+      },
+      {
+        "value": 0.1,
+        "evidence": "Other income (expense), net | 1.6 | 0.1"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 1.6,
+        "evidence": "Other income (expense), net | 1.6 | 0.1"
+      },
+      {
+        "value": 0.1,
+        "evidence": "Other income (expense), net | 1.6 | 0.1"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 1.6,\n      \"evidence\": \"Other income (expense), net | 1.6 | 0.1\"\n    },\n    {\n      \"value\": 0.1,\n      \"evidence\": \"Other income (expense), net | 1.6 | 0.1\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 320,
+      "source_key": "tq:85bc877a-ecc1-4d1a-9e45-6ddb6d0a4dc3:ext",
+      "response_sha256": "5877c065562e2ac8bb9c15a4421a46c77db24f715bf20a4596210b1d97c0ead3"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v1 - v0) * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v1 - v0) * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 480,
+    "source_key": "tq:85bc877a-ecc1-4d1a-9e45-6ddb6d0a4dc3:rsn",
+    "response_sha256": "c6555d3bb0b7b4fd68d3a85e41fb78595dabdf9d6d61cf16c438f95d619bdabc"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "85bc877a-ecc1-4d1a-9e45-6ddb6d0a4dc3:rs"
+  }
+}

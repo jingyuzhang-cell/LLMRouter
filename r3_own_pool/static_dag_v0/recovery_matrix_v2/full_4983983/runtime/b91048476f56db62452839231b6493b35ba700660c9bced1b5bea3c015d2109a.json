@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "b9c6abaf-9cf8-4bd1-a01e-c6967767d2b4:rs",
+  "task_uid": "b9c6abaf-9cf8-4bd1-a01e-c6967767d2b4",
+  "domain": "tatqa",
+  "question": "What is the sum of amounts billed due on U.S. federal government contracts in 2018 and 2019?",
+  "context": "TABLE:\n | September 30, | \n | 2019 | 2018\nAccounts receivable |  | \nBilled | $  127,406 | $  156,948\nUnbilled | — | 242,877\nAllowance for doubtful accounts | (1,392) | (1,324)\nTotal accounts receivable | 126,014 | 398,501\nLess estimated amounts not currently due | — | (6,134)\nCurrent accounts receivable | $  126,014 | $ 392,367\n\nPASSAGES:\n[0] {'uid': '88fb933e-24cd-44e2-a168-61eabd28ac63', 'order': 1, 'text': 'NOTE 7—ACCOUNTS RECEIVABLE'}\n[1] {'uid': '96d3959a-44bf-4659-8d50-a110d985aa7e', 'order': 2, 'text': 'The components of accounts receivable are as follows (in thousands):'}\n[2] {'uid': 'f025c09e-cb22-4093-914c-30b34306bd24', 'order': 3, 'text': 'Amounts billed include $60.3 million and $80.5 million due on U.S. federal government contracts at September 30, 2019 and 2018, respectively. As further described in Note 2, effective October 1, 2018, the component of accounts receivable that consisted of unbilled contract receivables as reported under ASC 605 has been reclassified as contract assets under ASC 606.'}\n[3] {'uid': '30f5929a-5503-4830-80a2-60a81fd02fbd', 'order': 4, 'text': 'In our normal course of business, we may sell trade receivables to financial institutions as a cash management technique. We do not retain financial or legal obligations for these receivables that would result in material losses. Our ongoing involvement is limited to the remittance of customer payments to the financial institutions with respect to the sold trade receivables; therefore, our sold trade receivables are not included in our Consolidated Balance Sheet in any period presented. As of September 30, 2019, we sold $31.1 million of outstanding trade receivables to financial institutions.'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 60.3,
+        "evidence": "Amounts billed include $60.3 million and $80.5 million due on U.S. federal government contracts at September 30, 2019 and 2018, respectively."
+      },
+      {
+        "value": 80.5,
+        "evidence": "Amounts billed include $60.3 million and $80.5 million due on U.S. federal government contracts at September 30, 2019 and 2018, respectively."
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 60.3,
+        "evidence": "Amounts billed include $60.3 million and $80.5 million due on U.S. federal government contracts at September 30, 2019 and 2018, respectively."
+      },
+      {
+        "value": 80.5,
+        "evidence": "Amounts billed include $60.3 million and $80.5 million due on U.S. federal government contracts at September 30, 2019 and 2018, respectively."
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 60.3,\n      \"evidence\": \"Amounts billed include $60.3 million and $80.5 million due on U.S. federal government contracts at September 30, 2019 and 2018, respectively.\"\n    },\n    {\n      \"value\": 80.5,\n      \"evidence\": \"Amounts billed include $60.3 million and $80.5 million due on U.S. federal government contracts at September 30, 2019 and 2018, respectively.\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 186,
+      "source_key": "tq:b9c6abaf-9cf8-4bd1-a01e-c6967767d2b4:ext",
+      "response_sha256": "8229dc0ce393419163520e8dba53be46c9f53c70af261826fe3f4dbfaa2ff0c6"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"v0 + v1\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"v0 + v1\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 346,
+    "source_key": "tq:b9c6abaf-9cf8-4bd1-a01e-c6967767d2b4:rsn",
+    "response_sha256": "c678940a86782f0c2bda8c4fb6d8e80950ed1e3bb6766050f6f767cc53f90832"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "b9c6abaf-9cf8-4bd1-a01e-c6967767d2b4:rs"
+  }
+}
