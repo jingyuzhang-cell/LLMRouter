@@ -1,0 +1,146 @@
+{
+  "all_pass": true,
+  "original_7_checks": {
+    "snapshot_hash_consistent": true,
+    "all_actions_have_results": true,
+    "gold_leak_none": true,
+    "tokens_recorded": true,
+    "dt_recorded": true,
+    "er_recorded_for_evidence": true,
+    "d_recorded_for_structural": true
+  },
+  "new_hard_checks": {
+    "evidence_8_of_8_incomplete": true,
+    "facts_source_actual": true,
+    "frozen_prompts_unchanged": true,
+    "counts_frozen": true,
+    "runtime_payloads_isolated": true,
+    "retrieval_called_for_all": true
+  },
+  "evidence": [
+    {
+      "node_id": "cda651e30a3c4a589ac2835f42a6914f:ex0",
+      "ER_before": 0.6666666666666666,
+      "ER_after": 1.0,
+      "delta_ER": 0.33333333333333337
+    },
+    {
+      "node_id": "cf711c6fa3ba4cae84efe9af396341b1:ex0",
+      "ER_before": 0.0,
+      "ER_after": 0.5,
+      "delta_ER": 0.5
+    },
+    {
+      "node_id": "a92d0f9216e14d36b56d04196a4817aa:ex1",
+      "ER_before": 0.0,
+      "ER_after": 0.0,
+      "delta_ER": 0.0
+    },
+    {
+      "node_id": "cf6a8029d4474577b0b91b1f4c120683:ex1",
+      "ER_before": 0.0,
+      "ER_after": 0.0,
+      "delta_ER": 0.0
+    },
+    {
+      "node_id": "a81f1322-e74f-4e3c-a6cf-4b8d25d01cf5:ex0",
+      "ER_before": 0.75,
+      "ER_after": 0.75,
+      "delta_ER": 0.0
+    },
+    {
+      "node_id": "99f83ba7-2e57-44d8-ac0a-64ab3e9c7b47:ex0",
+      "ER_before": 0.75,
+      "ER_after": 0.75,
+      "delta_ER": 0.0
+    },
+    {
+      "node_id": "a0414f81-8dc2-44b2-a441-2c9d9c805c4d:ex0",
+      "ER_before": 0.3333333333333333,
+      "ER_after": 0.3333333333333333,
+      "delta_ER": 0.0
+    },
+    {
+      "node_id": "3bc9ea91-f346-4cc1-9ca7-10c481be3ac9:ex0",
+      "ER_before": 0.5,
+      "ER_after": 0.5,
+      "delta_ER": 0.0
+    }
+  ],
+  "snapshot_invalid": [],
+  "replacements": [],
+  "recovery_counts": {
+    "evidence": {
+      "no_recovery": {
+        "successes": 0,
+        "n": 8
+      },
+      "retry_same": {
+        "successes": 4,
+        "n": 8
+      },
+      "switch_model": {
+        "successes": 4,
+        "n": 8
+      },
+      "evidence_retrieval": {
+        "successes": 3,
+        "n": 8
+      },
+      "local_decompose": {
+        "successes": 4,
+        "n": 8
+      }
+    },
+    "reasoning": {
+      "no_recovery": {
+        "successes": 0,
+        "n": 7
+      },
+      "retry_same": {
+        "successes": 0,
+        "n": 7
+      },
+      "switch_model": {
+        "successes": 0,
+        "n": 7
+      },
+      "evidence_retrieval": {
+        "successes": 0,
+        "n": 7
+      },
+      "local_decompose": {
+        "successes": 0,
+        "n": 7
+      }
+    },
+    "structural": {
+      "no_recovery": {
+        "successes": 0,
+        "n": 5
+      },
+      "retry_same": {
+        "successes": 1,
+        "n": 5
+      },
+      "switch_model": {
+        "successes": 1,
+        "n": 5
+      },
+      "evidence_retrieval": {
+        "successes": 1,
+        "n": 5
+      },
+      "local_decompose": {
+        "successes": 1,
+        "n": 5
+      }
+    }
+  },
+  "full_experiment_started": false,
+  "notes": [
+    "Present unparseable historical extraction outputs remain valid failure snapshots with empty executable facts and preserved raw text.",
+    "D retains the original offline structural-load proxy; no gold operation count enters any recovery action.",
+    "gold_leak_check audits provenance/input isolation and exact prompt reconstruction, not natural numeric overlap with reference values."
+  ]
+}

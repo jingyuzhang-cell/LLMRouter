@@ -1,0 +1,62 @@
+{
+  "valid": true,
+  "node_id": "5090ac49-8f00-4c8a-9f15-2fe1d8b77a67:rs",
+  "task_uid": "5090ac49-8f00-4c8a-9f15-2fe1d8b77a67",
+  "domain": "tatqa",
+  "question": "What was the percentage change in Cash and cash equivalents, and restricted cash at end of period between 2018 and 2019?",
+  "context": "TABLE:\n |  | Year ended March 31, | \n | 2019 | 2018 | 2017\nEffect of foreign exchange rate changes on cash and cash equivalents | — | — | (1.0)\nNet decrease in cash and cash equivalents | (472.7) | (7.4) | (1,184.0)\nCash and cash equivalents, and restricted cash at beginning of period (2) | 901.3 | 908.7 | 2,092.7\nCash and cash equivalents, and restricted cash at end of period (2) | $428.6 | $901.3 | $908.7\n\nPASSAGES:\n[0] {'uid': '5f800f76-e4be-40fc-9d55-5a2d8fc35901', 'order': 1, 'text': 'MICROCHIP TECHNOLOGY INCORPORATED AND SUBSIDIARIES CONSOLIDATED STATEMENTS OF CASH FLOWS (in millions)'}\n[1] {'uid': 'a43b35ac-6ed3-4d64-8704-7601601eb5ad', 'order': 2, 'text': 'Schedule of restricted cash:'}\n[2] {'uid': 'aea5d800-7c45-486e-a3e3-e6e038a2ac5d', 'order': 3, 'text': '(2) During the fiscal year ended March 31, 2019, the Company adopted ASU 2016-18 - Statement of Cash Flows: Restricted Cash. The following table presents the balance of restricted cash which consists of cash denominated in a foreign currency and restricted in use due to a foreign taxing authority requirement (in millions):'}",
+  "facts_source": "actual_extraction_output",
+  "facts_before": {
+    "facts": [
+      {
+        "value": 428.6,
+        "evidence": "Cash and cash equivalents, and restricted cash at end of period | $428.6 | $901.3 | $908.7"
+      },
+      {
+        "value": 901.3,
+        "evidence": "Cash and cash equivalents, and restricted cash at end of period | $428.6 | $901.3 | $908.7"
+      }
+    ]
+  },
+  "actual_extracted_facts": {
+    "facts": [
+      {
+        "value": 428.6,
+        "evidence": "Cash and cash equivalents, and restricted cash at end of period | $428.6 | $901.3 | $908.7"
+      },
+      {
+        "value": 901.3,
+        "evidence": "Cash and cash equivalents, and restricted cash at end of period | $428.6 | $901.3 | $908.7"
+      }
+    ]
+  },
+  "actual_parent_outputs": [
+    {
+      "output": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 428.6,\n      \"evidence\": \"Cash and cash equivalents, and restricted cash at end of period | $428.6 | $901.3 | $908.7\"\n    },\n    {\n      \"value\": 901.3,\n      \"evidence\": \"Cash and cash equivalents, and restricted cash at end of period | $428.6 | $901.3 | $908.7\"\n    }\n  ]\n}\n```",
+      "model": "large",
+      "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+      "source_line": 247,
+      "source_key": "tq:5090ac49-8f00-4c8a-9f15-2fe1d8b77a67:ext",
+      "response_sha256": "ae7049b79ad2269ecc4fe490a4c2a0aa3708b2ea50172171827abc81d410aa1c"
+    }
+  ],
+  "failed_node_output": "{\"expression\":\"(v2 - v0) / v0 * 100\"}",
+  "failed_output_provenance": {
+    "output": "{\"expression\":\"(v2 - v0) / v0 * 100\"}",
+    "model": "medium",
+    "source_file": "static_dag_v0/scale_up/RESPONSES.jsonl",
+    "source_line": 407,
+    "source_key": "tq:5090ac49-8f00-4c8a-9f15-2fe1d8b77a67:rsn",
+    "response_sha256": "db0cd571a17a79cbe693d87207bfd7231cc92eb127d48c34befc5b6680bfdfe5"
+  },
+  "failure_state": {
+    "extraction_parse_error": null
+  },
+  "dag_state": {
+    "path": [
+      "extraction",
+      "reasoning"
+    ],
+    "failed_node_id": "5090ac49-8f00-4c8a-9f15-2fe1d8b77a67:rs"
+  }
+}

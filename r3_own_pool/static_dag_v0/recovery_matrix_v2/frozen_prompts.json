@@ -1,0 +1,5 @@
+{
+  "D1": "Align the bare financial facts with the report. For each fact state what it measures (entity, period, unit/scale), then state the single quantitative relationship the question asks for. Return ONLY JSON {{\"facts\":[{{\"index\":i,\"meaning\":\"...\"}}],\"relationship\":\"...\"}}.\nQUESTION: {q}\nREPORT:\n{ctx}\nFACT VALUES: {vals}",
+  "D2": "Using the aligned facts and the relationship, first list the arithmetic steps, then write the single final expression over fact values v0,v1,.... Allowed operators: + - * / and parentheses; small numeric constants permitted (divide by the count to average; multiply by 100 for percent). Return ONLY JSON {{\"steps\":[\"...\"],\"expression\":\"...\"}}.\nQUESTION: {q}\nALIGNMENT: {align}",
+  "RETRIEVE": "Select the rows from the table that are relevant to answering the question. Return ONLY the selected rows as plain text, one per line. Then list all numeric values found in those rows as JSON {{\"facts\":[{{\"value\":number,\"source\":\"row description\"}}]}}.\nQUESTION: {q}\nREPORT:\n{ctx}"
+}
