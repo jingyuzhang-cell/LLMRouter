@@ -216,10 +216,12 @@ def run():
         arms['BestSingle']['Q'] += true_q[m]; arms['BestSingle']['C'] += r['per_model'][m]['C']
         arms['BestSingle']['L'] += r['per_model'][m]['L']
         arms['BestSingle']['regret'] += q_oracle - true_q[m]
+        arms['BestSingle']['top1'] += int(true_q[m] == q_oracle)
         m = type_prior['reasoning']
         arms['TypePrior']['Q'] += true_q[m]; arms['TypePrior']['C'] += r['per_model'][m]['C']
         arms['TypePrior']['L'] += r['per_model'][m]['L']
         arms['TypePrior']['regret'] += q_oracle - true_q[m]
+        arms['TypePrior']['top1'] += int(true_q[m] == q_oracle)
     n = len(corpus)
     table = {}
     for a, d in arms.items():
@@ -291,6 +293,7 @@ def run():
                    n_pairs_all=pair_tot, n_pairs_nontied=nontie_tot,
                    mean_spearman=round(sum(spearman_rows) / len(spearman_rows), 4) if spearman_rows else None),
                task_composition=comp,
+               top1_caveat='overall top1_hit is tie-inflated (77% all-wrong tasks count any pick as hit); decision-relevant metric is headroom_subset',
                headroom_subset=dict(
                    n=comp['headroom'],
                    note='ties excluded; only tasks where models disagree (decision-relevant routing)',
