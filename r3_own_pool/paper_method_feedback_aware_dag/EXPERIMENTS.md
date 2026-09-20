@@ -214,7 +214,41 @@ live 三臂按组件递增重算边际贡献（从调用缓存零成本重建）
 
 **局部子图重规划**（40 节点 dev 真失败集，与冻结 116/pool/pilot/decompose 集全部互斥，判据纯净；336 次真实调用）：模型把剩余计算规划为多步原子子图（s1..sk 确定性逐步执行 + 最终表达式），步骤失败时允许一次证据修复并重规划，改写失败节点及其受影响后继。结果：replan 恢复率 2.5%（1/40），且该节点本可被 retrieval 救回——**动作集 oracle 覆盖率 10.0%→10.0%，净增 0 节点**；replan 平均成本 5931 tokens（约为 decompose 的 2.3 倍），33/40 需要二次规划、29/40 执行器错误。按预注册判据（净增 >2 节点才继续）判定 **NO-GO**：局部子图重规划未扩大恢复动作覆盖率，作为未来工作保留，不再对冻结 116 测试。该负结果与 5.4.4 的 oracle 瓶颈一致：当前恢复上限由证据获取与计算能力决定，而非图的拓扑形状。
 
-## 5.5 Dependency-aware DAG Reuse
+### 5.4.6 Residual GAP Learnability
+
+**能力画像与传播协议**（900 题 × 3 模型 × 双节点，5402 次真实调用，传播口径）：reasoning 消费同模型自身抽取输出（end-to-end node-chain capability），与条件节点基准的 gold-facts 口径区分。任务组成：全错 693（77.0%）、全对 50（5.6%）、headroom 157（17.4%）。
+
+**Layer 1 单模型可预测性**：标准 ROC-AUC = medium 0.751 / large 0.788 / coder 0.839。实例级单模型成功倾向存在可预测信号。
+
+**Layer 2 排序可学习性**：非并列 pairwise 排序准确率 73.9%（n=314），平均 Spearman 0.056。
+
+**Layer 3 路由收益**：全部五臂 Q = 17.8–18.0%，无显著差异；Oracle = 23.0%。总可利用 GAP = 5.0pp。
+
+**Learnability Funnel**：
+
+| 层级 | 数量 | 保留率 |
+| --- | --- | --- |
+| L0 Oracle opportunity（non-large winner） | 81 | 5.1% of 1600 |
+| L1 Trigger detected | 41 | 50.6% of L0 |
+| L2 Ranked correctly | 20 | 48.8% of L1 |
+| L3 Actually recovered | 20 | 24.7% of L0 |
+
+**Selective Routing Risk-Coverage Curve**（1600 题，post-hoc 5-fold CV，机制分析层级）：
+
+| 覆盖率 | Override | Help | Harm | Net | GAP Recovery |
+| --- | --- | --- | --- | --- | --- |
+| 2% | 32 | 2 | 0 | +2 | +2.5% |
+| 5% | 80 | 6 | 0 | +6 | +7.4% |
+| 10% | 160 | 8 | 1 | +7 | +8.6% |
+| 15% | 240 | 8 | 6 | +2 | +2.5% |
+| 30% | 480 | 12 | 15 | −3 | −3.7% |
+| 50% | 800 | 22 | 39 | −17 | −21.0% |
+
+结论：**Residual GAP 在 5–10% coverage 下存在可利用信号（GAP +7.4–8.6%），但信号随 coverage 扩大急剧退化。**
+
+**Exact Optimality**（200 任务 cross-model 子集，全部 9 组合实测）：Exact Oracle Q = 30.5%；最优固定组合 E_large→R_coder = 20.5%（Optimality Gap = 10.0pp）；Exact Pareto 非支配集 = E_large→R_medium / E_large→R_large / E_large→R_coder。
+
+### 5.5 Dependency-aware DAG Reuse
 
 多轮任务中，追问通常只改变历史任务的一部分。本节检验依赖感知的局部复用（非输出缓存）：历史图保存节点、边、依赖与版本，修改发生时定位受影响子图，仅重算其后继。实验为 20 个追问任务（原始材料不变、首个事实假设 +10%），历史抽取子图零调用保留，仅重执行推理与验证。
 

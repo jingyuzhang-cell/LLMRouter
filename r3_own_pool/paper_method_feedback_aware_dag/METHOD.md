@@ -221,6 +221,18 @@ B^{\rm rem}=B-B^{\rm used},\qquad T^{\rm rem}=T-T^{\rm used}.
 
 预算网格实验（5.4.6）显示：\(T^{\rm rem}\le 1\) s 时 retrieval/decompose 不可行；从低成本动作升级到全动作执行，质量仅从约 3.5% 升至 6.9%（即 oracle），成本从约 500 涨至 6300 tokens（恢复效率约 6 倍差距）；λ/μ 敏感性中昂贵动作在任何非零成本/延迟权重下均不占优。因此系统按 **Recover → Escalate → Terminate** 三级决策：低成本恢复先行；仍失败且剩余预算允许并存在可观察改进信号时升级；否则终止以避免无效开销。若有限恢复仍然失败，执行记录保留未解决状态，而不能通过忽略失败或读取评价答案生成成功结论。这样的状态约束使动态适应保持明确的异常恢复语义，也使恢复次数与资源消耗能够独立核算。
 
+### 3.5.5 Exact Oracle within the Model-Composition Space
+
+在有限模型池 \(\mathcal M\)（\(|\mathcal M|=3\)）、2 节点传播链与确定性执行下，全部可行模型组合为 \(3 \times 3 = 9\) 种。精确枚举全部组合并逐任务取 Q 最大者，得到定义策略空间内的 Exact Static Oracle：
+
+\[
+Q^{\text{oracle}} = \frac{1}{n}\sum_i \max_{(e,r)} Q_i(e,r).
+\]
+
+在 200 任务 cross-model 子集上的实测结果：Exact Oracle Q = 30.5%；Always Large（E_large→R_large）Q = 18.0%；Oracle GAP = 12.5pp。最优固定组合 E_large→R_coder Q = 20.5%（Optimality Gap = 10.0pp）。Exact Pareto 非支配集包含 E_large→R_medium、E_large→R_large 和 E_large→R_coder 三个组合（互不支配）。
+
+**边界声明**：此 Exact Oracle 为 3×3 模型组合空间内的精确最优上界，不涵盖 retry/switch/retrieval 等恢复动作、downstream rescheduling 或 Graph Forest；后者属于更复杂的序列决策问题，留作未来工作。
+
 ## 3.6 Graph Forest Reuse
 
 在多轮任务中，新的请求通常只改变历史任务的一部分。用户可能要求比较已有结果，或在报告事实保持不变时修改某项计算假设。本文将历史任务图保存为图森林
