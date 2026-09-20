@@ -78,21 +78,19 @@ def run():
             label = f'lam={lam},mu={mu}' + (f',B={bc[0]}tok/{bc[1]}s' if bc else ',B=inf')
             picks = []
             for i in range(n):
-                feasible = []
-                for m in POOL:
-                    if bc and c_hat[m][i] > bc[0]: continue
-                    if bc and l_hat[m][i] > bc[1]: continue
-                    feasible.append(m)
-                if not feasible: feasible = ['medium']  # cheapest fallback
-                # two-stage: default large if feasible, else best feasible
-                if 'large' in feasible and p_sw[i] <= FROZEN_TAU:
-                    picks.append('large'); continue
-                if 'large' in feasible and p_sw[i] > FROZEN_TAU:
+                # budget filtering: only remove infeasible models, do NOT change selection logic
+                feasible = [m for m in POOL if (not bc or (c_hat[m][i] <= bc[0] and l_hat[m][i] <= bc[1]))]
+                if not feasible: feasible = ['medium']  # cheapest fallback when nothing fits
+                # strictly frozen Two-stage tau=0.5 within the feasible set
+                if 'large' in feasible:
+                    if p_sw[i] <= FROZEN_TAU:
+                        picks.append('large'); continue
                     m2 = max(['medium', 'coder'], key=lambda mm: p_beats[mm][i] if mm in feasible else -1)
                     if m2 in feasible and p_beats[m2][i] > 0.5:
                         picks.append(m2); continue
-                # utility selection among feasible
-                best = max(feasible, key=lambda m: q_hat[m][i] - lam * c_hat[m][i] / 1000 - mu * l_hat[m][i])
+                    picks.append('large'); continue  # stay large (no fallthrough)
+                # large infeasible: best non-large by stage-2 score
+                best = max(feasible, key=lambda m: p_beats.get(m, np.array([0.0]*n))[i] if m in p_beats else q_hat[m][i])
                 picks.append(best)
             qsel = np.array([Q[picks[i]][i] for i in range(n)])
             csel = np.array([C[picks[i]][i] for i in range(n)])
