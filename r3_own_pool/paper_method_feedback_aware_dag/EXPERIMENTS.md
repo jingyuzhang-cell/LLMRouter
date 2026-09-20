@@ -6,7 +6,7 @@
 
 本章实验设置见第 4 章。
 
-## 5.1 GAP Analysis## 5.2 GAP Analysis
+## 5.1 GAP Analysis
 
 **拆分质量的执行效用**（300 任务，两域；其中 210 个具有单体对照可配对比较）：同一任务上比较无拆分单体（large 单提示直答）与类型先验 DAG 链（抽取→推理→确定性执行）。结果呈现**域依赖的双向效应**：
 
@@ -221,11 +221,11 @@ live 三臂按组件递增重算边际贡献（从调用缓存零成本重建）
 
 **预算感知升级实验**（116 个判据纯净真失败，冻结 counterfactual，零新调用）：以剩余预算 \(B^{\rm rem},T^{\rm rem}\) 过滤可行动作后按序执行。时间预算网格显示：\(T^{\rm rem}\le0.5\) s 时仅 retry/switch 可行（Q=1.7%）；\(\le1\) s 时 retrieval/decompose（实测 2.7–4.8 s）不可行，上限为 retry→switch（3.5%）。token 预算从 1200 放开到无限，Q 仅从 3.4% 升至 6.9%（=oracle），成本从约 500 涨至 6332 tokens；恢复效率从 0.063 降至 0.011 恢复/千 token（约 6 倍差距），oracle 以 1/47 的成本达到同一上限。λ/μ 敏感性（\(U=Q-\lambda C-\mu L\)）中，昂贵动作在任何非零成本/延迟权重下均不占优，多数权重下 retry-only 最优。结论：**并不是恢复越复杂越好**——在动作收益很低时，应根据剩余预算控制升级深度，必要时提前终止。
 
-### 5.4.7 Local Subgraph Replan（开发 pilot，NO-GO，未来工作）
+### 5.4.8 Local Subgraph Replan（开发 pilot，NO-GO，未来工作）
 
 **局部子图重规划**（40 节点 dev 真失败集，与冻结 116/pool/pilot/decompose 集全部互斥，判据纯净；336 次真实调用）：模型把剩余计算规划为多步原子子图（s1..sk 确定性逐步执行 + 最终表达式），步骤失败时允许一次证据修复并重规划，改写失败节点及其受影响后继。结果：replan 恢复率 2.5%（1/40），且该节点本可被 retrieval 救回——**动作集 oracle 覆盖率 10.0%→10.0%，净增 0 节点**；replan 平均成本 5931 tokens（约为 decompose 的 2.3 倍），33/40 需要二次规划、29/40 执行器错误。按预注册判据（净增 >2 节点才继续）判定 **NO-GO**：局部子图重规划未扩大恢复动作覆盖率，作为未来工作保留，不再对冻结 116 测试。该负结果与 5.4.4 的 oracle 瓶颈一致：当前恢复上限由证据获取与计算能力决定，而非图的拓扑形状。
 
-### 5.4.6 Residual GAP Learnability
+### 5.4.7 Residual GAP Learnability
 
 **能力画像与传播协议**（900 题 × 3 模型 × 双节点，5402 次真实调用，传播口径）：reasoning 消费同模型自身抽取输出（end-to-end node-chain capability），与条件节点基准的 gold-facts 口径区分。任务组成：全错 693（77.0%）、全对 50（5.6%）、headroom 157（17.4%）。
 
@@ -259,7 +259,22 @@ live 三臂按组件递增重算边际贡献（从调用缓存零成本重建）
 
 **Exact Optimality**（200 任务 cross-model 子集，全部 9 组合实测）：Exact Oracle Q = 30.5%；最优固定组合 E_large→R_coder = 20.5%（Optimality Gap = 10.0pp）；Exact Pareto 非支配集 = E_large→R_medium / E_large→R_large / E_large→R_coder。
 
-### 5.5 Dependency-aware DAG Reuse
+#
+### 5.4.9 模型组合空间下的精确最优上界与最优性差距
+
+在 200 任务 cross-model 子集上枚举全部 9 种 Extraction–Reasoner 模型组合（传播口径），得到逐任务精确 Oracle：
+
+| Extraction ↓ / Reasoner → | Medium | Large | Coder |
+| --- | --- | --- | --- |
+| Medium | 10.0% | 9.5% | 9.5% |
+| **Large** | **20.0%** | 18.0% | **20.5%** |
+| Coder | 13.0% | 11.5% | 11.0% |
+
+最优固定组合为 E_large→R_coder（Q = 20.5%），相对 Always Large（E_large→R_large = 18.0%）提升 +2.5pp，恢复 Oracle GAP 的 20.0%。逐任务 Exact Oracle Q = 30.5%，Optimality Gap = 10.0pp。
+
+Exact Pareto 非支配集包含 E_large→R_medium、E_large→R_large 和 E_large→R_coder 三个组合（互不支配）。该 Exact Oracle 仅表示枚举的 3×3 Extraction–Reasoner 模型组合空间中的精确上界，不代表完整 Dynamic DAG 动作空间的全局最优。
+
+## 5.5 Dependency-aware DAG Reuse
 
 多轮任务中，追问通常只改变历史任务的一部分。本节检验依赖感知的局部复用（非输出缓存）：历史图保存节点、边、依赖与版本，修改发生时定位受影响子图，仅重算其后继。实验为 20 个追问任务（原始材料不变、首个事实假设 +10%），历史抽取子图零调用保留，仅重执行推理与验证。
 
