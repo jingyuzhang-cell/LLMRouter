@@ -255,7 +255,7 @@ live 三臂按组件递增重算边际贡献（从调用缓存零成本重建）
 | 30% | 480 | 12 | 15 | −3 | −3.7% |
 | 50% | 800 | 22 | 39 | −17 | −21.0% |
 
-结论：**Residual GAP 在 5–10% coverage 下存在可利用信号（GAP +7.4–8.6%），但信号随 coverage 扩大急剧退化。**
+结论：**单模型能力具有较强可预测性（AUC 0.75–0.84），Residual GAP 也存在部分可利用信号，但这种信号只能在低覆盖率的选择性路由区域安全转化为收益，扩大覆盖率后泛化不稳定。**
 
 **Exact Optimality**（200 任务 cross-model 子集，全部 9 组合实测）：Exact Oracle Q = 30.5%；最优固定组合 E_large→R_coder = 20.5%（Optimality Gap = 10.0pp）；Exact Pareto 非支配集 = E_large→R_medium / E_large→R_large / E_large→R_coder。
 
