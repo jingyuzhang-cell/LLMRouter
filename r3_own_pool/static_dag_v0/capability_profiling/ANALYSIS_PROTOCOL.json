@@ -1,0 +1,38 @@
+{
+  "frozen_at": "before any outcome analysis of the 900-question corpus (collection mid-flight)",
+  "split": "task-level grouped 5-fold CV; extraction and reasoning of the same task always share a fold; no node-level splitting",
+  "holdout": {
+    "set": "fresh_static_confirmation 100 tasks (existing 3-model measurements)",
+    "disjointness": "verified: 0 shared uids with the 900 (HOLDOUT_DISJOINTNESS.json)",
+    "label": "independent held-out transfer set"
+  },
+  "definitions": {
+    "Q_node": "node-level EXEC correctness: extraction = parse + required-operand coverage; reasoning = expression executed on the facts it consumed matches gold (close, 1e-4 rel)",
+    "Q_task": "task-level final value matches gold on the same consumed facts",
+    "C": "total tokens (input+output) per call; routing rows sum over the task's calls",
+    "L": "local vLLM service latency per call (single local GPU; NOT cross-hardware comparable)",
+    "regret_primary": "R_Q = Q_oracle - Q_selected at task level; multi-objective regret reported separately, never mixed into the main table"
+  },
+  "layer1_per_model_prediction": {
+    "Q": ["AUC", "Accuracy@0.5", "Brier", "ECE(10 bins)"],
+    "C_L": ["MAE", "MAPE"],
+    "reporting": "per model (medium/large/coder) x node type (extraction/reasoning); pooled numbers secondary"
+  },
+  "layer2_ranking": [
+    "pairwise ranking accuracy (per question, all model pairs)",
+    "top1-oracle-model hit rate",
+    "mean rank correlation (Spearman)",
+    "quality regret R_Q"
+  ],
+  "layer3_routing_table": {
+    "arms": ["Best Single", "Query Router (retrained, same folds, no type conditioning)", "Type Prior (per-type best by train folds)", "Capability Router (per-type per-question argmax Q-hat)", "Oracle"],
+    "columns": ["Quality", "Tokens", "Latency", "Top1 Hit", "R_Q"],
+    "plus": "Q-C and Q-L Pareto scatter"
+  },
+  "cross_domain": {
+    "direction": "mh -> tq",
+    "comparable": "router ranking/selection changes",
+    "not_comparable": "absolute quality (mh reasoning consumes own extraction; tq legacy measurements are gold-facts conditional) - protocol difference must be stated"
+  },
+  "interpretation_precommitment": "If Capability Router does not significantly exceed Type Prior, that is an acceptable outcome: the question is how much predictable information the capability profile carries and how much converts to routing gains, not that a learned router must win."
+}
