@@ -38,3 +38,16 @@ RQ1（拆分）：分解收益呈域依赖与复杂度依赖（MultiHiertt +14pp
 ## 6.6 局限
 
 (1) 任务域以财务表格问答为主，跨域泛化未验证；(2) Live Dynamic 对照为 2 节点链（抽取→推理），更深的后继链尚未在 live 层级验证；(3) 48 任务为 previously analyzed live confirmation set，其诊断启发了 v2 规则设计，不构成未接触留出集；(4) v2 的 coder→large hysteresis 切换分支未被 dev 数据触发，仅有定义与一致性验证；(5) 回放层级实验使用条件化节点结果表，后继节点处于标准输入条件，已与 live 层级显式区分；(6) 成本为 token 计量与本地服务时延，未建模货币价格；(7) 恢复动作覆盖上限的结论限定于当前 3 模型池与冻结 prompt，扩池（更强模型、工具增强）是突破上限的自然途径，留作未来工作。
+
+
+## 6.7 四条核心结论
+
+1. **Conditional capability ≠ propagated capability。** 条件节点评估下模型互补性明显（oracle +13.59pp），传播后互补空间被上游错误压缩至 5pp——两者测量的是不同的能力维度。
+
+2. **Predictability ≠ routability。** 单模型成功倾向可预测（AUC 0.75–0.84），Residual GAP 也存在部分可利用信号，但这种信号只能在低覆盖率的选择性路由区域（5–10%）安全转化为收益；扩大覆盖率后泛化不稳定。
+
+3. **Stage-wise complementarity is real。** Cross-model 3×3 矩阵表明，当抽取质量被固定（E_large）后，medium 和 coder 的推理互补性重新浮现——阶段互补性是真实的，只是被同模型绑定掩盖。
+
+4. **Selective adaptation is safer than aggressive switching。** Two-stage（4 次切换，零 harm）优于 Capability Router（135 次切换，harm 4.5%）；保守偏好切换以极低成本实现了正向但温和的收益。
+
+**最终结论**：动态调度能够更安全地利用已有模型互补性，但不能突破模型池本身的能力覆盖上限。

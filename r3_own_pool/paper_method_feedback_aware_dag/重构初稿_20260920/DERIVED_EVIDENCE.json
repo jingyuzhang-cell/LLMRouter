@@ -1,0 +1,197 @@
+{
+  "audit_seed": 20260920,
+  "bootstrap_replicates": 10000,
+  "note": "New descriptive aggregations of existing outputs only; ratio-of-sums cluster bootstrap aligns with node-weighted Q. Post-hoc audit, not new preregistered experiment.",
+  "routing": {
+    "n_tasks": 100,
+    "n_nodes": 493,
+    "Q": {
+      "AlwaysLarge": 0.4685598377281947,
+      "QueryRouter": 0.4665314401622718,
+      "FrozenNodeRouter": 0.5354969574036511,
+      "TypePrior": 0.5354969574036511,
+      "NodeOracle": 0.6064908722109533
+    },
+    "diff_ci95": {
+      "FrozenNodeRouter-QueryRouter": [
+        0.03441295546558704,
+        0.10612244897959183
+      ],
+      "FrozenNodeRouter-TypePrior": [
+        -0.012096774193548387,
+        0.012121212121212121
+      ],
+      "TypePrior-QueryRouter": [
+        0.03441295546558704,
+        0.10505050505050505
+      ]
+    },
+    "types": {
+      "extraction": {
+        "n": 193,
+        "Q": {
+          "medium": 0.37305699481865284,
+          "large": 0.5958549222797928,
+          "coder": 0.37823834196891193
+        },
+        "oracle": 0.694300518134715
+      },
+      "reasoning": {
+        "n": 100,
+        "Q": {
+          "medium": 0.31,
+          "large": 0.25,
+          "coder": 0.31
+        },
+        "oracle": 0.41
+      },
+      "verification": {
+        "n": 200,
+        "Q": {
+          "medium": 0.52,
+          "large": 0.455,
+          "coder": 0.59
+        },
+        "oracle": 0.62
+      }
+    },
+    "dev_type_prior": {
+      "extraction": "large",
+      "reasoning": "medium",
+      "verification": "coder"
+    }
+  },
+  "complexity": {
+    "MultiHiertt:1-2": {
+      "n": 64,
+      "mono_correct": 4,
+      "dag_correct": 11
+    },
+    "MultiHiertt:3": {
+      "n": 20,
+      "mono_correct": 7,
+      "dag_correct": 9
+    },
+    "MultiHiertt:4+": {
+      "n": 16,
+      "mono_correct": 1,
+      "dag_correct": 3
+    },
+    "TAT-QA:1-2": {
+      "n": 132,
+      "mono_correct": 71,
+      "dag_correct": 51
+    },
+    "TAT-QA:3": {
+      "n": 20,
+      "mono_correct": 12,
+      "dag_correct": 14
+    },
+    "TAT-QA:4+": {
+      "n": 8,
+      "mono_correct": 1,
+      "dag_correct": 4
+    },
+    "ALL:1-2": {
+      "n": 196,
+      "mono_correct": 75,
+      "dag_correct": 62
+    },
+    "ALL:3": {
+      "n": 40,
+      "mono_correct": 19,
+      "dag_correct": 23
+    },
+    "ALL:4+": {
+      "n": 24,
+      "mono_correct": 2,
+      "dag_correct": 7
+    }
+  },
+  "dynamic_v2": {
+    "n": 48,
+    "latency_mean": 3.0914068382699043,
+    "realloc_count": 25,
+    "dQ_ci95": [
+      0.0,
+      0.0625
+    ],
+    "help": 1,
+    "harm": 0
+  },
+  "faults": {
+    "C0": {
+      "n": 30,
+      "static_correct": 16,
+      "dynamic_correct": 15,
+      "help": 0,
+      "harm": 1,
+      "dC": -2.7333333333333334,
+      "dL": -0.01282189494619767
+    },
+    "T1": {
+      "n": 28,
+      "static_correct": 2,
+      "dynamic_correct": 2,
+      "help": 1,
+      "harm": 1,
+      "dC": -3.9642857142857144,
+      "dL": 0.03917844793094056
+    },
+    "T2": {
+      "n": 30,
+      "static_correct": 1,
+      "dynamic_correct": 1,
+      "help": 0,
+      "harm": 0,
+      "dC": -5.3,
+      "dL": -0.0790640201419592
+    },
+    "T3": {
+      "n": 30,
+      "static_correct": 13,
+      "dynamic_correct": 15,
+      "help": 2,
+      "harm": 0,
+      "dC": -69.66666666666667,
+      "dL": -0.6381653752177954
+    }
+  },
+  "recovery": {
+    "n": 116,
+    "unique_tasks": 96,
+    "already_correct": 32,
+    "actions": {
+      "retry_same": {
+        "successes": 2,
+        "tokens": 276.0344827586207,
+        "latency": 0.32194652564117104
+      },
+      "switch_model": {
+        "successes": 2,
+        "tokens": 275.66379310344826,
+        "latency": 0.36568433951971857
+      },
+      "evidence_retrieval": {
+        "successes": 5,
+        "tokens": 2939.060344827586,
+        "latency": 3.487835999337378
+      },
+      "local_decompose": {
+        "successes": 2,
+        "tokens": 3030.3189655172414,
+        "latency": 3.899860749791922
+      }
+    }
+  },
+  "source_sha256": {
+    "static_dag_v0/fresh_static_confirmation/SCORED_MATRIX_EXEC.npz": "e40a9fb3d942b74e4c11ddc7724217ce16f00f89376442e90858715e6065d2c8",
+    "static_dag_v0/fresh_static_confirmation/NODES.json": "aff74db229c14096f2b8afdd4be939f3ff843600172f0a9352da1d04a0421305",
+    "static_dag_v0/tool_aware_v1/node_benchmark/NODE_GAP_AUDIT.json": "8258ebf627f078c6d5db14b2d2e25f5668c324828f12797dc9936080b0b00c0e",
+    "static_dag_v0/complexity_stratification.json": "b21adf9599bfa8acec95a2eea71f75714fe0e66c4557720de4e8347e4d286fae",
+    "static_dag_v0/dynamic_v2_test/TEST_ANALYSIS.json": "33bf0416885276fdd3c1654cbb3230e7117e457b53fcacfad56edf48aa6ac81f",
+    "static_dag_v0/controlled_fault_propagation/RAW_RESULTS.json": "a8c0ae1b8f01d6b13b5c6bf4874b8fbd9df369ba5498671e115374f17afaa228",
+    "static_dag_v0/recovery_matrix_v2/full_4983983/ORIG_CORRECTNESS.json": "454dbffa9bcaac6b07295e1f623abe9d9018501a2c35b5b9780985869137dd81",
+    "static_dag_v0/recovery_matrix_v2/full_4983983/FULL_RESULTS.json": "810d6f2a3917aa3264489875ed125ea3dc53970bef93a9edc52061c27f73da8d"
+  }
+}
