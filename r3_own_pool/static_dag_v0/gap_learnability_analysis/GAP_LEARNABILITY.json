@@ -10,7 +10,7 @@
     "L1_recall": 0.5062,
     "L2_precision": 0.4878,
     "L3_rate": 0.2469,
-    "note": "Funnel shows where signal is lost: L0->L1 is override detection (biggest loss); L1->L2 is alternative ranking (secondary loss); L2->L3 should be ~100%"
+    "note": "Signal loss is split roughly evenly: 50.6% recall at override detection AND 48.8% precision at alternative ranking. Both layers contribute equally; once the right model is selected, recovery is deterministic (100%)."
   },
   "risk_coverage": [
     {
@@ -119,5 +119,6 @@
     },
     "note": "Cross-model cells (E_large->R_medium etc.) require new reasoning calls on cross-model extraction outputs; reported here as design, not results"
   },
-  "interpretation": "Residual GAP has exploitable signal at high selectivity: at 5.0% coverage, Help=6 > Harm=0 (net +6), GAP Recovery=7.4%. Signal degrades as coverage expands."
+  "interpretation": "Residual GAP has weak but real learnable signal; safe exploitation requires selective coverage control (5-10% of highest-scoring instances). The prerequisite is that the router score contains weak but non-zero ranking signal; coverage control amplifies this into safe positive GAP Recovery.",
+  "evidence_tier_note": "5-10% coverage results come from 5-fold CV + post-hoc risk-coverage analysis on 1600 dev questions. This is mechanism evidence, NOT independent-test-set confirmation. Paper should state: \"in cross-validation analysis on development data, GAP Recovery of 7.4-8.6% was observed at 5-10% coverage with 0-1 harmful overrides\" rather than claiming stable independent-set recovery."
 }
