@@ -329,5 +329,7 @@
       }
     ]
   },
-  "interpretation": "partial structural regularity exists (max diagnostic AUC=0.664, max |SMD|=0.574), but current routing features fail to exploit it robustly"
+  "interpretation": "Primary bottleneck lies in the override trigger (s_switch AUC=0.458, near zero discriminative power); alternative-model ranking retains partial signal (s_pref AUC=0.664) but is a secondary error source (2 of 4 harm switches were target-model selection errors, not trigger errors).",
+  "terminology_note": "s_switch and s_pref are uncalibrated ridge decision scores, NOT probabilities (values can exceed 1.0). Do not describe high-score errors as \"high-confidence\" unless calibration is verified.",
+  "subset_note": "S_L=34 and S_NL=27 are the unique-winner subset of the 84 headroom tasks; the remaining 23 shared-winner tasks (S_T) are excluded from this binary comparison."
 }
