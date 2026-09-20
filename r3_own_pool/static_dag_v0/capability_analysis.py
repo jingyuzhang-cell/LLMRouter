@@ -13,12 +13,16 @@ import numpy as np
 from . import tool_aware_v1 as v
 from .decompose_v1 import exec_calc
 from .recovery_matrix_v2_devset import BASE
-from .capability_profiling import OUT as CPROF, POOL, close
+from .capability_profiling import OUT as CPROF, POOL
+from .recovery_matrix_v2_audit import close
 from .node_benchmark_build import operand_values
 
 OUT = BASE / 'capability_profiling'
 FRESH = BASE / 'fresh_static_confirmation'
 SEED = 20260918
+def sha(x):
+    import hashlib
+    return hashlib.sha256(x.encode()).hexdigest()
 ALPHA = 1.0
 FOLDS = 5
 TYPES = ['extraction', 'reasoning']
@@ -93,7 +97,7 @@ def auc(scores, labels):
         avg = (i + j + 1) / 2
         for k in range(i, j): ranks[pairs[k][1]] = ranks.get(pairs[k][1], []) + [avg]
         i = j
-    r1 = sum(sum(r) for r in ranks.values()) / max(1, n1)
+    r1 = sum(ranks.get(1, []))
     return round((r1 - (n1 * (n1 + 1) / 2)) / (n1 * n0), 4)
 
 def run():
@@ -107,7 +111,7 @@ def run():
     X = features(questions, emb_map, dim)
     uids = [r['uid'] for r in corpus]
     # task-level grouped folds (hash-based, deterministic)
-    fold = {u: int(sha(u + ':fold')) % FOLDS for u in uids}
+    fold = {u: int(sha(u + ':fold'), 16) % FOLDS for u in uids}
     # predictions per (type, model) via grouped CV
     pred = {ty: {m: np.zeros(len(corpus)) for m in POOL} for ty in TYPES}
     predC = {ty: {m: np.zeros(len(corpus)) for m in POOL} for ty in TYPES}
@@ -145,18 +149,26 @@ def run():
     arms = {a: dict(Q=0, C=0.0, L=0.0, top1=0, regret=0.0) for a in
             ['BestSingle', 'QueryRouter', 'TypePrior', 'CapabilityRouter', 'Oracle']}
     pair_ok = pair_tot = 0
+    nontie_ok = nontie_tot = 0
     spearman_rows = []
+    comp = dict(all_wrong=0, all_correct=0, headroom=0)
+    sub = {a: dict(top1=0, regret=0.0) for a in ['QueryRouter', 'TypePrior', 'CapabilityRouter']}
+    mean_q_pre = {m: float(np.mean([r['per_model'][m]['q_rsn'] for r in corpus])) for m in POOL}
+    best_single_pre = max(POOL, key=lambda m: mean_q_pre[m])
+    type_prior_pre = {ty: max(POOL, key=lambda m: float(np.mean(
+        [r['per_model'][m][('q_ext' if ty == 'extraction' else 'q_rsn')] for r in corpus]))) for ty in TYPES}
     for i, r in enumerate(corpus):
         true_q = {m: r['per_model'][m]['q_rsn'] for m in POOL}
         pred_q = {m: float(pred['reasoning'][m][i]) for m in POOL}
         oracle_m = max(POOL, key=lambda m: (true_q[m], pred_q.get(m, 0)))
-        best_pair = sorted(POOL, key=lambda m: -(true_q[m], pred_q[m]))
+        best_pair = sorted(POOL, key=lambda m: (-true_q[m], -pred_q[m]))
         for a in range(len(POOL)):
             for b in range(a + 1, len(POOL)):
                 m1, m2 = best_pair[a], best_pair[b]
-                if pred_q[m1] != pred_q[m2]:
-                    pair_tot += 1
-                    pair_ok += int((pred_q[m1] > pred_q[m2]) == (true_q[m1] > true_q[m2]))
+                if true_q[m1] != true_q[m2]:  # only non-tied pairs are decision-relevant
+                    nontie_tot += 1
+                    if pred_q[m1] != pred_q[m2]:
+                        nontie_ok += int((pred_q[m1] > pred_q[m2]) == (true_q[m1] > true_q[m2]))
         def rank_of(d):
             order = sorted(d, key=lambda k: d[k])
             return {k: i + 1 for i, k in enumerate(order)}
@@ -166,8 +178,19 @@ def run():
             spearman_rows.append(1 - 6 * d2 / (len(POOL) * (len(POOL) ** 2 - 1)))
         elif len(set(true_q.values())) == 1:
             spearman_rows.append(0.0)
-        # arms
+        vals = sorted(true_q.values())
         q_oracle = max(true_q.values())
+        if vals[0] == vals[-1]:
+            comp['all_wrong' if vals[0] == 0 else 'all_correct'] += 1
+        else:
+            comp['headroom'] += 1
+            # headroom-subset metrics: ties excluded, decision-relevant only
+            for a, m in [('QueryRouter', max(POOL, key=lambda mm: sum(pred[ty][mm][i] for ty in TYPES))),
+                         ('TypePrior', type_prior_pre['reasoning']),
+                         ('CapabilityRouter', max(POOL, key=lambda mm: pred['reasoning'][mm][i]))]:
+                sub[a]['top1'] += int(true_q[m] == q_oracle)
+                sub[a]['regret'] += q_oracle - true_q[m]
+        # arms
         sel = {}
         sel['Oracle'] = oracle_m
         sel['BestSingle'] = None  # global constant, filled after loop via train means
@@ -214,12 +237,12 @@ def run():
             # per-task recomputation requires per-task records; compute from stored per-task sums
         return None
     # per-task sums were accumulated in arms; recompute per-task records for bootstrap
-    per_task = {a: {} for a in arms}
+    per_task = {a: {} for a in list(arms) + ['CapabilityRouter_reasoning']}
     for r, i in zip(corpus, range(len(corpus))):
         true_q = {m: r['per_model'][m]['q_rsn'] for m in POOL}
         q_oracle = max(true_q.values())
         x = X[i].reshape(1, -1)
-        pred_q = {ty: {m: float((x @ pred[ty][m].reshape(-1, 1))[0]) for m in POOL} for ty in TYPES}
+        pred_q = {ty: {m: float(pred[ty][m][i]) for m in POOL} for ty in TYPES}
         sel = dict(
             Oracle=max(POOL, key=lambda m: true_q[m]),
             QueryRouter=max(POOL, key=lambda m: sum(pred_q[ty][m] for ty in TYPES)),
@@ -262,9 +285,17 @@ def run():
                terminology=dict(task_quality='propagated capability (extract(m)->reason(m)); NOT pure reasoning capability',
                                 L_definition='per-call inference service latency, loaded-model, cold-start excluded'),
                layer1_per_model=L1,
-               layer2=dict(pairwise_rank_acc=round(pair_ok / pair_tot, 4) if pair_tot else None,
-                           n_pairs=pair_tot,
-                           mean_spearman=round(sum(spearman_rows) / len(spearman_rows), 4) if spearman_rows else None),
+               layer2=dict(
+                   pairwise_rank_acc_all=round(pair_ok / pair_tot, 4) if pair_tot else None,
+                   pairwise_rank_acc_nontied=round(nontie_ok / nontie_tot, 4) if nontie_tot else None,
+                   n_pairs_all=pair_tot, n_pairs_nontied=nontie_tot,
+                   mean_spearman=round(sum(spearman_rows) / len(spearman_rows), 4) if spearman_rows else None),
+               task_composition=comp,
+               headroom_subset=dict(
+                   n=comp['headroom'],
+                   note='ties excluded; only tasks where models disagree (decision-relevant routing)',
+                   **{a: dict(top1_hit=round(d['top1'] / max(1, comp['headroom']), 4),
+                              R_Q=round(d['regret'] / max(1, comp['headroom']), 4)) for a, d in sub.items()}),
                layer3_routing_corpus=table, transfer_fresh100=transfer,
                transfer_degradation=dtr,
                type_prior=type_prior, best_single=best_single)

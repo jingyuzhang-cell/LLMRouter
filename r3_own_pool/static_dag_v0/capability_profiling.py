@@ -78,9 +78,13 @@ def freeze_tasks():
     (OUT / 'PROFILE_POLICY.json').write_text(json.dumps(pol, ensure_ascii=False, indent=2))
     return pol
 
+import threading
+_APPEND_LOCK = threading.Lock()
+
 def append(path, obj):
-    with path.open('a') as f:
-        f.write(json.dumps(obj, ensure_ascii=False) + '\n'); f.flush(); os.fsync(f.fileno())
+    with _APPEND_LOCK:
+        with path.open('a') as f:
+            f.write(json.dumps(obj, ensure_ascii=False) + '\n'); f.flush(); os.fsync(f.fileno())
 
 def run():
     import fcntl
@@ -137,7 +141,7 @@ def run():
                     if int(q.stdout.strip()) < 1000: break
                 except ValueError: break
                 _t.sleep(2)
-        # ---- Pass per model: extraction(planned per model) then reasoning on own facts ----
+        # ---- Pass per model: extraction then reasoning on own facts (sequential, stable) ----
         for m in POOL:
             for t in tasks:
                 k = f'EXT:{m}:{t["uid"]}'
@@ -147,7 +151,6 @@ def run():
             for t in tasks:
                 uid = t['uid']; k = f'RSN:{m}:{uid}'
                 if k in cache: continue
-                facts = v.parse_facts(cache[f'EXT:{m}:{uid}']['response']['answer']) if False else None
                 r = cache[f'EXT:{m}:{uid}']
                 try: facts = v.parse_facts(r['response']['answer'])
                 except Exception: facts = {'facts': []}

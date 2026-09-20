@@ -1,0 +1,186 @@
+{
+  "protocol": "ANALYSIS_PROTOCOL.json",
+  "seed": 20260918,
+  "alpha": 1.0,
+  "folds": 5,
+  "n_corpus": 900,
+  "headline_ci": {
+    "dQ_Capability-TypePrior": [
+      -0.0111,
+      0.0089
+    ],
+    "dQ_Capability-QueryRouter": [
+      -0.0089,
+      0.0111
+    ],
+    "dRQ_Capability-TypePrior": [
+      -0.01,
+      0.0122
+    ]
+  },
+  "terminology": {
+    "task_quality": "propagated capability (extract(m)->reason(m)); NOT pure reasoning capability",
+    "L_definition": "per-call inference service latency, loaded-model, cold-start excluded"
+  },
+  "layer1_per_model": {
+    "medium": {
+      "Q_auc": 0.7511,
+      "Q_acc": 0.8933,
+      "Q_brier": 0.0863,
+      "Q_ece": 0.0143,
+      "C_mae": 1001.4,
+      "C_mape": 0.376,
+      "L_mae": 2.509,
+      "L_mape": 0.597
+    },
+    "large": {
+      "Q_auc": 0.788,
+      "Q_acc": 0.8422,
+      "Q_brier": 0.1195,
+      "Q_ece": 0.0383,
+      "C_mae": 978.2,
+      "C_mape": 0.372,
+      "L_mae": 1.701,
+      "L_mape": 0.4
+    },
+    "coder": {
+      "Q_auc": 0.8391,
+      "Q_acc": 0.8878,
+      "Q_brier": 0.0785,
+      "Q_ece": 0.0241,
+      "C_mae": 984.8,
+      "C_mape": 0.368,
+      "L_mae": 2.7,
+      "L_mape": 0.635
+    }
+  },
+  "layer2": {
+    "pairwise_rank_acc_all": null,
+    "pairwise_rank_acc_nontied": 0.7389,
+    "n_pairs_all": 0,
+    "n_pairs_nontied": 314,
+    "mean_spearman": 0.0561
+  },
+  "task_composition": {
+    "all_wrong": 693,
+    "all_correct": 50,
+    "headroom": 157
+  },
+  "headroom_subset": {
+    "n": 157,
+    "note": "ties excluded; only tasks where models disagree (decision-relevant routing)",
+    "QueryRouter": {
+      "top1_hit": 0.7006,
+      "R_Q": 0.2994
+    },
+    "TypePrior": {
+      "top1_hit": 0.7134,
+      "R_Q": 0.2866
+    },
+    "CapabilityRouter": {
+      "top1_hit": 0.707,
+      "R_Q": 0.293
+    }
+  },
+  "layer3_routing_corpus": {
+    "BestSingle": {
+      "Q": 0.18,
+      "C": 4511.4,
+      "L": 5.13,
+      "top1_hit": 0.0,
+      "R_Q": 0.05
+    },
+    "QueryRouter": {
+      "Q": 0.1778,
+      "C": 4512.6,
+      "L": 5.14,
+      "top1_hit": 0.9478,
+      "R_Q": 0.0522
+    },
+    "TypePrior": {
+      "Q": 0.18,
+      "C": 4511.4,
+      "L": 5.13,
+      "top1_hit": 0.0,
+      "R_Q": 0.05
+    },
+    "CapabilityRouter": {
+      "Q": 0.1789,
+      "C": 4556.5,
+      "L": 5.63,
+      "top1_hit": 0.9489,
+      "R_Q": 0.0511
+    },
+    "Oracle": {
+      "Q": 0.23,
+      "C": 4559.8,
+      "L": 5.61,
+      "top1_hit": 1.0,
+      "R_Q": 0.0
+    }
+  },
+  "transfer_fresh100": {
+    "n": 100,
+    "arms": {
+      "BestSingle": {
+        "Q": 0.18,
+        "C": 4345.6,
+        "L": 6.55,
+        "top1": 0.97,
+        "R_Q": 0.03
+      },
+      "QueryRouter": {
+        "Q": 0.18,
+        "C": 4382.8,
+        "L": 6.69,
+        "top1": 0.97,
+        "R_Q": 0.03
+      },
+      "TypePrior": {
+        "Q": 0.18,
+        "C": 4345.6,
+        "L": 6.55,
+        "top1": 0.97,
+        "R_Q": 0.03
+      },
+      "CapabilityRouter": {
+        "Q": 0.18,
+        "C": 8765.7,
+        "L": 13.38,
+        "top1": 0.97,
+        "R_Q": 0.03
+      },
+      "Oracle": {
+        "Q": 0.21,
+        "C": 4491.1,
+        "L": 7.69,
+        "top1": 1.0,
+        "R_Q": 0.0
+      }
+    },
+    "note": "transfer: predictors trained on the 900-question corpus applied to fresh-100; quality recomputed under the propagated protocol (reasoning on own extraction)"
+  },
+  "transfer_degradation": {
+    "BestSingle": {
+      "d_transfer_Q": 0.0,
+      "d_transfer_RQ": -0.02
+    },
+    "QueryRouter": {
+      "d_transfer_Q": -0.0022,
+      "d_transfer_RQ": -0.0222
+    },
+    "TypePrior": {
+      "d_transfer_Q": 0.0,
+      "d_transfer_RQ": -0.02
+    },
+    "CapabilityRouter": {
+      "d_transfer_Q": -0.0011,
+      "d_transfer_RQ": -0.0211
+    }
+  },
+  "type_prior": {
+    "extraction": "large",
+    "reasoning": "large"
+  },
+  "best_single": "large"
+}
