@@ -1,0 +1,123 @@
+{
+  "n": 1600,
+  "funnel": {
+    "total_tasks": 1600,
+    "L0_oracle_opportunity": 81,
+    "L1_trigger_detected": 41,
+    "L2_alternative_ranked_correctly": 20,
+    "L3_actually_recovered": 20,
+    "L0_rate": 0.0506,
+    "L1_recall": 0.5062,
+    "L2_precision": 0.4878,
+    "L3_rate": 0.2469,
+    "note": "Funnel shows where signal is lost: L0->L1 is override detection (biggest loss); L1->L2 is alternative ranking (secondary loss); L2->L3 should be ~100%"
+  },
+  "risk_coverage": [
+    {
+      "coverage": 0.5,
+      "n_override": 8,
+      "help": 0,
+      "harm": 0,
+      "net": 0,
+      "Q": 0.1825,
+      "GAP_recovery": 0.0
+    },
+    {
+      "coverage": 1.0,
+      "n_override": 16,
+      "help": 0,
+      "harm": 0,
+      "net": 0,
+      "Q": 0.1825,
+      "GAP_recovery": 0.0
+    },
+    {
+      "coverage": 2.0,
+      "n_override": 32,
+      "help": 2,
+      "harm": 0,
+      "net": 2,
+      "Q": 0.1837,
+      "GAP_recovery": 0.0247
+    },
+    {
+      "coverage": 5.0,
+      "n_override": 80,
+      "help": 6,
+      "harm": 0,
+      "net": 6,
+      "Q": 0.1862,
+      "GAP_recovery": 0.0741
+    },
+    {
+      "coverage": 10.0,
+      "n_override": 160,
+      "help": 8,
+      "harm": 1,
+      "net": 7,
+      "Q": 0.1869,
+      "GAP_recovery": 0.0864
+    },
+    {
+      "coverage": 15.0,
+      "n_override": 240,
+      "help": 8,
+      "harm": 6,
+      "net": 2,
+      "Q": 0.1837,
+      "GAP_recovery": 0.0247
+    },
+    {
+      "coverage": 20.0,
+      "n_override": 320,
+      "help": 10,
+      "harm": 8,
+      "net": 2,
+      "Q": 0.1837,
+      "GAP_recovery": 0.0247
+    },
+    {
+      "coverage": 30.0,
+      "n_override": 480,
+      "help": 12,
+      "harm": 15,
+      "net": -3,
+      "Q": 0.1806,
+      "GAP_recovery": -0.037
+    },
+    {
+      "coverage": 50.0,
+      "n_override": 800,
+      "help": 22,
+      "harm": 39,
+      "net": -17,
+      "Q": 0.1719,
+      "GAP_recovery": -0.2099
+    },
+    {
+      "coverage": 100.0,
+      "n_override": 1600,
+      "help": 44,
+      "harm": 142,
+      "net": -98,
+      "Q": 0.1212,
+      "GAP_recovery": -1.2099
+    }
+  ],
+  "propagation_matrix": {
+    "E_medium->R_medium": {
+      "Q": 0.1069,
+      "n": 1600
+    },
+    "E_large->R_large": {
+      "Q": 0.1825,
+      "n": 1600
+    },
+    "E_coder->R_coder": {
+      "Q": 0.1212,
+      "n": 1600
+    },
+    "note": "Cross-model cells (E_large->R_medium etc.) require new reasoning calls on cross-model extraction outputs; reported here as design, not results"
+  },
+  "interpretation": "Residual GAP has exploitable signal at high selectivity: at 5.0% coverage, Help=6 > Harm=0 (net +6), GAP Recovery=7.4%. Signal degrades as coverage expands."
+}
