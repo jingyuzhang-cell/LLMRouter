@@ -14,8 +14,16 @@
     "regret_primary": "R_Q = Q_oracle - Q_selected at task level; multi-objective regret reported separately, never mixed into the main table"
   },
   "layer1_per_model_prediction": {
-    "Q": ["AUC", "Accuracy@0.5", "Brier", "ECE(10 bins)"],
-    "C_L": ["MAE", "MAPE"],
+    "Q": [
+      "AUC",
+      "Accuracy@0.5",
+      "Brier",
+      "ECE(10 bins)"
+    ],
+    "C_L": [
+      "MAE",
+      "MAPE"
+    ],
     "reporting": "per model (medium/large/coder) x node type (extraction/reasoning); pooled numbers secondary"
   },
   "layer2_ranking": [
@@ -25,8 +33,20 @@
     "quality regret R_Q"
   ],
   "layer3_routing_table": {
-    "arms": ["Best Single", "Query Router (retrained, same folds, no type conditioning)", "Type Prior (per-type best by train folds)", "Capability Router (per-type per-question argmax Q-hat)", "Oracle"],
-    "columns": ["Quality", "Tokens", "Latency", "Top1 Hit", "R_Q"],
+    "arms": [
+      "Best Single",
+      "Query Router (retrained, same folds, no type conditioning)",
+      "Type Prior (per-type best by train folds)",
+      "Capability Router (per-type per-question argmax Q-hat)",
+      "Oracle"
+    ],
+    "columns": [
+      "Quality",
+      "Tokens",
+      "Latency",
+      "Top1 Hit",
+      "R_Q"
+    ],
     "plus": "Q-C and Q-L Pareto scatter"
   },
   "cross_domain": {
@@ -34,5 +54,27 @@
     "comparable": "router ranking/selection changes",
     "not_comparable": "absolute quality (mh reasoning consumes own extraction; tq legacy measurements are gold-facts conditional) - protocol difference must be stated"
   },
-  "interpretation_precommitment": "If Capability Router does not significantly exceed Type Prior, that is an acceptable outcome: the question is how much predictable information the capability profile carries and how much converts to routing gains, not that a learned router must win."
+  "interpretation_precommitment": {
+    "Capability >> TypePrior": "instance-level profile provides information beyond node type",
+    "Capability ~= TypePrior": "predictable information mainly from node type; complex profile adds little",
+    "CV good, fresh drops": "distribution dependence; generalization is the bottleneck",
+    "Oracle high, Router low": "complementarity space exists but features cannot predict it (Routing Opportunity != Learnable Routing Signal)"
+  },
+  "terminology": {
+    "task_quality": "propagated capability / end-to-end node-chain capability: Q_task(m) = Q(extract(m) -> reason(m)); reflects chained execution capability, NOT pure reasoning capability",
+    "latency": "per-call inference service latency under an already-loaded model (single local vLLM); model cold-start/load time is EXCLUDED from per-question L (engine.call_model times the request only)"
+  },
+  "headline_ci": {
+    "method": "task-level bootstrap (resample tasks, B=5000, seed=20260918)",
+    "required": [
+      "dQ_Capability-TypePrior",
+      "dQ_Capability-QueryRouter",
+      "dRQ_Capability-TypePrior"
+    ]
+  },
+  "transfer_degradation": {
+    "d_transfer_Q": "Q_CV - Q_fresh (per arm)",
+    "d_transfer_RQ": "R_Q,fresh - R_Q,CV (per arm)",
+    "reading": "separates stable model preferences from corpus-local distributions"
+  }
 }

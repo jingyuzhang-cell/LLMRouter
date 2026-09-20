@@ -145,7 +145,7 @@ def run():
     arms = {a: dict(Q=0, C=0.0, L=0.0, top1=0, regret=0.0) for a in
             ['BestSingle', 'QueryRouter', 'TypePrior', 'CapabilityRouter', 'Oracle']}
     pair_ok = pair_tot = 0
-    ranks_all = []
+    spearman_rows = []
     for i, r in enumerate(corpus):
         true_q = {m: r['per_model'][m]['q_rsn'] for m in POOL}
         pred_q = {m: float(pred['reasoning'][m][i]) for m in POOL}
@@ -157,9 +157,15 @@ def run():
                 if pred_q[m1] != pred_q[m2]:
                     pair_tot += 1
                     pair_ok += int((pred_q[m1] > pred_q[m2]) == (true_q[m1] > true_q[m2]))
-        import statistics
+        def rank_of(d):
+            order = sorted(d, key=lambda k: d[k])
+            return {k: i + 1 for i, k in enumerate(order)}
+        rp, rt = rank_of(pred_q), rank_of(true_q)
         if len(set(pred_q.values())) > 1 and len(set(true_q.values())) > 1:
-            ranks_all.append(0)  # spearman computed below per row via scipy-free shortcut
+            d2 = sum((rp[m] - rt[m]) ** 2 for m in POOL)
+            spearman_rows.append(1 - 6 * d2 / (len(POOL) * (len(POOL) ** 2 - 1)))
+        elif len(set(true_q.values())) == 1:
+            spearman_rows.append(0.0)
         # arms
         q_oracle = max(true_q.values())
         sel = {}
@@ -196,17 +202,71 @@ def run():
     for a, d in arms.items():
         table[a] = dict(Q=round(d['Q'] / n, 4), C=round(d['C'] / n, 1), L=round(d['L'] / n, 2),
                         top1_hit=round(d['top1'] / n, 4), R_Q=round(d['regret'] / n, 4))
+    # ---- headline deltas with task-level bootstrap CI (protocol requirement) ----
+    import random as _r
+    rng2 = _r.Random(SEED)
+    order = list(range(len(corpus)))
+    def pair_boot(sel_a, sel_b, attr):
+        out = []
+        for _ in range(5000):
+            sm = [order[rng2.randrange(n)] for _ in range(n)]
+            da = sum(arms[sel_a][attr] for _ in [0]) if False else None
+            # per-task recomputation requires per-task records; compute from stored per-task sums
+        return None
+    # per-task sums were accumulated in arms; recompute per-task records for bootstrap
+    per_task = {a: {} for a in arms}
+    for r, i in zip(corpus, range(len(corpus))):
+        true_q = {m: r['per_model'][m]['q_rsn'] for m in POOL}
+        q_oracle = max(true_q.values())
+        x = X[i].reshape(1, -1)
+        pred_q = {ty: {m: float((x @ pred[ty][m].reshape(-1, 1))[0]) for m in POOL} for ty in TYPES}
+        sel = dict(
+            Oracle=max(POOL, key=lambda m: true_q[m]),
+            QueryRouter=max(POOL, key=lambda m: sum(pred_q[ty][m] for ty in TYPES)),
+            TypePrior=max(POOL, key=lambda m: float(np.mean([r['per_model'][m][('q_ext' if ty == 'extraction' else 'q_rsn')] for r in corpus]))),
+            CapabilityRouter={ty: max(POOL, key=lambda m: pred_q[ty][m]) for ty in TYPES})
+        for a, m in [('BestSingle', best_single), ('QueryRouter', sel['QueryRouter']),
+                     ('TypePrior', sel['TypePrior']), ('Oracle', sel['Oracle']),
+                     ('CapabilityRouter_reasoning', sel['CapabilityRouter']['reasoning'])]:
+            per_task[a][i] = (true_q[m], sum(r['per_model'][m]['C'] for _ in TYPES) if False else r['per_model'][m]['C'], r['per_model'][m]['L'], q_oracle - true_q[m])
+        # capability task Q uses reasoning-node outcome; C/L sum over per-type picks
+        csum = sum(r['per_model'][sel['CapabilityRouter'][ty]]['C'] for ty in TYPES)
+        lsum = sum(r['per_model'][sel['CapabilityRouter'][ty]]['L'] for ty in TYPES)
+        per_task['CapabilityRouter'][i] = (true_q[sel['CapabilityRouter']['reasoning']], csum, lsum, q_oracle - true_q[sel['CapabilityRouter']['reasoning']])
+    def boot_delta(a, b, k):
+        diffs = []
+        for _ in range(5000):
+            sm = [order[rng2.randrange(n)] for _ in range(n)]
+            diffs.append(sum(per_task[a][i][k] for i in sm) / n - sum(per_task[b][i][k] for i in sm) / n)
+        diffs.sort()
+        return [round(diffs[int(0.025 * len(diffs))], 4), round(diffs[int(0.975 * len(diffs)) - 1], 4)]
+    headline_ci = {
+        'dQ_Capability-TypePrior': boot_delta('CapabilityRouter', 'TypePrior', 0),
+        'dQ_Capability-QueryRouter': boot_delta('CapabilityRouter', 'QueryRouter', 0),
+        'dRQ_Capability-TypePrior': boot_delta('CapabilityRouter', 'TypePrior', 3)}
     # ---- transfer to fresh-100 (propagated protocol, recomputed identically) ----
     mean_q_full = {m: float(np.mean([r['per_model'][m]['q_rsn'] for r in corpus])) for m in POOL}
     best_single = max(POOL, key=lambda m: mean_q_full[m])
     type_prior_full = {ty: max(POOL, key=lambda m: float(np.mean(
         [r['per_model'][m][('q_ext' if ty == 'extraction' else 'q_rsn')] for r in corpus]))) for ty in TYPES}
     transfer = transfer_eval(finalQ, None, None, best_single, type_prior_full, FRESH)
+    # transfer degradation (protocol): d_transfer = CV - fresh, per arm
+    dtr = {}
+    for a in ['BestSingle', 'QueryRouter', 'TypePrior', 'CapabilityRouter']:
+        try:
+            dtr[a] = dict(d_transfer_Q=round(table[a]['Q'] - transfer['arms'][a]['Q'], 4),
+                          d_transfer_RQ=round(transfer['arms'][a]['R_Q'] - table[a]['R_Q'], 4))
+        except KeyError: pass
     rep = dict(protocol='ANALYSIS_PROTOCOL.json', seed=SEED, alpha=ALPHA, folds=FOLDS,
-               n_corpus=n, layer1_per_model=L1,
+               n_corpus=n, headline_ci=headline_ci,
+               terminology=dict(task_quality='propagated capability (extract(m)->reason(m)); NOT pure reasoning capability',
+                                L_definition='per-call inference service latency, loaded-model, cold-start excluded'),
+               layer1_per_model=L1,
                layer2=dict(pairwise_rank_acc=round(pair_ok / pair_tot, 4) if pair_tot else None,
-                           n_pairs=pair_tot),
+                           n_pairs=pair_tot,
+                           mean_spearman=round(sum(spearman_rows) / len(spearman_rows), 4) if spearman_rows else None),
                layer3_routing_corpus=table, transfer_fresh100=transfer,
+               transfer_degradation=dtr,
                type_prior=type_prior, best_single=best_single)
     (OUT / 'CAPABILITY_ANALYSIS.json').write_text(json.dumps(rep, ensure_ascii=False, indent=2))
     print(json.dumps({k: v for k, v in rep.items() if k != 'detail'}, ensure_ascii=False, indent=2))
