@@ -2,7 +2,7 @@
 
 ## 6.1 主线发现：调度可以更安全，但不能创造能力
 
-全部实验收敛到同一个结论：**动态调度能够更安全地利用已有模型互补性，但不能突破模型池本身的能力覆盖上限。**
+全部实验收敛到同一个结论：**动态调度能够更安全地利用已有模型互补性，但在当前模型池的能力覆盖范围内，性能提升空间有限。**
 
 这条结论由三个相互独立的证据层支撑。第一层是 Live 端到端对照（48 任务，真实执行、真实传播）：Static 52.1%、Dynamic v2 54.2%，配对 ΔQ = +2.1pp 且 95% CI 覆盖 0；Dynamic v2 将 harm 降为 0、预算违规为 0、成本与 Static 持平（1400.6 对 1402.2 tokens）。第二层是机制诊断（回放层级）：后继重调度在存在可重路由空间（原计划模型失败且模型池存在正确替代）的节点上，选中正确模型 8/8，优于 Static 冻结回退的 5/8——调度策略本身能把反馈转化为正确的模型选择。第三层是覆盖率核算：116 个判据纯净真失败上，四种恢复动作全部执行的 oracle 上界仅 6.9%，且 22 个双失败任务在真实传播后由两臂链路合并尝试了模型池全部 3 个模型、全部错误。三层合起来解释了为什么 ΔQ 不显著：不是调度器不会选，而是选择空间本身不存在。
 
@@ -22,7 +22,7 @@ RQ1（拆分）：分解收益呈域依赖与复杂度依赖（MultiHiertt +14pp
 
 三组独立实验揭示了一个统一的机制：**模型互补性在条件节点层面清晰可测，但在真实传播后被上游抽取质量差异掩盖**。
 
-条件节点评估（gold facts）下，Node Router 可恢复约 50% GAP（类型级模型异质性稳定）；传播口径下，77% 任务出现全模型共同失败，oracle gap 缩小至 5pp。Cross-model 3×3 矩阵精确定位了机制：E_large→R_medium (20.0%) > E_medium→R_medium (10.0%)（+10pp），说明 **medium 的推理能力被自身弱抽取掩盖，而非互补性消失**。当抽取质量被 large 固定后，medium 和 coder 的推理互补性重新浮现。
+条件节点评估（gold facts）下，Node Router 可恢复约 50% GAP（类型级模型异质性稳定）；传播口径下，共同失败占主导（900 题开发语料中 77.0% 任务全模型皆错；200 题确认集为 76.5%），oracle gap 缩小至 5pp。Cross-model 3×3 矩阵精确定位了机制：E_large→R_medium (20.0%) > E_medium→R_medium (10.0%)（+10pp），说明 **medium 的推理能力被自身弱抽取掩盖，而非互补性消失**。当抽取质量被 large 固定后，medium 和 coder 的推理互补性重新浮现。
 
 因此，**分解为 DAG 的价值不在于"拆分本身提高性能"，而在于解除模型能力之间的绑定**——让最适合抽取的模型与最适合推理的模型可以独立组合。
 
@@ -30,10 +30,16 @@ RQ1（拆分）：分解收益呈域依赖与复杂度依赖（MultiHiertt +14pp
 
 在 1600 题（900 dev + 200 conf + 500 conf500）上，residual GAP 的可利用性呈 coverage-dependent 特征：5–10% coverage 下 GAP Recovery 为 7.4–8.6% 且 harm 极低；coverage 扩大后 false override 急剧增加。Oracle 上界仅 6.9%（116 真失败），表明**当前模型池的能力覆盖率是全部恢复策略的硬上界**。
 
+四级机制链：
+
+$$ \text{Stage-wise complementarity exists} \Downarrow \text{Propagation noise masks part of it} \Downarrow \text{Selective routing exploits only limited residual gap} \Downarrow \text{For hard all-fail cases, capability coverage becomes the dominant ceiling} $$
+
 三级结论：
 1. 条件节点环境下模型互补性可学习（Node Router ≈ 50% GAP Recovery）
-2. 真实传播压缩可利用互补空间（oracle gap 5pp, 76% 共同失败）
-3. Residual GAP 的实例级可预测性有限（AUC 0.75–0.84 但不转化为选择收益），保守选择性切换（Two-stage τ=0.5）可在零 harm 下恢复部分 GAP（+22.2% confirmation, +4.4% dev CV）
+2. 真实传播压缩可利用互补空间（oracle gap 5pp；1600 题合并语料共同失败 76.7%）
+3. Residual GAP 的实例级可预测性有限（AUC 0.75–0.84 但不转化为选择收益），保守选择性切换（Two-stage τ=0.5）在 200 题确认集与 dev 交叉验证上呈方向性正信号（+22.2% / +4.4%，零 harm），但 500 题确认集未能复现（−11.1%）——泛化不稳定，仅作方向性证据
+
+**D0–D4 诊断边界**：在所分析的 all-fail 子集上，进一步改善 evidence retrieval、selection 和 routing 并未带来稳定收益；即使在 gold facts 条件下，最终正确率仍仅为 31%，说明当前模型池的推理能力覆盖构成主要剩余瓶颈。此结论限于所分析的 all-fail 子集，不扩展为整个任务分布的绝对结论。
 
 ## 6.7 局限
 
@@ -50,4 +56,4 @@ RQ1（拆分）：分解收益呈域依赖与复杂度依赖（MultiHiertt +14pp
 
 4. **Selective adaptation is safer than aggressive switching。** Two-stage 在较小 confirmation set 上出现正向信号（harm=0），但在更大的 confirmation set 上未复现；相比之下，激进切换（135 次 Capability Router 切换）导致 harm 4.5%。**少而准的切换比多而激进的切换安全，但泛化收益仍不稳定。**
 
-**最终结论**：动态调度能够更安全地利用已有模型互补性，但不能突破模型池本身的能力覆盖上限。
+**最终结论**：动态调度能够更安全地利用已有模型互补性，但不能突破模型池本身的能力覆盖上限。当前系统的主要限制不再是单纯的路由错误，而是模型池在困难任务上的共同失败。未来提升应优先扩展执行能力覆盖，例如引入更强推理模型、符号执行器和工具增强，而非仅增加调度复杂度。
