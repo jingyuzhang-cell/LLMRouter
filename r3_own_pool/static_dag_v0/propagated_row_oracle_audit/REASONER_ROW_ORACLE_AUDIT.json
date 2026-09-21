@@ -1,0 +1,91 @@
+{
+  "generated_unix": 1789964234.3470244,
+  "commit_hash": "fc0dc43a1872bc592445ec6b8d7423d016eb74be",
+  "evidence_tier": "audit of frozen outputs; zero model calls; replay-level",
+  "scoring": "exec_calc(v.decode(RSN answer)[\"expression\"], v.parse_facts(EXT answer)); success iff close(val, gold) with tol max(1e-4, 1e-4*|gold|); Q=0 on any parse/exec error",
+  "protocol": "propagated same-model chain EXT(m)->RSN(m); row oracle = per-task max over the 3 diagonal chains; headroom = row oracle - best single model",
+  "corpora": [
+    {
+      "corpus": "dev900_propagated",
+      "n_tasks": 900,
+      "Q_medium": 0.108889,
+      "Q_large": 0.18,
+      "Q_coder": 0.11,
+      "best_single_model": "large",
+      "Q_best_single": 0.18,
+      "Q_row_oracle": 0.23,
+      "headroom_pp": 5.0,
+      "headroom_vs_large_pp": 5.0,
+      "all_correct": 50,
+      "all_wrong": 693,
+      "disagreement": 157,
+      "policy_n": 900,
+      "valid_tasks": 900,
+      "infrastructure_dropped": 0,
+      "source_files": {
+        "static_dag_v0/capability_profiling/RESPONSES.jsonl": "3e1b81c2688a036188f09ae68eba2996af4a86653f9c29b011c3bd6b57dcc031",
+        "static_dag_v0/capability_profiling/PROFILE_POLICY.json": "b1f9cda85a3de386e38cdeb5b68294ceee2b9e571d115d0928bb48f355a876e3"
+      }
+    },
+    {
+      "corpus": "confirmation200_propagated",
+      "n_tasks": 200,
+      "Q_medium": 0.095,
+      "Q_large": 0.19,
+      "Q_coder": 0.13,
+      "best_single_model": "large",
+      "Q_best_single": 0.19,
+      "Q_row_oracle": 0.235,
+      "headroom_pp": 4.5,
+      "headroom_vs_large_pp": 4.5,
+      "all_correct": 10,
+      "all_wrong": 153,
+      "disagreement": 37,
+      "policy_n": 200,
+      "valid_tasks": 200,
+      "infrastructure_dropped": 0,
+      "source_files": {
+        "static_dag_v0/confirmation_200/RESPONSES.jsonl": "a340e98f08125839050c2935e19decf82063115336a308ef014ab45ab6fbc187",
+        "static_dag_v0/confirmation_200/CONF_POLICY.json": "19b5501ac2bac841bc7fc4b5b7cbc8d518be868027362b04f1c7c34e4a231c60"
+      }
+    },
+    {
+      "corpus": "confirmation500_propagated",
+      "n_tasks": 500,
+      "Q_medium": 0.108,
+      "Q_large": 0.184,
+      "Q_coder": 0.138,
+      "best_single_model": "large",
+      "Q_best_single": 0.184,
+      "Q_row_oracle": 0.238,
+      "headroom_pp": 5.4,
+      "headroom_vs_large_pp": 5.4,
+      "all_correct": 35,
+      "all_wrong": 381,
+      "disagreement": 84,
+      "policy_n": 500,
+      "valid_tasks": 500,
+      "infrastructure_dropped": 0,
+      "source_files": {
+        "static_dag_v0/confirmation_500/RESPONSES.jsonl": "725185f8a42f093759b25664d60bf7ad2f50afe41100c479af72a79d77fa4875",
+        "static_dag_v0/confirmation_500/CONF500_POLICY.json": "9cf54832c568bf05cd28063c1b8d3cc3c81f4a06dc9de75af5e65590b5b5edef"
+      }
+    }
+  ],
+  "pooled1600": {
+    "corpus": "pooled1600_propagated",
+    "n_tasks": 1600,
+    "Q_medium": 0.106875,
+    "Q_large": 0.1825,
+    "Q_coder": 0.12125,
+    "best_single_model": "large",
+    "Q_best_single": 0.1825,
+    "Q_row_oracle": 0.233125,
+    "headroom_pp": 5.0625,
+    "headroom_vs_large_pp": 5.0625,
+    "all_correct": 95,
+    "all_wrong": 1227,
+    "disagreement": 278
+  },
+  "note": "This file is the only citable source for propagated headroom. Any previously quoted oral number (e.g. \"4.1pp\") is void unless it equals headroom_pp here."
+}

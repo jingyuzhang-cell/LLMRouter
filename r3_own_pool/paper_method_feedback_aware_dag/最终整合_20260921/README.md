@@ -8,4 +8,4 @@
 
 证据清单见 `FINAL_SOURCE_MANIFEST.json`，自动核对见 `CONSISTENCY_CHECKS.json`。正文区分条件化节点、真实传播、确认、开发交叉验证、理想失败检测及事后 Oracle。
 
-仍有两项来源待补：传播后推理 headroom 约 4.1pp，以及完整 D0–D4 配对诊断统计。正文未把它们写成已确认结果，详见审计第六节。
+原两项待补来源（传播 headroom、D0–D4 配对诊断）已于 2026-09-21 以零调用审计闭环：见 FINAL_CLAIM_AUDIT.md 第八节及 static_dag_v0/propagated_row_oracle_audit/ 与 static_dag_v0/structure_aware_experiment/EVIDENCE_DIAGNOSIS_AUDIT.json。
