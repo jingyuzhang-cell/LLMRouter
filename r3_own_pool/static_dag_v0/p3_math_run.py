@@ -167,9 +167,9 @@ def run():
             jobs = []
             jobmap = []
             for st in state.values():
-                jobs.append((st['task_id'], 'solve', SOLVE_P.format(q=st['question'], analysis=st['ana_main_text'])))
+                jobs.append(('solve', st['task_id'], SOLVE_P.format(q=st['question'], analysis=st['ana_main_text'])))
                 jobmap.append((st['task_id'], 'solve_ntr'))
-                jobs.append((st['task_id'], 'solve', SOLVE_P.format(q=st['question'], analysis=st['ana_fb_text'])))
+                jobs.append(('solve', st['task_id'], SOLVE_P.format(q=st['question'], analysis=st['ana_fb_text'])))
                 jobmap.append((st['task_id'], 'solve_sd'))
             res = collect('medium', jobs)
             for i, (tid, role) in enumerate(jobmap):
@@ -194,11 +194,11 @@ def run():
             jobmap = []
             for st in state.values():
                 if not st['cells']['solve_sd_ok']:
-                    jobs.append((st['task_id'], 'solve', SOLVE_P.format(q=st['question'], analysis=st['ana_fb_text'])))
+                    jobs.append(('solve', st['task_id'], SOLVE_P.format(q=st['question'], analysis=st['ana_fb_text'])))
                     jobmap.append((st['task_id'], 'solve_sd_fb'))
-                jobs.append((st['task_id'], 'verify', VERIFY_P.format(q=st['question'], solution=st['cells']['solve_ntr_ans'])))
+                jobs.append(('verify', st['task_id'], VERIFY_P.format(q=st['question'], solution=st['cells']['solve_ntr_ans'])))
                 jobmap.append((st['task_id'], 'verify_ntr'))
-                jobs.append((st['task_id'], 'verify', VERIFY_P.format(q=st['question'], solution=st['cells']['solve_sd_ans'])))
+                jobs.append(('verify', st['task_id'], VERIFY_P.format(q=st['question'], solution=st['cells']['solve_sd_ans'])))
                 jobmap.append((st['task_id'], 'verify_sd'))
             res = collect('coder', jobs)
             for i, (tid, role) in enumerate(jobmap):
@@ -216,7 +216,7 @@ def run():
                        if parse_jsonish(st['cells']['verify_sd'].get('answer')) is None]
             if need_vf:
                 ensure('medium')
-                jobs = [(st['task_id'], 'verify', VERIFY_P.format(q=st['question'], solution=st['cells']['solve_sd_ans'])) for st in need_vf]
+                jobs = [('verify', st['task_id'], VERIFY_P.format(q=st['question'], solution=st['cells']['solve_sd_ans'])) for st in need_vf]
                 res = collect('medium', jobs)
                 for i, st in enumerate(need_vf):
                     st['cells']['verify_sd_fb'] = res[i]
@@ -240,10 +240,10 @@ def run():
                 jobs = []
                 jobmap = []
                 for st in esc_solve:
-                    jobs.append((st['task_id'], 'solve', SOLVE_P.format(q=st['question'], analysis=st['ana_fb_text'])))
+                    jobs.append(('solve', st['task_id'], SOLVE_P.format(q=st['question'], analysis=st['ana_fb_text'])))
                     jobmap.append((st['task_id'], 'solve_dyn_esc'))
                 for st in esc_verify:
-                    jobs.append((st['task_id'], 'verify', VERIFY_P.format(q=st['question'], solution=st['cells']['solve_sd_ans'])))
+                    jobs.append(('verify', st['task_id'], VERIFY_P.format(q=st['question'], solution=st['cells']['solve_sd_ans'])))
                     jobmap.append((st['task_id'], 'verify_dyn_esc'))
                 res = collect('large', jobs)
                 for i, (tid, role) in enumerate(jobmap):
