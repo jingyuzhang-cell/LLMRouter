@@ -1,0 +1,117 @@
+{
+ "created_unix": null,
+ "domains": {
+  "mbpp": {
+   "n": 100,
+   "acc": {
+    "always_medium": 0.68,
+    "always_large": 0.76,
+    "query_router": 0.71,
+    "node_type_router": 0.73,
+    "static_dag": 0.74,
+    "dynamic_real": 0.8
+   },
+   "pairs": {
+    "node_vs_query": {
+     "delta": 0.02,
+     "ci": [
+      -0.07,
+      0.11
+     ],
+     "help": 12,
+     "harm": 10
+    },
+    "dynamic_vs_static": {
+     "delta": 0.06,
+     "ci": [
+      0.01,
+      0.12
+     ],
+     "help": 7,
+     "harm": 1
+    },
+    "static_vs_always_large": {
+     "delta": -0.02,
+     "ci": [
+      -0.11,
+      0.06
+     ],
+     "help": 8,
+     "harm": 10
+    }
+   },
+   "budget_violations": 22
+  },
+  "math500": {
+   "n": 100,
+   "acc": {
+    "always_medium": 0.49,
+    "always_large": 0.54,
+    "query_router": 0.5,
+    "node_type_router": 0.13,
+    "static_dag": 0.15,
+    "dynamic_real": 0.16
+   },
+   "pairs": {
+    "node_vs_query": {
+     "delta": -0.37,
+     "ci": [
+      -0.48,
+      -0.26
+     ],
+     "help": 5,
+     "harm": 42
+    },
+    "dynamic_vs_static": {
+     "delta": 0.01,
+     "ci": [
+      0.0,
+      0.03
+     ],
+     "help": 1,
+     "harm": 0
+    },
+    "static_vs_always_large": {
+     "delta": -0.39,
+     "ci": [
+      -0.51,
+      -0.27
+     ],
+     "help": 6,
+     "harm": 45
+    }
+   },
+   "budget_violations": 4
+  }
+ },
+ "math_dag_diagnosis": {
+  "solve_medium_parseable": "95/100",
+  "solve_medium_correct_vs_gold": "33/100",
+  "verify_coder_json_parsed": "98/100",
+  "verify_verdict_yes": "11/100",
+  "verify_no_with_value": "87/100",
+  "verify_value_parseable": "68/87",
+  "mechanism": "final-answer rule lets verify-corrected value override the solve answer; coder is the weakest math model and rejects nearly everything, so the DAG outcome concentrates on coder corrections -> 13-16% vs mono-large 54%. solve=medium is itself only 33% correct vs mono-large 54%: the frozen type-prior allocation (finance priors) puts the weakest model on the core reasoning node in math.",
+  "dynamic_null": "wrong-but-parseable answers are invisible to the deployable signals (parse/format/consistency), so dynamic has nothing to act on: +1.0pp CI[+0.0,+0.03] Help1/Harm0"
+ },
+ "cross_domain_rq": {
+  "RQ1_stage_complementarity": {
+   "mbpp": "node oracle evidence pending per-node table; type-prior beats always-medium",
+   "math500": "type-prior allocation fails: node router 13% vs mono 54%"
+  },
+  "RQ2_node_vs_query": {
+   "mbpp": "+2.0pp ns CI[-7.0,+11.0]",
+   "math500": "-37.0pp CI[-48.0,-26.0] (frozen priors do not transfer across domains)"
+  },
+  "RQ3_feedback_dynamic": {
+   "mbpp": "+6.0pp CI[+1.0,+12.0] Help7/Harm1 (deterministic unit-test feedback)",
+   "math500": "+1.0pp CI[+0.0,+3.0] Help1/Harm0 (parse/consistency signals cannot see value errors)"
+  },
+  "generalization_verdict": "dynamic-adaptation value is signal-dependent, not domain-universal: it replicates decisively where the deployable failure signal is deterministic (code), and vanishes where the signal is only validity/consistency (math). Allocation priors are domain-specific: finance type priors fail on math."
+ },
+ "protocol_boundaries": {
+  "math_dag": "analyze(large)->solve(medium)->verify(coder), final = verify-corrected value when verdict=no (frozen rule); one-shot, no post-hoc re-tuning",
+  "no_gold_runtime": "both domains; mbpp release has no reference solutions at all",
+  "all_results_one_shot": "runners/scorers/protocols unchanged after freeze"
+ }
+}
