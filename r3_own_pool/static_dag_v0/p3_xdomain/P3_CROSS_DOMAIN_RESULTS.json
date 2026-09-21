@@ -113,5 +113,132 @@
   "math_dag": "analyze(large)->solve(medium)->verify(coder), final = verify-corrected value when verdict=no (frozen rule); one-shot, no post-hoc re-tuning",
   "no_gold_runtime": "both domains; mbpp release has no reference solutions at all",
   "all_results_one_shot": "runners/scorers/protocols unchanged after freeze"
- }
+ },
+ "pairs_exact": {
+  "mbpp": {
+   "node_vs_query": {
+    "delta": 0.02,
+    "ci": [
+     -0.07,
+     0.11
+    ],
+    "b": 10,
+    "c": 12,
+    "mcnemar_p": 0.8318
+   },
+   "dynamic_vs_static": {
+    "delta": 0.06,
+    "ci": [
+     0.01,
+     0.12
+    ],
+    "b": 1,
+    "c": 7,
+    "mcnemar_p": 0.0703
+   },
+   "static_vs_always_large": {
+    "delta": -0.02,
+    "ci": [
+     -0.11,
+     0.06
+    ],
+    "b": 10,
+    "c": 8,
+    "mcnemar_p": 0.8145
+   },
+   "dynamic_vs_always_large": {
+    "delta": 0.04,
+    "ci": [
+     -0.03,
+     0.11
+    ],
+    "b": 4,
+    "c": 8,
+    "mcnemar_p": 0.3877
+   }
+  },
+  "math500": {
+   "node_vs_query": {
+    "delta": -0.37,
+    "ci": [
+     -0.48,
+     -0.26
+    ],
+    "b": 42,
+    "c": 5,
+    "mcnemar_p": 1e-10,
+    "note": "p<1e-10"
+   },
+   "dynamic_vs_static": {
+    "delta": 0.01,
+    "ci": [
+     0.0,
+     0.03
+    ],
+    "b": 0,
+    "c": 1,
+    "mcnemar_p": 1.0
+   },
+   "static_vs_always_large": {
+    "delta": -0.39,
+    "ci": [
+     -0.51,
+     -0.27
+    ],
+    "b": 45,
+    "c": 6,
+    "mcnemar_p": 1e-10,
+    "note": "p<1e-10"
+   },
+   "dynamic_vs_always_large": {
+    "delta": -0.38,
+    "ci": [
+     -0.5,
+     -0.26
+    ],
+    "b": 44,
+    "c": 6,
+    "mcnemar_p": 1e-10,
+    "note": "p<1e-10"
+   }
+  }
+ },
+ "claim_language_rules": {
+  "mbpp_dynamic_vs_static": "Dynamic-Real 相对 Static 提升 +6.0pp（bootstrap 95% CI [+1.0,+12.0]pp 不跨零），但 exact McNemar p=0.070 未达 0.05 阈值，两种配对推断口径不完全一致：表述为\"方向明确的正向趋势与支持性证据\"，不宣称稳定统计显著。",
+  "mbpp_dynamic_vs_always_large": "+4.0pp，CI [−3.0,+11.0]pp 跨零，McNemar p=0.388：不宣称超过最强固定模型。",
+  "mbpp_rq1": "Code 域存在一定阶段差异迹象，但 Node/Type Router（73.0%）未超过最强固定模型 （Always-Large 76.0%），阶段互补在该域只能作为有限证据，不能作为强结论。",
+  "math_mechanism": "Math500 上冻结的阶段分配先验与验证接口均未迁移成功：medium solve 仅 33/100 正确，coder verifier 的覆盖规则（87/100 判 no 并以自身修正值覆盖答案）进一步放大误差，且部署可得的解析/一致性信号无法识别大量\"形式合法但数值错误\"的失败，故 Dynamic-Real 仅 +1.0pp、未形成有效恢复。区分\"方法边界\"与\"实现设计失配\"两个因素，不简化为\"弱反馈导致 Dynamic 归零\"。",
+  "cross_domain_conclusion": "跨域收益取决于能力匹配、节点接口与反馈可诊断性。反馈驱动的 DAG 调整并非跨域自动有效：代码任务中单元测试提供直接可执行的失败反馈，Dynamic-Real 恢复 7/26 个初始失败任务并取得 +6.0pp 正向变化；数学任务中阶段能力先验与验证接口均发生失配，运行时信号无法识别大量形式合法但数值错误的输出，因而动态调整未产生实质收益。"
+ },
+ "cross_domain_table": {
+  "rows": [
+   "阶段级异质性",
+   "Node vs Query",
+   "Dynamic vs Static",
+   "运行反馈",
+   "主要边界"
+  ],
+  "Finance": [
+   "有明确节点级差异",
+   "类型/阶段粒度更有效",
+   "主要体现选择性与资源效率",
+   "部署信号有限",
+   "capability/action coverage"
+  ],
+  "MBPP": [
+   "有一定迹象，但未超过最强固定模型",
+   "+2.0pp，ns",
+   "+6.0pp；bootstrap CI 不跨0，但 McNemar p=0.070",
+   "unit test 为确定性反馈",
+   "有效修复但成本上升、预算违规"
+  ],
+  "Math500": [
+   "冻结先验明显失效",
+   "−37.0pp，显著退化",
+   "+1.0pp，ns",
+   "parse/一致性无法覆盖值错误",
+   "先验与节点接口均失配"
+  ]
+ },
+ "experiment_phase": "CLOSED: no further experiments (user decision 2026-09-21); P1/P2/Decomposition/P3 all frozen; paper finalization next"
 }
