@@ -1,0 +1,113 @@
+{
+ "train_info": {
+  "n_train": 134,
+  "pos_rate": 0.7388059701492538,
+  "fin_large_share": 1.0,
+  "cod_large_share": 1.0
+ },
+ "finance": {
+  "always_large": {
+   "q": 0.525,
+   "tok": 831.825,
+   "viol": 0.01
+  },
+  "route_llm": {
+   "q": 0.525,
+   "tok": 831.825,
+   "viol": 0.01,
+   "dQ_vs_AL": 0.0,
+   "ci_vs_AL": [
+    0.0,
+    0.0
+   ],
+   "mcnemar_b_c": [
+    0,
+    0
+   ],
+   "dQ_vs_dyn": 0.125
+  },
+  "cascade": {
+   "q": 0.325,
+   "tok": 743.24,
+   "viol": 0.0,
+   "dQ_vs_AL": -0.2,
+   "ci_vs_AL": [
+    -0.26,
+    -0.145
+   ],
+   "mcnemar_b_c": [
+    42,
+    2
+   ],
+   "dQ_vs_dyn": -0.075
+  },
+  "selfrefine": {
+   "q": 0.08,
+   "tok": 1544.615,
+   "viol": 0.8,
+   "dQ_vs_AL": -0.445,
+   "ci_vs_AL": [
+    -0.515,
+    -0.375
+   ],
+   "mcnemar_b_c": [
+    90,
+    1
+   ],
+   "dQ_vs_dyn": -0.32
+  }
+ },
+ "code": {
+  "always_large": {
+   "q": 0.76,
+   "tok": 236.51,
+   "viol": 0.0
+  },
+  "route_llm": {
+   "q": 0.76,
+   "tok": 236.51,
+   "viol": 0.0,
+   "dQ_vs_AL": 0.0,
+   "ci_vs_AL": [
+    0.0,
+    0.0
+   ],
+   "mcnemar_b_c": [
+    0,
+    0
+   ],
+   "dQ_vs_dyn": -0.04
+  },
+  "cascade": {
+   "q": 0.81,
+   "tok": 302.06,
+   "viol": 0.0,
+   "dQ_vs_AL": 0.05,
+   "ci_vs_AL": [
+    0.01,
+    0.1
+   ],
+   "mcnemar_b_c": [
+    0,
+    5
+   ],
+   "dQ_vs_dyn": 0.01
+  },
+  "selfrefine": {
+   "q": 0.85,
+   "tok": 385.59,
+   "viol": 0.03,
+   "dQ_vs_AL": 0.09,
+   "ci_vs_AL": [
+    0.04,
+    0.15
+   ],
+   "mcnemar_b_c": [
+    0,
+    9
+   ],
+   "dQ_vs_dyn": 0.05
+  }
+ },
+ "route_collapse_note": "learned router predicted large for 100% of queries in BOTH panels (0 switches): query-level preference signal collapses to the strong default, consistent with the paper's finding that residual routing gaps are not stably learnable"
+}
