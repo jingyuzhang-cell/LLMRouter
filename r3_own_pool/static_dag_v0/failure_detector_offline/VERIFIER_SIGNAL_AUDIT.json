@@ -1,0 +1,26 @@
+{
+  "generated_unix": 1789973929.939603,
+  "n": 120,
+  "r_fail_rate": 0.7167,
+  "signal_v_disagree": {
+    "precision": 0.7167,
+    "recall": 1.0,
+    "f1": 0.835,
+    "tp": 86,
+    "fp": 34,
+    "fn": 0
+  },
+  "verify_fix_path": {
+    "tasks_where_v_correct": 0,
+    "note": "v node independently recomputes; when v agrees with r (deployable), both usually right or share the same facts error"
+  },
+  "deployability": "v_disagree = |v_value - r_value| beyond tolerance, computable from two model outputs without gold",
+  "tier": "zero-call evaluation on frozen outputs; NEGATIVE/degenerate result reported honestly",
+  "honest_correction": {
+    "v_disagree_rate": 1.0,
+    "degenerate": true,
+    "finding": "v disagreed with r on ALL 120 tasks and matched gold on 0/120: under the frozen 1e-4 relative tolerance the coder exact-value verifier is uninformative (constant-fire signal has recall 1.0 and precision equal to the 0.717 base rate - no discrimination), and the verify-fix path never fired. Root cause: free-form recompute without unit/scale conventions cannot hit a 1e-4-relative gold match.",
+    "consequence": "a verifier-based deployable failure detector is NOT demonstrated; the only validated deployable signals remain parser/execution checks (precision 1.0, recall 33-39%). Any future verifier design must output the ranked expression or a scale-aware value and be re-evaluated.",
+    "impact_on_multidag_conclusion": "none on the Static-vs-Dynamic contrast: the weak v node is symmetric across both arms; the measured Dynamic advantage comes from fallback/escalation adaptation and selective propagation, not from v fixing values."
+  }
+}
