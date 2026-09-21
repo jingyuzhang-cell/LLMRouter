@@ -1,0 +1,136 @@
+{
+  "generated_unix": 1789985114.1743476,
+  "n": 200,
+  "arms": {
+    "always_medium": {
+      "Q": 0.37,
+      "C": 320.2,
+      "L": 3.1
+    },
+    "always_large": {
+      "Q": 0.635,
+      "C": 442.5,
+      "L": 5.84
+    },
+    "query_router": {
+      "Q": 0.48,
+      "C": 390.1,
+      "L": 4.81
+    },
+    "type_node_router": {
+      "Q": 0.21,
+      "C": 690.1,
+      "L": 2.38
+    },
+    "static_dag": {
+      "Q": 0.215,
+      "C": 1016.6,
+      "L": 3.22
+    },
+    "dynamic_dag": {
+      "Q": 0.205,
+      "C": 1112.3,
+      "L": 4.99
+    }
+  },
+  "finite_candidate_oracle": 0.695,
+  "RQ1": {
+    "best_staged_vs_always_medium": {
+      "dQ": -0.16,
+      "ci": [
+        -0.23,
+        -0.09
+      ],
+      "mcnemar": {
+        "b": 12,
+        "c": 44,
+        "p_exact": 2.1e-05
+      }
+    },
+    "best_staged_vs_always_large": {
+      "dQ": -0.425,
+      "ci": [
+        -0.5,
+        -0.35
+      ],
+      "mcnemar": {
+        "b": 5,
+        "c": 90,
+        "p_exact": 0.0
+      }
+    },
+    "static_vs_both": {
+      "vs_medium": {
+        "dQ": -0.155,
+        "ci": [
+          -0.23,
+          -0.085
+        ],
+        "mcnemar": {
+          "b": 14,
+          "c": 45,
+          "p_exact": 6.5e-05
+        }
+      },
+      "vs_large": {
+        "dQ": -0.42,
+        "ci": [
+          -0.5,
+          -0.345
+        ],
+        "mcnemar": {
+          "b": 8,
+          "c": 92,
+          "p_exact": 0.0
+        }
+      }
+    }
+  },
+  "RQ2": {
+    "type_node_vs_query": {
+      "dQ": -0.27,
+      "ci": [
+        -0.345,
+        -0.195
+      ],
+      "mcnemar": {
+        "b": 11,
+        "c": 65,
+        "p_exact": 0.0
+      }
+    },
+    "static_vs_query": {
+      "dQ": -0.265,
+      "ci": [
+        -0.345,
+        -0.185
+      ],
+      "mcnemar": {
+        "b": 13,
+        "c": 66,
+        "p_exact": 0.0
+      }
+    }
+  },
+  "RQ3": {
+    "dynreal_vs_static": {
+      "dQ": -0.01,
+      "ci": [
+        -0.045,
+        0.025
+      ],
+      "mcnemar": {
+        "b": 6,
+        "c": 8,
+        "p_exact": 0.790527
+      }
+    },
+    "dC": 95.7,
+    "dL": 1.78,
+    "help": 6,
+    "harm": 8,
+    "budget_violations": 42,
+    "dynamic_intervention_rate": 0.795
+  },
+  "notes": "type_node_router = pure initial assignment (no recovery); static/dynamic = + deployable-detected recovery"
+}

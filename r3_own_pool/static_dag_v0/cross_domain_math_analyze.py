@@ -84,22 +84,29 @@ def run():
         return round(sum(r[a] for r in rows) / n, 4)
 
     def c(a):
-        return round(sum(r[a + '_used'] for r in rows) / n, 1)
+        f = a[:-4] + '_used' if a.endswith('_dag') else a + '_used'
+        return round(sum(r[f] for r in rows) / n, 1)
 
     def L(a):
-        return round(sum(r[a + '_lat'] for r in rows) / n, 2)
+        f = a[:-4] + '_lat' if a.endswith('_dag') else a + '_lat'
+        return round(sum(r[f] for r in rows) / n, 2)
 
     arms = ['always_medium', 'always_large', 'query_router', 'type_node_router', 'static_dag', 'dynamic_dag']
     table = {a: dict(Q=q(a)) for a in arms}
-    for a in ('type_node_router', 'static_dag', 'dynamic_dag'):
-        table[a].update(C=c(a.rstrip('_dag')), L=L(a.rstrip('_dag')))
+    for a in ('static_dag', 'dynamic_dag'):
+        table[a].update(C=c(a), L=L(a))
+    # type_node arm cost = the three shared initial calls
+    table['type_node_router']['C'] = round(sum(
+        cost_of(cache, f'{nd}:{r["index"]}') for r in rows for nd in ('X', 'S', 'V')) / n, 1)
+    table['type_node_router']['L'] = round(sum(
+        lat.get(f'{nd}:{r["index"]}', 0) for r in rows for nd in ('X', 'S', 'V')) / n, 2)
     # mono-arm costs from responses
     for arm, key in (('always_medium', 'm'), ('always_large', 'l'), ('query_router', 'q')):
         table[arm]['C'] = round(sum(cost_of(cache, f'M:{key}:{r["index"]}') for r in rows) / n, 1)
         table[arm]['L'] = round(sum(lat.get(f'M:{key}:{r["index"]}', 0) for r in rows) / n, 2)
     help_n = sum(1 for r in rows if r['static_dag'] == 0 and r['dynamic_dag'] == 1)
     harm_n = sum(1 for r in rows if r['static_dag'] == 1 and r['dynamic_dag'] == 0)
-    over_budget = sum(1 for r in rows if r['dynamic_dag_used'] > r['static_dag_used'] * 1.2 + 1e-9)
+    over_budget = sum(1 for r in rows if r['dynamic_used'] > r['static_used'] * 1.2 + 1e-9)
     intervention = sum(1 for r in rows if r['dynamic_events'] > 0) / n
     rep = dict(
         generated_unix=time.time(), n=n,
@@ -113,8 +120,8 @@ def run():
         RQ2=dict(type_node_vs_query=contrast(rows, 'type_node_router', 'query_router'),
                  static_vs_query=contrast(rows, 'static_dag', 'query_router')),
         RQ3=dict(dynreal_vs_static=contrast(rows, 'dynamic_dag', 'static_dag'),
-                 dC=round((sum(r['dynamic_dag_used'] - r['static_dag_used'] for r in rows) / n), 1),
-                 dL=round((sum(r['dynamic_dag_lat'] - r['static_dag_lat'] for r in rows) / n), 2),
+                 dC=round((sum(r['dynamic_used'] - r['static_used'] for r in rows) / n), 1),
+                 dL=round((sum(r['dynamic_lat'] - r['static_lat'] for r in rows) / n), 2),
                  help=help_n, harm=harm_n,
                  budget_violations=over_budget,
                  dynamic_intervention_rate=round(intervention, 4)),
