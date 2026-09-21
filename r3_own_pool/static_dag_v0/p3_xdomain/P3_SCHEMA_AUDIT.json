@@ -1,0 +1,122 @@
+{
+ "audit_name": "P3_SCHEMA_AUDIT",
+ "version": "1.0",
+ "created_unix": 1789992000,
+ "scope": "cross-domain generalization pre-audit (Math500 / MBPP / HumanEval); zero model calls, zero GPU",
+ "source_root": "/root/autodl-tmp/llmrouterbench_r2_data/bench-release",
+ "source_files": {
+  "math500": {"path": "math500/test/Qwen2.5-Coder-7B-Instruct/math500-test-Qwen2.5-Coder-7B-Instruct-20251012_042701.json", "sha256": "4edc1952b38367961b0d5c8989032de2d77e80d3571bbaa782b5538d9a31259b"},
+  "mbpp": {"path": "mbpp/test/Qwen2.5-Coder-7B-Instruct/mbpp-test-Qwen2.5-Coder-7B-Instruct-20251012_043950.json", "sha256": "e80e9a5a4b83602d9731f3d6cc5de7395688f7e1e8070bdce243d9cbbabb11ed"},
+  "humaneval": {"path": "humaneval/test/Qwen2.5-Coder-7B-Instruct/humaneval-test-Qwen2.5-Coder-7B-Instruct-20251012_034614.json", "sha256": "ea116d6ed681bbf8d600300c87f6ec02d679f5172c0a41ebf57e26ac7ccc4dc7"}
+ },
+ "math500": {
+  "n_total": 500,
+  "split": "test",
+  "usable": 500,
+  "fresh": 300,
+  "fresh_note": "200 indices already frozen by the concurrent cross_domain_math six-arm run (indices 6..499, all drawn from math500); 300 indices remain untouched",
+  "duplicates": 0,
+  "task_id": "integer index 1..500, unique; no uuid-style id",
+  "overlap_with_previous_experiments": {
+   "query_text_overlap_vs_14650_prior_queries": 0,
+   "note": "exact normalized-text intersection with all prior panel/task query fields (router_v2, data/, static_dag_v0) is EMPTY; prior router panels used gsm8k-style math (different dataset); exposure of math500 problem text: none",
+   "concurrent_run": "r3_own_pool/static_dag_v0/cross_domain_math/ (commits 87a14f5..fda7d13) froze 200 tasks from a 398-task numeric-only subset and is running six arms NOW (GPU occupied)"
+  },
+  "answer_types": {
+   "integer": 311, "latex_frac": 68, "other": 52, "latex_sqrt": 20,
+   "tuple": 15, "other_latex": 21, "decimal": 7, "latex_pi": 6
+  },
+  "scorer_ready": true,
+  "scorer": {
+   "module": "p3_xdomain/math_scorer.py",
+   "method": "LaTeX normalization (balanced-brace frac/sqrt/text, degrees, mixed numbers, matrices, intervals, unions, pm-branch sets, complex i, base-n, thousands, units, x=5/expr=0, implicit multiplication) + sympy exact comparison + tuple elementwise + finite-guarded numeric fallback",
+   "gt_parse_rate": "500/500 (100%)",
+   "agreement_with_release_score": "497/500 (99.4%)",
+   "disagreements": "3, all 'we-correct': idx93 equivalent fractions (2240/78125 = 448/15625), idx258 unit-omitted numeric answer accepted, idx384 interval without variable prefix accepted",
+   "release_scorer_weakness_found": "release scoring rejected mathematically correct answers (equivalent fractions, interval notation); our scorer supersedes it for the benchmark"
+  },
+  "natural_dag_available": true,
+  "recommended_nodes": [
+   {"name": "analyze", "role": "restate problem, list unknowns/conditions/plan", "input": "raw question", "output": "JSON plan+conditions", "deployable_failure": "JSON parse/format check"},
+   {"name": "solve", "role": "derive the final answer expression/value", "input": "question + analysis", "output": "boxed LaTeX answer", "deployable_failure": "boxed extraction failure / expression unparseable / non-finite numeric"},
+   {"name": "verify", "role": "independent re-derivation or numeric cross-check against solve output", "input": "question + analysis + solve answer", "output": "verdict + corrected value", "deployable_failure": "format check + agreement flag (consistency signal, model-based not deterministic)"}
+  ],
+  "deployable_failure_signals": [
+   "boxed-answer extraction failure",
+   "expression parse failure (sympy)",
+   "non-finite evaluation result",
+   "verify/solve output disagreement (consistency signal)",
+   "NOTE: no deterministic correctness oracle exists for math (unlike code unit tests / finance arithmetic exec); correctness is decided offline vs gold with the frozen scorer; runtime signals are validity+consistency only"
+  ],
+  "parallel_run_protocol_concerns": {
+   "universe": "398 numeric-normalizable tasks only; 102 tasks with pi/sqrt/tuples/equations excluded because the concurrent normalizer rejects symbolic answers",
+   "assessment": "our scorer parses 500/500 ground truths, so the 102-task exclusion is avoidable and biases the frozen panel toward numerically-answerable (generally simpler) problems; also rejects correct symbolic model answers",
+   "decision_required": "user must decide whether the concurrent six-arm math run stands as the P3 math arm (with its restricted universe and weaker normalizer) or is superseded"
+  }
+ },
+ "mbpp": {
+  "n_total": 974,
+  "split": "test",
+  "usable": 974,
+  "fresh": 974,
+  "duplicates": 4,
+  "duplicates_detail": "4 near-duplicate query pairs: indices (175,810), (199,455), (410,680), (700,920) — dedupe by normalized query at selection time",
+  "task_id": "integer index 1..974, unique",
+  "overlap_with_previous_experiments": 0,
+  "tests_embedded": true,
+  "tests_detail": "2,922 assert lines extracted from prompts (avg 3.0/task); 0 unparseable; every task has >=2 asserts",
+  "helper_dependency": "2 tasks (idx 64, 609) call helper functions not defined in the prompt (Pair, max_chain_length, lobb_num) — exclude from selection",
+  "ground_truth": "NULL for all 974 (reference solutions absent) — acceptable: runtime never reads gold; offline scoring = unit tests only",
+  "scorer_ready": true,
+  "scorer": "execute extracted asserts against the generated function in a sandboxed subprocess (timeout, no network); pass = all asserts pass",
+  "natural_dag_available": true,
+  "recommended_nodes": [
+   {"name": "plan", "role": "restate requirement, design function signature/algorithm", "input": "task description", "output": "JSON plan", "deployable_failure": "JSON parse check"},
+   {"name": "implement", "role": "write the python function", "input": "task description + plan", "output": "python code", "deployable_failure": "syntax error (compile check)"},
+   {"name": "execute", "role": "run extracted unit tests in sandbox", "input": "generated code + tests", "output": "pass/fail per test", "deployable_failure": "runtime error / test failure — DETERMINISTIC, strongest signal in the paper"},
+   {"name": "repair", "role": "bounded re-generation on failure, consuming only error messages + failing assertions (NEVER gold solution)", "input": "code + failure report", "output": "revised code", "deployable_failure": "same signals as implement/execute"}
+  ],
+  "deployable_failure_signals": [
+   "syntax error (compile)", "runtime error (exec)", "test pass/fail (deterministic)", "output-format checks",
+   "runtime is forbidden from reading reference solution / gold answer (none even exist in this release)"
+  ]
+ },
+ "humaneval": {
+  "n_total": 164,
+  "split": "test",
+  "usable": 164,
+  "fresh": 164,
+  "duplicates": 0,
+  "overlap_with_previous_experiments": 0,
+  "ground_truth": "canonical solution present for 164/164 (offline reference only)",
+  "tests_missing": "canonical CHECK-based unit tests are NOT included in the release; only >>> doctests embedded in 76/164 docstrings; proper evaluation would require downloading the original dataset file (violates the 'no external fetch if release suffices' preference)",
+  "verdict": "second choice behind MBPP; MBPP provides 3 real unit tests per task in the release itself"
+ },
+ "model_cache_audit": {
+  "release_models_per_dataset": 21,
+  "our_checkpoints_present": {"medium_Qwen2.5-7B-Instruct": false, "large_Qwen2.5-14B-Instruct-GPTQ-Int8": false, "coder_Qwen2.5-Coder-7B-Instruct": true},
+  "reusable_as_experiment_cells": "NONE — cached rows are end-to-end answers to the release's own prompts (their solve prompt, their temperature unknown); our node-level calls must all be fresh",
+  "coder_cache_used_for": "scorer validation only (agreement study, done above)",
+  "gpu_state": "occupied by the concurrent cross_domain_math run (vLLM live); any new collection must wait (engine GPU-busy guard enforces this)"
+ },
+ "recommendations": {
+  "A_math500_worth_running": "yes — real problem text + gold, 500/500 scorer coverage, natural 3-node DAG; BUT the concurrent six-arm run (200 tasks, numeric-only universe, weaker normalizer) already occupies the domain and the GPU; decide first whether it stands",
+  "B_mbpp_over_humaneval": "yes — MBPP embeds 3 real unit tests per task (deterministic deployable signal); HumanEval lacks canonical tests in the release and would need an external dataset fetch",
+  "C_recommended_freeze_size": "100 fresh tasks per domain (sha256('xdomain:'+index) ascending, excluding frozen-200 for math, excluding dedup-second-indices and helper-dependent tasks for mbpp); final count pending user decision on the concurrent math run",
+  "D_expected_model_calls": {
+   "math_six_arms_shared_cache": "~900-1,100 calls per 100-task domain (3 nodes x 3 models x 100 + bounded dynamic repair)",
+   "code_six_arms_shared_cache": "~700-1,000 calls per 100-task domain (plan/implement x 3 models x 100 + bounded repair loop)",
+   "note": "six arms share node-level call cache exactly like the finance multidag panels; the concurrent math run is already consuming its own share"
+  },
+  "E_which_arms_have_meaning": {
+   "Always_Best": "yes (fixed-model baseline)",
+   "Query_Router": "yes (whole-task routing baseline)",
+   "Type_Router": "yes (node-type prior, mirrors the finance result)",
+   "Static_DAG": "yes (decomposition + fixed allocation + local fallback)",
+   "Dynamic_DAG": "yes, strongest on code (test-failure repair loop is a deployable, deterministic trigger); on math the trigger is consistency/format only, so dynamic value is expected smaller",
+   "Oracle": "yes (finite candidate ceiling within the executed node-model matrix)",
+   "honest_caveat": "six arms are all interpretable, but the math domain's deployable signal is weaker than code's; if the paper wants a decisive 'selective dynamic' replication, MBPP is the stronger witness"
+  },
+  "verdict_summary": "Math500: runnable, scorer fully ready (supersedes the release scorer); currently occupied by a concurrent 200-task six-arm run whose numeric-only filter is unjustified given our 500/500 scorer — user decision gate required. MBPP: runnable and preferred over HumanEval, strongest deployable failure signals, no reference-solution leak possible. Recommended final configuration: Math500 (pending concurrent-run decision) + MBPP 100 fresh tasks each; nothing is frozen in this audit."
+ }
+}
