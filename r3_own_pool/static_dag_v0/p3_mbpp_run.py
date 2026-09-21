@@ -31,7 +31,7 @@ EXPERT = 'You are an expert Python programmer, and here is your task:\n'
 MONO_P = (EXPERT + '{q}\n\nYour code should pass these tests:\n{tests}\n\n'
           'Write only the python code (function + any imports). Do not explain.')
 PLAN_P = ('Analyze the coding task and design the solution. Return ONLY JSON '
-          '{"signature":"function signature","algorithm":"step plan","edge_cases":["..."]}.\n'
+          '{{"signature":"function signature","algorithm":"step plan","edge_cases":["..."]}}.\n'
           'TASK: {q}\nTESTS:\n{tests}')
 IMPL_P = ('Implement the function per the plan. Write only the python code '
           '(function + any imports). Do not explain.\nTASK: {q}\nTESTS:\n{tests}\nPLAN: {plan}')
