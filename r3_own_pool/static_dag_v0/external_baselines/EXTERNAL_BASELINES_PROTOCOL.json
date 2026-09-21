@@ -6,11 +6,29 @@
  "purpose": "same-pool, same-panel, same-scorer, same-budget comparison against three representative published-method styles; closes the external-baseline gap for the top-venue version",
  "naming_rule": "all baselines labeled '-style' with the sentence 'adapted to the same frozen model pool, task panel, scorer, and budget constraints'; no claim of faithful reproduction of the original published systems",
  "panels": {
-  "finance": {"file": "static_dag_v0/decomposition_benchmark/decomposition_final_tatqa_200.json", "n": 200, "scorer": "frozen extract_value + tolerance 1e-4 rel", "mono_cells": "decomposition_benchmark/paired_run/RESPONSES.jsonl keys tq:{uid}:mono (model=large)"},
-  "code": {"file": "static_dag_v0/p3_xdomain/P3_CODE_FINAL_TASKS_100.json", "n": 100, "scorer": "extracted unit tests in sandbox", "mono_cells": "p3_xdomain/mbpp_run/RESPONSES.jsonl keys {task}:mono:{model}:{sha}"}
+  "finance": {
+   "file": "static_dag_v0/decomposition_benchmark/decomposition_final_tatqa_200.json",
+   "n": 200,
+   "scorer": "frozen extract_value + tolerance 1e-4 rel",
+   "mono_cells": "decomposition_benchmark/paired_run/RESPONSES.jsonl keys tq:{uid}:mono (model=large); MEDIUM mono cells NOT frozen -> this addendum collects them (200 new medium calls, same MONO v1 prompt, ctx[:14000])"
+  },
+  "code": {
+   "file": "static_dag_v0/p3_xdomain/P3_CODE_FINAL_TASKS_100.json",
+   "n": 100,
+   "scorer": "extracted unit tests in sandbox",
+   "mono_cells": "p3_xdomain/mbpp_run/RESPONSES.jsonl keys {task}:mono:{model}:{sha}"
+  }
  },
- "model_pool": {"medium": "Qwen2.5-7B-Instruct", "large": "Qwen2.5-14B-Instruct-GPTQ-Int8", "coder": "Qwen2.5-Coder-7B-Instruct"},
- "generation": {"temperature": 0, "top_p": 1, "max_tokens": 512},
+ "model_pool": {
+  "medium": "Qwen2.5-7B-Instruct",
+  "large": "Qwen2.5-14B-Instruct-GPTQ-Int8",
+  "coder": "Qwen2.5-Coder-7B-Instruct"
+ },
+ "generation": {
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 512
+ },
  "budget_rule": "same as frozen arms: per-task budget = max(200, 1.2 x static realized tokens); violations reported",
  "baselines": {
   "RouteLLM_style_learned_query_router": {
@@ -37,11 +55,26 @@
   "Always_Large": "existing frozen mono-large arm on each panel",
   "Dynamic_DAG": "existing frozen dynamic_real arm (decomposition_benchmark DAG-L/M for finance? NO - finance dynamic reference = multidag panels are a different panel; on the TAT-QA 200 panel the DAG reference = DAG-L/M; code reference = mbpp dynamic_real 80.0%"
  },
- "metrics": ["quality (finance accuracy / code pass@1)", "tokens", "observed latency (same-environment caveat)", "paired dQ vs Always-Large and vs the frozen DAG/Dynamic arm", "10k paired bootstrap CI (seed 20260916)", "exact McNemar", "budget violations"],
+ "metrics": [
+  "quality (finance accuracy / code pass@1)",
+  "tokens",
+  "observed latency (same-environment caveat)",
+  "paired dQ vs Always-Large and vs the frozen DAG/Dynamic arm",
+  "10k paired bootstrap CI (seed 20260916)",
+  "exact McNemar",
+  "budget violations"
+ ],
  "output": "EXTERNAL_BASELINES_RESULTS.json",
  "constraints": [
   "no modification of any existing frozen result, protocol, scorer, or panel",
   "no gold at runtime; all feedback deployable",
   "one-shot; no post-hoc tuning of router/cascade/refine after results"
- ]
+ ],
+ "new_calls_budget": {
+  "finance_medium_mono": 200,
+  "selfrefine_finance": 400,
+  "selfrefine_code": "<=200",
+  "total_upper_bound": 800,
+  "note": "RouteLLM-style and FrugalGPT-style otherwise reuse existing cells (zero additional calls beyond the finance medium mono collection)"
+ }
 }
