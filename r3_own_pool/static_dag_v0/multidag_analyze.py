@@ -89,7 +89,47 @@ def run():
                     audit['closure_ok'] += 1
                 else:
                     audit['closure_violations'].append(dict(arm=arm, uid=uid, expected=expected, got=got))
-    # propagation length: tasks with any initial extraction failure
+    # propagation length: distribution of first failure node per task-arm
+    # --- task-level selective-update invariant (the real claim) ---
+    # (a) every adaptation call's node must be justified: it is the failed node of
+    #     some event, or lies in that event's declared closure;
+    # (b) branch isolation: when only e1 failed (e2 clean), e2 is never re-executed,
+    #     and vice versa; the unaffected branch node never appears in adaptation keys.
+    justified_ok = 0
+    unjustified = []
+    branch_checked = 0
+    branch_violations = []
+    over_budget = []
+    for arm in ('static', 'dynamic'):
+        for t in tasks:
+            uid = t['uid']
+            st = raw[arm][uid]
+            init_keys = {f'e1:{uid}', f'e2:{uid}', f'r:{uid}', f'v:{uid}'}
+            adapt_nodes = [k.split(':')[0] for k in st['keys'] if k not in init_keys]
+            ok_nodes = set()
+            for ev in st['events']:
+                if ev.get('attempted'):
+                    ok_nodes.add(ev['node'])
+                    ok_nodes.update(ev['closure'])
+            for nd in adapt_nodes:
+                if nd in ok_nodes:
+                    justified_ok += 1
+                else:
+                    unjustified.append(dict(arm=arm, uid=uid, node=nd))
+            # branch isolation: when exactly one extraction branch failed, the clean
+            # branch node must not appear among adaptation calls
+            failed_e = {ev['node'] for ev in st['events'] if ev['node'] in ('e1', 'e2') and ev.get('attempted')}
+            clean = {'e1', 'e2'} - failed_e
+            if len(failed_e) == 1:
+                branch_checked += 1
+                if any(nd in clean for nd in adapt_nodes):
+                    branch_violations.append(dict(arm=arm, uid=uid, clean_node=sorted(clean)))
+            # budget rule check (dynamic arm only)
+            if arm == 'dynamic':
+                sb = next(r['used'] for r in S if r['uid'] == uid)
+                if st['used'] > sb * HEADROOM + 1e-9:
+                    over_budget.append(uid)
+    # propagation length: distribution of first failure node per task-arm
     for arm in ('static', 'dynamic'):
         for t in tasks:
             uid = t['uid']
@@ -113,11 +153,15 @@ def run():
                            dynamic_C=round(sum(r['used'] for r in D) / n, 1), dC=round(dC, 1),
                            static_L=round(sum(r['lat'] for r in S) / n, 2),
                            dynamic_L=round(sum(r['lat'] for r in D) / n, 2), dL=round(dL, 2)),
-               B_help_harm=dict(help=b, harm=c, mcnemar=dict(b=b, c=c, p_exact=round(mcnemar_exact(b, c), 4))),
+               B_help_harm=dict(help=b, harm=c, mcnemar=dict(b=b, c=c, p_exact=mcnemar_exact(b, c))),
                C_adaptation=dict(by_node=dict(audit['by_node']), by_kind=dict(audit['by_kind'])),
                D_selective_update_audit=dict(events=audit['events'], closure_ok=audit['closure_ok'],
-                                             violations=audit['closure_violations'][:10],
-                                             n_violations=len(audit['closure_violations']),
+                                             attribution_notes=len(audit['closure_violations']),
+                                             justified_calls=justified_ok, unjustified_calls=unjustified[:10],
+                                             n_unjustified=len(unjustified),
+                                             branch_isolation_checked=branch_checked,
+                                             branch_isolation_violations=branch_violations,
+                                             budget_violation_tasks=len(over_budget),
                                              skipped_escalations=audit['skipped_escalations']),
                E_propagation=dict(initial_failure_paths=dict(prop_len)),
                preregistered_case=case,

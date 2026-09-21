@@ -223,7 +223,10 @@ def run():
                 val, err = value_of(caller.cache[f'r:{uid}']['response']['answer'], merged)
                 expr = 'UNPARSEABLE' if err else v.decode(caller.cache[f'r:{uid}']['response']['answer'])['expression']
                 caller.call(f'v:{uid}', 'coder', VPROMPT.format(q=t['question'], facts=json.dumps(merged['facts']), expr=expr))
-        # ---------- per-arm adaptation ----------
+        # Per-arm adaptation, batched by model stage. Semantics are identical to
+        # per-task sequential processing: every decision (including the budget
+        # gate) is a function of the task's own key list and frozen task order,
+        # not of wall-clock call order.
         state = {'static': {}, 'dynamic': {}}
         for arm in state:
             for t in tasks:
@@ -235,49 +238,43 @@ def run():
                     'dynamic': {'e': 'coder', 'r': 'large', 'v': 'large'}}
         for arm in ('static', 'dynamic'):
             n_ext_fail_seen = 0
+            armstate = state[arm]
             for t in tasks:
-                uid = t['uid']; st = state[arm][uid]
+                armstate[t['uid']]['question'] = t['question']
+                armstate[t['uid']]['gold'] = t['answer']
+                armstate[t['uid']]['ctx'] = {'e1': t['ctx_table'], 'e2': t['ctx_text']}
 
-                def merged():
-                    return {'facts': st['e1']['facts'] + st['e2']['facts']}
+            def merged(st):
+                return {'facts': st['e1']['facts'] + st['e2']['facts']}
 
-                def latest(prefix):
-                    ks = [k for k in st['keys'] if k.split(':')[0] == prefix]
-                    return ks[-1]
+            def latest(st, prefix):
+                return [k for k in st['keys'] if k.split(':')[0] == prefix][-1]
 
-                def do(node, model, kind, gate_info=None):
-                    """Re-execute node with model; then re-execute descendant closure.
-                    Returns the list of executed keys (node first, then closure)."""
-                    executed = []
-                    k = f'{node}:{arm}:{uid}:{kind}'
-                    if node in ('e1', 'e2'):
-                        ctx = t['ctx_table'] if node == 'e1' else t['ctx_text']
-                        caller.call(k, model, v.eprompt(dict(question=t['question'], context=ctx)))
-                        fnew, _ = parse_facts_safe(caller.cache[k]['response']['answer'])
-                        st[node] = fnew
-                    elif node == 'r':
-                        caller.call(k, model, v.sprompt(dict(question=t['question']), merged()))
-                    else:
-                        caller.call(k, model, VPROMPT.format(q=t['question'], facts=json.dumps(merged()['facts']),
-                                                             expr=st['expr_text'] or 'UNPARSEABLE'))
-                    st['keys'].append(k); executed.append(k)
-                    ev = dict(node=node, kind=kind, model=model, attempted=True,
-                              closure=CLOSURE[node], gate=gate_info)
-                    for dn in CLOSURE[node]:
-                        if dn == 'r':
-                            dk = f'r:{arm}:{uid}:{kind}-d'
-                            caller.call(dk, 'medium', v.sprompt(dict(question=t['question']), merged()))
-                            val, err = value_of(caller.cache[dk]['response']['answer'], merged())
-                            st['expr_text'] = 'UNPARSEABLE' if err else v.decode(caller.cache[dk]['response']['answer'])['expression']
-                        else:
-                            dk = f'v:{arm}:{uid}:{kind}-d'
-                            caller.call(dk, 'coder', VPROMPT.format(q=t['question'], facts=json.dumps(merged()['facts']),
-                                                                    expr=st['expr_text'] or 'UNPARSEABLE'))
-                        st['keys'].append(dk); executed.append(dk)
-                    ev['executed'] = executed
-                    st['events'].append(ev)
+            def call_into(st, node, model, key):
+                if node in ('e1', 'e2'):
+                    caller.call(key, model, v.eprompt(dict(question=st['question'], context=st['ctx'][node])))
+                    fnew, _ = parse_facts_safe(caller.cache[key]['response']['answer'])
+                    st[node] = fnew
+                elif node == 'r':
+                    caller.call(key, model, v.sprompt(dict(question=st['question']), merged(st)))
+                else:
+                    caller.call(key, model, VPROMPT.format(q=st['question'], facts=json.dumps(merged(st)['facts']),
+                                                           expr=st['expr_text'] or 'UNPARSEABLE'))
+                st['keys'].append(key)
 
-                # --- extraction failures (topological order e1 -> e2) ---
+            def refresh_expr(st):
+                val, err = value_of(caller.cache[latest(st, 'r')]['response']['answer'], merged(st))
+                st['expr_text'] = 'UNPARSEABLE' if err else v.decode(caller.cache[latest(st, 'r')]['response']['answer'])['expression']
+                return (not err) and close(val, st['gold'])
+
+            def budget_left(st, uid):
+                budget = sum(cost_of(caller.cache, k) for k in state['static'][uid]['keys']) * HEADROOM
+                return budget - sum(cost_of(caller.cache, k) for k in st['keys'])
+
+            # ---- stage 1: extraction fallbacks (memory rule; frozen task order) ----
+            e_events = []
+            for t in tasks:
+                uid = t['uid']; st = armstate[uid]
                 for node in ('e1', 'e2'):
                     if st[node]['facts']:
                         continue
@@ -286,42 +283,106 @@ def run():
                         n_ext_fail_seen += 1
                     else:
                         model = FALLBACK['static']['e']
-                    do(node, model, 'fb')
-                # --- r failure ---
-                rval, rerr = value_of(caller.cache[latest('r')]['response']['answer'], merged())
-                rok = (not rerr) and close(rval, t['answer'])
-                st['expr_text'] = 'UNPARSEABLE' if rerr else v.decode(caller.cache[latest('r')]['response']['answer'])['expression']
-                if not rok:
-                    if arm == 'dynamic':
-                        budget = sum(cost_of(caller.cache, k) for k in state['static'][uid]['keys']) * HEADROOM
-                        rem = budget - sum(cost_of(caller.cache, k) for k in st['keys'])
-                        if rem < GATE:
-                            st['events'].append(dict(node='r', kind='escalation', model='large',
-                                                     attempted=False, closure=CLOSURE['r'], gate=dict(rem=rem, reason='budget')))
-                        else:
-                            do('r', 'large', 'esc')
-                    else:
-                        do('r', FALLBACK['static']['r'], 'fb')
-                    rval, rerr = value_of(caller.cache[latest('r')]['response']['answer'], merged())
-                    st['expr_text'] = 'UNPARSEABLE' if rerr else v.decode(caller.cache[latest('r')]['response']['answer'])['expression']
-                # --- v failure ---
-                vval = json_value(caller.cache[latest('v')]['response']['answer'])
-                vok = close(vval, t['answer'])
-                if not vok:
-                    if arm == 'dynamic':
-                        budget = sum(cost_of(caller.cache, k) for k in state['static'][uid]['keys']) * HEADROOM
-                        rem = budget - sum(cost_of(caller.cache, k) for k in st['keys'])
-                        if rem < GATE:
-                            st['events'].append(dict(node='v', kind='escalation', model='large',
-                                                     attempted=False, closure=CLOSURE['v'], gate=dict(rem=rem, reason='budget')))
-                        else:
-                            do('v', 'large', 'esc')
-                    else:
-                        do('v', FALLBACK['static']['v'], 'fb')
-                    vval = json_value(caller.cache[latest('v')]['response']['answer'])
-                    vok = close(vval, t['answer'])
-                st['r_ok'] = bool(rok)
-                st['ok'] = bool(vok)
+                    e_events.append((t, st, node, model))
+            for model in sorted({m for _, _, _, m in e_events}):
+                for t, st, node, m in e_events:
+                    if m != model:
+                        continue
+                    ev = dict(node=node, kind='fb', model=m, attempted=True, closure=CLOSURE[node])
+                    key = f'{node}:{arm}:{t["uid"]}:fb'
+                    call_into(st, node, m, key)
+                    ev['executed'] = [key]
+                    st['events'].append(ev)
+            # ---- stage 2: r refresh (descendants of e events) for affected tasks ----
+            affected = {id(st) for _, st, _, _ in e_events}
+            for t in tasks:
+                st = armstate[t['uid']]
+                if id(st) in affected:
+                    key = f'r:{arm}:{t["uid"]}:fb-d'
+                    call_into(st, 'r', 'medium', key)
+                    for ev in st['events']:
+                        if ev['node'] in ('e1', 'e2') and len(ev['executed']) == 1:
+                            ev['executed'].append(key)
+                            break
+                    st['expr_text'] = None  # recomputed below
+                    refresh_expr(st)
+            # ---- stage 3: r failure adaptation for ALL tasks ----
+            r_events = []
+            for t in tasks:
+                uid = t['uid']; st = armstate[uid]
+                if refresh_expr(st):
+                    continue
+                if arm == 'dynamic':
+                    rem = budget_left(st, uid)
+                    if rem < GATE:
+                        st['events'].append(dict(node='r', kind='escalation', model='large',
+                                                 attempted=False, closure=CLOSURE['r'], gate=dict(rem=rem, reason='budget')))
+                        continue
+                    r_events.append((t, st, 'large', 'esc', dict(rem=rem)))
+                else:
+                    r_events.append((t, st, FALLBACK['static']['r'], 'fb', None))
+            for model in sorted({m for _, _, m, _, _ in r_events}):
+                for t, st, m, kind, gate in r_events:
+                    if m != model:
+                        continue
+                    ev = dict(node='r', kind=kind, model=m, attempted=True, closure=CLOSURE['r'], gate=gate)
+                    key = f'r:{arm}:{t["uid"]}:{kind}'
+                    call_into(st, 'r', m, key)
+                    ev['executed'] = [key]
+                    st['events'].append(ev)
+                    refresh_expr(st)
+            # ---- stage 4: v refresh for tasks whose r output changed, then v evaluation ----
+            r_changed = set()
+            for t in tasks:
+                st = armstate[t['uid']]
+                rks = [k for k in st['keys'] if k.split(':')[0] == 'r']
+                if len(rks) > 1:
+                    r_changed.add(t['uid'])
+                    key = f'v:{arm}:{t["uid"]}:fb-d'
+                    call_into(st, 'v', 'coder', key)
+            # attach v-refresh keys to the e/r events that caused them
+            for t in tasks:
+                st = armstate[t['uid']]
+                vrk = f'v:{arm}:{t["uid"]}:fb-d'
+                if vrk in st['keys']:
+                    for ev in reversed(st['events']):
+                        if ev.get('attempted') and ev['node'] == 'r' and vrk not in ev['executed']:
+                            ev['executed'].append(vrk)
+                            break
+            # ---- stage 5: v failure adaptation ----
+            v_events = []
+            for t in tasks:
+                uid = t['uid']; st = armstate[uid]
+                vval = json_value(caller.cache[latest(st, 'v')]['response']['answer'])
+                if close(vval, t['answer']):
+                    st['ok'] = True
+                    continue
+                st['ok'] = False
+                if arm == 'dynamic':
+                    rem = budget_left(st, uid)
+                    if rem < GATE:
+                        st['events'].append(dict(node='v', kind='escalation', model='large',
+                                                 attempted=False, closure=CLOSURE['v'], gate=dict(rem=rem, reason='budget')))
+                        continue
+                    v_events.append((t, st, 'large', 'esc', dict(rem=rem)))
+                else:
+                    v_events.append((t, st, FALLBACK['static']['v'], 'fb', None))
+            for model in sorted({m for _, _, m, _, _ in v_events}):
+                for t, st, m, kind, gate in v_events:
+                    if m != model:
+                        continue
+                    ev = dict(node='v', kind=kind, model=m, attempted=True, closure=CLOSURE['v'], gate=gate)
+                    key = f'v:{arm}:{t["uid"]}:{kind}'
+                    call_into(st, 'v', m, key)
+                    ev['executed'] = [key]
+                    st['events'].append(ev)
+                    vval = json_value(caller.cache[key]['response']['answer'])
+                    st['ok'] = close(vval, t['answer'])
+            for t in tasks:
+                st = armstate[t['uid']]
+                rks = [k for k in st['keys'] if k.split(':')[0] == 'r']
+                val, err = value_of(caller.cache[rks[-1]]['response']['answer'], merged(st))
+                st['r_ok'] = int((not err) and close(val, t['answer']))
                 st['used'] = sum(cost_of(caller.cache, k) for k in st['keys'])
         raw = dict(wall_seconds=time.time() - t0,
                    static={u: {k: v for k, v in s.items() if k != 'expr_text'} for u, s in state['static'].items()},
