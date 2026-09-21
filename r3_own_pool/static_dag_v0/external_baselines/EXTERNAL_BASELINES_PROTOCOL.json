@@ -1,0 +1,47 @@
+{
+ "protocol_name": "EXTERNAL_BASELINES_PROTOCOL",
+ "version": "1.0",
+ "status": "FROZEN_BEFORE_EXECUTION",
+ "created_unix": 1790002000,
+ "purpose": "same-pool, same-panel, same-scorer, same-budget comparison against three representative published-method styles; closes the external-baseline gap for the top-venue version",
+ "naming_rule": "all baselines labeled '-style' with the sentence 'adapted to the same frozen model pool, task panel, scorer, and budget constraints'; no claim of faithful reproduction of the original published systems",
+ "panels": {
+  "finance": {"file": "static_dag_v0/decomposition_benchmark/decomposition_final_tatqa_200.json", "n": 200, "scorer": "frozen extract_value + tolerance 1e-4 rel", "mono_cells": "decomposition_benchmark/paired_run/RESPONSES.jsonl keys tq:{uid}:mono (model=large)"},
+  "code": {"file": "static_dag_v0/p3_xdomain/P3_CODE_FINAL_TASKS_100.json", "n": 100, "scorer": "extracted unit tests in sandbox", "mono_cells": "p3_xdomain/mbpp_run/RESPONSES.jsonl keys {task}:mono:{model}:{sha}"}
+ },
+ "model_pool": {"medium": "Qwen2.5-7B-Instruct", "large": "Qwen2.5-14B-Instruct-GPTQ-Int8", "coder": "Qwen2.5-Coder-7B-Instruct"},
+ "generation": {"temperature": 0, "top_p": 1, "max_tokens": 512},
+ "budget_rule": "same as frozen arms: per-task budget = max(200, 1.2 x static realized tokens); violations reported",
+ "baselines": {
+  "RouteLLM_style_learned_query_router": {
+   "training": "900-task finance profiling corpus (capability_profiling/): per-task propagated outcomes for medium/large recomputed with the frozen scorer from frozen RESPONSES (replay-level, zero calls); binary label = large-beats-medium on the task's propagated chain",
+   "features": "3584-d GTE-Qwen2-7B question embeddings (frozen encoder, CPU); train embeddings from PROFILE_EMB.npz aligned by question text",
+   "model": "L2-regularized logistic regression (sklearn), 5-fold sanity on training corpus",
+   "inference": "embed each panel query -> predict -> route to medium or large -> reuse the EXISTING mono cell of the chosen model (zero new model calls)",
+   "note": "original RouteLLM routes strong/weak models by learned preference; here adapted to the frozen two-model pool and panels"
+  },
+  "FrugalGPT_style_cascade": {
+   "policy": "run the cheaper model (medium) first; escalate to large iff the deployable confidence check fails; stop after large",
+   "finance_check": "answer extractable and finite (regex Answer: <number> / trailing number)",
+   "code_check": "extracted unit tests pass in sandbox",
+   "cells": "reuses existing medium and large mono cells for every panel task (zero new model calls)",
+   "cost_accounting": "medium cost + large cost iff escalated"
+  },
+  "SelfRefine_style_iterative_refinement": {
+   "finance": "initial = existing large mono answer; feedback = self-critique prompt (same large model: state errors in the draft, give a corrected boxed answer); one critique+revise round; final scored by frozen scorer",
+   "code": "initial = existing large mono code; feedback = sandbox test failure report (deployable, deterministic); revise with the same model; at most 2 revisions; final scored by unit tests",
+   "new_calls_upper_bound": "finance 200x2=400, code 100x2=200, total <=600 (large model)"
+  }
+ },
+ "reference_arms": {
+  "Always_Large": "existing frozen mono-large arm on each panel",
+  "Dynamic_DAG": "existing frozen dynamic_real arm (decomposition_benchmark DAG-L/M for finance? NO - finance dynamic reference = multidag panels are a different panel; on the TAT-QA 200 panel the DAG reference = DAG-L/M; code reference = mbpp dynamic_real 80.0%"
+ },
+ "metrics": ["quality (finance accuracy / code pass@1)", "tokens", "observed latency (same-environment caveat)", "paired dQ vs Always-Large and vs the frozen DAG/Dynamic arm", "10k paired bootstrap CI (seed 20260916)", "exact McNemar", "budget violations"],
+ "output": "EXTERNAL_BASELINES_RESULTS.json",
+ "constraints": [
+  "no modification of any existing frozen result, protocol, scorer, or panel",
+  "no gold at runtime; all feedback deployable",
+  "one-shot; no post-hoc tuning of router/cascade/refine after results"
+ ]
+}
