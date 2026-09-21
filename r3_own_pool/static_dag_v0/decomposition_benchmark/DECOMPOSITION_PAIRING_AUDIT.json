@@ -1,0 +1,2606 @@
+{
+ "audit_version": "1.0",
+ "created_unix": 1789975916.1109726,
+ "scope": "strictly paired Monolithic-vs-DAG decomposition benchmark; task-id + protocol audit only; no model calls",
+ "legacy_artifacts_preserved": {
+  "MultiHiertt_mono_batch1": "/root/r3_own_pool/static_dag_v0/live_e2e/monolithic_baseline/RESULTS.json",
+  "MultiHiertt_mono_batch2": "/root/r3_own_pool/static_dag_v0/scale_up/RESPONSES.jsonl",
+  "MultiHiertt_dag_live_static": "/root/r3_own_pool/static_dag_v0/live_e2e/TRACES.jsonl",
+  "MultiHiertt_dag_fsc_conditional": "/root/r3_own_pool/static_dag_v0/fresh_static_confirmation/SCORED_MATRIX_EXEC.npz",
+  "TAT-QA_old40": "/root/r3_own_pool/static_dag_v0/tatqa_benchmark/TASKS.json",
+  "TAT-QA_new160": "/root/r3_own_pool/static_dag_v0/scale_up/TQ_TASKS.json",
+  "legacy_paired_analysis": "/root/r3_own_pool/static_dag_v0/scale_up/DECOMP_UTILITY.json",
+  "legacy_analysis_script": "/root/r3_own_pool/static_dag_v0/scale_up_analyze.py"
+ },
+ "model_versions_pinned": {
+  "medium": {
+   "path": "Qwen2.5-7B-Instruct",
+   "served": "Qwen/Qwen2.5-7B-Instruct",
+   "provenance": "/root/r3_own_pool/router_v2/label_repair_experiment/raw/medium_MODEL_PROVENANCE.json"
+  },
+  "large": {
+   "path": "Qwen2.5-14B-Instruct-GPTQ-Int8",
+   "served": "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8",
+   "provenance": "/root/r3_own_pool/router_v2/label_repair_experiment/raw/large_MODEL_PROVENANCE.json"
+  },
+  "coder": {
+   "path": "Qwen2.5-Coder-7B-Instruct",
+   "served": "Qwen/Qwen2.5-Coder-7B-Instruct",
+   "provenance": "/root/r3_own_pool/router_v2/label_repair_experiment/raw/coder_MODEL_PROVENANCE.json"
+  }
+ },
+ "generation_config": {
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 512
+ },
+ "scorer_version": "exec_calc (decompose_v1) for DAG; extract_value+close for mono; tolerance max(1e-4, 1e-4*|gold|)",
+ "prompt_versions": {
+  "extraction": "eprompt v1 (tool_aware_v1.eprompt), verbatim across all four sources",
+  "reasoning": "sprompt v1 (tool_aware_v1.sprompt), verbatim; INPUT differs by source (gold vs actual)",
+  "monolithic": "MONO v1, identical template in monolithic_baseline.py and scale_up_collect.py; ctx truncated to 14000 chars"
+ },
+ "datasets": {
+  "MultiHiertt": {
+   "dataset": "MultiHiertt",
+   "dag_task_count": 100,
+   "mono_task_count": 100,
+   "intersection_count": 100,
+   "dag_only_task_ids": [],
+   "mono_only_task_ids": [],
+   "duplicate_task_ids": [],
+   "dag_task_source": "/root/r3_own_pool/static_dag_v0/fresh_static_confirmation/TASKS.json",
+   "split": "audited unused MultiHiertt train (fresh holdout, not official test)",
+   "protocol_group": [
+    {
+     "group": "mh_mono_batch1_live_session",
+     "count": 50,
+     "task_ids": [
+      "cf32d60d2c3043a194565b3fabf0dcfb",
+      "8d44611c9b9b45968b9fc6a76d6a3292",
+      "801652a1045646eab273881fe0c095a2",
+      "12efc4e07eee44f39b3473e03e003345",
+      "a97d21ab1fd644f7a67b7185033796ef",
+      "003594db953a4f919c2f5b6f46bbb79f",
+      "72a7bf44b6f44db8b6b9f0b79b5ad35a",
+      "1b1082b3fa2f403386d208a368b795b6",
+      "88dcfa9b58434e8a85ba506dee891ede",
+      "52c7608506e44cb8a06026b4c14970b1",
+      "4046601ddf674a1c9f4507df6d2a972b",
+      "6f2c908fe17b498896ea24cbcaac2ae5",
+      "f2bd5fbbfbf34ae183e7c8dd77a0eb7a",
+      "bbecd35899de4fb1be46b56339f5d7bd",
+      "1c6635d8e10b4383ab6ab5ea0d8c0e6d",
+      "2da3c4e6c38b435195a2a29358b0cf6e",
+      "690bdcf798174e15ba82b3fe659d8e7d",
+      "26e97e280be042789822ae8aa08138c9",
+      "724543c809fb4a2d895eb7c3f26bbff9",
+      "a4fd9d53f55e43088cb18015c71306cb",
+      "cfbbc9aeca2945699682b332f7c83a39",
+      "529a5d0cbb8d4927b068abf48292efd7",
+      "f5643975b4b046c186b072475c57789d",
+      "a9a0a554c74c41719d28b9f7c32dc3ea",
+      "4b5bf5901b434fd0b7052031baca8321",
+      "f96addc1b690408ca08a141255ae41f2",
+      "b9c03f1c9f8b45eb9e6744a4b5898b9d",
+      "e47d314bc9ab4b46925a0453a4646126",
+      "53da07e016c44a19b77b0a1de4f86f15",
+      "d465215f787a462288c27fb70b38531a",
+      "0172b91f808c430890391df3bd98fb89",
+      "a74dc414c1ae4277a57dece221887f85",
+      "c07a6dbeca2a49f6ae4e9e2ed0779e84",
+      "d4e229649c694de6bc9781e521a80222",
+      "ebfa86ab15644fe5b08113acf88e610e",
+      "c57204c3adcf41a8b71bf1eaa4c09fe7",
+      "0ba40b26cf6540d3ba1dca96dc0ac505",
+      "03b5c06fd4f14cafb011bf63a4c8e76d",
+      "e6e1880ed51f4d1a98e0f2982ab39789",
+      "aaed30b0b1804368bcdd70946af3cfbb",
+      "6238092fd52c4f2b89c2db456411250f",
+      "7208d20492b64eca810c8e484c5a8e38",
+      "a61db122fd7543fdaaa9be8e88ee9b3c",
+      "2fb5cc849c974b89b73165556e5f65a4",
+      "2ea9b87945064067a523b7d232dd9809",
+      "8bfc649acf804325bad0dc581fd0c68a",
+      "ffea35f80442476c999e70b68fd0cb29",
+      "3eba2d84c84940aa95c389a7b1f2a258",
+      "95b3fec2a5484d308748cfd19fe4c811",
+      "6560606bef4546cd866a92bfd8d324c0"
+     ],
+     "arm": "monolithic",
+     "input_mode": "question + full context (raw, no gold)",
+     "execution_mode": "live",
+     "evidence_source": "raw_context",
+     "model_version": "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8 (large)",
+     "prompt_version": "MONO v1",
+     "scorer_version": "extract_value + 1e-4 rel",
+     "status": "reusable_for_paired_benchmark",
+     "note": "collected in live_e2e server session; checkpoint SHA-pinned at engine startup"
+    },
+    {
+     "group": "mh_mono_batch2_scaleup_session",
+     "count": 50,
+     "task_ids": [
+      "cf6a8029d4474577b0b91b1f4c120683",
+      "cba81efcf72f47dcbf60723369432e6d",
+      "fc5ab41086fa44119f154e41b5fe2c78",
+      "1e0a2cdac9864dd0b8e047ba4a620e7b",
+      "c8ff1009d181467c8dc74893b0171cd8",
+      "55312249eb80450b825b1f4c1e1c0730",
+      "cd6d5558cbd945d3886fa7f2369d5f4d",
+      "e0051170f6cf416caa1f79813133d254",
+      "9ee8f64237304489bc9febc528aa66b4",
+      "034a14018f1d4f24a5ce3afa1e46db1f",
+      "cb829d3409f940d3854da6af23a6fb06",
+      "3d92bf014d99423496331bf2d8bda75d",
+      "a0679de6c7874787a4e11ecfb4d46044",
+      "6ba4b3469aac4cbead67500d0cc0bf85",
+      "4ee73cb8c31142fd94df8538f82715e4",
+      "69df1d1692d6445797af6d0553eca13e",
+      "42e6eddf0cf1456cb8632c10ccd14f53",
+      "15107ae4a3654f5b975b0b45ed6dda57",
+      "da29eda4c32642b398be37df9246743d",
+      "04de16eacf7642aaa0846562dce24f14",
+      "bcc200d52107421a94c789c1ac36e7bf",
+      "a4a2b05eff294464ba8fc0a295d8ca5b",
+      "cf711c6fa3ba4cae84efe9af396341b1",
+      "ee5a45ba002d47788a17bdbf0455d4b5",
+      "702fb63d1ac649c7b1fef4ceedfcdbf2",
+      "0f75a4bdc79c4e53959ca011eb0ce9a4",
+      "90f0058bfd70471a8ba289e8c21450e7",
+      "c77ab5e2a6ba46b9837d71f48025d69d",
+      "cbca62b51f04464ebf1de67774241eca",
+      "cda651e30a3c4a589ac2835f42a6914f",
+      "302dbb6249554077a8a722f97dd8cbd9",
+      "a865a6f8969447cf81658dc9f22ac28c",
+      "e677bdc27bed42b4993c6b97e2117863",
+      "1f7ef06d66d94c12938daba2966a9569",
+      "3eff99b7876045bab0672a4d0947e8c5",
+      "fb0d28948be942cfadb696223b02cb8a",
+      "ea2a61fbf02b44b897d6018cdffd65dd",
+      "c12f0faad1c0455bbb9f80aa5b625e46",
+      "5cc5b5081af049d5bd445f289450f647",
+      "6e162c4fc79c4ae594b4b463d20a3b62",
+      "599300005b5e4b99b4fdff1e8927cd11",
+      "f45dcbba5fd640bdb11123620fba9e0a",
+      "6b09e2fdac634e43a7e0f8b46409092a",
+      "d60815331f0a4aaba1b766c053f55412",
+      "f616e253d416406eb6db6a81a2109754",
+      "f53bf6b574d841e69bf86f7d5179b1ac",
+      "c9257ff836a846ea90fbec84b35de444",
+      "f994cf0576954754a8c8bf369b9df272",
+      "a92d0f9216e14d36b56d04196a4817aa",
+      "00b072a8cbfa41b09294a9cb10a1eb7f"
+     ],
+     "arm": "monolithic",
+     "input_mode": "question + full context (raw, no gold)",
+     "execution_mode": "live",
+     "evidence_source": "raw_context",
+     "model_version": "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8 (large)",
+     "prompt_version": "MONO v1",
+     "scorer_version": "extract_value + 1e-4 rel",
+     "status": "reusable_for_paired_benchmark",
+     "note": "collected in scale_up server session; same prompt/model/checkpoint as batch1; legacy paired analysis used ONLY this batch (n=50)"
+    },
+    {
+     "group": "mh_dag_live_static_first50",
+     "count": 50,
+     "task_ids": [
+      "cf32d60d2c3043a194565b3fabf0dcfb",
+      "8d44611c9b9b45968b9fc6a76d6a3292",
+      "801652a1045646eab273881fe0c095a2",
+      "12efc4e07eee44f39b3473e03e003345",
+      "a97d21ab1fd644f7a67b7185033796ef",
+      "003594db953a4f919c2f5b6f46bbb79f",
+      "72a7bf44b6f44db8b6b9f0b79b5ad35a",
+      "1b1082b3fa2f403386d208a368b795b6",
+      "88dcfa9b58434e8a85ba506dee891ede",
+      "52c7608506e44cb8a06026b4c14970b1",
+      "4046601ddf674a1c9f4507df6d2a972b",
+      "6f2c908fe17b498896ea24cbcaac2ae5",
+      "f2bd5fbbfbf34ae183e7c8dd77a0eb7a",
+      "bbecd35899de4fb1be46b56339f5d7bd",
+      "1c6635d8e10b4383ab6ab5ea0d8c0e6d",
+      "2da3c4e6c38b435195a2a29358b0cf6e",
+      "690bdcf798174e15ba82b3fe659d8e7d",
+      "26e97e280be042789822ae8aa08138c9",
+      "724543c809fb4a2d895eb7c3f26bbff9",
+      "a4fd9d53f55e43088cb18015c71306cb",
+      "cfbbc9aeca2945699682b332f7c83a39",
+      "529a5d0cbb8d4927b068abf48292efd7",
+      "f5643975b4b046c186b072475c57789d",
+      "a9a0a554c74c41719d28b9f7c32dc3ea",
+      "4b5bf5901b434fd0b7052031baca8321",
+      "f96addc1b690408ca08a141255ae41f2",
+      "b9c03f1c9f8b45eb9e6744a4b5898b9d",
+      "e47d314bc9ab4b46925a0453a4646126",
+      "53da07e016c44a19b77b0a1de4f86f15",
+      "d465215f787a462288c27fb70b38531a",
+      "0172b91f808c430890391df3bd98fb89",
+      "a74dc414c1ae4277a57dece221887f85",
+      "c07a6dbeca2a49f6ae4e9e2ed0779e84",
+      "d4e229649c694de6bc9781e521a80222",
+      "ebfa86ab15644fe5b08113acf88e610e",
+      "c57204c3adcf41a8b71bf1eaa4c09fe7",
+      "0ba40b26cf6540d3ba1dca96dc0ac505",
+      "03b5c06fd4f14cafb011bf63a4c8e76d",
+      "e6e1880ed51f4d1a98e0f2982ab39789",
+      "aaed30b0b1804368bcdd70946af3cfbb",
+      "6238092fd52c4f2b89c2db456411250f",
+      "7208d20492b64eca810c8e484c5a8e38",
+      "a61db122fd7543fdaaa9be8e88ee9b3c",
+      "2fb5cc849c974b89b73165556e5f65a4",
+      "2ea9b87945064067a523b7d232dd9809",
+      "8bfc649acf804325bad0dc581fd0c68a",
+      "ffea35f80442476c999e70b68fd0cb29",
+      "3eba2d84c84940aa95c389a7b1f2a258",
+      "95b3fec2a5484d308748cfd19fe4c811",
+      "6560606bef4546cd866a92bfd8d324c0"
+     ],
+     "arm": "dag",
+     "input_mode": "actual extraction -> reasoning; GOLD fallback on extraction parse failure",
+     "execution_mode": "live",
+     "evidence_source": "actual_extraction + 4 gold-fallback tasks",
+     "model_version": "reasoning model per task varies by frozen utility picks (medium 38 / coder 9 / large 3)",
+     "prompt_version": "eprompt v1 + sprompt v1",
+     "scorer_version": "exec_calc + 1e-4 rel",
+     "status": "legacy_invalid_for_unified_benchmark",
+     "note": "gold_fallback_task_ids=['52c7608506e44cb8a06026b4c14970b1', '1c6635d8e10b4383ab6ab5ea0d8c0e6d', 'c07a6dbeca2a49f6ae4e9e2ed0779e84', 'e6e1880ed51f4d1a98e0f2982ab39789']"
+    },
+    {
+     "group": "mh_dag_fsc_gold_conditioned_last50",
+     "count": 50,
+     "task_ids": [
+      "cf6a8029d4474577b0b91b1f4c120683",
+      "cba81efcf72f47dcbf60723369432e6d",
+      "fc5ab41086fa44119f154e41b5fe2c78",
+      "1e0a2cdac9864dd0b8e047ba4a620e7b",
+      "c8ff1009d181467c8dc74893b0171cd8",
+      "55312249eb80450b825b1f4c1e1c0730",
+      "cd6d5558cbd945d3886fa7f2369d5f4d",
+      "e0051170f6cf416caa1f79813133d254",
+      "9ee8f64237304489bc9febc528aa66b4",
+      "034a14018f1d4f24a5ce3afa1e46db1f",
+      "cb829d3409f940d3854da6af23a6fb06",
+      "3d92bf014d99423496331bf2d8bda75d",
+      "a0679de6c7874787a4e11ecfb4d46044",
+      "6ba4b3469aac4cbead67500d0cc0bf85",
+      "4ee73cb8c31142fd94df8538f82715e4",
+      "69df1d1692d6445797af6d0553eca13e",
+      "42e6eddf0cf1456cb8632c10ccd14f53",
+      "15107ae4a3654f5b975b0b45ed6dda57",
+      "da29eda4c32642b398be37df9246743d",
+      "04de16eacf7642aaa0846562dce24f14",
+      "bcc200d52107421a94c789c1ac36e7bf",
+      "a4a2b05eff294464ba8fc0a295d8ca5b",
+      "cf711c6fa3ba4cae84efe9af396341b1",
+      "ee5a45ba002d47788a17bdbf0455d4b5",
+      "702fb63d1ac649c7b1fef4ceedfcdbf2",
+      "0f75a4bdc79c4e53959ca011eb0ce9a4",
+      "90f0058bfd70471a8ba289e8c21450e7",
+      "c77ab5e2a6ba46b9837d71f48025d69d",
+      "cbca62b51f04464ebf1de67774241eca",
+      "cda651e30a3c4a589ac2835f42a6914f",
+      "302dbb6249554077a8a722f97dd8cbd9",
+      "a865a6f8969447cf81658dc9f22ac28c",
+      "e677bdc27bed42b4993c6b97e2117863",
+      "1f7ef06d66d94c12938daba2966a9569",
+      "3eff99b7876045bab0672a4d0947e8c5",
+      "fb0d28948be942cfadb696223b02cb8a",
+      "ea2a61fbf02b44b897d6018cdffd65dd",
+      "c12f0faad1c0455bbb9f80aa5b625e46",
+      "5cc5b5081af049d5bd445f289450f647",
+      "6e162c4fc79c4ae594b4b463d20a3b62",
+      "599300005b5e4b99b4fdff1e8927cd11",
+      "f45dcbba5fd640bdb11123620fba9e0a",
+      "6b09e2fdac634e43a7e0f8b46409092a",
+      "d60815331f0a4aaba1b766c053f55412",
+      "f616e253d416406eb6db6a81a2109754",
+      "f53bf6b574d841e69bf86f7d5179b1ac",
+      "c9257ff836a846ea90fbec84b35de444",
+      "f994cf0576954754a8c8bf369b9df272",
+      "a92d0f9216e14d36b56d04196a4817aa",
+      "00b072a8cbfa41b09294a9cb10a1eb7f"
+     ],
+     "arm": "dag",
+     "input_mode": "reasoning node fed GOLD facts by construction (conditional benchmark)",
+     "execution_mode": "conditional_benchmark (not a live DAG)",
+     "evidence_source": "gold_facts",
+     "model_version": "Qwen/Qwen2.5-7B-Instruct (medium), column 0 of SCORED_MATRIX_EXEC",
+     "prompt_version": "sprompt v1 with gold facts",
+     "scorer_version": "frozen evaluator on gold-conditioned reasoning node",
+     "status": "legacy_invalid_for_unified_benchmark",
+     "note": "this group produced the legacy \"+14.0pp\" MH paired result (recomputed: mono 0.08 vs chain 0.22, diff +0.14 confirmed)"
+    }
+   ],
+   "conclusion": "mono exists for all 100 tasks (two sessions, same protocol); NO task has a DAG arm under the unified protocol: first 50 = live static with per-task varying models and 4 gold fallbacks; last 50 = gold-conditioned conditional benchmark only. Legacy paper number +14.0pp is a mono-vs-gold-conditioned-reasoning comparison, not a DAG comparison."
+  },
+  "TAT-QA": {
+   "dataset": "TAT-QA",
+   "dag_task_count": 200,
+   "mono_task_count": 160,
+   "intersection_count": 160,
+   "dag_only_task_ids": [
+    "0a12160d-f72a-44ec-9c31-5815d81268a0",
+    "0b7463b3-ed9e-47a0-b838-b26e0ab886eb",
+    "11708d2a-0e19-4feb-b687-fe2785da2b95",
+    "12756239-28b8-482e-bfc8-c3dd6b2f2954",
+    "14501a2e-1369-44f4-aa58-c5eb42c8d68b",
+    "219f3e23-c2b0-4607-9573-6af0eea1fb33",
+    "24f8613a-5516-4f0e-9839-8f6e31480785",
+    "2b77bd1e-17ee-4f74-9fb7-7cc4ad5142dd",
+    "2e3d4fe2-96f3-4ad9-b23f-1c590897b6e5",
+    "311dc93c-93b4-49a5-ba50-5d97cc16e4fa",
+    "35d602ae-9131-4291-a30c-49a40f32bbe4",
+    "37c1f8e3-ea65-4d95-95bc-91356c8e6ffc",
+    "3b5bb347-41c7-499a-b044-87b9a04b0833",
+    "3b8e873e-64d5-4af0-904f-7197dc632773",
+    "4a253bf4-b9fc-4ec3-b99b-d2744646a296",
+    "634122ee-5fb5-4e38-a552-5673e23987cf",
+    "65026273-5d78-4e7a-b846-828ecbc809ec",
+    "6c44a1a8-0785-43a0-90ab-7e21df2c57d9",
+    "71384b98-32c8-46e6-a820-9551c8c10e2d",
+    "74f778d2-8a07-4b39-92d9-4a3c36af6f50",
+    "765f1e20-9c75-4611-99ef-68a193d7e101",
+    "78d004fb-a7b1-4ad5-8870-a7e0462e999e",
+    "79bc72ac-ecad-4b9e-92a9-df7ab98cdd7b",
+    "87cdfd06-a9ef-48e8-a44e-9addd92a0d0c",
+    "9332c840-68f6-43e1-a06c-902dae3fef81",
+    "9406b211-17a1-4a97-a646-a57170b7e270",
+    "973464b5-a5fe-4381-9bc5-e225f5ba9a2c",
+    "9e632ed1-1a2b-40a9-9a9a-72515db3585d",
+    "9fce8f25-dd3b-4c50-9b7b-d200ced15ded",
+    "a6bc87a3-0335-4914-bdc1-69fc6b941b69",
+    "a8ab5675-0560-4cd0-a294-76fd54b04ad6",
+    "aef42c33-65c0-40a3-92e7-fefd107aacdb",
+    "cd3367c7-d3bd-440c-8c51-90a6ee95cc77",
+    "ceb35697-abdc-4acf-a54f-5b6716749d2b",
+    "d5072c93-36bb-432c-adc8-6334fd6fe7ac",
+    "e4deb430-6bd6-4505-a2cc-facbd0d502bf",
+    "eb1ecc18-e3d3-4dd6-a689-546998eb2784",
+    "efb9abeb-ad8a-4558-9695-6d1054957e1b",
+    "f8073b0e-9327-40f7-9646-dd96da92ea3a",
+    "f9898b19-f84e-4cd8-9cd2-330767f39a38"
+   ],
+   "mono_only_task_ids": [],
+   "duplicate_task_ids": [],
+   "dag_task_sources": [
+    "/root/r3_own_pool/static_dag_v0/tatqa_benchmark/TASKS.json",
+    "/root/r3_own_pool/static_dag_v0/scale_up/TQ_TASKS.json"
+   ],
+   "split": "dev (r3_own_pool/data/tatqa/tatqa_dataset_dev.json, git-clean at aeeabc8)",
+   "protocol_group": [
+    {
+     "group": "tq_old40_dag_gold_fed",
+     "count": 40,
+     "task_ids": [
+      "d5072c93-36bb-432c-adc8-6334fd6fe7ac",
+      "634122ee-5fb5-4e38-a552-5673e23987cf",
+      "2e3d4fe2-96f3-4ad9-b23f-1c590897b6e5",
+      "71384b98-32c8-46e6-a820-9551c8c10e2d",
+      "efb9abeb-ad8a-4558-9695-6d1054957e1b",
+      "4a253bf4-b9fc-4ec3-b99b-d2744646a296",
+      "6c44a1a8-0785-43a0-90ab-7e21df2c57d9",
+      "a8ab5675-0560-4cd0-a294-76fd54b04ad6",
+      "79bc72ac-ecad-4b9e-92a9-df7ab98cdd7b",
+      "f8073b0e-9327-40f7-9646-dd96da92ea3a",
+      "9332c840-68f6-43e1-a06c-902dae3fef81",
+      "11708d2a-0e19-4feb-b687-fe2785da2b95",
+      "37c1f8e3-ea65-4d95-95bc-91356c8e6ffc",
+      "0a12160d-f72a-44ec-9c31-5815d81268a0",
+      "14501a2e-1369-44f4-aa58-c5eb42c8d68b",
+      "a6bc87a3-0335-4914-bdc1-69fc6b941b69",
+      "ceb35697-abdc-4acf-a54f-5b6716749d2b",
+      "87cdfd06-a9ef-48e8-a44e-9addd92a0d0c",
+      "973464b5-a5fe-4381-9bc5-e225f5ba9a2c",
+      "12756239-28b8-482e-bfc8-c3dd6b2f2954",
+      "f9898b19-f84e-4cd8-9cd2-330767f39a38",
+      "35d602ae-9131-4291-a30c-49a40f32bbe4",
+      "e4deb430-6bd6-4505-a2cc-facbd0d502bf",
+      "9e632ed1-1a2b-40a9-9a9a-72515db3585d",
+      "9406b211-17a1-4a97-a646-a57170b7e270",
+      "765f1e20-9c75-4611-99ef-68a193d7e101",
+      "219f3e23-c2b0-4607-9573-6af0eea1fb33",
+      "78d004fb-a7b1-4ad5-8870-a7e0462e999e",
+      "74f778d2-8a07-4b39-92d9-4a3c36af6f50",
+      "2b77bd1e-17ee-4f74-9fb7-7cc4ad5142dd",
+      "eb1ecc18-e3d3-4dd6-a689-546998eb2784",
+      "cd3367c7-d3bd-440c-8c51-90a6ee95cc77",
+      "3b8e873e-64d5-4af0-904f-7197dc632773",
+      "aef42c33-65c0-40a3-92e7-fefd107aacdb",
+      "24f8613a-5516-4f0e-9839-8f6e31480785",
+      "0b7463b3-ed9e-47a0-b838-b26e0ab886eb",
+      "311dc93c-93b4-49a5-ba50-5d97cc16e4fa",
+      "9fce8f25-dd3b-4c50-9b7b-d200ced15ded",
+      "3b5bb347-41c7-499a-b044-87b9a04b0833",
+      "65026273-5d78-4e7a-b846-828ecbc809ec"
+     ],
+     "arm": "dag",
+     "input_mode": "reasoning fed GOLD facts by construction (40/40 prompts verified evidence=gold)",
+     "execution_mode": "live calls, gold-conditioned input",
+     "evidence_source": "gold_facts",
+     "model_version": "Qwen/Qwen2.5-7B-Instruct (medium)",
+     "prompt_version": "sprompt v1 with gold facts",
+     "scorer_version": "exec_calc with gold facts + 1e-4 rel (ext_r=None forces gold in legacy analysis)",
+     "status": "legacy_invalid_for_unified_benchmark",
+     "note": "no monolithic arm exists for these 40; large-extraction responses exist (2 unparseable: ['14501a2e-1369-44f4-aa58-c5eb42c8d68b', '35d602ae-9131-4291-a30c-49a40f32bbe4'])"
+    },
+    {
+     "group": "tq_new160_dag_actual",
+     "count": 151,
+     "task_ids": [
+      "fa5d745e-66cd-49cf-ac91-b6916a412c7d",
+      "426e47ae-aff7-43e2-81be-0bb951b0def1",
+      "bfb033dc-19dc-41cc-9253-aa7e03b61a62",
+      "25212463-2a2c-4df5-a97a-a0dc1268ebe1",
+      "c5757bb4-a312-48ed-a244-29932669363c",
+      "27911d6f-dfe5-487b-bc56-7e5cf16a32e0",
+      "64d8c7e4-99d6-4d2e-ac39-dbee2a0dbc85",
+      "147f7c09-a627-4719-93ad-33661b5a4543",
+      "3525bcc2-5684-45a3-9a2e-4b35de25551a",
+      "ba16499f-3c96-4faa-81b0-874f9ace7c8c",
+      "21ac021b-192e-46ea-b494-dbc82ad8f53d",
+      "073c6499-cf72-47f2-8874-7dfc67f1e251",
+      "acde36c6-c718-4bfc-ae8d-0083d3dab3f0",
+      "4082086c-6f47-40b1-8ac1-757d437a502d",
+      "8b2d5db2-7a47-4269-9df2-f44385bc0883",
+      "072bf5fb-0edd-4267-bae7-b57f1c598017",
+      "a6dca142-4691-4a05-9c78-9087cdc491f6",
+      "3a467fa9-64d9-4214-9f5e-0e7a101efd57",
+      "c36e2211-e46a-43d1-a0a8-ae87af347ae8",
+      "cb4abf04-9551-46e2-8a32-46672e284167",
+      "3bc9ea91-f346-4cc1-9ca7-10c481be3ac9",
+      "9b71194f-7599-4368-a529-76b0d44359b0",
+      "8cf06f37-dccd-4b16-8f75-5359a9a55d93",
+      "77b14f34-b206-4b50-babb-aa9ee379410a",
+      "b9c6abaf-9cf8-4bd1-a01e-c6967767d2b4",
+      "98b13aba-4ca2-4369-87eb-a960c71b8a2c",
+      "7b2b17a9-6409-45fb-907f-270832305974",
+      "73618a72-ca8a-43f4-b384-409aec6bbb75",
+      "dab0e943-fc62-4e26-95e5-025b98ff9b57",
+      "5c59c850-a720-4b1f-b703-9e1d9ff8e242",
+      "d6fd8039-e4d4-45eb-b22e-d8ddc6e068e1",
+      "0f45cc67-fd57-4930-a0d0-f5d7174d7562",
+      "79f658b0-e8e5-4b83-bdbe-4d4f96261c69",
+      "ec696158-f93d-4608-903d-a6b9c4e7bfd5",
+      "4ba37f67-0474-4e5c-8f45-da51a2873072",
+      "74183d5d-7633-43b5-bd7b-f0894fbe2299",
+      "a3ea64bc-4447-4c0b-b76c-84575a3a0de2",
+      "33d6e35e-0c0d-4234-99ce-2df83034136e",
+      "6a94f765-2c5a-4486-ba06-0057636740e0",
+      "00a60f91-b2d2-4bc5-acc4-69121abf68a9",
+      "b875ba98-fe2e-43b4-bec5-57379487e755",
+      "73f75537-695c-431d-a917-18071def0090",
+      "ca7623cd-811b-4b33-8e3d-b78b0ec1f58e",
+      "7df5635a-6f79-4fd2-8dc4-a5040e04cf4c",
+      "05b670d3-5b19-438c-873f-9bf6de29c69e",
+      "5a58d6e1-8526-49cc-a56a-c4ade901790c",
+      "716a0054-4177-43f6-b320-8de375eb3642",
+      "e08bf359-5dc5-4df9-8679-5144747fdb6b",
+      "6ba4045d-4222-4da0-a126-94b267a707ec",
+      "b194279c-16e5-4a17-9733-c8babb6e8281",
+      "8ada4c33-1bde-46cf-95ec-dc7938cd7521",
+      "a81f1322-e74f-4e3c-a6cf-4b8d25d01cf5",
+      "34e0adca-febe-4862-a4db-8581df95e44b",
+      "79f51c3d-59d3-4abc-b0cd-d9e28668fbf4",
+      "894362e3-56cc-4a76-8053-36d6cbaeb6ce",
+      "34144864-790c-4733-8323-91347f68f5ef",
+      "14381fab-36ac-482b-9f77-2c78f3f34ffb",
+      "735a2fcf-f401-4636-8e75-43743beddad4",
+      "0550ae54-99f4-4b87-b1a7-11d402a94918",
+      "ab7a5581-88bf-48dc-99bd-e02d0fbb3fff",
+      "fa15cd27-153d-44a0-b315-1fd0e6022714",
+      "0339e2bb-4a63-4f23-aaea-b9fa3cb29737",
+      "5d9b397d-16bb-4463-8f9a-b85507704a8d",
+      "33437a5b-9c80-4961-a8c6-9a31c6458cf8",
+      "2ee1798f-bccd-4524-b8fe-645379c4d034",
+      "ef9d4839-5277-4614-bb73-f902fd8a38b6",
+      "9d2bd743-f600-4e40-86dd-ebd18cbbe311",
+      "99f83ba7-2e57-44d8-ac0a-64ab3e9c7b47",
+      "61c7a52b-6849-4e09-84e4-a5020e51c744",
+      "bf7abd62-d9cd-48d2-8826-1457684019a3",
+      "add9076b-b167-4ff6-a071-fc94902d728d",
+      "424177bf-1bab-4f7a-b11c-61e7eaa1a493",
+      "20092aeb-d39f-4b50-b927-0602b8a95c08",
+      "beb114d0-5ff6-452b-ae71-774f70b9cca5",
+      "65581c66-9e18-4e1b-979a-dcd2a873d998",
+      "ed47e72c-c67c-4c61-abfa-9aefcf4caa89",
+      "4dc8be43-d8d9-4b08-9ffd-9c19012361ce",
+      "66e5cc1b-5eea-45d7-acff-5eeef83184e1",
+      "6586d5cf-16c3-444a-b946-f8485a5c2a82",
+      "ea159bf1-8401-4540-b5a7-8fbdb5476944",
+      "5103aed0-b4e8-4fae-bf78-e2c9f4ba84cf",
+      "f2f39c26-9c31-4b39-b9c1-d5b4508736d6",
+      "5090ac49-8f00-4c8a-9f15-2fe1d8b77a67",
+      "bf683a17-9353-4784-94b3-8cf2a677b1f4",
+      "81c99a9e-786b-4ab6-94ed-e3149d697347",
+      "a44daafc-5a51-4eab-94df-2490c42a2161",
+      "edfd8e56-88a7-402a-bd78-b867bf509fa8",
+      "8b6a4479-3b77-4db7-a90c-8b1ca41a8997",
+      "b3fbeb07-4352-47db-b329-a627bc17e1e1",
+      "f7cac790-05ae-4a55-a41d-836a6b415f88",
+      "f96cce90-9703-4b6b-9ea4-1a650ac8765a",
+      "c0d6605c-50c2-42b1-94f6-c4c601559918",
+      "6ba75fbd-3fd8-4756-b583-f696a50e39a7",
+      "56d8d92f-a555-4a26-a2ec-3dc9ad9795eb",
+      "8c882f0d-684c-430e-8194-997c565a7258",
+      "a4f782f1-de3b-47a3-87af-1cb33c112b39",
+      "7639efef-c768-4631-95b5-382a0fde501d",
+      "4875e520-3ead-44f2-aefc-d1a9d087419d",
+      "078e34fa-b33a-43fe-afd3-d39b4cbd6a6b",
+      "b5ede057-3e98-4851-a1e1-1774c52cd908",
+      "e10133f7-0579-4a1d-b41c-c12210fc7559",
+      "0ae9262d-c0fd-4b56-b896-2b37f90810bc",
+      "407d43ea-c405-4b88-95ae-d15b1f25fb25",
+      "c34555c9-39a6-4505-bc7e-fcabfa3ae6cd",
+      "1e20b997-cb3b-4bc5-93e6-b45dbe945fb5",
+      "bc020812-e1de-4ac4-8820-6ed2cce998c5",
+      "73521986-bd59-404b-8eb5-c2a24e2bc8ee",
+      "d4f18464-2a67-4768-8540-1a9bf577e14d",
+      "0fab7389-c8c7-4d84-995c-c2bdf63cb07f",
+      "4f1d7142-98fe-4e6a-b8ea-3c2c451f5037",
+      "405f18a8-803b-4f68-be49-7490b74b3697",
+      "ff71e762-7a3d-4b9e-aa75-3ab148d8154c",
+      "26971fd2-ea63-4009-a394-b38d7cca0f97",
+      "f4a95f4d-5957-44e8-81b7-f0cd392c4409",
+      "d06a5ade-d848-4325-a2a5-8f5ef427d246",
+      "a0052d66-aa9c-47af-936c-07cd16f817ee",
+      "b8fee38b-98dd-4d84-9382-be27f83c736f",
+      "f4511ab0-2ad9-472a-9a26-024b64f7bbc0",
+      "e151e953-f5ab-4041-8e6f-7aec08ed5a60",
+      "5a09d607-3502-4451-9d1a-a222dfc32968",
+      "a0414f81-8dc2-44b2-a441-2c9d9c805c4d",
+      "204ecd0e-d405-4a41-8163-10f670f987b5",
+      "01de2123-400f-4411-98d9-cd3f9f1e4136",
+      "54dd0e9e-c525-4bea-8bd7-b292e9dd9be3",
+      "2067daa1-9905-456b-bcbf-42bc66b47259",
+      "78f0aebe-c955-4e78-831e-0ffa77c0f50b",
+      "6315382f-6dba-46d9-adc5-08a0ad6efb7a",
+      "f140a65f-c408-45fc-8c60-e98e13530452",
+      "c72f2f6d-3d88-406d-a482-0736ae4846b0",
+      "fb2036af-5359-4b80-975f-3604f1ad67d5",
+      "16e717d5-80b8-4888-9e21-cf255ae2a5a5",
+      "c91ad938-6ad1-4481-8f6b-43ccd2f69926",
+      "b4884040-a0bc-428a-9a1c-6346acb6dc3c",
+      "d21b8fe8-119a-4bd7-ba93-24cb28deb15c",
+      "5beff07b-d9e0-4592-b11a-47bc4bbb5e07",
+      "699b2f87-84df-49a3-a9a1-41e26eed0577",
+      "a7df73f3-a944-46e5-86c0-ae3c0223b88b",
+      "49e5b466-62c9-4cab-8d70-8e9317e7a007",
+      "0388b022-13e2-4eac-93b3-f6ded1b9fb67",
+      "68107102-0fdc-4e64-850f-8eda6bcc892a",
+      "13d32108-e758-457b-95a1-73f3bd918975",
+      "d53d179b-a28e-4c5b-8817-fb6b7f843327",
+      "7e8041b3-4b8c-4e47-8c83-af0b9a6fdb4c",
+      "643cfcef-6d2c-4df7-b538-3588e28b58e1",
+      "89e21fa8-60b1-4f4f-be8d-497733907f52",
+      "e81574d8-f9e8-48b3-85ab-a7ed36f8cbb0",
+      "54b11fb5-014a-4042-affa-fe96ea5e5eaa",
+      "8cb754f8-8411-4846-b6f8-8e2467ce08f3",
+      "8c0bb13b-4ba4-4349-a697-dd2ab11723f8",
+      "82c155de-a907-4b3f-b89f-1984bd97ddc5",
+      "85bc877a-ecc1-4d1a-9e45-6ddb6d0a4dc3"
+     ],
+     "arm": "dag",
+     "input_mode": "actual large-extraction -> medium reasoning -> exec",
+     "execution_mode": "live",
+     "evidence_source": "actual_extraction",
+     "model_version": "extraction Qwen2.5-14B-GPTQ-Int8 (large); reasoning Qwen2.5-7B (medium)",
+     "prompt_version": "eprompt v1 + sprompt v1",
+     "scorer_version": "exec_calc + 1e-4 rel",
+     "status": "reusable_for_unified_benchmark"
+    },
+    {
+     "group": "tq_new160_dag_gold_fallback",
+     "count": 9,
+     "task_ids": [
+      "56327885-98fe-40db-93f8-f762b1bf5d20",
+      "5f282807-f3fe-4efd-a4ef-b88a3d580bf9",
+      "61610e9a-13c4-4670-8616-c6218f7793ad",
+      "780bc5d9-daa1-4434-b5ae-f8187fb0f450",
+      "b2786c1a-37de-4120-b03c-32bf5c81f157",
+      "e302a7ec-94e5-4bea-bff4-5d4b9d4f6265",
+      "eb787966-fa02-401f-bfaf-ccabf3828b23",
+      "ed9e3e80-6941-4888-9e40-bbd1cb092485",
+      "fbf1fd1f-12d5-4ffc-b121-51cb10e6a9c8"
+     ],
+     "arm": "dag",
+     "input_mode": "extraction parse failed -> reasoning fed GOLD literals (evidence=gold)",
+     "execution_mode": "live",
+     "evidence_source": "gold_facts (fallback)",
+     "model_version": "extraction large; reasoning medium",
+     "prompt_version": "eprompt v1 + sprompt v1",
+     "scorer_version": "exec_calc + 1e-4 rel",
+     "status": "legacy_invalid_for_unified_benchmark",
+     "note": "recorded reasoning answers are gold-contaminated; must not be reused"
+    },
+    {
+     "group": "tq_new160_mono",
+     "count": 160,
+     "task_ids": [
+      "fa5d745e-66cd-49cf-ac91-b6916a412c7d",
+      "426e47ae-aff7-43e2-81be-0bb951b0def1",
+      "bfb033dc-19dc-41cc-9253-aa7e03b61a62",
+      "25212463-2a2c-4df5-a97a-a0dc1268ebe1",
+      "c5757bb4-a312-48ed-a244-29932669363c",
+      "27911d6f-dfe5-487b-bc56-7e5cf16a32e0",
+      "64d8c7e4-99d6-4d2e-ac39-dbee2a0dbc85",
+      "147f7c09-a627-4719-93ad-33661b5a4543",
+      "3525bcc2-5684-45a3-9a2e-4b35de25551a",
+      "ba16499f-3c96-4faa-81b0-874f9ace7c8c",
+      "21ac021b-192e-46ea-b494-dbc82ad8f53d",
+      "073c6499-cf72-47f2-8874-7dfc67f1e251",
+      "acde36c6-c718-4bfc-ae8d-0083d3dab3f0",
+      "4082086c-6f47-40b1-8ac1-757d437a502d",
+      "8b2d5db2-7a47-4269-9df2-f44385bc0883",
+      "072bf5fb-0edd-4267-bae7-b57f1c598017",
+      "a6dca142-4691-4a05-9c78-9087cdc491f6",
+      "3a467fa9-64d9-4214-9f5e-0e7a101efd57",
+      "c36e2211-e46a-43d1-a0a8-ae87af347ae8",
+      "cb4abf04-9551-46e2-8a32-46672e284167",
+      "3bc9ea91-f346-4cc1-9ca7-10c481be3ac9",
+      "9b71194f-7599-4368-a529-76b0d44359b0",
+      "8cf06f37-dccd-4b16-8f75-5359a9a55d93",
+      "56327885-98fe-40db-93f8-f762b1bf5d20",
+      "77b14f34-b206-4b50-babb-aa9ee379410a",
+      "b9c6abaf-9cf8-4bd1-a01e-c6967767d2b4",
+      "98b13aba-4ca2-4369-87eb-a960c71b8a2c",
+      "7b2b17a9-6409-45fb-907f-270832305974",
+      "73618a72-ca8a-43f4-b384-409aec6bbb75",
+      "dab0e943-fc62-4e26-95e5-025b98ff9b57",
+      "5c59c850-a720-4b1f-b703-9e1d9ff8e242",
+      "d6fd8039-e4d4-45eb-b22e-d8ddc6e068e1",
+      "0f45cc67-fd57-4930-a0d0-f5d7174d7562",
+      "79f658b0-e8e5-4b83-bdbe-4d4f96261c69",
+      "ec696158-f93d-4608-903d-a6b9c4e7bfd5",
+      "4ba37f67-0474-4e5c-8f45-da51a2873072",
+      "74183d5d-7633-43b5-bd7b-f0894fbe2299",
+      "a3ea64bc-4447-4c0b-b76c-84575a3a0de2",
+      "5f282807-f3fe-4efd-a4ef-b88a3d580bf9",
+      "33d6e35e-0c0d-4234-99ce-2df83034136e",
+      "b2786c1a-37de-4120-b03c-32bf5c81f157",
+      "6a94f765-2c5a-4486-ba06-0057636740e0",
+      "00a60f91-b2d2-4bc5-acc4-69121abf68a9",
+      "b875ba98-fe2e-43b4-bec5-57379487e755",
+      "73f75537-695c-431d-a917-18071def0090",
+      "ca7623cd-811b-4b33-8e3d-b78b0ec1f58e",
+      "7df5635a-6f79-4fd2-8dc4-a5040e04cf4c",
+      "05b670d3-5b19-438c-873f-9bf6de29c69e",
+      "5a58d6e1-8526-49cc-a56a-c4ade901790c",
+      "716a0054-4177-43f6-b320-8de375eb3642",
+      "e08bf359-5dc5-4df9-8679-5144747fdb6b",
+      "6ba4045d-4222-4da0-a126-94b267a707ec",
+      "b194279c-16e5-4a17-9733-c8babb6e8281",
+      "8ada4c33-1bde-46cf-95ec-dc7938cd7521",
+      "a81f1322-e74f-4e3c-a6cf-4b8d25d01cf5",
+      "34e0adca-febe-4862-a4db-8581df95e44b",
+      "79f51c3d-59d3-4abc-b0cd-d9e28668fbf4",
+      "894362e3-56cc-4a76-8053-36d6cbaeb6ce",
+      "eb787966-fa02-401f-bfaf-ccabf3828b23",
+      "34144864-790c-4733-8323-91347f68f5ef",
+      "14381fab-36ac-482b-9f77-2c78f3f34ffb",
+      "735a2fcf-f401-4636-8e75-43743beddad4",
+      "0550ae54-99f4-4b87-b1a7-11d402a94918",
+      "ab7a5581-88bf-48dc-99bd-e02d0fbb3fff",
+      "fa15cd27-153d-44a0-b315-1fd0e6022714",
+      "0339e2bb-4a63-4f23-aaea-b9fa3cb29737",
+      "5d9b397d-16bb-4463-8f9a-b85507704a8d",
+      "33437a5b-9c80-4961-a8c6-9a31c6458cf8",
+      "2ee1798f-bccd-4524-b8fe-645379c4d034",
+      "ef9d4839-5277-4614-bb73-f902fd8a38b6",
+      "9d2bd743-f600-4e40-86dd-ebd18cbbe311",
+      "99f83ba7-2e57-44d8-ac0a-64ab3e9c7b47",
+      "61c7a52b-6849-4e09-84e4-a5020e51c744",
+      "bf7abd62-d9cd-48d2-8826-1457684019a3",
+      "add9076b-b167-4ff6-a071-fc94902d728d",
+      "424177bf-1bab-4f7a-b11c-61e7eaa1a493",
+      "20092aeb-d39f-4b50-b927-0602b8a95c08",
+      "beb114d0-5ff6-452b-ae71-774f70b9cca5",
+      "65581c66-9e18-4e1b-979a-dcd2a873d998",
+      "ed47e72c-c67c-4c61-abfa-9aefcf4caa89",
+      "4dc8be43-d8d9-4b08-9ffd-9c19012361ce",
+      "66e5cc1b-5eea-45d7-acff-5eeef83184e1",
+      "6586d5cf-16c3-444a-b946-f8485a5c2a82",
+      "ea159bf1-8401-4540-b5a7-8fbdb5476944",
+      "5103aed0-b4e8-4fae-bf78-e2c9f4ba84cf",
+      "f2f39c26-9c31-4b39-b9c1-d5b4508736d6",
+      "5090ac49-8f00-4c8a-9f15-2fe1d8b77a67",
+      "bf683a17-9353-4784-94b3-8cf2a677b1f4",
+      "81c99a9e-786b-4ab6-94ed-e3149d697347",
+      "a44daafc-5a51-4eab-94df-2490c42a2161",
+      "edfd8e56-88a7-402a-bd78-b867bf509fa8",
+      "8b6a4479-3b77-4db7-a90c-8b1ca41a8997",
+      "e302a7ec-94e5-4bea-bff4-5d4b9d4f6265",
+      "b3fbeb07-4352-47db-b329-a627bc17e1e1",
+      "780bc5d9-daa1-4434-b5ae-f8187fb0f450",
+      "f7cac790-05ae-4a55-a41d-836a6b415f88",
+      "f96cce90-9703-4b6b-9ea4-1a650ac8765a",
+      "c0d6605c-50c2-42b1-94f6-c4c601559918",
+      "6ba75fbd-3fd8-4756-b583-f696a50e39a7",
+      "56d8d92f-a555-4a26-a2ec-3dc9ad9795eb",
+      "8c882f0d-684c-430e-8194-997c565a7258",
+      "a4f782f1-de3b-47a3-87af-1cb33c112b39",
+      "7639efef-c768-4631-95b5-382a0fde501d",
+      "4875e520-3ead-44f2-aefc-d1a9d087419d",
+      "078e34fa-b33a-43fe-afd3-d39b4cbd6a6b",
+      "b5ede057-3e98-4851-a1e1-1774c52cd908",
+      "e10133f7-0579-4a1d-b41c-c12210fc7559",
+      "0ae9262d-c0fd-4b56-b896-2b37f90810bc",
+      "407d43ea-c405-4b88-95ae-d15b1f25fb25",
+      "c34555c9-39a6-4505-bc7e-fcabfa3ae6cd",
+      "1e20b997-cb3b-4bc5-93e6-b45dbe945fb5",
+      "bc020812-e1de-4ac4-8820-6ed2cce998c5",
+      "73521986-bd59-404b-8eb5-c2a24e2bc8ee",
+      "d4f18464-2a67-4768-8540-1a9bf577e14d",
+      "0fab7389-c8c7-4d84-995c-c2bdf63cb07f",
+      "4f1d7142-98fe-4e6a-b8ea-3c2c451f5037",
+      "405f18a8-803b-4f68-be49-7490b74b3697",
+      "ff71e762-7a3d-4b9e-aa75-3ab148d8154c",
+      "26971fd2-ea63-4009-a394-b38d7cca0f97",
+      "f4a95f4d-5957-44e8-81b7-f0cd392c4409",
+      "d06a5ade-d848-4325-a2a5-8f5ef427d246",
+      "a0052d66-aa9c-47af-936c-07cd16f817ee",
+      "b8fee38b-98dd-4d84-9382-be27f83c736f",
+      "61610e9a-13c4-4670-8616-c6218f7793ad",
+      "f4511ab0-2ad9-472a-9a26-024b64f7bbc0",
+      "e151e953-f5ab-4041-8e6f-7aec08ed5a60",
+      "5a09d607-3502-4451-9d1a-a222dfc32968",
+      "ed9e3e80-6941-4888-9e40-bbd1cb092485",
+      "a0414f81-8dc2-44b2-a441-2c9d9c805c4d",
+      "204ecd0e-d405-4a41-8163-10f670f987b5",
+      "01de2123-400f-4411-98d9-cd3f9f1e4136",
+      "54dd0e9e-c525-4bea-8bd7-b292e9dd9be3",
+      "2067daa1-9905-456b-bcbf-42bc66b47259",
+      "78f0aebe-c955-4e78-831e-0ffa77c0f50b",
+      "6315382f-6dba-46d9-adc5-08a0ad6efb7a",
+      "f140a65f-c408-45fc-8c60-e98e13530452",
+      "c72f2f6d-3d88-406d-a482-0736ae4846b0",
+      "fb2036af-5359-4b80-975f-3604f1ad67d5",
+      "16e717d5-80b8-4888-9e21-cf255ae2a5a5",
+      "c91ad938-6ad1-4481-8f6b-43ccd2f69926",
+      "b4884040-a0bc-428a-9a1c-6346acb6dc3c",
+      "d21b8fe8-119a-4bd7-ba93-24cb28deb15c",
+      "5beff07b-d9e0-4592-b11a-47bc4bbb5e07",
+      "699b2f87-84df-49a3-a9a1-41e26eed0577",
+      "a7df73f3-a944-46e5-86c0-ae3c0223b88b",
+      "49e5b466-62c9-4cab-8d70-8e9317e7a007",
+      "0388b022-13e2-4eac-93b3-f6ded1b9fb67",
+      "68107102-0fdc-4e64-850f-8eda6bcc892a",
+      "13d32108-e758-457b-95a1-73f3bd918975",
+      "d53d179b-a28e-4c5b-8817-fb6b7f843327",
+      "7e8041b3-4b8c-4e47-8c83-af0b9a6fdb4c",
+      "643cfcef-6d2c-4df7-b538-3588e28b58e1",
+      "fbf1fd1f-12d5-4ffc-b121-51cb10e6a9c8",
+      "89e21fa8-60b1-4f4f-be8d-497733907f52",
+      "e81574d8-f9e8-48b3-85ab-a7ed36f8cbb0",
+      "54b11fb5-014a-4042-affa-fe96ea5e5eaa",
+      "8cb754f8-8411-4846-b6f8-8e2467ce08f3",
+      "8c0bb13b-4ba4-4349-a697-dd2ab11723f8",
+      "82c155de-a907-4b3f-b89f-1984bd97ddc5",
+      "85bc877a-ecc1-4d1a-9e45-6ddb6d0a4dc3"
+     ],
+     "arm": "monolithic",
+     "input_mode": "question + full context (raw, no gold)",
+     "execution_mode": "live",
+     "evidence_source": "raw_context",
+     "model_version": "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8 (large)",
+     "prompt_version": "MONO v1",
+     "scorer_version": "extract_value + 1e-4 rel",
+     "status": "reusable_for_paired_benchmark"
+    }
+   ],
+   "conclusion": "mono missing for the old 40; old-40 DAG is gold-fed reasoning (40/40); 9/160 new tasks had gold fallback on extraction parse failure. Legacy paper number -9.38pp mixes gold-fed and actual DAG arms with 160 mono."
+  }
+ },
+ "unified_frozen_protocol": {
+  "definition": "same task + same model version + same scorer + same information condition; only Monolithic/DAG differs",
+  "monolithic_arm": {
+   "model": "large",
+   "prompt": "MONO v1",
+   "input": "question + raw context (ctx[:14000])",
+   "scoring": "extract_value + tolerance 1e-4 rel"
+  },
+  "dag_arm": {
+   "extraction": {
+    "model": "large",
+    "prompt": "eprompt v1",
+    "input": "question + raw context"
+   },
+   "reasoning": {
+    "model": "medium",
+    "prompt": "sprompt v1",
+    "input": "facts parsed from the large-extraction output; NEVER gold"
+   },
+   "execution": "exec_calc over v0..v_{n-1} with the same facts; tolerance 1e-4 rel"
+  },
+  "extraction_parse_failure_policy": "deterministic DAG failure; NO gold fallback, NO retry (default)",
+  "generation": {
+   "temperature": 0,
+   "top_p": 1,
+   "max_tokens": 512
+  },
+  "answer_normalization": "regex Answer: <number> for mono; JSON expression for DAG reasoning",
+  "no_gold_anywhere": true
+ },
+ "rerun_plan": {
+  "policy": "reuse protocol-identical legacy artifacts; re-run only contaminated/missing cells; no retries; no gold",
+  "MultiHiertt": {
+   "mono": {
+    "decision": "reuse",
+    "n": 100,
+    "note": "batch1 (live session) + batch2 (scale_up session); identical prompt/model/checkpoint; optional uniform re-run (100 calls) if single-session latency accounting is required"
+   },
+   "dag_extraction": {
+    "decision": "reuse",
+    "n": 100,
+    "source": "fresh_static_confirmation/large_RESPONSES.jsonl (eprompt v1, large, temp0, pinned checkpoint)"
+   },
+   "dag_reasoning_rerun": {
+    "n": 87,
+    "task_ids": [
+     "cf32d60d2c3043a194565b3fabf0dcfb",
+     "8d44611c9b9b45968b9fc6a76d6a3292",
+     "801652a1045646eab273881fe0c095a2",
+     "12efc4e07eee44f39b3473e03e003345",
+     "a97d21ab1fd644f7a67b7185033796ef",
+     "003594db953a4f919c2f5b6f46bbb79f",
+     "72a7bf44b6f44db8b6b9f0b79b5ad35a",
+     "1b1082b3fa2f403386d208a368b795b6",
+     "88dcfa9b58434e8a85ba506dee891ede",
+     "4046601ddf674a1c9f4507df6d2a972b",
+     "6f2c908fe17b498896ea24cbcaac2ae5",
+     "f2bd5fbbfbf34ae183e7c8dd77a0eb7a",
+     "bbecd35899de4fb1be46b56339f5d7bd",
+     "2da3c4e6c38b435195a2a29358b0cf6e",
+     "690bdcf798174e15ba82b3fe659d8e7d",
+     "26e97e280be042789822ae8aa08138c9",
+     "724543c809fb4a2d895eb7c3f26bbff9",
+     "a4fd9d53f55e43088cb18015c71306cb",
+     "cfbbc9aeca2945699682b332f7c83a39",
+     "529a5d0cbb8d4927b068abf48292efd7",
+     "f5643975b4b046c186b072475c57789d",
+     "a9a0a554c74c41719d28b9f7c32dc3ea",
+     "4b5bf5901b434fd0b7052031baca8321",
+     "f96addc1b690408ca08a141255ae41f2",
+     "b9c03f1c9f8b45eb9e6744a4b5898b9d",
+     "e47d314bc9ab4b46925a0453a4646126",
+     "53da07e016c44a19b77b0a1de4f86f15",
+     "d465215f787a462288c27fb70b38531a",
+     "a74dc414c1ae4277a57dece221887f85",
+     "c07a6dbeca2a49f6ae4e9e2ed0779e84",
+     "d4e229649c694de6bc9781e521a80222",
+     "ebfa86ab15644fe5b08113acf88e610e",
+     "c57204c3adcf41a8b71bf1eaa4c09fe7",
+     "0ba40b26cf6540d3ba1dca96dc0ac505",
+     "03b5c06fd4f14cafb011bf63a4c8e76d",
+     "aaed30b0b1804368bcdd70946af3cfbb",
+     "6238092fd52c4f2b89c2db456411250f",
+     "7208d20492b64eca810c8e484c5a8e38",
+     "a61db122fd7543fdaaa9be8e88ee9b3c",
+     "2fb5cc849c974b89b73165556e5f65a4",
+     "2ea9b87945064067a523b7d232dd9809",
+     "8bfc649acf804325bad0dc581fd0c68a",
+     "ffea35f80442476c999e70b68fd0cb29",
+     "3eba2d84c84940aa95c389a7b1f2a258",
+     "95b3fec2a5484d308748cfd19fe4c811",
+     "6560606bef4546cd866a92bfd8d324c0",
+     "cba81efcf72f47dcbf60723369432e6d",
+     "fc5ab41086fa44119f154e41b5fe2c78",
+     "1e0a2cdac9864dd0b8e047ba4a620e7b",
+     "c8ff1009d181467c8dc74893b0171cd8",
+     "55312249eb80450b825b1f4c1e1c0730",
+     "cd6d5558cbd945d3886fa7f2369d5f4d",
+     "e0051170f6cf416caa1f79813133d254",
+     "9ee8f64237304489bc9febc528aa66b4",
+     "034a14018f1d4f24a5ce3afa1e46db1f",
+     "a0679de6c7874787a4e11ecfb4d46044",
+     "6ba4b3469aac4cbead67500d0cc0bf85",
+     "4ee73cb8c31142fd94df8538f82715e4",
+     "69df1d1692d6445797af6d0553eca13e",
+     "42e6eddf0cf1456cb8632c10ccd14f53",
+     "15107ae4a3654f5b975b0b45ed6dda57",
+     "da29eda4c32642b398be37df9246743d",
+     "04de16eacf7642aaa0846562dce24f14",
+     "bcc200d52107421a94c789c1ac36e7bf",
+     "a4a2b05eff294464ba8fc0a295d8ca5b",
+     "ee5a45ba002d47788a17bdbf0455d4b5",
+     "0f75a4bdc79c4e53959ca011eb0ce9a4",
+     "90f0058bfd70471a8ba289e8c21450e7",
+     "c77ab5e2a6ba46b9837d71f48025d69d",
+     "cbca62b51f04464ebf1de67774241eca",
+     "302dbb6249554077a8a722f97dd8cbd9",
+     "e677bdc27bed42b4993c6b97e2117863",
+     "1f7ef06d66d94c12938daba2966a9569",
+     "3eff99b7876045bab0672a4d0947e8c5",
+     "fb0d28948be942cfadb696223b02cb8a",
+     "ea2a61fbf02b44b897d6018cdffd65dd",
+     "5cc5b5081af049d5bd445f289450f647",
+     "6e162c4fc79c4ae594b4b463d20a3b62",
+     "599300005b5e4b99b4fdff1e8927cd11",
+     "6b09e2fdac634e43a7e0f8b46409092a",
+     "d60815331f0a4aaba1b766c053f55412",
+     "f616e253d416406eb6db6a81a2109754",
+     "f53bf6b574d841e69bf86f7d5179b1ac",
+     "c9257ff836a846ea90fbec84b35de444",
+     "f994cf0576954754a8c8bf369b9df272",
+     "a92d0f9216e14d36b56d04196a4817aa",
+     "00b072a8cbfa41b09294a9cb10a1eb7f"
+    ],
+    "note": "medium, sprompt fed parsed large-extraction facts"
+   },
+   "dag_deterministic_fail": {
+    "n": 13,
+    "task_ids": [
+     "0172b91f808c430890391df3bd98fb89",
+     "1c6635d8e10b4383ab6ab5ea0d8c0e6d",
+     "3d92bf014d99423496331bf2d8bda75d",
+     "52c7608506e44cb8a06026b4c14970b1",
+     "702fb63d1ac649c7b1fef4ceedfcdbf2",
+     "a865a6f8969447cf81658dc9f22ac28c",
+     "c12f0faad1c0455bbb9f80aa5b625e46",
+     "cb829d3409f940d3854da6af23a6fb06",
+     "cda651e30a3c4a589ac2835f42a6914f",
+     "cf6a8029d4474577b0b91b1f4c120683",
+     "cf711c6fa3ba4cae84efe9af396341b1",
+     "e6e1880ed51f4d1a98e0f2982ab39789",
+     "f45dcbba5fd640bdb11123620fba9e0a"
+    ],
+    "note": "large-extraction unparseable -> DAG arm fails with zero calls"
+   }
+  },
+  "TAT-QA": {
+   "mono_rerun": {
+    "n": 40,
+    "task_ids": [
+     "d5072c93-36bb-432c-adc8-6334fd6fe7ac",
+     "634122ee-5fb5-4e38-a552-5673e23987cf",
+     "2e3d4fe2-96f3-4ad9-b23f-1c590897b6e5",
+     "71384b98-32c8-46e6-a820-9551c8c10e2d",
+     "efb9abeb-ad8a-4558-9695-6d1054957e1b",
+     "4a253bf4-b9fc-4ec3-b99b-d2744646a296",
+     "6c44a1a8-0785-43a0-90ab-7e21df2c57d9",
+     "a8ab5675-0560-4cd0-a294-76fd54b04ad6",
+     "79bc72ac-ecad-4b9e-92a9-df7ab98cdd7b",
+     "f8073b0e-9327-40f7-9646-dd96da92ea3a",
+     "9332c840-68f6-43e1-a06c-902dae3fef81",
+     "11708d2a-0e19-4feb-b687-fe2785da2b95",
+     "37c1f8e3-ea65-4d95-95bc-91356c8e6ffc",
+     "0a12160d-f72a-44ec-9c31-5815d81268a0",
+     "14501a2e-1369-44f4-aa58-c5eb42c8d68b",
+     "a6bc87a3-0335-4914-bdc1-69fc6b941b69",
+     "ceb35697-abdc-4acf-a54f-5b6716749d2b",
+     "87cdfd06-a9ef-48e8-a44e-9addd92a0d0c",
+     "973464b5-a5fe-4381-9bc5-e225f5ba9a2c",
+     "12756239-28b8-482e-bfc8-c3dd6b2f2954",
+     "f9898b19-f84e-4cd8-9cd2-330767f39a38",
+     "35d602ae-9131-4291-a30c-49a40f32bbe4",
+     "e4deb430-6bd6-4505-a2cc-facbd0d502bf",
+     "9e632ed1-1a2b-40a9-9a9a-72515db3585d",
+     "9406b211-17a1-4a97-a646-a57170b7e270",
+     "765f1e20-9c75-4611-99ef-68a193d7e101",
+     "219f3e23-c2b0-4607-9573-6af0eea1fb33",
+     "78d004fb-a7b1-4ad5-8870-a7e0462e999e",
+     "74f778d2-8a07-4b39-92d9-4a3c36af6f50",
+     "2b77bd1e-17ee-4f74-9fb7-7cc4ad5142dd",
+     "eb1ecc18-e3d3-4dd6-a689-546998eb2784",
+     "cd3367c7-d3bd-440c-8c51-90a6ee95cc77",
+     "3b8e873e-64d5-4af0-904f-7197dc632773",
+     "aef42c33-65c0-40a3-92e7-fefd107aacdb",
+     "24f8613a-5516-4f0e-9839-8f6e31480785",
+     "0b7463b3-ed9e-47a0-b838-b26e0ab886eb",
+     "311dc93c-93b4-49a5-ba50-5d97cc16e4fa",
+     "9fce8f25-dd3b-4c50-9b7b-d200ced15ded",
+     "3b5bb347-41c7-499a-b044-87b9a04b0833",
+     "65026273-5d78-4e7a-b846-828ecbc809ec"
+    ],
+    "note": "old-40 mono missing, large"
+   },
+   "mono_reuse": {
+    "n": 160,
+    "note": "scale_up/RESPONSES.jsonl tq:*:mono"
+   },
+   "dag_extraction": {
+    "decision": "reuse",
+    "n": 200,
+    "source": "tatqa_benchmark/large_RESPONSES.jsonl (40) + scale_up/RESPONSES.jsonl tq:*:ext (160)"
+   },
+   "dag_reasoning_rerun": {
+    "n": 38,
+    "task_ids": [
+     "d5072c93-36bb-432c-adc8-6334fd6fe7ac",
+     "634122ee-5fb5-4e38-a552-5673e23987cf",
+     "2e3d4fe2-96f3-4ad9-b23f-1c590897b6e5",
+     "71384b98-32c8-46e6-a820-9551c8c10e2d",
+     "efb9abeb-ad8a-4558-9695-6d1054957e1b",
+     "4a253bf4-b9fc-4ec3-b99b-d2744646a296",
+     "6c44a1a8-0785-43a0-90ab-7e21df2c57d9",
+     "a8ab5675-0560-4cd0-a294-76fd54b04ad6",
+     "79bc72ac-ecad-4b9e-92a9-df7ab98cdd7b",
+     "f8073b0e-9327-40f7-9646-dd96da92ea3a",
+     "9332c840-68f6-43e1-a06c-902dae3fef81",
+     "11708d2a-0e19-4feb-b687-fe2785da2b95",
+     "37c1f8e3-ea65-4d95-95bc-91356c8e6ffc",
+     "0a12160d-f72a-44ec-9c31-5815d81268a0",
+     "a6bc87a3-0335-4914-bdc1-69fc6b941b69",
+     "ceb35697-abdc-4acf-a54f-5b6716749d2b",
+     "87cdfd06-a9ef-48e8-a44e-9addd92a0d0c",
+     "973464b5-a5fe-4381-9bc5-e225f5ba9a2c",
+     "12756239-28b8-482e-bfc8-c3dd6b2f2954",
+     "f9898b19-f84e-4cd8-9cd2-330767f39a38",
+     "e4deb430-6bd6-4505-a2cc-facbd0d502bf",
+     "9e632ed1-1a2b-40a9-9a9a-72515db3585d",
+     "9406b211-17a1-4a97-a646-a57170b7e270",
+     "765f1e20-9c75-4611-99ef-68a193d7e101",
+     "219f3e23-c2b0-4607-9573-6af0eea1fb33",
+     "78d004fb-a7b1-4ad5-8870-a7e0462e999e",
+     "74f778d2-8a07-4b39-92d9-4a3c36af6f50",
+     "2b77bd1e-17ee-4f74-9fb7-7cc4ad5142dd",
+     "eb1ecc18-e3d3-4dd6-a689-546998eb2784",
+     "cd3367c7-d3bd-440c-8c51-90a6ee95cc77",
+     "3b8e873e-64d5-4af0-904f-7197dc632773",
+     "aef42c33-65c0-40a3-92e7-fefd107aacdb",
+     "24f8613a-5516-4f0e-9839-8f6e31480785",
+     "0b7463b3-ed9e-47a0-b838-b26e0ab886eb",
+     "311dc93c-93b4-49a5-ba50-5d97cc16e4fa",
+     "9fce8f25-dd3b-4c50-9b7b-d200ced15ded",
+     "3b5bb347-41c7-499a-b044-87b9a04b0833",
+     "65026273-5d78-4e7a-b846-828ecbc809ec"
+    ],
+    "note": "old-40 reasoning re-run with actual large-extraction facts, medium"
+   },
+   "dag_reasoning_reuse": {
+    "n": 151,
+    "note": "new-160 rsn rows fed actual parsed facts; reuse"
+   },
+   "dag_deterministic_fail": {
+    "n": 11,
+    "task_ids": [
+     "14501a2e-1369-44f4-aa58-c5eb42c8d68b",
+     "35d602ae-9131-4291-a30c-49a40f32bbe4",
+     "56327885-98fe-40db-93f8-f762b1bf5d20",
+     "5f282807-f3fe-4efd-a4ef-b88a3d580bf9",
+     "61610e9a-13c4-4670-8616-c6218f7793ad",
+     "780bc5d9-daa1-4434-b5ae-f8187fb0f450",
+     "b2786c1a-37de-4120-b03c-32bf5c81f157",
+     "e302a7ec-94e5-4bea-bff4-5d4b9d4f6265",
+     "eb787966-fa02-401f-bfaf-ccabf3828b23",
+     "ed9e3e80-6941-4888-9e40-bbd1cb092485",
+     "fbf1fd1f-12d5-4ffc-b121-51cb10e6a9c8"
+    ],
+    "note": "unparseable extraction -> DAG arm fails with zero calls; existing gold-contaminated answers discarded"
+   }
+  },
+  "total_new_model_calls": 165,
+  "total_new_calls_breakdown": {
+   "mh_reasoning_medium": 87,
+   "tq_mono_large": 40,
+   "tq_reasoning_medium": 38
+  },
+  "paired_n": {
+   "MultiHiertt": 100,
+   "TAT_QA": 200,
+   "overall": 300
+  },
+  "analysis": {
+   "paired_delta": "Delta_i = I(DAG_i correct) - I(Mono_i correct); mean + paired bootstrap 95% CI (10k resamples, seed 20260916)",
+   "mcnemar": "exact McNemar on b (mono ok, dag fail) / c (mono fail, dag ok)",
+   "complexity_stratification": "n_ops from TAT-QA derivation / MH program; buckets 1-2, 3, 4+",
+   "cost_metrics": "tokens per arm (reported from legacy rows for reused cells, new rows for reruns) and per-call latency_s; single-session recommendation for any new calls"
+  }
+ },
+ "complexity_stratification_plan": {
+  "rule": "count arithmetic ops: TAT-QA derivation binary operators; MultiHiertt program function calls (add/sub/mul/div)",
+  "MultiHiertt": {
+   "1-2": 86,
+   "3": 9,
+   "4+": 5
+  },
+  "TAT-QA": {
+   "1-2": 177,
+   "3": 19,
+   "4+": 4
+  },
+  "per_task": {
+   "cf32d60d2c3043a194565b3fabf0dcfb": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "8d44611c9b9b45968b9fc6a76d6a3292": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "801652a1045646eab273881fe0c095a2": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "12efc4e07eee44f39b3473e03e003345": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a97d21ab1fd644f7a67b7185033796ef": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "003594db953a4f919c2f5b6f46bbb79f": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "72a7bf44b6f44db8b6b9f0b79b5ad35a": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "1b1082b3fa2f403386d208a368b795b6": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "88dcfa9b58434e8a85ba506dee891ede": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "52c7608506e44cb8a06026b4c14970b1": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "4046601ddf674a1c9f4507df6d2a972b": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "6f2c908fe17b498896ea24cbcaac2ae5": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "f2bd5fbbfbf34ae183e7c8dd77a0eb7a": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "bbecd35899de4fb1be46b56339f5d7bd": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "1c6635d8e10b4383ab6ab5ea0d8c0e6d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 7,
+    "bucket": "4+"
+   },
+   "2da3c4e6c38b435195a2a29358b0cf6e": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "690bdcf798174e15ba82b3fe659d8e7d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "26e97e280be042789822ae8aa08138c9": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "724543c809fb4a2d895eb7c3f26bbff9": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "a4fd9d53f55e43088cb18015c71306cb": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "cfbbc9aeca2945699682b332f7c83a39": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "529a5d0cbb8d4927b068abf48292efd7": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "f5643975b4b046c186b072475c57789d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a9a0a554c74c41719d28b9f7c32dc3ea": {
+    "dataset": "MultiHiertt",
+    "n_ops": 5,
+    "bucket": "4+"
+   },
+   "4b5bf5901b434fd0b7052031baca8321": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "f96addc1b690408ca08a141255ae41f2": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "b9c03f1c9f8b45eb9e6744a4b5898b9d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "e47d314bc9ab4b46925a0453a4646126": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "53da07e016c44a19b77b0a1de4f86f15": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "d465215f787a462288c27fb70b38531a": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "0172b91f808c430890391df3bd98fb89": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "a74dc414c1ae4277a57dece221887f85": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "c07a6dbeca2a49f6ae4e9e2ed0779e84": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "d4e229649c694de6bc9781e521a80222": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "ebfa86ab15644fe5b08113acf88e610e": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "c57204c3adcf41a8b71bf1eaa4c09fe7": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "0ba40b26cf6540d3ba1dca96dc0ac505": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "03b5c06fd4f14cafb011bf63a4c8e76d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "e6e1880ed51f4d1a98e0f2982ab39789": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "aaed30b0b1804368bcdd70946af3cfbb": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "6238092fd52c4f2b89c2db456411250f": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "7208d20492b64eca810c8e484c5a8e38": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "a61db122fd7543fdaaa9be8e88ee9b3c": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "2fb5cc849c974b89b73165556e5f65a4": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "2ea9b87945064067a523b7d232dd9809": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "8bfc649acf804325bad0dc581fd0c68a": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "ffea35f80442476c999e70b68fd0cb29": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "3eba2d84c84940aa95c389a7b1f2a258": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "95b3fec2a5484d308748cfd19fe4c811": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "6560606bef4546cd866a92bfd8d324c0": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "cf6a8029d4474577b0b91b1f4c120683": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "cba81efcf72f47dcbf60723369432e6d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "fc5ab41086fa44119f154e41b5fe2c78": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "1e0a2cdac9864dd0b8e047ba4a620e7b": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "c8ff1009d181467c8dc74893b0171cd8": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "55312249eb80450b825b1f4c1e1c0730": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "cd6d5558cbd945d3886fa7f2369d5f4d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "e0051170f6cf416caa1f79813133d254": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "9ee8f64237304489bc9febc528aa66b4": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "034a14018f1d4f24a5ce3afa1e46db1f": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "cb829d3409f940d3854da6af23a6fb06": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "3d92bf014d99423496331bf2d8bda75d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a0679de6c7874787a4e11ecfb4d46044": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "6ba4b3469aac4cbead67500d0cc0bf85": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "4ee73cb8c31142fd94df8538f82715e4": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "69df1d1692d6445797af6d0553eca13e": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "42e6eddf0cf1456cb8632c10ccd14f53": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "15107ae4a3654f5b975b0b45ed6dda57": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "da29eda4c32642b398be37df9246743d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "04de16eacf7642aaa0846562dce24f14": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "bcc200d52107421a94c789c1ac36e7bf": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "a4a2b05eff294464ba8fc0a295d8ca5b": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "cf711c6fa3ba4cae84efe9af396341b1": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "ee5a45ba002d47788a17bdbf0455d4b5": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "702fb63d1ac649c7b1fef4ceedfcdbf2": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "0f75a4bdc79c4e53959ca011eb0ce9a4": {
+    "dataset": "MultiHiertt",
+    "n_ops": 9,
+    "bucket": "4+"
+   },
+   "90f0058bfd70471a8ba289e8c21450e7": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "c77ab5e2a6ba46b9837d71f48025d69d": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "cbca62b51f04464ebf1de67774241eca": {
+    "dataset": "MultiHiertt",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "cda651e30a3c4a589ac2835f42a6914f": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "302dbb6249554077a8a722f97dd8cbd9": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "a865a6f8969447cf81658dc9f22ac28c": {
+    "dataset": "MultiHiertt",
+    "n_ops": 4,
+    "bucket": "4+"
+   },
+   "e677bdc27bed42b4993c6b97e2117863": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "1f7ef06d66d94c12938daba2966a9569": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "3eff99b7876045bab0672a4d0947e8c5": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "fb0d28948be942cfadb696223b02cb8a": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "ea2a61fbf02b44b897d6018cdffd65dd": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "c12f0faad1c0455bbb9f80aa5b625e46": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "5cc5b5081af049d5bd445f289450f647": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "6e162c4fc79c4ae594b4b463d20a3b62": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "599300005b5e4b99b4fdff1e8927cd11": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "f45dcbba5fd640bdb11123620fba9e0a": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "6b09e2fdac634e43a7e0f8b46409092a": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "d60815331f0a4aaba1b766c053f55412": {
+    "dataset": "MultiHiertt",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "f616e253d416406eb6db6a81a2109754": {
+    "dataset": "MultiHiertt",
+    "n_ops": 4,
+    "bucket": "4+"
+   },
+   "f53bf6b574d841e69bf86f7d5179b1ac": {
+    "dataset": "MultiHiertt",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "c9257ff836a846ea90fbec84b35de444": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "f994cf0576954754a8c8bf369b9df272": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "a92d0f9216e14d36b56d04196a4817aa": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "00b072a8cbfa41b09294a9cb10a1eb7f": {
+    "dataset": "MultiHiertt",
+    "n_ops": 0,
+    "bucket": "1-2"
+   },
+   "d5072c93-36bb-432c-adc8-6334fd6fe7ac": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "634122ee-5fb5-4e38-a552-5673e23987cf": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "2e3d4fe2-96f3-4ad9-b23f-1c590897b6e5": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "71384b98-32c8-46e6-a820-9551c8c10e2d": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "efb9abeb-ad8a-4558-9695-6d1054957e1b": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "4a253bf4-b9fc-4ec3-b99b-d2744646a296": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "6c44a1a8-0785-43a0-90ab-7e21df2c57d9": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a8ab5675-0560-4cd0-a294-76fd54b04ad6": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "79bc72ac-ecad-4b9e-92a9-df7ab98cdd7b": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "f8073b0e-9327-40f7-9646-dd96da92ea3a": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "9332c840-68f6-43e1-a06c-902dae3fef81": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "11708d2a-0e19-4feb-b687-fe2785da2b95": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "37c1f8e3-ea65-4d95-95bc-91356c8e6ffc": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "0a12160d-f72a-44ec-9c31-5815d81268a0": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "14501a2e-1369-44f4-aa58-c5eb42c8d68b": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a6bc87a3-0335-4914-bdc1-69fc6b941b69": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "ceb35697-abdc-4acf-a54f-5b6716749d2b": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "87cdfd06-a9ef-48e8-a44e-9addd92a0d0c": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "973464b5-a5fe-4381-9bc5-e225f5ba9a2c": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "12756239-28b8-482e-bfc8-c3dd6b2f2954": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "f9898b19-f84e-4cd8-9cd2-330767f39a38": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "35d602ae-9131-4291-a30c-49a40f32bbe4": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "e4deb430-6bd6-4505-a2cc-facbd0d502bf": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "9e632ed1-1a2b-40a9-9a9a-72515db3585d": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "9406b211-17a1-4a97-a646-a57170b7e270": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "765f1e20-9c75-4611-99ef-68a193d7e101": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "219f3e23-c2b0-4607-9573-6af0eea1fb33": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "78d004fb-a7b1-4ad5-8870-a7e0462e999e": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "74f778d2-8a07-4b39-92d9-4a3c36af6f50": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "2b77bd1e-17ee-4f74-9fb7-7cc4ad5142dd": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "eb1ecc18-e3d3-4dd6-a689-546998eb2784": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "cd3367c7-d3bd-440c-8c51-90a6ee95cc77": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "3b8e873e-64d5-4af0-904f-7197dc632773": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "aef42c33-65c0-40a3-92e7-fefd107aacdb": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "24f8613a-5516-4f0e-9839-8f6e31480785": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "0b7463b3-ed9e-47a0-b838-b26e0ab886eb": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "311dc93c-93b4-49a5-ba50-5d97cc16e4fa": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "9fce8f25-dd3b-4c50-9b7b-d200ced15ded": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "3b5bb347-41c7-499a-b044-87b9a04b0833": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "65026273-5d78-4e7a-b846-828ecbc809ec": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "fa5d745e-66cd-49cf-ac91-b6916a412c7d": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "426e47ae-aff7-43e2-81be-0bb951b0def1": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "bfb033dc-19dc-41cc-9253-aa7e03b61a62": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "25212463-2a2c-4df5-a97a-a0dc1268ebe1": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "c5757bb4-a312-48ed-a244-29932669363c": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "27911d6f-dfe5-487b-bc56-7e5cf16a32e0": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "64d8c7e4-99d6-4d2e-ac39-dbee2a0dbc85": {
+    "dataset": "TAT-QA",
+    "n_ops": 4,
+    "bucket": "4+"
+   },
+   "147f7c09-a627-4719-93ad-33661b5a4543": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "3525bcc2-5684-45a3-9a2e-4b35de25551a": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "ba16499f-3c96-4faa-81b0-874f9ace7c8c": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "21ac021b-192e-46ea-b494-dbc82ad8f53d": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "073c6499-cf72-47f2-8874-7dfc67f1e251": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "acde36c6-c718-4bfc-ae8d-0083d3dab3f0": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "4082086c-6f47-40b1-8ac1-757d437a502d": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "8b2d5db2-7a47-4269-9df2-f44385bc0883": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "072bf5fb-0edd-4267-bae7-b57f1c598017": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "a6dca142-4691-4a05-9c78-9087cdc491f6": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "3a467fa9-64d9-4214-9f5e-0e7a101efd57": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "c36e2211-e46a-43d1-a0a8-ae87af347ae8": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "cb4abf04-9551-46e2-8a32-46672e284167": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "3bc9ea91-f346-4cc1-9ca7-10c481be3ac9": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "9b71194f-7599-4368-a529-76b0d44359b0": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "8cf06f37-dccd-4b16-8f75-5359a9a55d93": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "56327885-98fe-40db-93f8-f762b1bf5d20": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "77b14f34-b206-4b50-babb-aa9ee379410a": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "b9c6abaf-9cf8-4bd1-a01e-c6967767d2b4": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "98b13aba-4ca2-4369-87eb-a960c71b8a2c": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "7b2b17a9-6409-45fb-907f-270832305974": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "73618a72-ca8a-43f4-b384-409aec6bbb75": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "dab0e943-fc62-4e26-95e5-025b98ff9b57": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "5c59c850-a720-4b1f-b703-9e1d9ff8e242": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "d6fd8039-e4d4-45eb-b22e-d8ddc6e068e1": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "0f45cc67-fd57-4930-a0d0-f5d7174d7562": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "79f658b0-e8e5-4b83-bdbe-4d4f96261c69": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "ec696158-f93d-4608-903d-a6b9c4e7bfd5": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "4ba37f67-0474-4e5c-8f45-da51a2873072": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "74183d5d-7633-43b5-bd7b-f0894fbe2299": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a3ea64bc-4447-4c0b-b76c-84575a3a0de2": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "5f282807-f3fe-4efd-a4ef-b88a3d580bf9": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "33d6e35e-0c0d-4234-99ce-2df83034136e": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "b2786c1a-37de-4120-b03c-32bf5c81f157": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "6a94f765-2c5a-4486-ba06-0057636740e0": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "00a60f91-b2d2-4bc5-acc4-69121abf68a9": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "b875ba98-fe2e-43b4-bec5-57379487e755": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "73f75537-695c-431d-a917-18071def0090": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "ca7623cd-811b-4b33-8e3d-b78b0ec1f58e": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "7df5635a-6f79-4fd2-8dc4-a5040e04cf4c": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "05b670d3-5b19-438c-873f-9bf6de29c69e": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "5a58d6e1-8526-49cc-a56a-c4ade901790c": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "716a0054-4177-43f6-b320-8de375eb3642": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "e08bf359-5dc5-4df9-8679-5144747fdb6b": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "6ba4045d-4222-4da0-a126-94b267a707ec": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "b194279c-16e5-4a17-9733-c8babb6e8281": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "8ada4c33-1bde-46cf-95ec-dc7938cd7521": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a81f1322-e74f-4e3c-a6cf-4b8d25d01cf5": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "34e0adca-febe-4862-a4db-8581df95e44b": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "79f51c3d-59d3-4abc-b0cd-d9e28668fbf4": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "894362e3-56cc-4a76-8053-36d6cbaeb6ce": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "eb787966-fa02-401f-bfaf-ccabf3828b23": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "34144864-790c-4733-8323-91347f68f5ef": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "14381fab-36ac-482b-9f77-2c78f3f34ffb": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "735a2fcf-f401-4636-8e75-43743beddad4": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "0550ae54-99f4-4b87-b1a7-11d402a94918": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "ab7a5581-88bf-48dc-99bd-e02d0fbb3fff": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "fa15cd27-153d-44a0-b315-1fd0e6022714": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "0339e2bb-4a63-4f23-aaea-b9fa3cb29737": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "5d9b397d-16bb-4463-8f9a-b85507704a8d": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "33437a5b-9c80-4961-a8c6-9a31c6458cf8": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "2ee1798f-bccd-4524-b8fe-645379c4d034": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "ef9d4839-5277-4614-bb73-f902fd8a38b6": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "9d2bd743-f600-4e40-86dd-ebd18cbbe311": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "99f83ba7-2e57-44d8-ac0a-64ab3e9c7b47": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "61c7a52b-6849-4e09-84e4-a5020e51c744": {
+    "dataset": "TAT-QA",
+    "n_ops": 5,
+    "bucket": "4+"
+   },
+   "bf7abd62-d9cd-48d2-8826-1457684019a3": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "add9076b-b167-4ff6-a071-fc94902d728d": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "424177bf-1bab-4f7a-b11c-61e7eaa1a493": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "20092aeb-d39f-4b50-b927-0602b8a95c08": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "beb114d0-5ff6-452b-ae71-774f70b9cca5": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "65581c66-9e18-4e1b-979a-dcd2a873d998": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "ed47e72c-c67c-4c61-abfa-9aefcf4caa89": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "4dc8be43-d8d9-4b08-9ffd-9c19012361ce": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "66e5cc1b-5eea-45d7-acff-5eeef83184e1": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "6586d5cf-16c3-444a-b946-f8485a5c2a82": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "ea159bf1-8401-4540-b5a7-8fbdb5476944": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "5103aed0-b4e8-4fae-bf78-e2c9f4ba84cf": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "f2f39c26-9c31-4b39-b9c1-d5b4508736d6": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "5090ac49-8f00-4c8a-9f15-2fe1d8b77a67": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "bf683a17-9353-4784-94b3-8cf2a677b1f4": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "81c99a9e-786b-4ab6-94ed-e3149d697347": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "a44daafc-5a51-4eab-94df-2490c42a2161": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "edfd8e56-88a7-402a-bd78-b867bf509fa8": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "8b6a4479-3b77-4db7-a90c-8b1ca41a8997": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "e302a7ec-94e5-4bea-bff4-5d4b9d4f6265": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "b3fbeb07-4352-47db-b329-a627bc17e1e1": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "780bc5d9-daa1-4434-b5ae-f8187fb0f450": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "f7cac790-05ae-4a55-a41d-836a6b415f88": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "f96cce90-9703-4b6b-9ea4-1a650ac8765a": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "c0d6605c-50c2-42b1-94f6-c4c601559918": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "6ba75fbd-3fd8-4756-b583-f696a50e39a7": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "56d8d92f-a555-4a26-a2ec-3dc9ad9795eb": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "8c882f0d-684c-430e-8194-997c565a7258": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "a4f782f1-de3b-47a3-87af-1cb33c112b39": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "7639efef-c768-4631-95b5-382a0fde501d": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "4875e520-3ead-44f2-aefc-d1a9d087419d": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "078e34fa-b33a-43fe-afd3-d39b4cbd6a6b": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "b5ede057-3e98-4851-a1e1-1774c52cd908": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "e10133f7-0579-4a1d-b41c-c12210fc7559": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "0ae9262d-c0fd-4b56-b896-2b37f90810bc": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "407d43ea-c405-4b88-95ae-d15b1f25fb25": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "c34555c9-39a6-4505-bc7e-fcabfa3ae6cd": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "1e20b997-cb3b-4bc5-93e6-b45dbe945fb5": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "bc020812-e1de-4ac4-8820-6ed2cce998c5": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "73521986-bd59-404b-8eb5-c2a24e2bc8ee": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "d4f18464-2a67-4768-8540-1a9bf577e14d": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "0fab7389-c8c7-4d84-995c-c2bdf63cb07f": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "4f1d7142-98fe-4e6a-b8ea-3c2c451f5037": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "405f18a8-803b-4f68-be49-7490b74b3697": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "ff71e762-7a3d-4b9e-aa75-3ab148d8154c": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "26971fd2-ea63-4009-a394-b38d7cca0f97": {
+    "dataset": "TAT-QA",
+    "n_ops": 4,
+    "bucket": "4+"
+   },
+   "f4a95f4d-5957-44e8-81b7-f0cd392c4409": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "d06a5ade-d848-4325-a2a5-8f5ef427d246": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a0052d66-aa9c-47af-936c-07cd16f817ee": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "b8fee38b-98dd-4d84-9382-be27f83c736f": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "61610e9a-13c4-4670-8616-c6218f7793ad": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "f4511ab0-2ad9-472a-9a26-024b64f7bbc0": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "e151e953-f5ab-4041-8e6f-7aec08ed5a60": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "5a09d607-3502-4451-9d1a-a222dfc32968": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "ed9e3e80-6941-4888-9e40-bbd1cb092485": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "a0414f81-8dc2-44b2-a441-2c9d9c805c4d": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "204ecd0e-d405-4a41-8163-10f670f987b5": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "01de2123-400f-4411-98d9-cd3f9f1e4136": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "54dd0e9e-c525-4bea-8bd7-b292e9dd9be3": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "2067daa1-9905-456b-bcbf-42bc66b47259": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "78f0aebe-c955-4e78-831e-0ffa77c0f50b": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "6315382f-6dba-46d9-adc5-08a0ad6efb7a": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "f140a65f-c408-45fc-8c60-e98e13530452": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "c72f2f6d-3d88-406d-a482-0736ae4846b0": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "fb2036af-5359-4b80-975f-3604f1ad67d5": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "16e717d5-80b8-4888-9e21-cf255ae2a5a5": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "c91ad938-6ad1-4481-8f6b-43ccd2f69926": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "b4884040-a0bc-428a-9a1c-6346acb6dc3c": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "d21b8fe8-119a-4bd7-ba93-24cb28deb15c": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "5beff07b-d9e0-4592-b11a-47bc4bbb5e07": {
+    "dataset": "TAT-QA",
+    "n_ops": 4,
+    "bucket": "4+"
+   },
+   "699b2f87-84df-49a3-a9a1-41e26eed0577": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "a7df73f3-a944-46e5-86c0-ae3c0223b88b": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "49e5b466-62c9-4cab-8d70-8e9317e7a007": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "0388b022-13e2-4eac-93b3-f6ded1b9fb67": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "68107102-0fdc-4e64-850f-8eda6bcc892a": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "13d32108-e758-457b-95a1-73f3bd918975": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "d53d179b-a28e-4c5b-8817-fb6b7f843327": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "7e8041b3-4b8c-4e47-8c83-af0b9a6fdb4c": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "643cfcef-6d2c-4df7-b538-3588e28b58e1": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "fbf1fd1f-12d5-4ffc-b121-51cb10e6a9c8": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "89e21fa8-60b1-4f4f-be8d-497733907f52": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "e81574d8-f9e8-48b3-85ab-a7ed36f8cbb0": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "54b11fb5-014a-4042-affa-fe96ea5e5eaa": {
+    "dataset": "TAT-QA",
+    "n_ops": 3,
+    "bucket": "3"
+   },
+   "8cb754f8-8411-4846-b6f8-8e2467ce08f3": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "8c0bb13b-4ba4-4349-a697-dd2ab11723f8": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   },
+   "82c155de-a907-4b3f-b89f-1984bd97ddc5": {
+    "dataset": "TAT-QA",
+    "n_ops": 2,
+    "bucket": "1-2"
+   },
+   "85bc877a-ecc1-4d1a-9e45-6ddb6d0a4dc3": {
+    "dataset": "TAT-QA",
+    "n_ops": 1,
+    "bucket": "1-2"
+   }
+  }
+ }
+}
