@@ -1,0 +1,51 @@
+{
+ "protocol_name": "P3_MATH_FINAL_PROTOCOL",
+ "version": "1.0",
+ "status": "FROZEN_BEFORE_EXECUTION",
+ "domain": "math500",
+ "panel": {
+  "file": "P3_MATH_FINAL_TASKS_100.json",
+  "sha256": "cde639debca5e513d9e1393c23cfee5f1c2bfd0cd87e208ffcc67ef2d86488b7",
+  "n_tasks": 100,
+  "universe": "all 500 math500 test records MINUS the 200 indices frozen by the superseded exploratory six-arm run (cross_domain_math/frozen_math_tasks.json); 300 remaining",
+  "selection": "stratified by answer type over the remaining 300 (proportional allocation, min 1 per stratum), deterministic sha256('xmath:'+index) ascending within stratum",
+  "strata_quota": {"numeric": 55, "other": 14, "symbolic": 9, "radical": 7, "tuple_interval_matrix": 6, "pi": 3, "complex": 2, "numeric_degree": 2, "other_set": 2},
+  "exposure": "zero overlap with any prior workspace query text (14,650 prior queries checked); no prior tuning on math500"
+ },
+ "scorer": {
+  "module": "math_scorer.py",
+  "sha256": "9afb5ba54c912b4fbf4571bc185c5ad500f4901e379c2515a89ae7f5b9750adc",
+  "method": "LaTeX normalization (balanced braces) + sympy exact equivalence; gt parse rate 500/500; agreement with release scorer 497/500",
+  "release_disagreements": "3 cases archived in SCORER_RELEASE_DISAGREEMENTS.json; gold NEVER modified; all 3 disagreements favor this scorer (equivalent fractions, unit-omitted answer, interval notation)"
+ },
+ "dag": {
+  "nodes": [
+   {"id": "analyze", "prompt": "restate the problem, list unknowns/conditions, give a step plan; JSON output", "deployable_failure": "JSON parse/format check"},
+   {"id": "solve", "prompt": "derive the final answer; last line \\boxed{...}", "deployable_failure": "boxed extraction failure / sympy unparseable / non-finite evaluation"},
+   {"id": "verify", "prompt": "independent re-derivation or numeric cross-check of the solve answer; verdict + corrected value", "deployable_failure": "format check + agreement flag (consistency signal, model-based NOT deterministic)"}
+  ],
+  "no_gold_runtime": true,
+  "honest_boundary": "math has no deterministic correctness oracle; runtime signals are validity + consistency only; correctness is decided offline vs gold by the frozen scorer; Dynamic value on math is expected weaker than on code — reported honestly"
+ },
+ "arms": {
+  "always_medium": "mono medium, one call, boxed answer scored by frozen scorer",
+  "always_large": "mono large, same",
+  "query_router": "mono; large iff frozen panel median token guard exceeded else medium",
+  "node_type_router": "analyze(large)->solve(medium)->verify(coder), one call per node, NO recovery; final = verify-corrected value if consistent else solve value",
+  "static_dag": "same DAG + deployable failure detection + local fallbacks (analyze->medium, solve->coder, verify->medium) with descendant closure refresh",
+  "dynamic_real": "same DAG; deployable detection only; memory-based model switches on failure (first failure->coder, later->medium in task order); solve/verify escalate to large; budget-gated (budget = 1.2 x static realized, B_rem<200 skip+record); selective refresh only"
+ },
+ "models": {"medium": "Qwen2.5-7B-Instruct", "large": "Qwen2.5-14B-Instruct-GPTQ-Int8", "coder": "Qwen2.5-Coder-7B-Instruct"},
+ "generation": {"temperature": 0, "top_p": 1, "max_tokens": 512},
+ "collection": {"single_session": true, "gpu_discipline": "engine guard refuses while GPU busy", "resume": "keyed ledger", "expected_calls": "~700-1,000 with shared node cache across arms"},
+ "metrics": ["task-level correctness via frozen scorer", "paired deltas vs chosen baselines", "help/harm", "tokens", "observed latency (same-environment caveat)", "budget violations"],
+ "rq": {
+  "RQ1_stage_complementarity": "node-level Oracle vs best fixed model per node type",
+  "RQ2_node_vs_query_allocation": "node_type_router vs query_router",
+  "RQ3_feedback_dynamic": "dynamic_real vs static_dag on Q with cost/budget reported"
+ },
+ "superseded_exploratory": {
+  "path": "r3_own_pool/static_dag_v0/cross_domain_math/",
+  "verdict": "exploratory/superseded, NOT a paper table source: universe restricted to 398 numeric-normalizable tasks (102 symbolic tasks excluded though our scorer parses 500/500) and its normalizer rejects correct symbolic answers"
+ }
+}

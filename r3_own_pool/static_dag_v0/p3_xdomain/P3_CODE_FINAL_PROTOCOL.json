@@ -1,0 +1,47 @@
+{
+ "protocol_name": "P3_CODE_FINAL_PROTOCOL",
+ "version": "1.0",
+ "status": "FROZEN_BEFORE_EXECUTION",
+ "domain": "mbpp",
+ "panel": {
+  "file": "P3_CODE_FINAL_TASKS_100.json",
+  "sha256": "e6f5ed6be9b26c31b388f760acd8e56cb8e59fc4dabc90b4956d324a34b45a83",
+  "n_tasks": 100,
+  "universe": "974 mbpp test records",
+  "selection": "sha256('xcode:'+index) ascending; deterministic exclusions: second index of 4 near-dup pairs (810,455,680,920) and 2 helper-dependent tasks (64,609)",
+  "exposure": "zero overlap with prior workspace query text"
+ },
+ "tests": {
+  "source": "assert lines embedded verbatim in each task prompt (what the model sees)",
+  "count": "2922 across 974 tasks; selected-100 detail with extracted tests archived in P3_CODE_TASKS_100_DETAIL.json",
+  "execution": "sandboxed subprocess (timeout, no network), run generated function + extracted asserts",
+  "scorer": "task correct iff all extracted asserts pass"
+ },
+ "dag": {
+  "nodes": [
+   {"id": "plan", "prompt": "restate requirement, design signature/algorithm; JSON output", "deployable_failure": "JSON parse check"},
+   {"id": "implement", "prompt": "write the python function (coder default)", "deployable_failure": "syntax error (compile)"},
+   {"id": "execute", "deterministic": true, "zero_calls": true, "deployable_failure": "runtime error / test failure — deterministic, strongest signal in P3"},
+   {"id": "repair", "dynamic_only": true, "bounded": true, "input": "error message + failing assertions ONLY; NEVER gold (no reference solution even exists in release)", "deployable_failure": "same signals as implement/execute"}
+  ],
+  "no_gold_runtime": true
+ },
+ "arms": {
+  "always_medium": "mono medium: description -> code, one call, scored by tests",
+  "always_large": "mono large, same",
+  "query_router": "mono; model = large iff frozen token-length guard else medium",
+  "node_type_router": "plan(medium)->implement(coder)->execute, one call per node, NO recovery",
+  "static_dag": "same DAG + deployable failure detection + local fallbacks (plan->large, implement->medium, one retry each) with descendant refresh",
+  "dynamic_real": "same DAG; deployable detection only (syntax/runtime/test); failed implement -> repair loop (bounded, memory-gated); budget = 1.2 x static realized; selective refresh only"
+ },
+ "models": {"medium": "Qwen2.5-7B-Instruct", "large": "Qwen2.5-14B-Instruct-GPTQ-Int8", "coder": "Qwen2.5-Coder-7B-Instruct"},
+ "generation": {"temperature": 0, "top_p": 1, "max_tokens": 512},
+ "collection": {"single_session": true, "gpu_discipline": "engine guard refuses while GPU busy", "resume": "keyed ledger", "expected_calls": "~700-1,000 with shared node cache across arms"},
+ "metrics": ["task-level pass rate via unit tests", "paired deltas", "help/harm", "tokens", "observed latency (same-environment caveat)", "budget violations", "repair success rate"],
+ "rq": {
+  "RQ1_stage_complementarity": "node-level Oracle vs best fixed model per node type",
+  "RQ2_node_vs_query_allocation": "node_type_router vs query_router",
+  "RQ3_feedback_dynamic": "dynamic_real vs static_dag; test-failure-driven repair is the decisive cross-domain witness for deployable-only dynamic adaptation"
+ },
+ "priority_note": "MBPP runs FIRST (user directive): its unit-test feedback is the strongest deployable signal in P3 and directly answers whether Dynamic-Real works in a fully different domain without any gold at runtime."
+}
