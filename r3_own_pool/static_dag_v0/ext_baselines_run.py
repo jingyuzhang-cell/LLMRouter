@@ -173,8 +173,9 @@ def run():
     mbpp_res = {r['task_id']: r for r in json.loads((MBPP_RUN / 'RESULTS.json').read_text())['rows']}
 
     def mbpp_cell(tid, model):
+        # mbpp_run keys are '{tid}:{tid}:{model}:{sha}' (node label field was overwritten by task_id in that runner)
         for k, r in mbpp_rows.items():
-            if k.startswith(f'{tid}:mono:{model}:'):
+            if k.startswith(f'{tid}:{tid}:{model}:'):
                 return r
         return None
 
