@@ -1,0 +1,48 @@
+{
+  "role": "cross_domain_math_six_arm_one_shot",
+  "n_tasks": 200,
+  "panel": "sha256(\"xmath:\"+index) ascending over numeric-normalizable deduped tasks",
+  "models": {
+    "medium": "Qwen2.5-7B-Instruct",
+    "large": "Qwen2.5-14B-Instruct-GPTQ-Int8",
+    "coder": "Qwen2.5-Coder-7B-Instruct"
+  },
+  "generation": "temperature 0, top_p 1, max_tokens 512, vLLM local",
+  "prompts": {
+    "mono": "Solve the math problem. Think as needed, then give ONLY the final numeric answer on the last line in the format: Answer: <number>\nPROBLEM:\n{q}",
+    "extract": "Extract every explicit numeric quantity in the problem that is relevant to solving it, with its meaning. Return ONLY JSON {{\"facts\":[{{\"value\":<number>,\"evidence\":\"<short description>\"}}]}} with at most 12 facts; values as plain numbers (convert percentages and units to plain numbers).\nPROBLEM:\n{q}",
+    "solve": "Choose the arithmetic computation that answers the math problem using the extracted facts. Return ONLY JSON {{\"expression\":\"...\"}}. Reference fact values as v0,v1,... in their listed order. Allowed operators: + - * / and parentheses; any explicit numeric constants are permitted. Do not do the arithmetic.\nPROBLEM: {q}\nFACTS: {facts}",
+    "verify": "You are verifying a computed answer for a math problem. Given the extracted facts and a proposed expression, check that every referenced value binds to the correct fact and that the arithmetic is right, recompute independently, then return ONLY JSON {{\"value\": <number>}} with the corrected final numeric value.\nQUESTION: {q}\nFACTS: {facts}\nPROPOSED EXPRESSION: {expr}"
+  },
+  "arms": {
+    "always_medium": "mono medium; success = Answer: <number> close to gold",
+    "always_large": "mono large",
+    "query_router": "mono; model = large iff tok_len > 2 (frozen panel median at freeze time) else medium",
+    "type_node_router": "DAG extract(large)->solve(medium)->verify(coder), one call per node, NO recovery; success = verify value close to gold",
+    "static_dag": "same DAG; deployable failure detection; fallbacks extract->coder, solve->coder, verify->medium; descendant closure refresh",
+    "dynamic_real": "same DAG; deployable detection; extraction memory switch (first failure->coder, later->medium in task order); solve/verify escalate to large, budget-gated (B_rem<200 skip+record); budget = 1.2 x static realized; selective refresh"
+  },
+  "failure_detection_deployable": {
+    "extract": "facts unparseable or empty",
+    "solve": "expression unparseable or unexecutable on facts",
+    "verify": "value unparseable or disagrees with solve value (tolerance 1e-4 rel)"
+  },
+  "no_gold_runtime": true,
+  "oracle": "finite candidate oracle: per-task max over the six arms; not a global optimum",
+  "metrics": [
+    "accuracy",
+    "tokens",
+    "observed service latency",
+    "help/harm (dynamic vs static)",
+    "paired dQ with task bootstrap CI (B=10000, seed 20260918)",
+    "McNemar exact",
+    "budget violations",
+    "dynamic intervention rate"
+  ],
+  "rq_operationalization": {
+    "RQ1": "staged DAG assignment (best of type_node/static) exceeds BOTH always_medium and always_large (paired CI)",
+    "RQ2": "type_node_router (and static_dag) exceed query_router (paired CI)",
+    "RQ3": "dynamic_real improves static_dag on >=1 of Q/C/L; Q compared with paired CI + McNemar"
+  },
+  "one_shot": "no threshold, prompt, task, or detector change after any result is seen"
+}
