@@ -1,0 +1,112 @@
+{
+ "finance_route_llm_vs_AL": {
+  "delta": 0.0,
+  "ci": [
+   0.0,
+   0.0
+  ],
+  "b": 0,
+  "c": 0,
+  "mcnemar_p": 1.0
+ },
+ "finance_cascade_vs_AL": {
+  "delta": -0.2,
+  "ci": [
+   -0.26,
+   -0.145
+  ],
+  "b": 42,
+  "c": 2,
+  "mcnemar_p": 0.0
+ },
+ "finance_selfrefine_vs_AL": {
+  "delta": -0.445,
+  "ci": [
+   -0.515,
+   -0.375
+  ],
+  "b": 90,
+  "c": 1,
+  "mcnemar_p": 0.0
+ },
+ "code_route_llm_vs_AL": {
+  "delta": 0.0,
+  "ci": [
+   0.0,
+   0.0
+  ],
+  "b": 0,
+  "c": 0,
+  "mcnemar_p": 1.0
+ },
+ "code_cascade_vs_AL": {
+  "delta": 0.05,
+  "ci": [
+   0.01,
+   0.1
+  ],
+  "b": 0,
+  "c": 5,
+  "mcnemar_p": 0.0625
+ },
+ "code_selfrefine_vs_AL": {
+  "delta": 0.09,
+  "ci": [
+   0.04,
+   0.15
+  ],
+  "b": 0,
+  "c": 9,
+  "mcnemar_p": 0.0039
+ },
+ "code_cascade_vs_dyn": {
+  "delta": 0.01,
+  "ci": [
+   -0.05,
+   0.08
+  ],
+  "b": 5,
+  "c": 6,
+  "mcnemar_p": 1.0
+ },
+ "code_selfrefine_vs_dyn": {
+  "delta": 0.05,
+  "ci": [
+   -0.02,
+   0.12
+  ],
+  "b": 4,
+  "c": 9,
+  "mcnemar_p": 0.2668
+ },
+ "finance_cascade_vs_daglm": {
+  "delta": -0.075,
+  "ci": [
+   -0.15,
+   0.0
+  ],
+  "b": 39,
+  "c": 24,
+  "mcnemar_p": 0.0769
+ },
+ "finance_selfrefine_vs_daglm": {
+  "delta": -0.32,
+  "ci": [
+   -0.395,
+   -0.25
+  ],
+  "b": 70,
+  "c": 6,
+  "mcnemar_p": 0.0
+ },
+ "naming_correction": "fin dyn_ref column = DAG-L/M (heterogeneous STATIC stage allocation on the frozen TAT-QA 200 panel, 40.0%). Dynamic-Real was NEVER run on the TAT-QA 200 panel; the label Dynamic-Real applies only to multidag panels and the MBPP 100 panel. Paper table must use \"Heterogeneous DAG (DAG-L/M)\" for finance.",
+ "fairness_checks": {
+  "cascade_max_calls_per_task": "<=2 (medium, then large iff deployable check fails) - protocol c4ac148",
+  "selfrefine_finance_calls": "exactly 2 (critique + revise, large)",
+  "selfrefine_code_calls": "<=2 revisions on test failure (large), initial = existing large mono cell",
+  "router_calls": "1 decision, reuses existing mono cell",
+  "budget_rule": "same frozen rule max(200, 1.2 x static realized); violations counted identically for all methods",
+  "no_gold_runtime": "all feedback deployable (parseability / unit tests / self-critique); gold only offline"
+ },
+ "verdict": "experiments permanently closed; no further runs"
+}
