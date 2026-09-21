@@ -1,13 +1,16 @@
-"""Math500 six-arm runner. Stage-batched, resumable, deployable-only detection.
+"""Math500 six-arm runner — parallel version (4 concurrent calls per model batch).
 
-Arm outcomes are computed identically to the frozen protocol; call order is
-batched by model for wall-clock efficiency and never affects any decision
-(all decisions are functions of per-task state and frozen task order).
+Protocol identical to the frozen CROSS_DOMAIN_MATH_PROTOCOL.json; only the
+execution engine changed (vLLM serves --max-num-seqs 4, so 4 concurrent
+requests are within the frozen serving configuration). Stage-batched,
+resumable from cache, deployable-only failure detection.
 """
 import fcntl
 import json
 import os
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from . import core, run as engine
 from . import tool_aware_v1 as v
@@ -16,15 +19,16 @@ from .cross_domain_math import (OUT, MONO, EXTRACT, SOLVE, VERIFY, N_TASKS,
                                 HEADROOM, GATE, close, extract_mono_value)
 
 CLOSURE = {'X': ['S', 'V'], 'S': ['V'], 'V': []}
+_lock = threading.Lock()
 
 
 def append(path, obj):
-    with path.open('a') as f:
-        f.write(json.dumps(obj, ensure_ascii=False) + '\n'); f.flush(); os.fsync(f.fileno())
+    with _lock:
+        with path.open('a') as f:
+            f.write(json.dumps(obj, ensure_ascii=False) + '\n'); f.flush(); os.fsync(f.fileno())
 
 
 def parse_math_facts(answer):
-    """Lenient frozen parser for the math facts JSON contract."""
     text = (answer or '').strip()
     if text.startswith('```'):
         text = text.split('\n', 1)[1].rsplit('```', 1)[0].strip()
@@ -34,10 +38,7 @@ def parse_math_facts(answer):
             continue
         try:
             obj, _ = dec.raw_decode(text[i:])
-            facts = []
-            for f in obj.get('facts', []):
-                val = float(f['value'])
-                facts.append(dict(value=val))
+            facts = [dict(value=float(f['value'])) for f in obj.get('facts', [])]
             if 0 < len(facts) <= 24:
                 return dict(facts=facts), False
         except Exception:
@@ -80,20 +81,32 @@ class Caller:
         self.lock = (core.ROOT / 'collect/logs/local_gpu.lock').open('a+')
         fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
-    def call(self, key, model, prompt):
-        if key in self.cache:
-            if self.cache[key]['response'].get('status') != 'delivered':
-                raise RuntimeError('cached infra failure: ' + key)
-            return self.cache[key]
+    def _ensure_model(self, model):
         if model != self.current:
             if self.proc is not None: engine.stop_model(self.proc, self.log); self.proc = self.log = None
             self.proc, self.log, _ = engine.start_model(model); self.current = model
-        append(OUT / 'REQUESTS.jsonl', dict(key=key, model=model, prompt=prompt))
-        resp = engine.call_model(model, prompt)
-        rec = dict(key=key, model=model, response=resp); append(OUT / 'RESPONSES.jsonl', rec)
-        self.cache[key] = rec
-        if resp.get('status') != 'delivered': raise RuntimeError('Infrastructure failure: ' + key)
-        return rec
+
+    def batch(self, jobs):
+        """jobs: list of (key, model, prompt), all one model. Cached keys skipped.
+        Parallel (4 workers); returns after all complete."""
+        todo = [(k, m, p) for k, m, p in jobs if k not in self.cache]
+        if not todo:
+            return
+        self._ensure_model(todo[0][1])
+        def one(job):
+            key, model, prompt = job
+            append(OUT / 'REQUESTS.jsonl', dict(key=key, model=model, prompt=prompt))
+            resp = engine.call_model(model, prompt)
+            return key, model, resp
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            futs = [pool.submit(one, j) for j in todo]
+            for f in as_completed(futs):
+                key, model, resp = f.result()
+                if resp.get('status') != 'delivered':
+                    raise RuntimeError('Infrastructure failure: ' + key)
+                rec = dict(key=key, model=model, response=resp)
+                append(OUT / 'RESPONSES.jsonl', rec)
+                self.cache[key] = rec
 
     def close(self):
         if self.proc is not None: engine.stop_model(self.proc, self.log); self.proc = None
@@ -112,37 +125,28 @@ def run():
     caller = Caller()
     t0 = time.time()
     try:
-        # ---------- mono arms (batched by model) ----------
+        # ---------- mono arms ----------
         for model in ('medium', 'large'):
-            for t in tasks:
-                k = f'M:{model[0]}:{t["index"]}'
-                if k not in caller.cache:
-                    caller.call(k, model, MONO.format(q=t['question']))
-        for t in tasks:  # query router arm
-            k = f'M:q:{t["index"]}'
-            model = 'large' if t['tok_len'] > qr_thresh else 'medium'
-            if k not in caller.cache:
-                caller.call(k, model, MONO.format(q=t['question']))
+            caller.batch([(f'M:{model[0]}:{t["index"]}', model, MONO.format(q=t['question'])) for t in tasks])
+        qr = [(f'M:q:{t["index"]}', 'large' if t['tok_len'] > qr_thresh else 'medium', MONO.format(q=t['question'])) for t in tasks]
+        for model in ('medium', 'large'):
+            caller.batch([j for j in qr if j[1] == model])
         # ---------- shared initial DAG passes ----------
-        for t in tasks:
-            k = f'X:{t["index"]}'
-            if k not in caller.cache:
-                caller.call(k, 'large', EXTRACT.format(q=t['question']))
+        caller.batch([(f'X:{t["index"]}', 'large', EXTRACT.format(q=t['question'])) for t in tasks])
         facts = {}
         for t in tasks:
             f, bad = parse_math_facts(caller.cache[f'X:{t["index"]}']['response']['answer'])
             facts[t['index']] = dict(f=f, bad=bad)
+        caller.batch([(f'S:{t["index"]}', 'medium',
+                       SOLVE.format(q=t['question'], facts=json.dumps(facts[t['index']]['f']['facts']))) for t in tasks])
+        vjobs = []
         for t in tasks:
-            k = f'S:{t["index"]}'
-            if k not in caller.cache:
-                caller.call(k, 'medium', SOLVE.format(q=t['question'], facts=json.dumps(facts[t['index']]['f']['facts'])))
-        for t in tasks:
-            k = f'V:{t["index"]}'
-            if k not in caller.cache:
-                _, expr, err = solve_out(caller.cache[f'S:{t["index"]}']['response']['answer'], facts[t['index']]['f'])
-                caller.call(k, 'coder', VERIFY.format(q=t['question'], facts=json.dumps(facts[t['index']]['f']['facts']),
-                                                      expr='UNPARSEABLE' if err else expr))
-        # ---------- recovery arms (static, dynamic) ----------
+            _, expr, err = solve_out(caller.cache[f'S:{t["index"]}']['response']['answer'], facts[t['index']]['f'])
+            vjobs.append((f'V:{t["index"]}', 'coder',
+                          VERIFY.format(q=t['question'], facts=json.dumps(facts[t['index']]['f']['facts']),
+                                        expr='UNPARSEABLE' if err else expr)))
+        caller.batch(vjobs)
+        # ---------- recovery arms ----------
         state = {arm: {} for arm in ('static', 'dynamic')}
         for arm in state:
             for t in tasks:
@@ -163,21 +167,17 @@ def run():
             def v_val(st):
                 return verify_value(caller.cache[[k for k in st['keys'] if k.startswith('V')][-1]]['response']['answer'])
 
-            def do_call(node, model, key, st):
-                i = key.split(':')[1]
-                if node == 'X':
-                    caller.call(key, model, EXTRACT.format(q=st['question']))
-                    fnew, _ = parse_math_facts(caller.cache[key]['response']['answer'])
-                    st['facts'] = fnew
-                elif node == 'S':
-                    caller.call(key, model, SOLVE.format(q=st['question'], facts=json.dumps(merged(st)['facts'])))
-                else:
-                    _, expr, err = s_out(st)
-                    caller.call(key, model, VERIFY.format(q=st['question'], facts=json.dumps(merged(st)['facts']),
-                                                          expr='UNPARSEABLE' if err else (st['expr'] or 'UNPARSEABLE')))
+            def apply_X(key, st):
+                fnew, _ = parse_math_facts(caller.cache[key]['response']['answer'])
+                st['facts'] = fnew; st['keys'].append(key)
+
+            def apply_S(key, st):
                 st['keys'].append(key)
 
-            # stage 1: extraction failures
+            def apply_V(key, st):
+                st['keys'].append(key)
+
+            # stage 1: extraction failures (memory rule for dynamic)
             ev1 = []
             for t in tasks:
                 st = armstate[t['index']]
@@ -190,47 +190,58 @@ def run():
                     model = 'coder'
                 ev1.append((t['index'], st, model))
             for model in sorted({m for _, _, m in ev1}):
+                jobs = [(f'X:{A}:{i}:efb', model, EXTRACT.format(q=st['question'])) for i, st, m in ev1 if m == model]
+                caller.batch(jobs)
                 for i, st, m in ev1:
                     if m != model: continue
-                    key = f'X:{A}:{i}:efb'
-                    do_call('X', m, key, st)
-                    st['events'].append(dict(node='X', kind='efb', model=m, key=key, closure=CLOSURE['X']))
-            # stage 2: solve refresh for e-fallback tasks, then solve failures
-            for i, st, m in ev1:
-                key = f'S:{A}:{i}:efb-d'
-                do_call('S', 'medium', key, st)
-                st['events'].append(dict(node='S', kind='refresh', model='medium', key=key, closure=[]))
+                    apply_X(f'X:{A}:{i}:efb', st)
+                    st['events'].append(dict(node='X', kind='efb', model=m, key=f'X:{A}:{i}:efb', closure=CLOSURE['X']))
+            # stage 2: solve refresh for e-fallback tasks
+            if ev1:
+                jobs = [(f'S:{A}:{i}:efb-d', 'medium',
+                         SOLVE.format(q=st['question'], facts=json.dumps(merged(st)['facts']))) for i, st, _ in ev1]
+                caller.batch(jobs)
+                for i, st, _ in ev1:
+                    apply_S(f'S:{A}:{i}:efb-d', st)
+                    st['events'].append(dict(node='S', kind='refresh', model='medium', key=f'S:{A}:{i}:efb-d', closure=[]))
             ev2 = []
             for t in tasks:
                 i = t['index']; st = armstate[i]
                 val, expr, err = s_out(st)
                 st['expr'] = expr if not err else None
                 if not err:
-                    continue  # deployable: executable => no action (value errors undetectable)
-                fb = 'coder' if arm == 'static' else 'large'
+                    continue
                 if arm == 'dynamic':
                     budget = sum(cost_of(caller.cache, k) for k in state['static'][i]['keys']) * HEADROOM
                     rem = budget - sum(cost_of(caller.cache, k) for k in st['keys'])
                     if rem < GATE:
-                        st['events'].append(dict(node='S', kind='esc', model='large', attempted=False,
-                                                 gate=dict(rem=rem))); continue
+                        st['events'].append(dict(node='S', kind='esc', model='large', attempted=False, gate=dict(rem=rem)))
+                        continue
                     ev2.append((i, st, 'large', dict(rem=rem)))
                 else:
-                    ev2.append((i, st, fb, None))
+                    ev2.append((i, st, 'coder', None))
             for model in sorted({m for _, _, m, _ in ev2}):
+                jobs = [(f'S:{A}:{i}:sfb', model, SOLVE.format(q=st['question'], facts=json.dumps(merged(st)['facts'])))
+                        for i, st, m, _ in ev2 if m == model]
+                caller.batch(jobs)
                 for i, st, m, gate in ev2:
                     if m != model: continue
-                    key = f'S:{A}:{i}:sfb'
-                    do_call('S', m, key, st)
-                    st['events'].append(dict(node='S', kind='sfb', model=m, key=key, closure=CLOSURE['S'], gate=gate))
-            # stage 3: verify refresh for tasks whose solve changed, then verify failures
-            for t in tasks:
-                i = t['index']; st = armstate[i]
-                skeys = [k for k in st['keys'] if k.startswith('S')]
-                if len(skeys) > 1:
-                    key = f'V:{A}:{i}:rs-d'
-                    do_call('V', 'coder', key, st)
-                    st['events'].append(dict(node='V', kind='refresh', model='coder', key=key, closure=[]))
+                    apply_S(f'S:{A}:{i}:sfb', st)
+                    st['events'].append(dict(node='S', kind='sfb', model=m, key=f'S:{A}:{i}:sfb', closure=CLOSURE['S'], gate=gate))
+            # stage 3: verify refresh for changed solve outputs
+            vrefresh = [t['index'] for t in tasks if len([k for k in armstate[t['index']]['keys'] if k.startswith('S')]) > 1]
+            if vrefresh:
+                jobs = []
+                for i in vrefresh:
+                    st = armstate[i]
+                    _, expr, err = s_out(st)
+                    jobs.append((f'V:{A}:{i}:rs-d', 'coder',
+                                 VERIFY.format(q=st['question'], facts=json.dumps(merged(st)['facts']),
+                                               expr='UNPARSEABLE' if err else expr)))
+                caller.batch(jobs)
+                for i in vrefresh:
+                    apply_V(f'V:{A}:{i}:rs-d', armstate[i])
+                    armstate[i]['events'].append(dict(node='V', kind='refresh', model='coder', key=f'V:{A}:{i}:rs-d', closure=[]))
             ev3 = []
             for t in tasks:
                 i = t['index']; st = armstate[i]
@@ -239,22 +250,28 @@ def run():
                 fail_deployable = (vv is None) or (not err and not close(vv, val))
                 if not fail_deployable:
                     continue
-                fb = 'medium' if arm == 'static' else 'large'
                 if arm == 'dynamic':
                     budget = sum(cost_of(caller.cache, k) for k in state['static'][i]['keys']) * HEADROOM
                     rem = budget - sum(cost_of(caller.cache, k) for k in st['keys'])
                     if rem < GATE:
-                        st['events'].append(dict(node='V', kind='esc', model='large', attempted=False,
-                                                 gate=dict(rem=rem))); continue
+                        st['events'].append(dict(node='V', kind='esc', model='large', attempted=False, gate=dict(rem=rem)))
+                        continue
                     ev3.append((i, st, 'large', dict(rem=rem)))
                 else:
-                    ev3.append((i, st, fb, None))
+                    ev3.append((i, st, 'medium', None))
             for model in sorted({m for _, _, m, _ in ev3}):
+                jobs = []
+                for i, st, m, _ in ev3:
+                    if m != model: continue
+                    _, expr, err = s_out(st)
+                    jobs.append((f'V:{A}:{i}:vfb', model,
+                                 VERIFY.format(q=st['question'], facts=json.dumps(merged(st)['facts']),
+                                               expr='UNPARSEABLE' if err else (st['expr'] or 'UNPARSEABLE'))))
+                caller.batch(jobs)
                 for i, st, m, gate in ev3:
                     if m != model: continue
-                    key = f'V:{A}:{i}:vfb'
-                    do_call('V', m, key, st)
-                    st['events'].append(dict(node='V', kind='vfb', model=m, key=key, closure=[], gate=gate))
+                    apply_V(f'V:{A}:{i}:vfb', st)
+                    st['events'].append(dict(node='V', kind='vfb', model=m, key=f'V:{A}:{i}:vfb', closure=[], gate=gate))
             for t in tasks:
                 st = armstate[t['index']]
                 st['ok'] = close(v_val(st), t['gold'])
