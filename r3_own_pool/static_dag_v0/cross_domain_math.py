@@ -153,8 +153,13 @@ def audit_and_freeze():
     from . import run as engine
     from transformers import AutoTokenizer
     tok = AutoTokenizer.from_pretrained(engine.MODELS['medium']['path'], local_files_only=True)
-    lens = [len(tok.apply_chat_template([dict(role='user', content=t['question'])], tokenize=True,
-                                        add_generation_prompt=True)) for t in panel]
+    lens = []
+    for t in panel:
+        ids = tok.apply_chat_template([dict(role='user', content=t['question'])], tokenize=True,
+                                      add_generation_prompt=True)
+        if isinstance(ids, dict):
+            ids = ids['input_ids']
+        lens.append(len(ids))
     lens_sorted = sorted(lens)
     median = lens_sorted[len(lens) // 2]
     json.dump([dict(index=t['index'], question=t['question'], gold=t['gold'], gold_raw=t['gold_raw'],
