@@ -13,7 +13,7 @@ assert abs((r['FrozenNodeRouter']-r['AlwaysLarge'])/(r['NodeOracle']-r['AlwaysLa
 x=json.loads((R/'static_dag_v0/exact_optimality_audit/AUDIT.json').read_text());assert x['Q_exact_oracle']==.305 and x['Q_always_large']==.18 and x['Q_best_fixed']==.205
 x=json.loads((R/'static_dag_v0/confirmation_500/CONF500_RESULTS.json').read_text());assert x['help']==1 and x['harm']==4 and len(x['switches'])==22 and x['GAP_recovery']==-.1111
 with ZipFile(P/'论文完整草稿.docx') as z: xml=z.read('word/document.xml').decode()
-d=Document(P/'论文完整草稿.docx');assert len(d.tables)==12,len(d.tables)
+d=Document(P/'论文完整草稿.docx');assert len(d.tables)==15,len(d.tables)
 pages=ET.parse('/tmp/final_paper_bbox.html').getroot().findall('.//{http://www.w3.org/1999/xhtml}page');outside=[]
 for n,page in enumerate(pages,1):
  for w in page.findall('.//{http://www.w3.org/1999/xhtml}word'):
