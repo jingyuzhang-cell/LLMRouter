@@ -157,8 +157,10 @@ def audit_and_freeze():
     for t in panel:
         ids = tok.apply_chat_template([dict(role='user', content=t['question'])], tokenize=True,
                                       add_generation_prompt=True)
-        if isinstance(ids, dict):
-            ids = ids['input_ids']
+        if hasattr(ids, 'input_ids'):
+            ids = ids.input_ids
+        if ids and isinstance(ids[0], list):
+            ids = ids[0]
         lens.append(len(ids))
     lens_sorted = sorted(lens)
     median = lens_sorted[len(lens) // 2]

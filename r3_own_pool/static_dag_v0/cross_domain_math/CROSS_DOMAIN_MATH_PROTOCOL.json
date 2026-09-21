@@ -17,7 +17,7 @@
   "arms": {
     "always_medium": "mono medium; success = Answer: <number> close to gold",
     "always_large": "mono large",
-    "query_router": "mono; model = large iff tok_len > 2 (frozen panel median at freeze time) else medium",
+    "query_router": "mono; model = large iff tok_len > 81 (frozen panel median at freeze time) else medium",
     "type_node_router": "DAG extract(large)->solve(medium)->verify(coder), one call per node, NO recovery; success = verify value close to gold",
     "static_dag": "same DAG; deployable failure detection; fallbacks extract->coder, solve->coder, verify->medium; descendant closure refresh",
     "dynamic_real": "same DAG; deployable detection; extraction memory switch (first failure->coder, later->medium in task order); solve/verify escalate to large, budget-gated (B_rem<200 skip+record); budget = 1.2 x static realized; selective refresh"
