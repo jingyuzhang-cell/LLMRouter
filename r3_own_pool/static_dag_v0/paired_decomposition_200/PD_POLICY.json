@@ -1,0 +1,17 @@
+{
+  "role": "paired_decomposition_benchmark_one_shot",
+  "n_tasks": 200,
+  "arms": {
+    "mono_L": "single large model, frozen MONO prompt (scale_up_collect byte-identical), full report context",
+    "dag_L_L": "extraction(large)->reasoning(large); frozen cross-model cells; extraction failure => task fails",
+    "dag_L_M": "extraction(large)->reasoning(medium); frozen cross-model cells; extraction failure => task fails"
+  },
+  "contrasts": {
+    "C1": "Mono-L vs DAG-L/L (decomposition value)",
+    "C2": "DAG-L/L vs DAG-L/M (heterogeneous allocation value)"
+  },
+  "strata": "derivation op count: 2ops / 3-4ops / 5+ops",
+  "scoring": "mono: extract_value close to gold; dag: exec_calc(expression, parse_facts(ext)) close to gold; identical close tolerance",
+  "generation": "temperature 0, top_p 1, max_tokens 512",
+  "one_shot": true
+}
