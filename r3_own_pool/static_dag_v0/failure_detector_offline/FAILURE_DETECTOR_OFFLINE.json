@@ -1,0 +1,103 @@
+{
+  "generated_unix": 1789969392.3308744,
+  "commit_hash": "7d6e6c1fd1ff9cf009f62f37b902f938c3e1ed8b",
+  "evidence_tier": "offline audit of frozen outputs; zero model calls",
+  "label": "node failure = task_q==0 under frozen scorer (ideal label, evaluation only)",
+  "deployability": "all signals computable at runtime without the evaluation answer",
+  "corpora": {
+    "conf500": {
+      "n_instances": 1500,
+      "failure_rate": 0.8567,
+      "signals": {
+        "ext_invalid": {
+          "precision": 1.0,
+          "recall": 0.33,
+          "f1": 0.4962,
+          "tp": 424,
+          "fp": 0,
+          "fn": 861
+        },
+        "ext_empty": {
+          "precision": 1.0,
+          "recall": 0.33,
+          "f1": 0.4962,
+          "tp": 424,
+          "fp": 0,
+          "fn": 861
+        },
+        "rsn_schema_invalid": {
+          "precision": 1.0,
+          "recall": 0.0008,
+          "f1": 0.0016,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1284
+        },
+        "rsn_exec_fail": {
+          "precision": 1.0,
+          "recall": 0.3556,
+          "f1": 0.5247,
+          "tp": 457,
+          "fp": 0,
+          "fn": 828
+        },
+        "detector_fire": {
+          "precision": 1.0,
+          "recall": 0.3798,
+          "f1": 0.5505,
+          "tp": 488,
+          "fp": 0,
+          "fn": 797
+        }
+      }
+    },
+    "conf200": {
+      "n_instances": 600,
+      "failure_rate": 0.8617,
+      "signals": {
+        "ext_invalid": {
+          "precision": 1.0,
+          "recall": 0.3462,
+          "f1": 0.5144,
+          "tp": 179,
+          "fp": 0,
+          "fn": 338
+        },
+        "ext_empty": {
+          "precision": 1.0,
+          "recall": 0.3462,
+          "f1": 0.5144,
+          "tp": 179,
+          "fp": 0,
+          "fn": 338
+        },
+        "rsn_schema_invalid": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 517
+        },
+        "rsn_exec_fail": {
+          "precision": 1.0,
+          "recall": 0.3752,
+          "f1": 0.5457,
+          "tp": 194,
+          "fp": 0,
+          "fn": 323
+        },
+        "detector_fire": {
+          "precision": 1.0,
+          "recall": 0.3946,
+          "f1": 0.5659,
+          "tp": 204,
+          "fp": 0,
+          "fn": 313
+        }
+      }
+    }
+  },
+  "limitation": "parser/execution signals only catch interface failures; value errors need a verifier or cross-model consistency (measured live in the multinode DAG verification node)",
+  "sources": "conf500/conf200 RESPONSES.jsonl + policy gold answers"
+}
