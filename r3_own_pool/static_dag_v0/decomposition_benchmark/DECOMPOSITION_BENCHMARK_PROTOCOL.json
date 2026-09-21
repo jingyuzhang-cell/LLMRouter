@@ -1,0 +1,87 @@
+{
+ "protocol_name": "DECOMPOSITION_BENCHMARK_PROTOCOL",
+ "version": "1.0",
+ "created_unix": 1789550000,
+ "status": "FROZEN_BEFORE_EXECUTION",
+ "research_question": "Does task decomposition itself improve final execution quality, and does it additionally enable stage-level heterogeneous model allocation?",
+ "design_decision": {
+  "three_arms": true,
+  "rationale": "Mono-L vs DAG-L/M would confound decomposition with the reasoning-model change. Three arms separate the two effects.",
+  "arms": {
+   "Mono-L": {
+    "pipeline": "Raw Context -> Large -> Final Answer",
+    "model": "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8 (large)",
+    "prompt": "MONO v1 (verbatim from monolithic_baseline.py / scale_up_collect.py)",
+    "prompt_text": "Answer the financial question using the report. Think as needed, then give ONLY the final numeric answer on the last line in the format: Answer: <number>\nQUESTION: {q}\nREPORT:\n{ctx}",
+    "context_truncation": 14000,
+    "scoring": "extract_value (regex Answer: <number>, fallback trailing number) + tolerance max(1e-4, 1e-4*|gold|)"
+   },
+   "DAG-L/L": {
+    "pipeline": "Raw Context -> Large Extraction -> Large Reasoning -> Deterministic Exec -> Final Answer",
+    "extraction": {"model": "large", "prompt": "eprompt v1 (tool_aware_v1.eprompt)", "input": "question + full raw context"},
+    "reasoning": {"model": "large", "prompt": "sprompt v1 (tool_aware_v1.sprompt)", "input": "facts parsed from the extraction output; NEVER gold facts"},
+    "execution": "exec_calc (decompose_v1) over v0..v_{n-1} bound to the same parsed facts",
+    "scoring": "close(exec_result, gold) with tolerance max(1e-4, 1e-4*|gold|)"
+   },
+   "DAG-L/M": {
+    "pipeline": "Raw Context -> Large Extraction -> Medium Reasoning -> Deterministic Exec -> Final Answer",
+    "extraction": {"model": "large", "shared_with": "DAG-L/L", "note": "single extraction call per task, consumed by both DAG arms"},
+    "reasoning": {"model": "Qwen/Qwen2.5-7B-Instruct (medium)", "prompt": "sprompt v1", "input": "identical parsed facts as DAG-L/L"},
+    "execution": "exec_calc",
+    "scoring": "close(exec_result, gold) with tolerance max(1e-4, 1e-4*|gold|)"
+   }
+  }
+ },
+ "control_variable": "same task + same input + same scorer + same model capability; only whether decomposition is applied differs (RQ-A), and only the reasoning model differs across the two DAG arms (RQ-B)",
+ "failure_policy": {
+  "extraction_parse_success": "-> reasoning (both DAG arms) -> exec -> final score",
+  "extraction_parse_failure": "both DAG arms = incorrect; reasoning not called; stop",
+  "no_retry": true,
+  "no_gold_anywhere": true,
+  "reasoning_status_not_delivered": "arm scored incorrect (infrastructure failure counts reported separately; expected 0)"
+ },
+ "research_questions": {
+  "RQ-A": "Mono-L vs DAG-L/L: pure decomposition effect",
+  "RQ-B": "DAG-L/L vs DAG-L/M: heterogeneous stage allocation effect after decomposition"
+ },
+ "frozen_task_lists": {
+  "MultiHiertt": {"path": "decomposition_benchmark/decomposition_final_multihiertt_100.json", "n": 100, "sha256": "060c73ef57156f586b608557be310249cc0de5f1bbe2d6866106413150972a2f", "split": "fresh_holdout_unused_train"},
+  "TAT-QA": {"path": "decomposition_benchmark/decomposition_final_tatqa_200.json", "n": 200, "sha256": "126e1f5d4ab03e2697eb3558ac89b8861d4f4a3abf3de1118d7118e0206b51a2", "split": "dev"}
+ },
+ "task_sources_pinned": {
+  "fresh_static_confirmation/TASKS.json": "95fc9f97121c7e16aab35fe564570de0523d4152e150efdf45f410329c9ccd61",
+  "tatqa_benchmark/TASKS.json": "0f6658e4979141c3a41c9aa9ad9e403f99e42357c5762ee8ae3fd01c3e220aeb",
+  "scale_up/TQ_TASKS.json": "aa038c9e8f88fb9c564fa9d4c8a0100e2e3001a9618f842082d847685305aff7"
+ },
+ "model_versions": {
+  "large": {"path": "/root/autodl-tmp/models/Qwen2.5-14B-Instruct-GPTQ-Int8", "served": "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8", "provenance": "/root/r3_own_pool/router_v2/label_repair_experiment/raw/large_MODEL_PROVENANCE.json"},
+  "medium": {"path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct", "served": "Qwen/Qwen2.5-7B-Instruct", "provenance": "/root/r3_own_pool/router_v2/label_repair_experiment/raw/medium_MODEL_PROVENANCE.json"},
+  "checkpoint_verification": "engine.start_model re-hashes config+weights against provenance before every serve"
+ },
+ "generation_config": {"temperature": 0, "top_p": 1, "max_tokens": 512},
+ "vllm_config": {"port": 8128, "max_model_len": 8192, "max_num_seqs": 4, "gpu_memory_utilization": 0.92, "dtype": "auto", "generation_config": "vllm"},
+ "collection": {
+  "session": "ONE unified inference session for all arms",
+  "model_grouping": ["large: Mono-L (300) -> extraction (300) -> DAG-L/L reasoning (<=300)", "medium: DAG-L/M reasoning (<=300)"],
+  "expected_calls": {"mono_large": 300, "extraction_large": 300, "reasoning_large": 276, "reasoning_medium": 276, "total_expected": 1152, "worst_case": 1200, "expected_parse_failures": 24},
+  "parse_failure_note": "24 is an estimate from legacy extraction (MH 13 + TQ-old 2 + TQ-new 9); fresh extraction decides at runtime",
+  "gpu_discipline": "run ONLY after RealDetector completes; engine.start_model refuses to start when GPU busy or port occupied",
+  "resume": "keyed ledger; completed keys skipped",
+  "latency_accounting": "single session; per-call latency_s recorded; arm means reported with session caveat"
+ },
+ "analysis": {
+  "table_A": {"pair": "Mono-L vs DAG-L/L", "question": "does decomposition itself help?", "columns": ["Dataset", "Paired N", "Mono-L", "DAG-L/L", "delta_Q", "95% paired bootstrap CI", "McNemar b/c/p"]},
+  "table_B": {"pair": "DAG-L/L vs DAG-L/M", "question": "does heterogeneous stage allocation help after decomposition?", "columns": ["Dataset", "Paired N", "DAG-L/L", "DAG-L/M", "delta_Q", "95% paired bootstrap CI", "McNemar b/c/p"]},
+  "paired_delta": "Delta_i = I(armA_i correct) - I(armB_i correct); mean over paired tasks",
+  "bootstrap": "10k paired resamples, seed 20260916, 2.5/97.5 percentiles",
+  "mcnemar": "exact two-sided binomial test on discordant pairs",
+  "complexity_stratification": {"pair": "Mono-L vs DAG-L/L ONLY", "buckets": ["1-2", "3", "4+"], "n_ops_rule": "TAT-QA: binary operators in derivation; MultiHiertt: add/sub/mul/div calls in program", "precomputed_counts": {"MultiHiertt": {"1-2": 86, "3": 9, "4+": 5}, "TAT-QA": {"1-2": 177, "3": 19, "4+": 4}}},
+  "cost": {"tokens": "per arm from fresh session rows", "latency": "per-call latency_s from fresh session rows"},
+  "legacy_results_demoted": "old DECOMP_UTILITY.json numbers (+14.0 MH / -9.38 TQ / pooled -3.8) are protocol-contaminated (gold-fed reasoning, gold fallbacks, mixed models) and are legacy/exploratory; NOT to be used as decomposition evidence"
+ },
+ "scripts": {
+  "runner": "static_dag_v0/decomp_benchmark_run.py",
+  "scorer": "static_dag_v0/decomp_benchmark_score.py"
+ },
+ "status_after_freeze": "COMMITTED; model calls deferred until RealDetector completes"
+}

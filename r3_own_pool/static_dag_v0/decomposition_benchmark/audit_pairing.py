@@ -121,7 +121,7 @@ def main():
     assert gold_fed == 40
 
     audit = {
-        'audit_version': '1.0',
+        'audit_version': '1.1',
         'created_unix': time.time(),
         'scope': 'strictly paired Monolithic-vs-DAG decomposition benchmark; task-id + protocol audit only; no model calls',
         'legacy_artifacts_preserved': {
@@ -245,16 +245,28 @@ def main():
                        'Legacy paper number -9.38pp mixes gold-fed and actual DAG arms with 160 mono.'),
     }
 
-    # ---------- unified frozen protocol ----------
+    # ---------- unified frozen protocol (three arms, v1.1 design decision) ----------
     audit['unified_frozen_protocol'] = {
-        'definition': 'same task + same model version + same scorer + same information condition; only Monolithic/DAG differs',
-        'monolithic_arm': dict(model='large', prompt='MONO v1', input='question + raw context (ctx[:14000])',
-                               scoring='extract_value + tolerance 1e-4 rel'),
-        'dag_arm': dict(extraction=dict(model='large', prompt='eprompt v1', input='question + raw context'),
-                        reasoning=dict(model='medium', prompt='sprompt v1',
-                                       input='facts parsed from the large-extraction output; NEVER gold'),
-                        execution='exec_calc over v0..v_{n-1} with the same facts; tolerance 1e-4 rel'),
-        'extraction_parse_failure_policy': 'deterministic DAG failure; NO gold fallback, NO retry (default)',
+        'definition': 'same task + same input + same scorer + same model capability; only whether decomposition is applied differs',
+        'design_decision_v1_1': (
+            'Three arms, not two. Mono-L vs DAG-L/L isolates the pure decomposition effect; '
+            'DAG-L/L vs DAG-L/M isolates stage-level heterogeneous model allocation. '
+            'Comparing Mono-L directly against DAG-L/M would confound decomposition with reasoning-model choice.'),
+        'arms': {
+            'Mono-L': dict(model='large', prompt='MONO v1', input='question + raw context (ctx[:14000])',
+                           scoring='extract_value + tolerance 1e-4 rel'),
+            'DAG-L/L': dict(extraction=dict(model='large', prompt='eprompt v1', input='question + raw context'),
+                            reasoning=dict(model='large', prompt='sprompt v1',
+                                           input='facts parsed from the large-extraction output; NEVER gold'),
+                            execution='exec_calc over v0..v_{n-1} with the same facts; tolerance 1e-4 rel'),
+            'DAG-L/M': dict(extraction=dict(model='large', prompt='eprompt v1', input='question + raw context (SHARED extraction with DAG-L/L)'),
+                            reasoning=dict(model='medium', prompt='sprompt v1', input='same parsed facts as DAG-L/L'),
+                            execution='exec_calc; tolerance 1e-4 rel'),
+        },
+        'research_questions': {'RQ-A': 'Mono-L vs DAG-L/L -> does decomposition itself help?',
+                               'RQ-B': 'DAG-L/L vs DAG-L/M -> does heterogeneous stage allocation help after decomposition?'},
+        'extraction_parse_failure_policy': 'deterministic DAG failure for BOTH DAG arms; NO gold fallback, NO retry; reasoning not called',
+        'collection_policy': 'all three arms re-collected in one unified inference session (default); legacy cells are accuracy-reusable but latency is not comparable across sessions',
         'generation': GEN_CFG,
         'answer_normalization': 'regex Answer: <number> for mono; JSON expression for DAG reasoning',
         'no_gold_anywhere': True,
@@ -262,46 +274,50 @@ def main():
 
     # ---------- rerun plan ----------
     mh_rerun_rsn = [u for u in mh_uids if u not in mh_ext_unparseable]
-    mh_rerun_fail = sorted(mh_ext_unparseable)
-    tq_old_rerun_mono = [t['uid'] for t in tq_old]
     tq_old_rerun_rsn = [t['uid'] for t in tq_old if t['uid'] not in tq_old_ext_unparseable]
-    tq_new_fail = sorted(tq_new_fallback)
+    expect_fail = len(mh_ext_unparseable) + len(tq_old_ext_unparseable) + len(tq_new_fallback)
+    expect_rsn = 300 - expect_fail
     audit['rerun_plan'] = {
-        'policy': 'reuse protocol-identical legacy artifacts; re-run only contaminated/missing cells; no retries; no gold',
-        'MultiHiertt': {
-            'mono': dict(decision='reuse', n=100,
-                         note='batch1 (live session) + batch2 (scale_up session); identical prompt/model/checkpoint; optional uniform re-run (100 calls) if single-session latency accounting is required'),
-            'dag_extraction': dict(decision='reuse', n=100, source='fresh_static_confirmation/large_RESPONSES.jsonl (eprompt v1, large, temp0, pinned checkpoint)'),
-            'dag_reasoning_rerun': dict(n=len(mh_rerun_rsn), task_ids=mh_rerun_rsn,
-                                        note='medium, sprompt fed parsed large-extraction facts'),
-            'dag_deterministic_fail': dict(n=len(mh_rerun_fail), task_ids=mh_rerun_fail,
-                                           note='large-extraction unparseable -> DAG arm fails with zero calls'),
+        'policy': ('FULL FRESH unified session (default): every arm re-collected in one inference environment '
+                   'after RealDetector completes; single-session Quality/Tokens/Latency accounting. '
+                   'Legacy reuse remains possible for accuracy-only reporting (documented in legacy_reuse_option) '
+                   'but is NOT the default for the formal paper results.'),
+        'session': {
+            'model_grouping': 'large: mono(300) -> extraction(300) -> DAG-L/L reasoning(<=300); then medium: DAG-L/M reasoning(<=300)',
+            'gpu_guard': 'engine.start_model refuses to start when GPU busy or port 8128 occupied (protects RealDetector)',
+            'resume': 'keyed ledger; completed keys skipped on resume',
+            'timeout_per_call': 180, 'concurrency': 1,
         },
-        'TAT-QA': {
-            'mono_rerun': dict(n=len(tq_old_rerun_mono), task_ids=tq_old_rerun_mono, note='old-40 mono missing, large'),
-            'mono_reuse': dict(n=160, note='scale_up/RESPONSES.jsonl tq:*:mono'),
-            'dag_extraction': dict(decision='reuse', n=200,
-                                   source='tatqa_benchmark/large_RESPONSES.jsonl (40) + scale_up/RESPONSES.jsonl tq:*:ext (160)'),
-            'dag_reasoning_rerun': dict(n=len(tq_old_rerun_rsn), task_ids=tq_old_rerun_rsn,
-                                        note='old-40 reasoning re-run with actual large-extraction facts, medium'),
-            'dag_reasoning_reuse': dict(n=160 - len(tq_new_fallback),
-                                        note='new-160 rsn rows fed actual parsed facts; reuse'),
-            'dag_deterministic_fail': dict(n=len(tq_new_fallback) + len(tq_old_ext_unparseable),
-                                           task_ids=sorted(set(tq_new_fallback) | set(tq_old_ext_unparseable)),
-                                           note='unparseable extraction -> DAG arm fails with zero calls; existing gold-contaminated answers discarded'),
+        'expected_calls': {
+            'mono_large': 300,
+            'extraction_large': 300,
+            'dag_ll_reasoning_large': expect_rsn,
+            'dag_lm_reasoning_medium': expect_rsn,
+            'total_expected': 300 + 300 + 2 * expect_rsn,
+            'worst_case_total': 1200,
+            'expected_deterministic_dag_failures': expect_fail,
+            'note': ('parse-failure estimate from legacy extraction (MH %d + TQ-old %d + TQ-new %d); '
+                     'fresh extraction decides at runtime') % (len(mh_ext_unparseable), len(tq_old_ext_unparseable), len(tq_new_fallback)),
         },
-        'total_new_model_calls': len(mh_rerun_rsn) + len(tq_old_rerun_mono) + len(tq_old_rerun_rsn),
+        'legacy_reuse_option': {
+            'mono': '100 MH + 160 TQ legacy mono rows are protocol-identical (same prompt/model/checkpoint, temp 0); accuracy-reusable',
+            'dag_actual_cells': 'MH large-extraction 100 (FSC), TQ large-extraction 200 (40 tqb + 160 scale_up), TQ new-160 medium reasoning 151',
+            'invalid_forever': 'gold-fed old-40 reasoning, 9+4 gold-fallback reasoning answers, FSC gold-conditioned reasoning, live static mixed-model arm',
+        },
+        'total_new_model_calls': None,
         'total_new_calls_breakdown': {
-            'mh_reasoning_medium': len(mh_rerun_rsn),
-            'tq_mono_large': len(tq_old_rerun_mono),
-            'tq_reasoning_medium': len(tq_old_rerun_rsn),
+            'note': 'superseded by expected_calls under the full-fresh policy; minimal-cell plan was 165 (87 MH rsn-M + 40 TQ mono + 38 TQ rsn-M)',
+            'minimal_cell_plan': dict(mh_reasoning_medium=len(mh_rerun_rsn),
+                                      tq_mono_large=40, tq_reasoning_medium=len(tq_old_rerun_rsn)),
         },
         'paired_n': dict(MultiHiertt=100, TAT_QA=200, overall=300),
         'analysis': {
-            'paired_delta': 'Delta_i = I(DAG_i correct) - I(Mono_i correct); mean + paired bootstrap 95% CI (10k resamples, seed 20260916)',
-            'mcnemar': 'exact McNemar on b (mono ok, dag fail) / c (mono fail, dag ok)',
-            'complexity_stratification': 'n_ops from TAT-QA derivation / MH program; buckets 1-2, 3, 4+',
-            'cost_metrics': 'tokens per arm (reported from legacy rows for reused cells, new rows for reruns) and per-call latency_s; single-session recommendation for any new calls',
+            'paired_delta': 'Delta_i = I(armA_i correct) - I(armB_i correct); mean + paired bootstrap 95% CI (10k resamples, seed 20260916)',
+            'mcnemar': 'exact McNemar on b / c per arm pair',
+            'table_A': 'Mono-L vs DAG-L/L (pure decomposition), per dataset + overall',
+            'table_B': 'DAG-L/L vs DAG-L/M (heterogeneous allocation), per dataset + overall',
+            'complexity_stratification': 'n_ops buckets 1-2 / 3 / 4+, computed on Table-A pair (Mono-L vs DAG-L/L) ONLY',
+            'cost_metrics': 'tokens and per-call latency_s per arm from the single fresh session',
         },
     }
 
@@ -334,7 +350,7 @@ def main():
     print(json.dumps({
         'audit_written': str(OUT / 'DECOMPOSITION_PAIRING_AUDIT.json'),
         'mh_freeze': len(mh_freeze), 'tq_freeze': len(tq_freeze),
-        'total_new_calls': audit['rerun_plan']['total_new_model_calls'],
+        'expected_calls': audit['rerun_plan']['expected_calls'],
         'mh_ext_unparseable': len(mh_ext_unparseable),
         'tq_old_ext_unparseable': len(tq_old_ext_unparseable),
         'tq_new_fallback': len(tq_new_fallback),

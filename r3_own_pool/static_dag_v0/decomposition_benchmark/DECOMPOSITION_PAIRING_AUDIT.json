@@ -1,6 +1,6 @@
 {
- "audit_version": "1.0",
- "created_unix": 1789975916.1109726,
+ "audit_version": "1.1",
+ "created_unix": 1789976701.640648,
  "scope": "strictly paired Monolithic-vs-DAG decomposition benchmark; task-id + protocol audit only; no model calls",
  "legacy_artifacts_preserved": {
   "MultiHiertt_mono_batch1": "/root/r3_own_pool/static_dag_v0/live_e2e/monolithic_baseline/RESULTS.json",
@@ -793,27 +793,48 @@
   }
  },
  "unified_frozen_protocol": {
-  "definition": "same task + same model version + same scorer + same information condition; only Monolithic/DAG differs",
-  "monolithic_arm": {
-   "model": "large",
-   "prompt": "MONO v1",
-   "input": "question + raw context (ctx[:14000])",
-   "scoring": "extract_value + tolerance 1e-4 rel"
-  },
-  "dag_arm": {
-   "extraction": {
+  "definition": "same task + same input + same scorer + same model capability; only whether decomposition is applied differs",
+  "design_decision_v1_1": "Three arms, not two. Mono-L vs DAG-L/L isolates the pure decomposition effect; DAG-L/L vs DAG-L/M isolates stage-level heterogeneous model allocation. Comparing Mono-L directly against DAG-L/M would confound decomposition with reasoning-model choice.",
+  "arms": {
+   "Mono-L": {
     "model": "large",
-    "prompt": "eprompt v1",
-    "input": "question + raw context"
+    "prompt": "MONO v1",
+    "input": "question + raw context (ctx[:14000])",
+    "scoring": "extract_value + tolerance 1e-4 rel"
    },
-   "reasoning": {
-    "model": "medium",
-    "prompt": "sprompt v1",
-    "input": "facts parsed from the large-extraction output; NEVER gold"
+   "DAG-L/L": {
+    "extraction": {
+     "model": "large",
+     "prompt": "eprompt v1",
+     "input": "question + raw context"
+    },
+    "reasoning": {
+     "model": "large",
+     "prompt": "sprompt v1",
+     "input": "facts parsed from the large-extraction output; NEVER gold"
+    },
+    "execution": "exec_calc over v0..v_{n-1} with the same facts; tolerance 1e-4 rel"
    },
-   "execution": "exec_calc over v0..v_{n-1} with the same facts; tolerance 1e-4 rel"
+   "DAG-L/M": {
+    "extraction": {
+     "model": "large",
+     "prompt": "eprompt v1",
+     "input": "question + raw context (SHARED extraction with DAG-L/L)"
+    },
+    "reasoning": {
+     "model": "medium",
+     "prompt": "sprompt v1",
+     "input": "same parsed facts as DAG-L/L"
+    },
+    "execution": "exec_calc; tolerance 1e-4 rel"
+   }
   },
-  "extraction_parse_failure_policy": "deterministic DAG failure; NO gold fallback, NO retry (default)",
+  "research_questions": {
+   "RQ-A": "Mono-L vs DAG-L/L -> does decomposition itself help?",
+   "RQ-B": "DAG-L/L vs DAG-L/M -> does heterogeneous stage allocation help after decomposition?"
+  },
+  "extraction_parse_failure_policy": "deterministic DAG failure for BOTH DAG arms; NO gold fallback, NO retry; reasoning not called",
+  "collection_policy": "all three arms re-collected in one unified inference session (default); legacy cells are accuracy-reusable but latency is not comparable across sessions",
   "generation": {
    "temperature": 0,
    "top_p": 1,
@@ -823,258 +844,37 @@
   "no_gold_anywhere": true
  },
  "rerun_plan": {
-  "policy": "reuse protocol-identical legacy artifacts; re-run only contaminated/missing cells; no retries; no gold",
-  "MultiHiertt": {
-   "mono": {
-    "decision": "reuse",
-    "n": 100,
-    "note": "batch1 (live session) + batch2 (scale_up session); identical prompt/model/checkpoint; optional uniform re-run (100 calls) if single-session latency accounting is required"
-   },
-   "dag_extraction": {
-    "decision": "reuse",
-    "n": 100,
-    "source": "fresh_static_confirmation/large_RESPONSES.jsonl (eprompt v1, large, temp0, pinned checkpoint)"
-   },
-   "dag_reasoning_rerun": {
-    "n": 87,
-    "task_ids": [
-     "cf32d60d2c3043a194565b3fabf0dcfb",
-     "8d44611c9b9b45968b9fc6a76d6a3292",
-     "801652a1045646eab273881fe0c095a2",
-     "12efc4e07eee44f39b3473e03e003345",
-     "a97d21ab1fd644f7a67b7185033796ef",
-     "003594db953a4f919c2f5b6f46bbb79f",
-     "72a7bf44b6f44db8b6b9f0b79b5ad35a",
-     "1b1082b3fa2f403386d208a368b795b6",
-     "88dcfa9b58434e8a85ba506dee891ede",
-     "4046601ddf674a1c9f4507df6d2a972b",
-     "6f2c908fe17b498896ea24cbcaac2ae5",
-     "f2bd5fbbfbf34ae183e7c8dd77a0eb7a",
-     "bbecd35899de4fb1be46b56339f5d7bd",
-     "2da3c4e6c38b435195a2a29358b0cf6e",
-     "690bdcf798174e15ba82b3fe659d8e7d",
-     "26e97e280be042789822ae8aa08138c9",
-     "724543c809fb4a2d895eb7c3f26bbff9",
-     "a4fd9d53f55e43088cb18015c71306cb",
-     "cfbbc9aeca2945699682b332f7c83a39",
-     "529a5d0cbb8d4927b068abf48292efd7",
-     "f5643975b4b046c186b072475c57789d",
-     "a9a0a554c74c41719d28b9f7c32dc3ea",
-     "4b5bf5901b434fd0b7052031baca8321",
-     "f96addc1b690408ca08a141255ae41f2",
-     "b9c03f1c9f8b45eb9e6744a4b5898b9d",
-     "e47d314bc9ab4b46925a0453a4646126",
-     "53da07e016c44a19b77b0a1de4f86f15",
-     "d465215f787a462288c27fb70b38531a",
-     "a74dc414c1ae4277a57dece221887f85",
-     "c07a6dbeca2a49f6ae4e9e2ed0779e84",
-     "d4e229649c694de6bc9781e521a80222",
-     "ebfa86ab15644fe5b08113acf88e610e",
-     "c57204c3adcf41a8b71bf1eaa4c09fe7",
-     "0ba40b26cf6540d3ba1dca96dc0ac505",
-     "03b5c06fd4f14cafb011bf63a4c8e76d",
-     "aaed30b0b1804368bcdd70946af3cfbb",
-     "6238092fd52c4f2b89c2db456411250f",
-     "7208d20492b64eca810c8e484c5a8e38",
-     "a61db122fd7543fdaaa9be8e88ee9b3c",
-     "2fb5cc849c974b89b73165556e5f65a4",
-     "2ea9b87945064067a523b7d232dd9809",
-     "8bfc649acf804325bad0dc581fd0c68a",
-     "ffea35f80442476c999e70b68fd0cb29",
-     "3eba2d84c84940aa95c389a7b1f2a258",
-     "95b3fec2a5484d308748cfd19fe4c811",
-     "6560606bef4546cd866a92bfd8d324c0",
-     "cba81efcf72f47dcbf60723369432e6d",
-     "fc5ab41086fa44119f154e41b5fe2c78",
-     "1e0a2cdac9864dd0b8e047ba4a620e7b",
-     "c8ff1009d181467c8dc74893b0171cd8",
-     "55312249eb80450b825b1f4c1e1c0730",
-     "cd6d5558cbd945d3886fa7f2369d5f4d",
-     "e0051170f6cf416caa1f79813133d254",
-     "9ee8f64237304489bc9febc528aa66b4",
-     "034a14018f1d4f24a5ce3afa1e46db1f",
-     "a0679de6c7874787a4e11ecfb4d46044",
-     "6ba4b3469aac4cbead67500d0cc0bf85",
-     "4ee73cb8c31142fd94df8538f82715e4",
-     "69df1d1692d6445797af6d0553eca13e",
-     "42e6eddf0cf1456cb8632c10ccd14f53",
-     "15107ae4a3654f5b975b0b45ed6dda57",
-     "da29eda4c32642b398be37df9246743d",
-     "04de16eacf7642aaa0846562dce24f14",
-     "bcc200d52107421a94c789c1ac36e7bf",
-     "a4a2b05eff294464ba8fc0a295d8ca5b",
-     "ee5a45ba002d47788a17bdbf0455d4b5",
-     "0f75a4bdc79c4e53959ca011eb0ce9a4",
-     "90f0058bfd70471a8ba289e8c21450e7",
-     "c77ab5e2a6ba46b9837d71f48025d69d",
-     "cbca62b51f04464ebf1de67774241eca",
-     "302dbb6249554077a8a722f97dd8cbd9",
-     "e677bdc27bed42b4993c6b97e2117863",
-     "1f7ef06d66d94c12938daba2966a9569",
-     "3eff99b7876045bab0672a4d0947e8c5",
-     "fb0d28948be942cfadb696223b02cb8a",
-     "ea2a61fbf02b44b897d6018cdffd65dd",
-     "5cc5b5081af049d5bd445f289450f647",
-     "6e162c4fc79c4ae594b4b463d20a3b62",
-     "599300005b5e4b99b4fdff1e8927cd11",
-     "6b09e2fdac634e43a7e0f8b46409092a",
-     "d60815331f0a4aaba1b766c053f55412",
-     "f616e253d416406eb6db6a81a2109754",
-     "f53bf6b574d841e69bf86f7d5179b1ac",
-     "c9257ff836a846ea90fbec84b35de444",
-     "f994cf0576954754a8c8bf369b9df272",
-     "a92d0f9216e14d36b56d04196a4817aa",
-     "00b072a8cbfa41b09294a9cb10a1eb7f"
-    ],
-    "note": "medium, sprompt fed parsed large-extraction facts"
-   },
-   "dag_deterministic_fail": {
-    "n": 13,
-    "task_ids": [
-     "0172b91f808c430890391df3bd98fb89",
-     "1c6635d8e10b4383ab6ab5ea0d8c0e6d",
-     "3d92bf014d99423496331bf2d8bda75d",
-     "52c7608506e44cb8a06026b4c14970b1",
-     "702fb63d1ac649c7b1fef4ceedfcdbf2",
-     "a865a6f8969447cf81658dc9f22ac28c",
-     "c12f0faad1c0455bbb9f80aa5b625e46",
-     "cb829d3409f940d3854da6af23a6fb06",
-     "cda651e30a3c4a589ac2835f42a6914f",
-     "cf6a8029d4474577b0b91b1f4c120683",
-     "cf711c6fa3ba4cae84efe9af396341b1",
-     "e6e1880ed51f4d1a98e0f2982ab39789",
-     "f45dcbba5fd640bdb11123620fba9e0a"
-    ],
-    "note": "large-extraction unparseable -> DAG arm fails with zero calls"
-   }
+  "policy": "FULL FRESH unified session (default): every arm re-collected in one inference environment after RealDetector completes; single-session Quality/Tokens/Latency accounting. Legacy reuse remains possible for accuracy-only reporting (documented in legacy_reuse_option) but is NOT the default for the formal paper results.",
+  "session": {
+   "model_grouping": "large: mono(300) -> extraction(300) -> DAG-L/L reasoning(<=300); then medium: DAG-L/M reasoning(<=300)",
+   "gpu_guard": "engine.start_model refuses to start when GPU busy or port 8128 occupied (protects RealDetector)",
+   "resume": "keyed ledger; completed keys skipped on resume",
+   "timeout_per_call": 180,
+   "concurrency": 1
   },
-  "TAT-QA": {
-   "mono_rerun": {
-    "n": 40,
-    "task_ids": [
-     "d5072c93-36bb-432c-adc8-6334fd6fe7ac",
-     "634122ee-5fb5-4e38-a552-5673e23987cf",
-     "2e3d4fe2-96f3-4ad9-b23f-1c590897b6e5",
-     "71384b98-32c8-46e6-a820-9551c8c10e2d",
-     "efb9abeb-ad8a-4558-9695-6d1054957e1b",
-     "4a253bf4-b9fc-4ec3-b99b-d2744646a296",
-     "6c44a1a8-0785-43a0-90ab-7e21df2c57d9",
-     "a8ab5675-0560-4cd0-a294-76fd54b04ad6",
-     "79bc72ac-ecad-4b9e-92a9-df7ab98cdd7b",
-     "f8073b0e-9327-40f7-9646-dd96da92ea3a",
-     "9332c840-68f6-43e1-a06c-902dae3fef81",
-     "11708d2a-0e19-4feb-b687-fe2785da2b95",
-     "37c1f8e3-ea65-4d95-95bc-91356c8e6ffc",
-     "0a12160d-f72a-44ec-9c31-5815d81268a0",
-     "14501a2e-1369-44f4-aa58-c5eb42c8d68b",
-     "a6bc87a3-0335-4914-bdc1-69fc6b941b69",
-     "ceb35697-abdc-4acf-a54f-5b6716749d2b",
-     "87cdfd06-a9ef-48e8-a44e-9addd92a0d0c",
-     "973464b5-a5fe-4381-9bc5-e225f5ba9a2c",
-     "12756239-28b8-482e-bfc8-c3dd6b2f2954",
-     "f9898b19-f84e-4cd8-9cd2-330767f39a38",
-     "35d602ae-9131-4291-a30c-49a40f32bbe4",
-     "e4deb430-6bd6-4505-a2cc-facbd0d502bf",
-     "9e632ed1-1a2b-40a9-9a9a-72515db3585d",
-     "9406b211-17a1-4a97-a646-a57170b7e270",
-     "765f1e20-9c75-4611-99ef-68a193d7e101",
-     "219f3e23-c2b0-4607-9573-6af0eea1fb33",
-     "78d004fb-a7b1-4ad5-8870-a7e0462e999e",
-     "74f778d2-8a07-4b39-92d9-4a3c36af6f50",
-     "2b77bd1e-17ee-4f74-9fb7-7cc4ad5142dd",
-     "eb1ecc18-e3d3-4dd6-a689-546998eb2784",
-     "cd3367c7-d3bd-440c-8c51-90a6ee95cc77",
-     "3b8e873e-64d5-4af0-904f-7197dc632773",
-     "aef42c33-65c0-40a3-92e7-fefd107aacdb",
-     "24f8613a-5516-4f0e-9839-8f6e31480785",
-     "0b7463b3-ed9e-47a0-b838-b26e0ab886eb",
-     "311dc93c-93b4-49a5-ba50-5d97cc16e4fa",
-     "9fce8f25-dd3b-4c50-9b7b-d200ced15ded",
-     "3b5bb347-41c7-499a-b044-87b9a04b0833",
-     "65026273-5d78-4e7a-b846-828ecbc809ec"
-    ],
-    "note": "old-40 mono missing, large"
-   },
-   "mono_reuse": {
-    "n": 160,
-    "note": "scale_up/RESPONSES.jsonl tq:*:mono"
-   },
-   "dag_extraction": {
-    "decision": "reuse",
-    "n": 200,
-    "source": "tatqa_benchmark/large_RESPONSES.jsonl (40) + scale_up/RESPONSES.jsonl tq:*:ext (160)"
-   },
-   "dag_reasoning_rerun": {
-    "n": 38,
-    "task_ids": [
-     "d5072c93-36bb-432c-adc8-6334fd6fe7ac",
-     "634122ee-5fb5-4e38-a552-5673e23987cf",
-     "2e3d4fe2-96f3-4ad9-b23f-1c590897b6e5",
-     "71384b98-32c8-46e6-a820-9551c8c10e2d",
-     "efb9abeb-ad8a-4558-9695-6d1054957e1b",
-     "4a253bf4-b9fc-4ec3-b99b-d2744646a296",
-     "6c44a1a8-0785-43a0-90ab-7e21df2c57d9",
-     "a8ab5675-0560-4cd0-a294-76fd54b04ad6",
-     "79bc72ac-ecad-4b9e-92a9-df7ab98cdd7b",
-     "f8073b0e-9327-40f7-9646-dd96da92ea3a",
-     "9332c840-68f6-43e1-a06c-902dae3fef81",
-     "11708d2a-0e19-4feb-b687-fe2785da2b95",
-     "37c1f8e3-ea65-4d95-95bc-91356c8e6ffc",
-     "0a12160d-f72a-44ec-9c31-5815d81268a0",
-     "a6bc87a3-0335-4914-bdc1-69fc6b941b69",
-     "ceb35697-abdc-4acf-a54f-5b6716749d2b",
-     "87cdfd06-a9ef-48e8-a44e-9addd92a0d0c",
-     "973464b5-a5fe-4381-9bc5-e225f5ba9a2c",
-     "12756239-28b8-482e-bfc8-c3dd6b2f2954",
-     "f9898b19-f84e-4cd8-9cd2-330767f39a38",
-     "e4deb430-6bd6-4505-a2cc-facbd0d502bf",
-     "9e632ed1-1a2b-40a9-9a9a-72515db3585d",
-     "9406b211-17a1-4a97-a646-a57170b7e270",
-     "765f1e20-9c75-4611-99ef-68a193d7e101",
-     "219f3e23-c2b0-4607-9573-6af0eea1fb33",
-     "78d004fb-a7b1-4ad5-8870-a7e0462e999e",
-     "74f778d2-8a07-4b39-92d9-4a3c36af6f50",
-     "2b77bd1e-17ee-4f74-9fb7-7cc4ad5142dd",
-     "eb1ecc18-e3d3-4dd6-a689-546998eb2784",
-     "cd3367c7-d3bd-440c-8c51-90a6ee95cc77",
-     "3b8e873e-64d5-4af0-904f-7197dc632773",
-     "aef42c33-65c0-40a3-92e7-fefd107aacdb",
-     "24f8613a-5516-4f0e-9839-8f6e31480785",
-     "0b7463b3-ed9e-47a0-b838-b26e0ab886eb",
-     "311dc93c-93b4-49a5-ba50-5d97cc16e4fa",
-     "9fce8f25-dd3b-4c50-9b7b-d200ced15ded",
-     "3b5bb347-41c7-499a-b044-87b9a04b0833",
-     "65026273-5d78-4e7a-b846-828ecbc809ec"
-    ],
-    "note": "old-40 reasoning re-run with actual large-extraction facts, medium"
-   },
-   "dag_reasoning_reuse": {
-    "n": 151,
-    "note": "new-160 rsn rows fed actual parsed facts; reuse"
-   },
-   "dag_deterministic_fail": {
-    "n": 11,
-    "task_ids": [
-     "14501a2e-1369-44f4-aa58-c5eb42c8d68b",
-     "35d602ae-9131-4291-a30c-49a40f32bbe4",
-     "56327885-98fe-40db-93f8-f762b1bf5d20",
-     "5f282807-f3fe-4efd-a4ef-b88a3d580bf9",
-     "61610e9a-13c4-4670-8616-c6218f7793ad",
-     "780bc5d9-daa1-4434-b5ae-f8187fb0f450",
-     "b2786c1a-37de-4120-b03c-32bf5c81f157",
-     "e302a7ec-94e5-4bea-bff4-5d4b9d4f6265",
-     "eb787966-fa02-401f-bfaf-ccabf3828b23",
-     "ed9e3e80-6941-4888-9e40-bbd1cb092485",
-     "fbf1fd1f-12d5-4ffc-b121-51cb10e6a9c8"
-    ],
-    "note": "unparseable extraction -> DAG arm fails with zero calls; existing gold-contaminated answers discarded"
-   }
+  "expected_calls": {
+   "mono_large": 300,
+   "extraction_large": 300,
+   "dag_ll_reasoning_large": 276,
+   "dag_lm_reasoning_medium": 276,
+   "total_expected": 1152,
+   "worst_case_total": 1200,
+   "expected_deterministic_dag_failures": 24,
+   "note": "parse-failure estimate from legacy extraction (MH 13 + TQ-old 2 + TQ-new 9); fresh extraction decides at runtime"
   },
-  "total_new_model_calls": 165,
+  "legacy_reuse_option": {
+   "mono": "100 MH + 160 TQ legacy mono rows are protocol-identical (same prompt/model/checkpoint, temp 0); accuracy-reusable",
+   "dag_actual_cells": "MH large-extraction 100 (FSC), TQ large-extraction 200 (40 tqb + 160 scale_up), TQ new-160 medium reasoning 151",
+   "invalid_forever": "gold-fed old-40 reasoning, 9+4 gold-fallback reasoning answers, FSC gold-conditioned reasoning, live static mixed-model arm"
+  },
+  "total_new_model_calls": null,
   "total_new_calls_breakdown": {
-   "mh_reasoning_medium": 87,
-   "tq_mono_large": 40,
-   "tq_reasoning_medium": 38
+   "note": "superseded by expected_calls under the full-fresh policy; minimal-cell plan was 165 (87 MH rsn-M + 40 TQ mono + 38 TQ rsn-M)",
+   "minimal_cell_plan": {
+    "mh_reasoning_medium": 87,
+    "tq_mono_large": 40,
+    "tq_reasoning_medium": 38
+   }
   },
   "paired_n": {
    "MultiHiertt": 100,
@@ -1082,10 +882,12 @@
    "overall": 300
   },
   "analysis": {
-   "paired_delta": "Delta_i = I(DAG_i correct) - I(Mono_i correct); mean + paired bootstrap 95% CI (10k resamples, seed 20260916)",
-   "mcnemar": "exact McNemar on b (mono ok, dag fail) / c (mono fail, dag ok)",
-   "complexity_stratification": "n_ops from TAT-QA derivation / MH program; buckets 1-2, 3, 4+",
-   "cost_metrics": "tokens per arm (reported from legacy rows for reused cells, new rows for reruns) and per-call latency_s; single-session recommendation for any new calls"
+   "paired_delta": "Delta_i = I(armA_i correct) - I(armB_i correct); mean + paired bootstrap 95% CI (10k resamples, seed 20260916)",
+   "mcnemar": "exact McNemar on b / c per arm pair",
+   "table_A": "Mono-L vs DAG-L/L (pure decomposition), per dataset + overall",
+   "table_B": "DAG-L/L vs DAG-L/M (heterogeneous allocation), per dataset + overall",
+   "complexity_stratification": "n_ops buckets 1-2 / 3 / 4+, computed on Table-A pair (Mono-L vs DAG-L/L) ONLY",
+   "cost_metrics": "tokens and per-call latency_s per arm from the single fresh session"
   }
  },
  "complexity_stratification_plan": {
