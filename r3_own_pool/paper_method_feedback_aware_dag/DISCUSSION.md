@@ -48,6 +48,6 @@ RQ1（拆分）：分解收益呈域依赖与复杂度依赖（MultiHiertt +14pp
 
 3. **Stage-wise complementarity is real。** Cross-model 3×3 矩阵表明，当抽取质量被固定（E_large）后，medium 和 coder 的推理互补性重新浮现——阶段互补性是真实的，只是被同模型绑定掩盖。
 
-4. **Selective adaptation is safer than aggressive switching。** Two-stage（4 次切换，零 harm）优于 Capability Router（135 次切换，harm 4.5%）；保守偏好切换以极低成本实现了正向但温和的收益。
+4. **Selective adaptation is safer than aggressive switching。** Two-stage 在较小 confirmation set 上出现正向信号（harm=0），但在更大的 confirmation set 上未复现；相比之下，激进切换（135 次 Capability Router 切换）导致 harm 4.5%。**少而准的切换比多而激进的切换安全，但泛化收益仍不稳定。**
 
 **最终结论**：动态调度能够更安全地利用已有模型互补性，但不能突破模型池本身的能力覆盖上限。
