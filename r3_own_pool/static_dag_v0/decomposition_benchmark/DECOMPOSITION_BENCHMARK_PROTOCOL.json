@@ -70,11 +70,13 @@
   "latency_accounting": "single session; per-call latency_s recorded; arm means reported with session caveat"
  },
  "analysis": {
-  "table_A": {"pair": "Mono-L vs DAG-L/L", "question": "does decomposition itself help?", "columns": ["Dataset", "Paired N", "Mono-L", "DAG-L/L", "delta_Q", "95% paired bootstrap CI", "McNemar b/c/p"]},
-  "table_B": {"pair": "DAG-L/L vs DAG-L/M", "question": "does heterogeneous stage allocation help after decomposition?", "columns": ["Dataset", "Paired N", "DAG-L/L", "DAG-L/M", "delta_Q", "95% paired bootstrap CI", "McNemar b/c/p"]},
+  "table_A": {"pair": "Mono-L vs DAG-L/L", "question": "does decomposition itself help?", "columns": ["Dataset", "Paired N", "Mono-L", "DAG-L/L", "delta_Q", "95% paired bootstrap CI", "Help/Harm", "McNemar b/c/p"]},
+  "table_B": {"pair": "DAG-L/L vs DAG-L/M", "question": "does heterogeneous stage allocation help after decomposition?", "columns": ["Dataset", "Paired N", "DAG-L/L", "DAG-L/M", "delta_Q", "95% paired bootstrap CI", "Help/Harm", "McNemar b/c/p"]},
+  "help_harm_definition": {"table_A": "Help = #(Mono wrong, DAG right); Harm = #(Mono right, DAG wrong)", "table_B": "Help = #(DAG-L/L wrong, DAG-L/M right); Harm = #(DAG-L/L right, DAG-L/M wrong)", "note": "reported in every table cell and every complexity bucket; near-zero delta_Q with large Help AND Harm means offsetting effects, not absence of effect"},
   "paired_delta": "Delta_i = I(armA_i correct) - I(armB_i correct); mean over paired tasks",
   "bootstrap": "10k paired resamples, seed 20260916, 2.5/97.5 percentiles",
   "mcnemar": "exact two-sided binomial test on discordant pairs",
+  "cost_reporting_caveat": "Quality and Tokens are the clean resource comparison. Latency is reported as an observed value from the same execution environment (identical session, but execution order mono->ext->rsnL->rsnM means server thermal/batching state can shift across phases); sub-second latency differences must NOT be interpreted as a stable algorithmic speedup",
   "complexity_stratification": {"pair": "Mono-L vs DAG-L/L ONLY", "buckets": ["1-2", "3", "4+"], "n_ops_rule": "TAT-QA: binary operators in derivation; MultiHiertt: add/sub/mul/div calls in program", "precomputed_counts": {"MultiHiertt": {"1-2": 86, "3": 9, "4+": 5}, "TAT-QA": {"1-2": 177, "3": 19, "4+": 4}}},
   "cost": {"tokens": "per arm from fresh session rows", "latency": "per-call latency_s from fresh session rows"},
   "legacy_results_demoted": "old DECOMP_UTILITY.json numbers (+14.0 MH / -9.38 TQ / pooled -3.8) are protocol-contaminated (gold-fed reasoning, gold fallbacks, mixed models) and are legacy/exploratory; NOT to be used as decomposition evidence"

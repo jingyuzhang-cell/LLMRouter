@@ -154,6 +154,7 @@ def main():
         return dict(n=n, acc_a=float(np.mean([p[arm_a] for p in pts])) if n else None,
                     acc_b=float(np.mean([p[arm_b] for p in pts])) if n else None,
                     delta_q=float(d.mean()) if n else None, ci=ci,
+                    help=c, harm=b,
                     mcnemar_b=b, mcnemar_c=c, mcnemar_p=mcnemar_p(b, c),
                     tokens_a=float(np.mean([p['tokens'][cost_a] for p in pts])) if n else None,
                     tokens_b=float(np.mean([p['tokens'][cost_b] for p in pts])) if n else None,
