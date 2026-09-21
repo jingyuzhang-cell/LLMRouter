@@ -1,0 +1,17 @@
+{
+  "role": "multidag_ablation_two_control_arms_one_shot",
+  "base_panel": "multidag_dynamic_120 (frozen, unchanged)",
+  "n_tasks": 120,
+  "arm_static_matched": {
+    "semantics": "static: one recovery per failed node, ideal detection, no cross-task memory, no gating",
+    "targets": "e fail->coder (as original static); r fail->large; v fail->large",
+    "purpose": "isolate whether the +20pp comes from escalation targets rather than the adaptive policy"
+  },
+  "arm_dynamic_realdetector": {
+    "semantics": "dynamic rules identical to frozen dynamic arm",
+    "detection": "DEPLOYABLE: e=facts unparseable/empty; r=expression unparseable/unexecutable; v=value unparseable or v_value != r_value (agreement)",
+    "retention_preregistered": "(Q_RD - Q_static)/(Q_ideal - Q_static), reported with binomial CI"
+  },
+  "generation": "temperature 0, top_p 1, max_tokens 512; initial-pass keys shared with base panel (cache reuse)",
+  "one_shot": true
+}
