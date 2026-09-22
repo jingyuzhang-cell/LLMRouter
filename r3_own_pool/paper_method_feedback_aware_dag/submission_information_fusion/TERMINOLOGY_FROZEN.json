@@ -1,0 +1,59 @@
+{
+ "comment": "Terminology table for Information Fusion English submission. FROZEN before translation begins. All claim-strength terms locked to match frozen Chinese manuscript.",
+ "terms": {
+  "查询路由": {"en": "query-level routing", "note": "NEVER 'query router' as method name; use 'query-level routing' or 'query routing'"},
+  "节点路由": {"en": "node-level routing", "note": "or 'node routing'; refers to per-node model assignment"},
+  "类型先验": {"en": "type prior", "note": "stage-type prior baseline that matches node routing performance"},
+  "节点级模型分配": {"en": "node-level model assignment", "note": "the core mechanism of contribution 1"},
+  "静态执行": {"en": "static execution", "note": "fixed plan with frozen local fallbacks"},
+  "动态执行": {"en": "dynamic execution", "note": "feedback-conditioned downstream adaptation"},
+  "反馈条件化后继适应": {"en": "feedback-conditioned downstream adaptation", "note": "the formal definition of Dynamic; NEVER 'online learning' or 'real-time replanning'"},
+  "选择性调整": {"en": "selective override", "note": "preserve strong default, only override with evidence"},
+  "预算感知": {"en": "budget-aware", "note": "residual budget constraints on recovery actions"},
+  "历史图复用": {"en": "graph-forest reuse", "note": "historical DAG reuse; NOT 'caching' alone"},
+  "能力画像": {"en": "capability profiling", "note": "offline per-(node, model) Q/C/L estimation"},
+  "条件能力": {"en": "conditional capability", "note": "quality under gold/standard predecessor input"},
+  "传播能力": {"en": "propagated capability", "note": "quality under actual upstream output; KEY DISTINCTION"},
+  "接口表达能力": {"en": "interface adequacy", "note": "whether intermediate representations preserve necessary semantics"},
+  "反馈可诊断性": {"en": "feedback diagnosability", "note": "whether runtime signals can detect actual failures"},
+  "能力匹配": {"en": "capability match", "note": "whether model strengths align with node requirements"},
+  "三条件": {"en": "three conditions", "note": "conjunction, NOT a product model; always 'condition relation' not 'multiplicative model'"},
+  "有限候选 Oracle": {"en": "finite-candidate oracle", "note": "upper bound within enumerated candidate space only"},
+  "差距恢复比例": {"en": "gap recovery ratio", "note": "GR(r;b) = (Q_r - Q_b)/(Q_Oracle - Q_b); NEVER call this 'accuracy'"},
+  "严格配对分解基准": {"en": "strictly paired decomposition benchmark", "note": "300 tasks, three arms, single unified session"},
+  "异构阶段分工": {"en": "heterogeneous stage assignment", "note": "DAG-L/M arm; switching reasoning model after decomposition"},
+  "同模型拆分": {"en": "same-model decomposition", "note": "DAG-L/L arm; decomposition without model change"},
+  "后继闭包": {"en": "descendant closure", "note": "{v_i} ∪ Desc(v_i); the affected subgraph on failure"},
+  "部署可得信号": {"en": "deployable signals", "note": "parse/exec/consistency/unit-test; NO gold answers at runtime"},
+  "支持性证据": {"en": "supportive evidence", "note": "USE THIS for MBPP +6.0pp; NEVER 'statistically significant' when McNemar p≥0.05"},
+  "方向一致但未确证": {"en": "directionally consistent but not confirmed", "note": "for two-node-chain dynamic results"},
+  "点估计": {"en": "point estimate", "note": "for Self-Refine 85% vs Dynamic 80%; paired difference NOT significant"},
+  "非支配": {"en": "non-dominated", "note": "Pareto terminology"},
+  "反事实敏感性": {"en": "counterfactual sensitivity", "note": "hypothetical correction analysis, NOT a real result"},
+  "任务分解": {"en": "task decomposition", "note": "breaking a task into DAG nodes"},
+  "能力解耦": {"en": "capability decoupling", "note": "DAG's core role: unbinding same-model stage coupling"},
+  "探索性诊断": {"en": "exploratory diagnostic", "note": "downgraded results; NOT formal evidence"}
+ },
+ "claim_strength_rules": {
+  "significant": "ONLY when bootstrap CI excludes 0 AND exact McNemar p < 0.05",
+  "supportive_evidence": "bootstrap CI excludes 0 but McNemar p ≥ 0.05; or direction replicated across panels",
+  "not_significant": "CI includes 0; or McNemar p ≥ 0.05",
+  "point_estimate_only": "numerical difference reported without significance claim",
+  "confirmed": "pre-registered criterion met (e.g., cross-domain contrast upgrade rule)",
+  "directionally_consistent": "same sign across independent panels, magnitude similar, not confirmed"
+ },
+ "forbidden_phrases": [
+  "Dynamic DAG significantly outperforms Static on MBPP",
+  "DAG decomposition improves reasoning accuracy",
+  "first to apply Pareto optimization to DAG scheduling",
+  "universal best solver",
+  "math tasks are unsuitable for DAG (over-generalization)",
+  "Graph Forest improves accuracy (never claimed)"
+ ],
+ "required_qualifiers": {
+  "MBPP_dynamic": "+6.0pp; bootstrap 95% CI [+1.0, +12.0] excludes zero, but exact McNemar p = 0.070; supportive evidence, not confirmed significant",
+  "decomposition_overall": "DAG-L/M 31.7% still below Mono-L 38.7%; heterogeneous assignment mitigates but does not fully offset decomposition loss",
+  "math_collapse": "on the frozen stratified Math-100 panel, both tested intermediate-representation interface families showed substantial performance degradation; NOT extrapolated to all math tasks",
+  "attribution_20pp": "main gain from escalating failed nodes to strongest untried model (+18.3pp, Static-Matched); policy logic contributes only +1.7pp (ns)"
+ }
+}
