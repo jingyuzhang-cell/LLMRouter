@@ -1,0 +1,76 @@
+{
+ "protocol_name": "FRP_DAG",
+ "version": "1.0",
+ "status": "FROZEN_BEFORE_EXECUTION",
+ "created_unix": 1790050000,
+ "full_name": "Feedback-aware Residual-budget Pareto DAG scheduling",
+ "objective": "formalize the existing feedback-driven dynamic DAG as a multi-objective Pareto optimization; compare against weighted-sum, static-only, and existing frozen baselines on the multidag_120 panel",
+
+ "problem_definition": {
+  "dag": "e1 ∥ e2 → r → v (4 nodes, e1/e2 parallel branches)",
+  "decision_variables": "π = {(m_i, a_i)} for each node; m_i ∈ {medium, large, coder}; a_i ∈ {execute, retry, switch, verify, terminate}",
+  "objectives": {
+   "Q(π)": "expected task success = Σ w_i log q̂_i(m_i | z_i) − λ Σ r_ij(m_i, m_j)",
+   "C(π)": "total tokens = Σ C_i(m_i, a_i)",
+   "L(π)": "critical-path latency = max(L_e1, L_e2) + L_r + L_v"
+  },
+  "constraints": "C(π) ≤ B_C, L(π) ≤ B_L, DAG precedence"
+ },
+
+ "algorithm": {
+  "phase1_initial_pareto": {
+   "method": "topological-order Pareto beam search with ε-dominance",
+   "beam_width": 8,
+   "epsilon": 0.01,
+   "per_node": "try all 3 models, extend each beam candidate, compute (Q̂, Ĉ, L̂)",
+   "pruning": "ε-dominance: remove candidate B if ∃A with Q_A ≥ Q_B−ε and C_A ≤ C_B+ε and L_A ≤ L_B+ε and at least one strict",
+   "output": "Pareto front P_0 of ≤8 non-dominated plans"
+  },
+  "phase2_execution": {
+   "execute": "selected plan node-by-node; lookup frozen response for (node, model, task)",
+   "feedback": "deployable signals only (parse/exec/consistency), same as existing Dynamic",
+   "failure_at_node": "freeze all unaffected sibling branches; identify D(v_i) = {v_i} ∪ Desc(v_i)"
+  },
+  "phase3_reoptimization": {
+   "update_capability": "q̂_i^new(m) = g(q̂_i^old(m), f_i); simple update: q̂ ← q̂ × 0.3 on failure signal, q̂ ← min(1, q̂ × 1.5) on success",
+   "update_budget": "C_rem = B_C − C_used; L_rem = B_L − L_used",
+   "reoptimize": "Pareto beam search on subgraph D(v_i) with updated q̂ and budget constraints",
+   "plan_selection": "max-Q subject to C ≤ C_rem and L ≤ L_rem; if no feasible plan, terminate"
+  }
+ },
+
+ "baselines": {
+  "always_large": "all nodes → large",
+  "static_node_router": "frozen type-prior assignment (e1/e2→large, r→medium, v→coder) + local fallback",
+  "weighted_sum": "score = α·Q̂ − β·Ĉ − γ·L̂; grid over (α,β,γ) to trace out single-objective approximation; same execution/re-optimization as FRP-DAG",
+  "frp_static": "initial Pareto plan, execute, NO feedback re-optimization (ablation)",
+  "frp_dag_full": "initial Pareto plan + feedback re-optimization (complete algorithm)",
+  "frozen_static": "frozen Static arm from multidag_dynamic_120",
+  "frozen_dynamic": "frozen Dynamic arm from multidag_dynamic_120"
+ },
+
+ "panel": "multidag_dynamic_120 (120 tasks, same frozen panel)",
+ "data_source": "frozen RESPONSES.jsonl from multidag_dynamic_120 + multidag_ablation_120",
+ "scoring": "task success = v value close to gold (1e-4 rel); same as frozen panel",
+ "qcl_estimation": "aggregate per-(node, model) from frozen data; for missing (node, model, task) cells, use per-(node, model) mean",
+
+ "metrics": [
+  "task success rate (Q)",
+  "mean tokens (C)",
+  "mean critical-path latency (L)",
+  "budget violation rate",
+  "Pareto front size and coverage",
+  "Hypervolume (reference point = worst on each axis)",
+  "paired ΔQ vs frozen Static and Dynamic",
+  "bootstrap 95% CI + exact McNemar"
+ ],
+
+ "hard_rules": [
+  "no modification of any frozen result",
+  "all comparisons on the same 120-task panel",
+  "deployable signals only at runtime",
+  "one-shot; no post-hoc tuning after results"
+ ],
+
+ "new_calls_estimate": "0-200 (for (node, model, task) cells where frozen data is absent and the algorithm selects that combination; estimated per-(node,model) mean used as fallback if zero-call mode is chosen)"
+}
