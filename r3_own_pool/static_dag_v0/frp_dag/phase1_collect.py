@@ -26,7 +26,7 @@ OUT = ROOT / 'frp_dag'
 V_PROMPT = ('You are verifying a computed answer for a financial question. '
             'Given the extracted facts and a proposed expression, check that every referenced value '
             'binds to the correct fact and that the arithmetic is right, recompute independently, '
-            'then return ONLY JSON {"value": <number>} with the corrected final value '
+            'then return ONLY JSON {{"value": <number>}} with the corrected final value '
             '(preserve reported units; percentages as ratios x100).\n'
             'QUESTION: {q}\nFACTS: {facts}\nPROPOSED EXPRESSION: {expr}')
 
