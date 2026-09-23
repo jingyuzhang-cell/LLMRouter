@@ -6,15 +6,22 @@ known results; not independent confirmation). Gold used only for scoring. All 12
 in every denominator. Full provenance: corrected_replay/BUG_REPORT.md (parser fix),
 BENCHMARK_PROTOCOL.md, VERIFIER_SUBSET_PROTOCOL.md, FULLGRAPH_PROTOCOL.md.
 
-## Table 1 — Overall performance (clean scenario)
+## Table 1 — Task Completion under Different Execution Conditions
 
-| Method | Accuracy | tokens/task | calls | latency s |
-|---|---:|---:|---:|---:|
-| Router (best single model, 14B direct QA) | 0.5500 | 603 | 1 | 0.53 |
-| Static DAG (fixed structure/models, no feedback) | 0.3500 | 1503 | 4 | 4.63 |
-| Dynamic DAG (RD: deployable detection + local recovery) | 0.4000 | 2324 | 6.6 | 6.69 |
-| ref: dynamic-ideal (gold-driven triggers, not deployable) | 0.4250 | 2664 | 7.6 | 7.33 |
-| ref: static-with-fallback (fixed local fallbacks) | 0.3917 | 2759 | 7.6 | 7.79 |
+Baseline taxonomy (two categories, stated explicitly):
+- CAPABILITY baseline (answers "how strong is the model itself?"):
+  Single LLM — 14B direct QA; under faults its only policy is same-model retry.
+- WORKFLOW-EXECUTION baselines (answer "how is execution organized?"):
+  Static DAG (fixed structure/models, no feedback), Full replay (FG control), Dynamic DAG.
+
+| Method | Clean | Fault 10% | Fault 20% | Fault 30% | tokens/task (clean→f30) | latency s (clean) |
+|---|---:|---:|---:|---:|---:|---:|
+| Single LLM (retry on failure) | 0.5500 | 0.4833 | 0.4250 | 0.3500 | 603→783 | 0.53 |
+| Static DAG (no feedback) | 0.3500 | 0.3167 | 0.2917 | 0.2667 | 1503→1487 | 4.63 |
+| Dynamic DAG (feedback + local recovery) | 0.4000 | 0.4083 | 0.4083 | 0.4083 | 2324→2224 | 6.69 |
+
+Reference rows (corrected arms, clean): dynamic-ideal 0.4250 (gold-driven triggers, not
+deployable); static-with-fallback 0.3917.
 
 Reading: on clean, easy-heavy tasks the single model dominates quality AND cost — the
 DAG pays decomposition/interface losses (consistent with the loss-attribution study).
@@ -29,9 +36,28 @@ Paired statistics (STAT_CHECK.md, task bootstrap CI + McNemar exact):
 
 | Method | Easy (1 op, n=74) | Hard (>=2 ops, n=46) |
 |---|---:|---:|
-| Router | 0.7027 | 0.3043 |
-| Static | 0.4324 | 0.2174 |
-| Dynamic | 0.4595 | 0.3043 |
+| Single LLM | 0.7027 | 0.3043 |
+| Static DAG | 0.4324 | 0.2174 |
+| Dynamic DAG | 0.4595 | 0.3043 |
+
+### Table 1c — Quality-cost trade-off (Q per 1000 tokens; Pareto dominance)
+
+| Scenario | Single LLM | Static | Dynamic | Non-dominated set |
+|---|---:|---:|---:|---|
+| Clean | 0.913 | 0.233 | 0.172 | Single LLM only |
+| Fault 10% | 0.742 | 0.211 | 0.188 | Single LLM only |
+| Fault 20% | 0.587 | 0.196 | 0.186 | Single LLM only (overall); Hard: {Single, Dynamic} |
+| Fault 30% | 0.447 | 0.179 | 0.184 | {Single, Dynamic}; Hard: {Single, Dynamic} |
+
+Honest Pareto reading: in clean conditions the single model dominates BOTH DAG methods
+on quality and cost simultaneously — the DAG's tokens buy structure the task does not
+need. Static DAG is Pareto-DOMINATED at every operating point (by the single model
+everywhere; additionally by Dynamic at 30%). Dynamic becomes non-dominated only where
+its robustness pays: >=20% faults on hard tasks and >=30% overall, where it is the sole
+owner of the high-quality end of the frontier (0.408 vs 0.350; hard 0.283 vs 0.152).
+Efficiency claims vs Static must be scoped accordingly: Dynamic spends ~1.5x Static's
+tokens for +9 to +14pp under faults with zero harm; its cost advantage claim is versus
+FULL REPLAY (Table 2), not versus the single model.
 
 ## Figure 1 — Failure robustness curve (core figure)
 
@@ -114,11 +140,18 @@ real r expression executable in 32/36 tasks (evidence errors invisible at e and 
   advantage (fault30 hard +13.0pp vs Router, CI [+2.2, +23.9]); repairability
   bottleneck (verifier ablation).
 - Must NOT be claimed: clean-scenario accuracy superiority over a single strong model
-  (Router vs Dynamic +15.0pp, p=0.0005 in Router's favor); "Dynamic > Static on clean"
+  (Single LLM vs Dynamic +15.0pp, p=0.0005 in the model's favor; it also Pareto-dominates
+  both DAG methods in clean conditions — state this openly); "Dynamic > Static on clean"
   as significant (+5.0pp, p=0.109 — say "directionally positive, not significant");
-  a significant OVERALL crossover vs Router at 30% (directional only, p=0.31; the
-  significant crossover is on the hard subset); semantic evidence-error detection
-  (recall gap quantified).
+  cost superiority over the single model (Q/1000 tokens favors it in every scenario —
+  Dynamic's efficiency claim is versus full-graph replay and, under faults, versus Static
+  per unit of recovered quality); a significant OVERALL crossover vs Single LLM at 30%
+  (directional only, p=0.31; the significant crossover is on the hard subset);
+  semantic evidence-error detection (recall gap quantified).
+- Abstract wording: use "improve workflow reliability / reduce degradation under
+  failures / enable efficient local recovery"; never "improve reasoning accuracy /
+  outperform LLMs / superior task solving". Problem A (task solving: single model wins)
+  is distinguished from Problem B (reliable workflow execution: this paper's problem).
 - Caveats to carry: capability-fault model (same-model retry reproduces the fault at
   temp 0; transient-fault cost table reported separately); single seed; 14B-GPTQ session
   nondeterminism ~10–15% (bounds the FG−RD and fault-scenario noise); supplementary
