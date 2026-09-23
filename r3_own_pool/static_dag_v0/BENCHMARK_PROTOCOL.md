@@ -73,3 +73,15 @@ recover to clean accuracy under transient faults by construction (temp 0).
 
 Code: benchmark_run.py (freeze + S1 Router clean + S2 per rate),
 benchmark_analyze.py (zero-call consolidation).
+
+## Addendum (2026-09-23, frozen before running): multi-seed fault injection
+
+The single-seed risk is addressed WITHOUT adding tasks or re-running models: two
+additional fault-injection masks (seeds 20260924, 20260925; the original 20260923 is
+kept as-is) are drawn from the same fault pools and procedure; recovery/downstream
+calls reuse executed (model, prompt) pairs at temperature 0 wherever identical, and
+only genuinely new prompts are executed for real. Reporting changes to mean +/- std
+across the three seeds for every fault-scenario number; per-seed paired statistics
+remain available. Nothing else changes (rates, methods, recovery policies, pools).
+Positioning: the fault benchmark is a MAIN evaluation (120 tasks x 3 rates x 3 seeds);
+subset/attribution/verifier analyses are DIAGNOSTIC analyses and are labeled as such.

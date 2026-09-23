@@ -6,6 +6,15 @@ known results; not independent confirmation). Gold used only for scoring. All 12
 in every denominator. Full provenance: corrected_replay/BUG_REPORT.md (parser fix),
 BENCHMARK_PROTOCOL.md, VERIFIER_SUBSET_PROTOCOL.md, FULLGRAPH_PROTOCOL.md.
 
+Experiment tiers (stated explicitly, do not present all as equal weight):
+- MAIN EVALUATION: Table 1 / Figure 1 — 120 tasks, all methods, clean + fault
+  injection at 10/20/30% with THREE seeds (20260923/24/25; fault numbers are
+  mean±std across seeds; MULTI_SEED_REPORT.md).
+- RECOVERY-EFFICIENCY EVALUATION (main): Table 2 — RD vs FG on the same 120 tasks.
+- DIAGNOSTIC ANALYSES (mechanism explanations, smaller subsets — never headline
+  claims): hard/easy subsets (74/46 tasks), recovery attribution (78 failures),
+  verifier ablation (34 triggers), detection evaluation (per-node instances).
+
 ## Table 1 — Task Completion under Different Execution Conditions
 
 Baseline taxonomy (two categories, stated explicitly):
@@ -16,9 +25,11 @@ Baseline taxonomy (two categories, stated explicitly):
 
 | Method | Clean | Fault 10% | Fault 20% | Fault 30% | tokens/task (clean→f30) | latency s (clean) |
 |---|---:|---:|---:|---:|---:|---:|
-| Single LLM (retry on failure) | 0.5500 | 0.4833 | 0.4250 | 0.3500 | 603→783 | 0.53 |
-| Static DAG (no feedback) | 0.3500 | 0.3167 | 0.2917 | 0.2667 | 1503→1487 | 4.63 |
-| Dynamic DAG (feedback + local recovery) | 0.4000 | 0.4083 | 0.4083 | 0.4083 | 2324→2224 | 6.69 |
+| Single LLM (retry on failure) | 0.5500 | 0.4972±0.0142 | 0.4389±0.0142 | 0.3639±0.0258 | 603→783 | 0.53 |
+| Static DAG (no feedback) | 0.3500 | 0.3361±0.0142 | 0.3250±0.0236 | 0.3111±0.0322 | 1503→1487 | 4.63 |
+| Dynamic DAG (feedback + local recovery) | 0.4000 | 0.4111±0.0039 | 0.4139±0.0079 | 0.4083±0.0136 | 2324→2224 | 6.69 |
+
+Fault columns: mean±std over 3 injection seeds (population std; 120 tasks each).
 
 Reference rows (corrected arms, clean): dynamic-ideal 0.4250 (gold-driven triggers, not
 deployable); static-with-fallback 0.3917.
@@ -61,7 +72,7 @@ FULL REPLAY (Table 2), not versus the single model.
 
 ## Figure 1 — Failure robustness curve (core figure)
 
-`adaptive_benchmark/robustness_curve_2panel.png` (overall + Hard subset).
+`adaptive_benchmark/robustness_curve_2panel_multiseed.png` (overall + Hard subset, mean±std over 3 seeds; single-seed version kept as robustness_curve_2panel.png).
 Data: injected capability faults at 10/20/30%, seed 20260923:
 
 | Fault rate | Router | Static | Dynamic | Router degr. | Static degr. | Dynamic degr. | Dynamic recovery |
@@ -73,13 +84,18 @@ Data: injected capability faults at 10/20/30%, seed 20260923:
 
 Hard subset under faults: Dynamic 0.2609/0.2826 vs Router 0.1739/0.1522 at 20/30%.
 
-Robustness significance (STAT_CHECK.md):
-- Dynamic vs Static under faults: +9.2pp (p=0.001), +11.7pp (p=0.000122),
-  +14.2pp (p=1.5e-05) at 10/20/30% — and Help/Harm 11/0, 14/0, 17/0
-  (Dynamic NEVER harms a task that Static got right, at any fault rate).
-- Dynamic vs Router at 30%: +5.8pp overall, CI [−4.2, +15.0], p=0.31 — the overall
-  crossover is directional, not significant; on the HARD subset +13.0pp,
-  CI [+2.2, +23.9], p=0.070 — the significant-looking crossover lives on hard tasks.
+Robustness significance (STAT_CHECK.md per-seed paired tests; MULTI_SEED_REPORT.md for
+cross-seed consistency):
+- Dynamic vs Static under faults: cross-seed dQ = +7.5±1.4 / +8.9±2.1 / +9.7±3.8 pp at
+  10/20/30% — positive under every seed; per-seed paired tests reach p<=0.001
+  (seed 20260923: Help/Harm 11/0, 14/0, 17/0 — Dynamic NEVER harms a task Static
+  got right, at any rate).
+- Dynamic vs Single LLM at 30%: cross-seed dQ = +4.4±1.4pp — the crossover occurs
+  under ALL THREE seeds (any single-seed paired test remains directional, e.g.
+  p=0.31 for seed 20260923; report the cross-seed consistency, not a single p).
+- Hard subset: Dynamic 0.2754±0.010 / 0.2754±0.010 / 0.2681±0.021 vs Single LLM
+  0.2681±0.010 / 0.2174±0.036 / 0.1812±0.041 — Dynamic ahead at every rate >=10%
+  in the multi-seed mean (equal at 10%: 0.275 vs 0.268), and far ahead of Static.
 - Clean Hard: Dynamic vs Static +8.7pp, CI [+2.2, +17.4] (bootstrap CI excludes 0;
   McNemar 4/0, p=0.125 — report both).
 
@@ -153,6 +169,7 @@ real r expression executable in 32/36 tasks (evidence errors invisible at e and 
   outperform LLMs / superior task solving". Problem A (task solving: single model wins)
   is distinguished from Problem B (reliable workflow execution: this paper's problem).
 - Caveats to carry: capability-fault model (same-model retry reproduces the fault at
-  temp 0; transient-fault cost table reported separately); single seed; 14B-GPTQ session
+  temp 0; transient-fault cost table reported separately); fault injection now 3 seeds
+  (mean±std reported; original single-seed caveat resolved); 14B-GPTQ session
   nondeterminism ~10–15% (bounds the FG−RD and fault-scenario noise); supplementary
   status — an independent confirmation would require a fresh frozen panel.
