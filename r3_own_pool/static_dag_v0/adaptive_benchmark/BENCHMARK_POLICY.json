@@ -1,0 +1,29 @@
+{
+  "role": "adaptive_failure_benchmark",
+  "seed": 20260923,
+  "rates": [
+    0.1,
+    0.2,
+    0.3
+  ],
+  "methods": {
+    "router": "best single model (large) direct QA, no DAG, no recovery",
+    "static": "frozen initial pass e1/e2 large -> r medium -> v coder, fixed, no feedback",
+    "dynamic": "RD deployable local recovery (corrected v-stage)"
+  },
+  "failure_model": "capability fault on (task,node,planned-model): any call of that model for that node-task returns a real failing output; retry/re-execution with same model reproduces the fault",
+  "fault_pools": {
+    "e_n": 79,
+    "r_n": 18,
+    "v_n": 107,
+    "e_sample": "'{\\n  \"facts\": [\\n    {\\n      \"value\": \"-100\",\\n      \"evidence\": \"Amounts due to and from related parties, net as of the pe'",
+    "r_sample": "'{\"expression\":\"v3 - v4\"}'",
+    "v_sample": "\"Let's break down the provided facts and the proposed expression to ensure everything aligns correctly.\\n\\nFrom the facts:\\n\""
+  },
+  "cost_accounting": "re-execution/retry tokens counted even when the call is (model,prompt)-reused",
+  "code_sha256": {
+    "/root/r3_own_pool/static_dag_v0/benchmark_run.py": "3e6d639dd74f24edc4c17e3332671ec396cd60ca4bc515a58f99c36270ff0291",
+    "/root/r3_own_pool/static_dag_v0/benchmark_analyze.py": "e6ad1ef830745dcdbbebfc092e07e0c36d4db2c81ca53c711d35e1728c75cb5b",
+    "/root/r3_own_pool/static_dag_v0/BENCHMARK_PROTOCOL.md": "e17897fb5a990383d71fd644eb6adcf3a1113392665560a9e7ebfa8d61836aad"
+  }
+}

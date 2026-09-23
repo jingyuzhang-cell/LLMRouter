@@ -1,0 +1,33 @@
+{
+  "role": "multidag_fullgraph_control_arm_one_shot",
+  "base_panel": "multidag_dynamic_120 (frozen, unchanged)",
+  "base_controls": "multidag_ablation_120 sm (Static-Matched) and rd (Dynamic-Real, local)",
+  "n_tasks": 120,
+  "question": "how much computation does dependency-aware local recovery save vs feedback-triggered full-graph re-execution, at what quality difference?",
+  "arm_fg": {
+    "semantics": "IDENTICAL to RD arm rules except execution scope: every feedback-triggered recovery re-executes ALL nodes e1,e2,r,v",
+    "shared_with_rd": [
+      "initial DAG execution (cached base-panel keys)",
+      "model assignment (planned e=large,r=medium,v=coder)",
+      "deployable detection: e=facts unparseable/empty; r=expression unparseable/unexecutable; v=value unparseable or disagrees with r value; gold NEVER triggers recovery",
+      "recovery targets: e first failure->coder later->medium (cross-task memory, frozen task order); r->large; v->large",
+      "one recovery attempt per failed node; single detection pass per stage; stages e->r->v",
+      "budget rule per-task = 1.2 x Static-arm realized tokens; NOT enforced at execution (ungated like RD); violations reported post-hoc for both arms",
+      "generation temperature 0, top_p 1, max_tokens 512; same prompts"
+    ],
+    "scope_difference": "each feedback round re-executes the whole graph; triggering node gets its recovery model, other nodes keep their CURRENT model (recoveries persist)",
+    "rounds": "per task at most 3 rounds (e round handles all e failures at once, r round, v round); 4 real calls per round"
+  },
+  "budget_accounting": "post-hoc violation statistics against 1.2 x static realized; no hard limit at execution; same口径 for RD and FG",
+  "all_tasks_kept": true,
+  "supplementary_not_confirmatory": true,
+  "generation": "temperature 0, top_p 1, max_tokens 512; initial-pass keys shared with base panel (cache reuse)",
+  "one_shot": true,
+  "code_sha256": {
+    "/root/r3_own_pool/static_dag_v0/multidag_fullgraph.py": "00ca841146cb9a95c040fd3e6cabfe1a511d785e822181d751441c7b8185a2ff",
+    "/root/r3_own_pool/static_dag_v0/multidag_ablation.py": "997888b5e9cc9021ccdc4fd7c928d7ccaa20bdf314f7dfb56fc5f528c00e553e",
+    "/root/r3_own_pool/static_dag_v0/multidag_dynamic.py": "a447fe4a25b58c5519f5b6e5408986a42449089ca655264aa0da9db61bb4f300",
+    "multidag_dynamic_120/POLICY.json": "298bccaaee7022a4788c46f2c04c59fb901adbd5f8beee44eae8ae1282648e31"
+  },
+  "executed_code_note": "The code executed differs from the first freeze in two fixes only, both without semantic effect on the arm definition: (1) calls batched by model within each node pass (wall-clock optimization; task-local decisions unchanged); (2) override fallback m or node_model (None-return of per-round override lambda) and t.answer field name. Pre-run replay test (test_multidag_fullgraph.py) re-passed after the fixes: RD replay 120/120, mapping 824/0."
+}

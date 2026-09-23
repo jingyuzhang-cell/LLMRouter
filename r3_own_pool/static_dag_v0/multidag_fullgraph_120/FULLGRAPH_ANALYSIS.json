@@ -1,0 +1,189 @@
+{
+  "generated_unix": 1790162806.1523664,
+  "n": 120,
+  "primary_question": "does local (dependency-aware) recovery save computation vs full-graph re-execution, with what quality difference?",
+  "A_quality": {
+    "static": 0.1667,
+    "sm": 0.35,
+    "rd": 0.35,
+    "fg": 0.3333,
+    "fg_vs_rd": {
+      "dQ": -0.0167,
+      "ci": [
+        -0.0583,
+        0.025
+      ],
+      "help": 2,
+      "harm": 4,
+      "mcnemar": {
+        "b": 2,
+        "c": 4,
+        "p_exact": 0.6875
+      }
+    },
+    "fg_vs_sm": {
+      "dQ": -0.0167,
+      "ci": [
+        -0.075,
+        0.0417
+      ],
+      "help": 6,
+      "harm": 8,
+      "mcnemar": {
+        "b": 6,
+        "c": 8,
+        "p_exact": 0.790527
+      }
+    },
+    "rd_vs_sm": {
+      "dQ": 0.0,
+      "ci": [
+        -0.0583,
+        0.0583
+      ],
+      "help": 7,
+      "harm": 7,
+      "mcnemar": {
+        "b": 7,
+        "c": 7,
+        "p_exact": 1.0
+      }
+    }
+  },
+  "B_cost": {
+    "mean_tokens": {
+      "static": 2848.7,
+      "dynamic": 2758.3,
+      "sm": 2895.7,
+      "rd": 2459.5,
+      "fg": 4039.9
+    },
+    "total_tokens": {
+      "static": 341848.0,
+      "dynamic": 330997.0,
+      "sm": 347480.0,
+      "rd": 295139.0,
+      "fg": 484791.0
+    },
+    "mean_latency_s": {
+      "static": 7.88,
+      "dynamic": 7.54,
+      "sm": 8.9,
+      "rd": 7.15,
+      "fg": 12.7
+    },
+    "adaptation_calls": {
+      "static": 466,
+      "dynamic": 467,
+      "sm": 465,
+      "rd": 365,
+      "fg": 832
+    },
+    "initial_calls_shared": 4
+  },
+  "C_scope_audit": {
+    "fg_rounds": {
+      "e": 73,
+      "r": 15,
+      "v": 120
+    },
+    "fg_adaptation_calls": 832,
+    "rd_adaptation_calls": 365,
+    "unaffected_branch_repeats": 337,
+    "mean_branch_repeats_per_task": 2.808,
+    "tasks_with_branch_repeat": 120,
+    "redundant_calls_fg": 457,
+    "tokens_saved_by_local_scope": 1580.4,
+    "calls_saved_by_local_scope": 467,
+    "latency_saved_by_local_scope": 5.55
+  },
+  "D_budget": {
+    "rule": "post-hoc: per-task used > 1.2 x static realized (no hard limit at execution, same for RD/FG)",
+    "rd_violations": 0,
+    "fg_violations": 96,
+    "sm_violations": 0,
+    "fg_violation_rate": 0.8,
+    "rd_violation_rate": 0.0,
+    "max_budget_ratio": {
+      "rd": 1.177,
+      "fg": 2.165,
+      "sm": 1.19
+    }
+  },
+  "E_determinism_audit": {
+    "fg_calls_total": 832,
+    "fg_statuses": {
+      "delivered": 832
+    },
+    "mapped_checked": 820,
+    "answer_mismatches": 101,
+    "same_prompt_mismatches_by_model": {
+      "large": 47,
+      "medium": 7
+    },
+    "diff_prompt_mismatches_by_model": {
+      "large": 21,
+      "medium": 19,
+      "coder": 7
+    },
+    "model_mismatch_pairs": 1,
+    "mismatches_by_node": {
+      "e1": 35,
+      "r": 23,
+      "v": 34,
+      "e2": 9
+    },
+    "preexisting_crossarm_same_prompt": {
+      "pairs": 158,
+      "diverged": 0
+    },
+    "mismatches": [
+      {
+        "fg_key": "e1:fg:d873cdd1-a71a-47e3-9419-abcf96db4013:e",
+        "src_key": "e1:d873cdd1-a71a-47e3-9419-abcf96db4013"
+      },
+      {
+        "fg_key": "e1:fg:d873cdd1-a71a-47e3-9419-abcf96db4013:v",
+        "src_key": "e1:d873cdd1-a71a-47e3-9419-abcf96db4013"
+      },
+      {
+        "fg_key": "e1:fg:a40b3392-8eda-418f-8e89-043969308ec6:v",
+        "src_key": "e1:a40b3392-8eda-418f-8e89-043969308ec6"
+      },
+      {
+        "fg_key": "r:fg:5eb1e240-26d7-423f-998c-9f5210cc4963:v",
+        "src_key": "r:rd:5eb1e240-26d7-423f-998c-9f5210cc4963:esc"
+      },
+      {
+        "fg_key": "v:fg:5eb1e240-26d7-423f-998c-9f5210cc4963:v",
+        "src_key": "v:rd:5eb1e240-26d7-423f-998c-9f5210cc4963:esc"
+      },
+      {
+        "fg_key": "e1:fg:e3c6afa9-f8f6-48eb-bb2e-c920a78003bb:v",
+        "src_key": "e1:e3c6afa9-f8f6-48eb-bb2e-c920a78003bb"
+      },
+      {
+        "fg_key": "r:fg:e3c6afa9-f8f6-48eb-bb2e-c920a78003bb:v",
+        "src_key": "r:rd:e3c6afa9-f8f6-48eb-bb2e-c920a78003bb:esc"
+      },
+      {
+        "fg_key": "v:fg:e3c6afa9-f8f6-48eb-bb2e-c920a78003bb:v",
+        "src_key": "v:rd:e3c6afa9-f8f6-48eb-bb2e-c920a78003bb:esc"
+      },
+      {
+        "fg_key": "v:fg:1ab24e0f-a22f-49e0-b08b-d65abcf7ee7f:v",
+        "src_key": "v:rd:1ab24e0f-a22f-49e0-b08b-d65abcf7ee7f:esc"
+      },
+      {
+        "fg_key": "e1:fg:d1252ff5-32e7-4733-a6e5-00905438be63:v",
+        "src_key": "e1:d1252ff5-32e7-4733-a6e5-00905438be63"
+      }
+    ],
+    "note": "FG adaptation calls should reproduce mapped RD/base answers at temperature 0; mismatches indicate vllm session nondeterminism (concentrated in the 14B GPTQ model), reported as-is; diff-prompt mismatches are cascades of same-prompt divergences"
+  },
+  "integrity": {
+    "all_tasks_in_denominator": 120,
+    "supplementary_not_confirmatory": true,
+    "budget_accounting": "post-hoc statistics only"
+  }
+}

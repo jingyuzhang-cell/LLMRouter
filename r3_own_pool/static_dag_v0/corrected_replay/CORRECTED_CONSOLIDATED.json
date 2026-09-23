@@ -1,0 +1,378 @@
+{
+  "generated_unix": 1790165230.911776,
+  "n": 120,
+  "basis": "corrected_replay/CORRECTED_ARMS.json (v-stage re-decision, fixed json_value parser, zero new calls)",
+  "main_table": {
+    "static": {
+      "Q": 0.3917,
+      "mean_tokens": 2759.4,
+      "total_tokens": 331132.0,
+      "adaptation_calls": 426,
+      "mean_latency_s": 7.79
+    },
+    "dynamic": {
+      "Q": 0.425,
+      "mean_tokens": 2664.5,
+      "total_tokens": 319740.0,
+      "adaptation_calls": 426,
+      "mean_latency_s": 7.33
+    },
+    "sm": {
+      "Q": 0.4167,
+      "mean_tokens": 2799.1,
+      "total_tokens": 335888.0,
+      "adaptation_calls": 425,
+      "mean_latency_s": 8.67
+    },
+    "rd": {
+      "Q": 0.4,
+      "mean_tokens": 2323.7,
+      "total_tokens": 278844.0,
+      "adaptation_calls": 309,
+      "mean_latency_s": 6.69
+    },
+    "fg": {
+      "Q": 0.375,
+      "mean_tokens": 3346.6,
+      "total_tokens": 401592.0,
+      "adaptation_calls": 592,
+      "mean_latency_s": 10.36
+    }
+  },
+  "paired": {
+    "dynamic_vs_static": {
+      "dQ": 0.0333,
+      "ci": [
+        -0.025,
+        0.0917
+      ],
+      "help": 8,
+      "harm": 4,
+      "mcnemar": {
+        "b": 8,
+        "c": 4,
+        "p_exact": 0.387695
+      }
+    },
+    "sm_vs_static": {
+      "dQ": 0.025,
+      "ci": [
+        -0.0167,
+        0.0667
+      ],
+      "help": 5,
+      "harm": 2,
+      "mcnemar": {
+        "b": 5,
+        "c": 2,
+        "p_exact": 0.453125
+      }
+    },
+    "rd_vs_sm": {
+      "dQ": -0.0167,
+      "ci": [
+        -0.075,
+        0.0417
+      ],
+      "help": 5,
+      "harm": 7,
+      "mcnemar": {
+        "b": 5,
+        "c": 7,
+        "p_exact": 0.774414
+      }
+    },
+    "rd_vs_static": {
+      "dQ": 0.0083,
+      "ci": [
+        -0.05,
+        0.0667
+      ],
+      "help": 7,
+      "harm": 6,
+      "mcnemar": {
+        "b": 7,
+        "c": 6,
+        "p_exact": 1.0
+      }
+    },
+    "fg_vs_rd": {
+      "dQ": -0.025,
+      "ci": [
+        -0.0583,
+        0.0
+      ],
+      "help": 0,
+      "harm": 3,
+      "mcnemar": {
+        "b": 0,
+        "c": 3,
+        "p_exact": 0.25
+      }
+    },
+    "fg_vs_sm": {
+      "dQ": -0.0417,
+      "ci": [
+        -0.1,
+        0.0083
+      ],
+      "help": 3,
+      "harm": 8,
+      "mcnemar": {
+        "b": 3,
+        "c": 8,
+        "p_exact": 0.226562
+      }
+    }
+  },
+  "fg_scope_audit": {
+    "rounds": {
+      "e": 73,
+      "v": 60,
+      "r": 15
+    },
+    "unaffected_branch_repeats": 217,
+    "mean_branch_repeats_per_task": 1.808,
+    "redundant_calls": 277,
+    "tokens_saved_by_local_scope": 1022.9,
+    "calls_saved_by_local_scope": 283,
+    "latency_saved_by_local_scope": 3.67
+  },
+  "budget_violations": {
+    "sm": {
+      "max_ratio": 1.19,
+      "sweep": {
+        "1.0": {
+          "violations": 35,
+          "rate": 0.2917
+        },
+        "1.2": {
+          "violations": 0,
+          "rate": 0.0
+        },
+        "1.5": {
+          "violations": 0,
+          "rate": 0.0
+        },
+        "2.0": {
+          "violations": 0,
+          "rate": 0.0
+        },
+        "2.5": {
+          "violations": 0,
+          "rate": 0.0
+        }
+      }
+    },
+    "rd": {
+      "max_ratio": 1.157,
+      "sweep": {
+        "1.0": {
+          "violations": 6,
+          "rate": 0.05
+        },
+        "1.2": {
+          "violations": 0,
+          "rate": 0.0
+        },
+        "1.5": {
+          "violations": 0,
+          "rate": 0.0
+        },
+        "2.0": {
+          "violations": 0,
+          "rate": 0.0
+        },
+        "2.5": {
+          "violations": 0,
+          "rate": 0.0
+        }
+      }
+    },
+    "fg": {
+      "max_ratio": 2.074,
+      "sweep": {
+        "1.0": {
+          "violations": 82,
+          "rate": 0.6833
+        },
+        "1.2": {
+          "violations": 54,
+          "rate": 0.45
+        },
+        "1.5": {
+          "violations": 14,
+          "rate": 0.1167
+        },
+        "2.0": {
+          "violations": 2,
+          "rate": 0.0167
+        },
+        "2.5": {
+          "violations": 0,
+          "rate": 0.0
+        }
+      }
+    }
+  },
+  "determinism_audit": {
+    "mapped_checked": 580,
+    "answer_mismatches": 69,
+    "same_prompt_mismatches": 38
+  },
+  "E1_recovery_effectiveness": {
+    "static": {
+      "recovery_rate": 0.1026,
+      "m_recovered": 8,
+      "N_wrong": 78,
+      "rr_detected": 0.1026,
+      "n_detected_engaged": 78,
+      "missed_detection_tasks": 0,
+      "tokens_per_recovery": 2812.1
+    },
+    "dynamic": {
+      "recovery_rate": 0.141,
+      "m_recovered": 11,
+      "N_wrong": 78,
+      "rr_detected": 0.141,
+      "n_detected_engaged": 78,
+      "missed_detection_tasks": 0,
+      "tokens_per_recovery": 2531.6
+    },
+    "sm": {
+      "recovery_rate": 0.1282,
+      "m_recovered": 10,
+      "N_wrong": 78,
+      "rr_detected": 0.1299,
+      "n_detected_engaged": 77,
+      "missed_detection_tasks": 0,
+      "tokens_per_recovery": 2739.2
+    },
+    "rd": {
+      "recovery_rate": 0.1026,
+      "m_recovered": 8,
+      "N_wrong": 78,
+      "rr_detected": 0.1026,
+      "n_detected_engaged": 78,
+      "missed_detection_tasks": 0,
+      "tokens_per_recovery": 2259.5
+    },
+    "fg": {
+      "recovery_rate": 0.0769,
+      "m_recovered": 6,
+      "N_wrong": 78,
+      "rr_detected": 0.0769,
+      "n_detected_engaged": 78,
+      "missed_detection_tasks": 0,
+      "tokens_per_recovery": 3505.5
+    }
+  },
+  "E1_recovery_coverage": {
+    "static": {
+      "coverage_mean": 0.9386,
+      "n_region_tasks": 114,
+      "missed_nodes_by_type": {
+        "e1": 11,
+        "e2": 11,
+        "r": 3,
+        "v": 3
+      }
+    },
+    "dynamic": {
+      "coverage_mean": 0.9386,
+      "n_region_tasks": 114,
+      "missed_nodes_by_type": {
+        "e1": 11,
+        "e2": 11,
+        "r": 3,
+        "v": 3
+      }
+    },
+    "sm": {
+      "coverage_mean": 0.9386,
+      "n_region_tasks": 114,
+      "missed_nodes_by_type": {
+        "e1": 11,
+        "e2": 11,
+        "r": 3,
+        "v": 3
+      }
+    },
+    "rd": {
+      "coverage_mean": 0.7895,
+      "n_region_tasks": 114,
+      "missed_nodes_by_type": {
+        "r": 35,
+        "v": 9,
+        "e1": 11,
+        "e2": 11
+      }
+    },
+    "fg": {
+      "coverage_mean": 0.9035,
+      "n_region_tasks": 114,
+      "missed_nodes_by_type": {
+        "r": 11,
+        "v": 11,
+        "e2": 5,
+        "e1": 5
+      }
+    }
+  },
+  "E3_detection_evaluation": {
+    "evidence": {
+      "n": 84,
+      "tp": 73,
+      "fp": 0,
+      "fn": 11,
+      "precision": 1.0,
+      "recall": 0.869,
+      "f1": 0.9299,
+      "note": "GT: e output empty/unparseable (TP) or well-formed with operand-recall gap (FN); e detector fires only on empty/unparseable"
+    },
+    "reasoning": {
+      "n": 68,
+      "tp": 0,
+      "fp": 0,
+      "fn": 68,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "note": "GT: r executable but wrong value; r detector fires only on unexecutable (recall 0 by design)"
+    },
+    "execution": {
+      "n": 18,
+      "tp": 18,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "note": "GT: r unparseable/unexecutable; detector targets exactly this"
+    },
+    "verification": {
+      "n": 90,
+      "tp": 57,
+      "fp": 12,
+      "fn": 21,
+      "precision": 0.8261,
+      "recall": 0.7308,
+      "f1": 0.7755,
+      "note": "GT: v wrong; fires on unparseable or v!=r; FP = v corrected a wrong r"
+    },
+    "structure": {
+      "n": 0,
+      "note": "N/A on fixed-DAG panel; requires an injection run"
+    },
+    "evidence_injection_check": {
+      "tasks": 36,
+      "r_expression_still_executes": 32,
+      "r_expression_breaks": 4,
+      "note": "x0.8 perturbation of one fact value; deterministic execution of the real r expression on perturbed facts"
+    }
+  },
+  "retention_rd": {
+    "value": 0.2492,
+    "note": "(Q_RD - Q_static)/(Q_dynamic - Q_static) on corrected arms"
+  }
+}

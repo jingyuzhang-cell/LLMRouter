@@ -180,7 +180,7 @@ def value_of(ans, facts):
 def json_value(ans):
     try: return float(json.loads(ans)['value'])
     except Exception:
-        try: return float(json.loads(v.decode(ans))['value'])
+        try: return float(v.decode(ans)['value'])
         except Exception: return None
 
 

@@ -1,0 +1,243 @@
+{
+  "generated_unix": 1790170209.0857534,
+  "n": 120,
+  "clean": {
+    "router": {
+      "Q": 0.55,
+      "mean_tokens": 602.525,
+      "total_tokens": 72303.0,
+      "calls": 120,
+      "mean_latency_s": 0.526597483533745
+    },
+    "static_dag": {
+      "Q": 0.35,
+      "mean_tokens": 1503.15,
+      "total_tokens": 180378.0,
+      "calls": 480,
+      "mean_latency_s": 4.626676180679351
+    },
+    "dynamic_dag": {
+      "Q": 0.4,
+      "mean_tokens": 2323.7,
+      "total_tokens": 278844.0,
+      "calls": 789,
+      "mean_latency_s": 6.687737496647363
+    },
+    "_reference_dynamic_ideal": {
+      "Q": 0.425,
+      "mean_tokens": 2664.5,
+      "calls": 906,
+      "mean_latency_s": 7.33,
+      "note": "gold-driven r/v triggers; not deployable"
+    },
+    "_reference_static_fallback": {
+      "Q": 0.3917,
+      "mean_tokens": 2759.4,
+      "calls": 906,
+      "mean_latency_s": 7.79,
+      "note": "static with fixed local fallbacks"
+    }
+  },
+  "fault": {
+    "0.1": {
+      "router": {
+        "Q": 0.48333333333333334,
+        "degradation": 0.1212,
+        "recovery_rate": 0.0,
+        "n_faulted": 12,
+        "mean_tokens": 651.7083333333334,
+        "cost_increase": 0.0816,
+        "mean_latency_s": 0.5626146585680545
+      },
+      "static": {
+        "Q": 0.31666666666666665,
+        "degradation": 0.0952,
+        "recovery_rate": 0.1667,
+        "n_faulted": 12,
+        "mean_tokens": 1499.5833333333333,
+        "cost_increase": -0.0024,
+        "mean_latency_s": 4.661724816293766
+      },
+      "dynamic": {
+        "Q": 0.4083333333333333,
+        "degradation": -0.0208,
+        "recovery_rate": 0.5,
+        "n_faulted": 12,
+        "mean_tokens": 2171.25,
+        "cost_increase": -0.0656,
+        "mean_latency_s": 6.569742360974972
+      },
+      "transient_cost_per_fault": {
+        "router": {
+          "extra_calls": 1,
+          "extra_tokens": 492.0,
+          "note": "retry same model; recovers to clean Q by construction (temp 0)"
+        },
+        "static": {
+          "extra_calls": 4,
+          "extra_tokens": 1274.0,
+          "note": "whole-flow re-execution; recovers to clean Q by construction"
+        },
+        "dynamic": {
+          "extra_calls": 3.08,
+          "extra_tokens": 94.0,
+          "note": "local recovery; measured"
+        }
+      }
+    },
+    "0.2": {
+      "router": {
+        "Q": 0.425,
+        "degradation": 0.2273,
+        "recovery_rate": 0.0,
+        "n_faulted": 24,
+        "mean_tokens": 723.4166666666666,
+        "cost_increase": 0.2006,
+        "mean_latency_s": 0.6042663890713205
+      },
+      "static": {
+        "Q": 0.2916666666666667,
+        "degradation": 0.1667,
+        "recovery_rate": 0.125,
+        "n_faulted": 24,
+        "mean_tokens": 1490.775,
+        "cost_increase": -0.0082,
+        "mean_latency_s": 4.6526155886085085
+      },
+      "dynamic": {
+        "Q": 0.4083333333333333,
+        "degradation": -0.0208,
+        "recovery_rate": 0.4167,
+        "n_faulted": 24,
+        "mean_tokens": 2190.6583333333333,
+        "cost_increase": -0.0573,
+        "mean_latency_s": 6.620137451868504
+      },
+      "transient_cost_per_fault": {
+        "router": {
+          "extra_calls": 1,
+          "extra_tokens": 604.0,
+          "note": "retry same model; recovers to clean Q by construction (temp 0)"
+        },
+        "static": {
+          "extra_calls": 4,
+          "extra_tokens": 1433.0,
+          "note": "whole-flow re-execution; recovers to clean Q by construction"
+        },
+        "dynamic": {
+          "extra_calls": 2.83,
+          "extra_tokens": 55.0,
+          "note": "local recovery; measured"
+        }
+      }
+    },
+    "0.3": {
+      "router": {
+        "Q": 0.35,
+        "degradation": 0.3636,
+        "recovery_rate": 0.0,
+        "n_faulted": 36,
+        "mean_tokens": 783.1,
+        "cost_increase": 0.2997,
+        "mean_latency_s": 0.6601227922985952
+      },
+      "static": {
+        "Q": 0.26666666666666666,
+        "degradation": 0.2381,
+        "recovery_rate": 0.1667,
+        "n_faulted": 36,
+        "mean_tokens": 1486.825,
+        "cost_increase": -0.0109,
+        "mean_latency_s": 4.6773659584733345
+      },
+      "dynamic": {
+        "Q": 0.4083333333333333,
+        "degradation": -0.0208,
+        "recovery_rate": 0.4444,
+        "n_faulted": 36,
+        "mean_tokens": 2223.641666666667,
+        "cost_increase": -0.0431,
+        "mean_latency_s": 6.683244963207593
+      },
+      "transient_cost_per_fault": {
+        "router": {
+          "extra_calls": 1,
+          "extra_tokens": 602.0,
+          "note": "retry same model; recovers to clean Q by construction (temp 0)"
+        },
+        "static": {
+          "extra_calls": 4,
+          "extra_tokens": 1463.0,
+          "note": "whole-flow re-execution; recovers to clean Q by construction"
+        },
+        "dynamic": {
+          "extra_calls": 2.81,
+          "extra_tokens": 89.0,
+          "note": "local recovery; measured"
+        }
+      }
+    }
+  },
+  "budget": {
+    "router": {
+      "clean": {
+        "sweep": {
+          "1.0": 0.0,
+          "1.2": 0.0,
+          "1.5": 0.0
+        },
+        "max_ratio": 0.41
+      },
+      "fault_20pct": {
+        "sweep": {
+          "1.0": 0.0,
+          "1.2": 0.0,
+          "1.5": 0.0
+        },
+        "max_ratio": 0.74
+      }
+    },
+    "static": {
+      "clean": {
+        "sweep": {
+          "1.0": 0.0,
+          "1.2": 0.0,
+          "1.5": 0.0
+        },
+        "max_ratio": 0.86
+      },
+      "fault_20pct": {
+        "sweep": {
+          "1.0": 0.0,
+          "1.2": 0.0,
+          "1.5": 0.0
+        },
+        "max_ratio": 0.86
+      }
+    },
+    "dynamic": {
+      "clean": {
+        "sweep": {
+          "1.0": 0.05,
+          "1.2": 0.0,
+          "1.5": 0.0
+        },
+        "max_ratio": 1.16
+      },
+      "fault_20pct": {
+        "sweep": {
+          "1.0": 0.0417,
+          "1.2": 0.0083,
+          "1.5": 0.0
+        },
+        "max_ratio": 1.23
+      }
+    }
+  },
+  "integrity": {
+    "all_tasks_kept": 120,
+    "supplementary_not_confirmatory": true,
+    "budget_accounting": "post-hoc statistics only",
+    "failure_model": "capability fault; same-model retry/re-execution reproduces the fault (temp 0)"
+  }
+}
