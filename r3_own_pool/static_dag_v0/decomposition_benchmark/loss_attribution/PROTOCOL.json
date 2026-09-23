@@ -1,0 +1,38 @@
+{
+ "protocol_name": "Decomposition_Loss_Attribution_Ablation",
+ "version": "1.0",
+ "status": "FROZEN_BEFORE_EXECUTION",
+ "question": "Why does DAG-L/L drop from 52.5% (Mono-L) to 31.5% on TAT-QA 200? Which layer contributes most: extraction error, interface information loss, reasoning degradation, or execution/parser failure?",
+ "panel": "TAT-QA 200 (frozen decomposition_benchmark tasks)",
+ "versions": {
+  "A_mono": {"description": "Mono-L direct answer (existing frozen result)", "new_calls": 0},
+  "B_current_dag": {"description": "Current DAG-L/L: large extraction → large reasoning → deterministic execution (existing frozen result)", "new_calls": 0},
+  "C_full_context": {
+   "description": "DAG with full-context passthrough: extraction stays, but reasoning ALSO sees the complete original context alongside extracted facts",
+   "new_calls": "~200 (reasoning only, large model)",
+   "tests": "interface information loss (does the facts-only interface lose context needed for reasoning?)"
+  },
+  "D_gold_facts": {
+   "description": "DAG with gold facts: extraction output replaced with gold literals from the task derivation; reasoning and execution unchanged",
+   "new_calls": "~200 (reasoning only, large model)",
+   "tests": "extraction error (are upstream extraction mistakes the bottleneck?)"
+  }
+ },
+ "analysis": {
+  "metrics": ["end-to-end accuracy", "ΔQ vs version B", "Harm recovery count (how many of the 56 B-failures does each version fix?)", "Help/Harm vs A"],
+  "interpretation": {
+   "C_recovers": "interface information loss is the main bottleneck → improve interface representation",
+   "D_recovers_but_C_doesnt": "extraction error is the main bottleneck → improve extraction node",
+   "neither_recovers": "decomposition-induced reasoning degradation → reconsider decomposition granularity",
+   "expression_correct_but_answer_wrong": "execution/parser loss → fix deterministic execution interface"
+  }
+ },
+ "hard_rules": [
+  "same 200 tasks as frozen decomposition benchmark",
+  "same model pool, generation config, scorer",
+  "extraction responses reused from frozen B (no new extraction calls)",
+  "gold facts derived from task derivation using same literals() function as original benchmark construction",
+  "reasoning prompt format follows frozen sprompt with modification only for C (add context) or D (replace facts)",
+  "one-shot, no post-hoc tuning"
+ ]
+}
