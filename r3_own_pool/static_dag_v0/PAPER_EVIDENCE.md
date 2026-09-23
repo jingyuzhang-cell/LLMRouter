@@ -173,3 +173,23 @@ real r expression executable in 32/36 tasks (evidence errors invisible at e and 
   (mean±std reported; original single-seed caveat resolved); 14B-GPTQ session
   nondeterminism ~10–15% (bounds the FG−RD and fault-scenario noise); supplementary
   status — an independent confirmation would require a fresh frozen panel.
+
+## Supplementary simulation — Adaptive Decomposition (entry-decision routing; zero calls, post-hoc)
+
+Question: does routing Easy tasks to Single LLM and Hard tasks to Dynamic DAG beat
+Single-all? Simulated from executed per-task results (ADAPTIVE_SIMULATION.md):
+- CLEAN: Adaptive(oracle difficulty, upper bound) = 0.5500 = Single-all EXACTLY —
+  Dynamic's hard-subset accuracy (0.3043; ideal-detector variant 0.3261) does not
+  EXCEED the single model on hard tasks, so the entry decision cannot lift clean
+  accuracy on this panel; it only shapes cost (0.55 at 1308 tokens vs 603 for
+  Single-all, 2324 for Dynamic-all). Deployable rules (question numerals/length,
+  table size) agree with the oracle split at only 19-32% and score 0.41-0.49.
+- FAULTS (3 seeds): Adaptive(oracle) 0.5000±0.017 / 0.4611±0.005 / 0.3972±0.021 —
+  tied-best at 10%, best at 20% (vs Single 0.4389, Dynamic-all 0.4139), and at 30%
+  below Dynamic-all (0.4083). Value = cost shaping + moderate-fault composition,
+  not accuracy.
+Positioning: this stays a supplementary simulation; the failure-aware mainline is
+unchanged. Consistent with the earlier Selective-DAG gate finding (deployable
+difficulty signal exists, AUC 0.734 on TAT-QA-200) — the conditional DAG advantage
+on this panel is robustness, not clean accuracy. Do NOT claim adaptive > single on
+clean (oracle-level equality only).
