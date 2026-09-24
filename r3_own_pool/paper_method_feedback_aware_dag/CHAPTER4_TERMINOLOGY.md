@@ -9,7 +9,7 @@
 | 预算内正确完成率 | budgeted success rate | $Q(B)$；正确且预算内任务数／全部任务数 |
 | 会话非确定性审计 | cross-session output-stability audit | S4.5；映射数、输出差异数、同提示分歧数分别报告 |
 | 执行策略空间刻画 | execution-strategy space characterization | 4.2 |
-| 策略切换边界 | policy transition boundary | 4.4.3 |
+| 策略选择条件分析 | policy selection conditions | 4.4.3；比较已测条件，不估计连续切换边界 |
 | 独占超体积贡献 | exclusive hypervolume contribution | 移除该策略前后的HV差 |
 
 质量保持率不缩写为单独的retention ratio。英文首次定义后采用以下限定句：
