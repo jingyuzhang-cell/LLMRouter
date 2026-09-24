@@ -31,10 +31,11 @@
   38 次同提示分歧,作为质量差异的界)。
 - 预算扫描:FG 违规 68/45/12/1.7/0% @1.0–2.5×,RD 5/0/0/0/0%——"效率而非能力"。
 
-**4.5 多目标执行权衡分析(Execution Trade-off Analysis;不提出优化器)**
-- 4.5.1 Pareto 前沿与超体积独占贡献(3D 与 2D;Single 各场景主导 HV;Static/FG 全程零贡献;Dynamic 于 30% 故障入前沿)
-- 4.5.2 预算约束下的执行策略选择曲线 Q(B)(clean/10/20% Single 全预算领先;30% 故障 B≥~2800 处 Dynamic 反超——预算维度复现鲁棒性交叉)
-- 4.5.3 故障率-最优策略切换边界(整体切换带 (20%,30%];Hard 子集自 10–20% 起 Dynamic 最优)
+**4.5 多目标执行策略权衡分析(Multi-objective Execution Strategy Trade-off Analysis;不提出优化器)**
+- 4.5.1 Pareto 边界与超体积分析(Single 各场景主导 HV;Static/FG 全程零贡献;Dynamic 于 30% 故障成为非支配执行策略——措辞用 becomes a non-dominated execution strategy,禁用 best hypervolume)
+- 4.5.2 预算约束下的策略选择分析 Q(B)(clean/10/20% Single 全预算领先;30% 故障 B≥~2800 处 Dynamic 反超;关键句:The optimal execution policy changes with failure probability and resource constraints)
+- 4.5.3 动态执行策略切换边界分析(整体切换带 (20%,30%];Hard 子集自 10–20% 起 Dynamic 最优;策略随任务状态变化 → 引出章末伏笔)
+- 章末伏笔段:LLM workflow execution is inherently a combinatorial decision problem —— pi=(m_1..m_n, s, r) 在 max(Q,R)/min(C,L) 下的联合决策;本章实验证明最优 pi* 随故障率/难度/预算变化;自动求 Pareto 高效执行配置(演化/整数规划)为第 5 章展望,本文不提出求解器
 
 **4.4 诊断分析(RQ3,明确标注为机制解释,小样本子集不作头条结论)**
 - 4.4.1 失败检测评估(Table 4):Evidence F1 0.93 / Execution 1.0 /
