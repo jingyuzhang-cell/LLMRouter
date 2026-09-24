@@ -113,13 +113,14 @@ C(\pi;\omega)=\mathbb E[C_{\mathrm{run}}\mid\pi,\omega],\quad
 L(\pi;\omega)=\mathbb E[L_{\mathrm{run}}\mid\pi,\omega].
 $$
 
-可靠性 $R(\pi;\omega)$ 表示评价协议选定的故障响应指标，而不是新拟合的综合分数。第四章分别采用相对退化与恢复率评价：质量保持可写为 $Q(\pi;\omega)/Q(\pi;0)$（clean质量非零时），恢复率则以相应失败集合为分母。二者不混用，质量保持比值可能超过1，也不是独立于Q的成功概率。
+可靠性用指标集合 $\mathcal{R}(\pi;\omega)=\{\rho_{\mathrm{keep}}(\pi;\omega),\rho_{\mathrm{rec}}(\pi;\omega)\}$ 表示。质量保持比 $\rho_{\mathrm{keep}}=Q(\pi;\omega)/Q(\pi;0)$ 在clean质量非零时定义；$\rho_{\mathrm{rec}}$ 是相应冻结失败集合上的恢复比例，仅在有效分母下报告。它们不聚合为单一标量，质量保持比可能超过1，Static存活率也不替代恢复率。
 
-问题的多目标表达为
+各评价分量的偏好方向为
 
 $$
-\max_{\pi\in\Pi}\bigl(Q(\pi;\omega),R(\pi;\omega)\bigr),\qquad
-\min_{\pi\in\Pi}\bigl(C(\pi;\omega),L(\pi;\omega)\bigr).
+\max_{\pi\in\Pi}Q(\pi;\omega),\quad
+\max_{\pi\in\Pi}\rho_k(\pi;\omega)\ (k\in\{\mathrm{keep},\mathrm{rec}\}),\quad
+\min_{\pi\in\Pi}(C(\pi;\omega),L(\pi;\omega)).
 $$
 
 这是执行策略选择的problem formulation，不是本文新提出的optimization algorithm。多目标情况下讨论非支配集合；指定偏好或预算后，才可进一步定义候选最优。已有约束决策实例采用
@@ -142,10 +143,10 @@ $$
 
 的反馈闭环。第四章88题实例基于冻结候选输出重放，从LC出发并按部署反馈回落至MC；它没有新增质量收益，不用于证明在线条件能力学习或通用Pareto搜索的有效性。核心故障鲁棒性实验评价Dynamic-Real，不将其收益归于这一独立实例。
 
-对于动态优化收益的可实现性，本文进一步给出形式化上界。在固定候选输出与指定切换方向下，定义可恢复集合 $\mathcal R$ 为当前策略执行错误但候选策略集合中至少存在一种策略能够正确完成任务，触发集合 $\mathcal D$ 为部署信号触发该方向干预的任务集合。仅在此有限候选与反馈触发机制下，净质量增量满足以下上界：
+对于动态优化收益的可实现性，本文进一步给出形式化上界。在固定候选输出与指定切换方向下，定义可恢复集合 $\mathcal U$ 为当前策略执行错误但候选策略集合中至少存在一种策略能够正确完成任务，触发集合 $\mathcal D$ 为部署信号触发该方向干预的任务集合。仅在此有限候选与反馈触发机制下，净质量增量满足以下上界：
 
 $$
-\Delta Q_{\mathrm{dynamic}} \le \frac{|\mathcal R \cap\mathcal D|}{N}.
+\Delta Q_{\mathrm{dynamic}} \le \frac{|\mathcal U \cap\mathcal D|}{N}.
 $$
 
 该界不覆盖未纳入候选的新输出或恢复动作，方向限定的MC/LC诊断见第四章补充材料[S4.7](CHAPTER4_SUPPLEMENTARY.md#supp-s4-7)。

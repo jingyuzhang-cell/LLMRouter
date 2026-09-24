@@ -1,18 +1,18 @@
 # 第四章补充材料：执行策略与恢复诊断
 
-本材料保存正文压缩后的既有数据及诊断。不同面板、oracle、故障种子和统计口径分别解释，不合并为新的实验。原路由表改用S4.1前缀；其他记录按其来源保留精度。不存在新增模型调用。
+本材料按分析用途组织已有证据，节号连续为S4.1—S4.9，表格独立连续编号为Table S4.1起。任务面板、故障种子和标准差口径分别标注，不合并为新的实验。
 
-## 补充材料导航
+## 导航
 
-- [S4.1](#supp-s4-1)
-- [S4.1.1](#supp-s4-1-1)
-- [S4.2](#supp-s4-2)
-- [S4.3](#supp-s4-3)
-- [S4.4](#supp-s4-4)
-- [S4.5](#supp-s4-5)
-- [S4.6](#supp-s4-6)
-- [S4.7](#supp-s4-7)
-- [S4.8](#supp-s4-8)
+- [S4.1 阶段分配、传播与路由诊断](#supp-s4-1)
+- [S4.2 故障种子、难度分层与Verifier消融](#supp-s4-2)
+- [S4.3 恢复归因](#supp-s4-3)
+- [S4.4 Adaptive Decomposition事后诊断](#supp-s4-4)
+- [S4.5 会话非确定性审计](#supp-s4-5)
+- [S4.6 历史恢复与复用面板](#supp-s4-6)
+- [S4.7 MC/LC方向限定的策略切换上界](#supp-s4-7)
+- [S4.8 Math500详细结果与阶段诊断](#supp-s4-8)
+- [S4.9 数据与统计来源](#supp-s4-9)
 
 <a id="supp-s4-1"></a>
 
@@ -22,9 +22,11 @@
 
 
 
-**阶段能力异质性。**在 100 任务、493 个主要节点的冻结确认面板上，三候选模型分别执行节点，以扩展执行器统一评分（表 S4.1-2）。推理与验证采用基准规定的条件输入，因此本节首先测量阶段能力，而不是完整链成功率。
+**阶段能力异质性。**在 100 任务、493 个主要节点的冻结确认面板上，三候选模型分别执行节点，以扩展执行器统一评分（Table S4.1）。推理与验证采用基准规定的条件输入，因此本节首先测量阶段能力，而不是完整链成功率。
 
-表 S4.1-2 不同节点类型的条件化质量
+**不同节点类型的条件化质量**
+
+**Table S4.1**
 
 | 类型 | 节点数 | medium | large | coder | 逐节点 Oracle |
 | --- | --- | --- | --- | --- | --- |
@@ -34,9 +36,11 @@
 
 large 在抽取上占优，medium 与 coder 的推理均值并列最高，coder 的验证质量最高。类型内 Oracle 相对最佳固定模型分别存在约 9.84、10.00 和 3.00 个百分点的差距。模型优势因阶段而异：同一模型池中不存在"所有阶段都最优"的单一模型，这为节点级选择提供了经验依据，也构成中心命题中"阶段能力匹配"条件的度量基础。Oracle 使用事后标签，不能直接证明这些机会可被输入特征预测——该问题由下文的冻结确认与残差路由诊断检验。
 
-**节点级调度与查询级路由。** 将上述能力差异转化为分配问题：稳定收益来自阶段/类型粒度，还是来自强实例级学习器。节点路由相对查询路由的条件化节点质量提高 6.90 个百分点，并减少记录中的 token 与观测服务时延（表 S4.1-3）。
+**节点级调度与查询级路由。** 将上述能力差异转化为分配问题：稳定收益来自阶段/类型粒度，还是来自强实例级学习器。节点路由相对查询路由的条件化节点质量提高 6.90 个百分点，并减少记录中的 token 与观测服务时延（Table S4.2）。
 
-表 S4.1-3 冻结路由与类型先验比较
+**冻结路由与类型先验比较**
+
+**Table S4.2**
 
 | 方法 | 平均节点质量 | 每任务 tokens | 每任务观测服务时延总和（秒） |
 | --- | --- | --- | --- |
@@ -48,9 +52,11 @@ large 在抽取上占优，medium 与 coder 的推理均值并列最高，coder 
 
 以 Always Large 为参考，其条件化节点 GAP Recovery 为 (0.5355−0.4686)/(0.6065−0.4686)，约 48.5%，即接近一半。这里的"接近一半"是差距恢复比例，不是任务准确率。**类型先验与节点路由的均值相同——主要收益来自阶段粒度，而非问题表示的额外学习能力**；节点路由相对查询路由差异为正，而相对类型先验区间包含零。原结果中 0.6045 是旧 Oracle 选择在新评分器下的重评分；本表采用已留档复核的新版逐节点最大值 0.6065，不混用两者计算差距。
 
-**能力机会的实现限制。** 剩余差距能否由实例级信号稳定利用？剩余差距路由以 large 为强默认，使用 900 任务开发数据拟合两阶段选择器，固定阈值 τ=0.5 后分别评价较小 Conf-200 与较大 Conf-500（表 S4.1-4）。这里的 Oracle 仅取三条同模型传播链，与下文九组合 Oracle 不同。
+**能力机会的实现限制。** 剩余差距能否由实例级信号稳定利用？剩余差距路由以 large 为强默认，使用 900 任务开发数据拟合两阶段选择器，固定阈值 τ=0.5 后分别评价较小 Conf-200 与较大 Conf-500（Table S4.3）。这里的 Oracle 仅取三条同模型传播链，与下文九组合 Oracle 不同。
 
-表 S4.1-4 冻结两阶段路由的确认结果
+**冻结两阶段路由的确认结果**
+
+**Table S4.3**
 
 | 指标 | Conf-200 | Conf-500 |
 | --- | --- | --- |
@@ -67,9 +73,11 @@ large 在抽取上占优，medium 与 coder 的推理均值并列最高，coder 
 
 较小确认集出现正向信号，但差异不显著；在更大确认集上未复现，点估计转负且同样不显著。因此不能将 +22.22% 作为稳定主结果，也不能反向断言剩余差距完全不可学习。在 Conf-200 上，能力画像路由与成对路由分别切换 135 和 137 次，质量为 0.16 和 0.15，低于默认的 0.19；两阶段策略只切换 4 次。该比较提示无充分依据的覆盖会引入损害。Conf-500 的机制分析在 34 个仅 large 占优任务与 27 个替代者占优任务上，触发分数的诊断 AUC 为 0.458：单模型成功可预测、相对优劣可排序以及最终路由有净收益，是不同层次的问题。
 
-低覆盖率选择为何相对安全？将 900 开发任务、200 和 500 个已分析确认任务合并为 1,600 题开发语料，进行任务级五折预测与事后风险—覆盖率分析（表 S4.1-5）。运行时特征来自 large 的实际抽取和推理输出；这一评价不能再称为独立确认，也不等同于零执行成本的到达时路由。
+低覆盖率选择为何相对安全？将 900 开发任务、200 和 500 个已分析确认任务合并为 1,600 题开发语料，进行任务级五折预测与事后风险—覆盖率分析（Table S4.4）。运行时特征来自 large 的实际抽取和推理输出；这一评价不能再称为独立确认，也不等同于零执行成本的到达时路由。
 
-表 S4.1-5 开发语料上的事后风险—覆盖率曲线
+**开发语料上的事后风险—覆盖率曲线**
+
+**Table S4.4**
 
 | 覆盖率 | 覆盖默认次数 | Help | Harm | 净改善数 | GAP Recovery |
 | --- | --- | --- | --- | --- | --- |
@@ -82,15 +90,19 @@ large 在抽取上占优，medium 与 coder 的推理均值并列最高，coder 
 
 在该分析中，5%—10% 覆盖具有正净收益且损害较少；扩大覆盖后，新增有害覆盖逐渐抵消帮助。它支持限制干预范围的机制动机，不证明 5%—10% 是新任务上的通用安全区间，更不能在看到曲线后将这些档位称为事先冻结阈值。既有流程在折分前进行全体无标签特征标准化，且覆盖档位为事后解释，因此本节保留开发层级。
 
-900 任务画像使推理模型消费同模型实际抽取结果，测量传播链能力（表 S4.1-6 与表 S4.1-7）。任务级五折交叉验证保持同任务节点同折。
+900 任务画像使推理模型消费同模型实际抽取结果，测量传播链能力（Table S4.5 与Table S4.6）。任务级五折交叉验证保持同任务节点同折。
 
-表 S4.1-6 传播画像中的预测与路由结果
+**传播画像中的预测与路由结果**
+
+**Table S4.5**
 
 | 指标 | medium | large | coder |
 | --- | --- | --- | --- |
 | 单模型成功预测 ROC-AUC | 0.7511 | 0.7880 | 0.8391 |
 
-表 S4.1-7 传播画像中的路由质量
+**传播画像中的路由质量**
+
+**Table S4.6**
 
 | 传播路由策略 | 最终质量 |
 | --- | --- |
@@ -103,9 +115,11 @@ large 在抽取上占优，medium 与 coder 的推理均值并列最高，coder 
 
 **条件能力不等于传播能力**。标准事实推理基准中的最佳固定质量为 0.31、逐任务推理 Oracle 为 0.41，存在 10 个百分点的条件空间；传播画像中最佳同模型链为 0.18、Oracle 为 0.23，只保留 5 个百分点的整链选择空间。但这两组数据的任务集和估计对象不同，不能把差值解释为严格配对的"抽取噪声损失"。零调用审计（证据编号见 FINAL_CLAIM_AUDIT）给出各面板传播 headroom：900 题开发集 5.00pp、Conf-200 4.50pp、Conf-500 5.40pp、合并 1,600 题 5.06pp；共同失败占比 77.0%／76.5%／76.2%／76.7%。本文统一引用上述冻结审计值，不采用无冻结来源的传播差距。由此，条件能力与传播能力必须分开估计：前者揭示理想输入下的能力，后者反映整个输入生成过程与下游执行的联合作用——这是"节点接口表达能力"条件的第一处直接证据。
 
-在能力画像的 200 任务子集上，实际执行三个抽取模型与三个推理模型的九种组合，推理者消费对应抽取者输出（表 S4.1-8）。该子集用于开发机制分析，不是 Conf-200 确认集。
+在能力画像的 200 任务子集上，实际执行三个抽取模型与三个推理模型的九种组合，推理者消费对应抽取者输出（Table S4.7）。该子集用于开发机制分析，不是 Conf-200 确认集。
 
-表 S4.1-8 跨模型传播矩阵
+**跨模型传播矩阵**
+
+**Table S4.7**
 
 | 抽取模型／推理模型 | medium | large | coder |
 | --- | --- | --- | --- |
@@ -113,9 +127,11 @@ large 在抽取上占优，medium 与 coder 的推理均值并列最高，coder 
 | large | 20.0% | 18.0% | 20.5% |
 | coder | 13.0% | 11.5% | 11.0% |
 
-该九组合空间的有限候选精确上界汇总于表 S4.1-9。保持推理者 medium 不变，将抽取者从 medium 换成 large，质量由 10.0% 提高至 20.0%；保持推理者 coder 不变，对应变化为 11.0% 至 20.5%。固定 large 抽取后，medium 和 coder 的推理结果分别高于 large 推理的 18.0%。这表明同模型链可能因抽取弱项而掩盖下游优势，独立分配阶段模型能够解除这种绑定。上述比较支持阶段互补的机制解释，但当前未据该汇总表宣称各点估计差异均达到统计显著；large 抽取均值更好也不意味着它在每个任务上都是最优来源。
+该九组合空间的有限候选精确上界汇总于Table S4.8。保持推理者 medium 不变，将抽取者从 medium 换成 large，质量由 10.0% 提高至 20.0%；保持推理者 coder 不变，对应变化为 11.0% 至 20.5%。固定 large 抽取后，medium 和 coder 的推理结果分别高于 large 推理的 18.0%。这表明同模型链可能因抽取弱项而掩盖下游优势，独立分配阶段模型能够解除这种绑定。上述比较支持阶段互补的机制解释，但当前未据该汇总表宣称各点估计差异均达到统计显著；large 抽取均值更好也不意味着它在每个任务上都是最优来源。
 
-表 S4.1-9 枚举组合空间的上界与差距
+**枚举组合空间的上界与差距**
+
+**Table S4.8**
 
 | 对象 | 质量 | 与精确 Oracle 的距离 |
 | --- | --- | --- |
@@ -128,21 +144,25 @@ large 在抽取上占优，medium 与 coder 的推理均值并列最高，coder 
 异构阶段能力真实存在，节点粒度能够更充分利用这些差异；但 Routing Opportunity ≠ Learnable Routing Signal，Conditional Capability ≠ Propagated Capability。
 
 
-<a id="supp-s4-1-1"></a>
+<a id="supp-complexity"></a>
 
-### S4.1.1 严格配对分解的复杂度分层
+**严格配对分解的复杂度分层**
 
 复杂度分层用于进一步辨别分解效应的条件性。TAT-QA 中1—2步任务由53.1%降至26.0%，3步任务由52.6%升至73.7%，4步及以上任务由25.0%升至75.0%；后两组仅有19和4题，且 MultiHiertt 未复现相同趋势。因此，该观察仅为复杂度依赖的描述性证据，不构成部署拆分阈值。DAG 提供可分配、可定位与可局部重执行的结构，但其质量收益仍受中间接口和实际输入传播制约。
 
 <a id="supp-s4-2"></a>
 
-## S4.2 故障种子与难度分层
+## S4.2 故障种子、难度分层与Verifier消融
+
+除特别说明外，本节故障分层报告三种子均值±总体标准差。“Fault scenarios per subset”表复现seed=20260923的单次冻结实验，用于任务级诊断，不替代多种子结果；clean与Verifier表也不代表三次独立执行。
 
 来源：`adaptive_benchmark/MULTI_SEED_REPORT.md`。
 
 ### Multi-seed fault injection (3 seeds: 20260923/24/25)
 
 Mean +/- std over seeds (population std). Same procedure, pools and policies; calls reused at temperature 0; only new prompts executed for real.
+
+**Table S4.9**
 
 | Fault rate | Single LLM (retry) | Static | Dynamic | dQ(Dyn-Static) | dQ(Dyn-Single) | Dynamic recovery | Static survival |
 |---:|---:|---:|---:|---:|---:|---:|---:|
@@ -151,6 +171,8 @@ Mean +/- std over seeds (population std). Same procedure, pools and policies; ca
 | 30% | 0.3639±0.0258 | 0.3111±0.0322 | 0.4083±0.0136 | +0.0972±0.0375 | +0.0444±0.0142 | 0.44±0.01 | 0.29±0.10 |
 
 #### Hard subset (46 tasks)
+
+**Table S4.10**
 
 | Fault rate | Single LLM | Static | Dynamic |
 |---:|---:|---:|---:|
@@ -166,6 +188,8 @@ Split (pre-execution, frozen): Easy = 1 operator (74 tasks); Hard = >=2 operator
 
 #### Clean scenario per subset
 
+**Table S4.11**
+
 | Method | overall | easy | hard |
 |---|---:|---:|---:|
 | router | 0.5500 | 0.7027 | 0.3043 |
@@ -173,7 +197,9 @@ Split (pre-execution, frozen): Easy = 1 operator (74 tasks); Hard = >=2 operator
 | dynamic | 0.4000 | 0.4595 | 0.3043 |
 | dynamic_verifier | 0.4000 | 0.4595 | 0.3043 |
 
-#### Fault scenarios per subset (accuracy)
+#### Fault scenarios per subset（seed=20260923，单种子）
+
+**Table S4.12**
 
 | Scenario | Method | overall | easy | hard |
 |---|---|---:|---:|---:|
@@ -186,6 +212,8 @@ Split (pre-execution, frozen): Easy = 1 operator (74 tasks); Hard = >=2 operator
 
 #### Dynamic + Verifier ablation (clean)
 
+**Table S4.13**
+
 | Method | Accuracy | tokens/task | latency s |
 |---|---:|---:|---:|
 | static | 0.3500 | 1503 | 4.63 |
@@ -193,9 +221,8 @@ Split (pre-execution, frozen): Easy = 1 operator (74 tasks); Hard = >=2 operator
 | dynamic_verifier | 0.4000 | 2727 | 7.06 |
 
 DV vs Dynamic paired: dQ=0.0, help/harm=1/1, McNemar p=1.0.
-Verifier signal stats: {"fired": 34, "both_exec": 104, "correct_initial": 34, "wrong_initial": 71, "new_fired": 28}.
+Verifier在34个任务上触发分歧信号，其中28个对应推理错误；这些计数不等同于新增正确任务数。原始诊断字段保留于来源记录，不在正文以日志对象展示。
 DV extra calls vs Dynamic: 146.
-
 
 <a id="supp-s4-3"></a>
 
@@ -211,6 +238,8 @@ Detection → Recovery action → Recovery outcome；各行描述不同条件，
 
 N = 78 initially-wrong tasks (fixed parser); recovery = task ends correct under RD.
 
+**Table S4.14**
+
 | Failure type (primary, topological) | n | node detection | any detection | recovery success |
 |---|---:|---:|---:|---:|
 | evidence (parse/empty) | 44 | 100% | 100% | 16% (7/44) |
@@ -222,6 +251,8 @@ N = 78 initially-wrong tasks (fixed parser); recovery = task ends correct under 
 #### B. Fault scenarios: injected faults, Dynamic recovery vs Static survival
 
 ##### fault 10%
+**Table S4.15**
+
 | Faulted node type | n | Dynamic recovery | Static survival |
 |---|---:|---:|---:|
 | evidence (injected e) | 7 | 29% | 0% |
@@ -229,6 +260,8 @@ N = 78 initially-wrong tasks (fixed parser); recovery = task ends correct under 
 | verification (injected v) | 1 | 100% | 0% |
 
 ##### fault 20%
+**Table S4.16**
+
 | Faulted node type | n | Dynamic recovery | Static survival |
 |---|---:|---:|---:|
 | execution (injected r) | 9 | 33% | 22% |
@@ -236,6 +269,8 @@ N = 78 initially-wrong tasks (fixed parser); recovery = task ends correct under 
 | verification (injected v) | 5 | 40% | 0% |
 
 ##### fault 30%
+**Table S4.17**
+
 | Faulted node type | n | Dynamic recovery | Static survival |
 |---|---:|---:|---:|
 | execution (injected r) | 11 | 55% | 45% |
@@ -246,13 +281,13 @@ N = 78 initially-wrong tasks (fixed parser); recovery = task ends correct under 
 
 signal fired 34 times; true reasoning errors 28 (detection precision 82%); repaired 7 (repair rate 21%).
 
-
-
 <a id="supp-s4-4"></a>
 
 ## S4.4 Adaptive Decomposition事后诊断
 
-该分析复用已执行输出，未新增模型调用。oracle按gold运算符数将46个Hard任务交给Dynamic、74个Easy任务交给Single；它不是逐任务取正确输出的最优oracle，也不是可部署难度估计器。
+本节故障表的std为三个种子的样本标准差，与主实验及S4.2的总体标准差不同。该分析复用已执行输出，未新增模型调用。oracle按gold运算符数将46个Hard任务交给Dynamic、74个Easy任务交给Single；它不是逐任务取正确输出的最优oracle，也不是可部署难度估计器。
+
+**Table S4.18**
 
 | 策略 | Clean正确率 | 平均tokens |
 | --- | ---: | ---: |
@@ -266,6 +301,8 @@ signal fired 34 times; true reasoning errors 28 (detection precision 82%); repai
 
 Single成本采用多目标原始汇总602.5，避免不同报告整数舍入602／603带来的表面冲突。Clean Hard中Single、Dynamic和Dynamic+Verifier均为0.3043，Dynamic-Ideal为0.3261。这一特定分流不提升clean质量，不排除其他尚未验证的候选组合。
 
+**Table S4.19**
+
 | 故障率 | Single-all | Dynamic-all | Adaptive（gold难度） | 当场景最佳规则点估计 |
 | --- | ---: | ---: | ---: | ---: |
 | 10% | 0.4972±0.0173 | 0.4111±0.0048 | 0.5000±0.0167 | 0.4750±0.0167（长度） |
@@ -276,7 +313,26 @@ Single成本采用多目标原始汇总602.5，避免不同报告整数舍入602
 
 <a id="supp-s4-5"></a>
 
-## S4.5 历史恢复与复用面板
+## S4.5 会话非确定性审计
+
+为判断Full Replay与Local Recovery的残余质量差能否仅归因于执行范围，检查已有跨会话请求的模型、提示与输出一致性。下表区分当前修正记录、修正前历史记录和独立探针；它们不能合并分母或相互替换。
+
+**Table S4.20**
+
+| 审计记录 | 检查范围 | 已观察结果 |
+| --- | --- | --- |
+| 修正后Full Replay对齐 | 580个映射调用 | 69次输出不一致，其中38次同提示分歧 |
+| 修正前Full Replay对齐 | 832次适配调用中820次可映射 | 101次输出不一致，其中54次同提示分歧（large 47、medium 7），另47次为上游改变引发的级联差异 |
+| 独立会话探针 | 每模型20个提示 | large 2/20分歧；medium 0/20；coder 0/20 |
+| 历史coder/medium配对 | 158对 | 158/158输出相同 |
+
+映射关系不自动意味着提示完全相同：历史101次差异中，47次涉及上游变化，必须与54次同提示差异分开。当前正文采用修正后580/69/38口径，未将历史820/54视为当前恢复对照计数。独立探针支持有限条件下存在会话差异，不估计所有请求的固定不确定率。
+
+这些观察要求谨慎解释涉及large模型重执行的质量差异，但不能据此认定全部任务差异都由非确定性造成。来源：[修正后审计](../static_dag_v0/corrected_replay/CORRECTED_REPORT.md)、[历史Full Replay审计及独立探针](../static_dag_v0/multidag_fullgraph_120/FULLGRAPH_REPORT.md)。
+
+<a id="supp-s4-6"></a>
+
+## S4.6 历史恢复与复用面板
 
 两节点链48题面板Static为25/48（52.08%），Dynamic两个版本均为26/48（54.17%），第二版差值约2.08pp、区间[0,6.25]。独立250题确认面板Static为103/250（41.2%）、Dynamic为110/250（44.0%），差值2.8pp、95%区间[−0.8,6.4]、McNemar p=0.167、Help/Harm=13/6。两个面板沿用理想失败检测协议，不作为部署检测下的独立确认；方向一致但未确证质量收益。
 
@@ -284,9 +340,27 @@ Graph Forest在20个修改型追问中复用40个抽取节点，新执行40次�
 
 固定恢复集合为116节点、96任务。再次调用、模型切换、重新取证和局部分解分别恢复2、2、5、2个节点，集合有重叠，并集8/116。预算档位(500 tokens,1秒)、(1000,2)、(2000,3)、(3000,3)、无限下顺序策略恢复率为2.59%、3.45%、4.31%、5.17%、6.90%，同预算动作oracle为3.45%、4.31%、5.17%、5.17%、6.90%。这是已知实际消耗和离线成功停止的回放，不是在线预算保证。
 
-<a id="supp-s4-6"></a>
+<a id="supp-s4-7"></a>
 
-## S4.6 数据与统计来源
+## S4.7 MC/LC方向限定的策略切换上界
+
+逐任务比较中，MC与LC同时正确15题，仅MC正确1题，仅LC正确3题，同时错误69题。两个切换方向并不对称。对MC→LC方向，令 $\mathcal U$ 为MC错误但LC正确的任务集合，$\mathcal D$ 为部署反馈触发该方向切换的任务集合，则仅由此反馈触发的净质量增量满足
+
+$$
+\Delta Q_{MC\rightarrow LC}\le\frac{|\mathcal U\cap\mathcal D|}{N}.
+$$
+
+其中恢复机会仅3/88；MC侧反馈触发5题，但不包含这3题，故交集为0，上界为0/88。该界不同于实际LC→MC执行的归因，且仅覆盖固定候选、方向与反馈规则。它表明平均指标上的非支配关系不足以保证可被反馈识别的逐任务恢复机会。
+
+<a id="supp-s4-8"></a>
+
+## S4.8 Math500详细结果与阶段诊断
+
+正式Math500面板中，Single large、查询路由与Single medium为54.0%、50.0%、49.0%，节点路由、Static与Dynamic为13.0%、15.0%、16.0%。Static对Single large下降39.0个百分点，95%置信区间[−50,−27]；Dynamic对Static仅增加1.0个百分点。有限候选Oracle为64.0%。阶段诊断中，计划后求解正确率仅32%，校验又将部分正确输出改错，降至15%。因此，当前恢复未补偿阶段配置失配与验证覆盖造成的损失；结论限于所测数学接口，不否定其他求解器。
+
+<a id="supp-s4-9"></a>
+
+## S4.9 数据与统计来源
 
 - 核心故障：`../static_dag_v0/adaptive_benchmark/MULTI_SEED_REPORT.md`。
 - 多目标表与预算曲线：`../static_dag_v0/adaptive_benchmark/MULTIOBJECTIVE_TRADEOFF.json`；表4-6直接取既有汇总，表4-8保留已生成表格，未重跑分析。
@@ -295,21 +369,7 @@ Graph Forest在20个修改型追问中复用40个抽取节点，新执行40次�
 - FLARE-DAG：`../static_dag_v0/frp_dag/`冻结记录；MC→LC上界与实际LC→MC回落分开解释。
 - 基础与跨域：原实验章及`FINAL_CLAIM_AUDIT.md`中相应基础／跨域条目。该审计文件仍含已撤回的历史四节点主张，不作为修正恢复结果来源；后者以`corrected_replay/CORRECTED_REPORT.md`为准。被解析缺陷推翻的结果不转入本补充材料。
 
-<a id="supp-s4-7"></a>
 
-## S4.7 MC/LC方向限定的策略切换上界
+### 修正解析器与证据范围
 
-逐任务比较中，MC与LC同时正确15题，仅MC正确1题，仅LC正确3题，同时错误69题。两个切换方向并不对称。对MC→LC方向，令 $\mathcal R$ 为MC错误但LC正确的任务集合，$\mathcal D$ 为部署反馈触发该方向切换的任务集合，则仅由此反馈触发的净质量增量满足
-
-$$
-\Delta Q_{MC\rightarrow LC}\le\frac{|\mathcal R\cap\mathcal D|}{N}.
-$$
-
-其中恢复机会仅3/88；MC侧反馈触发5题，但不包含这3题，故交集为0，上界为0/88。该界不同于实际LC→MC执行的归因，且仅覆盖固定候选、方向与反馈规则。它表明平均指标上的非支配关系不足以保证可被反馈识别的逐任务恢复机会。
-
-
-<a id="supp-s4-8"></a>
-
-## S4.8 Math500详细结果与阶段诊断
-
-正式Math500面板中，Single large、查询路由与Single medium为54.0%、50.0%、49.0%，节点路由、Static与Dynamic为13.0%、15.0%、16.0%。Static对Single large下降39.0个百分点，95%置信区间[−50,−27]；Dynamic对Static仅增加1.0个百分点。有限候选Oracle为64.0%。阶段诊断中，计划后求解正确率仅32%，校验又将部分正确输出改错，降至15%。因此，当前恢复未补偿阶段配置失配与验证覆盖造成的损失；结论限于所测数学接口，不否定其他求解器。
+历史验证解析器错误地对已解码字典再次调用JSON解析，导致围栏包裹的验证输出被判失败。修正重放只重新判定受影响的验证阶段并移除不再需要的恢复调用，保留已有真实输出，不是新任务上的独立确认。旧四节点质量差与增益保留率已撤回，当前对照以[修正报告](../static_dag_v0/corrected_replay/CORRECTED_REPORT.md)和[错误说明](../static_dag_v0/corrected_replay/BUG_REPORT.md)为准。该修正范围不等于所有独立基础及跨任务实验都经过相同重放。
