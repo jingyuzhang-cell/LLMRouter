@@ -25,7 +25,7 @@ for ax,scene,title in zip(axs,['clean','fault20','fault30'],['a  Clean','b  Faul
  ax.set_title(title,loc='left',fontsize=8,pad=8)
  ax.set(xlim=(450,3150),ylim=(0,.60),xticks=[600,1500,3000],xlabel='Budget (tokens)')
  ax.grid(axis='y',alpha=.18)
-axs[0].set_ylabel('Budgeted success Q(B)')
+axs[0].set_ylabel('Budgeted success rate Q(B)')
 fig.legend(*axs[0].get_legend_handles_labels(),loc='upper center',bbox_to_anchor=(.52,.98),ncol=3,frameon=False)
 fig.canvas.draw()
 for ext in ['png','pdf','svg']:
