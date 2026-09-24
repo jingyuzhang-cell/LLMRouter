@@ -193,3 +193,25 @@ unchanged. Consistent with the earlier Selective-DAG gate finding (deployable
 difficulty signal exists, AUC 0.734 on TAT-QA-200) — the conditional DAG advantage
 on this panel is robustness, not clean accuracy. Do NOT claim adaptive > single on
 clean (oracle-level equality only).
+
+## Multi-objective execution trade-off analysis (ch4.5; zero calls; MULTIOBJECTIVE_TRADEOFF.md)
+
+Section renamed from "optimization boundary" to EXECUTION TRADE-OFF ANALYSIS — no
+optimizer is proposed; we quantify when each execution policy is worth its cost.
+- T1 Pareto + exclusive hypervolume (Q / -tokens / -latency; per-scenario reference
+  point 1.1x worst; 3D and 2D Q-C): Single LLM is the dominant HV contributor in
+  EVERY scenario (clean 0.31/0.23); Static and Full-Replay contribute ZERO everywhere
+  (dominated at all operating points); Dynamic is off-frontier through 20% faults and
+  JOINS the frontier at 30% (exclusive HV small: 0.0004 3D / 0.0040 2D — it owns the
+  high-quality corner but sits at the worst cost/latency end of the set).
+- T2 Budget-constrained completion Q(B) = #(correct AND used<=B)/N (all tasks kept):
+  Single dominates the budget curve at every B in clean and at 10/20% faults; at 30%
+  faults the curves CROSS — Dynamic overtakes for B >= ~2800 tokens (0.378±0.017 vs
+  0.364±0.032 at 3000). Budget dimension reproduces the robustness crossover.
+- T3 Policy transition (multi-seed means): Single best overall through 20%; Dynamic
+  best at 30% overall and from 10-20% on the Hard subset. Transition band (20%,30%].
+Literature candidates for related work (PENDING VERIFICATION before citation, per the
+no-unverified-references rule): multi-objective BO for LLM agent-team configuration
+(MALBO), capability-cost coordinated multi-LLM serving (ECCOS), classic MOBO/NSGA-II
+as background. Positioning: related work discusses; this paper does not propose an
+optimization algorithm.
