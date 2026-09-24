@@ -3,6 +3,8 @@
 > 定位:第三章新增内容雏形 + 第四章 4.5/章末伏笔的形式化基础。算法选择(NSGA-II/MILP/精确枚举)
 > 延后——先检验模型是否"自然产生"求解必要性。所有量映射到已执行的实验证据;零新调用。
 > 主张规则:本文不提出求解器;本文件给出建模与"证据子空间精确求解"结果。
+> 章节定位:第 3 章末尾 3.X Failure-aware Workflow Optimization Formulation(3.X.1 配置空间 /
+> 3.X.2 多目标 / 3.X.3 三挑战),不单独成章,避免读者预期算法。
 
 ## 1 问题定义:Failure-aware Workflow Execution Planning
 
@@ -48,9 +50,17 @@ $$\max\ \big(Q(\pi),\ R(\pi)\big),\qquad \min\ \big(C(\pi),\ L(\pi)\big)$$
 
 $$|\Pi| = K\cdot M^{N}\cdot R^{N}\quad(K{=}4,\ M{=}3,\ N{=}4,\ R{=}4)\ \Rightarrow\ \text{指数增长(面板实例}\approx 2\times10^4\text{)}$$
 
-一般问题族包含广义指派类子问题(NP-hard);但**本文面板实例规模小,且关键瓶颈不是搜索而是评估**:
-完整空间的每个新配置需真实执行($\sim$120 任务 × 4 节点 × 模型切换)才能得到无偏 $Q$。
-已执行证据仅覆盖 4–6 个配置——称**证据子空间** $\Pi_{\text{ev}}$。
+**三个优化挑战(3.X.3;主卖点,替代 NP-hard)**:
+C1 组合空间指数增长(一般问题族含广义指派类 NP-hard 子问题——仅作背景,不作卖点);
+C2 **目标评估昂贵且部分可观测**:传统组合优化评价函数已知,此处 $Q(\pi)$ 需真实调用 LLM 才能获得,
+且运行时仅部署可得信号(部分可观测)——the optimization objective is expensive-to-evaluate and
+partially observable;
+C3 **最优策略故障条件化**:最优 $\pi^*$ 随故障率/任务复杂度/预算非一致变化(T3 切换带)。
+据此,本文先行证据子空间分析;全空间求解需"模拟器→代理模型→Pareto 搜索→少量真实验证"的
+代理辅助路线(类 Bayesian optimization / surrogate-assisted evolution),而非直接演化搜索。
+
+**证据子空间**:已执行证据仅覆盖 4–6 个配置 $\Pi_{\mathrm{ev}}$;完整空间每个新配置需真实执行
+($\sim$120 任务 × 4 节点)才能得到无偏 $Q$——评估而非搜索是瓶颈。
 
 **证据子空间可精确求解**:$|\Pi_{\text{ev}}|\le 6$,精确枚举即最优(无需启发式搜索)。
 枚举结果 = T1 前沿 + T3 切换边界:clean/10%/20% 由 single 支配,30% 故障 Dynamic 入前沿,
