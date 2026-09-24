@@ -36,6 +36,7 @@ class Caller:
         self.folder = folder
         self.by_key = {}
         self.by_mp = {}
+        self.faults = {}
         self.proc = self.log = None
         self.current = None
         import glob
@@ -56,7 +57,18 @@ class Caller:
         self.lock = (core.ROOT / 'collect/logs/local_gpu.lock').open('a+')
         fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
-    def call(self, key, model, prompt):
+    def set_fault(self, uid, node, model, failing_answer, clean_usage=None, clean_lat=None):
+        self.faults[(uid, node, model)] = (failing_answer, clean_usage, clean_lat)
+
+    def call(self, key, model, prompt, uid=None, node=None):
+        if uid is not None and (uid, node, model) in getattr(self, 'faults', {}):
+            failing, clean_usage, clean_lat = self.faults[(uid, node, model)]
+            rec = dict(key=key, model=model,
+                       response=dict(status='delivered', answer=failing,
+                                     usage=clean_usage or dict(total_tokens=1),
+                                     latency_s=clean_lat or 0.0, injected_fault=True))
+            self.by_key[key] = rec
+            return rec
         if key in self.by_key:
             rec = self.by_key[key]
             if rec['response'].get('status') != 'delivered':
@@ -136,6 +148,14 @@ def run_seed(seed):
         t1 = time.time()
         faults = build_faults(seed, rate, tasks)
         out = {'faulted': {u: faults[u][0] for u in faults}, 'router': {}, 'static': {}, 'dynamic': {}}
+        # register persistent capability faults for ALL arms before any execution:
+        # any call of the faulted (task, node, planned-model) triple returns the fault
+        planned_all = {'e1': 'large', 'e2': 'large', 'r': 'medium', 'v': 'coder'}
+        for u, (node, failing) in faults.items():
+            ck = f'{node}:{u}'
+            caller.set_fault(u, node, planned_all[node], failing,
+                             clean_usage=resp[ck]['response'].get('usage'),
+                             clean_lat=resp[ck]['response'].get('latency_s'))
         # ---- router: retry same model; fault persists ----
         for u in [t['uid'] for t in tasks]:
             base = clean['router'][u]
@@ -153,7 +173,7 @@ def run_seed(seed):
             t = next(x for x in tasks if x['uid'] == u)
             for nd, ctx in (('e1', t['ctx_table']), ('e2', t['ctx_text'])):
                 k = f'bf-s:{nd}:{u}'
-                caller.call(k, 'large', v.eprompt(dict(question=t['question'], context=ctx)))
+                caller.call(k, 'large', v.eprompt(dict(question=t['question'], context=ctx)), uid=u, node=nd)
                 static_jobs[u]['keys'].append(k)
                 fnew, _ = parse_facts_safe(caller.by_key[k]['response']['answer'])
                 static_jobs[u]['facts'][nd] = fnew
@@ -162,7 +182,7 @@ def run_seed(seed):
             t = next(x for x in tasks if x['uid'] == u)
             merged = {'facts': static_jobs[u]['facts']['e1']['facts'] + static_jobs[u]['facts']['e2']['facts']}
             k = f'bf-s:r:{u}'
-            caller.call(k, 'medium', v.sprompt(dict(question=t['question']), merged))
+            caller.call(k, 'medium', v.sprompt(dict(question=t['question']), merged), uid=u, node='r')
             static_jobs[u]['keys'].append(k)
             val, err = value_of(caller.by_key[k]['response']['answer'], merged)
             static_jobs[u]['expr'] = 'UNPARSEABLE' if err else v.decode(caller.by_key[k]['response']['answer'])['expression']
@@ -173,7 +193,7 @@ def run_seed(seed):
             k = f'bf-s:v:{u}'
             caller.call(k, 'coder', VPROMPT.format(q=t['question'],
                                                    facts=json.dumps(static_jobs[u]['merged']['facts']),
-                                                   expr=static_jobs[u]['expr']))
+                                                   expr=static_jobs[u]['expr']), uid=u, node='v')
             static_jobs[u]['keys'].append(k)
             vval = json_value(caller.by_key[k]['response']['answer'])
             out['static'][u] = dict(ok=close(vval, gold[u]), val=vval,
@@ -200,7 +220,8 @@ def run_seed(seed):
                           keys=[f'e1:{u}', f'e2:{u}', f'r:{u}', f'v:{u}'],
                           question=t['question'], gold=t['answer'],
                           ctx={'e1': t['ctx_table'], 'e2': t['ctx_text']}, expr_text=None)
-        # fault overrides on initial keys
+        # fault overrides on initial keys AND on any later re-execution of the
+        # faulted (task, node, planned-model) triple (capability fault persists)
         for u, (node, failing) in faults.items():
             if node in ('e1', 'e2'):
                 fnew, _ = parse_facts_safe(failing)
@@ -211,6 +232,7 @@ def run_seed(seed):
                                                   usage=resp[k]['response'].get('usage'),
                                                   latency_s=resp[k]['response'].get('latency_s'),
                                                   injected_fault=True))
+
 
         def merged(st):
             return {'facts': st['e1']['facts'] + st['e2']['facts']}
@@ -246,7 +268,7 @@ def run_seed(seed):
                 if m != model:
                     continue
                 key = f'bf-d:{node}:{u}:fb'
-                caller.call(key, m, v.eprompt(dict(question=dyn[u]['question'], context=dyn[u]['ctx'][node])))
+                caller.call(key, m, v.eprompt(dict(question=dyn[u]['question'], context=dyn[u]['ctx'][node])), uid=u, node=node)
                 fnew, _ = parse_facts_safe(caller.by_key[key]['response']['answer'])
                 dyn[u][node] = fnew
                 dyn[u]['keys'].append(key)
@@ -254,7 +276,7 @@ def run_seed(seed):
         affected = {u for u, _, _ in e_jobs}
         for u in affected:  # all medium
             key = f'bf-d:r:{u}:fb-d'
-            caller.call(key, 'medium', v.sprompt(dict(question=dyn[u]['question']), merged(dyn[u])))
+            caller.call(key, 'medium', v.sprompt(dict(question=dyn[u]['question']), merged(dyn[u])), uid=u, node='r')
             dyn[u]['keys'].append(key)
             dyn[u]['events'].append(dict(node='r', kind='refresh', model='medium', key=key))
             refresh_expr(dyn[u])
@@ -267,7 +289,7 @@ def run_seed(seed):
             refresh_expr(dyn[u])
         for u in r_esc:
             key = f'bf-d:r:{u}:esc'
-            caller.call(key, 'large', v.sprompt(dict(question=dyn[u]['question']), merged(dyn[u])))
+            caller.call(key, 'large', v.sprompt(dict(question=dyn[u]['question']), merged(dyn[u])), uid=u, node='r')
             dyn[u]['keys'].append(key)
             dyn[u]['events'].append(dict(node='r', kind='esc', model='large', key=key))
             refresh_expr(dyn[u])
@@ -279,7 +301,7 @@ def run_seed(seed):
                 key = f'bf-d:v:{u}:fb-d'
                 caller.call(key, 'coder', VPROMPT.format(q=dyn[u]['question'],
                                                          facts=json.dumps(merged(dyn[u])['facts']),
-                                                         expr=dyn[u]['expr_text'] or 'UNPARSEABLE'))
+                                                         expr=dyn[u]['expr_text'] or 'UNPARSEABLE'), uid=u, node='v')
                 dyn[u]['keys'].append(key)
                 dyn[u]['events'].append(dict(node='v', kind='refresh', model='coder', key=key))
         # stage 4: v failure (deployable), esc large
@@ -299,7 +321,7 @@ def run_seed(seed):
             key = f'bf-d:v:{u}:esc'
             caller.call(key, 'large', VPROMPT.format(q=dyn[u]['question'],
                                                      facts=json.dumps(merged(dyn[u])['facts']),
-                                                     expr=dyn[u]['expr_text'] or 'UNPARSEABLE'))
+                                                     expr=dyn[u]['expr_text'] or 'UNPARSEABLE'), uid=u, node='v')
             dyn[u]['keys'].append(key)
             dyn[u]['events'].append(dict(node='v', kind='esc', model='large', key=key))
             vval = json_value(caller.by_key[key]['response']['answer'])

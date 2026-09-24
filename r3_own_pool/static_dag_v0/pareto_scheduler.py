@@ -79,7 +79,9 @@ def run():
     def select(rate, B, cal_seeds):
         """Pareto-aware selector:前沿内取校准 Q(B) 最高者。"""
         f = front(rate, cal_seeds)
-        return max(f, key=lambda m: st.mean([perf[(rate, s)][m]['qb'][B] for s in cal_seeds]))
+        q = {m: st.mean([perf[(rate, s)][m]['qb'][B] for s in cal_seeds]) for m in f}
+        best = max(q.values())
+        return min((m for m in f if q[m] == best), key=lambda m: st.mean([perf[(rate, s)][m]['tokens'] for s in cal_seeds]))
 
     # ---- 评估:3 折 CV ----
     policies = ['random', 'cost_only', 'accuracy_only', 'fixed_dynamic', 'pareto_selector', 'oracle_state']
