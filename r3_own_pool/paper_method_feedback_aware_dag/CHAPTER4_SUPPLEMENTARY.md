@@ -114,6 +114,10 @@ large 在抽取上占优，medium 与 coder 的推理均值并列最高，coder 
 异构阶段能力真实存在，节点粒度能够更充分利用这些差异；但 Routing Opportunity ≠ Learnable Routing Signal，Conditional Capability ≠ Propagated Capability。
 
 
+### S4.1.1 严格配对分解的复杂度分层
+
+复杂度分层用于进一步辨别分解效应的条件性。TAT-QA 中1—2步任务由53.1%降至26.0%，3步任务由52.6%升至73.7%，4步及以上任务由25.0%升至75.0%；后两组仅有19和4题，且 MultiHiertt 未复现相同趋势。因此，该观察仅为复杂度依赖的描述性证据，不构成部署拆分阈值。DAG 提供可分配、可定位与可局部重执行的结构，但其质量收益仍受中间接口和实际输入传播制约。
+
 ## S4.2 故障种子与难度分层
 
 来源：`adaptive_benchmark/MULTI_SEED_REPORT.md`。
