@@ -81,7 +81,10 @@ C3 **最优策略故障条件化**:最优 $\pi^*$ 随故障率/任务复杂度/�
 - **全空间 $(X,Y,Z)$**:需先解决**评估瓶颈**——代理模型(能力画像先验 + 温度-0 重放校准)或
   新执行预算;在代理误差未量化前,任何搜索结果不可信。此为下一阶段(方法升级)工作:
   Failure-aware Multi-objective Combinatorial Optimization(FAMO-WE),演化搜索/整数规划,
-  对比 Random Search / 人工策略(Dynamic)/ oracle。
+  对比 Random Search / 人工策略(Dynamic)/ oracle。种群管理可借鉴 MEoH(AAAI-25,待核验)的
+  "支配-不相似度"准则:目标空间 Pareto 支配 + 搜索空间结构距离,后者在本文设定下自然定义为
+  (X,Y,Z) 配置距离;但 MEoH 的评估是廉价代码执行,本文 Q(π) 评估昂贵(C2),故搜索必须代理辅助,
+  不能直接演化。
 
 ## 7 既有实验 ↔ 模型组件映射
 

@@ -230,5 +230,14 @@ related anchors (PENDING VERIFICATION).
 Literature candidates for related work (PENDING VERIFICATION before citation, per the
 no-unverified-references rule): multi-objective BO for LLM agent-team configuration
 (MALBO), capability-cost coordinated multi-LLM serving (ECCOS), classic MOBO/NSGA-II
-as background. Positioning: related work discusses; this paper does not propose an
+as background; LLM-driven evolutionary algorithm-design lineage FunSearch -> EoH ->
+MEoH (AAAI-25; dominance-dissimilarity population management combining objective-space
+Pareto with search-space structural distance). MEoH status: platform repo LLM4AD
+(github.com/Optima-CityU/LLM4AD) VERIFIED to exist; the paper record itself NOT yet
+independently verified (arXiv/S2 lookups inconclusive) — obtain DOI/arXiv id before
+citation. Relevance: validates the 'seek a non-dominated SET, not a single winner'
+framing (matches ch4.4 philosophy); its dominance-dissimilarity criterion maps to our
+(X,Y,Z) configuration distance for future FAMO-WE population management; its cheap
+evaluation assumption contrasts with our expensive-to-evaluate Q(pi) (Challenge C2),
+which is exactly why surrogate-assisted search, not direct evolution, is pinned. Positioning: related work discusses; this paper does not propose an
 optimization algorithm.
