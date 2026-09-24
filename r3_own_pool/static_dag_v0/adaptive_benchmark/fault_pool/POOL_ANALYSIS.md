@@ -33,8 +33,9 @@ Q-前沿:clean/f10/f20 → {Single};f30 → {Dynamic}。DV 在各条件下略低
 | f30% | 0.4056 | 0.5694 | +16.4pp |
 
 与 3 策略 oracle(+8.1/+12.5/+13.3pp)相比,5 策略 oracle gap 更大(+9.2/+13.9/+16.4pp):
-扩展候选确实增加了逐任务互补性,但这些新增互补**没有被任何策略的均值水平兑现**——
-这正是"前沿紧凑但任务级选择空间更大"的证据,加强了组合优化的动机。
+扩展候选增加了任务级策略互补性,但现有策略的平均性能仍无法完全覆盖该潜在收益
+(potential, 非 achieved improvement)——说明自动化 workflow 搜索仍存在进一步优化空间,
+为后续工作提供实证基础而非已实现的改进。
 
 ## 论文表述(建议)
 
@@ -53,7 +54,7 @@ Q-前沿:clean/f10/f20 → {Single};f30 → {Dynamic}。DV 在各条件下略低
 2. **调度器候选池敏感性实验(E1 故障侧)**:P3(3 策略)→ P5(5 策略)——前沿过滤
    行为不变(仍只留 Single/Dynamic 入前沿),selector 行为不变,但 oracle gap 增大,
    进一步验证"前沿过滤有效、扩展候选不干扰选择"。
-3. **负结果的价值**:DV 的 verifier 在故障下不提供额外恢复(r 换模型已覆盖大部分
-   可修复场景,verifier 检测到的额外错误不被 large 修复——与 clean 下 DV=Dynamic
-   的负结果一致);FR 的整图重放在故障下也不优于局部恢复(与 clean 下 FR 更差的
-   结论一致)。两个负结果从故障侧复制了 clean 侧的结论,增强了外部效度。
+3. **负结果的价值**:The verifier-augmented workflow does not provide additional Pareto gains
+   under the evaluated fault model: Dynamic 的模型切换已覆盖主要可恢复故障场景
+   (与 clean 下 DV=Dynamic 的负结果一致,故障侧复制);Full replay introduces additional execution cost without improving recovery
+   effectiveness compared with localized recovery(突出局部恢复的核心价值)。两个负结果从故障侧复制了 clean 侧的结论,增强了外部效度。
