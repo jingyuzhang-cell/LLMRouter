@@ -32,7 +32,7 @@ for ext in ['png','pdf','svg']:
  meta={'CreationDate':None,'ModDate':None} if ext=='pdf' else {'Date':None} if ext=='svg' else None
  fig.savefig(P/f'fig4_2_budget_quality.{ext}',dpi=300,metadata=meta)
 with (P/'fig4_2_source.csv').open('w') as f:
- w=csv.writer(f);w.writerow(['scenario','method','budget_tokens','mean','sample_sd']);w.writerows(rows)
+ w=csv.writer(f,lineterminator="\n");w.writerow(['scenario','method','budget_tokens','mean','sample_sd']);w.writerows(rows)
 layout={'schema_version':1,'row_groups':[['0','1','2']],'figure':{'width_pt':fig.get_figwidth()*72,'height_pt':fig.get_figheight()*72},'panels':[]}
 for i,ax in enumerate(axs):
  b=ax.get_position();layout['panels'].append({'id':str(i),'bbox_pt':[b.x0*fig.get_figwidth()*72,b.y0*fig.get_figheight()*72,b.x1*fig.get_figwidth()*72,b.y1*fig.get_figheight()*72],'row':0,'col':i})
