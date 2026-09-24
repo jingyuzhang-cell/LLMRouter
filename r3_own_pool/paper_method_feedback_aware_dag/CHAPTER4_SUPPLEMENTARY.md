@@ -268,3 +268,18 @@ Graph Forest在20个修改型追问中复用40个抽取节点，新执行40次�
 - 检测与归因：上述修正报告及`adaptive_benchmark/RECOVERY_ATTRIBUTION.md`；Verifier见`adaptive_benchmark/verifier_ablation/SUBSET_REPORT.md`。
 - FLARE-DAG：`../static_dag_v0/frp_dag/`冻结记录；MC→LC上界与实际LC→MC回落分开解释。
 - 基础与跨域：原实验章及`FINAL_CLAIM_AUDIT.md`中相应基础／跨域条目。该审计文件仍含已撤回的历史四节点主张，不作为修正恢复结果来源；后者以`corrected_replay/CORRECTED_REPORT.md`为准。被解析缺陷推翻的结果不转入本补充材料。
+
+## S4.7 MC/LC方向限定的策略切换上界
+
+逐任务比较中，MC与LC同时正确15题，仅MC正确1题，仅LC正确3题，同时错误69题。两个切换方向并不对称。对MC→LC方向，令 $\mathcal R$ 为MC错误但LC正确的任务集合，$\mathcal D$ 为部署反馈触发该方向切换的任务集合，则仅由此反馈触发的净质量增量满足
+
+$$
+\Delta Q_{MC\rightarrow LC}\le\frac{|\mathcal R\cap\mathcal D|}{N}.
+$$
+
+其中恢复机会仅3/88；MC侧反馈触发5题，但不包含这3题，故交集为0，上界为0/88。该界不同于实际LC→MC执行的归因，且仅覆盖固定候选、方向与反馈规则。它表明平均指标上的非支配关系不足以保证可被反馈识别的逐任务恢复机会。
+
+
+## S4.8 Math500详细结果与阶段诊断
+
+正式Math500面板中，Single large、查询路由与Single medium为54.0%、50.0%、49.0%，节点路由、Static与Dynamic为13.0%、15.0%、16.0%。Static对Single large下降39.0个百分点，95%置信区间[−50,−27]；Dynamic对Static仅增加1.0个百分点。有限候选Oracle为64.0%。阶段诊断中，计划后求解正确率仅32%，校验又将部分正确输出改错，降至15%。因此，当前恢复未补偿阶段配置失配与验证覆盖造成的损失；结论限于所测数学接口，不否定其他求解器。
