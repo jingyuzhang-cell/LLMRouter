@@ -8,6 +8,8 @@ Pareto: (Q, -C, -L). Reliability reported separately.
 
 Outputs: adaptive_benchmark/exact_pareto/CONFIG_RESULTS.json + PARETO_ANALYSIS.md
 """
+from .audited_cache import load_prompt_cache, cached_record
+import copy
 import fcntl
 import hashlib
 import json
@@ -59,6 +61,7 @@ class CacheCaller:
                 for l in p.read_text().splitlines():
                     r = json.loads(l)
                     self.by_mp.setdefault((r['model'], sha(r['prompt'])), r['key'])
+        self.by_mp = load_prompt_cache(dirs)
         self.lock = (core.ROOT / 'collect/logs/local_gpu.lock').open('a+')
         fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
@@ -74,15 +77,10 @@ class CacheCaller:
                                      latency_s=cl or 0.0, injected_fault=True))
             self.by_key[key] = rec
             return rec
-        if key in self.by_key:
-            rec = self.by_key[key]
-            if rec['response'].get('status') != 'delivered':
-                raise RuntimeError('cached infra failure: ' + key)
-            return rec
+        # Never reuse a mutable execution-key alias without matching the prompt.
         mp = (model, sha(prompt))
-        if mp in self.by_mp:
-            src = self.by_key[self.by_mp[mp]]
-            rec = dict(key=key, model=model, response=src['response'], alias_of=self.by_mp[mp])
+        rec = cached_record(self.by_mp, key, model, prompt)
+        if rec is not None:
             self.by_key[key] = rec
             return rec
         if model != self.current:
@@ -96,7 +94,7 @@ class CacheCaller:
         rec = dict(key=key, model=model, response=resp)
         append(self.folder / 'RESPONSES.jsonl', rec)
         self.by_key[key] = rec
-        self.by_mp[mp] = key
+        self.by_mp[mp] = copy.deepcopy(rec)
         if resp.get('status') != 'delivered':
             raise RuntimeError('Infrastructure failure: ' + key)
         return rec
@@ -124,6 +122,8 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
     gold = {t['uid']: t['answer'] for t in tasks}
     planned = {'e1': 'large', 'e2': 'large', 'r': m_r, 'v': m_v}
 
+    caller.faults.clear()
+    namespace = f'{m_r}_{m_v}_{z}_{seed}'
     # register faults for this config's planned models
     for u, (node, failing) in faults.items():
         ck = f'{node}:{u}'
@@ -134,9 +134,15 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
     state = {}
     for t in tasks:
         u = t['uid']
-        f1, _ = parse_facts_safe(caller.by_key.get(f'e1:{u}', {}).get('response', {}).get('answer', ''))
-        f2, _ = parse_facts_safe(caller.by_key.get(f'e2:{u}', {}).get('response', {}).get('answer', ''))
-        state[u] = dict(e1=f1, e2=f2, ok=None, keys=[f'e1:{u}', f'e2:{u}', f'r:{u}', f'v:{u}'],
+        evidence_keys = []
+        for node, context in (('e1', t['ctx_table']), ('e2', t['ctx_text'])):
+            key = f'ep:{node}:{u}:{namespace}:initial'
+            caller.call(key, 'large', v.eprompt(dict(question=t['question'], context=context)),
+                        uid=u, node=node)
+            evidence_keys.append(key)
+        f1, _ = parse_facts_safe(caller.by_key[evidence_keys[0]]['response']['answer'])
+        f2, _ = parse_facts_safe(caller.by_key[evidence_keys[1]]['response']['answer'])
+        state[u] = dict(e1=f1, e2=f2, ok=None, keys=evidence_keys,
                         question=t['question'], gold=t['answer'],
                         ctx={'e1': t['ctx_table'], 'e2': t['ctx_text']}, expr_text=None)
 
@@ -144,7 +150,7 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
         return {'facts': st['e1']['facts'] + st['e2']['facts']}
 
     def latest(st, pfx):
-        return [k for k in st['keys'] if k.split(':')[0] == pfx][-1]
+        return [k for k in st['keys'] if k.split(':')[1] == pfx][-1]
 
     def call_node(st, u, node, model, key):
         if node in ('e1', 'e2'):
@@ -172,11 +178,6 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
         for t in tasks:
             u = t['uid']
             st = state[u]
-            if node == 'r':
-                # check if initial r key already exists in cache with correct model
-                k = f'r:{u}'
-                if k in caller.by_key and node == 'r':
-                    pass  # initial key from base panel; model may differ
             by_m.setdefault(model, []).append(u)
         for m in sorted(by_m):
             for u in by_m[m]:
@@ -218,12 +219,12 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
             if m != model:
                 continue
             st = state[u]
-            key = f'ep:{node}:{u}:esw_{seed}'
+            key = f'ep:{node}:{u}:esw_{namespace}'
             call_node(st, u, node, m, key)
     e_affected = {u for u, _, _ in e_jobs}
     for u in sorted(e_affected):
         st = state[u]
-        key = f'ep:r:{u}:eref_{seed}'
+        key = f'ep:r:{u}:eref_{namespace}'
         call_node(st, u, 'r', 'medium', key)
         refresh_expr(st)
 
@@ -231,7 +232,7 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
     r_esc = [t['uid'] for t in tasks if r_value(state[t['uid']])[1]]
     for u in sorted(r_esc):
         st = state[u]
-        key = f'ep:r:{u}:resc_{seed}'
+        key = f'ep:r:{u}:resc_{namespace}'
         call_node(st, u, 'r', 'large', key)
         refresh_expr(st)
 
@@ -240,10 +241,10 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
     for t in tasks:
         u = t['uid']
         st = state[u]
-        rks = [k for k in st['keys'] if k.split(':')[0] == 'r']
+        rks = [k for k in st['keys'] if k.split(':')[1] == 'r']
         if len(rks) > 1:
             r_changed.add(u)
-            key = f'ep:v:{u}:vref_{seed}'
+            key = f'ep:v:{u}:vref_{namespace}'
             call_node(st, u, 'v', 'coder', key)
 
     # stage 4: v failure → large
@@ -252,18 +253,15 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
         u = t['uid']
         st = state[u]
         vv = json_value(caller.by_key[latest(st, 'v')]['response']['answer'])
-        if close(vv, gold[u]):
-            st['ok'] = True
-            continue
         rv, rerr = r_value(st)
         v_fail = (vv is None) or (not rerr and not close(vv, rv))
         if v_fail:
             v_esc.append(u)
         else:
-            st['ok'] = False
+            st['ok'] = close(vv, gold[u])
     for u in sorted(v_esc):
         st = state[u]
-        key = f'ep:v:{u}:vesc_{seed}'
+        key = f'ep:v:{u}:vesc_{namespace}'
         call_node(st, u, 'v', 'large', key)
         vv = json_value(caller.by_key[key]['response']['answer'])
         st['ok'] = close(vv, gold[u])
@@ -281,6 +279,8 @@ def run_config(m_r, m_v, z, seed, tasks, faults, resp, caller):
 
 
 def run():
+    if (PARETO_DIR / 'CONFIG_RESULTS.json').exists():
+        raise FileExistsError('Preserve frozen results; use an explicitly versioned output directory')
     PARETO_DIR.mkdir(parents=True, exist_ok=True)
     pol = json.loads((OUT / 'POLICY.json').read_text())
     tasks = pol['tasks'][:N_TASKS]

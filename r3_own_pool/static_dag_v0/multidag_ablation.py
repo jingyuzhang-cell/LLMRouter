@@ -218,7 +218,7 @@ def run():
             for t in tasks:
                 uid = t['uid']; st = armstate[uid]
                 vval = json_value(caller.cache[latest(st, 'v')]['response']['answer'])
-                if close(vval, t['answer']):
+                if arm == 'sm' and close(vval, t['answer']):
                     st['ok'] = True; continue
                 if arm == 'sm':
                     v_events.append((t, st, 'large', 'fb'))
@@ -228,7 +228,7 @@ def run():
                     if v_deployable_fail:
                         v_events.append((t, st, 'large', 'esc'))
                     else:
-                        st['ok'] = False
+                        st['ok'] = close(vval, t['answer'])
             for model in sorted({m for _, _, m, _ in v_events}):
                 for t, st, m, kind in v_events:
                     if m != model: continue

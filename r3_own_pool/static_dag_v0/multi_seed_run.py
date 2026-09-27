@@ -10,6 +10,8 @@ change any decision.
 Outputs: adaptive_benchmark/fault_p{p}_seed{s}/FAULT_RESULT.json (same schema
 as the original fault_p{p} dirs).
 """
+from .audited_cache import load_prompt_cache, cached_record
+import copy
 import fcntl
 import hashlib
 import json
@@ -54,6 +56,7 @@ class Caller:
                 for l in p.read_text().splitlines():
                     r = json.loads(l)
                     self.by_mp.setdefault((r['model'], sha(r['prompt'])), r['key'])
+        self.by_mp = load_prompt_cache(dirs)
         self.lock = (core.ROOT / 'collect/logs/local_gpu.lock').open('a+')
         fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
@@ -69,15 +72,10 @@ class Caller:
                                      latency_s=clean_lat or 0.0, injected_fault=True))
             self.by_key[key] = rec
             return rec
-        if key in self.by_key:
-            rec = self.by_key[key]
-            if rec['response'].get('status') != 'delivered':
-                raise RuntimeError('cached infra failure: ' + key)
-            return rec
+        # Never reuse a mutable execution-key alias without matching the prompt.
         mp = (model, sha(prompt))
-        if mp in self.by_mp:
-            src = self.by_key[self.by_mp[mp]]
-            rec = dict(key=key, model=model, response=src['response'], alias_of=self.by_mp[mp])
+        rec = cached_record(self.by_mp, key, model, prompt)
+        if rec is not None:
             self.by_key[key] = rec
             return rec
         if model != self.current:
@@ -91,7 +89,7 @@ class Caller:
         rec = dict(key=key, model=model, response=resp)
         append(self.folder / 'RESPONSES.jsonl', rec)
         self.by_key[key] = rec
-        self.by_mp[mp] = key
+        self.by_mp[mp] = copy.deepcopy(rec)
         if resp.get('status') != 'delivered':
             raise RuntimeError('Infrastructure failure: ' + key)
         return rec
@@ -309,14 +307,11 @@ def run_seed(seed):
         for t in tasks:
             u = t['uid']
             vval = json_value(caller.by_key[latest(dyn[u], 'v')]['response']['answer'])
-            if close(vval, dyn[u]['gold']):
-                dyn[u]['ok'] = True
-                continue
             rval, rerr = r_value(dyn[u])
             if (vval is None) or (not rerr and not close(vval, rval)):
                 v_esc.append(u)
             else:
-                dyn[u]['ok'] = False
+                dyn[u]['ok'] = close(vval, dyn[u]['gold'])
         for u in v_esc:
             key = f'bf-d:v:{u}:esc'
             caller.call(key, 'large', VPROMPT.format(q=dyn[u]['question'],

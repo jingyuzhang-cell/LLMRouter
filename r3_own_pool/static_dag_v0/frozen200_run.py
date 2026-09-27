@@ -4,6 +4,8 @@ Arms: Single LLM (retry), Static DAG (no feedback), Dynamic DAG (Dynamic-Real).
 Scenarios: clean + 30% fault × 3 seeds. Protocol frozen in FROZEN200_PROTOCOL.md.
 One-shot: no parameter changes after results are seen.
 """
+from .audited_cache import load_prompt_cache, cached_record
+import copy
 import fcntl
 import hashlib
 import json
@@ -70,6 +72,7 @@ class Caller:
                 for l in p.read_text().splitlines():
                     r = json.loads(l)
                     self.by_mp.setdefault((r['model'], sha(r['prompt'])), r['key'])
+        self.by_mp = load_prompt_cache(dirs)
         self.lock = (core.ROOT / 'collect/logs/local_gpu.lock').open('a+')
         fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
@@ -85,15 +88,10 @@ class Caller:
                                      latency_s=cl or 0.0, injected_fault=True))
             self.by_key[key] = rec
             return rec
-        if key in self.by_key:
-            rec = self.by_key[key]
-            if rec['response'].get('status') != 'delivered':
-                raise RuntimeError('cached infra failure: ' + key)
-            return rec
+        # Never reuse a mutable execution-key alias without matching the prompt.
         mp = (model, sha(prompt))
-        if mp in self.by_mp:
-            src = self.by_key[self.by_mp[mp]]
-            rec = dict(key=key, model=model, response=src['response'], alias_of=self.by_mp[mp])
+        rec = cached_record(self.by_mp, key, model, prompt)
+        if rec is not None:
             self.by_key[key] = rec
             return rec
         if model != self.current:
@@ -107,7 +105,7 @@ class Caller:
         rec = dict(key=key, model=model, response=resp)
         append(self.folder / 'RESPONSES.jsonl', rec)
         self.by_key[key] = rec
-        self.by_mp[mp] = key
+        self.by_mp[mp] = copy.deepcopy(rec)
         if resp.get('status') != 'delivered':
             raise RuntimeError('Infrastructure failure: ' + key)
         return rec
@@ -155,7 +153,10 @@ def run_arm(arm, tasks, faults, caller, gold, is_fault):
             k = f'fz:single:{u}'
             if is_fault and u in faults:
                 # Single LLM under fault: faulted task fails; retry same model → fault persists
-                results[u] = dict(ok=False, used=0, lat=0, injected=True)
+                caller.call(k, 'large', ROUTER_PROMPT.format(q=t['question'],
+                            ctx_table=t['ctx_table'], ctx_text=t['ctx_text']))
+                results[u] = dict(ok=False, used=2 * caller.cost(k), lat=2 * caller.lat(k),
+                                  injected=True, cost_semantics='two_clean_call_equivalents')
             else:
                 caller.call(k, 'large', ROUTER_PROMPT.format(q=t['question'],
                                                               ctx_table=t['ctx_table'], ctx_text=t['ctx_text']))
@@ -272,16 +273,13 @@ def run_arm(arm, tasks, faults, caller, gold, is_fault):
         u = t['uid']
         st = state[u]
         vv = json_value(caller.by_key[v_latest(st)]['response']['answer'])
-        if close(vv, gold[u]):
-            st['ok'] = True
-            continue
         rv, rerr = r_value(st)
         if (vv is None) or (not rerr and not close(vv, rv)):
             call_node(st, u, 'v', 'large', f'fz:v:{u}:esc')
             vv2 = json_value(caller.by_key[v_latest(st)]['response']['answer'])
             st['ok'] = close(vv2, gold[u])
         else:
-            st['ok'] = False
+            st['ok'] = close(vv, gold[u])
     results = {}
     for t in tasks:
         u = t['uid']
@@ -295,6 +293,8 @@ def run_arm(arm, tasks, faults, caller, gold, is_fault):
 
 
 def run():
+    if (FZ / 'FROZEN200_RESULTS.json').exists():
+        raise FileExistsError('Preserve frozen results; use an explicitly versioned output directory')
     pol = json.loads((FZ / 'FROZEN200_POLICY.json').read_text())
     tasks = pol['tasks']
     gold = {t['uid']: t['answer'] for t in tasks}

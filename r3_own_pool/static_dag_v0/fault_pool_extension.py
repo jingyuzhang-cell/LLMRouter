@@ -154,14 +154,11 @@ def run_combo(seed, rate, tasks, resp):
             u = t['uid']
             st = fr[u]
             vv = json_value(caller.by_key[latest(st, 'v')]['response']['answer'])
-            if close(vv, t['answer']):
-                st['ok'] = True
-                continue
             rv, rerr = r_value(st)
             if (vv is None) or (not rerr and not close(vv, rv)):
                 v_tasks.append(u)
             else:
-                st['ok'] = False
+                st['ok'] = close(vv, gold[u])
         if v_tasks:
             exec_round(v_tasks, 'v', lambda u, node: 'large' if node == 'v' else None)
         fr_out = {}
@@ -222,14 +219,11 @@ def run_combo(seed, rate, tasks, resp):
             u = t['uid']
             st = dv[u]
             vv = json_value(caller.by_key[latest(st, 'v')]['response']['answer'])
-            if close(vv, t['answer']):
-                st['ok'] = True
-                continue
             rv, rerr = r_value(st)
             if (vv is None) or (not rerr and not close(vv, rv)):
                 vesc.append(u)
             else:
-                st['ok'] = False
+                st['ok'] = close(vv, gold[u])
         for u in vesc:
             st = dv[u]
             call_into(st, u, 'v', 'large', f'v:dvx:{u}:esc')

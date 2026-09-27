@@ -19,6 +19,7 @@ executed ones (ground truth from the REQUESTS log), so this replay does not
 depend on reconstructing the exact (partly uncommitted) stage code that ran.
 """
 import json
+from pathlib import Path
 import time
 
 from . import core
@@ -56,8 +57,11 @@ def lat_of(resp, key):
     return resp[key]['response'].get('latency_s') or 0
 
 
-def run():
-    RES.mkdir(exist_ok=True)
+def run(output_dir=None):
+    destination = RES if output_dir is None else Path(output_dir)
+    if (destination / 'CORRECTED_ARMS.json').exists():
+        raise FileExistsError('Preserve prior results; choose a new audit output directory')
+    destination.mkdir(parents=True, exist_ok=True)
     resp = load(OUT)
     resp.update(load(ABL))
     resp.update(load(FG))
@@ -96,34 +100,25 @@ def run():
                 v_stage_keys = [k for k in v_stage_keys if k in keys]
                 v_before = [k for k in keys if k.split(':')[0] == 'v' and k not in v_stage_keys][-1]
             vval_before = json_value_fixed(resp[v_before]['response']['answer'])
-            fire = not close(vval_before, gold[u])
-            if not fire:
-                # corrected: v-stage recovery does not fire; final v = v_before
-                keys = [k for k in keys if k not in v_stage_keys]
+            before_keys = [k for k in keys if k not in v_stage_keys]
+            if arm in ('rd', 'fg'):
+                # Decide from the state BEFORE a possible full replay round, never gold.
+                rval, rerr = r_value(u, before_keys)
+                fire = (vval_before is None) or (not rerr and not close(vval_before, rval))
+            else:
+                # Explicit ideal/static attribution controls retain their historical semantics.
+                fire = not close(vval_before, gold[u])
+            if fire:
+                vk = f'v:fg:{u}:v' if arm == 'fg' else v_stage_keys[0]
+                ok = close(json_value_fixed(resp[vk]['response']['answer']), gold[u])
+            else:
+                keys = before_keys
                 if arm == 'fg':
-                    events = [e for e in events if not (e.get('stage') == 'v')]
+                    events = [e for e in events if e.get('stage') != 'v']
                     rounds = [r for r in rounds if r['round'] != 'v']
                 else:
                     events = [e for e in events if not (e['node'] == 'v' and e.get('attempted') and e.get('kind') == suffix)]
-                ok = True
-            else:
-                if arm in ('static', 'dynamic', 'sm'):
-                    ok = close(json_value_fixed(resp[v_stage_keys[0]]['response']['answer']), gold[u])
-                else:  # rd, fg: deployable check on v_before
-                    rval, rerr = r_value(u, keys)
-                    deployable = (vval_before is None) or (not rerr and not close(vval_before, rval))
-                    if deployable:
-                        vk = f'v:{arm}:{u}:esc' if arm == 'rd' else f'v:fg:{u}:v'
-                        ok = close(json_value_fixed(resp[vk]['response']['answer']), gold[u])
-                    else:
-                        # detector says fine: corrected arm does not recover; final stays wrong
-                        keys = [k for k in keys if k not in v_stage_keys]
-                        if arm == 'fg':
-                            events = [e for e in events if not (e.get('stage') == 'v')]
-                            rounds = [r for r in rounds if r['round'] != 'v']
-                        else:
-                            events = [e for e in events if not (e['node'] == 'v' and e.get('attempted') and e.get('kind') == 'esc')]
-                        ok = False
+                ok = close(vval_before, gold[u])
             used = sum(cost_of(resp, k) for k in keys)
             lat = sum(lat_of(resp, k) for k in keys)
             armout[u] = dict(ok=ok, keys=keys, events=events, rounds=rounds,
@@ -145,7 +140,7 @@ def run():
                       'e/r stages unchanged (parser bug does not affect them); '
                       'all retained outputs are real executed calls; zero new model calls',
                summary=summary, arms=out)
-    (RES / 'CORRECTED_ARMS.json').write_text(json.dumps(rep, ensure_ascii=False, indent=2))
+    (destination / 'CORRECTED_ARMS.json').write_text(json.dumps(rep, ensure_ascii=False, indent=2))
     print(json.dumps(summary, ensure_ascii=False, indent=1))
 
 

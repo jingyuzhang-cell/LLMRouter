@@ -243,9 +243,6 @@ def run():
             uid = t['uid']
             st = armstate[uid]
             vval = json_value(caller.cache[latest(st, 'v')]['response']['answer'])
-            if close(vval, t['answer']):
-                st['ok'] = True
-                continue
             rval, rerr = r_value(st)
             v_deployable_fail = (vval is None) or (not rerr and not close(vval, rval))
             if v_deployable_fail:
@@ -255,7 +252,7 @@ def run():
                                          models={n: st['node_model'][n] for n in ('e1', 'e2', 'r', 'v')},
                                          executed=[]))
             else:
-                st['ok'] = False
+                st['ok'] = close(vval, t['answer'])
         if v_tasks:
             exec_round(v_tasks, 'v', lambda t, node: {'v': 'large'}.get(node), -1)
 

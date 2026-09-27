@@ -13,6 +13,8 @@ Cache policy: (model, prompt) reuse for identical calls (temp 0) unless the
 other calls are REAL. Fault outputs are sampled from REAL failing outputs of
 the frozen panel.
 """
+from .audited_cache import load_prompt_cache, cached_record
+import copy
 import fcntl
 import hashlib
 import json
@@ -106,6 +108,7 @@ class Caller:
                 for l in p.read_text().splitlines():
                     r = json.loads(l)
                     self.by_mp[(r['model'], sha(r['prompt']))] = r['key']
+        self.by_mp = load_prompt_cache((OUT, ABL, FG))
         self.lock = (core.ROOT / 'collect/logs/local_gpu.lock').open('a+')
         fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
@@ -124,16 +127,11 @@ class Caller:
                                      injected_fault=True))
             self._store(rec)
             return rec
-        if key in self.by_key:
-            rec = self.by_key[key]
-            if rec['response'].get('status') != 'delivered':
-                raise RuntimeError('cached infra failure: ' + key)
-            return rec
+        # Never reuse a mutable execution-key alias without matching the prompt.
         mp = (model, sha(prompt))
-        if mp in self.by_mp:
-            src = self.by_key[self.by_mp[mp]]
-            rec = dict(key=key, model=model, response=src['response'], alias_of=self.by_mp[mp])
-            self._store(rec)
+        rec = cached_record(self.by_mp, key, model, prompt)
+        if rec is not None:
+            self.by_key[key] = rec
             return rec
         if model != self.current:
             if self.proc is not None:
@@ -146,7 +144,7 @@ class Caller:
         rec = dict(key=key, model=model, response=resp)
         append(self.folder / 'RESPONSES.jsonl', rec)
         self.by_key[key] = rec
-        self.by_mp[mp] = key
+        self.by_mp[mp] = copy.deepcopy(rec)
         if resp.get('status') != 'delivered':
             raise RuntimeError('Infrastructure failure: ' + key)
         return rec
@@ -430,15 +428,12 @@ def fault_scenario(caller, rate, resp):
         u = t['uid']
         st = dyn_state[u]
         vval = json_value(caller.by_key[latest(st, 'v')]['response']['answer'])
-        if close(vval, st['gold']):
-            st['ok'] = True
-            continue
         rval, rerr = r_value(st)
         v_fail = (vval is None) or (not rerr and not close(vval, rval))
         if v_fail:
             v_events.append((u, st))
         else:
-            st['ok'] = False
+            st['ok'] = close(vval, st['gold'])
     for u, st in v_events:
         key = f'bf-d:v:{u}:esc'
         call_into(st, u, 'v', 'large', key)
