@@ -1,0 +1,78 @@
+{
+ "features": "router risk: QueryRouter Qhat(mean/per-model/std) + NodeRouter Qhat at frozen assignment (e=large,r=medium,v=coder) + node min/std/cross-checks; encoder-only, zero LLM calls",
+ "baselines": {
+  "always_single": 0.39666666666666667,
+  "always_dynamic": 0.4033333333333333,
+  "oracle_selective": 0.515
+ },
+ "models": {
+  "router_only|logistic": {
+   "q_mean": 0.375,
+   "q_std": 0.05296749527356903,
+   "auroc_mean": 0.47125885909433707,
+   "rates_mean": {
+    "help_capture": 0.4431818181818182,
+    "harm_avoidance": 0.38,
+    "intervention_rate": 0.5850000000000001
+   }
+  },
+  "router_only|hist_gb": {
+   "q_mean": 0.3983333333333333,
+   "q_std": 0.06778233135887585,
+   "auroc_mean": 0.3853255369018237,
+   "rates_mean": {
+    "help_capture": 0.7636363636363637,
+    "harm_avoidance": 0.25357142857142856,
+    "intervention_rate": 0.775
+   }
+  },
+  "router_only|calibrated_gb": {
+   "q_mean": 0.39999999999999997,
+   "q_std": 0.07031674369909664,
+   "auroc_mean": 0.5365455209618812,
+   "rates_mean": {
+    "help_capture": 0.9595959595959596,
+    "harm_avoidance": 0.05357142857142857,
+    "intervention_rate": 0.96
+   }
+  },
+  "lexical+router|logistic": {
+   "q_mean": 0.4033333333333333,
+   "q_std": 0.07684761255599001,
+   "auroc_mean": 0.5096251221205265,
+   "rates_mean": {
+    "help_capture": 0.7568181818181818,
+    "harm_avoidance": 0.225,
+    "intervention_rate": 0.755
+   }
+  },
+  "lexical+router|hist_gb": {
+   "q_mean": 0.3933333333333333,
+   "q_std": 0.07137537701787953,
+   "auroc_mean": 0.42937563202728646,
+   "rates_mean": {
+    "help_capture": 0.7454545454545455,
+    "harm_avoidance": 0.23214285714285712,
+    "intervention_rate": 0.755
+   }
+  },
+  "lexical+router|calibrated_gb": {
+   "q_mean": 0.40166666666666656,
+   "q_std": 0.07291547618075786,
+   "auroc_mean": 0.48096037081790755,
+   "rates_mean": {
+    "help_capture": 0.9373737373737374,
+    "harm_avoidance": 0.05714285714285714,
+    "intervention_rate": 0.8549999999999999
+   }
+  }
+ },
+ "regret_oracle": {
+  "router_only|logistic": 0.14,
+  "router_only|hist_gb": 0.1166666666666667,
+  "router_only|calibrated_gb": 0.11500000000000005,
+  "lexical+router|logistic": 0.11166666666666669,
+  "lexical+router|hist_gb": 0.1216666666666667,
+  "lexical+router|calibrated_gb": 0.11333333333333345
+ }
+}

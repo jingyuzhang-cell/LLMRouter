@@ -1,0 +1,41 @@
+{
+ "clean_panel": {
+  "single": 0.55,
+  "dynamic": 0.415,
+  "help": 8,
+  "harm": 35,
+  "neutral": 157,
+  "oracle": 0.59,
+  "note": "Dynamic is NET harmful without faults: intervention on healthy tasks breaks 35 to help 8"
+ },
+ "fault_panel": {
+  "n": 600,
+  "injected": 180,
+  "help_total": 71,
+  "help_on_injected": 57,
+  "help_on_noninjected": 14,
+  "harm_total": 67,
+  "harm_on_injected": 0,
+  "harm_on_noninjected": 67,
+  "single_on_injected": "0/180",
+  "dynamic_on_injected": "57/180",
+  "noninjected": {
+   "single": 0.5666666666666667,
+   "dynamic": 0.44047619047619047,
+   "oracle": 0.6
+  },
+  "injected_subset": {
+   "single": 0.0,
+   "dynamic": 0.31666666666666665
+  }
+ },
+ "gates": {
+  "always_single": 0.39666666666666667,
+  "always_dynamic": 0.4033333333333333,
+  "oracle_selective": 0.515,
+  "clairvoyant_fault_aware": 0.49166666666666664,
+  "never_on_healthy_max": 0.49166666666666664,
+  "note": "Even PERFECT runtime fault detection reaches only 0.4917; the residual to oracle (0.5150) requires predicting task-intrinsic help, which is 14 samples against 67 intrinsic harm"
+ },
+ "conclusion": "80% of help (57/71) sits on randomly-injected tasks -> unpredictable ex ante by ANY pre-execution feature; on healthy tasks harm:help = 67:14. The learnable signal must be RUNTIME state (deployable failure signals), not task features \u2014 directing the method to trust estimation / state observability (M1/M2), not a priori gating."
+}

@@ -1,0 +1,102 @@
+{
+ "panel": {
+  "n_tasks": 200,
+  "seeds": [
+   20260923,
+   20260924,
+   20260925
+  ],
+  "per_seed": {
+   "20260923": {
+    "single": 0.395,
+    "dynamic": 0.405
+   },
+   "20260924": {
+    "single": 0.38,
+    "dynamic": 0.405
+   },
+   "20260925": {
+    "single": 0.415,
+    "dynamic": 0.4
+   }
+  },
+  "overall": {
+   "single": 0.39666666666666667,
+   "dynamic": 0.4033333333333333,
+   "oracle": 0.515,
+   "help": 71,
+   "harm": 67,
+   "neutral": 462
+  }
+ },
+ "baselines": {
+  "always_single": 0.39666666666666667,
+  "always_dynamic": 0.4033333333333333,
+  "random": {
+   "intervene_25pct": 0.3983333333333333,
+   "intervene_50pct": 0.4,
+   "intervene_75pct": 0.40166666666666667
+  },
+  "oracle_selective": 0.515
+ },
+ "models": {
+  "logistic": {
+   "q_mean": 0.3966666666666666,
+   "q_std": 0.0678232998312527,
+   "auroc_mean": 0.4937772842965857,
+   "tau_chosen": [
+    0.1,
+    0.05,
+    0.15,
+    0.6,
+    0.7
+   ],
+   "rates_mean": {
+    "help_capture": 0.625,
+    "harm_avoidance": 0.3314285714285714,
+    "intervention_rate": 0.665
+   }
+  },
+  "hist_gb": {
+   "q_mean": 0.39833333333333326,
+   "q_std": 0.07019813229550895,
+   "auroc_mean": 0.5116552151892225,
+   "tau_chosen": [
+    0.15,
+    0.15,
+    0.7,
+    0.45,
+    0.3
+   ],
+   "rates_mean": {
+    "help_capture": 0.71010101010101,
+    "harm_avoidance": 0.25857142857142856,
+    "intervention_rate": 0.7550000000000001
+   }
+  },
+  "calibrated_gb": {
+   "q_mean": 0.39999999999999997,
+   "q_std": 0.06708203932499368,
+   "auroc_mean": 0.4957244639551625,
+   "tau_chosen": [
+    0.05,
+    0.05,
+    0.5,
+    0.55,
+    0.05
+   ],
+   "rates_mean": {
+    "help_capture": 0.8136363636363637,
+    "harm_avoidance": 0.145,
+    "intervention_rate": 0.8149999999999998
+   }
+  }
+ },
+ "regret_oracle": {
+  "logistic": 0.1183333333333334,
+  "hist_gb": 0.11666666666666675,
+  "calibrated_gb": 0.11500000000000005
+ },
+ "features": "question len/words/nums + type flags; table chars/rows/nums; text chars/nums; passage count \u2014 all pre-execution, no gold, no injected flag, no outcomes",
+ "protocol": "GroupKFold(5) by task; tau chosen on train folds only; neutral (U=0) excluded from training only"
+}
