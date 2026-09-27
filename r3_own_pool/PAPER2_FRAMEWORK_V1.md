@@ -7,13 +7,15 @@
 **When should a multi-agent system trust, reuse, verify, or recompute a
 historical workflow state under quality–cost–latency trade-offs?**
 
-主线正式收敛为（P1a 后进一步收窄）：
+主线正式收敛为（P0-2 后最终版）：
 
-    Observability → Localization → Correctability → Selective Intervention
-    → State-conditioned Pareto Scheduling
+    Observability → Update-aware Trust → Recoverability/Harm Estimation
+    → Selective Intervention → State-conditioned Pareto Scheduling
 
 （P1a 实测逐层损失：r 故障 Detection 80% → Localization 39% → Correction 38%；
-接口故障可观测但仅 21–29% 可纠正；语义故障对现有全部原语不可观测。）
+接口故障可观测但仅 21–29% 可纠正；语义故障对现有全部原语不可观测。
+P0-2 实测动作效用：P(harm|correct) A 0.061 / B 0.121 / C' 0.606，
+P(recover|wrong) ≤0.048 —— "更多干预 ⇏ 更高效用"，A 对 B/C' 经验 Pareto 支配。）
 
 Graph Forest 是其中的历史状态与复用层（h），不与 selective gate 分开讲述。
 两轴互补：运行时干预轴（何时动）+ 复用轴（有可信历史时是否重执行）。
@@ -41,9 +43,9 @@ diagnosability，而不是更复杂的先验分类器。**
 - x：当前任务（含是否 follow-up、修改类型）
 - h：Graph Forest 历史状态（节点信任度 r_i、版本、来源、依赖）
 
-**方法流（P0-1 后修订）**：
+**方法流（P0-2 后修订）**：
 
-    x → initial plan → s_t → Trust Estimation → Intervention Gate
+    x → initial plan → s_t → Update-aware Trust Estimation → Intervention Gate
 
 真正决定是否干预的是运行时状态，而非任务静态词法特征：
 
@@ -86,7 +88,13 @@ P1a：现有部署信号对 fault-aware selection 上界的增益为零。关键
 
 ## 3. 算法模块
 
-M1 **Semantic Trust Estimation（P1b，P1a 后重新定义）**：输入为节点级可执行
+M1 **Update-aware Trust Estimation（P1b，P0-2 后再定义）**：拆成两个量——
+T_reuse = P(stored computation remains valid after update δ | s)
+（originally correct ≠ counterfactually reusable：A 零调用仍损 2/33）和
+R_regen = P(regeneration will improve rather than harm | s)（B 修 3/63 却伤
+4/33）。reuse 自身也受 T_reuse 约束，不再是无条件安全项。第一步是零调用
+结构信号审计（见实验表 P1b-audit），LLM semantic verifier 仅在结构信号
+无分离度时引入。输入为节点级可执行
 证据——事实/表达式依赖一致性、operand 覆盖、单位/比例/百分比语义、中间
 执行 trace、结果与原始证据一致性、下游 verifier 结构化反证、provenance/
 历史节点可靠性；目标不是 P(fault) 而是 **P(node output trustworthy | s_t)**
@@ -149,8 +157,9 @@ upper bound?
 |---|---|---|---|
 | P0-1 | Selective gate 可学习性 | RQ3 否定事前路径 + 上界分层 | **完成（阴性+机制）** |
 | P1a | Runtime detector audit | Observability→Localization→Correctability 分层 | **完成（现有信号对选臂上界增益为零）** |
-| P0-2 | 200 任务 3×2 + C′ | RQ1 主表 | ~600 调用，下一个 |
-| P1b | Semantic Trust Estimation（两类故障族评估） | M1；能否把格式良好错误变为可诊断 | 复用 GFv2 + 少量调用 |
+| P0-2 | 96 任务归一化 3×2（A/B/C′×V0/V1） | RQ1 主表 + V(a\|s) 实测动作效用 | **完成（326 调用；A Pareto 支配 B/C′）** |
+| P1b-audit | 零调用结构信号审计：区分 2 reuse-harm / 3 regen-recover / 4 regen-harm | T_reuse/R_regen 可学性 | 0 调用，先于任何 LLM verifier |
+| P1b | Update-aware Trust Estimation（两类故障族评估） | M1；能否把格式良好错误变为可诊断 | 视 audit 结果定 |
 | P1 | 状态条件前沿（真实面板 reuse 前后） | RQ2 | 复用现有+少量 |
 | P2 | SA-PGFS 真实评价阶段（HV-vs-evals 主图） | RQ2/M4 | 分批 |
 | P2 | V(a\|s) 门控 vs 三种 Always 统一负载 | RQ3 主表 | ~1000 调用 |
