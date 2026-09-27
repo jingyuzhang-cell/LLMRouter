@@ -1,0 +1,582 @@
+{
+ "phase": "dev",
+ "n": 20,
+ "prompt": "Translate the financial question into a SEMANTIC CONTRACT. You see ONLY the question and a numbered fact list. Return ONLY JSON, no prose, with exactly these fields:\n{\"operation_family\": one of [sum, difference, ratio, percentage, percentage_change, product, average, other],\n \"required_facts\": fact ids used, e.g. [\"f0\",\"f2\"],\n \"roles\": mapping of semantic roles to fact ids, e.g. {\"new_value\":\"f2\",\"base_value\":\"f0\"},\n \"canonical_expression\": arithmetic expression over fact ids (f0,f1,...) using only + - * / and parentheses; numeric constants 0,1,100 allowed; MUST compute the final answer to the question,\n \"output_scale\": \"raw\" or \"percent\",\n \"output_unit\": short unit string or \"none\",\n \"update_dependencies\": fact ids whose value change would change the answer,\n \"confidence\": number 0..1}\nFor a percentage_change question use (new-base)/base*100; for a ratio use new/base WITHOUT multiplying by 100 unless the question asks for a percentage.\nQUESTION: {q}\nFACTS: {facts}",
+ "model": "large",
+ "abstain": 0,
+ "contracts": {
+  "003594db953a4f919c2f5b6f46bbb79f": {
+   "uid": "003594db953a4f919c2f5b6f46bbb79f",
+   "contract": {
+    "operation_family": "sum",
+    "required_facts": [
+     "f2",
+     "f3"
+    ],
+    "roles": {},
+    "canonical_expression": "f2 + f3",
+    "output_scale": "raw",
+    "output_unit": "million",
+    "update_dependencies": [
+     "f2",
+     "f3"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 388.0,
+   "latency": 1.7633918970823288,
+   "contract_value": 8557.0,
+   "contract_exec": true,
+   "equiv_stored": false
+  },
+  "12efc4e07eee44f39b3473e03e003345": {
+   "uid": "12efc4e07eee44f39b3473e03e003345",
+   "contract": {
+    "operation_family": "sum",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "roles": {},
+    "canonical_expression": "f0 + f1 + f2",
+    "output_scale": "raw",
+    "output_unit": "thousand",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 407.0,
+   "latency": 1.5951889120042324,
+   "contract_value": 144361.0,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "26e97e280be042789822ae8aa08138c9": {
+   "uid": "26e97e280be042789822ae8aa08138c9",
+   "contract": {
+    "operation_family": "average",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "roles": {
+     "value_1": "f0",
+     "value_2": "f1",
+     "value_3": "f2"
+    },
+    "canonical_expression": "(f0 + f1 + f2) / 3",
+    "output_scale": "raw",
+    "output_unit": "million",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 424.0,
+   "latency": 2.1265962794423103,
+   "contract_value": 10255.333333333334,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "4046601ddf674a1c9f4507df6d2a972b": {
+   "uid": "4046601ddf674a1c9f4507df6d2a972b",
+   "contract": {
+    "operation_family": "sum",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "roles": {},
+    "canonical_expression": "f0+f1+f2+f3",
+    "output_scale": "raw",
+    "output_unit": "millions",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 420.0,
+   "latency": 1.761579692363739,
+   "contract_value": 10555.0,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "4b5bf5901b434fd0b7052031baca8321": {
+   "uid": "4b5bf5901b434fd0b7052031baca8321",
+   "contract": {
+    "operation_family": "percentage_change",
+    "required_facts": [
+     "f0",
+     "f1"
+    ],
+    "roles": {
+     "base_value": "f0",
+     "new_value": "f1"
+    },
+    "canonical_expression": "(f1-f0)/f0*100",
+    "output_scale": "percent",
+    "output_unit": "none",
+    "update_dependencies": [
+     "f0",
+     "f1"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 400.0,
+   "latency": 1.7844227217137814,
+   "contract_value": 1.6978417266187051,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "529a5d0cbb8d4927b068abf48292efd7": {
+   "uid": "529a5d0cbb8d4927b068abf48292efd7",
+   "contract": {
+    "operation_family": "sum",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "roles": {},
+    "canonical_expression": "f0 + f1 + f2 + f3",
+    "output_scale": "raw",
+    "output_unit": "billion",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 434.0,
+   "latency": 1.814573246985674,
+   "contract_value": 442.0,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "690bdcf798174e15ba82b3fe659d8e7d": {
+   "uid": "690bdcf798174e15ba82b3fe659d8e7d",
+   "contract": {
+    "operation_family": "ratio",
+    "required_facts": [
+     "f0",
+     "f1"
+    ],
+    "roles": {
+     "new_value": "f0",
+     "base_value": "f1"
+    },
+    "canonical_expression": "f0/f1",
+    "output_scale": "raw",
+    "output_unit": "none",
+    "update_dependencies": [
+     "f0",
+     "f1"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 398.0,
+   "latency": 1.6450017169117928,
+   "contract_value": 0.47939661993976107,
+   "contract_exec": true,
+   "equiv_stored": false
+  },
+  "6f2c908fe17b498896ea24cbcaac2ae5": {
+   "uid": "6f2c908fe17b498896ea24cbcaac2ae5",
+   "contract": {
+    "operation_family": "average",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "roles": {
+     "value1": "f0",
+     "value2": "f1",
+     "value3": "f2"
+    },
+    "canonical_expression": "(f0+f1+f2)/3",
+    "output_scale": "raw",
+    "output_unit": "thousand",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 431.0,
+   "latency": 2.0341178625822067,
+   "contract_value": 138728.66666666666,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "724543c809fb4a2d895eb7c3f26bbff9": {
+   "uid": "724543c809fb4a2d895eb7c3f26bbff9",
+   "contract": {
+    "operation_family": "percentage_change",
+    "required_facts": [
+     "f0",
+     "f1"
+    ],
+    "roles": {
+     "base_value": "f0",
+     "new_value": "f1"
+    },
+    "canonical_expression": "(f1-f0)/f0*100",
+    "output_scale": "percent",
+    "output_unit": "none",
+    "update_dependencies": [
+     "f0",
+     "f1"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 398.0,
+   "latency": 1.7920449487864971,
+   "contract_value": 83.03966925878531,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "72a7bf44b6f44db8b6b9f0b79b5ad35a": {
+   "uid": "72a7bf44b6f44db8b6b9f0b79b5ad35a",
+   "contract": {
+    "operation_family": "average",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "roles": {},
+    "canonical_expression": "(f0 + f1 + f2) / 3",
+    "output_scale": "raw",
+    "output_unit": "thousand",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 427.0,
+   "latency": 1.691337313503027,
+   "contract_value": 2607570.3333333335,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "801652a1045646eab273881fe0c095a2": {
+   "uid": "801652a1045646eab273881fe0c095a2",
+   "contract": {
+    "operation_family": "percentage_change",
+    "required_facts": [
+     "f0",
+     "f1"
+    ],
+    "roles": {
+     "base_value": "f0",
+     "new_value": "f1"
+    },
+    "canonical_expression": "(f1-f0)/f0*100",
+    "output_scale": "percent",
+    "output_unit": "none",
+    "update_dependencies": [
+     "f0",
+     "f1"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 385.0,
+   "latency": 1.7977311834692955,
+   "contract_value": 18.529862174578867,
+   "contract_exec": true,
+   "equiv_stored": false
+  },
+  "88dcfa9b58434e8a85ba506dee891ede": {
+   "uid": "88dcfa9b58434e8a85ba506dee891ede",
+   "contract": {
+    "operation_family": "difference",
+    "required_facts": [
+     "f0",
+     "f1"
+    ],
+    "roles": {
+     "new_value": "f1",
+     "base_value": "f0"
+    },
+    "canonical_expression": "f1 - f0",
+    "output_scale": "raw",
+    "output_unit": "none",
+    "update_dependencies": [
+     "f0",
+     "f1"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 399.0,
+   "latency": 1.6690406166017056,
+   "contract_value": 8345.0,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "a97d21ab1fd644f7a67b7185033796ef": {
+   "uid": "a97d21ab1fd644f7a67b7185033796ef",
+   "contract": {
+    "operation_family": "average",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "roles": {},
+    "canonical_expression": "(f0 + f1 + f2) / 3",
+    "output_scale": "raw",
+    "output_unit": "million",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 403.0,
+   "latency": 1.6671757437288761,
+   "contract_value": 1874.6666666666667,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "a9a0a554c74c41719d28b9f7c32dc3ea": {
+   "uid": "a9a0a554c74c41719d28b9f7c32dc3ea",
+   "contract": {
+    "operation_family": "sum",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "roles": {},
+    "canonical_expression": "f0+f1+f2+f3+f4+f5",
+    "output_scale": "raw",
+    "output_unit": "million",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 453.0,
+   "latency": 1.927991833537817,
+   "contract_value": 5193.0,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "b9c03f1c9f8b45eb9e6744a4b5898b9d": {
+   "uid": "b9c03f1c9f8b45eb9e6744a4b5898b9d",
+   "contract": {
+    "operation_family": "average",
+    "required_facts": [
+     "f0",
+     "f1"
+    ],
+    "roles": {
+     "value1": "f0",
+     "value2": "f1"
+    },
+    "canonical_expression": "(f0 + f1) / 2",
+    "output_scale": "raw",
+    "output_unit": "million",
+    "update_dependencies": [
+     "f0",
+     "f1"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 405.0,
+   "latency": 1.7460804395377636,
+   "contract_value": 12511.0,
+   "contract_exec": true,
+   "equiv_stored": false
+  },
+  "bbecd35899de4fb1be46b56339f5d7bd": {
+   "uid": "bbecd35899de4fb1be46b56339f5d7bd",
+   "contract": {
+    "operation_family": "percentage_change",
+    "required_facts": [
+     "f0",
+     "f1"
+    ],
+    "roles": {
+     "base_value": "f0",
+     "new_value": "f1"
+    },
+    "canonical_expression": "(f1-f0)/f0*100",
+    "output_scale": "percent",
+    "output_unit": "none",
+    "update_dependencies": [
+     "f0",
+     "f1"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 397.0,
+   "latency": 1.7987478710711002,
+   "contract_value": 20.58165548098434,
+   "contract_exec": true,
+   "equiv_stored": false
+  },
+  "cf32d60d2c3043a194565b3fabf0dcfb": {
+   "uid": "cf32d60d2c3043a194565b3fabf0dcfb",
+   "contract": {
+    "operation_family": "sum",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "roles": {},
+    "canonical_expression": "f0+f1+f2",
+    "output_scale": "raw",
+    "output_unit": "thousand",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 418.0,
+   "latency": 1.570797335356474,
+   "contract_value": 8409670.0,
+   "contract_exec": true,
+   "equiv_stored": true
+  },
+  "cfbbc9aeca2945699682b332f7c83a39": {
+   "uid": "cfbbc9aeca2945699682b332f7c83a39",
+   "contract": {
+    "operation_family": "sum",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "roles": {},
+    "canonical_expression": "f0+f1+f2",
+    "output_scale": "raw",
+    "output_unit": "million",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 386.0,
+   "latency": 1.554785829037428,
+   "contract_value": 7607.0,
+   "contract_exec": true,
+   "equiv_stored": false
+  },
+  "e47d314bc9ab4b46925a0453a4646126": {
+   "uid": "e47d314bc9ab4b46925a0453a4646126",
+   "contract": {
+    "operation_family": "percentage_change",
+    "required_facts": [
+     "f0",
+     "f1"
+    ],
+    "roles": {
+     "base_value": "f0",
+     "new_value": "f1"
+    },
+    "canonical_expression": "(f1-f0)/f0*100",
+    "output_scale": "percent",
+    "output_unit": "none",
+    "update_dependencies": [
+     "f0",
+     "f1"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 387.0,
+   "latency": 1.7915294542908669,
+   "contract_value": 4.651162790697675,
+   "contract_exec": true,
+   "equiv_stored": false
+  },
+  "f2bd5fbbfbf34ae183e7c8dd77a0eb7a": {
+   "uid": "f2bd5fbbfbf34ae183e7c8dd77a0eb7a",
+   "contract": {
+    "operation_family": "average",
+    "required_facts": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "roles": {
+     "values": [
+      "f0",
+      "f1",
+      "f2",
+      "f3"
+     ]
+    },
+    "canonical_expression": "(f0 + f1 + f2 + f3) / 4",
+    "output_scale": "raw",
+    "output_unit": "thousand",
+    "update_dependencies": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "confidence": 1
+   },
+   "abstain": false,
+   "tokens": 449.0,
+   "latency": 2.261812534183264,
+   "contract_value": 71224.75,
+   "contract_exec": true,
+   "equiv_stored": true
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "role": "P1b-1: independent semantic contract verification (deployable equiv_gold proxy)",
+ "dev_panel": "GFv2-20 (graph_forest_v1 tasks)",
+ "dev_iterations": 2,
+ "dev_results": "v1 11/20, v2 11/20 contract-correct; x100 ratio/percent convention conflict is systematic (not prompt-fixable without overfitting dev); v2 frozen",
+ "proxy_fidelity_dev": "on stored-correct subset (12): equiv(contract,stored)==equiv(contract,gold) 12/12 in BOTH v1 and v2",
+ "test_panel": "P0-2 96-task normalized follow-up panel; contracts generated for all 96; PRIMARY metrics on 76 clean-test tasks (96 minus 20 dev)",
+ "verifier": "single call, model large (Qwen2.5-14B-GPTQ), temperature 0, fixed 8-field JSON schema; inputs = question + numbered facts ONLY (no gold, no stored expression, no answers); parse fail = abstain; no repair loop",
+ "adjudication": "deterministic, zero calls: random-perturbation equivalence (K=32, seed 7, rel tol 1e-6) between contract canonical_expression (f-refs->v-refs) and stored expression; mismatch typing (missing/extra operand, scale, operator structure, other); dependency check vs update_dependencies",
+ "T_reuse": "equiv(contract, stored); abstain/nonexec -> no trust (intervene)",
+ "primary_endpoint": "on stored-correct stratum: reuse-harm caught (recall) vs safe retained (1-FPR); rows: V1 lexical checks / cross-model agreement / semantic contract / oracle equiv_gold",
+ "secondary": "mismatch enrichment for regen-recover vs regen-harm; policy replay a=reuse if T>=tau else regenerate using frozen P0-2 A/B outcomes (zero workflow calls); verifier cost amortized n=1,2,5,10",
+ "fault_families": "Family A latent/bookkeeping = negative control only (P1a: unidentifiable by construction); Family B observable semantic corruption = main evaluation (this panel)",
+ "budget": "96 test calls + 40 dev calls (2 rounds x 20), single model",
+ "bindings_frozen_prompt": "see CONTRACTS_dev_v2.json prompt field",
+ "created_unix": 1790000000
+}
