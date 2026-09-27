@@ -1,0 +1,111 @@
+{
+ "dag_detector": {
+  "stage_recall": {
+   "e1": "58/58",
+   "e2": "42/42",
+   "r": "16/41",
+   "v": "39/39"
+  },
+  "late_v_surface_r_faults": 17,
+  "correction_success": {
+   "e1": "17/58",
+   "e2": "9/42",
+   "r": "16/41",
+   "v": "15/39"
+  },
+  "healthy_false_triggers": "380/420",
+  "healthy_signal_breakdown": {
+   "e_fb": 345,
+   "v_esc": 232,
+   "r_esc": 50
+  }
+ },
+ "r_three_capability": {
+  "r_detect": "33/41",
+  "r_localize": "16/41",
+  "r_correct_given_localized": "6/16",
+  "note": "Detection != Diagnosis != Correction: late v-stage surfacing counts as detected-but-mislocalized (repair targets v, not r)."
+ },
+ "single_visibility": {
+  "faulted_schema_visible_in_experiment": "0/180 (by construction: fault applied at result level; recorded output is the clean answer)",
+  "healthy_schema_fail": "7/420",
+  "counterfactual_pool_injection_schema_visible": {
+   "e": "20/20",
+   "r": "18/18",
+   "v": "20/20"
+  },
+  "note": "zero single-level fault visibility in the frozen data; the 0.4033->0.4917 band requires a NEW cheap signal (semantic trust estimation), not better use of existing ones."
+ },
+ "policies": {
+  "always_single": {
+   "Q": 0.39666666666666667,
+   "C": 612.775,
+   "L": 0.4631756321899593
+  },
+  "always_dynamic": {
+   "Q": 0.4033333333333333,
+   "C": 2529.65,
+   "L": 7.0973434522375465
+  },
+  "sfe_schema": {
+   "Q": 0.39666666666666667,
+   "C": 677.855,
+   "L": 0.6683541317408284
+  },
+  "clairvoyant_fault_aware": {
+   "Q": 0.49166666666666664,
+   "C": 1425.3816666666667,
+   "L": 2.768321874573206
+  },
+  "selective_oracle": {
+   "Q": 0.515
+  }
+ },
+ "regret_vs_04917": {
+  "always_single": 0.095,
+  "always_dynamic": 0.0883,
+  "sfe_schema": 0.095,
+  "clairvoyant_fault_aware": 0.0,
+  "selective_oracle": -0.0233
+ },
+ "tau_sweep": [
+  {
+   "tau": 0,
+   "Q": 0.4033333333333333,
+   "C": 3142.425,
+   "L": 7.560519084427506
+  },
+  {
+   "tau": 1,
+   "Q": 0.3616666666666667,
+   "C": 1716.7866666666666,
+   "L": 3.693267610790208
+  },
+  {
+   "tau": 2,
+   "Q": 0.395,
+   "C": 789.0766666666667,
+   "L": 0.9768687124022594
+  },
+  {
+   "tau": 3,
+   "Q": 0.39666666666666667,
+   "C": 677.855,
+   "L": 0.6683541317408284
+  },
+  {
+   "tau": 4,
+   "Q": 0.39666666666666667,
+   "C": 677.855,
+   "L": 0.6683541317408284
+  },
+  {
+   "tau": "schema_only",
+   "Q": 0.39666666666666667,
+   "C": 677.855,
+   "L": 0.6683541317408284
+  }
+ ],
+ "gap_decomposition": "0.4033->0.4917 is ENTIRELY the healthy-task DAG penalty (single 0.5667 vs dynamic 0.4405 on non-injected); faulted outcomes are identical under both policies. Capturing it requires pre-arm fault knowledge at the single level.",
+ "zero_calls": true
+}

@@ -7,10 +7,13 @@
 **When should a multi-agent system trust, reuse, verify, or recompute a
 historical workflow state under quality–cost–latency trade-offs?**
 
-主线正式收敛为：
+主线正式收敛为（P1a 后进一步收窄）：
 
-    Runtime Diagnosability → Trust Estimation → Selective Intervention
+    Observability → Localization → Correctability → Selective Intervention
     → State-conditioned Pareto Scheduling
+
+（P1a 实测逐层损失：r 故障 Detection 80% → Localization 39% → Correction 38%；
+接口故障可观测但仅 21–29% 可纠正；语义故障对现有全部原语不可观测。）
 
 Graph Forest 是其中的历史状态与复用层（h），不与 selective gate 分开讲述。
 两轴互补：运行时干预轴（何时动）+ 复用轴（有可信历史时是否重执行）。
@@ -55,11 +58,18 @@ diagnosability，而不是更复杂的先验分类器。**
 
     P(fault|s) > τ = (ΔQ_harm + λ_C·ΔC + λ_L·ΔL) / (ΔQ_help + ΔQ_harm)
 
-**理论上界分层（P0-1，frozen200 f30 面板）**：
+**理论上界分层（P0-1/P1a，frozen200 f30 面板）**：
 
     Q(Always-Dynamic)            = 0.4033
     Q(Perfect fault-aware gate)  = 0.4917
     Q(Selective Oracle)          = 0.5150
+
+P1a：现有部署信号对 fault-aware selection 上界的增益为零。关键层级区分：
+    Arm selection → DAG execution → failure detection → recovery
+检测器信号出现在第 2 步之后，而 clairvoyant 收益要求在第 1 步之前知道
+故障状态——"选 Dynamic 之后能检测" ≠ "知道该选 Single 还是 Dynamic"。
+0.4033→0.4917 的机会主要由两个因素共同挡住：可观测性的时间位置 +
+对语义保持型错误的不可见性（P1a REPORT §4）。
 
 可优化空间拆解：
 - **0.4033 → 0.4917（+8.8pp）**：运行时故障诊断（检测器在 s_t 信号上的
@@ -76,10 +86,16 @@ diagnosability，而不是更复杂的先验分类器。**
 
 ## 3. 算法模块
 
-M1 **Trust model**：节点级 r_i = P(stored state trustworthy)。输入：写入时
-验证（exec/schema 已有；语义层待做）、运行时一致性、执行历史。已定结论：
-朴素多数投票无天花板；报告口径含 Precision/Recall/FPR/TPR 与
-**P(wrong intervention | trigger)**。
+M1 **Semantic Trust Estimation（P1b，P1a 后重新定义）**：输入为节点级可执行
+证据——事实/表达式依赖一致性、operand 覆盖、单位/比例/百分比语义、中间
+执行 trace、结果与原始证据一致性、下游 verifier 结构化反证、provenance/
+历史节点可靠性；目标不是 P(fault) 而是 **P(node output trustworthy | s_t)**
+（Graph Forest 真正需要的量）。**评估必须覆盖两类故障族**：(a) 记账层/潜伏
+故障（single harness：输出不变，输出型检测器结构上不可见——协议属性而非
+检测器失败）；(b) 可观测语义损坏（GFv2 格式正常但内容错误是天然测试源）。
+两类分开回答：哪些错误信息论上不可观测 vs 哪些可观测但现有 verifier 识别
+不好。已定结论：朴素多数投票无天花板；报告口径含 Precision/Recall/FPR/TPR
+与 **P(wrong intervention | trigger)**。
 
 M2 **Selective intervention policy（运行时）**：在 s_t 上估计 P_help/P_harm，
 按 V(a|s)>0 门控。**必须显式计入 false positive 代价**：健康状态上
@@ -132,9 +148,9 @@ upper bound?
 | 优先级 | 实验 | 支撑 | 状态/规模 |
 |---|---|---|---|
 | P0-1 | Selective gate 可学习性 | RQ3 否定事前路径 + 上界分层 | **完成（阴性+机制）** |
-| P0-2 | 200 任务 3×2 + C′ | RQ1 主表 | ~600 调用，继续做 |
-| P1 | P(fault|s_t) 运行时检测器（现有 deployable 信号上） | RQ3 主攻段 0.4033→0.4917 | 复用 frozen 信号 + 少量调用 |
+| P1a | Runtime detector audit | Observability→Localization→Correctability 分层 | **完成（现有信号对选臂上界增益为零）** |
+| P0-2 | 200 任务 3×2 + C′ | RQ1 主表 | ~600 调用，下一个 |
+| P1b | Semantic Trust Estimation（两类故障族评估） | M1；能否把格式良好错误变为可诊断 | 复用 GFv2 + 少量调用 |
 | P1 | 状态条件前沿（真实面板 reuse 前后） | RQ2 | 复用现有+少量 |
-| P1 | 语义写入验证 probe | RQ1、M1 | ~200 调用 |
 | P2 | SA-PGFS 真实评价阶段（HV-vs-evals 主图） | RQ2/M4 | 分批 |
-| P2 | V(a|s) 门控 vs 三种 Always 统一负载 | RQ3 主表 | ~1000 调用 |
+| P2 | V(a\|s) 门控 vs 三种 Always 统一负载 | RQ3 主表 | ~1000 调用 |
