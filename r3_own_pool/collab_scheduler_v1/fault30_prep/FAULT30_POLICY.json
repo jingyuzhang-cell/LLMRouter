@@ -1,0 +1,74 @@
+{
+ "role": "reference_cube_stage2_fault30_protocol_frozen_v1",
+ "created_unix": 1790520000,
+ "panel": {
+  "tasks": "frozen200 FROZEN200_POLICY.json tasks (200), identical to cube_clean",
+  "states": ["s_clean (cube_clean, measured separately)", "s_fault30 (this protocol)"]
+ },
+ "fault_model": {
+  "rate": 0.3,
+  "seeds": [20260923, 20260924, 20260925],
+  "draw_rule": "bit-identical reuse of frozen200_run.build_faults(seed, 0.3, tasks, pools): random.Random(seed); sample 60 uids in policy order; choice node in {e1,e2,r,v}; pool draw from adaptive_benchmark/FAULT_POOLS.json",
+  "kind": "persistent capability fault keyed (task_uid, node, planned_model(config)): every execution attempt of that triple returns the drawn failing answer with the clean execution's measured usage/latency (FZ-1 reference-cost semantics); retrying the same model persists; a different model escapes",
+  "node_mapping": {
+   "e1": "PARALLELER/DYNAMICDAG: fault branch e1; SER/SERV: fault the single e node",
+   "e2": "PARALLELER/DYNAMICDAG: fault branch e2; SER/SERV: fault the single e node",
+   "r": "all topologies",
+   "v": "SERV/DYNAMICDAG only; on SER/PARALLELER the v-fault is LATENT (recorded, inactive)"
+  },
+  "latent_note": "per-topology effective fault exposure differs (SER/PARALLELER cannot express v faults); frozen rule, same draw stream keeps all configs paired on the same (task,node) fault set",
+  "cost_accounting": "injected triple: usage/latency = that config's clean planned execution from cube_clean ledger; mark injected_fault=true; NEVER enters the prompt cache"
+ },
+ "configs": {
+  "ids": "SER/SERV/PARALLELER x {BALANCED,HETEROGENEOUS,QUALITY} x NONE + DYNAMICDAG x {BALANCED,HETEROGENEOUS,QUALITY} x {NONE, LOCAL_REROUTE} = 15",
+  "x_map": {
+   "BALANCED": {"e": "medium", "r": "large", "v": "medium"},
+   "HETEROGENEOUS": {"e": "large", "r": "medium", "v": "coder"},
+   "QUALITY": {"e": "large", "r": "large", "v": "large"}
+  },
+  "dedup_lift": "under s_fault30 the clean dedup LIFTS: DYNAMICDAG NONE and LOCAL_REROUTE are distinct evaluations (15 total, not 12)"
+ },
+ "propagation_rules": {
+  "mandatory_real_propagation": "any node whose INPUT changes (upstream fault/recovery altered facts or expression) MUST be re-executed: prompt-cache (model, sha(prompt)) hit, else REAL model call; NEVER fall back to a same-key clean record under a changed prompt (the f30_static defect, see FROZEN200_FAULT_PROVENANCE.json); infrastructure failure aborts the run",
+  "seed_isolation": "each (seed, config) evaluation derives state only from (a) immutable pure-execution prompt-cache snapshots, (b) the explicit fault registry, (c) records written within the same (seed, config); no by_key carry-over across seeds or configs (the 0/2/8 leakage flips in the legacy run)",
+  "detection_ungated": [
+   "e-failure: parsed facts empty (cannot distinguish injected fault from natural extraction failure; recovery fires on both)",
+   "r-failure: value_of(answer, merged facts) errors",
+   "v-failure: json_value None OR (r parseable and value disagrees with r-value)"
+  ]
+ },
+ "recovery_Z_LOCAL_REROUTE": {
+  "scope": "DYNAMICDAG only; one attempt per detected failure; ungated; descendant closure",
+  "e_rule_memory": "first detected e-failure within the (seed, config) evaluation reroutes to coder; subsequent to medium (per-config memory, matches frozen200 per-arm memory scope)",
+  "r_rule": "escalate to large",
+  "v_rule": "escalate to large",
+  "closure": "e-recovery -> recompute r (planned model) -> recompute v (planned); r-recovery -> recompute v (planned)",
+  "ineffective_reroute": "reroute target == faulted planned model (BALANCED/QUALITY r-faults escalate large->large; QUALITY v-faults large->large; BALANCED e-faults on 2nd+ memory draw medium->medium): the persistent fault serves the attempt (no real call, clean-ref cost, no state change)",
+  "natural_failures": "detection also fires on naturally failed nodes; their recoveries are REAL calls and genuine config cost (this is the dynamic topology's semantics); the analyzer separates fault-attributable deltas (faulted tasks only, paired) from natural-recovery deltas",
+  "clean_dedup_caveat": "the clean cube's DYNAMICDAG LOCAL_REROUTE value is the planned-chain idealization (shared with NONE); under fault30 LOCAL_REROUTE recovers natural failures too, so clean->fault delta for this label conflates both effects; use the faulted-task-only paired delta for the fault effect"
+ },
+ "objectives": {
+  "Q": "topology's own final producer, identical to cube_clean scoring (SER/PARALLELER: value_of on latest r; SERV/DYNAMICDAG: json_value on latest v); averaged over 200 tasks x 3 seeds (n=600), mean and per-seed",
+  "C": "sum of node total_tokens: injected triples at clean-reference cost + real executions at measured cost",
+  "L": "critical path as in cube_clean (max over parallel e1/e2) with recovery appended at the failure point; NOTE: frozen200's dynamic arm used serial-sum latency, so the f30_dynamic L anchor is approximate by construction"
+ },
+ "cache": {
+  "prompt_cache_key_spec": ["task", "node", "model", "input_hash(prompt_sha256)", "prompt_version"],
+  "prompt_version": "vp1",
+  "prompt_version_hashes": "recorded at protocol freeze in fault30_protocol.PROMPT_VERSION_SHA",
+  "boundary": "prompt cache admits ONLY delivered, non-injected records paired with their requests (audited_cache.load_prompt_cache semantics); fault injections / failure status / reroute decisions NEVER cached or shared across clean/fault states",
+  "execution_key_format": "f30:{TOPO}:{FAM}:{node}[:{kind}]:{uid} with kind in {fb, fbd, esc} for recovery calls",
+  "seed_sources": ["static_dag_v0/frozen200", "collab_scheduler_v1/cube_clean", "own ledger (fault30)"]
+ },
+ "anchors": {
+  "internal_primary": "unfaulted tasks under NONE must reproduce clean cube per-task results exactly (bit-level check in fault30_analyze); this is the primary anchor and needs no legacy data",
+  "single_anchor": "SINGLE__QUALITY__RETRY__FRESH fault values carried from frozen200 f30_single (bookkeeping fault by design: Q .3967, C 802.0, L 0.59); zero new calls",
+  "weak_anchor": "DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE Q within tolerance of f30_dynamic .4033 (real recoveries exist in the legacy ledger; memory-rule scope and L accounting differ, tolerance = max(0.02, 2x legacy seed std) = 0.02)",
+  "excluded": "f30_static (.2933): tainted provenance (e/r injections recorded as no-ops; see FROZEN200_FAULT_PROVENANCE.json); DYNAMICDAG__HETEROGENEOUS__NONE under this protocol is its first genuine measurement"
+ },
+ "execution_gating": {
+  "dry_run_first": "fault30_protocol.py plans every (seed, config, task) call with zero model calls; forecast reviewed before any execution",
+  "gpu_exclusive": "fault30_run.py acquires collect/logs/local_gpu.lock (exclusive) and refuses to start while cube_clean or any vLLM server holds the GPU or port 8128",
+  "order": "after cube_clean completes and its server exits"
+ }
+}

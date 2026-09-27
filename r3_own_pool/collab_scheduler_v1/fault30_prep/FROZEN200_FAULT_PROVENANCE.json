@@ -1,0 +1,118 @@
+{
+ "question": "can FROZEN200_RESULTS.json f30 arms be reproduced by repo code?",
+ "verdict": "NO for the static arm: e/r injections are recorded as no-ops; downstream re-executions required by the code path exist in no ledger",
+ "P1_static_change_census_changed_same": {
+  "20260923": {
+   "e1": [
+    0,
+    22
+   ],
+   "e2": [
+    0,
+    10
+   ],
+   "none": [
+    0,
+    140
+   ],
+   "r": [
+    0,
+    15
+   ],
+   "v": [
+    3,
+    10
+   ]
+  },
+  "20260924": {
+   "e1": [
+    0,
+    17
+   ],
+   "e2": [
+    1,
+    15
+   ],
+   "none": [
+    2,
+    138
+   ],
+   "r": [
+    0,
+    16
+   ],
+   "v": [
+    5,
+    6
+   ]
+  },
+  "20260925": {
+   "e1": [
+    0,
+    19
+   ],
+   "e2": [
+    0,
+    16
+   ],
+   "none": [
+    8,
+    132
+   ],
+   "r": [
+    0,
+    10
+   ],
+   "v": [
+    6,
+    9
+   ]
+  }
+ },
+ "P2_request_census": {
+  "single:plain": 200,
+  "e1:plain": 267,
+  "e2:plain": 349,
+  "r:plain": 277,
+  "v:plain": 372
+ },
+ "P3_fault_side_r_prompt_lookup": {
+  "20260923": {
+   "changed_prompt": 30,
+   "found_somewhere": 2,
+   "found_nowhere": 28,
+   "nowhere_examples": [
+    "83609f56-d841-443b-834f-a0b553583187",
+    "d19886e0-4e76-4e86-ac9f-881dbd6cafa5",
+    "186ba1a6-63c4-4036-81c6-27e65a290131"
+   ]
+  },
+  "20260924": {
+   "changed_prompt": 31,
+   "found_somewhere": 2,
+   "found_nowhere": 29,
+   "nowhere_examples": [
+    "06ef962a-2863-4d6e-acd4-95037ed6dec4",
+    "c87ec7cd-605e-44ab-828e-e786c5b260aa",
+    "d7926021-79c6-465c-b5a2-3058f0f0a265"
+   ]
+  },
+  "20260925": {
+   "changed_prompt": 30,
+   "found_somewhere": 4,
+   "found_nowhere": 26,
+   "nowhere_examples": [
+    "92e02e3c-c183-4f52-819c-979bdb8b67dc",
+    "fc892eeb-cb03-4379-98aa-2f16447f4793",
+    "64e80de7-df8c-41f6-ad75-d48118e04476"
+   ]
+  }
+ },
+ "P4_anchor_policy": {
+  "f30_single": "bookkeeping fault by design (marked failed, cost x2, cached call) \u2014 usable",
+  "f30_static": "TAINTED \u2014 do not use as fault30 anchor; re-measure under real propagation",
+  "f30_dynamic": "weak anchor \u2014 real recovery calls exist in the ledger",
+  "front_claim": "s_fault30 front {Single, Dynamic} unaffected (static dominated either way)"
+ },
+ "zero_model_calls": true
+}
