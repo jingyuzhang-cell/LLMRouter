@@ -1,0 +1,343 @@
+{
+ "phase": "dev",
+ "n": 20,
+ "model": "large",
+ "prompt": "Classify the financial question into EXACTLY ONE operation family and assign its operand roles. The system compiles your choice into the exact formula \u2014 you do NOT write formulas. CRITICAL: ratio = a/b is NEVER multiplied by 100; percentage and percentage_change ALWAYS multiply by 100. If the question asks \"the ratio of X to Y\" or \"how many times\", choose ratio. Choose percentage/percentage_change ONLY if the question literally contains \"percent\" or \"%\". Choose difference only for an absolute amount difference.\nAllowed schemas:\n{schemas}\nReturn ONLY the JSON object for ONE family, using fact ids f0..fk from the list. If none fits, return {{\"family\":\"none\"}}.\nQUESTION: {q}\nFACTS: {facts}",
+ "families": {
+  "sum": "{\"family\":\"sum\",\"terms\":[\"f0\",\"f1\",\"f2\"]}  // total of the listed facts",
+  "average": "{\"family\":\"average\",\"terms\":[\"f0\",\"f1\"]}  // mean of the listed facts",
+  "difference": "{\"family\":\"difference\",\"minuend\":\"f1\",\"subtrahend\":\"f0\"}  // minuend minus subtrahend",
+  "ratio": "{\"family\":\"ratio\",\"numerator\":\"f3\",\"denominator\":\"f7\"}  // numerator/denominator, NEVER x100; denominator may be {\"sum_of\":[\"f3\",\"f7\"]} for a share of a total",
+  "percentage": "{\"family\":\"percentage\",\"part\":\"f3\",\"whole\":\"f7\"}  // 100*part/whole, ONLY when the question explicitly asks for a percentage; whole may be {\"sum_of\":[...]}",
+  "percentage_change": "{\"family\":\"percentage_change\",\"new\":\"f3\",\"old\":\"f7\"}  // 100*(new-old)/old, ONLY for \"by what percent did X increase/decrease\"",
+  "product": "{\"family\":\"product\",\"factors\":[\"f0\",\"f1\"]}"
+ },
+ "abstain": 0,
+ "contracts": {
+  "003594db953a4f919c2f5b6f46bbb79f": {
+   "uid": "003594db953a4f919c2f5b6f46bbb79f",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 9143.0,
+   "abstain": false,
+   "tokens": 486.0,
+   "latency": 1.096421342343092
+  },
+  "12efc4e07eee44f39b3473e03e003345": {
+   "uid": "12efc4e07eee44f39b3473e03e003345",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 144361.0,
+   "abstain": false,
+   "tokens": 489.0,
+   "latency": 0.5574411377310753
+  },
+  "26e97e280be042789822ae8aa08138c9": {
+   "uid": "26e97e280be042789822ae8aa08138c9",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 10255.333333333334,
+   "abstain": false,
+   "tokens": 477.0,
+   "latency": 0.558420967310667
+  },
+  "4046601ddf674a1c9f4507df6d2a972b": {
+   "uid": "4046601ddf674a1c9f4507df6d2a972b",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 10555.0,
+   "abstain": false,
+   "tokens": 498.0,
+   "latency": 0.6473366096615791
+  },
+  "4b5bf5901b434fd0b7052031baca8321": {
+   "uid": "4b5bf5901b434fd0b7052031baca8321",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 1.6978417266187051,
+   "abstain": false,
+   "tokens": 473.0,
+   "latency": 0.5651021003723145
+  },
+  "529a5d0cbb8d4927b068abf48292efd7": {
+   "uid": "529a5d0cbb8d4927b068abf48292efd7",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 442.0,
+   "abstain": false,
+   "tokens": 509.0,
+   "latency": 0.6405070535838604
+  },
+  "690bdcf798174e15ba82b3fe659d8e7d": {
+   "uid": "690bdcf798174e15ba82b3fe659d8e7d",
+   "family": "ratio",
+   "contract": {
+    "family": "ratio",
+    "numerator": "f0",
+    "denominator": "f1"
+   },
+   "expr": "(v0) / (v1)",
+   "value": 0.47939661993976107,
+   "abstain": false,
+   "tokens": 480.0,
+   "latency": 0.5996460914611816
+  },
+  "6f2c908fe17b498896ea24cbcaac2ae5": {
+   "uid": "6f2c908fe17b498896ea24cbcaac2ae5",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 138728.66666666666,
+   "abstain": false,
+   "tokens": 490.0,
+   "latency": 0.5622146837413311
+  },
+  "724543c809fb4a2d895eb7c3f26bbff9": {
+   "uid": "724543c809fb4a2d895eb7c3f26bbff9",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 83.03966925878531,
+   "abstain": false,
+   "tokens": 471.0,
+   "latency": 0.5642482787370682
+  },
+  "72a7bf44b6f44db8b6b9f0b79b5ad35a": {
+   "uid": "72a7bf44b6f44db8b6b9f0b79b5ad35a",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 2607570.3333333335,
+   "abstain": false,
+   "tokens": 505.0,
+   "latency": 0.5604331009089947
+  },
+  "801652a1045646eab273881fe0c095a2": {
+   "uid": "801652a1045646eab273881fe0c095a2",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 18.529862174578867,
+   "abstain": false,
+   "tokens": 458.0,
+   "latency": 0.5705293230712414
+  },
+  "88dcfa9b58434e8a85ba506dee891ede": {
+   "uid": "88dcfa9b58434e8a85ba506dee891ede",
+   "family": "difference",
+   "contract": {
+    "family": "difference",
+    "minuend": "f1",
+    "subtrahend": "f0"
+   },
+   "expr": "(v1) - (v0)",
+   "value": 8345.0,
+   "abstain": false,
+   "tokens": 483.0,
+   "latency": 0.6575275734066963
+  },
+  "a97d21ab1fd644f7a67b7185033796ef": {
+   "uid": "a97d21ab1fd644f7a67b7185033796ef",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 1874.6666666666667,
+   "abstain": false,
+   "tokens": 482.0,
+   "latency": 0.5599400289356709
+  },
+  "a9a0a554c74c41719d28b9f7c32dc3ea": {
+   "uid": "a9a0a554c74c41719d28b9f7c32dc3ea",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3) + (v4) + (v5)",
+   "value": 5193.0,
+   "abstain": false,
+   "tokens": 530.0,
+   "latency": 0.7887640185654163
+  },
+  "b9c03f1c9f8b45eb9e6744a4b5898b9d": {
+   "uid": "b9c03f1c9f8b45eb9e6744a4b5898b9d",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "((v0) + (v1)) / 2",
+   "value": 12511.0,
+   "abstain": false,
+   "tokens": 476.0,
+   "latency": 0.46817154437303543
+  },
+  "bbecd35899de4fb1be46b56339f5d7bd": {
+   "uid": "bbecd35899de4fb1be46b56339f5d7bd",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 20.58165548098434,
+   "abstain": false,
+   "tokens": 470.0,
+   "latency": 0.5643308535218239
+  },
+  "cf32d60d2c3043a194565b3fabf0dcfb": {
+   "uid": "cf32d60d2c3043a194565b3fabf0dcfb",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 8409670.0,
+   "abstain": false,
+   "tokens": 502.0,
+   "latency": 0.5591427832841873
+  },
+  "cfbbc9aeca2945699682b332f7c83a39": {
+   "uid": "cfbbc9aeca2945699682b332f7c83a39",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 7607.0,
+   "abstain": false,
+   "tokens": 471.0,
+   "latency": 0.5458471067249775
+  },
+  "e47d314bc9ab4b46925a0453a4646126": {
+   "uid": "e47d314bc9ab4b46925a0453a4646126",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 4.651162790697675,
+   "abstain": false,
+   "tokens": 450.0,
+   "latency": 0.3847062848508358
+  },
+  "f2bd5fbbfbf34ae183e7c8dd77a0eb7a": {
+   "uid": "f2bd5fbbfbf34ae183e7c8dd77a0eb7a",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2) + (v3)) / 4",
+   "value": 71224.75,
+   "abstain": false,
+   "tokens": 501.0,
+   "latency": 0.6397903971374035
+  }
+ }
+}

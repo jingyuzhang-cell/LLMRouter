@@ -1,0 +1,1500 @@
+{
+ "phase": "test",
+ "n": 96,
+ "model": "large",
+ "prompt": "Classify the financial question into EXACTLY ONE operation family and assign its operand roles. The system compiles your choice into the exact formula \u2014 you do NOT write formulas. CRITICAL: ratio = a/b is NEVER multiplied by 100; percentage and percentage_change ALWAYS multiply by 100. If the question asks \"the ratio of X to Y\" or \"how many times\", choose ratio. Choose percentage/percentage_change ONLY if the question literally contains \"percent\" or \"%\". Choose difference only for an absolute amount difference.\nAllowed schemas:\n{schemas}\nReturn ONLY the JSON object for ONE family, using fact ids f0..fk from the list. If none fits, return {{\"family\":\"none\"}}.\nQUESTION: {q}\nFACTS: {facts}",
+ "families": {
+  "sum": "{\"family\":\"sum\",\"terms\":[\"f0\",\"f1\",\"f2\"]}  // total of the listed facts",
+  "average": "{\"family\":\"average\",\"terms\":[\"f0\",\"f1\"]}  // mean of the listed facts",
+  "difference": "{\"family\":\"difference\",\"minuend\":\"f1\",\"subtrahend\":\"f0\"}  // minuend minus subtrahend",
+  "ratio": "{\"family\":\"ratio\",\"numerator\":\"f3\",\"denominator\":\"f7\"}  // numerator/denominator, NEVER x100; denominator may be {\"sum_of\":[\"f3\",\"f7\"]} for a share of a total",
+  "percentage": "{\"family\":\"percentage\",\"part\":\"f3\",\"whole\":\"f7\"}  // 100*part/whole, ONLY when the question explicitly asks for a percentage; whole may be {\"sum_of\":[...]}",
+  "percentage_change": "{\"family\":\"percentage_change\",\"new\":\"f3\",\"old\":\"f7\"}  // 100*(new-old)/old, ONLY for \"by what percent did X increase/decrease\"",
+  "product": "{\"family\":\"product\",\"factors\":[\"f0\",\"f1\"]}"
+ },
+ "abstain": 12,
+ "contracts": {
+  "003594db953a4f919c2f5b6f46bbb79f": {
+   "uid": "003594db953a4f919c2f5b6f46bbb79f",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 9143.0,
+   "abstain": false,
+   "tokens": 486.0,
+   "latency": 1.0256856009364128
+  },
+  "00b072a8cbfa41b09294a9cb10a1eb7f": {
+   "uid": "00b072a8cbfa41b09294a9cb10a1eb7f",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 28.09917355371901,
+   "abstain": false,
+   "tokens": 466.0,
+   "latency": 0.5812752954661846
+  },
+  "0172b91f808c430890391df3bd98fb89": {
+   "uid": "0172b91f808c430890391df3bd98fb89",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "((v0) + (v1)) / 2",
+   "value": 308189.0,
+   "abstain": false,
+   "tokens": 466.0,
+   "latency": 0.47430218756198883
+  },
+  "034a14018f1d4f24a5ce3afa1e46db1f": {
+   "uid": "034a14018f1d4f24a5ce3afa1e46db1f",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 2925.6666666666665,
+   "abstain": false,
+   "tokens": 481.0,
+   "latency": 0.5541580952703953
+  },
+  "03b5c06fd4f14cafb011bf63a4c8e76d": {
+   "uid": "03b5c06fd4f14cafb011bf63a4c8e76d",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 356.6666666666667,
+   "abstain": false,
+   "tokens": 471.0,
+   "latency": 0.543737318366766
+  },
+  "04de16eacf7642aaa0846562dce24f14": {
+   "uid": "04de16eacf7642aaa0846562dce24f14",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 13.333333333333334,
+   "abstain": false,
+   "tokens": 490.0,
+   "latency": 0.5498757511377335
+  },
+  "0ba40b26cf6540d3ba1dca96dc0ac505": {
+   "uid": "0ba40b26cf6540d3ba1dca96dc0ac505",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 18.154463390170513,
+   "abstain": false,
+   "tokens": 469.0,
+   "latency": 0.5610470995306969
+  },
+  "12efc4e07eee44f39b3473e03e003345": {
+   "uid": "12efc4e07eee44f39b3473e03e003345",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 144361.0,
+   "abstain": false,
+   "tokens": 489.0,
+   "latency": 0.5556551516056061
+  },
+  "15107ae4a3654f5b975b0b45ed6dda57": {
+   "uid": "15107ae4a3654f5b975b0b45ed6dda57",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 3.7108901285471743,
+   "abstain": false,
+   "tokens": 487.0,
+   "latency": 0.5777427777647972
+  },
+  "1b1082b3fa2f403386d208a368b795b6": {
+   "uid": "1b1082b3fa2f403386d208a368b795b6",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f1",
+     "f2",
+     "f0"
+    ]
+   },
+   "expr": "((v1) + (v2) + (v0)) / 3",
+   "value": 142634.33333333334,
+   "abstain": false,
+   "tokens": 501.0,
+   "latency": 0.563240647315979
+  },
+  "1e0a2cdac9864dd0b8e047ba4a620e7b": {
+   "uid": "1e0a2cdac9864dd0b8e047ba4a620e7b",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 2.4645969498910674,
+   "abstain": false,
+   "tokens": 471.0,
+   "latency": 0.5663779675960541
+  },
+  "1f7ef06d66d94c12938daba2966a9569": {
+   "uid": "1f7ef06d66d94c12938daba2966a9569",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 391.0,
+   "abstain": false,
+   "tokens": 481.0,
+   "latency": 0.5744601972401142
+  },
+  "26e97e280be042789822ae8aa08138c9": {
+   "uid": "26e97e280be042789822ae8aa08138c9",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 10255.333333333334,
+   "abstain": false,
+   "tokens": 477.0,
+   "latency": 0.5428867489099503
+  },
+  "2da3c4e6c38b435195a2a29358b0cf6e": {
+   "uid": "2da3c4e6c38b435195a2a29358b0cf6e",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "((v0) + (v1)) / 2",
+   "value": 137001.5,
+   "abstain": false,
+   "tokens": 466.0,
+   "latency": 0.46498942002654076
+  },
+  "2ea9b87945064067a523b7d232dd9809": {
+   "uid": "2ea9b87945064067a523b7d232dd9809",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 45.588235294117645,
+   "abstain": false,
+   "tokens": 452.0,
+   "latency": 0.3893127031624317
+  },
+  "2fb5cc849c974b89b73165556e5f65a4": {
+   "uid": "2fb5cc849c974b89b73165556e5f65a4",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 17.375,
+   "abstain": false,
+   "tokens": 459.0,
+   "latency": 0.5754239559173584
+  },
+  "302dbb6249554077a8a722f97dd8cbd9": {
+   "uid": "302dbb6249554077a8a722f97dd8cbd9",
+   "family": "none",
+   "contract": {
+    "family": "none"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 446.0,
+   "latency": 0.16858289018273354
+  },
+  "3d92bf014d99423496331bf2d8bda75d": {
+   "uid": "3d92bf014d99423496331bf2d8bda75d",
+   "family": "ratio",
+   "contract": {
+    "family": "ratio",
+    "numerator": {
+     "sum_of": [
+      "f0",
+      "f1",
+      "f2"
+     ]
+    },
+    "denominator": "f3"
+   },
+   "expr": "((v0) + (v1) + (v2)) / (v3)",
+   "value": 0.7948990435706695,
+   "abstain": false,
+   "tokens": 512.0,
+   "latency": 0.8385521844029427
+  },
+  "3eff99b7876045bab0672a4d0947e8c5": {
+   "uid": "3eff99b7876045bab0672a4d0947e8c5",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0"
+    ]
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 465.0,
+   "latency": 0.2727251909673214
+  },
+  "4046601ddf674a1c9f4507df6d2a972b": {
+   "uid": "4046601ddf674a1c9f4507df6d2a972b",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 10555.0,
+   "abstain": false,
+   "tokens": 498.0,
+   "latency": 0.6332754455506802
+  },
+  "42e6eddf0cf1456cb8632c10ccd14f53": {
+   "uid": "42e6eddf0cf1456cb8632c10ccd14f53",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 1.6224986479177934,
+   "abstain": false,
+   "tokens": 481.0,
+   "latency": 0.5700390748679638
+  },
+  "4b5bf5901b434fd0b7052031baca8321": {
+   "uid": "4b5bf5901b434fd0b7052031baca8321",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 1.6978417266187051,
+   "abstain": false,
+   "tokens": 473.0,
+   "latency": 0.5605212152004242
+  },
+  "4ee73cb8c31142fd94df8538f82715e4": {
+   "uid": "4ee73cb8c31142fd94df8538f82715e4",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v1) + (v2)) / 2",
+   "value": 1634254.0,
+   "abstain": false,
+   "tokens": 477.0,
+   "latency": 0.4723304882645607
+  },
+  "529a5d0cbb8d4927b068abf48292efd7": {
+   "uid": "529a5d0cbb8d4927b068abf48292efd7",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 442.0,
+   "abstain": false,
+   "tokens": 509.0,
+   "latency": 0.6497353427112103
+  },
+  "52c7608506e44cb8a06026b4c14970b1": {
+   "uid": "52c7608506e44cb8a06026b4c14970b1",
+   "family": "difference",
+   "contract": {
+    "family": "difference",
+    "minuend": "f3",
+    "subtrahend": {
+     "average": {
+      "terms": [
+       "f0",
+       "f1",
+       "f2",
+       "f3"
+      ]
+     }
+    }
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 528.0,
+   "latency": 1.1570248641073704
+  },
+  "53da07e016c44a19b77b0a1de4f86f15": {
+   "uid": "53da07e016c44a19b77b0a1de4f86f15",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 75.0,
+   "abstain": false,
+   "tokens": 450.0,
+   "latency": 0.3770606517791748
+  },
+  "55312249eb80450b825b1f4c1e1c0730": {
+   "uid": "55312249eb80450b825b1f4c1e1c0730",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 1120.0,
+   "abstain": false,
+   "tokens": 483.0,
+   "latency": 0.5437110364437103
+  },
+  "599300005b5e4b99b4fdff1e8927cd11": {
+   "uid": "599300005b5e4b99b4fdff1e8927cd11",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f0",
+    "old": "f1"
+   },
+   "expr": "(100 * ((v0) - (v1))) / (v1)",
+   "value": -74.16299559471365,
+   "abstain": false,
+   "tokens": 469.0,
+   "latency": 0.5802924744784832
+  },
+  "5cc5b5081af049d5bd445f289450f647": {
+   "uid": "5cc5b5081af049d5bd445f289450f647",
+   "family": "percentage",
+   "contract": {
+    "family": "percentage",
+    "part": "f0",
+    "whole": "f1"
+   },
+   "expr": "(100 * (v0)) / (v1)",
+   "value": 41.666666666666664,
+   "abstain": false,
+   "tokens": 466.0,
+   "latency": 0.5414857938885689
+  },
+  "6238092fd52c4f2b89c2db456411250f": {
+   "uid": "6238092fd52c4f2b89c2db456411250f",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 7.696873763355758,
+   "abstain": false,
+   "tokens": 480.0,
+   "latency": 0.565201673656702
+  },
+  "6560606bef4546cd866a92bfd8d324c0": {
+   "uid": "6560606bef4546cd866a92bfd8d324c0",
+   "family": "none",
+   "contract": {
+    "family": "none"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 441.0,
+   "latency": 0.16559555381536484
+  },
+  "690bdcf798174e15ba82b3fe659d8e7d": {
+   "uid": "690bdcf798174e15ba82b3fe659d8e7d",
+   "family": "ratio",
+   "contract": {
+    "family": "ratio",
+    "numerator": "f0",
+    "denominator": "f1"
+   },
+   "expr": "(v0) / (v1)",
+   "value": 0.47939661993976107,
+   "abstain": false,
+   "tokens": 480.0,
+   "latency": 0.5944796018302441
+  },
+  "69df1d1692d6445797af6d0553eca13e": {
+   "uid": "69df1d1692d6445797af6d0553eca13e",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 12027.0,
+   "abstain": false,
+   "tokens": 483.0,
+   "latency": 0.6194673329591751
+  },
+  "6ba4b3469aac4cbead67500d0cc0bf85": {
+   "uid": "6ba4b3469aac4cbead67500d0cc0bf85",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 1.1782032400589102,
+   "abstain": false,
+   "tokens": 449.0,
+   "latency": 0.3716481067240238
+  },
+  "6e162c4fc79c4ae594b4b463d20a3b62": {
+   "uid": "6e162c4fc79c4ae594b4b463d20a3b62",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 8.277027027027026,
+   "abstain": false,
+   "tokens": 469.0,
+   "latency": 0.560038760304451
+  },
+  "6f2c908fe17b498896ea24cbcaac2ae5": {
+   "uid": "6f2c908fe17b498896ea24cbcaac2ae5",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 138728.66666666666,
+   "abstain": false,
+   "tokens": 490.0,
+   "latency": 0.5455603078007698
+  },
+  "702fb63d1ac649c7b1fef4ceedfcdbf2": {
+   "uid": "702fb63d1ac649c7b1fef4ceedfcdbf2",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "(v0) + (v1)",
+   "value": 393.0,
+   "abstain": false,
+   "tokens": 455.0,
+   "latency": 0.4705999605357647
+  },
+  "7208d20492b64eca810c8e484c5a8e38": {
+   "uid": "7208d20492b64eca810c8e484c5a8e38",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": -30.636413616844234,
+   "abstain": false,
+   "tokens": 463.0,
+   "latency": 0.578650951385498
+  },
+  "724543c809fb4a2d895eb7c3f26bbff9": {
+   "uid": "724543c809fb4a2d895eb7c3f26bbff9",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 83.03966925878531,
+   "abstain": false,
+   "tokens": 471.0,
+   "latency": 0.5802556723356247
+  },
+  "72a7bf44b6f44db8b6b9f0b79b5ad35a": {
+   "uid": "72a7bf44b6f44db8b6b9f0b79b5ad35a",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 2607570.3333333335,
+   "abstain": false,
+   "tokens": 505.0,
+   "latency": 0.5558959394693375
+  },
+  "801652a1045646eab273881fe0c095a2": {
+   "uid": "801652a1045646eab273881fe0c095a2",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 18.529862174578867,
+   "abstain": false,
+   "tokens": 458.0,
+   "latency": 0.5608940199017525
+  },
+  "88dcfa9b58434e8a85ba506dee891ede": {
+   "uid": "88dcfa9b58434e8a85ba506dee891ede",
+   "family": "difference",
+   "contract": {
+    "family": "difference",
+    "minuend": "f1",
+    "subtrahend": "f0"
+   },
+   "expr": "(v1) - (v0)",
+   "value": 8345.0,
+   "abstain": false,
+   "tokens": 483.0,
+   "latency": 0.6547884680330753
+  },
+  "8bfc649acf804325bad0dc581fd0c68a": {
+   "uid": "8bfc649acf804325bad0dc581fd0c68a",
+   "family": "percentage",
+   "contract": {
+    "family": "percentage",
+    "part": "f0",
+    "whole": "f7"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 477.0,
+   "latency": 0.5562556311488152
+  },
+  "8d44611c9b9b45968b9fc6a76d6a3292": {
+   "uid": "8d44611c9b9b45968b9fc6a76d6a3292",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 33.179205425302364,
+   "abstain": false,
+   "tokens": 459.0,
+   "latency": 0.3984202742576599
+  },
+  "90f0058bfd70471a8ba289e8c21450e7": {
+   "uid": "90f0058bfd70471a8ba289e8c21450e7",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 3.1325301204819276,
+   "abstain": false,
+   "tokens": 461.0,
+   "latency": 0.37911131605505943
+  },
+  "95b3fec2a5484d308748cfd19fe4c811": {
+   "uid": "95b3fec2a5484d308748cfd19fe4c811",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f3",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v3) + (v1) + (v2)",
+   "value": 1962.0,
+   "abstain": false,
+   "tokens": 493.0,
+   "latency": 0.5707509592175484
+  },
+  "9ee8f64237304489bc9febc528aa66b4": {
+   "uid": "9ee8f64237304489bc9febc528aa66b4",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 12292.0,
+   "abstain": false,
+   "tokens": 492.0,
+   "latency": 0.5574657097458839
+  },
+  "a0679de6c7874787a4e11ecfb4d46044": {
+   "uid": "a0679de6c7874787a4e11ecfb4d46044",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v1) + (v2)) / 2",
+   "value": 836.0,
+   "abstain": false,
+   "tokens": 488.0,
+   "latency": 0.4757090173661709
+  },
+  "a4a2b05eff294464ba8fc0a295d8ca5b": {
+   "uid": "a4a2b05eff294464ba8fc0a295d8ca5b",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "(v0) + (v1)",
+   "value": 2004068.0,
+   "abstain": false,
+   "tokens": 473.0,
+   "latency": 0.47960058972239494
+  },
+  "a4fd9d53f55e43088cb18015c71306cb": {
+   "uid": "a4fd9d53f55e43088cb18015c71306cb",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 9.238415436339716,
+   "abstain": false,
+   "tokens": 458.0,
+   "latency": 0.3731917776167393
+  },
+  "a61db122fd7543fdaaa9be8e88ee9b3c": {
+   "uid": "a61db122fd7543fdaaa9be8e88ee9b3c",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 108.0,
+   "abstain": false,
+   "tokens": 482.0,
+   "latency": 0.5437255389988422
+  },
+  "a74dc414c1ae4277a57dece221887f85": {
+   "uid": "a74dc414c1ae4277a57dece221887f85",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 11.71259842519685,
+   "abstain": false,
+   "tokens": 468.0,
+   "latency": 0.5624393485486507
+  },
+  "a865a6f8969447cf81658dc9f22ac28c": {
+   "uid": "a865a6f8969447cf81658dc9f22ac28c",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3",
+     "f4"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3) + (v4)",
+   "value": 376.0,
+   "abstain": false,
+   "tokens": 496.0,
+   "latency": 0.7101145386695862
+  },
+  "a92d0f9216e14d36b56d04196a4817aa": {
+   "uid": "a92d0f9216e14d36b56d04196a4817aa",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 2.342878393454816,
+   "abstain": false,
+   "tokens": 466.0,
+   "latency": 0.3757549561560154
+  },
+  "a97d21ab1fd644f7a67b7185033796ef": {
+   "uid": "a97d21ab1fd644f7a67b7185033796ef",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2)) / 3",
+   "value": 1874.6666666666667,
+   "abstain": false,
+   "tokens": 482.0,
+   "latency": 0.5432535298168659
+  },
+  "a9a0a554c74c41719d28b9f7c32dc3ea": {
+   "uid": "a9a0a554c74c41719d28b9f7c32dc3ea",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3) + (v4) + (v5)",
+   "value": 5193.0,
+   "abstain": false,
+   "tokens": 530.0,
+   "latency": 0.7804216705262661
+  },
+  "aaed30b0b1804368bcdd70946af3cfbb": {
+   "uid": "aaed30b0b1804368bcdd70946af3cfbb",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "((v0) + (v1)) / 2",
+   "value": 5.5,
+   "abstain": false,
+   "tokens": 469.0,
+   "latency": 0.4640693627297878
+  },
+  "b9c03f1c9f8b45eb9e6744a4b5898b9d": {
+   "uid": "b9c03f1c9f8b45eb9e6744a4b5898b9d",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "((v0) + (v1)) / 2",
+   "value": 12511.0,
+   "abstain": false,
+   "tokens": 476.0,
+   "latency": 0.4645167216658592
+  },
+  "bbecd35899de4fb1be46b56339f5d7bd": {
+   "uid": "bbecd35899de4fb1be46b56339f5d7bd",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 20.58165548098434,
+   "abstain": false,
+   "tokens": 470.0,
+   "latency": 0.5611580610275269
+  },
+  "bcc200d52107421a94c789c1ac36e7bf": {
+   "uid": "bcc200d52107421a94c789c1ac36e7bf",
+   "family": "none",
+   "contract": {
+    "family": "none"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 437.0,
+   "latency": 0.18498541042208672
+  },
+  "c07a6dbeca2a49f6ae4e9e2ed0779e84": {
+   "uid": "c07a6dbeca2a49f6ae4e9e2ed0779e84",
+   "family": "none",
+   "contract": {
+    "family": "none"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 452.0,
+   "latency": 0.1670968309044838
+  },
+  "c12f0faad1c0455bbb9f80aa5b625e46": {
+   "uid": "c12f0faad1c0455bbb9f80aa5b625e46",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 81.0,
+   "abstain": false,
+   "tokens": 475.0,
+   "latency": 0.5615382120013237
+  },
+  "c57204c3adcf41a8b71bf1eaa4c09fe7": {
+   "uid": "c57204c3adcf41a8b71bf1eaa4c09fe7",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 15.384615384615385,
+   "abstain": false,
+   "tokens": 470.0,
+   "latency": 0.565719373524189
+  },
+  "c77ab5e2a6ba46b9837d71f48025d69d": {
+   "uid": "c77ab5e2a6ba46b9837d71f48025d69d",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 1026.0,
+   "abstain": false,
+   "tokens": 475.0,
+   "latency": 0.5456459783017635
+  },
+  "c8ff1009d181467c8dc74893b0171cd8": {
+   "uid": "c8ff1009d181467c8dc74893b0171cd8",
+   "family": "ratio",
+   "contract": {
+    "family": "ratio",
+    "numerator": "f0",
+    "denominator": "f1"
+   },
+   "expr": "(v0) / (v1)",
+   "value": 0.011664595085572235,
+   "abstain": false,
+   "tokens": 473.0,
+   "latency": 0.5866777263581753
+  },
+  "c9257ff836a846ea90fbec84b35de444": {
+   "uid": "c9257ff836a846ea90fbec84b35de444",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 411.0,
+   "abstain": false,
+   "tokens": 491.0,
+   "latency": 0.622243870049715
+  },
+  "cb829d3409f940d3854da6af23a6fb06": {
+   "uid": "cb829d3409f940d3854da6af23a6fb06",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 13.74951950124866,
+   "abstain": false,
+   "tokens": 457.0,
+   "latency": 0.37743299826979637
+  },
+  "cba81efcf72f47dcbf60723369432e6d": {
+   "uid": "cba81efcf72f47dcbf60723369432e6d",
+   "family": "none",
+   "contract": {
+    "family": "none"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 451.0,
+   "latency": 0.1656276173889637
+  },
+  "cbca62b51f04464ebf1de67774241eca": {
+   "uid": "cbca62b51f04464ebf1de67774241eca",
+   "family": "difference",
+   "contract": {
+    "family": "difference",
+    "minuend": "f2",
+    "subtrahend": "f0"
+   },
+   "expr": "(v2) - (v0)",
+   "value": 20467.0,
+   "abstain": false,
+   "tokens": 486.0,
+   "latency": 0.6460312083363533
+  },
+  "cd6d5558cbd945d3886fa7f2369d5f4d": {
+   "uid": "cd6d5558cbd945d3886fa7f2369d5f4d",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 256705.0,
+   "abstain": false,
+   "tokens": 480.0,
+   "latency": 0.5429552458226681
+  },
+  "cda651e30a3c4a589ac2835f42a6914f": {
+   "uid": "cda651e30a3c4a589ac2835f42a6914f",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "((v0) + (v1)) / 2",
+   "value": 441.5,
+   "abstain": false,
+   "tokens": 473.0,
+   "latency": 0.4680582843720913
+  },
+  "cf32d60d2c3043a194565b3fabf0dcfb": {
+   "uid": "cf32d60d2c3043a194565b3fabf0dcfb",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 8409670.0,
+   "abstain": false,
+   "tokens": 502.0,
+   "latency": 0.560517854988575
+  },
+  "cf6a8029d4474577b0b91b1f4c120683": {
+   "uid": "cf6a8029d4474577b0b91b1f4c120683",
+   "family": "none",
+   "contract": {
+    "family": "none"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 454.0,
+   "latency": 0.1679869145154953
+  },
+  "cf711c6fa3ba4cae84efe9af396341b1": {
+   "uid": "cf711c6fa3ba4cae84efe9af396341b1",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 5.989984591679507,
+   "abstain": false,
+   "tokens": 452.0,
+   "latency": 0.37291162461042404
+  },
+  "cfbbc9aeca2945699682b332f7c83a39": {
+   "uid": "cfbbc9aeca2945699682b332f7c83a39",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 7607.0,
+   "abstain": false,
+   "tokens": 471.0,
+   "latency": 0.5439521223306656
+  },
+  "d465215f787a462288c27fb70b38531a": {
+   "uid": "d465215f787a462288c27fb70b38531a",
+   "family": "percentage",
+   "contract": {
+    "family": "percentage",
+    "part": "f1",
+    "whole": "f3"
+   },
+   "expr": "(100 * (v1)) / (v3)",
+   "value": 3.5398230088495577,
+   "abstain": false,
+   "tokens": 477.0,
+   "latency": 0.5720001943409443
+  },
+  "d4e229649c694de6bc9781e521a80222": {
+   "uid": "d4e229649c694de6bc9781e521a80222",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 7.6923076923076925,
+   "abstain": false,
+   "tokens": 458.0,
+   "latency": 0.3753030523657799
+  },
+  "d60815331f0a4aaba1b766c053f55412": {
+   "uid": "d60815331f0a4aaba1b766c053f55412",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3)",
+   "value": 1848378.0,
+   "abstain": false,
+   "tokens": 506.0,
+   "latency": 0.6352830119431019
+  },
+  "da29eda4c32642b398be37df9246743d": {
+   "uid": "da29eda4c32642b398be37df9246743d",
+   "family": "percentage",
+   "contract": {
+    "family": "percentage",
+    "part": "f1",
+    "whole": {
+     "sum_of": [
+      "f0",
+      "f1"
+     ]
+    }
+   },
+   "expr": "(100 * (v1)) / ((v0) + (v1))",
+   "value": 53.24182518960587,
+   "abstain": false,
+   "tokens": 485.0,
+   "latency": 0.7142170295119286
+  },
+  "e0051170f6cf416caa1f79813133d254": {
+   "uid": "e0051170f6cf416caa1f79813133d254",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 2.6178010471204187,
+   "abstain": false,
+   "tokens": 457.0,
+   "latency": 0.5619479678571224
+  },
+  "e47d314bc9ab4b46925a0453a4646126": {
+   "uid": "e47d314bc9ab4b46925a0453a4646126",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 4.651162790697675,
+   "abstain": false,
+   "tokens": 450.0,
+   "latency": 0.37656232714653015
+  },
+  "e677bdc27bed42b4993c6b97e2117863": {
+   "uid": "e677bdc27bed42b4993c6b97e2117863",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 5.613178767541184,
+   "abstain": false,
+   "tokens": 471.0,
+   "latency": 0.5674546957015991
+  },
+  "e6e1880ed51f4d1a98e0f2982ab39789": {
+   "uid": "e6e1880ed51f4d1a98e0f2982ab39789",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1"
+    ]
+   },
+   "expr": "(v0) + (v1)",
+   "value": 55350.0,
+   "abstain": false,
+   "tokens": 474.0,
+   "latency": 0.320085596293211
+  },
+  "ea2a61fbf02b44b897d6018cdffd65dd": {
+   "uid": "ea2a61fbf02b44b897d6018cdffd65dd",
+   "family": "percentage",
+   "contract": {
+    "family": "percentage",
+    "part": "f1",
+    "whole": "f0"
+   },
+   "expr": "(100 * (v1)) / (v0)",
+   "value": 359.0,
+   "abstain": false,
+   "tokens": 457.0,
+   "latency": 0.3546145148575306
+  },
+  "ebfa86ab15644fe5b08113acf88e610e": {
+   "uid": "ebfa86ab15644fe5b08113acf88e610e",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "((v1) + (v2) + (v3)) / 3",
+   "value": 422733.0,
+   "abstain": false,
+   "tokens": 501.0,
+   "latency": 0.5732384398579597
+  },
+  "ee5a45ba002d47788a17bdbf0455d4b5": {
+   "uid": "ee5a45ba002d47788a17bdbf0455d4b5",
+   "family": "percentage",
+   "contract": {
+    "family": "percentage",
+    "part": "f0",
+    "whole": "f1"
+   },
+   "expr": "(100 * (v0)) / (v1)",
+   "value": 40.73235183087958,
+   "abstain": false,
+   "tokens": 456.0,
+   "latency": 0.5614735148847103
+  },
+  "f2bd5fbbfbf34ae183e7c8dd77a0eb7a": {
+   "uid": "f2bd5fbbfbf34ae183e7c8dd77a0eb7a",
+   "family": "average",
+   "contract": {
+    "family": "average",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "expr": "((v0) + (v1) + (v2) + (v3)) / 4",
+   "value": 71224.75,
+   "abstain": false,
+   "tokens": 501.0,
+   "latency": 0.6399352662265301
+  },
+  "f45dcbba5fd640bdb11123620fba9e0a": {
+   "uid": "f45dcbba5fd640bdb11123620fba9e0a",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f1",
+    "old": "f0"
+   },
+   "expr": "(100 * ((v1) - (v0))) / (v0)",
+   "value": 10.0,
+   "abstain": false,
+   "tokens": 471.0,
+   "latency": 0.5628755427896976
+  },
+  "f53bf6b574d841e69bf86f7d5179b1ac": {
+   "uid": "f53bf6b574d841e69bf86f7d5179b1ac",
+   "family": "percentage",
+   "contract": {
+    "family": "percentage",
+    "part": "f1",
+    "whole": {
+     "sum_of": [
+      "f0",
+      "f1",
+      "f2"
+     ]
+    }
+   },
+   "expr": "(100 * (v1)) / ((v0) + (v1) + (v2))",
+   "value": 20.930232558139537,
+   "abstain": false,
+   "tokens": 511.0,
+   "latency": 0.858370017260313
+  },
+  "f5643975b4b046c186b072475c57789d": {
+   "uid": "f5643975b4b046c186b072475c57789d",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2)",
+   "value": 184827.0,
+   "abstain": false,
+   "tokens": 487.0,
+   "latency": 0.5413459837436676
+  },
+  "f616e253d416406eb6db6a81a2109754": {
+   "uid": "f616e253d416406eb6db6a81a2109754",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0",
+     "f1",
+     "f2",
+     "f3",
+     "f4"
+    ]
+   },
+   "expr": "(v0) + (v1) + (v2) + (v3) + (v4)",
+   "value": 9366352.0,
+   "abstain": false,
+   "tokens": 520.0,
+   "latency": 0.7023121677339077
+  },
+  "f96addc1b690408ca08a141255ae41f2": {
+   "uid": "f96addc1b690408ca08a141255ae41f2",
+   "family": "ratio",
+   "contract": {
+    "family": "ratio",
+    "numerator": "f0",
+    "denominator": "f3"
+   },
+   "expr": "(v0) / (v3)",
+   "value": 0.01909045280099244,
+   "abstain": false,
+   "tokens": 494.0,
+   "latency": 0.6078221835196018
+  },
+  "f994cf0576954754a8c8bf369b9df272": {
+   "uid": "f994cf0576954754a8c8bf369b9df272",
+   "family": "ratio",
+   "contract": {
+    "family": "ratio",
+    "numerator": "f0",
+    "denominator": "f7"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 447.0,
+   "latency": 0.3964177928864956
+  },
+  "fb0d28948be942cfadb696223b02cb8a": {
+   "uid": "fb0d28948be942cfadb696223b02cb8a",
+   "family": "percentage_change",
+   "contract": {
+    "family": "percentage_change",
+    "new": "f0",
+    "old": "f1"
+   },
+   "expr": "(100 * ((v0) - (v1))) / (v1)",
+   "value": -43.333333333333336,
+   "abstain": false,
+   "tokens": 464.0,
+   "latency": 0.5600522980093956
+  },
+  "fc5ab41086fa44119f154e41b5fe2c78": {
+   "uid": "fc5ab41086fa44119f154e41b5fe2c78",
+   "family": "sum",
+   "contract": {
+    "family": "sum",
+    "terms": [
+     "f0"
+    ]
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 465.0,
+   "latency": 0.26109305024147034
+  },
+  "ffea35f80442476c999e70b68fd0cb29": {
+   "uid": "ffea35f80442476c999e70b68fd0cb29",
+   "family": "none",
+   "contract": {
+    "family": "none"
+   },
+   "expr": null,
+   "value": null,
+   "abstain": true,
+   "tokens": 458.0,
+   "latency": 0.17982390150427818
+  }
+ }
+}

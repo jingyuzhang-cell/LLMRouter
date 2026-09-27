@@ -1,0 +1,17 @@
+{
+ "role": "P1b-2: grounded semantic contract (typed operators + deterministic compiler)",
+ "dev_panel": "GFv2-20, 1 schema-design pass (families/roles/compiler); v1 frozen without further schema edits",
+ "dev_findings": "fidelity 12/20 vs free-form 11/20; 5/8 residual errors are family-selection (x100 convention): 2 questions literally ask 'percentage change' while benchmark gold is the raw ratio -> irreducible benchmark-convention ambiguity, not model disobedience; dev trust discrimination 10/12 safe endorsed (2 FP where stored channel read the convention right and the fresh reading differs)",
+ "test_panel": "96-task P0-2 panel, contracts for all 96; PRIMARY metrics on 76 non-overlapping (dev excluded)",
+ "typed_semantics": "sum / average / difference(minuend,sub) / ratio(num,den) NEVER x100 / percentage(part,whole) ALWAYS x100 / percentage_change(new,old) ALWAYS x100 / product; num/den/whole may be fact id or {sum_of:[ids]}",
+ "llm_task": "family selection + operand role assignment ONLY; no free-form expression; program compiles the formula",
+ "abstain_policy_preregistered": "schema-inexpressible/invalid -> abstain -> DO NOT intervene (selective intervention: uncertainty -> inaction); abstain rate reported",
+ "hypotheses": {
+  "H1": "Q_grounded (P(equiv gold)) > 14/76 free-form on held-out",
+  "H2": "FPR on 19 reuse-safe DOWN from 10/19",
+  "H3": "recall on 2 reuse-harm UP from 0/2"
+ },
+ "policy_replay": "frozen P0-2 A/B outcomes, zero workflow calls; verifier cost amortized n=1,2,5,10",
+ "budget": "<=96 test calls + 20 dev calls, model large, temperature 0, one call per task",
+ "created_unix": 1790000000
+}
