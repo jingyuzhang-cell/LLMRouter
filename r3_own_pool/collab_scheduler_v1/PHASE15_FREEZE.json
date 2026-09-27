@@ -1,0 +1,100 @@
+{
+ "space_n": 34,
+ "upgraded_cells": {
+  "SER__Emedium_Rmedium__NONE__FRESH": {
+   "Q": 0.1,
+   "n": 200,
+   "evidence": "Q-only: diagonal combos were served from cache in the frozen run; no per-call records in this manifest -> C/L not reconstructable at zero calls"
+  },
+  "SER__Emedium_Rlarge__NONE__FRESH": {
+   "Q": 0.095,
+   "n": 200,
+   "C_reasoning_stage": 270.285,
+   "L_reasoning_stage": 0.3383515995275229,
+   "n_calls": 200,
+   "evidence": "measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here"
+  },
+  "SER__Emedium_Rcoder__NONE__FRESH": {
+   "Q": 0.095,
+   "n": 200,
+   "C_reasoning_stage": 278.075,
+   "L_reasoning_stage": 0.4186109355464578,
+   "n_calls": 200,
+   "evidence": "measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here"
+  },
+  "SER__Elarge_Rmedium__NONE__FRESH": {
+   "Q": 0.2,
+   "n": 200,
+   "C_reasoning_stage": 322.87,
+   "L_reasoning_stage": 0.3312274764943868,
+   "n_calls": 200,
+   "evidence": "measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here"
+  },
+  "SER__Elarge_Rlarge__NONE__FRESH": {
+   "Q": 0.18,
+   "n": 200,
+   "evidence": "Q-only: diagonal combos were served from cache in the frozen run; no per-call records in this manifest -> C/L not reconstructable at zero calls"
+  },
+  "SER__Elarge_Rcoder__NONE__FRESH": {
+   "Q": 0.205,
+   "n": 200,
+   "C_reasoning_stage": 329.09,
+   "L_reasoning_stage": 0.4389001791458577,
+   "n_calls": 200,
+   "evidence": "measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here"
+  },
+  "SER__Ecoder_Rmedium__NONE__FRESH": {
+   "Q": 0.13,
+   "n": 200,
+   "C_reasoning_stage": 279.545,
+   "L_reasoning_stage": 0.33851141007617114,
+   "n_calls": 200,
+   "evidence": "measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here"
+  },
+  "SER__Ecoder_Rlarge__NONE__FRESH": {
+   "Q": 0.115,
+   "n": 200,
+   "C_reasoning_stage": 277.735,
+   "L_reasoning_stage": 0.36115145787596703,
+   "n_calls": 200,
+   "evidence": "measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here"
+  },
+  "SER__Ecoder_Rcoder__NONE__FRESH": {
+   "Q": 0.11,
+   "n": 200,
+   "evidence": "Q-only: diagonal combos were served from cache in the frozen run; no per-call records in this manifest -> C/L not reconstructable at zero calls"
+  }
+ },
+ "cube_design": {
+  "reference_cube": {
+   "YX_none": [
+    "SER",
+    "SERV",
+    "ParallelER"
+   ],
+   "Y_dynamic_with_Z": "DynamicDAG x {NONE, LOCAL_REROUTE}",
+   "X": [
+    "BALANCED",
+    "HETEROGENEOUS",
+    "QUALITY"
+   ],
+   "n_core": 15,
+   "clean_dedup": "under s_clean DynamicDAG NONE and LOCAL_REROUTE share the execution path (no faults to trigger recovery) -> one clean evaluation, reported under both Z labels",
+   "anchors": [
+    "SINGLE__QUALITY__RETRY__FRESH",
+    "DYNAMICDAG__HETEROGENEOUS__NONE__FRESH",
+    "DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE__FRESH"
+   ],
+   "states": [
+    "s_clean",
+    "s_fault30 (3 seeds, frozen200 fault model)"
+   ],
+   "same_panel": true,
+   "purpose": "exact empirical Pareto fronts P*_clean, P*_fault = SA-PGFS ground truth for reveal/replay"
+  },
+  "cost_estimate": "unique real calls \u2248 extraction 3 models\u00d7200 + reasoning 3 reasoners\u00d73 fact-sets\u00d7200 + verify 2\u00d7200 + fault-recovery reroutes \u2248 3\u20134k calls; node-level caching across configs exploited; exact count to be frozen in the run protocol",
+  "M_handling": "reuse/selective-reuse EXCLUDED from the cube (history panel is a separate case study); cube searches (Y,X,Z) under clean/fault only",
+  "cache_boundary": "cache key = (task, node, model, input_hash, prompt_version); ONLY pure model executions cached; fault injection / failure status / reroute decisions / descendant recomputation NEVER shared across clean/fault states",
+  "crossmodel_upgrade_scope": "the 6 zero-call upgrades carry REASONING-STAGE C/L only; usable as X priors / sanity checks / cache-reuse basis; NEVER mixed into the unified (Q_workflow, C_workflow, L_critical_path) Pareto front"
+ }
+}
