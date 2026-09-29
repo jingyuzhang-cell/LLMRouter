@@ -1,5 +1,21 @@
 # Reference Cube 实验台账（collab_scheduler_v1）
 
+## 2026-09-28 实验链正式收口（最终状态）
+
+- **不再新增实验**。主张层级锁定为 qNEHVI ≈ SA-PGFS > {其余}；统计表述统一
+  p < 10⁻⁴ 与 signed normalized HV gap（不写 p=0.000 / regret）；三句主结论锁定
+  （见 ALGORITHM_TABLE.md）。
+- qNEHVI 区分措辞：框架统一性（G(s)/恢复动作/档案相对状态定义），不写"qNEHVI
+  不能处理状态"，不声称跨状态迁移（replay 为逐状态独立）。
+- **P2 scale-up（small→medium→large 复杂度边界）记为审稿人应对预案**，未启动：
+  若被要求，须先做零调用 cache coverage audit、preregister 空间/预算/基线/指标，
+  成败条件（medium/large 上 AUC 与 N95 的配对显著优于 scalarized）与停止条件
+  （若仍输则降级 SA-PGFS 定位）已在此预定。559-config 模拟仅作 algorithm-
+  development sanity check，不承担"真实大空间胜出"结论。
+- 下一步：写 Results（冻结数据已定），再反推 Method。
+
+
+
 ## 2026-09-28 外部基线横向对比（冻结 cube 上零调用，投稿前补齐）
 
 四个外部搜索机制在**同一冻结 harness**（200 配对种子、同初始设计、同噪声抽样、
