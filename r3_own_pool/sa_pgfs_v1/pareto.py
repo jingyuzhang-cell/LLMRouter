@@ -22,7 +22,15 @@ def non_dominated(points):
 
 
 def hypervolume(points, ref=(0.0, 0.0, 0.0)):
-    """Exact hypervolume in 2D or 3D, maximization form, via slicing."""
+    """Exact hypervolume in 2D or 3D, maximization form, via slicing.
+
+    2026-09-27 fix: both previous branches effectively returned the box of a
+    single extreme point (2D: asc-x sweep with `y > best_y` never fires again
+    on a front, where x asc implies y desc; 3D: desc-z with `z > best_z`
+    processes only the highest-z point) and could DECREASE when a point was
+    added. Corrected to the standard staircase sweeps, pinned by
+    test_pareto_regression.py.
+    """
     pts = np.asarray([p for p in np.asarray(points, dtype=float)
                       if np.all(p > np.asarray(ref))], dtype=float)
     if not len(pts):
@@ -30,26 +38,30 @@ def hypervolume(points, ref=(0.0, 0.0, 0.0)):
     ref = np.asarray(ref, dtype=float)
     d = pts.shape[1]
     if d == 2:
-        order = np.argsort(pts[:, 0])
-        hv, best_x = 0.0, ref[1]
+        # covered width at height band = max{x : q.x >= band top}; sweep x DESC,
+        # band [p.x, prev_x] uses the max y of already-seen (x >= prev_x) points
+        order = np.argsort(-pts[:, 0])
+        hv, max_y, prev_x = 0.0, 0.0, None
         for p in pts[order]:
-            if p[1] > best_x:
-                hv += (p[0] - ref[0]) * (p[1] - best_x)
-                best_x = p[1]
+            if prev_x is not None and prev_x > p[0]:
+                hv += (prev_x - p[0]) * max_y
+            max_y = max(max_y, p[1])
+            prev_x = p[0]
+        hv += (prev_x - ref[0]) * max_y
         return float(hv)
     if d == 3:
-        order = np.argsort(-pts[:, 2])  # descend z
-        hv, best_z = 0.0, ref[2]
-        slices = []
+        # sweep z DESC; band [p.z, prev_z] is covered by the 2D front of points
+        # with z >= prev_z (slices BEFORE adding p); bottom band uses the union
+        order = np.argsort(-pts[:, 2])
+        hv, prev_z = 0.0, None
+        slices = np.zeros((0, 2))
         for p in pts[order]:
-            if p[2] > best_z:
-                dz = p[2] - best_z
-                slices = np.array(slices) if len(slices) else np.zeros((0, 2))
-                merged = np.vstack([slices, [p[0], p[1]]]) if len(slices) else p[:2].reshape(1, 2)
-                hv += hypervolume(merged, ref=ref[:2]) * dz
-                keep = non_dominated(merged)
-                slices = merged[keep]
-                best_z = p[2]
+            if prev_z is not None and prev_z > p[2]:
+                hv += hypervolume(slices, ref=ref[:2]) * (prev_z - p[2])
+            merged = np.vstack([slices, p[:2]]) if len(slices) else p[:2].reshape(1, 2)
+            slices = merged[non_dominated(merged)]
+            prev_z = p[2]
+        hv += hypervolume(slices, ref=ref[:2]) * (prev_z - ref[2])
         return float(hv)
     raise ValueError('only 2D/3D supported')
 

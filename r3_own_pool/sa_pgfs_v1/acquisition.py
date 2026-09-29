@@ -32,7 +32,7 @@ def ehvi(mu, sigma, cand_obj, front_pts, n_samples=48, rng=None, eval_costs=None
     base = cand_obj.copy()
     out = np.zeros(len(mu))
     for s in range(n_samples):
-        base[:, 0] = qs[:, s]
+        base[:, 0] = qs[s]  # sample s over candidates (qs is (n_samples, n_cand))
         # improvement of adding each candidate alone (independent batches)
         for i in range(len(mu)):
             out[i] += hypervolume(np.vstack([front_pts, base[i]])) - front_hv

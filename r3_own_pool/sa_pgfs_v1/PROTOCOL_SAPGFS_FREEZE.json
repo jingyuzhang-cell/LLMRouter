@@ -1,0 +1,36 @@
+{
+ "role": "PROTOCOL_SAPGFS_FREEZE_v1 (2026-09-28): frozen BEFORE the 200-seed robustness benchmark; no acquisition/normalization/budget changes after seeing fault replay",
+ "algorithm_files_sha": {
+  "acquisition.py": "d93ddd8c4137fdcc",
+  "pareto.py": "557e4fd81084e979",
+  "surrogate.py": "db671924fbf87295",
+  "cube_replay.py": "4139b2d3e41b56d1"
+ },
+ "regression_tests": [
+  "sa_pgfs_v1/test_pareto_regression.py (ALL PASS)",
+  "sa_pgfs_v1/test_acquisition_regression.py (ALL PASS)"
+ ],
+ "surrogate": "QSurrogate: ConstantKernel(0.2)*Matern(nu=1.5, per-dim length_scale) + WhiteKernel(0.02); sklearn GP, normalize_y=True, n_restarts_optimizer=2, random_state=0; features = one-hot(Y,X,Z) + normalized C,L",
+ "acquisition": "MC-EHVI (n_samples=16 in replay); cost-aware variant divides by C_eval/Cmax; prefilter none (15 candidates)",
+ "normalization": "objectives (Q, 1-C/Cmax, 1-L/Lmax) maximization, Cmax/Lmax = max over the CURRENT candidate set (G_collab, 15 configs)",
+ "reference_point": "origin (0,0,0) for HV; regret normalized by HV(true front)",
+ "initial_design": "2 configs chosen uniformly at random, COMMON across all strategies within a seed (paired design)",
+ "budget": "8 total evaluations (2 init + 6 sequential)",
+ "noise_model": "per-seed empirical Q (3 fault seeds, uniform draw) \u2014 real panel noise, no synthetic sigma",
+ "search_space": "G_collab ONLY (15 cooperative configs); Single = external global baseline, never a search candidate; global vs collab always separate tables",
+ "strategies": [
+  "random",
+  "greedy_q",
+  "ehvi",
+  "cost_aware_ehvi"
+ ],
+ "metrics": [
+  "final Normalized HV Regret",
+  "AUC-HV (mean HV ratio over budget)",
+  "Pareto recall \u2014 config-level",
+  "Pareto recall \u2014 deduplicated by objective tuple (structurally identical configs counted once)",
+  "N_95%HV distribution"
+ ],
+ "statistics": "paired comparison (common init + common noise draw per seed), n_seeds=200; paired permutation test (10,000 sign shuffles) on final regret and AUC-HV for ehvi-vs-random, ehvi-vs-greedy, costaware-vs-random",
+ "frozen_before": "the robustness run; any later change requires a new protocol version and full rerun"
+}
