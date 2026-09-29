@@ -1,0 +1,57 @@
+{
+ "retirement": "f30_static AND f30_dynamic (all legacy frozen200 fault-arm numbers) plus the global-front-expansion claim",
+ "decided": "2026-09-27 evidence-governance pass",
+ "reason": "FROZEN200_FAULT_PROVENANCE.json: recorded static fault arms have e/r injections as byte-identical no-ops (0/54, 0/41, 0/45 changed tasks across seeds), zero downstream re-executions in the ledger, and the reconstructed fault-side r prompts exist in no ledger \u2014 the recorded numbers cannot have been produced by the repo's frozen200_run.py logic",
+ "retired_value": {
+  "f30_static": {
+   "Q": 0.2933,
+   "Q_std": 0.0275,
+   "C": 1485.7,
+   "L": 4.56
+  },
+  "f30_dynamic": {
+   "Q": 0.4033,
+   "Q_std": 0.0029,
+   "C": 2529.7,
+   "L": 7.1
+  }
+ },
+ "affected_artifacts": [
+  {
+   "path": "static_dag_v0/frozen200/FROZEN200_RESULTS_CORRECTED.json / FROZEN200_CORRECTED_SUMMARY.json",
+   "usage": "arms.f30_static; pareto.points.static; budget curves 'static' entries under f30",
+   "status": "HISTORICAL \u2014 do not use in the new Reference Cube or any paper-2 headline table"
+  },
+  {
+   "path": "collab_scheduler_v1/AUDIT_V1.json",
+   "usage": "s_fault30 slice cell dynamicdag|heterogeneous|none|fresh (measured via f30_static)",
+   "status": "HISTORICAL \u2014 the cell is re-measured by fault30 DYNAMICDAG__HETEROGENEOUS__NONE under real propagation; until then the s_fault30 slice has 2 measured cells (single, dynamic-reroute)"
+  },
+  {
+   "path": "collab_scheduler_v1/REPORT_V1.md",
+   "usage": "s_fault30 front table lists static Q 0.2933 as context",
+   "status": "front claim {Single, Dynamic} UNAFFECTED (static is dominated either way); the static row itself is historical"
+  },
+  {
+   "path": "sa_pgfs_v1/cube_replay.py legacy_trio('s_fault30')",
+   "usage": "fixture marks dynamicdag|heterogeneous|none|fresh tainted=true",
+   "status": "already quarantined in code; fixture retained for machinery self-test only"
+  },
+  {
+   "path": "static_dag_v0/frozen200 budget curves / scheduler grids built on f30 arms",
+   "usage": "Q(B) 'static' entries under fault; scheduler_grid in chapter4 audit",
+   "status": "HISTORICAL \u2014 regenerate from fault30 per-task costs when available"
+  },
+  {
+   "path": "f30_dynamic / legacy claim 'fault brings Dynamic into the global Pareto front'",
+   "usage": "REPORT_V1 s_fault30 front table; AUDIT_V1 s_fault30 slice; sa_pgfs_v1/space.py recovery calibration constants",
+   "status": "RETIRED 2026-09-28: re-measured under the corrected protocol as DYN__HET__LOCAL_REROUTE Q=0.3433\u00b10.0047 (diff 0.060 >> tolerance 0.02). The corrected global fronts are P*_clean = P*_fault = {Single}; the front-expansion claim is permanently withdrawn. Legacy dynamic value remains at most a historical note on the pre-correction implementation."
+  }
+ ],
+ "provenance_of_surviving_cells": {
+  "f30_single": "bookkeeping fault BY DESIGN (faulted tasks marked failed, cost doubled, call served from cache) \u2014 fully auditable in frozen200_run.run_arm 'single' branch",
+  "f30_dynamic": "RETIRED \u2014 was kept as a WEAK anchor on 2026-09-27; the fault30 weak-anchor check FAILED by 0.060 and it now exits the formal evidence chain together with f30_static",
+  "clean_static / clean_dynamic / clean_single": "unaffected by this retirement"
+ },
+ "interpretation_rule": "fault30 measures the value of recovery strategies UNDER THE FROZEN FAULT MODEL \u2014 a state intervention (injected persistent node-model failures), not a claim about model capability change in general"
+}

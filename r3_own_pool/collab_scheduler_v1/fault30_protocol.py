@@ -4,18 +4,22 @@ Single source of truth for the s_fault30 stage of the reference cube
 (FAULT30_POLICY.json). The planner enumerates every (seed, config, task)
 execution and classifies it WITHOUT any model call:
 
-  INJECTED   persistent-fault triple (clean-ref cost, never cached)
-  CACHED     (model, sha(prompt)) already executed in a seeded ledger
-  PENDING    would be cached, but cube_clean has not produced it yet
-  NEW        real model call required at fault30 time
-  RUNTIME    call whose existence depends on a runtime answer (recovery
-             stages after an effective reroute); counted separately with a
-             structural expectation under documented assumption A1
+  INJECTED        persistent-fault triple (clean-ref cost, never cached)
+  CACHED          (model, sha(prompt)) already executed in a seeded ledger or
+                  already simulated earlier in this dry-run (virtual set)
+  NEW             real model call required at fault30 time
+  RUNTIME         call whose existence depends on a runtime answer (recovery
+                  stages after an effective reroute); counted separately under
+                  documented assumption A1
+  PENDING*        would be cached but cube_clean has not produced it yet
 
 NONE arms are fully decidable from artifacts (no detection, no recovery):
 their NEW-call forecast is EXACT. LOCAL_REROUTE arms additionally fire on
-naturally failed nodes (ungated detection), so their totals carry the
-RUNTIME bucket.
+naturally failed nodes (ungated detection), hence the RUNTIME bucket.
+
+Clean-cube answers/costs resolve through cube_analyze's alias-aware ledger
+(the runner served some keys from its by_mp cache without writing them;
+alias identity is (model, sha(prompt)) in execution order).
 
 Run:  python3 -m collab_scheduler_v1.fault30_protocol
 """
@@ -94,39 +98,35 @@ def map_fault_node(drawn_node, topo):
 
 
 class Ledger:
-    """Read-only view of executed prompts + answers (zero calls)."""
+    """Read-only artifact view: alias-aware clean answers/costs + executed
+    (model, sha(prompt)) index. Zero model calls."""
 
     def __init__(self):
         sys.path.insert(0, str(ROOT))
+        from collab_scheduler_v1 import cube_analyze
         from static_dag_v0 import tool_aware_v1 as v
         from static_dag_v0.multidag_dynamic import VPROMPT, parse_facts_safe
         self.v = v
         self.VPROMPT = VPROMPT
         self.parse_facts_safe = parse_facts_safe
-        self.by_key = {}
-        for l in (CUBE / 'RESPONSES.jsonl').read_text().splitlines():
-            r = json.loads(l)
-            self.by_key.setdefault(r['key'], r)
+        self._resolve, self._cost, self._lat = cube_analyze.load_ledgers()[:3]
+        # executed index, keyed (model, prompt_sha) like the runner's by_mp
         self.executed = {}
         for l in (CUBE / 'REQUESTS.jsonl').read_text().splitlines():
             q = json.loads(l)
-            self.executed.setdefault(q['prompt_sha256'], q['key'])
-        self.fz_by_key = {}
-        for l in (FZ / 'RESPONSES.jsonl').read_text().splitlines():
-            r = json.loads(l)
-            self.fz_by_key.setdefault(r['key'], r)
-        for folder, pfield in ((FZ, 'prompt'), ):
-            rp, qp = folder / 'RESPONSES.jsonl', folder / 'REQUESTS.jsonl'
-            if qp.exists() and rp.exists():
-                resp = {json.loads(l)['key']: json.loads(l) for l in rp.read_text().splitlines()}
-                for l in qp.read_text().splitlines():
-                    q = json.loads(l)
-                    h = hashlib.sha256(q[pfield].encode()).hexdigest() if pfield == 'prompt' \
-                        else q['prompt_sha256']
-                    if q['key'] in resp and resp[q['key']].get('model') == q['model']:
-                        r = resp[q['key']]['response']
-                        if r.get('status') == 'delivered' and not r.get('injected_fault'):
-                            self.executed.setdefault(h, q['key'])
+            self.executed.setdefault((q['model'], q['prompt_sha256']), q['key'])
+        resp = {json.loads(l)['key']: json.loads(l)
+                for l in (FZ / 'RESPONSES.jsonl').read_text().splitlines()}
+        for l in (FZ / 'REQUESTS.jsonl').read_text().splitlines():
+            q = json.loads(l)
+            r = resp.get(q['key'])
+            if r is None or r.get('model') != q['model']:
+                continue
+            response = r['response']
+            if response.get('status') != 'delivered' or response.get('injected_fault'):
+                continue
+            h = hashlib.sha256(q['prompt'].encode()).hexdigest()
+            self.executed.setdefault((q['model'], h), q['key'])
 
     # ---- prompt builders (mirror cube_clean_run exactly) ----
     def eprompt(self, task, ctx):
@@ -141,54 +141,44 @@ class Ledger:
     # ---- clean-cube accessors ----
     def clean_key(self, topo, fam, node, uid):
         pfx = 'SER' if topo in SER_TOPOS else 'PAR'
-        if node == 'e':
-            node = 'e'
-        if topo == 'SERV' and node == 'v':
-            return f'cube:SERV:{fam}:v:{uid}'
-        if topo == 'DYNAMICDAG' and node == 'v':
-            return f'cube:DYNAMICDAG:{fam}:v:{uid}'
+        if node == 'v' and topo in ('SERV', 'DYNAMICDAG'):
+            return f'cube:{topo}:{fam}:v:{uid}'
         return f'cube:{pfx}:{fam}:{node}:{uid}'
 
     def answer(self, key):
-        rec = self.by_key.get(key) or self.fz_by_key.get(key)
-        return rec['response'].get('answer') if rec else None
-
-    def answer_for_prompt(self, prompt):
-        h = hashlib.sha256(prompt.encode()).hexdigest()
-        key = self.executed.get(h)
-        return self.answer(key) if key else None
+        return self._resolve(key)
 
     def clean_facts(self, topo, fam, node, uid, task):
-        key = self.clean_key(topo, fam, node, uid)
-        a = self.answer(key)
+        a = self.answer(self.clean_key(topo, fam, node, uid))
         if a is None:
             return None  # PENDING
         f, _ = self.parse_facts_safe(a)
         return f
 
     def clean_expr(self, topo, fam, uid, task, merged_facts):
-        key = self.clean_key(topo, fam, 'r', uid)
-        a = self.answer(key)
+        a = self.answer(self.clean_key(topo, fam, 'r', uid))
         if a is None:
             return None
         try:
-            from static_dag_v0.multidag_dynamic import value_of
-            val, err = value_of(a, merged_facts)
-            return 'UNPARSEABLE' if err else self.v.decode(a)['expression']
+            return self.v.decode(a)['expression']  # runner phase-V semantics: decode-only
         except Exception:
             return 'UNPARSEABLE'
 
     def classify(self, model, prompt, virtual=None):
-        """CACHED if executed in a seeded ledger or already simulated in this
-        dry-run (virtual set); else NEW, and the sha is added to virtual so
-        later configs dedup against it exactly as the executor's own cache
-        would. RUNTIME calls cannot be dedup-simulated (answer unknown)."""
+        """CACHED if executed or already simulated in this dry-run; else NEW,
+        with the (model, sha) added to virtual so later configs dedup against
+        it exactly as the executor's own cache would."""
         h = hashlib.sha256(prompt.encode()).hexdigest()
-        if h in self.executed or (virtual is not None and h in virtual):
+        if (model, h) in self.executed or (virtual is not None and (model, h) in virtual):
             return 'CACHED'
         if virtual is not None:
-            virtual.add(h)
+            virtual.add((model, h))
         return 'NEW'
+
+    def answer_for_prompt(self, model, prompt):
+        h = hashlib.sha256(prompt.encode()).hexdigest()
+        key = self.executed.get((model, h))
+        return self.answer(key) if key else None
 
 
 def plan_none(cid, seed, faults, led, task, uid, virtual):
@@ -218,9 +208,8 @@ def plan_none(cid, seed, faults, led, task, uid, virtual):
         f_e, _ = e_step('e', task['ctx_table'] + '\n' + task['ctx_text'])
     else:
         f1, _ = e_step('e1', task['ctx_table'])
-        f2, ch2 = e_step('e2', task['ctx_text'])
+        f2, _ = e_step('e2', task['ctx_text'])
         f_e = None if f1 is None or f2 is None else {'facts': f1['facts'] + f2['facts']}
-    # r
     r_fault = active and active[0] == 'r'
     if f_e is None:
         steps.append(dict(node='r', model=nodes['r'], cls='PENDING_DEP'))
@@ -228,9 +217,7 @@ def plan_none(cid, seed, faults, led, task, uid, virtual):
         steps.append(dict(node='r', model=nodes['r'], cls='INJECTED'))
     else:
         p = led.sprompt(task, f_e)
-        cls = led.classify(nodes['r'], p, virtual)
-        steps.append(dict(node='r', model=nodes['r'], cls=cls))
-    # v
+        steps.append(dict(node='r', model=nodes['r'], cls=led.classify(nodes['r'], p, virtual)))
     if 'v' in nodes:
         v_fault = active and active[0] == 'v'
         if v_fault:
@@ -243,15 +230,16 @@ def plan_none(cid, seed, faults, led, task, uid, virtual):
                 steps.append(dict(node='v', model=nodes['v'], cls='PENDING_DEP'))
             else:
                 p = led.vprompt(task, f_e['facts'], expr)
-                steps.append(dict(node='v', model=nodes['v'], cls=led.classify(nodes['v'], p, virtual)))
+                steps.append(dict(node='v', model=nodes['v'],
+                                  cls=led.classify(nodes['v'], p, virtual)))
     return steps
 
 
 def plan_reroute(cid, seed, faults, led, task, uid, memory, virtual):
     """Plan a DYNAMICDAG LOCAL_REROUTE config. Stages after an effective
     reroute depend on runtime answers -> RUNTIME bucket (assumption A1:
-    an effective reroute returns parseable, non-empty facts / parseable
-    value; natural rates taken from the legacy ledger where decidable)."""
+    an effective NEW reroute returns parseable, non-empty facts; cached
+    reroute answers decide their branch exactly from the ledger)."""
     topo, fam, z, nodes = planned_models(cid)
     drawn = faults.get(uid)
     active = None
@@ -262,7 +250,6 @@ def plan_reroute(cid, seed, faults, led, task, uid, memory, virtual):
     steps = []
     fault_facts = {'facts': []}
 
-    # planned e1/e2 with detection bookkeeping
     e_state = {}
     for node, ctx in (('e1', task['ctx_table']), ('e2', task['ctx_text'])):
         if active and active[0] == node:
@@ -279,11 +266,10 @@ def plan_reroute(cid, seed, faults, led, task, uid, memory, virtual):
 
     # stage 1: e recovery (memory rule) for detected empty/faulted branches
     e_changed = False
+    e_new_recovery = False
     for node in ('e1', 'e2'):
         f, injected, status = e_state[node]
-        if status in ('pending',):
-            continue
-        if status == 'ok':
+        if status in ('pending', 'ok'):
             continue
         target = 'coder' if memory['first'] else 'medium'
         memory['first'] = False
@@ -294,10 +280,11 @@ def plan_reroute(cid, seed, faults, led, task, uid, memory, virtual):
         cls = led.classify(target, p, virtual)
         steps.append(dict(node=node, model=target, cls=cls, stage='e-reroute'))
         if cls == 'CACHED':
-            f_rec, _ = led.parse_facts_safe(led.answer_for_prompt(p) or '')
+            f_rec, _ = led.parse_facts_safe(led.answer_for_prompt(target, p) or '')
             e_changed = e_changed or bool(f_rec['facts'])  # decidable
         else:
-            e_changed = True  # A1: effective new reroute changes facts
+            e_changed = True
+            e_new_recovery = True  # A1
 
     # planned r on current (possibly corrupted) facts
     f1, f2 = e_state['e1'][0], e_state['e2'][0]
@@ -313,23 +300,20 @@ def plan_reroute(cid, seed, faults, led, task, uid, memory, virtual):
         r_new = cls == 'NEW'
         steps.append(dict(node='r', model=nodes['r'], cls=cls, stage='planned'))
 
-    # stage 1b: r refresh after e change (prompt decidable unless a recovery
-    # answer is still runtime-unknown)
+    # stage 1b: r refresh after e change
     if e_changed:
-        if any(s.get('stage') == 'e-reroute' and s['cls'] == 'NEW'
-               for s in steps) or r_new:
+        if e_new_recovery or r_new:
             steps.append(dict(node='r', model=nodes['r'], cls='RUNTIME', stage='r-refresh'))
         else:
-            f1r, f2r = e_state['e1'][0], e_state['e2'][0]
-            # recompute merged with the recovered facts where decidable
             rec = {}
             for s in steps:
                 if s.get('stage') == 'e-reroute' and s['cls'] == 'CACHED':
-                    pp = led.eprompt(task, task['ctx_table'] if s['node'] == 'e1' else task['ctx_text'])
-                    fr, _ = led.parse_facts_safe(led.answer_for_prompt(pp) or '')
+                    pp = led.eprompt(task, task['ctx_table'] if s['node'] == 'e1'
+                                     else task['ctx_text'])
+                    fr, _ = led.parse_facts_safe(led.answer_for_prompt(s['model'], pp) or '')
                     rec[s['node']] = fr
-            m = {'facts': rec.get('e1', f1r if f1r else {'facts': []})['facts']
-                 + rec.get('e2', f2r if f2r else {'facts': []})['facts']}
+            m = {'facts': rec.get('e1', f1 if f1 else {'facts': []})['facts']
+                 + rec.get('e2', f2 if f2 else {'facts': []})['facts']}
             steps.append(dict(node='r', model=nodes['r'],
                               cls=led.classify(nodes['r'], led.sprompt(task, m), virtual),
                               stage='r-refresh'))
@@ -337,12 +321,8 @@ def plan_reroute(cid, seed, faults, led, task, uid, memory, virtual):
     if not r_fault and merged is not None:
         expr = led.clean_expr(topo, fam, uid, task, merged)
         if expr == 'UNPARSEABLE':
-            if nodes['r'] == 'large':
-                steps.append(dict(node='r', model='large', cls='RUNTIME', stage='r-esc',
-                                  note='natural r failure; large==planned only if faulted'))
-            else:
-                steps.append(dict(node='r', model='large', cls=led.classify(
-                    'large', led.sprompt(task, merged), virtual), stage='r-esc'))
+            steps.append(dict(node='r', model='large', cls=led.classify(
+                'large', led.sprompt(task, merged), virtual), stage='r-esc'))
     # stage 3/4: v refresh + escalation
     if 'v' in nodes:
         v_fault = active and active[0] == 'v'
@@ -351,8 +331,9 @@ def plan_reroute(cid, seed, faults, led, task, uid, memory, virtual):
             if nodes['v'] != 'large':
                 steps.append(dict(node='v', model='large', cls='RUNTIME', stage='v-esc'))
         else:
-            steps.append(dict(node='v', model=nodes['v'], cls='RUNTIME' if (e_changed or r_new)
-                              else 'PENDING_DEP', stage='planned-or-refresh'))
+            steps.append(dict(node='v', model=nodes['v'],
+                              cls='RUNTIME' if (e_changed or r_new) else 'CACHED',
+                              stage='planned-or-refresh'))
     return steps
 
 
@@ -367,7 +348,7 @@ def run():
         VPROMPT=hashlib.sha256(led.VPROMPT.encode()).hexdigest())
 
     out = dict(prompt_version='vp1', prompt_version_sha=PROMPT_VERSION_SHA,
-               assumption_A1='effective reroute returns parseable non-empty facts; '
+               assumption_A1='effective NEW reroute returns parseable non-empty facts; '
                              'RUNTIME bucket counts calls whose existence depends on it',
                seeds={}, totals={})
     tot = {}
@@ -389,8 +370,13 @@ def run():
             for k, n in agg.items():
                 tot[k] = tot.get(k, 0) + n
         out['seeds'][str(seed)] = seed_out
-        prev = dict(out.get('seeds', {}).get(str(SEEDS[0]), {}))  # placeholder
-    # per-seed class totals (summed over configs) for printing
+    out['totals'] = tot
+    out['new_call_forecast'] = dict(
+        exact_NEW=tot.get('NEW', 0),
+        runtime_expected=tot.get('RUNTIME', 0),
+        pending_clean=tot.get('PENDING', 0) + tot.get('PENDING_DEP', 0),
+        note='PENDING* buckets collapse to CACHED once cube_clean finishes; '
+             'rerun this dry-run after clean completes for the exact budget')
     per_seed = {}
     for seed in SEEDS:
         d = {}
@@ -399,16 +385,9 @@ def run():
                 d[k] = d.get(k, 0) + n
         per_seed[str(seed)] = d
     out['per_seed_totals'] = per_seed
+    (OUT / 'FAULT30_DRYRUN.json').write_text(json.dumps(out, indent=1))
     for seed, d in per_seed.items():
         print(f'seed {seed}: ' + json.dumps(d), flush=True)
-    out['totals'] = tot
-    out['new_call_forecast'] = dict(
-        exact_NEW=tot.get('NEW', 0),
-        runtime_expected=tot.get('RUNTIME', 0),
-        pending_clean=tot.get('PENDING', 0) + tot.get('PENDING_DEP', 0),
-        note='PENDING* buckets collapse to CACHED once cube_clean finishes; '
-             'rerun this dry-run after clean completes for the exact budget')
-    (OUT / 'FAULT30_DRYRUN.json').write_text(json.dumps(out, indent=1))
     print(json.dumps(out['new_call_forecast'], indent=1))
 
 

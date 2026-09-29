@@ -1,0 +1,88 @@
+{
+ "role": "REFERENCE_CUBE_FREEZE_v1 (2026-09-28): no further real model calls permitted on this cube",
+ "panel": {
+  "tasks": "frozen200 (200)",
+  "policy_sha": "be8eaf0ba7ce338f"
+ },
+ "clean_stage": {
+  "runner": "cube_clean_run.py",
+  "results": "cube_clean/CUBE_CLEAN.json",
+  "results_sha": "c17ba6c1dc5213c7",
+  "ledger_sha": {
+   "REQUESTS": "225c345ab8caa9b8",
+   "RESPONSES": "a0a984bf6c63f1ac"
+  },
+  "new_calls": 3119,
+  "n_configs": "15 labels (12 distinct evals, clean dedup)",
+  "front_global": {
+   "SINGLE__QUALITY__RETRY__FRESH": [
+    0.55,
+    612.8,
+    0.46
+   ]
+  },
+  "front_collab": {
+   "SER__HETEROGENEOUS__NONE": [
+    0.37,
+    963.5,
+    2.375
+   ],
+   "SER__QUALITY__NONE": [
+    0.34,
+    963.3,
+    2.408
+   ]
+  },
+  "independent_recompute": "cube_analyze.py 15/15 agreement (CUBE_CLEAN_ANALYSIS.json)"
+ },
+ "fault_stage": {
+  "policy": "fault30_prep/FAULT30_POLICY.json",
+  "policy_sha": "4cc59b10d7f38455",
+  "executor": "fault30_run.py v2 (own-ledger seeding, stage-batched, checkpointed)",
+  "results": "fault30_prep/FAULT30_RESULTS.json",
+  "results_sha": "0c0e57abea777716",
+  "ledger_sha": {
+   "REQUESTS": "28e6c0badc685017",
+   "RESPONSES": "d8c8487f101cf0d6"
+  },
+  "total_real_calls": 1088,
+  "seeds": [
+   20260923,
+   20260924,
+   20260925
+  ],
+  "n_per_config": 600,
+  "audit": "five steps PASS (provenance traceable; QUALITY-family anchor noise bounded: 12/1680 ok cells, median 3.6% cost delta) -> FAULT30_ANALYSIS.json",
+  "front_global": {
+   "SINGLE__QUALITY__RETRY__FRESH": [
+    0.3967,
+    802.0,
+    0.59
+   ]
+  },
+  "front_collab": {
+   "SER__HETEROGENEOUS__NONE": [
+    0.3083,
+    952.0,
+    2.376
+   ],
+   "SER__QUALITY__NONE": [
+    0.2833,
+    951.5,
+    2.405
+   ],
+   "DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE": [
+    0.3433,
+    2089.3,
+    4.454
+   ]
+  },
+  "headline": "P*_clean = P*_fault = {Single} (global, NOT expanded); collab front 2->3 pts, HV 0.0519->0.1007; D_Z Q positive in all three X families (+0.030/+0.067/+0.023); Y-flip SERV<->DYNAMICDAG; X ranking stable HET>QUALITY>BALANCED"
+ },
+ "objectives": "Q_workflow (topology's own final producer), C_workflow (sum node tokens, cold-run accounting; injected faults at clean-ref cost), L_critical_path (parallel e max; recovery appended at failure point)",
+ "retractions": "f30_static .2933 AND f30_dynamic .4033 retired; global front-expansion claim withdrawn (fault30_prep/RETIRED_EVIDENCE.json)",
+ "framing": "fault30 = state intervention under the frozen fault model; conclusions about recovery-strategy value only, not model capability change",
+ "evidence_tiers": "EVIDENCE_CLASSIFICATION.md (TIER-1 paper-eligible / TIER-2 recomputed / TIER-3 retired)",
+ "prompt_version": "vp1 (fault30_protocol.PROMPT_VERSION_SHA)",
+ "post_freeze_rule": "no new real model calls on this cube; any extension requires a new versioned cube directory, never appends to these ledgers"
+}

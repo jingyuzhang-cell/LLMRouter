@@ -1,0 +1,124 @@
+{
+ "source_artifacts": [
+  "static_dag_v0/cross_model_matrix/CROSS_MODEL_RESULTS.json",
+  "collab_scheduler_v1/PHASE15_FREEZE.json"
+ ],
+ "usage_rule": "priors / sanity checks / cache-reuse basis ONLY; never part of the unified (Q,C,L) Pareto front (reasoning-stage C is not workflow C)",
+ "combos": {
+  "E_medium->R_medium": {
+   "e_model": "medium",
+   "r_model": "medium",
+   "Q": 0.1,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; Q-only: diagonal combos were served from cache in the frozen run; no per-call records in this manifest -> C/L not reconstructable at zero calls",
+   "C_reasoning_stage": null,
+   "L_reasoning_stage": null,
+   "cube_config_id": null,
+   "relation_to_cube": "X-prior neighborhood: (e,r) combo outside the three cube families"
+  },
+  "E_medium->R_large": {
+   "e_model": "medium",
+   "r_model": "large",
+   "Q": 0.095,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here",
+   "C_reasoning_stage": 270.285,
+   "L_reasoning_stage": 0.3383515995275229,
+   "cube_config_id": "SER__BALANCED__NONE__FRESH",
+   "relation_to_cube": "SAME (e,r) pair as this cube config \u2014 prior/sanity check for the cube SER measurement; extraction-stage cost and verifier effects not included"
+  },
+  "E_medium->R_coder": {
+   "e_model": "medium",
+   "r_model": "coder",
+   "Q": 0.095,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here",
+   "C_reasoning_stage": 278.075,
+   "L_reasoning_stage": 0.4186109355464578,
+   "cube_config_id": null,
+   "relation_to_cube": "X-prior neighborhood: (e,r) combo outside the three cube families"
+  },
+  "E_large->R_medium": {
+   "e_model": "large",
+   "r_model": "medium",
+   "Q": 0.2,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here",
+   "C_reasoning_stage": 322.87,
+   "L_reasoning_stage": 0.3312274764943868,
+   "cube_config_id": "SER__HETEROGENEOUS__NONE__FRESH",
+   "relation_to_cube": "SAME (e,r) pair as this cube config \u2014 prior/sanity check for the cube SER measurement; extraction-stage cost and verifier effects not included"
+  },
+  "E_large->R_large": {
+   "e_model": "large",
+   "r_model": "large",
+   "Q": 0.18,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; Q-only: diagonal combos were served from cache in the frozen run; no per-call records in this manifest -> C/L not reconstructable at zero calls",
+   "C_reasoning_stage": null,
+   "L_reasoning_stage": null,
+   "cube_config_id": "SER__QUALITY__NONE__FRESH",
+   "relation_to_cube": "SAME (e,r) pair as this cube config \u2014 prior/sanity check for the cube SER measurement; extraction-stage cost and verifier effects not included"
+  },
+  "E_large->R_coder": {
+   "e_model": "large",
+   "r_model": "coder",
+   "Q": 0.205,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here",
+   "C_reasoning_stage": 329.09,
+   "L_reasoning_stage": 0.4389001791458577,
+   "cube_config_id": null,
+   "relation_to_cube": "X-prior neighborhood: (e,r) combo outside the three cube families"
+  },
+  "E_coder->R_medium": {
+   "e_model": "coder",
+   "r_model": "medium",
+   "Q": 0.13,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here",
+   "C_reasoning_stage": 279.545,
+   "L_reasoning_stage": 0.33851141007617114,
+   "cube_config_id": null,
+   "relation_to_cube": "X-prior neighborhood: (e,r) combo outside the three cube families"
+  },
+  "E_coder->R_large": {
+   "e_model": "coder",
+   "r_model": "large",
+   "Q": 0.115,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; measured Q (full chain) + measured per-call tokens/latency for the REASONING stage (this manifest holds the 6 off-diagonal combos, 200 calls each); extraction-stage cost not separable here",
+   "C_reasoning_stage": 277.735,
+   "L_reasoning_stage": 0.36115145787596703,
+   "cube_config_id": null,
+   "relation_to_cube": "X-prior neighborhood: (e,r) combo outside the three cube families"
+  },
+  "E_coder->R_coder": {
+   "e_model": "coder",
+   "r_model": "coder",
+   "Q": 0.11,
+   "n": 200,
+   "evidence": "Q (full chain) + reasoning-stage C/L; Q-only: diagonal combos were served from cache in the frozen run; no per-call records in this manifest -> C/L not reconstructable at zero calls",
+   "C_reasoning_stage": null,
+   "L_reasoning_stage": null,
+   "cube_config_id": null,
+   "relation_to_cube": "X-prior neighborhood: (e,r) combo outside the three cube families"
+  }
+ },
+ "cube_alignment": {
+  "direct": [
+   "E_medium->R_large",
+   "E_large->R_medium",
+   "E_large->R_large"
+  ],
+  "neighborhood": [
+   "E_medium->R_medium",
+   "E_medium->R_coder",
+   "E_large->R_coder",
+   "E_coder->R_medium",
+   "E_coder->R_large",
+   "E_coder->R_coder"
+  ]
+ },
+ "zero_model_calls": true
+}

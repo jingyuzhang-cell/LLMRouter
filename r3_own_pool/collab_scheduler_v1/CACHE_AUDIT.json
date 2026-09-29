@@ -1,0 +1,73 @@
+{
+ "cube_clean": {
+  "n_requests": 3227,
+  "n_responses": 3226,
+  "unpaired_requests": 0,
+  "unpaired_responses": 0,
+  "duplicate_prompt_executions": 108,
+  "dup_examples": [
+   {
+    "this": "cube:SER:QUALITY:e:1fa0fada-4301-427f-b62a-bda8d2049fe5",
+    "first": "cube:SER:HETEROGENEOUS:e:1fa0fada-4301-427f-b62a-bda8d2049fe5"
+   },
+   {
+    "this": "cube:PAR:QUALITY:e1:1fa0fada-4301-427f-b62a-bda8d2049fe5",
+    "first": "cube:PAR:HETEROGENEOUS:e1:1fa0fada-4301-427f-b62a-bda8d2049fe5"
+   },
+   {
+    "this": "cube:PAR:QUALITY:e2:1fa0fada-4301-427f-b62a-bda8d2049fe5",
+    "first": "cube:PAR:HETEROGENEOUS:e2:1fa0fada-4301-427f-b62a-bda8d2049fe5"
+   }
+  ],
+  "injected_fault_records": 0,
+  "prompts_shared_across_models": 1076,
+  "key_structure_ok": 3227,
+  "key_structure_bad": 0,
+  "prompt_version_field": "absent \u2014 folded into prompt_sha256 (documented deviation from the 5-tuple spec; FAULT30_POLICY records vp1 template hashes explicitly)"
+ },
+ "frozen200_seed": {
+  "n_requests": 1465,
+  "n_responses": 1465,
+  "unpaired_requests": 0,
+  "unpaired_responses": 0,
+  "duplicate_prompt_executions": 0,
+  "dup_examples": [],
+  "injected_fault_records": 0,
+  "prompts_shared_across_models": 0,
+  "key_structure_ok": 1465,
+  "key_structure_bad": 0,
+  "prompt_version_field": "absent \u2014 folded into prompt_sha256 (documented deviation from the 5-tuple spec; FAULT30_POLICY records vp1 template hashes explicitly)"
+ },
+ "fault30": {
+  "n_requests": 0,
+  "n_responses": 0,
+  "unpaired_requests": 0,
+  "unpaired_responses": 0,
+  "duplicate_prompt_executions": 0,
+  "dup_examples": [],
+  "injected_fault_records": 0,
+  "prompts_shared_across_models": 0,
+  "key_structure_ok": 0,
+  "key_structure_bad": 0,
+  "prompt_version_field": "absent \u2014 folded into prompt_sha256 (documented deviation from the 5-tuple spec; FAULT30_POLICY records vp1 template hashes explicitly)"
+ },
+ "cross_ledger": {
+  "key_collisions": 0,
+  "examples": []
+ },
+ "duplicate_root_cause": {
+  "ledger_session_gap_seconds": 13039.3,
+  "cross_session_duplicates": 108,
+  "intra_session_duplicates": 0,
+  "cross_session_answer_divergences": 20,
+  "explanation": "REQUESTS/RESPONSES append an earlier partial cube_clean session (~3.7h before the final run). The final run seeded by_key from those responses and re-executed shared prompts under new keys; vLLM temp-0 outputs can diverge across server restarts. Resolution is deterministic (first occurrence in ledger order) and identical in the runner and the independent analyzer (15/15 agreement), so the cube measurement stays well-defined; provenance is two server sessions, documented here."
+ },
+ "verdict": {
+  "a1": "PASS with documented prompt_version deviation",
+  "a2": "PASS",
+  "a3": "PASS with note",
+  "a4": "PASS",
+  "a6": "PASS",
+  "zero_model_calls": true
+ }
+}

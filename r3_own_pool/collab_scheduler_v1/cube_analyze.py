@@ -35,7 +35,12 @@ LEGACY_STATIC_ANCHOR = dict(Q=0.335, C=1485.7, L=4.56, n=200,
                             source='frozen200 clean_static (e:large,r:medium,v:coder)')
 
 
-def load_ledgers():
+def load_ledgers(by_policy='last', prompt_policy='first'):
+    """by_policy/prompt_policy in {'first','last'} control which server-session
+    record wins for duplicated keys / duplicated (model, prompt) executions
+    (the ledger contains an earlier partial session plus the final run).
+    Defaults replicate the runner's observable semantics (by_key: own calls
+    last; by_mp: first execution of each prompt)."""
     sys.path.insert(0, str(ROOT))
     from static_dag_v0.multidag_dynamic import close, json_value, parse_facts_safe, value_of
     from static_dag_v0 import tool_aware_v1 as v
@@ -46,6 +51,8 @@ def load_ledgers():
         by_key[r['key']] = r
     for l in (CUBE / 'RESPONSES.jsonl').read_text().splitlines():
         r = json.loads(l)
+        if by_policy == 'first' and r['key'] in by_key:
+            continue
         by_key[r['key']] = r
     # prompt-indexed alias target records (delivered, non-injected), so keys the
     # runner served from its by_mp cache (no RESPONSES line written) still resolve.
@@ -71,10 +78,22 @@ def load_ledgers():
                 continue
             h = sha(q['prompt']) if 'prompt' in q else q.get('prompt_sha256')
             if h:
-                prompt_rec.setdefault(h, r)
+                kk = (q['model'], h)
+                if prompt_policy == 'last' or kk not in prompt_rec:
+                    prompt_rec[kk] = r
 
     tasks_by_uid = {t['uid']: t for t in
                     json.loads((FZ / 'FROZEN200_POLICY.json').read_text())['tasks']}
+
+    def _model_of(key):
+        from collab_scheduler_v1.fault30_protocol import X_MAP
+        _, pfx, fam, node, uid = key.split(':')
+        xm = X_MAP[fam]
+        if node in ('e', 'e1', 'e2'):
+            return xm['e']
+        if node == 'r':
+            return xm['r']
+        return xm['v']
 
     def build_prompt(key):
         """Reconstruct the prompt for a cube execution key (None if upstream
@@ -133,7 +152,7 @@ def load_ledgers():
         if rec is None:
             p = build_prompt(key)
             if p is not None:
-                rec = prompt_rec.get(sha(p))
+                rec = prompt_rec.get((_model_of(key), sha(p)))
         memo[key] = rec['response'].get('answer') if rec else None
         return memo[key]
 
@@ -141,21 +160,22 @@ def load_ledgers():
         rec = by_key.get(key)
         if rec is None:
             p = build_prompt(key)
-            rec = prompt_rec.get(sha(p)) if p is not None else None
+            rec = prompt_rec.get((_model_of(key), sha(p))) if p is not None else None
         return float(rec['response'].get('usage', {}).get('total_tokens') or 0) if rec else None
 
     def lat(key):
         rec = by_key.get(key)
         if rec is None:
             p = build_prompt(key)
-            rec = prompt_rec.get(sha(p)) if p is not None else None
+            rec = prompt_rec.get((_model_of(key), sha(p))) if p is not None else None
         return float(rec['response'].get('latency_s') or 0) if rec else None
 
     return resolve, cost, lat, close, json_value, parse_facts_safe, value_of, v
 
 
-def evaluate(tasks, coverage_only=False):
-    ans, cost, lat, close, json_value, parse_facts_safe, value_of, v = load_ledgers()
+def evaluate(tasks, coverage_only=False, led=None):
+    ans, cost, lat, close, json_value, parse_facts_safe, value_of, v = \
+        led if led is not None else load_ledgers()
     rctx = {}
     results = {}
     per_task = {}
@@ -241,7 +261,7 @@ def pareto_analysis(results):
     return dict(objectives=objs, front=nd, hv=float(hv) if hv else None,
                 normalization=dict(Cmax=Cmax, Lmax=Lmax,
                                    note='(Q, 1-C/Cmax, 1-L/Lmax) maximization, ref origin'),
-                dominated_by=dom)
+                dominates=dom)
 
 
 def run():
@@ -254,7 +274,7 @@ def run():
                                            for k, v in results.items() if v['n'] < v['n_total']})
     if complete:
         pa = pareto_analysis(results)
-        out['pareto'] = {k: v for k, v in pa.items() if k != 'dominated_by'}
+        out['pareto'] = {k: v for k, v in pa.items() if k != 'dominates'}
         out['dominance_matrix'] = pa['dominates']
         # dedup check
         dd = {}
