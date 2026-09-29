@@ -1,3 +1,11 @@
+> **⚠️ HISTORICAL CHECKPOINT — PARTIALLY SUPERSEDED.** The framework mainline
+> (Observability → Update-aware Trust → Recoverability/Harm → Selective
+> Intervention → State-conditioned Pareto) remains valid. However, specific
+> numbers referencing f30_dynamic=0.4033 and the P_fault={Single,Dynamic}
+> expansion have been corrected: the frozen result is P_global={Single} in
+> both states; collaborative-front expansion and recovery trade-off (+6.7pp)
+> are the supported collaborative-level findings. See REFERENCE_CUBE.json.
+
 # 第二篇方法框架 V1.1（2026-09-26，含 P0-1 结果）
 
 状态：设计稿。证据均已提交（25b6113 / ba04aef / 本 selective-gate commit）。

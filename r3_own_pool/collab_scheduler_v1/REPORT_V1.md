@@ -1,3 +1,9 @@
+> **⚠️ HISTORICAL CHECKPOINT — SUPERSEDED.** This Phase-1 audit relied on the
+> legacy f30_dynamic=0.4033, later retired by seed-isolated remeasurement
+> (corrected to 0.3433). The claim that P_fault={Single,Dynamic} has been
+> **withdrawn**; the frozen result is P_global={Single} in both states.
+> See REFERENCE_CUBE.json and commit d7a2896 for the authoritative record.
+
 # collab_scheduler_v1 — Phase 1: real-evidence audit of the state-conditioned Pareto claim (2026-09-27)
 
 Enumerator + evaluator only (no surrogate, no search). Space per the frozen

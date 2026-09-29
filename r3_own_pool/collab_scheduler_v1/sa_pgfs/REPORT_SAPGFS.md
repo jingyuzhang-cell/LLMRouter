@@ -1,3 +1,21 @@
+# ⚠️ HISTORICAL CHECKPOINT — SUPERSEDED BY FROZEN REFERENCE CUBE ⚠️
+
+> **This record reflects an intermediate state before the fault30 stage was
+> completed and before external baselines were added.** Claims about legacy
+> fault anchors (f30_dynamic=0.4033), the global Pareto front ({Single,Dynamic}
+> expansion), and search-algorithm rankings (scalarized>AUC 0.94) have been
+> **superseded** by the seed-isolated remeasurement (d7a2896), the expanded
+> external-baseline replay (49facf9), and the final algorithm table
+> (`sa_pgfs_v1/results_cube_replay/FINAL_ALGORITHM_TABLE.json`).
+> **Do not cite this file as paper evidence.**
+>
+> The frozen, paper-ready results are:
+> - **Global**: Single remains dominant in both states (P_clean = P_fault = {Single})
+> - **Collaborative**: state changes Y,Z; P_collab(fault) expands to include DYN-HET-REROUTE (+6.7pp Q via Z)
+> - **Search**: SA-PGFS matches qNEHVI (AUC≈0.922); both beat Random, Greedy-Q, NSGA-II, qNParEGO, AFlow-MCTS (p<1e-4); SA-PGFS ≁ qNEHVI (signed HV gap p=0.35)
+
+---
+
 # SA-PGFS Reveal/Replay Results (2026-09-28, zero LLM calls)
 
 Protocol frozen pre-run (`PROTOCOL_SAPGFS_FREEZE.json`); 200 paired replay
