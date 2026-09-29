@@ -42,15 +42,16 @@
 
 配对检验与内部锚点见 FAULT30_ANALYSIS.json（provenance 全通过；QUALITY 家族锚点有 0.7% ok 单元/中位 3.6% cost 的双会话噪声，结论裕度远大于此）。
 
-## T4 搜索策略（DAG 子空间 fault 前沿，实测 3 点，16 种子）
+## T4 搜索策略（冻结协议 PROTOCOL_SAPGFS_FREEZE_v1；G_collab 15 配置；200 种子配对设计；实测 fault cube 零调用 replay）
 
-| strategy | final regret | recall | AUC-HV | N95%HV |
+| strategy | final regret (mean/median) | AUC-HV | recall (dedup) | N95%HV 达标率 |
 |---|---|---|---|---|
-| random | 0.061±0.093 | 0.625 | 0.863 | never 8/16 |
-| greedy_q | 0.065±0.097 | 0.625 | 0.862 | never 7/16 |
-| ehvi | 0.004±0.002 | 0.750 | 0.919 | never 0/16 |
-| cost_aware_ehvi | 0.004±0.002 | 0.750 | 0.921 | never 0/16 |
+| random | +0.0852 / +0.0591 | 0.842 | 0.133 | 91/200 |
+| greedy_q | +0.0698 / +0.0382 | 0.840 | 0.233 | 107/200 |
+| ehvi | -0.0060 / -0.0008 | 0.922 | 0.173 | 160/200 |
+| cost_aware_ehvi | -0.0062 / -0.0008 | 0.922 | 0.158 | 162/200 |
 
-## 补充：sim_search 重生（修复后实现，替代 INVALIDATED 旧结果）
-
-ehvi 1.013±0.020 / cost_aware 1.017±0.023 / greedy 0.677±0.336 / random 0.405±0.018（HV/HV*，8 种子）
+配对置换检验（10,000 次符号置换）：ehvi/cost_aware 对 random 与 greedy 在 regret 和 AUC-HV 上 **p = 0.000**（全部六项）。
+注：regret 为负表示噪声采样下发现的前沿可略超实测前沿 HV（相对实测前沿归一）；
+recall 对所有策略都低是因为前沿第三点是 0.5-token 刃缘点（SER__QUALITY），8 次评估内难以精确命中——EHVI 的优势体现在 regret/AUC/N95。
+旧 16-seed 数字仅作过程记录，正式统计以本表为准（REPLAY_FAULT_ROBUST.json）。

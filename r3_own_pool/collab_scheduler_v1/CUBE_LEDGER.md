@@ -1,5 +1,19 @@
 # Reference Cube 实验台账（collab_scheduler_v1）
 
+## 2026-09-28 冻结与 200 种子 robustness（当日收尾）
+
+- **f30_dynamic = 0.4033 正式退役**（重测 0.3433±0.0047，差 0.060 >> 容差）；
+  "fault 使 Dynamic 进入全局前沿"主张永久撤回：修正后 P*_clean = P*_fault = {Single}。
+- **REFERENCE_CUBE_FREEZE.json / PROTOCOL_SAPGFS_FREEZE.json 落盘**（关键工件 sha256
+  全记录；freeze 后规则：不再对本 cube 发真实调用，扩展需新版本目录）。
+- **200 种子配对 robustness**（REPLAY_FAULT_ROBUST.json，冻结协议、同初始设计、
+  逐种子实测噪声、双 recall、置换检验）：ehvi/cost_aware regret −0.006、AUC 0.922、
+  N95 达标 160+/200；random regret 0.085、达标 91/200；六项置换检验全部 p=0.000。
+- SA-PGFS 修复与冻结已提交 git；collab 侧由并行会话提交（d7a2896）。
+- 方法结构定稿：Outer Scheduler (s→{Single, Collab, Reuse}) + Inner Optimizer
+  (SA-PGFS over G_collab)；全局与协同结果永久分表。
+
+
 ## 2026-09-28 fault30 完成与五步审计结果（当日主结果）
 
 fault30 v2 于 19:0x 完成：45/45 (seed,config) 评估，全链 1088 个真实调用
