@@ -165,6 +165,7 @@ def run(seed_master=20260928, n_seeds=200, smoke=False):
                strategy_summary=summary, paired_permutation_tests=tests,
                zero_model_calls=True)
     fn = OUT / ('REPLAY_FAULT_ROBUST_SMOKE.json' if smoke else 'REPLAY_FAULT_ROBUST.json')
+    out['per_seed_metrics'] = per_seed  # paired tests vs external baselines
     fn.write_text(json.dumps(out, indent=1))
     print(json.dumps({s: dict(regret=summary[s]['final_regret']['mean'],
                               auc=summary[s]['AUC_HV']['mean'],

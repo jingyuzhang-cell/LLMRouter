@@ -1,5 +1,28 @@
 # Reference Cube 实验台账（collab_scheduler_v1）
 
+## 2026-09-28 外部基线横向对比（冻结 cube 上零调用，投稿前补齐）
+
+四个外部搜索机制在**同一冻结 harness**（200 配对种子、同初始设计、同噪声抽样、
+预算 8、双 recall、置换检验）下与 SA-PGFS 对比（ALGORITHM_TABLE.md /
+FINAL_ALGORITHM_TABLE.json；机制为诚实适配，非原系统复现）：
+
+| Method | HV gap | AUC-HV | N95 达标 | Recall(dedup) |
+|---|---|---|---|---|
+| Random | +0.085 | 0.842 | 91/200 | 0.133 |
+| Greedy-Q | +0.070 | 0.840 | 107/200 | 0.233 |
+| NSGA-II | +0.081 | 0.828 | 109/200 | 0.158 |
+| qNParEGO | +0.058 | 0.857 | 117/200 | 0.217 |
+| **qNEHVI** | **−0.006** | **0.922** | **165/200** | 0.177 |
+| AFlow-style MCTS | +0.014 | 0.881 | 140/200 | 0.218 |
+| **SA-PGFS (EHVI / cost-aware)** | **−0.006** | **0.922** | 160/162/200 | 0.173/0.158 |
+
+配对置换检验：SA-PGFS 对 NSGA-II/qNParEGO/AFlow-MCTS/random/greedy 全部 **p=0.000**；
+**对 qNEHVI 不可区分**（regret p=0.885/0.979，AUC p=0.457/0.581）——noisy-EHVI 家族
+是本问题上的第一梯队。论文表述：SA-PGFS 与最强 noisy-MOBO 基线持平、显著优于其余，
+其差异化在于状态条件搜索能力（跨 s 的 G(s)/P*(s)）而非单状态有限表上的采集函数本身。
+SA-PGFS 200 种子重跑与冻结汇总逐位一致（冻结可复现性 PASS）。
+
+
 ## 2026-09-28 冻结与 200 种子 robustness（当日收尾）
 
 - **f30_dynamic = 0.4033 正式退役**（重测 0.3433±0.0047，差 0.060 >> 容差）；

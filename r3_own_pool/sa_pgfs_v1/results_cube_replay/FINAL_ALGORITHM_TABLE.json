@@ -1,0 +1,121 @@
+{
+ "reproducibility_check": "PASS (rerun reproduces frozen SA-PGFS summaries bit-for-bit)",
+ "protocol": "PROTOCOL_SAPGFS_FREEZE_v1 (frozen harness, 200 paired seeds)",
+ "naming": "nsga2/qnparego/qnehvi/aflow_mcts are mechanism adaptations to the frozen finite space, not full reproductions of the original systems (paper wording fixed in PROTOCOL addendum)",
+ "rows": [
+  {
+   "key": "random",
+   "name": "Random",
+   "type": "\u65e0\u6a21\u578b",
+   "regret_mean": 0.08524898976662673,
+   "regret_median": 0.05907345036022932,
+   "auc_mean": 0.8424323021266651,
+   "n95_pass": 91,
+   "n_seeds": 200,
+   "recall_dedup_mean": 0.13333333333333333
+  },
+  {
+   "key": "greedy_q",
+   "name": "Greedy-Q",
+   "type": "\u5355\u76ee\u6807\u8d2a\u5fc3",
+   "regret_mean": 0.06980217736533935,
+   "regret_median": 0.03815076666968287,
+   "auc_mean": 0.8398641817674607,
+   "n95_pass": 107,
+   "n_seeds": 200,
+   "recall_dedup_mean": 0.23333333333333336
+  },
+  {
+   "key": "nsga2",
+   "name": "NSGA-II",
+   "type": "MOEA",
+   "regret_mean": 0.08130492994380786,
+   "regret_median": 0.04068639246332095,
+   "auc_mean": 0.827616314689972,
+   "n95_pass": 109,
+   "n_seeds": 200,
+   "recall_dedup_mean": 0.15833333333333333
+  },
+  {
+   "key": "qnparego",
+   "name": "qNParEGO",
+   "type": "MOBO",
+   "regret_mean": 0.05826155772226962,
+   "regret_median": 0.03192387271020991,
+   "auc_mean": 0.8565349312419105,
+   "n95_pass": 117,
+   "n_seeds": 200,
+   "recall_dedup_mean": 0.21666666666666665
+  },
+  {
+   "key": "qnehvi",
+   "name": "qNEHVI",
+   "type": "noisy MOBO",
+   "regret_mean": -0.006213403834441483,
+   "regret_median": -0.0008096780916428958,
+   "auc_mean": 0.9224806254196857,
+   "n95_pass": 165,
+   "n_seeds": 200,
+   "recall_dedup_mean": 0.17666666666666664
+  },
+  {
+   "key": "aflow_mcts",
+   "name": "AFlow-style MCTS",
+   "type": "workflow search",
+   "regret_mean": 0.01431058614375847,
+   "regret_median": -0.00044333210236002785,
+   "auc_mean": 0.8811073296034249,
+   "n95_pass": 140,
+   "n_seeds": 200,
+   "recall_dedup_mean": 0.21833333333333332
+  },
+  {
+   "key": "ehvi",
+   "name": "SA-PGFS (EHVI)",
+   "type": "state-cond. surrogate Pareto (SA-PGFS)",
+   "regret_mean": -0.0059742538065031305,
+   "regret_median": -0.0008096780916428958,
+   "auc_mean": 0.9218123198537819,
+   "n95_pass": 160,
+   "n_seeds": 200,
+   "recall_dedup_mean": 0.1733333333333333
+  },
+  {
+   "key": "cost_aware_ehvi",
+   "name": "SA-PGFS (cost-aware EHVI)",
+   "type": "state-cond. surrogate Pareto (SA-PGFS)",
+   "regret_mean": -0.006166705640308019,
+   "regret_median": -0.0008096780916428958,
+   "auc_mean": 0.921994860116179,
+   "n95_pass": 162,
+   "n_seeds": 200,
+   "recall_dedup_mean": 0.15833333333333333
+  }
+ ],
+ "paired_permutation_tests": {
+  "ehvi_vs_nsga2:regret": 0.0,
+  "ehvi_vs_nsga2:auc": 0.0,
+  "ehvi_vs_qnparego:regret": 0.0,
+  "ehvi_vs_qnparego:auc": 0.0,
+  "ehvi_vs_qnehvi:regret": 0.8851,
+  "ehvi_vs_qnehvi:auc": 0.4568,
+  "ehvi_vs_aflow_mcts:regret": 0.0,
+  "ehvi_vs_aflow_mcts:auc": 0.0,
+  "ehvi_vs_random:regret": 0.0,
+  "ehvi_vs_random:auc": 0.0,
+  "ehvi_vs_greedy_q:regret": 0.0,
+  "ehvi_vs_greedy_q:auc": 0.0,
+  "cost_aware_ehvi_vs_nsga2:regret": 0.0,
+  "cost_aware_ehvi_vs_nsga2:auc": 0.0,
+  "cost_aware_ehvi_vs_qnparego:regret": 0.0,
+  "cost_aware_ehvi_vs_qnparego:auc": 0.0,
+  "cost_aware_ehvi_vs_qnehvi:regret": 0.9794,
+  "cost_aware_ehvi_vs_qnehvi:auc": 0.5808,
+  "cost_aware_ehvi_vs_aflow_mcts:regret": 0.0,
+  "cost_aware_ehvi_vs_aflow_mcts:auc": 0.0,
+  "cost_aware_ehvi_vs_random:regret": 0.0,
+  "cost_aware_ehvi_vs_random:auc": 0.0,
+  "cost_aware_ehvi_vs_greedy_q:regret": 0.0,
+  "cost_aware_ehvi_vs_greedy_q:auc": 0.0
+ }
+}
