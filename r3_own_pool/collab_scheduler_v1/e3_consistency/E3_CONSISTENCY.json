@@ -1,0 +1,370 @@
+{
+ "all_pass": true,
+ "checks": {
+  "r_static_no_change": true,
+  "r_reroute_has_switch": true,
+  "r_reroute_no_patch": true,
+  "r_patch_changed_graph": true,
+  "r_paths_differ": true,
+  "v_static_no_change": true,
+  "v_reroute_has_switch": true,
+  "v_reroute_no_patch": true,
+  "v_patch_changed_graph": true,
+  "v_paths_differ": true,
+  "e1_static_no_change": true,
+  "e1_reroute_has_switch": true,
+  "e1_reroute_no_patch": true,
+  "e1_patch_changed_graph": true,
+  "e1_paths_differ": true
+ },
+ "results": [
+  {
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v"
+    ]
+   ],
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "patches": [],
+   "switches": [],
+   "n_calls": 4,
+   "strategy": "static",
+   "fault": "r"
+  },
+  {
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v"
+    ]
+   ],
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "patches": [],
+   "switches": [
+    {
+     "node": "r",
+     "from_m": "medium",
+     "to_m": "large"
+    }
+   ],
+   "n_calls": 5,
+   "strategy": "reroute",
+   "fault": "r"
+  },
+  {
+   "nodes": [
+    "e1",
+    "e2",
+    "r_a",
+    "r_b",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r_a"
+    ],
+    [
+     "e2",
+     "r_a"
+    ],
+    [
+     "r_a",
+     "r_b"
+    ],
+    [
+     "r_b",
+     "v"
+    ]
+   ],
+   "executed": [
+    "e1",
+    "e2",
+    "r_a",
+    "r_b",
+    "v"
+   ],
+   "patches": [
+    {
+     "op": "split",
+     "node": "r"
+    }
+   ],
+   "switches": [],
+   "n_calls": 5,
+   "strategy": "patch",
+   "fault": "r"
+  },
+  {
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v"
+    ]
+   ],
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "patches": [],
+   "switches": [],
+   "n_calls": 4,
+   "strategy": "static",
+   "fault": "v"
+  },
+  {
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v"
+    ]
+   ],
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "patches": [],
+   "switches": [
+    {
+     "node": "v",
+     "from_m": "coder",
+     "to_m": "large"
+    }
+   ],
+   "n_calls": 5,
+   "strategy": "reroute",
+   "fault": "v"
+  },
+  {
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v_a",
+    "v_b"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v_a"
+    ],
+    [
+     "v_a",
+     "v_b"
+    ]
+   ],
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v_a",
+    "v_b"
+   ],
+   "patches": [
+    {
+     "op": "split",
+     "node": "v"
+    }
+   ],
+   "switches": [],
+   "n_calls": 5,
+   "strategy": "patch",
+   "fault": "v"
+  },
+  {
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v"
+    ]
+   ],
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "patches": [],
+   "switches": [],
+   "n_calls": 4,
+   "strategy": "static",
+   "fault": "e1"
+  },
+  {
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v"
+    ]
+   ],
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "patches": [],
+   "switches": [
+    {
+     "node": "e1",
+     "from_m": "large",
+     "to_m": "coder"
+    }
+   ],
+   "n_calls": 5,
+   "strategy": "reroute",
+   "fault": "e1"
+  },
+  {
+   "nodes": [
+    "e1_a",
+    "e1_b",
+    "e2",
+    "r",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1_a",
+     "e1_b"
+    ],
+    [
+     "e1_b",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v"
+    ]
+   ],
+   "executed": [
+    "e1_a",
+    "e1_b",
+    "e2",
+    "r",
+    "v"
+   ],
+   "patches": [
+    {
+     "op": "split",
+     "node": "e1"
+    }
+   ],
+   "switches": [],
+   "n_calls": 5,
+   "strategy": "patch",
+   "fault": "e1"
+  }
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "role": "P2 statistical protocol (pre-registered before data)",
+ "comparisons": [
+  {
+   "name": "Dynamic Patch vs Static",
+   "primary_metric": "Q (task-level binary, paired)",
+   "test": "exact McNemar (two-sided)",
+   "secondary": "paired bootstrap CI for C and L differences",
+   "multiple_comparison": "Holm-Bonferroni across 3 pairwise comparisons"
+  },
+  {
+   "name": "Dynamic Patch vs Local Reroute",
+   "primary_metric": "Q (paired)",
+   "test": "exact McNemar",
+   "secondary": "paired bootstrap for C, L"
+  },
+  {
+   "name": "Local Reroute vs Static",
+   "primary_metric": "Q (paired)",
+   "test": "exact McNemar",
+   "secondary": "paired bootstrap for C, L"
+  }
+ ],
+ "sample_size": {
+  "pilot_estimate": "Reference Cube Z-effect dQ\u22480.067 (HET family)",
+  "note": "Z-effect provides a LOWER BOUND on expected patch-effect; DAG Patch may produce larger effects (structural change vs model switch) or smaller (adaptation cost). Range: [0, 2\u00d7Z-effect].",
+  "mcnemar_discordant_needed": "b+c \u2265 10 discordant pairs for meaningful McNemar",
+  "recommended_n_tasks": "100-200 (allows detection of \u22655pp Q difference at 80% power)",
+  "stopping_rule": "fixed-n (no interim analysis); if <10 discordant pairs, report as underpowered"
+ },
+ "quality_definition": "task-level binary: final output within tolerance of gold",
+ "cost_definition": "total tokens per task (all nodes + recovery overhead)",
+ "latency_definition": "critical-path wall-clock (max over parallel branches)",
+ "bootstrap": {
+  "n_iter": 10000,
+  "ci_level": 0.95,
+  "seed": 42,
+  "method": "percentile"
+ },
+ "multiple_comparison": {
+  "method": "Holm-Bonferroni",
+  "n_comparisons": 3,
+  "alpha": 0.05
+ },
+ "fairness": {
+  "same_tasks": "all strategies see identical task sets",
+  "same_faults": "same fault draw per (task, seed)",
+  "same_initial_dag": "same initial topology and model assignment",
+  "budget_policy": "per-task budget cap; over-budget = task failure",
+  "metrics_scope": "Q counted at task level; C/L per task; per-node detail logged"
+ },
+ "exclusion_criteria": {
+  "infrastructure_failure": "exclude task if ANY strategy hit infra error (not model failure); report count",
+  "timeout": "exclude if wall-clock > 10min per task",
+  "gold_leak": "T1b test: trajectory must be identical under perturbed gold"
+ },
+ "estimated_effect_ranges": {
+  "conservative": "Z-effect only (patch=split+reroute): dQ \u2248 +3-7pp",
+  "moderate": "structural benefit adds decomposability: dQ \u2248 +5-10pp",
+  "null": "patch adaptation cost offsets benefit: dQ \u2248 0",
+  "negative": "patch overhead + detection latency: dQ < 0"
+ },
+ "preregistered_unix": 1796100000
+}
