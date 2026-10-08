@@ -1,0 +1,163 @@
+{
+ "results": {
+  "s1": {
+   "scenario": "1: fb returns same facts",
+   "r2_fired": false,
+   "expected_r2": false,
+   "pass_": true,
+   "metrics": {
+    "logical_calls": 6,
+    "unique_model_prompt_pairs": 6,
+    "computed_requests": 5,
+    "cache_hits": 0,
+    "fault_injections": 1,
+    "stub_new_calls": 5,
+    "total_tokens_billed": 550,
+    "total_latency_billed": 0.55,
+    "billing_inflation": 1
+   },
+   "call_keys": [
+    "f30:DYNAMICDAG:HETEROGENEOUS:e1:s1-uid",
+    "f30:DYNAMICDAG:HETEROGENEOUS:e2:s1-uid",
+    "f30:DYNAMICDAG:HETEROGENEOUS:r:s1-uid",
+    "f30:DYNAMICDAG:HETEROGENEOUS:e1:fb:s1-uid",
+    "f30:DYNAMICDAG:HETEROGENEOUS:r:esc:s1-uid",
+    "f30:DYNAMICDAG:HETEROGENEOUS:v:s1-uid"
+   ]
+  },
+  "s2": {
+   "scenario": "2: R2 changes r output",
+   "r2_fired": true,
+   "r_original_answer": "{\"expression\": \"v0 + v1\"}",
+   "r_fbd_answer": "{\"expression\": \"v0 * v1\"}",
+   "r_output_changed": true,
+   "r_original_key": "f30:DYNAMICDAG:HETEROGENEOUS:r:s2-uid",
+   "r_fbd_key": "f30:DYNAMICDAG:HETEROGENEOUS:r:fbd:s2-uid",
+   "v1_present": true,
+   "v2_present": true,
+   "v1_v2_detail": [
+    {
+     "stage": "V1",
+     "model": "coder",
+     "sha": "b2b96da3f04deec1",
+     "source": "stub_new",
+     "answer": "{\"value\": 200}",
+     "tokens": 100
+    },
+    {
+     "stage": "V2",
+     "model": "coder",
+     "sha": "b2b96da3f04deec1",
+     "source": "cache",
+     "answer": "{\"value\": 200}",
+     "tokens": 100
+    }
+   ],
+   "v1_after_r2": true,
+   "metrics": {
+    "logical_calls": 8,
+    "unique_model_prompt_pairs": 7,
+    "computed_requests": 6,
+    "cache_hits": 1,
+    "fault_injections": 1,
+    "stub_new_calls": 6,
+    "total_tokens_billed": 750,
+    "total_latency_billed": 0.75,
+    "billing_inflation": 2
+   },
+   "pass_": true
+  },
+  "s3": {
+   "scenario": "3: R2+R3 with r fault",
+   "r_calls": [
+    {
+     "key": "f30:DYNAMICDAG:HETEROGENEOUS:r:s3-uid",
+     "answer": "garbage_not_json"
+    },
+    {
+     "key": "f30:DYNAMICDAG:HETEROGENEOUS:r:fbd:s3-uid",
+     "answer": "garbage_not_json"
+    },
+    {
+     "key": "f30:DYNAMICDAG:HETEROGENEOUS:r:esc:s3-uid",
+     "answer": "{\"expression\": \"v0 + v1\"}"
+    }
+   ],
+   "r_original_answer": "garbage_not_json",
+   "r_fbd_answer": "garbage_not_json",
+   "r_esc_answer": "{\"expression\": \"v0 + v1\"}",
+   "final_r_differs_from_original": true,
+   "v2_fired": true,
+   "r_changed_semantics": "r_changed is set per-stage (cumulative). If R2 sets True and R3 produces different output, it stays True. If R3 produces SAME as original, r_changed from R2 persists (conservative). In this test: v2_fired=True, final_changed=True",
+   "metrics": {
+    "logical_calls": 9,
+    "unique_model_prompt_pairs": 8,
+    "computed_requests": 5,
+    "cache_hits": 1,
+    "fault_injections": 3,
+    "stub_new_calls": 5,
+    "total_tokens_billed": 750,
+    "total_latency_billed": 0.75,
+    "billing_inflation": 4
+   },
+   "pass_": true
+  }
+ },
+ "summary": {
+  "all_pass": true,
+  "scenarios": {
+   "s1": {
+    "pass_": true,
+    "metrics": {
+     "logical_calls": 6,
+     "unique_model_prompt_pairs": 6,
+     "computed_requests": 5,
+     "cache_hits": 0,
+     "fault_injections": 1,
+     "stub_new_calls": 5,
+     "total_tokens_billed": 550,
+     "total_latency_billed": 0.55,
+     "billing_inflation": 1
+    }
+   },
+   "s2": {
+    "pass_": true,
+    "metrics": {
+     "logical_calls": 8,
+     "unique_model_prompt_pairs": 7,
+     "computed_requests": 6,
+     "cache_hits": 1,
+     "fault_injections": 1,
+     "stub_new_calls": 6,
+     "total_tokens_billed": 750,
+     "total_latency_billed": 0.75,
+     "billing_inflation": 2
+    }
+   },
+   "s3": {
+    "pass_": true,
+    "metrics": {
+     "logical_calls": 9,
+     "unique_model_prompt_pairs": 8,
+     "computed_requests": 5,
+     "cache_hits": 1,
+     "fault_injections": 3,
+     "stub_new_calls": 5,
+     "total_tokens_billed": 750,
+     "total_latency_billed": 0.75,
+     "billing_inflation": 4
+    }
+   }
+  },
+  "metrics_definition": {
+   "logical_calls": "total keys in call_log (includes faults and cache hits)",
+   "unique_model_prompt_pairs": "unique (model, sha) pairs \u2014 true unique requests",
+   "computed_requests": "unique (model, sha) excluding fault injections",
+   "cache_hits": "calls resolved from prior (model, sha) cache",
+   "fault_injections": "calls served by fault registry (no model invoked)",
+   "billing_inflation": "logical_calls - computed_requests (wasted charges)"
+  },
+  "v1_v2_order_note": "Code order: R2\u2192R3\u2192V1\u2192V2. V1 already uses post-R2/R3 r output. V2 fires only when r_changed=True. V1 is NOT consuming stale r. The potential redundancy is V2 repeating V1 when r_changed=True and the prompt is identical (same model, same expr).",
+  "r_changed_note": "r_changed is cumulative per-stage. If R2 sets True, it persists even if R3 restores original output. This is conservative (safe). A strict final-state check would compare last r answer vs first."
+ }
+}
