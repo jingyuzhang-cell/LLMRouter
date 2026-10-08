@@ -423,9 +423,14 @@ def smoke_run():
         ftasks = [t for t in tasks if t["uid"] in faults] or [tasks[0]]
         task = ftasks[0]
         led = fp.Ledger()
+        global LEDGER
         if (OUT / 'SMOKE_RESULTS.json').exists() and '--new-run' not in sys.argv:
             raise SystemExit('SMOKE_RESULTS.json exists — completion marker; '
                              'use --new-run for a fresh run id')
+        if '--new-run' in sys.argv:  # log isolation: run-scoped ledger
+            run_id = time.strftime('run%Y%m%d%H%M%S')
+            LEDGER = OUT / f'LEDGER_{run_id}.jsonl'
+            print('run-scoped ledger:', LEDGER.name, flush=True)
         gc = _load_gc()          # restart protection: reuse disk count
         if gc['n'] > 0 and '--reset-budget' not in sys.argv:
             raise SystemExit(f'refusing: disk counter n={gc["n"]} > 0 (restart '
