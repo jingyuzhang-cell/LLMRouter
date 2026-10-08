@@ -1,4 +1,15 @@
-# Ablation: State-aware vs State-blind SA-PGFS (zero LLM calls, 2026-09-30)
+# ⚠️ V1 RESULTS INVALID — see ABLATION_STATE_V2 and corrected report below ⚠️
+
+> **This v1 ablation used the broken `compute_hv` from `replay.py` (z-descending
+> scan that skips z≤prev_z points) and per-state normalization. The numbers
+> below are not valid evidence.** The corrected version
+> (`ablation_state_v2.py` → `ABLATION_STATE_V2.json`) uses the
+> regression-tested `sa_pgfs_v1.pareto.hypervolume`, unified normalization,
+> a 3-arm design, and two-sided tests.
+
+---
+
+# Ablation: State-aware vs State-blind SA-PGFS (zero LLM calls, 2026-09-30) [V1 — INVALID]
 
 Pre-frozen supplementary protocol; does NOT alter the main results.
 
