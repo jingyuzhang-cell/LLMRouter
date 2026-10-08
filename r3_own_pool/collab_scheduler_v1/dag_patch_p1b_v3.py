@@ -33,8 +33,10 @@ from static_dag_v0.multidag_dynamic import json_value, parse_facts_safe, close a
 
 OUT = ROOT / 'collab_scheduler_v1/fault30_prep/p1b'
 OUT.mkdir(exist_ok=True)
-LEDGER = OUT / 'LEDGER_V3.jsonl'
-GCOUNTER = OUT / 'GLOBAL_BUDGET_STATE_V3.json'
+LEDGER = OUT / 'LEDGER_V3.jsonl'          # production
+TEST_LEDGER = OUT / 'TEST_V3.jsonl'       # self-test only
+GCOUNTER = OUT / 'GLOBAL_BUDGET_STATE_V3.json'   # production
+TEST_GCOUNTER = OUT / 'TEST_GC_V3.json'          # self-test only
 PER_TASK_BUDGET = 12
 SMOKE_CAP = 48
 GLOBAL_BUDGET = 480
@@ -71,6 +73,17 @@ def _guard_succs_pending(g, nodes):
         if g.nodes[s]['status'] != 'pending':
             raise PatchError(f'successor {s} already {g.nodes[s]["status"]} '
                              f'— dependency change forbidden')
+
+
+def _use_test_ledger(test_mode):
+    """Switch LEDGER/GCOUNTER globals to test files (self-test isolation)."""
+    global LEDGER, GCOUNTER
+    if test_mode:
+        LEDGER = TEST_LEDGER
+        GCOUNTER = TEST_GCOUNTER
+    else:
+        LEDGER = OUT / 'LEDGER_V3.jsonl'
+        GCOUNTER = OUT / 'GLOBAL_BUDGET_STATE_V3.json'
 
 
 class P1BExecutor:
@@ -180,7 +193,17 @@ def _finish(log, ex, t0):
                failed_calls=ex.failed_calls, total_tokens=ex.tokens)
 
 
+def _strip_fences(ans):
+    """Strip markdown code fences from model output."""
+    text = (ans or '').strip()
+    if text.startswith('```'):
+        text = text.split('\n', 1)[1] if '\n' in text else text[3:]
+        text = text.rsplit('```', 1)[0].strip()
+    return text
+
+
 def _parse(u, ans):
+    ans = _strip_fences(ans)  # handle ```json ... ``` from real models
     if u in ('e1', 'e2'):
         return parse_facts_safe(ans)[0]
     if u == 'r':
@@ -409,7 +432,8 @@ def stub(script=None):
 
 
 def self_test():
-    """V3 comprehensive tests including mutation test for r2→v data flow."""
+    """V3 comprehensive tests. Uses TEST ledger — NEVER pollutes production."""
+    _use_test_ledger(True)
     tasks = select_tasks()
     faults = build_heldout_faults(tasks)
     led = fp.Ledger()
@@ -575,6 +599,7 @@ def smoke_run_v3():
         return
 
     # All gates passed — safe to start
+    _use_test_ledger(False)  # ensure production ledger
     print('smoke_run_v3: all gates passed. Starting v3 smoke...')
     lock = (ROOT / 'collect/logs/local_gpu.lock').open('a+')
     try:
@@ -693,8 +718,13 @@ def test_restart_protection():
 
 if __name__ == '__main__':
     if '--execute-v3' in sys.argv:
-        smoke_run_v3()
+        smoke_run_v3()  # production only; self_test NEVER runs here
     elif '--test-restart' in sys.argv:
         print(json.dumps(test_restart_protection(), indent=1))
+    elif '--self-test' in sys.argv:
+        self_test()  # explicit opt-in; uses TEST ledger
     else:
-        self_test()
+        print('Usage:\n'
+              '  --self-test     run comprehensive self-test (TEST ledger)\n'
+              '  --execute-v3    run real smoke (production ledger, triple-gated)\n'
+              '  --test-restart  test restart protection logic')
