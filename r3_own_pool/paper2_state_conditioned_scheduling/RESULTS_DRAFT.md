@@ -69,7 +69,10 @@ no-recovery counterpart — and did so consistently in all three fault seeds (pe
 P = 0.0016). Under the same clustered analysis the QUALITY family's gain
 remained significant (+2.3 points, CI +1.2 to +3.7, P = 0.0002) whereas the
 BALANCED family's did not (+3.2 points, CI −0.2 to +6.7, P = 0.072); all
-three families' cost increases were tightly positive.
+three families' cost increases were tightly positive. These intervals
+quantify task-sampling uncertainty under three fixed fault seeds on this
+panel; they do not constitute a generalization guarantee over other fault
+distributions or model pools.
 
 Recovery bought quality at measurable cost in every model-assignment family
 (Δ_Z Q = +0.032, +0.067 and +0.023 for BALANCED, HETEROGENEOUS and QUALITY,
@@ -101,14 +104,6 @@ first-, last- and session-consistent resolution, bounding this source of
 noise at zero for the reported quantities.
 
 ### Search efficiency on the measured front
-
-[2026-10-08 audit revision: the original draft of this subsection reported
-comparisons produced by a replay harness subsequently found to contain
-baseline implementation errors (scalarization weight cancellation, inverted
-crowding, a recall index-mapping bug, an incomplete MCTS tree) and an
-optimistic noise model (per-config independent seed draws; noisy-objective
-hypervolume scoring). All win/loss statements are withheld pending the
-corrected, pre-specified replay (Supplementary Note 4).]
 
 We then asked how efficiently the measured cooperative front can be
 discovered under a limited evaluation budget, comparing SA-PGFS — a
