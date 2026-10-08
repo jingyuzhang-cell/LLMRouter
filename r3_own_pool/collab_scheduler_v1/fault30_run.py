@@ -386,7 +386,7 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
             for nd in ('e1', 'e2'):
                 base = ex.lat(k(uid, nd))
                 if is_lr and k(uid, nd, 'fb') in st[uid]['keys']:
-                    base = max(base, ex.lat(k(uid, nd, 'fb')))
+                    base = base + ex.lat(k(uid, nd, 'fb'))  # serial: attempt then recovery
                 lats.append(base)
         l = max(lats) + sum(ex.lat(kk) for kk in st[uid]['rkeys']) \
             + sum(ex.lat(kk) for kk in st[uid]['vkeys'])

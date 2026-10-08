@@ -1,0 +1,14 @@
+{
+ "checks": {
+  "p01_stage_order": true,
+  "p01_scoring_uses_latest": true,
+  "p01_r2_triggers_on_any_e_fb": true,
+  "p02_latency_bug_fixed": true,
+  "p02_was_max_now_serial": true,
+  "p02b_serial_topology_ok": true
+ },
+ "p01_detail": "downstream refresh verified correct: stage order A->R1->ER->R2->R3->V1->V2->V3; scoring reads rkeys[-1]/vkeys[-1]; R2 triggers on any :fb e-key. Regression assertion added.",
+ "p02_detail": "branch latency for faulted+recovered nodes was max(planned, recovery); correct is planned+recovery (serial). Fix applied. Note: this affects FAULT30 ANALYSIS L values for LR arms; historical results not modified \u2014 rerun of analyzer required to propagate.",
+ "historical_data_unchanged": true,
+ "zero_model_calls": true
+}

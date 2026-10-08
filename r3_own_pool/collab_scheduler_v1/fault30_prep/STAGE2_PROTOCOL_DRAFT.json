@@ -1,0 +1,41 @@
+{
+ "name": "P1-C multi-task reliability (stage 2, DRAFT \u2014 not yet authorized)",
+ "tasks": {
+  "n": 6,
+  "selection": "sha256(\"p1c:20261009:\"+uid) ascending, next 6 held-out (excluding the 5 P1-B tasks)",
+  "pool": "hybrid_pool() same-distribution, 101 remaining after P1-B"
+ },
+ "faults": {
+  "random": "fault30 seed 20260923 over the 6 UIDs (paired across arms)",
+  "directed": "synthetic_unparseable_r on 3 of 6 tasks (alternating)",
+  "separate_reporting": true
+ },
+ "strategies": [
+  "single",
+  "static",
+  "reroute",
+  "dynpatch"
+ ],
+ "initial_dag": "DynamicDAG-HETEROGENEOUS",
+ "metrics": {
+  "mechanism": "patch_trigger_rate, detection_events, recovery_success, invalid_interventions, r2_to_v_data_passing",
+  "quality": "Q (fence-parsed post-hoc), per-task paired diff",
+  "cost": "real tokens (injected excluded), n_calls, scheduler_overhead",
+  "latency": "end_to_end_wall_clock (NOT critical-path synthesis)",
+  "statistics": "task-cluster bootstrap CI, paired permutation"
+ },
+ "budget": {
+  "per_task_per_strategy": 12,
+  "total": 576,
+  "hard_cap": "computed at freeze time"
+ },
+ "reuse_policy": {
+  "legal": "frozen200/cube_clean ledgers for cache-hit detection; detection semantics; prompt builders",
+  "illegal": "cross-task answer leakage; gold in detector path; budget reset without authorization"
+ },
+ "authorization": "requires explicit GO; this draft is NOT authorization",
+ "code_sha": {
+  "fault30_run.py": "d627199c36602832",
+  "dag_patch_directed_v3.py": "8cb4f1aa0959ef8a"
+ }
+}
