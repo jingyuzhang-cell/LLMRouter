@@ -1,0 +1,195 @@
+{
+ "run_id": "directed_1791434325_5d67f18b",
+ "scope": "directed-r mechanism verification",
+ "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+ "gold": 24.5,
+ "failing_text_preview": "{\"expression\":\"v3 - v4\"}",
+ "hard_cap": 24,
+ "per_strategy_cap": 12,
+ "strategies": [
+  "reroute",
+  "dynpatch"
+ ],
+ "tracks": [
+  {
+   "run_id": "directed_1791434325_5d67f18b",
+   "strategy": "reroute",
+   "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "detection_events": [],
+   "patches": [],
+   "scheduler_overhead_s": 0.0008487217128276825,
+   "mechanism": {
+    "G0": {
+     "nodes": [
+      "e1",
+      "e2",
+      "r",
+      "v"
+     ],
+     "edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ]
+    },
+    "r_response": {
+     "model": "medium",
+     "answer": "{\"expression\":\"v3 - v4\"}",
+     "parsed_out": {
+      "expr": "v3 - v4"
+     }
+    },
+    "v_response": {
+     "model": "coder",
+     "answer": "```json\n{\"value\": -152.6}\n```",
+     "parsed_out": {
+      "value": -152.6
+     }
+    },
+    "v_prompt_full": "You are verifying a computed answer for a financial question. Given the extracted facts and a proposed expression, check that every referenced value binds to the correct fact and that the arithmetic is right, recompute independently, then return ONLY JSON {\"value\": <number>} with the corrected final value (preserve reported units; percentages as ratios x100).\nQUESTION: What was the difference between the total rent obligations and land lease agreements?\nFACTS: [{\"value\": 1.3, \"evidence\": \"Rent Obligations(3) | 1.3 | 0.8 | 0.4 | 0.1 | \\u2014\"}, {\"value\": 25.8, \"evidence\": \"Land lease agreements (3) | 25.8 | 0.6 | 1.1 | 1.1 | 23.0\"}, {\"value\": 107.6, \"evidence\": \"Total rent obligations: $107.6 million (less than 1 year)\"}, {\"value\": 147.8, \"evidence\": \"Total rent obligations: $147.8 million (1-3 years)\"}, {\"value\": 3.8, \"evidence\": \"Total rent obligations: $3.8 million (3-5 years)\"}, {\"value\": 0, \"evidence\": \"Total rent obligations: $0 million (more than 5 years)\"}, {\"value\": 260.2, \"evidence\": \"Land lease agreements: $260.2 million (less than 1 year)\"}, {\"value\": 342.8, \"evidence\": \"Land lease agreements: $342.8 million (1-3 years)\"}, {\"value\": 7.7, \"evidence\": \"Land lease agreements: $7.7 million (3-5 years)\"}, {\"value\": 0.1, \"evidence\": \"Land lease agreements: $0.1 million (more than 5 years)\"}]\nPROPOSED EXPRESSION: v3 - v4",
+    "v_prompt_has_r2_val": false,
+    "G1": {
+     "nodes": [
+      "e1",
+      "e2",
+      "r",
+      "v"
+     ],
+     "edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ]
+    },
+    "graph_changed": false
+   },
+   "final_quality": 0,
+   "final_value": -152.6,
+   "gold": 24.5,
+   "cost": {
+    "total_logical_calls": 4,
+    "real_model_calls": 3,
+    "injected_calls": 1,
+    "real_tokens": 1937,
+    "injected_tokens_synthetic": 100,
+    "node_wall_s": 156.114082
+   },
+   "end_to_end_wall_s": 156.341498
+  },
+  {
+   "run_id": "directed_1791434325_5d67f18b",
+   "strategy": "dynpatch",
+   "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "detection_events": [],
+   "patches": [],
+   "scheduler_overhead_s": 0.0005530007183551788,
+   "mechanism": {
+    "G0": {
+     "nodes": [
+      "e1",
+      "e2",
+      "r",
+      "v"
+     ],
+     "edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ]
+    },
+    "r_response": {
+     "model": "medium",
+     "answer": "{\"expression\":\"v3 - v4\"}",
+     "parsed_out": {
+      "expr": "v3 - v4"
+     }
+    },
+    "v_response": {
+     "model": "coder",
+     "answer": "```json\n{\"value\": -35.2}\n```",
+     "parsed_out": {
+      "value": -35.2
+     }
+    },
+    "v_prompt_full": "You are verifying a computed answer for a financial question. Given the extracted facts and a proposed expression, check that every referenced value binds to the correct fact and that the arithmetic is right, recompute independently, then return ONLY JSON {\"value\": <number>} with the corrected final value (preserve reported units; percentages as ratios x100).\nQUESTION: What was the difference between the total rent obligations and land lease agreements?\nFACTS: [{\"value\": 1.3, \"evidence\": \"Rent Obligations(3) | 1.3 | 0.8 | 0.4 | 0.1 | \\u2014\"}, {\"value\": 25.8, \"evidence\": \"Land lease agreements (3) | 25.8 | 0.6 | 1.1 | 1.1 | 23.0\"}, {\"value\": 107.6, \"evidence\": \"Total rent obligations: $107.6 million (less than 1 year)\"}, {\"value\": 157.8, \"evidence\": \"Total rent obligations: $157.8 million (1-3 years)\"}, {\"value\": 32.5, \"evidence\": \"Total rent obligations: $32.5 million (3-5 years)\"}, {\"value\": 11.9, \"evidence\": \"Total rent obligations: $11.9 million (more than 5 years)\"}, {\"value\": 40.8, \"evidence\": \"Land lease agreements: $40.8 million (less than 1 year)\"}, {\"value\": 56.6, \"evidence\": \"Land lease agreements: $56.6 million (1-3 years)\"}, {\"value\": 12.2, \"evidence\": \"Land lease agreements: $12.2 million (3-5 years)\"}, {\"value\": 2.4, \"evidence\": \"Land lease agreements: $2.4 million (more than 5 years)\"}]\nPROPOSED EXPRESSION: v3 - v4",
+    "v_prompt_has_r2_val": false,
+    "G1": {
+     "nodes": [
+      "e1",
+      "e2",
+      "r",
+      "v"
+     ],
+     "edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ]
+    },
+    "graph_changed": false
+   },
+   "final_quality": 0,
+   "final_value": -35.2,
+   "gold": 24.5,
+   "cost": {
+    "total_logical_calls": 4,
+    "real_model_calls": 3,
+    "injected_calls": 1,
+    "real_tokens": 1948,
+    "injected_tokens_synthetic": 100,
+    "node_wall_s": 157.236388
+   },
+   "end_to_end_wall_s": 157.443892
+  }
+ ]
+}

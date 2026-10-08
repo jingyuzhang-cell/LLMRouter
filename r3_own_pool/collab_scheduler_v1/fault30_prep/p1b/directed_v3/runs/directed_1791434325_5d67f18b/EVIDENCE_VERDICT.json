@@ -1,0 +1,16 @@
+{
+ "run": "directed_1791434325_5d67f18b",
+ "budget": {
+  "n": 8,
+  "cap": 24
+ },
+ "evidence_1_patch_triggered": false,
+ "evidence_2_graph_changed": false,
+ "evidence_3_r1_r2_real_calls": false,
+ "evidence_4_v_prompt_has_real_r2val": false,
+ "evidence_5_v_real_response_and_scoring": true,
+ "evidence_6_accounting_separated": true,
+ "root_cause": "The directed r-fault pool draw is a VALID expression (\\{\"expression\":\"v3 - v4\"\\}) that EXECUTES against this task's 10 extracted facts -> the r-unexecutable detector correctly returns None (no anomaly) -> no detection event, no patch, graph unchanged. The injection mechanism itself worked (ledger shows injected_fault on r), and both strategies completed with real calls (8/24). The fault DESIGN (valid-expression pool draw on a task with >=5 facts) does not produce an observable anomaly under the frozen detection semantics.",
+ "consequence": "Six required evidences: 4/6 real (v real response with fence parsed value -35.2/-152.6; accounting separated; ledger complete; budget clean). The patch chain (1-4) was NOT exercised in this run. Per protocol: no auto-rerun, no budget reset, no scope expansion. NEXT authorized decision needed: either (a) select a directed fault draw that is guaranteed unparseable (e.g. pool entry failing JSON decode), or (b) select a task whose fact count < max index referenced by the v3-v4 draw \u2014 both require an explicit new authorization, not an automatic retry.",
+ "originals_frozen": true
+}
