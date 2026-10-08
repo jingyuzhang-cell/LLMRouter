@@ -1,0 +1,539 @@
+{
+ "role": "P1-A integration test: DAG Patch on an executor-grade loop with FAKE model (zero LLM calls; wiring/safety only, no performance meaning)",
+ "budget_max_calls": 12,
+ "logs": [
+  {
+   "task_id": "I1-split-resume",
+   "initial_DAG": {
+    "e": {
+     "deps": [],
+     "model": "large"
+    },
+    "r": {
+     "deps": [
+      "e"
+     ],
+     "model": "medium"
+    },
+    "v": {
+     "deps": [
+      "r"
+     ],
+     "model": "coder"
+    }
+   },
+   "executed": [
+    "e",
+    "r",
+    "r1",
+    "r2",
+    "v"
+   ],
+   "events": [
+    {
+     "executed": "r",
+     "kind": "reasoning output not parseable",
+     "diagnosis": "reasoning-stage failure",
+     "decision": "split r"
+    }
+   ],
+   "patches": [
+    {
+     "removed_nodes": [
+      "r"
+     ],
+     "added_nodes": [
+      "r1",
+      "r2"
+     ],
+     "removed_edges": [
+      [
+       "e",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ],
+     "added_edges": [
+      [
+       "e",
+       "r1"
+      ],
+      [
+       "r1",
+       "r2"
+      ],
+      [
+       "r2",
+       "v"
+      ]
+     ]
+    }
+   ],
+   "scheduler_overhead_s": 0.00012307614088058472,
+   "status": "completed",
+   "final_DAG": {
+    "e": {
+     "deps": [],
+     "model": "large",
+     "status": "done"
+    },
+    "v": {
+     "deps": [
+      "r2"
+     ],
+     "model": "coder",
+     "status": "done"
+    },
+    "r1": {
+     "deps": [
+      "e"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "r2": {
+     "deps": [
+      "r1"
+     ],
+     "model": "large",
+     "status": "done"
+    }
+   },
+   "final_quality": 1,
+   "total_tokens": 510,
+   "node_wall_clock_s": 0.005305,
+   "n_calls": 5
+  },
+  {
+   "task_id": "I4-budget-guard",
+   "initial_DAG": {
+    "n0": {
+     "deps": [],
+     "model": "large"
+    },
+    "n1": {
+     "deps": [
+      "n0"
+     ],
+     "model": "large"
+    },
+    "n2": {
+     "deps": [
+      "n1"
+     ],
+     "model": "large"
+    },
+    "n3": {
+     "deps": [
+      "n2"
+     ],
+     "model": "large"
+    },
+    "n4": {
+     "deps": [
+      "n3"
+     ],
+     "model": "large"
+    },
+    "n5": {
+     "deps": [
+      "n4"
+     ],
+     "model": "large"
+    },
+    "n6": {
+     "deps": [
+      "n5"
+     ],
+     "model": "large"
+    },
+    "n7": {
+     "deps": [
+      "n6"
+     ],
+     "model": "large"
+    },
+    "n8": {
+     "deps": [
+      "n7"
+     ],
+     "model": "large"
+    },
+    "n9": {
+     "deps": [
+      "n8"
+     ],
+     "model": "large"
+    },
+    "n10": {
+     "deps": [
+      "n9"
+     ],
+     "model": "large"
+    },
+    "n11": {
+     "deps": [
+      "n10"
+     ],
+     "model": "large"
+    },
+    "n12": {
+     "deps": [
+      "n11"
+     ],
+     "model": "large"
+    },
+    "n13": {
+     "deps": [
+      "n12"
+     ],
+     "model": "large"
+    },
+    "n14": {
+     "deps": [
+      "n13"
+     ],
+     "model": "large"
+    },
+    "n15": {
+     "deps": [
+      "n14"
+     ],
+     "model": "large"
+    },
+    "n16": {
+     "deps": [
+      "n15"
+     ],
+     "model": "large"
+    },
+    "n17": {
+     "deps": [
+      "n16"
+     ],
+     "model": "large"
+    },
+    "n18": {
+     "deps": [
+      "n17"
+     ],
+     "model": "large"
+    },
+    "n19": {
+     "deps": [
+      "n18"
+     ],
+     "model": "large"
+    },
+    "n20": {
+     "deps": [
+      "n19"
+     ],
+     "model": "large"
+    },
+    "n21": {
+     "deps": [
+      "n20"
+     ],
+     "model": "large"
+    },
+    "n22": {
+     "deps": [
+      "n21"
+     ],
+     "model": "large"
+    },
+    "n23": {
+     "deps": [
+      "n22"
+     ],
+     "model": "large"
+    },
+    "n24": {
+     "deps": [
+      "n23"
+     ],
+     "model": "large"
+    },
+    "n25": {
+     "deps": [
+      "n24"
+     ],
+     "model": "large"
+    },
+    "n26": {
+     "deps": [
+      "n25"
+     ],
+     "model": "large"
+    },
+    "n27": {
+     "deps": [
+      "n26"
+     ],
+     "model": "large"
+    },
+    "n28": {
+     "deps": [
+      "n27"
+     ],
+     "model": "large"
+    },
+    "n29": {
+     "deps": [
+      "n28"
+     ],
+     "model": "large"
+    }
+   },
+   "executed": [
+    "n0",
+    "n1",
+    "n2",
+    "n3",
+    "n4",
+    "n5",
+    "n6",
+    "n7",
+    "n8",
+    "n9",
+    "n10",
+    "n11"
+   ],
+   "events": [],
+   "patches": [],
+   "scheduler_overhead_s": 4.556030035018921e-06,
+   "status": "aborted-budget: 12 call budget exhausted",
+   "final_DAG": {
+    "n0": {
+     "deps": [],
+     "model": "large",
+     "status": "done"
+    },
+    "n1": {
+     "deps": [
+      "n0"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n2": {
+     "deps": [
+      "n1"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n3": {
+     "deps": [
+      "n2"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n4": {
+     "deps": [
+      "n3"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n5": {
+     "deps": [
+      "n4"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n6": {
+     "deps": [
+      "n5"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n7": {
+     "deps": [
+      "n6"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n8": {
+     "deps": [
+      "n7"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n9": {
+     "deps": [
+      "n8"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n10": {
+     "deps": [
+      "n9"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n11": {
+     "deps": [
+      "n10"
+     ],
+     "model": "large",
+     "status": "done"
+    },
+    "n12": {
+     "deps": [
+      "n11"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n13": {
+     "deps": [
+      "n12"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n14": {
+     "deps": [
+      "n13"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n15": {
+     "deps": [
+      "n14"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n16": {
+     "deps": [
+      "n15"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n17": {
+     "deps": [
+      "n16"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n18": {
+     "deps": [
+      "n17"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n19": {
+     "deps": [
+      "n18"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n20": {
+     "deps": [
+      "n19"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n21": {
+     "deps": [
+      "n20"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n22": {
+     "deps": [
+      "n21"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n23": {
+     "deps": [
+      "n22"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n24": {
+     "deps": [
+      "n23"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n25": {
+     "deps": [
+      "n24"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n26": {
+     "deps": [
+      "n25"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n27": {
+     "deps": [
+      "n26"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n28": {
+     "deps": [
+      "n27"
+     ],
+     "model": "large",
+     "status": "pending"
+    },
+    "n29": {
+     "deps": [
+      "n28"
+     ],
+     "model": "large",
+     "status": "pending"
+    }
+   },
+   "final_quality": 0,
+   "total_tokens": 120,
+   "node_wall_clock_s": 1.9e-05,
+   "n_calls": 12
+  }
+ ],
+ "checks": {
+  "i1_completed": true,
+  "i1_structure_changed_midrun": [
+   "r1",
+   "r2"
+  ],
+  "i2_cycle_rejected": true,
+  "i3_duplicate_id_rejected": true,
+  "i4_budget_abort": true,
+  "i5_timing_fields": true,
+  "zero_model_calls": true
+ },
+ "verdict": "P1-A PASS: executor-grade wiring, atomic patches, budget guard, timing and ledger verified with a fake model; ready for P1-B (5-8 held-out tasks, REAL calls) once the budget protocol is frozen"
+}

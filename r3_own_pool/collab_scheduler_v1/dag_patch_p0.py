@@ -21,6 +21,7 @@ real online run:
 
 Run:  python3 -m collab_scheduler_v1.dag_patch_p0     -> PATCH_EVIDENCE.json
 """
+import copy
 import json
 import time
 from pathlib import Path
@@ -66,8 +67,31 @@ class RuntimeDAG:
 
         return all(visit(u) for u in self.nodes)
 
-    # ---- constrained patch ops ----
+    # ---- constrained patch ops (atomic: checked on a draft, then committed) ----
+    def _atomic(self, mutate):
+        draft = copy.deepcopy(self)
+        diff = mutate(draft)
+        draft._check_all()
+        self.nodes = draft.nodes
+        return diff
+
+    def _check_all(self):
+        if not self._acyclic():
+            raise PatchError('patch would create a cycle')
+        for u in self.nodes:
+            for p in self.nodes[u]['deps']:
+                if p not in self.nodes:
+                    raise PatchError(f'dangling dep {p}->{u}')
+
     def split_node(self, u, u1, u2, m1, m2):
+        def mutate(d):
+            for nid in (u1, u2):
+                if nid in d.nodes:
+                    raise PatchError(f'duplicate node id {nid}')
+            return d._split(u, u1, u2, m1, m2)
+        return self._atomic(mutate)
+
+    def _split(self, u, u1, u2, m1, m2):
         self._guard_remove(u)
         preds, succs = self.nodes[u]['deps'], self._succs(u)
         del self.nodes[u]
@@ -75,38 +99,50 @@ class RuntimeDAG:
         self.nodes[u2] = dict(deps=[u1], model=m2, status='pending', output=None)
         for s in succs:  # successors of u now depend on the split chain's end
             self.nodes[s]['deps'] = [u2 if d == u else d for d in self.nodes[s]['deps']]
-        self._check(u)
         return dict(removed_nodes=[u], added_nodes=[u1, u2],
                     removed_edges=sorted({(p, u) for p in preds} | {(u, s) for s in succs}),
                     added_edges=sorted({(p, u1) for p in preds} | {(u1, u2)}
                                        | {(u2, s) for s in succs}))
 
     def insert_node(self, u, w, mw):
+        def mutate(d):
+            if w in d.nodes:
+                raise PatchError(f'duplicate node id {w}')
+            return d._insert(u, w, mw)
+        return self._atomic(mutate)
+
+    def _insert(self, u, w, mw):
         succs = self._succs(u)
         self.nodes[w] = dict(deps=[u], model=mw, status='pending', output=None)
         for s in succs:
             self.nodes[s]['deps'].remove(u)
             self.nodes[s]['deps'].append(w)
-        self._check(u)
         return dict(removed_nodes=[], added_nodes=[w],
                     removed_edges=sorted({(u, s) for s in succs}),
                     added_edges=sorted({(u, w)} | {(w, s) for s in succs}))
 
     def remove_node(self, u):
+        self._atomic(lambda d: (d._guard_remove(u), d._remove(u))[1])
+
+    def _remove(self, u):
         self._guard_remove(u)
         preds, succs = self.nodes[u]['deps'], self._succs(u)
         del self.nodes[u]
         for s in succs:
             self.nodes[s]['deps'].remove(u)
             self.nodes[s]['deps'] += preds
-        self._check(u)
         return dict(removed_nodes=[u], added_nodes=[],
                     removed_edges=sorted({(p, u) for p in preds} | {(u, s) for s in succs}),
                     added_edges=sorted({(p, s) for p in preds for s in succs}))
 
     def rewire_edge(self, a, b):
-        if self.nodes[a]['status'] != 'pending' or self.nodes[b]['status'] != 'pending':
-            raise PatchError('rewire only on pending nodes')
+        def mutate(d):
+            if d.nodes[a]['status'] != 'pending' or d.nodes[b]['status'] != 'pending':
+                raise PatchError('rewire only on pending nodes')
+            return d._rewire(a, b)
+        return self._atomic(mutate)
+
+    def _rewire(self, a, b):
         succs = self._succs(a)
         for s in succs:
             if s == b:
@@ -114,7 +150,6 @@ class RuntimeDAG:
             self.nodes[s]['deps'].remove(a)
             if b not in self.nodes[s]['deps']:
                 self.nodes[s]['deps'].append(b)
-        self._check(a)
         return dict(removed_nodes=[], added_nodes=[],
                     removed_edges=sorted({(a, s) for s in succs if s != b}),
                     added_edges=sorted({(b, s) for s in succs if s != b}))
@@ -135,20 +170,14 @@ class RuntimeDAG:
             raise PatchError(f'node {u} output already consumed by an executed '
                              f'successor — protected')
 
-    def _check(self, touched):
-        if not self._acyclic():
-            raise PatchError('patch would create a cycle')
-        for u in self.nodes:
-            for p in self.nodes[u]['deps']:
-                if p not in self.nodes:
-                    raise PatchError(f'dangling dep {p}->{u}')
-
 
 def run_task(task_id, g0, sim, detector, policy, gold):
     """Execute; after each node, run the OBSERVABLE-feedback detector and let
     the policy issue patches; continue on the reconfigured graph."""
-    log = dict(task_id=task_id, initial_DAG={u: dict(deps=n['deps'], model=n['model'])
-                                             for u, n in g0.nodes.items()},
+    log = dict(task_id=task_id,
+               initial_DAG=copy.deepcopy({u: dict(deps=list(n['deps']),
+                                                  model=n['model'])
+                                          for u, n in g0.nodes.items()}),
                events=[], patches=[], validation=[])
     order, tokens, steps = [], 0, 0
     while g0.ready():
