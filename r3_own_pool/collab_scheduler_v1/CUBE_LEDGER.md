@@ -1,5 +1,21 @@
 # Reference Cube 实验台账（collab_scheduler_v1）
 
+## 2026-10-08 工作包 B 机制消融（修正协议，200 配对种子，零调用；MECHANISM_ABLATIONS.json；取代 6e9702e 旧消融）
+
+- **B1 状态感知 vs 状态盲**（同跨状态观测流、同数据量、仅状态信息不同）：
+  aware gap +0.0019 vs blind +0.0040，**Holm 显著**（gap/AUC 均 p=0.0007）——
+  状态信息在公平设计下有可测搜索收益（效应量小，限两状态离线设定）。
+- **B2 表示**（同 GP+EHVI）：integer 优于 onehot（Holm p=0.0007）；
+  **structural 对 onehot 在 Holm 后不显著（p=0.118/0.129），且未超简单整数编码**
+  ——图结构特征的独立贡献在此空间未获支持，如实降级该主张。
+- **B3 代理必要性**（同 EHVI）：GP 优于常数预测器（gap Holm p=0.0007；AUC 检不出
+  差异，p=0.206）；采集必要性已由 v2 覆盖（scalarized≈EHVI on gap）。
+- 措辞规则：n.s. 一律写 "no statistically significant difference was detected"，
+  不写 equivalence。
+- 定位含义：SA-PGFS 框架中**状态条件化是当前证据最好的机制**；图结构表示主张降级。
+
+
+
 ## 2026-10-08 外部审计（裁定 D）响应
 
 - **接受裁定 D**：定位收缩为"协同配置权衡 + 恢复价值的实证研究"；SA-PGFS 不作
