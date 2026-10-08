@@ -284,20 +284,22 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
                         st[uid]['e_recovered'].add(nd)
                 jobs.append(dict(model=target[uid], go=go))
         ex.run_stage(jobs)
-        # ---- R2: r-refresh where e facts changed (descendant closure) ----
-        chg = [t['uid'] for t in tasks
-               if any(':e1:fb:' in kk or ':e2:fb:' in kk
-                      for kk in st[t['uid']]['keys'])]
+        # ---- R2: r-refresh where e facts actually changed (descendant closure) ----
+        chg = [t['uid'] for t in tasks if st[t['uid']]['e_recovered']]
         jobs = []
         for uid in chg:
             t = task_map[uid]
 
             def go(uid=uid, t=t):
+                prev_answer = ex.answer(st[uid]['rkeys'][-1]) if st[uid]['rkeys'] else None
                 key = k(uid, 'r', 'fbd')
                 ex.call(key, nodes['r'], led.sprompt(t, merged(uid)),
                         uid=uid if st[uid]['faulted'] else None, node='r')
                 st[uid]['keys'].append(key)
                 st[uid]['rkeys'].append(key)
+                new_answer = ex.answer(key)
+                if new_answer != prev_answer:
+                    st[uid]['r_changed'] = True
             jobs.append(dict(model=nodes['r'], go=go))
         ex.run_stage(jobs)
         # ---- R3: r-escalation on unparseable r (ungated) ----
@@ -307,11 +309,15 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
             t = task_map[uid]
 
             def go(uid=uid, t=t):
+                prev_answer = ex.answer(st[uid]['rkeys'][-1]) if st[uid]['rkeys'] else None
                 key = k(uid, 'r', 'esc')
                 ex.call(key, 'large', led.sprompt(t, merged(uid)),
                         uid=uid if st[uid]['faulted'] else None, node='r')
                 st[uid]['keys'].append(key)
                 st[uid]['rkeys'].append(key)
+                new_answer = ex.answer(key)
+                if new_answer != prev_answer:
+                    st[uid]['r_changed'] = True
             jobs.append(dict(model='large', go=go))
         ex.run_stage(jobs)
 
@@ -332,8 +338,10 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
         ex.run_stage(jobs)
 
         if is_lr:
-            # ---- V2: v-refresh where r changed (descendant closure) ----
-            rch = [t['uid'] for t in tasks if len(st[t['uid']]['rkeys']) > 1]
+            # ---- V2: v-refresh where r output actually changed (descendant closure) ----
+            # r_changed set populated in R2/R3 stages when r re-execution
+            # produced a different answer than the previous r call
+            rch = [t['uid'] for t in tasks if st[t['uid']].get('r_changed', False)]
             jobs = []
             for uid in rch:
                 t = task_map[uid]
