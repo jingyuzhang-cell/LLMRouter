@@ -394,31 +394,67 @@ def self_test():
 
 
 def smoke_run():
-    """GATED real entry: --execute + env P1B_EXECUTE=1 + GPU lock."""
+    """GATED real smoke (authorized 2026-10-09): ONE state (fault30), ONE task
+    (the faulted held-out task), 4 strategies, hard cap 48; plus the pre-fixed
+    DIRECTED r-fault scenario (dynpatch+reroute only) reported separately if
+    the natural fault does not trigger the patch. Writes SMOKE_RESULTS.json."""
     import os
-    if os.environ.get('P1B_EXECUTE') != '1':
-        print('smoke_run is gated (env P1B_EXECUTE=1); refusing')
+    if os.environ.get("P1B_EXECUTE") != "1":
+        print("smoke_run is gated (env P1B_EXECUTE=1); refusing")
         return
-    lock = (ROOT / 'collect/logs/local_gpu.lock').open('a+')
+    lock = (ROOT / "collect/logs/local_gpu.lock").open("a+")
     fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    from static_dag_v0 import run as engine
+    engine.OUT = OUT
+    proc = [None, None]
+    cur = [None]
+
+    def svc(model, prompt):
+        if cur[0] != model:
+            if proc[0] is not None:
+                engine.stop_model(proc[0], proc[1])
+            proc[0], proc[1], _ = engine.start_model(model)
+            cur[0] = model
+        return engine.call_model(model, prompt)
+
     try:
-        from static_dag_v0 import run as engine
-        engine.OUT = OUT
         tasks = select_tasks()
+        faults = build_heldout_faults(tasks)
+        ftasks = [t for t in tasks if t["uid"] in faults] or [tasks[0]]
+        task = ftasks[0]
         led = fp.Ledger()
-        gc = _load_gc()
-        gc['cap'] = min(gc['cap'], SMOKE_CAP)
+        gc = dict(n=0, cap=SMOKE_CAP)
         _save_gc(gc)
-        for state, faults in (('clean', {}), ('fault30', build_heldout_faults(tasks))):
-            for strat in ('single', 'static', 'reroute', 'dynpatch'):
-                log = run_track(lambda m, p: engine.call_model(m, p),
-                                tasks[0], strat, led, faults, gc)
-                log['state'] = state
-                print(json.dumps({k: log[k] for k in
-                                  ('strategy', 'state', 'status', 'final_quality',
-                                   'total_tokens', 'end_to_end_wall_s', 'n_calls')},
-                                 default=str), flush=True)
+        results = dict(task_uid=task["uid"], state="fault30(random, seed 20260923)",
+                       drawn_fault=faults.get(task["uid"], ("none",))[0],
+                       budget=dict(cap=SMOKE_CAP), tracks=[], directed=[])
+        for strat in ("static", "reroute", "dynpatch", "single"):
+            log = run_track(svc, task, strat, led, faults, gc)
+            log["state"] = "fault30-random"
+            results["tracks"].append(log)
+            print(json.dumps({k: log[k] for k in
+                              ("strategy", "status", "final_quality", "n_calls",
+                               "total_tokens", "end_to_end_wall_s", "patches",
+                               "events")}, default=str), flush=True)
+        # directed scenario (separately reported): r-node fault on same task
+        if not any(t.get("patches") for t in results["tracks"]):
+            pools = json.loads((ROOT / "static_dag_v0/adaptive_benchmark/"
+                                "FAULT_POOLS.json").read_text())
+            directed = {task["uid"]: ("r", pools["r"][0])}
+            for strat in ("reroute", "dynpatch"):
+                log = run_track(svc, task, strat, led, directed, gc)
+                log["state"] = "fault30-DIRECTED-r (pre-fixed, separate report)"
+                results["directed"].append(log)
+                print("DIRECTED", json.dumps({k: log[k] for k in
+                      ("strategy", "status", "patches", "executed")},
+                      default=str), flush=True)
+        results["budget"]["used"] = gc["n"]
+        (OUT / "SMOKE_RESULTS.json").write_text(json.dumps(results, indent=1,
+                                                           default=str))
+        print("SMOKE DONE, calls used:", gc["n"])
     finally:
+        if proc[0] is not None:
+            engine.stop_model(proc[0], proc[1])
         fcntl.flock(lock, fcntl.LOCK_UN)
 
 
