@@ -423,6 +423,11 @@ def smoke_run():
         ftasks = [t for t in tasks if t["uid"] in faults] or [tasks[0]]
         task = ftasks[0]
         led = fp.Ledger()
+        gc = _load_gc()          # restart protection: reuse disk count
+        if gc['n'] > 0 and '--reset-budget' not in sys.argv:
+            raise SystemExit(f'refusing: disk counter n={gc["n"]} > 0 (restart '
+                             f'protection); pass --reset-budget to override '
+                             f'explicitly')
         gc = dict(n=0, cap=SMOKE_CAP)
         _save_gc(gc)
         results = dict(task_uid=task["uid"], state="fault30(random, seed 20260923)",

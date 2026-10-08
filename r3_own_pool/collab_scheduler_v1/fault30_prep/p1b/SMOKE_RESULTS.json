@@ -1,0 +1,199 @@
+{
+ "task_uid": "0dc550d6-ba0a-4f46-b606-b102f5441631",
+ "state": "fault30(random, seed 20260923)",
+ "drawn_fault": "e2",
+ "budget": {
+  "cap": 48,
+  "used": 24
+ },
+ "tracks": [
+  {
+   "task_uid": "0dc550d6-ba0a-4f46-b606-b102f5441631",
+   "strategy": "static",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "events": [],
+   "patches": [],
+   "scheduler_overhead_s": 225.9919610209763,
+   "final_quality": 0,
+   "end_to_end_wall_s": 225.992374,
+   "node_wall_s": 225.988386,
+   "n_calls": 4,
+   "failed_calls": 0,
+   "total_tokens": 968,
+   "state": "fault30-random"
+  },
+  {
+   "task_uid": "0dc550d6-ba0a-4f46-b606-b102f5441631",
+   "strategy": "reroute",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "events": [],
+   "patches": [],
+   "scheduler_overhead_s": 196.38285207375884,
+   "final_quality": 0,
+   "end_to_end_wall_s": 196.3833,
+   "node_wall_s": 196.378877,
+   "n_calls": 4,
+   "failed_calls": 0,
+   "total_tokens": 968,
+   "state": "fault30-random"
+  },
+  {
+   "task_uid": "0dc550d6-ba0a-4f46-b606-b102f5441631",
+   "strategy": "dynpatch",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "events": [],
+   "patches": [],
+   "scheduler_overhead_s": 198.0972610078752,
+   "final_quality": 0,
+   "end_to_end_wall_s": 198.097646,
+   "node_wall_s": 198.093119,
+   "n_calls": 4,
+   "failed_calls": 0,
+   "total_tokens": 968,
+   "state": "fault30-random"
+  },
+  {
+   "task_uid": "0dc550d6-ba0a-4f46-b606-b102f5441631",
+   "strategy": "single",
+   "status": "completed",
+   "executed": [
+    "single"
+   ],
+   "events": [],
+   "patches": [],
+   "scheduler_overhead_s": 0.0,
+   "final_quality": 1,
+   "end_to_end_wall_s": 73.004521,
+   "node_wall_s": 72.985574,
+   "n_calls": 1,
+   "failed_calls": 0,
+   "total_tokens": 280,
+   "state": "fault30-random"
+  }
+ ],
+ "directed": [
+  {
+   "task_uid": "0dc550d6-ba0a-4f46-b606-b102f5441631",
+   "strategy": "reroute",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "r_esc",
+    "v"
+   ],
+   "events": [
+    {
+     "executed": "r",
+     "kind": "r unparseable",
+     "diagnosis": "reasoning failure"
+    },
+    {
+     "executed": "r_esc",
+     "kind": "escalated rerun",
+     "diagnosis": "local-reroute recovery"
+    }
+   ],
+   "patches": [],
+   "scheduler_overhead_s": 225.02630416303873,
+   "final_quality": 0,
+   "end_to_end_wall_s": 225.026758,
+   "node_wall_s": 225.021723,
+   "n_calls": 5,
+   "failed_calls": 0,
+   "total_tokens": 1186,
+   "state": "fault30-DIRECTED-r (pre-fixed, separate report)"
+  },
+  {
+   "task_uid": "0dc550d6-ba0a-4f46-b606-b102f5441631",
+   "strategy": "dynpatch",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "r1",
+    "r2",
+    "v"
+   ],
+   "events": [
+    {
+     "executed": "r",
+     "kind": "r unparseable",
+     "diagnosis": "reasoning failure"
+    }
+   ],
+   "patches": [
+    {
+     "decision": "split r",
+     "removed_nodes": [
+      "r"
+     ],
+     "added_nodes": [
+      "r1",
+      "r2"
+     ],
+     "removed_edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ],
+     "added_edges": [
+      [
+       "e1",
+       "r1"
+      ],
+      [
+       "e2",
+       "r1"
+      ],
+      [
+       "r1",
+       "r2"
+      ],
+      [
+       "r2",
+       "v"
+      ]
+     ]
+    }
+   ],
+   "scheduler_overhead_s": 298.7376673966646,
+   "final_quality": 0,
+   "end_to_end_wall_s": 298.738191,
+   "node_wall_s": 298.732712,
+   "n_calls": 6,
+   "failed_calls": 0,
+   "total_tokens": 1289,
+   "state": "fault30-DIRECTED-r (pre-fixed, separate report)"
+  }
+ ]
+}
