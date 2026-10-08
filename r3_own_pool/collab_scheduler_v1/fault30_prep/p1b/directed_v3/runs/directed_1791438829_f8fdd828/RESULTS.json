@@ -1,0 +1,273 @@
+{
+ "run_id": "directed_1791438829_f8fdd828",
+ "scope": "directed-r mechanism verification",
+ "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+ "gold": 24.5,
+ "fault_type": "directed r syntax error",
+ "failing_text": "###SYNTHETIC UNPARSEABLE r-output [not a pool draw]###",
+ "hard_cap": 24,
+ "per_strategy_cap": 12,
+ "strategies": [
+  "reroute",
+  "dynpatch"
+ ],
+ "tracks": [
+  {
+   "run_id": "directed_1791438829_f8fdd828",
+   "strategy": "reroute",
+   "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "r_esc",
+    "v"
+   ],
+   "detection_events": [
+    {
+     "kind": "r_unparseable",
+     "diagnosis": "reasoning_expression_unparseable"
+    }
+   ],
+   "patches": [],
+   "scheduler_overhead_s": 2.2996217012405396e-05,
+   "mechanism": {
+    "G0": {
+     "nodes": [
+      "e1",
+      "e2",
+      "r",
+      "v"
+     ],
+     "edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ]
+    },
+    "r_response": {
+     "model": "medium",
+     "answer": "###SYNTHETIC UNPARSEABLE r-output [not a pool draw]###",
+     "parsed_out": "###SYNTHETIC UNPARSEABLE r-output [not a pool draw]###"
+    },
+    "r_esc_response": {
+     "model": "large",
+     "answer": "{\"expression\":\"v2-v1\"}"
+    },
+    "v_response": {
+     "model": "coder",
+     "answer": "```json\n{\"value\": 19.4}\n```",
+     "parsed_out": {
+      "value": 19.4
+     }
+    },
+    "v_prompt_full": "You are verifying a computed answer for a financial question. Given the extracted facts and a proposed expression, check that every referenced value binds to the correct fact and that the arithmetic is right, recompute independently, then return ONLY JSON {\"value\": <number>} with the corrected final value (preserve reported units; percentages as ratios x100).\nQUESTION: What was the difference between the total rent obligations and land lease agreements?\nFACTS: [{\"value\": 1.3, \"evidence\": \"Rent Obligations(3) | 1.3 | 0.8 | 0.4 | 0.1 | \\u2014\"}, {\"value\": 25.8, \"evidence\": \"Land lease agreements (3) | 25.8 | 0.6 | 1.1 | 1.1 | 23.0\"}, {\"value\": 107.6, \"evidence\": \"Total rent obligations: $107.6 million (less than 1 year), $107.6 million (1-3 years), $107.6 million (3-5 years) and $107.6 million (more than 5 years)\"}, {\"value\": 10.4, \"evidence\": \"Land lease agreements: $10.4 million (less than 1 year), $10.4 million (1-3 years), $10.4 million (3-5 years) and $10.4 million (more than 5 years)\"}]\nPROPOSED EXPRESSION: v2-v1",
+    "v_prompt_has_r2_val": false,
+    "G1": {
+     "nodes": [
+      "e1",
+      "e2",
+      "r",
+      "v"
+     ],
+     "edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ]
+    },
+    "graph_changed": false
+   },
+   "final_quality": 0,
+   "final_value": 19.4,
+   "gold": 24.5,
+   "cost": {
+    "total_logical_calls": 5,
+    "real_model_calls": 4,
+    "injected_calls": 1,
+    "real_tokens": 2095,
+    "injected_tokens_synthetic": 100,
+    "node_wall_s": 149.335808
+   },
+   "end_to_end_wall_s": 149.571579
+  },
+  {
+   "run_id": "directed_1791438829_f8fdd828",
+   "strategy": "dynpatch",
+   "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+   "status": "completed",
+   "executed": [
+    "e1",
+    "e2",
+    "r",
+    "r1",
+    "r2",
+    "v"
+   ],
+   "detection_events": [
+    {
+     "kind": "r_unparseable",
+     "diagnosis": "reasoning_expression_unparseable"
+    }
+   ],
+   "patches": [
+    {
+     "decision": "split r",
+     "removed_nodes": [
+      "r"
+     ],
+     "added_nodes": [
+      "r1",
+      "r2"
+     ],
+     "removed_edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ],
+     "added_edges": [
+      [
+       "e1",
+       "r1"
+      ],
+      [
+       "e2",
+       "r1"
+      ],
+      [
+       "r1",
+       "r2"
+      ],
+      [
+       "r2",
+       "v"
+      ]
+     ]
+    }
+   ],
+   "scheduler_overhead_s": 0.0004710480570793152,
+   "mechanism": {
+    "G0": {
+     "nodes": [
+      "e1",
+      "e2",
+      "r",
+      "v"
+     ],
+     "edges": [
+      [
+       "e1",
+       "r"
+      ],
+      [
+       "e2",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ]
+    },
+    "r_response": {
+     "model": "medium",
+     "answer": "###SYNTHETIC UNPARSEABLE r-output [not a pool draw]###",
+     "parsed_out": "###SYNTHETIC UNPARSEABLE r-output [not a pool draw]###"
+    },
+    "patch_validated": true,
+    "r1_response": {
+     "model": "large",
+     "answer": "{\"step1\": 1.3}",
+     "parsed_out": {
+      "step1": 1.3
+     }
+    },
+    "r2_response": {
+     "model": "large",
+     "answer": "{\"val\": -24.5}",
+     "parsed_out": {
+      "val": -24.5
+     }
+    },
+    "r2_val": -24.5,
+    "v_response": {
+     "model": "coder",
+     "answer": "```json\n{\n  \"value\": -24.5\n}\n```",
+     "parsed_out": {
+      "value": -24.5
+     }
+    },
+    "v_prompt_full": "You are verifying a computed answer for a financial question. Given the extracted facts and a proposed expression, check that every referenced value binds to the correct fact and that the arithmetic is right, recompute independently, then return ONLY JSON {\"value\": <number>} with the corrected final value (preserve reported units; percentages as ratios x100).\nQUESTION: What was the difference between the total rent obligations and land lease agreements?\nFACTS: [{\"value\": 1.3, \"evidence\": \"Rent Obligations(3) | 1.3 | 0.8 | 0.4 | 0.1 | \\u2014\"}, {\"value\": 25.8, \"evidence\": \"Land lease agreements (3) | 25.8 | 0.6 | 1.1 | 1.1 | 23.0\"}, {\"value\": 107.6, \"evidence\": \"Total rent obligations: $107.6 million (less than 1 year)\"}, {\"value\": 157.8, \"evidence\": \"Total rent obligations: $157.8 million (1-3 years)\"}, {\"value\": 32.7, \"evidence\": \"Total rent obligations: $32.7 million (3-5 years)\"}, {\"value\": 11.9, \"evidence\": \"Total rent obligations: $11.9 million (more than 5 years)\"}, {\"value\": 30.4, \"evidence\": \"Land lease agreements: $30.4 million (less than 1 year)\"}, {\"value\": 42.4, \"evidence\": \"Land lease agreements: $42.4 million (1-3 years)\"}, {\"value\": 9.7, \"evidence\": \"Land lease agreements: $9.7 million (3-5 years)\"}, {\"value\": 2.4, \"evidence\": \"Land lease agreements: $2.4 million (more than 5 years)\"}]\nPROPOSED EXPRESSION: [PENDING VERIFICATION: r2 computed -24.5]",
+    "v_prompt_has_r2_val": true,
+    "G1": {
+     "nodes": [
+      "e1",
+      "e2",
+      "r1",
+      "r2",
+      "v"
+     ],
+     "edges": [
+      [
+       "e1",
+       "r1"
+      ],
+      [
+       "e2",
+       "r1"
+      ],
+      [
+       "r1",
+       "r2"
+      ],
+      [
+       "r2",
+       "v"
+      ]
+     ]
+    },
+    "graph_changed": true
+   },
+   "final_quality": 0,
+   "final_value": -24.5,
+   "gold": 24.5,
+   "cost": {
+    "total_logical_calls": 6,
+    "real_model_calls": 5,
+    "injected_calls": 1,
+    "real_tokens": 2839,
+    "injected_tokens_synthetic": 100,
+    "node_wall_s": 151.458946
+   },
+   "end_to_end_wall_s": 151.670642
+  }
+ ]
+}
