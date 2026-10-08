@@ -1,0 +1,167 @@
+{
+ "role": "joint_search_smoke_8task",
+ "created_unix": 1791472524,
+ "task_selection": {
+  "n_tasks": 8,
+  "source": "frozen200 panel (FROZEN200_POLICY.json), deterministic SHA order",
+  "seed": "joint_smoke_v1",
+  "selection_rule": "sort by SHA256(\"joint_smoke_v1:\" + uid), take first 8",
+  "exclusion": "no overlap with P1-B directed task (3117a2bf)"
+ },
+ "dag": {
+  "nodes": [
+   "e1",
+   "e2",
+   "r",
+   "v"
+  ],
+  "edges": [
+   [
+    "e1",
+    "r"
+   ],
+   [
+    "e2",
+    "r"
+   ],
+   [
+    "r",
+    "v"
+   ]
+  ],
+  "topology": "ParallelER + verifier (fixed, no Y search)"
+ },
+ "search_space": {
+  "X": {
+   "description": "node-model assignment for (e1,e2,r,v)",
+   "families": {
+    "cheap": [
+     "medium",
+     "medium",
+     "medium",
+     "medium"
+    ],
+    "quality": [
+     "large",
+     "large",
+     "large",
+     "large"
+    ],
+    "heterogeneous": [
+     "large",
+     "large",
+     "medium",
+     "coder"
+    ],
+    "balanced": [
+     "medium",
+     "medium",
+     "large",
+     "medium"
+    ],
+    "type_prior": [
+     "large",
+     "medium",
+     "coder",
+     "large"
+    ]
+   }
+  },
+  "Z": {
+   "description": "feedback recovery strategy",
+   "options": [
+    "none",
+    "reroute"
+   ]
+  },
+  "total_configs": "len(X_families) * len(Z) = 5 * 2 = 10 base configs",
+  "note": "10 configs \u00d7 8 tasks \u00d7 1 state (fault30) = 80 task-evaluations"
+ },
+ "fault": {
+  "state": "s_fault30 (30% injection, seed 20260923)",
+  "rate": 0.3,
+  "seeds": [
+   20260923
+  ],
+  "n_faulted_tasks": "int(8 * 0.3) = 2 tasks",
+  "node_choice": "random from {e1,e2,r,v}",
+  "pool": "FAULT_POOLS.json"
+ },
+ "budget": {
+  "logical_call_cap_per_task": 12,
+  "total_logical_cap": 960,
+  "smoke_real_cap": 200,
+  "smoke_real_note": "200 real calls = ~25% of theoretical max; sufficient for smoke validation",
+  "cost_estimate": "avg 4 nodes/task * ~300 tok/node * 80 evaluations \u2248 ~96k tokens (with cache reuse much less)"
+ },
+ "algorithms": [
+  {
+   "name": "random",
+   "type": "baseline",
+   "description": "uniform random over unevaluated configs"
+  },
+  {
+   "name": "greedy_q",
+   "type": "single-objective",
+   "description": "argmax surrogate Q\u0302 only"
+  },
+  {
+   "name": "scalarized",
+   "type": "multi-objective",
+   "description": "rotating frozen weight bank, argmax w\u00b7F\u0302"
+  },
+  {
+   "name": "ehvi",
+   "type": "MOBO",
+   "description": "MC expected hypervolume improvement"
+  },
+  {
+   "name": "sa_pgfs",
+   "type": "proposed",
+   "description": "cost-aware EHVI with state-conditioned surrogate"
+  },
+  {
+   "name": "qnehvi",
+   "type": "strongest baseline",
+   "description": "noisy expected HV improvement"
+  }
+ ],
+ "initial_design": {
+  "n_init": 2,
+  "shared_across_algorithms": true,
+  "selection": "random (seed 42) from the 10-config space"
+ },
+ "search_budget": {
+  "t_min": 2,
+  "t_max": 10,
+  "per_step": "one config revealed per step",
+  "replay_seeds": 100
+ },
+ "objectives": {
+  "Q": "fraction of 8 tasks with final answer within tolerance of gold",
+  "C": "real model tokens per task (excluding cache hits and injected)",
+  "C_logical": "logical calls per task (including cache and injected)",
+  "L_serial": "sum of per-call service latency (serial execution)",
+  "L_wall": "end-to-end wall-clock per task",
+  "note": "C uses only real model calls (not cache); L_serial is sum of service latencies; L_wall is wall-clock including model switching"
+ },
+ "termination": {
+  "mode": "fixed-budget (all 10 configs revealed)",
+  "no_early_stopping": true,
+  "no_interim_analysis": true
+ },
+ "artifact_isolation": {
+  "run_dir": "joint_search_smoke/runs/<run_id>/",
+  "separate_from": "P1-B (frozen), Reference Cube (frozen), fault30 results (frozen)",
+  "no_modification_of_historical_results": true
+ },
+ "information_boundary": {
+  "surrogate_features": "structural encoding of (X,Z) config only; no gold info",
+  "may_use": "previously revealed configs' (Q,C,L) from THIS run",
+  "may_not_use": "unrevealed configs' true values; historical fault30 results as labels (execution defect versions); Reference Cube as labels"
+ },
+ "code_sha": {
+  "collab_scheduler_v1/fault30_run.py": "66e13982259211b3",
+  "collab_scheduler_v1/p2_executor_audit/final_targeted.py": "db12a837b0753b62"
+ }
+}

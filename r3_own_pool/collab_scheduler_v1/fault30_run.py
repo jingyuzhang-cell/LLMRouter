@@ -402,17 +402,31 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
             val, err = r_value(uid, t)
             ok = int(not err and close(val, gold))
         used = sum(ex.cost(kk) for kk in st[uid]['keys'])
-        # Seven-layer accounting (protocol v3): distinguish logical vs physical
+        # Eight-layer accounting (protocol v4): physical model cost must
+        # EXCLUDE cache alias hits and injected faults — only count calls that
+        # actually issued a new request to the model server.
         logical_calls = len(st[uid]['keys'])
         injected_calls = sum(1 for kk in st[uid]['keys']
                              if ex.by_key.get(kk, {}).get('response', {})
                              .get('injected_fault'))
-        real_calls = logical_calls - injected_calls
         cache_hits = sum(1 for kk in st[uid]['keys']
                          if ex.by_key.get(kk, {}).get('alias_of'))
-        real_tokens = sum(ex.cost(kk) for kk in st[uid]['keys']
-                          if not ex.by_key.get(kk, {}).get('response', {})
+        # NEW physical model requests = logical - injected - cache_alias
+        new_requests = logical_calls - injected_calls - cache_hits
+        # NEW physical tokens: only from calls that were NOT cache aliases
+        # and NOT injected faults (i.e., actual server round-trips this run)
+        new_tokens = sum(ex.cost(kk) for kk in st[uid]['keys']
+                         if not ex.by_key.get(kk, {}).get('alias_of')
+                         and not ex.by_key.get(kk, {}).get('response', {})
+                         .get('injected_fault'))
+        # NEW physical latency: only from non-alias, non-injected calls
+        new_latency = sum(ex.lat(kk) for kk in st[uid]['keys']
+                          if not ex.by_key.get(kk, {}).get('alias_of')
+                          and not ex.by_key.get(kk, {}).get('response', {})
                           .get('injected_fault'))
+        # Legacy fields (kept for compatibility with historical results)
+        real_calls = new_requests  # corrected: was logical - injected
+        real_tokens = new_tokens   # corrected: was non-injected sum (included cache)
         if topo in ('SER', 'SERV'):
             lats = [ex.lat(k(uid, 'e'))]
             if is_lr and k(uid, 'e', 'fb') in st[uid]['keys']:
@@ -429,8 +443,10 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
         rows[uid] = dict(ok=ok, used=used, lat=l, faulted=st[uid]['faulted'],
                          fault_node=st[uid]['node'], keys=st[uid]['keys'],
                          logical_calls=logical_calls, injected_calls=injected_calls,
-                         real_calls=real_calls, cache_hits=cache_hits,
-                         real_tokens=real_tokens,
+                         cache_hits=cache_hits,
+                         new_requests=new_requests, new_tokens=new_tokens,
+                         new_latency_s=new_latency,
+                         real_calls=real_calls, real_tokens=real_tokens,
                          r_changed_final=st[uid].get('r_changed', False),
                          r_process_changed=st[uid].get('r_process_changed', False))
     return rows

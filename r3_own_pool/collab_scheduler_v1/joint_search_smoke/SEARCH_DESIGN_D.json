@@ -1,0 +1,156 @@
+{
+ "role": "joint_search_48config_design",
+ "created_unix": 1791472524,
+ "X_space": {
+  "models": [
+   "medium",
+   "large",
+   "coder"
+  ],
+  "roles": [
+   "e1",
+   "e2",
+   "r",
+   "v"
+  ],
+  "constrained_assignments": [
+   [
+    "large",
+    "large",
+    "medium",
+    "coder"
+   ],
+   [
+    "large",
+    "large",
+    "large",
+    "large"
+   ],
+   [
+    "medium",
+    "medium",
+    "medium",
+    "medium"
+   ],
+   [
+    "medium",
+    "medium",
+    "large",
+    "medium"
+   ],
+   [
+    "large",
+    "medium",
+    "coder",
+    "large"
+   ],
+   [
+    "coder",
+    "coder",
+    "medium",
+    "coder"
+   ],
+   [
+    "large",
+    "coder",
+    "medium",
+    "coder"
+   ],
+   [
+    "coder",
+    "large",
+    "medium",
+    "large"
+   ],
+   [
+    "large",
+    "coder",
+    "medium",
+    "coder"
+   ],
+   [
+    "coder",
+    "large",
+    "medium",
+    "coder"
+   ],
+   [
+    "large",
+    "large",
+    "coder",
+    "coder"
+   ],
+   [
+    "medium",
+    "medium",
+    "coder",
+    "coder"
+   ],
+   [
+    "large",
+    "large",
+    "medium",
+    "large"
+   ],
+   [
+    "large",
+    "large",
+    "medium",
+    "medium"
+   ],
+   [
+    "medium",
+    "medium",
+    "medium",
+    "large"
+   ]
+  ]
+ },
+ "Z_space": {
+  "options": [
+   "none",
+   "reroute"
+  ],
+  "future_options": [
+   "dynpatch (P3, after P2 validation)"
+  ]
+ },
+ "config_count": "15 X \u00d7 2 Z = 30 configs (feasible subset of 3^4 \u00d7 2 = 162)",
+ "selection_rationale": {
+  "included": "15 diverse X assignments covering uniform, heterogeneous, asymmetric, and coder-heavy patterns",
+  "excluded": "assignments where e1=e2 with weak models (dominated by e1=e2=large in clean cube); assignments with identical capability profiles to included ones",
+  "note": "30 configs is large enough for meaningful search comparison but small enough for exhaustive ground truth on 8-16 tasks"
+ },
+ "state_features": {
+  "structural": [
+   "n_distinct_models (heterogeneity measure)",
+   "has_coder (boolean)",
+   "has_large (boolean)",
+   "e_same_model (boolean: e1==e2)",
+   "r_model_strength (0=medium, 1=coder, 2=large)",
+   "v_model_strength",
+   "recovery_enabled (Z=reroute)"
+  ],
+  "informational_boundary": "features encode only the config structure; no task-specific or gold-derived information"
+ },
+ "incremental_cost": {
+  "definition": "estimated real tokens to evaluate a config on one task",
+  "formula": "sum of per-node estimated tokens based on model and context length",
+  "per_model_estimates": {
+   "medium": 250,
+   "large": 350,
+   "coder": 300
+  },
+  "recovery_overhead": 200,
+  "note": "estimated cost used for cost-aware acquisition; actual cost from real evaluation replaces it once revealed"
+ },
+ "q_b_baseline": {
+  "description": "directly optimize budget-constrained quality Q(B)",
+  "method": "evaluate configs by scalarized utility w=[1,0,0] (quality only) under budget constraint C<=B",
+  "note": "this baseline tests whether multi-objective search provides value beyond single-objective optimization"
+ },
+ "info_boundary": {
+  "allowed": "(1) features of any config; (2) (Q,C,L) of revealed configs from current run; (3) pre-estimated incremental cost",
+  "forbidden": "(1) true (Q,C,L) of unrevealed configs; (2) Reference Cube results as labels; (3) fault30 v1 results (execution defect); (4) any gold-derived features"
+ }
+}
