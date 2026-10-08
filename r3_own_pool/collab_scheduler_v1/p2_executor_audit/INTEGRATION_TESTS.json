@@ -1,0 +1,61 @@
+{
+ "checks": {
+  "t1_r2_fires_when_facts_change": true,
+  "t1_r2_executed": true,
+  "t2_no_r2_when_no_fault": true,
+  "t3_v2_present": false,
+  "t4_r_same_answer_same_stub": true,
+  "t4_note": "stub returns same expression for both r calls; r_changed correctly False \u2014 no v refresh needed when r output unchanged",
+  "t5_total_calls": 6,
+  "t5_unique_prompts": 5,
+  "t5_cache_hits": 0,
+  "t5_real_calls": 5,
+  "t5_note": "6 logical calls, 5 unique prompts, 0 cache hits, 5 real stub calls; C/L inflation = 1 duplicate-key charges"
+ },
+ "n_bool": 5,
+ "n_pass": 4,
+ "call_log": [
+  {
+   "key": "f30:DYNAMICDAG:HETEROGENEOUS:e1:test-uid-001",
+   "model": "large",
+   "sha": "d0fc5a4ee348a097",
+   "answer": "{\"facts\": []}",
+   "from_cache": false
+  },
+  {
+   "key": "f30:DYNAMICDAG:HETEROGENEOUS:e2:test-uid-001",
+   "model": "large",
+   "sha": "296a1f9aea944f85",
+   "answer": "{\"facts\": [{\"value\": 100, \"evidence\": \"stub\"}]}",
+   "from_cache": false
+  },
+  {
+   "key": "f30:DYNAMICDAG:HETEROGENEOUS:r:test-uid-001",
+   "model": "medium",
+   "sha": "a00bdcd3e19fec45",
+   "answer": "{\"expression\": \"v0 + v1\"}",
+   "from_cache": false
+  },
+  {
+   "key": "f30:DYNAMICDAG:HETEROGENEOUS:e1:fb:test-uid-001",
+   "model": "coder",
+   "sha": "d0fc5a4ee348a097",
+   "answer": "{\"facts\": [{\"value\": 100, \"evidence\": \"stub\"}]}",
+   "from_cache": false
+  },
+  {
+   "key": "f30:DYNAMICDAG:HETEROGENEOUS:r:fbd:test-uid-001",
+   "model": "medium",
+   "sha": "c145faeb32a31178",
+   "answer": "{\"expression\": \"v0 + v1\"}",
+   "from_cache": false
+  },
+  {
+   "key": "f30:DYNAMICDAG:HETEROGENEOUS:v:test-uid-001",
+   "model": "coder",
+   "sha": "8bb87eb0d00fffe4",
+   "answer": "{\"value\": 200}",
+   "from_cache": false
+  }
+ ]
+}
