@@ -1,27 +1,28 @@
 {
  "checks": {
-  "t1_budget_exhaustion": true,
-  "t2_duplicate_refusal": true,
-  "t3_restart_refusal": true,
-  "t4_old_files_protected": true,
-  "t5_directed_scope": true
+  "a1_r2_val_changes_v_prompt": true,
+  "a2_fence_parse": true,
+  "a3_duplicate_refusal": true,
+  "a4_resume_disabled_restart_refused": true,
+  "a5_old_files_protected": true,
+  "a6_uses_v3_runner_only": true,
+  "a7_scope_frozen": true
  },
  "freeze": {
-  "code_sha": {
-   "p1b": "2e1454fec1d60c84",
-   "v3entry": "aab56ff2f5c939f1"
-  },
-  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
-  "fault": {
-   "node": "r",
-   "seed": 20260923
-  },
-  "strategy_order": [
+  "cap": 24,
+  "per_strategy": 12,
+  "strategies": [
    "reroute",
    "dynpatch"
   ],
-  "cap": 24,
-  "per_task": 12
+  "runner": "dag_patch_directed_v3.run_directed",
+  "resume": "DISABLED",
+  "code_sha": {
+   "v3runner": "01a5c53d6628fe94",
+   "v3helpers": "348a126d2a493fcf",
+   "entry": "e29e81ded5474d73"
+  }
  },
- "verdict": "V3-ENTRY PASS"
+ "verdict": "V3-ENTRY-UNIFIED PASS",
+ "zero_model_calls": true
 }
