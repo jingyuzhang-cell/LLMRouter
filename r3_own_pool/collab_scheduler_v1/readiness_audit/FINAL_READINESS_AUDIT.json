@@ -1,0 +1,109 @@
+{
+ "E3_p1b_direct": {
+  "checks": {
+   "e1_static_no_patches": true,
+   "e1_static_no_extra_calls": true,
+   "e1_reroute_no_patches": true,
+   "e1_dynpatch_completes": true,
+   "e2_static_no_patches": true,
+   "e2_static_no_extra_calls": true,
+   "e2_reroute_no_patches": true,
+   "e2_dynpatch_completes": true,
+   "r_static_no_patches": true,
+   "r_static_no_extra_calls": true,
+   "r_reroute_has_r_esc": true,
+   "r_reroute_no_patches": true,
+   "r_dynpatch_has_split": true,
+   "r_dynpatch_executed_r1r2": true,
+   "v_static_no_patches": true,
+   "v_static_no_extra_calls": true,
+   "v_reroute_no_patches": true,
+   "v_dynpatch_completes": true,
+   "nofault_static_no_patches": true,
+   "nofault_static_completed": true,
+   "nofault_reroute_no_patches": true,
+   "nofault_reroute_completed": true,
+   "nofault_dynpatch_no_patches": true,
+   "nofault_dynpatch_completed": true
+  },
+  "all_pass": true,
+  "n_checks": 24,
+  "n_pass": 24
+ },
+ "E2_final": {
+  "metrics": {
+   "e": {
+    "precision": 0.3135,
+    "recall": 1.0,
+    "f1": 0.4773,
+    "tp": 1500,
+    "fp": 3285,
+    "fn": 0,
+    "tn": 6110,
+    "n_evaluated": 10895
+   },
+   "r": {
+    "precision": 0.1381,
+    "recall": 0.6569,
+    "f1": 0.2282,
+    "tp": 404,
+    "fp": 2521,
+    "fn": 211,
+    "tn": 3710,
+    "n_evaluated": 6846
+   },
+   "v": {
+    "precision": 0.1598,
+    "recall": 1.0,
+    "f1": 0.2756,
+    "tp": 351,
+    "fp": 1845,
+    "fn": 0,
+    "tn": 2398,
+    "n_evaluated": 4594
+   }
+  },
+  "missing": {
+   "r_no_answer": 2154,
+   "e_no_answer": 3505,
+   "v_no_answer": 806
+  },
+  "note": "e1/e2 properly mapped; per-(seed,config,task,node) reconstruction; injected faults use failing_text; cached nodes use cube_clean; f30 real calls from RESPONSES.jsonl; missing separately tracked"
+ },
+ "E1_archive": {
+  "test_file": "/root/r3_own_pool/collab_scheduler_v1/readiness_audit/e1_consumed_stress_reproducible.py",
+  "seed": 20261001,
+  "n_trials": 200,
+  "command": "python3 /root/r3_own_pool/collab_scheduler_v1/readiness_audit/e1_consumed_stress_reproducible.py",
+  "result": {
+   "consumed_protection_rate": 1.0,
+   "consumed_attempted": 264,
+   "consumed_rejected": 264,
+   "consumed_incorrect_accept": 0
+  },
+  "pass_": true
+ },
+ "E4_fix": {
+  "fixed": true,
+  "new_n_tasks": "TBD: requires P1-B smoke discordant-pair rate befo",
+  "timestamp": 1791430121
+ },
+ "P1B_admission": {
+  "checks": {
+   "f4_actual_fault_count": 1,
+   "f4_docstring_says_2": false,
+   "f4_count_correct": true,
+   "detector_covers_r_only": true,
+   "scheduler_overhead_includes_model_time": true,
+   "smoke_runs_both_states": false,
+   "model_lifecycle_wired": true,
+   "global_counter_persists": true,
+   "injected_fault_billed": true
+  },
+  "issues_found": [
+   "Detector only handles r-unparseable; e1/e2/v faults not detected",
+   "scheduler_overhead_s includes model call time (double-counting)"
+  ],
+  "ready_for_smoke": false
+ }
+}
