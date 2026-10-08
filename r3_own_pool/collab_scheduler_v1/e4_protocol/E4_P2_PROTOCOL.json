@@ -23,14 +23,14 @@
  ],
  "sample_size": {
   "pilot_estimate": "Reference Cube Z-effect dQ\u22480.067 (HET family)",
-  "note": "Z-effect provides a LOWER BOUND on expected patch-effect; DAG Patch may produce larger effects (structural change vs model switch) or smaller (adaptation cost). Range: [0, 2\u00d7Z-effect].",
+  "note": "Z-effect provides a REFERENCE RANGE only; DAG Patch effect may be larger (structural benefit), similar (split+reroute equivalent), or smaller/negative (adaptation cost + detection latency). This range CANNOT guarantee statistical power for any specific effect size. Power calculation requires pilot data from the P1-B smoke run (discordant pair rate unknown until then).",
   "mcnemar_discordant_needed": "b+c \u2265 10 discordant pairs for meaningful McNemar",
   "recommended_n_tasks": "100-200 (allows detection of \u22655pp Q difference at 80% power)",
   "stopping_rule": "fixed-n (no interim analysis); if <10 discordant pairs, report as underpowered"
  },
  "quality_definition": "task-level binary: final output within tolerance of gold",
  "cost_definition": "total tokens per task (all nodes + recovery overhead)",
- "latency_definition": "critical-path wall-clock (max over parallel branches)",
+ "latency_definition": "Primary: end_to_end_wall (serial execution wall-clock per task, measured by the P1-B executor). Secondary: critical-path estimate for reference only (current P1-B executes serially; parallel critical-path is a design target not yet implemented in the real executor).",
  "bootstrap": {
   "n_iter": 10000,
   "ci_level": 0.95,
@@ -51,7 +51,7 @@
  },
  "exclusion_criteria": {
   "infrastructure_failure": "exclude task if ANY strategy hit infra error (not model failure); report count",
-  "timeout": "exclude if wall-clock > 10min per task",
+  "timeout": "Timeout trajectory: report as task failure (Q=0) for the strategy that timed out; include in analysis with Q=0 (NOT excluded). For latency analysis, report median + IQR (robust to outliers) and note timeout censoring count per strategy. Do NOT silently drop timeout trajectories.",
   "gold_leak": "T1b test: trajectory must be identical under perturbed gold"
  },
  "estimated_effect_ranges": {
@@ -60,5 +60,6 @@
   "null": "patch adaptation cost offsets benefit: dQ \u2248 0",
   "negative": "patch overhead + detection latency: dQ < 0"
  },
- "preregistered_unix": 1796100000
+ "preregistered_unix": 1796150000,
+ "timestamp_note": "Preregistration timestamp should match the git commit hash; see commit history for authoritative time."
 }
