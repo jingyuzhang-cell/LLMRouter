@@ -1,0 +1,63 @@
+{
+ "results": [
+  {
+   "name": "T1_v_planned_is_alias",
+   "result": {
+    "cache_hits": 1,
+    "new_requests": 6,
+    "logical": 7,
+    "new_tokens": 600.0,
+    "total_used": 700.0,
+    "new_latency": 1.2000000000000002,
+    "executor_physical": 6,
+    "calls": [
+     "plain",
+     "plain",
+     "plain",
+     "fb",
+     "fbd",
+     "plain",
+     "fbd"
+    ]
+   },
+   "checks": {
+    "cache_hits_positive": true,
+    "alias_of_present": true,
+    "logical_gt_new_requests": true,
+    "new_requests_eq_executor_physical": true,
+    "new_tokens_excludes_alias": true
+   }
+  },
+  {
+   "name": "T2_no_aliases",
+   "result": {
+    "cache_hits": 0,
+    "new_requests": 7,
+    "logical": 7,
+    "executor_physical": 7
+   },
+   "checks": {
+    "cache_hits_zero": true,
+    "new_eq_logical_minus_injected": true,
+    "new_eq_physical": true
+   }
+  },
+  {
+   "name": "T3_v1_v2_both_aliases",
+   "result": {
+    "cache_hits": 2,
+    "new_requests": 5,
+    "logical": 7,
+    "executor_physical": 5,
+    "new_tokens": 500.0
+   },
+   "checks": {
+    "two_cache_hits": true,
+    "physical_lt_logical": true,
+    "new_eq_physical": true
+   }
+  }
+ ],
+ "all_pass": true,
+ "zero_model_calls": true
+}
