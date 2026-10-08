@@ -1,5 +1,25 @@
 # Reference Cube 实验台账（collab_scheduler_v1）
 
+## 2026-10-08 外部审计（裁定 D）响应
+
+- **接受裁定 D**：定位收缩为"协同配置权衡 + 恢复价值的实证研究"；SA-PGFS 不作
+  "已验证新算法"主张（最终搜索无状态输入/图特征/DualArchive/Outer 闭环）。
+- **已核实的实现/解释问题与修复**（零调用）：qNParEGO 权重约掉、NSGA-II 拥挤度
+  反向、recall 索引错位、MCTS 缺 DYN NONE 叶 → replay_v2.py 修复；跨状态"HV 翻倍"
+  撤回（共尺度 0.119→0.101，只保留前沿成员 2→3）；"Y 翻转"改为恢复驱动的 DYN
+  相对价值变化（Z 受控无翻转，已入 FAULT30_ANALYSIS）；BALANCED Δ_Z 更正
+  +3.17pp/+770.1 tok。
+- **REPLAY_V2.json（200 配对种子，真值评价，故障种子相关噪声，(count+1)/(B+1)+Holm）**：
+  唯一稳健分界 = 有代理 vs 无代理（GP 系五法 gap 不可区分：qNEHVI/cost-aware/EHVI/
+  qNParEGO/scalarized = +0.0024~+0.0048；MCTS/NSGA-II/greedy/random = +0.031~+0.093，
+  Holm P≤0.004；AUC 微弱利于 EHVI 系）。v1 表全部胜负主张作废。
+- 统计口径修正：p=(count+1)/(B+1)、AUC 自初始设计计、N95 含初始点、"bit-for-bit"
+  降级为"汇总一致"；协议补记：实际为整数编码特征（非 one-hot）。
+- 遗留（预注册）：state-aware/blind、图表示、surrogate 必要性三项机制验证（工作包 B）
+  与共尺度统计细节（任务聚类推断）为后续项，未启动。
+
+
+
 ## 2026-09-28 实验链正式收口（最终状态）
 
 - **不再新增实验**。主张层级锁定为 qNEHVI ≈ SA-PGFS > {其余}；统计表述统一

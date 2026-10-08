@@ -182,18 +182,36 @@ def run():
 
     # ---- 4 Y/X rank shift ----
     fym, fxm = {}, {}
+    fym_none = {}
     for cid, v in per_cfg.items():
         topo, fam, z, _ = cid.split('__')
         fym.setdefault(topo, []).append(v['Q'])
         fxm.setdefault(fam, []).append(v['Q'])
+        if z == 'NONE':
+            fym_none.setdefault(topo, []).append(v['Q'])
+    fym_none = {k: round(sum(v) / len(v), 4) for k, v in fym_none.items()}
     fault_Y = {k: round(sum(v) / len(v), 4) for k, v in fym.items()}
     fault_X = {k: round(sum(v) / len(v), 4) for k, v in fxm.items()}
+    clean_Y_none = {}
+    for cid, v in clean_summary.items():
+        if cid.endswith('__NONE__FRESH'):
+            clean_Y_none.setdefault(cid.split('__')[0], []).append(v['Q'])
+    clean_Y_none = {k: round(sum(v) / len(v), 4) for k, v in clean_Y_none.items()}
     out['step4_rank_shift'] = dict(
         fault_Y_mean_Q=fault_Y, fault_X_mean_Q=fault_X,
         clean_Y_mean_Q=clean_Y, clean_X_mean_Q=clean_X,
         Y_flips=order_flips(clean_Y, fault_Y), X_flips=order_flips(clean_X, fault_X),
-        interpretation='flips here = state-conditioned scheduling evidence; '
-                       'no flips = the state acts mainly through Z, not X')
+        Y_Z_controlled=dict(
+            clean_Y_mean_Q_NONE_only=clean_Y_none,
+            fault_Y_mean_Q_NONE_only=fym_none,
+            Y_flips_under_Z_NONE=order_flips(clean_Y_none, fym_none),
+            interpretation='family-mean flip conflates Z (fault mixes NONE+REROUTE, '
+                           'clean averages NONE only). Under Z=NONE control the '
+                           'SERV-vs-DYNAMICDAG order is stable in both states; the '
+                           'flip is recovery-driven value change of DynamicDAG, not '
+                           'a pure topology effect'),
+        interpretation='family-mean flips = recovery changes DynamicDAG relative '
+                       'value (see Y_Z_controlled); no X flips')
 
     # ---- 5 Pareto ----
     def objs_of(summary, anchor):

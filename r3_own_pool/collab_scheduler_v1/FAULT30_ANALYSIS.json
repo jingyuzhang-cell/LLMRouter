@@ -1008,12 +1008,28 @@
   },
   "Y_flips": [
    [
-    "DYNAMICDAG",
-    "SERV"
+    "SERV",
+    "DYNAMICDAG"
    ]
   ],
   "X_flips": [],
-  "interpretation": "flips here = state-conditioned scheduling evidence; no flips = the state acts mainly through Z, not X"
+  "Y_Z_controlled": {
+   "clean_Y_mean_Q_NONE_only": {
+    "SER": 0.335,
+    "SERV": 0.3417,
+    "PARALLELER": 0.305,
+    "DYNAMICDAG": 0.3117
+   },
+   "fault_Y_mean_Q_NONE_only": {
+    "SER": 0.2778,
+    "SERV": 0.2733,
+    "PARALLELER": 0.2706,
+    "DYNAMICDAG": 0.2645
+   },
+   "Y_flips_under_Z_NONE": [],
+   "interpretation": "family-mean flip conflates Z (fault mixes NONE+REROUTE, clean averages NONE only). Under Z=NONE control the SERV-vs-DYNAMICDAG order is stable in both states; the flip is recovery-driven value change of DynamicDAG, not a pure topology effect"
+  },
+  "interpretation": "family-mean flips = recovery changes DynamicDAG relative value (see Y_Z_controlled); no X flips"
  },
  "step5_pareto": {
   "P_clean": [

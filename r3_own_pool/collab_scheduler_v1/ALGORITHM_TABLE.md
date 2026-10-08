@@ -1,5 +1,13 @@
 # 统一算法表（SA-PGFS vs 外部基线，冻结 cube 上零调用 reveal/replay）
 
+> **2026-10-08 审计修订**：下表来自 v1 replay，其中 qNParEGO 权重约掉、NSGA-II
+> 拥挤度方向相反、Pareto recall 索引错位、MCTS 树缺失 DYN NONE 叶、噪声模型破坏
+> 故障相关性、主指标含噪乐观。**全部胜负主张暂停引用**，以 replay_v2 修正版为准
+>（REPLAY_V2.json：修四 bug + Scalarized 基线 + 真值评价 + (count+1)/(B+1) + Holm）。
+> 定性结论中不受影响的部分：跨工件核验过的 cube 测量本身、前沿成员 2→3、Δ_Z 效应。
+> 已撤回：跨状态"HV 翻倍"（尺度伪影；共尺度下 0.119→0.101）、"纯拓扑 Y 翻转"
+>（Z 受控后无翻转，为恢复驱动的 DYN 相对价值变化）。
+
 协议：PROTOCOL_SAPGFS_FREEZE_v1 (frozen harness, 200 paired seeds)；同初始设计/同噪声抽样/预算 8；G_collab 15 配置。
 
 冻结可复现性：PASS (rerun reproduces frozen SA-PGFS summaries bit-for-bit)。

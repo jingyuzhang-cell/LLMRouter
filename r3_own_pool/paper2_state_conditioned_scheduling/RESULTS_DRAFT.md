@@ -53,9 +53,14 @@ global front, which we test next.
 
 Although the global front was unchanged under faults (P_clean = P_fault =
 {Single}), the fault state reshaped the cooperative subspace. Within G_collab,
-the Pareto front expanded from two points in the clean state to three
-structurally distinct points under faults, doubling its hypervolume
-(0.052 to 0.101; Fig. 1b). The new front point was the recovery-enabled
+the Pareto front changed membership from two points in the clean state to
+three structurally distinct points under faults, adding a recovery-enabled
+configuration (Fig. 1b). We report front membership rather than a
+cross-state hypervolume comparison because the latter depends on the
+reference scale: under each state's own normalization the cooperative
+hypervolume appears to double (0.052 to 0.101), whereas under a common
+scale it decreases (0.119 to 0.101), so no cross-state hypervolume claim
+is made. The new front point was the recovery-enabled
 configuration DynamicDAG–HETEROGENEOUS–local-reroute (Q = 0.343 ± 0.005,
 C = 2089, L = 4.45 s), which traded roughly 622 additional tokens and 1.3 s
 of critical-path latency for a 6.7-percentage-point quality gain over its
@@ -63,15 +68,18 @@ no-recovery counterpart — and did so consistently in all three fault seeds
 (per-seed gains +0.060 to +0.075).
 
 Recovery bought quality at measurable cost in every model-assignment family
-(Δ_Z Q = +0.030, +0.067 and +0.023 for BALANCED, HETEROGENEOUS and QUALITY,
-at +789, +622 and +613 tokens respectively; Table 2), indicating that the
+(Δ_Z Q = +0.032, +0.067 and +0.023 for BALANCED, HETEROGENEOUS and QUALITY,
+at +770, +622 and +613 tokens respectively; Table 2), indicating that the
 value we measured attaches to the recovery dimension rather than to one
-assignment family. The state also changed which *topology* was preferred:
-SERV outranked DynamicDAG in the clean state, and the ranking reversed under
-faults as local reroute activated. By contrast, the ranking of assignment
-families (HETEROGENEOUS > QUALITY > BALANCED) was unchanged between states.
-Runtime state, in this design space, acted primarily on topology and
-recovery policy rather than on model-assignment preference.
+assignment family. The family-mean ranking of topologies also changed — SERV outranked
+DynamicDAG in the clean state, and the ranking reversed under faults — but
+this reversal is attributable to recovery rather than to topology alone:
+controlling Z at no-recovery, SERV remained above DynamicDAG in both states
+(0.342 versus 0.312 clean; 0.273 versus 0.265 fault). The ranking of
+assignment families (HETEROGENEOUS > QUALITY > BALANCED) was unchanged
+between states. Runtime state, in this design space, acted on the *value of
+the recovery dimension* (and through it on DynamicDAG's relative standing)
+rather than on topology per se or on model-assignment preference.
 
 Because these measurements contradicted two numbers in our legacy audit, we
 re-examined the legacy fault ledgers before interpreting them. Forensic
@@ -90,6 +98,14 @@ noise at zero for the reported quantities.
 
 ### Search efficiency on the measured front
 
+[2026-10-08 audit revision: the original draft of this subsection reported
+comparisons produced by a replay harness subsequently found to contain
+baseline implementation errors (scalarization weight cancellation, inverted
+crowding, a recall index-mapping bug, an incomplete MCTS tree) and an
+optimistic noise model (per-config independent seed draws; noisy-objective
+hypervolume scoring). All win/loss statements are withheld pending the
+corrected, pre-specified replay (Supplementary Note 4).]
+
 We then asked how efficiently the measured cooperative front can be
 discovered under a limited evaluation budget, comparing SA-PGFS — a
 state-conditioned surrogate-assisted Pareto search over graph-forest
@@ -103,20 +119,25 @@ common per-seed fault noise, budget of eight evaluations, frozen surrogate
 and reference point), so that comparisons isolate search behaviour rather
 than implementation differences (Methods; Supplementary Note 2).
 
-SA-PGFS recovered the true front as efficiently as the strongest baseline:
-both SA-PGFS variants and qNEHVI reached a median signed normalized HV gap
-indistinguishable from zero (−0.001), achieved 95% of true hypervolume in
-160–165 of 200 seeds within the budget, and attained identical mean AUC-HV
-(0.922; Table 3). Paired permutation tests resolved no difference between
-SA-PGFS and qNEHVI (all P ≥ 0.46), while both significantly outperformed
-every other mechanism — qNParEGO (+0.058 gap), AFlow-style MCTS (+0.014),
-NSGA-II (+0.081), greedy (+0.070) and random (+0.085) — with P < 10⁻⁴ in
-all twelve paired comparisons. The differentiation of SA-PGFS from qNEHVI
-in our framework is consequently not acquisition strength on a single-state
-table, which these data rule out, but the surrounding scheduling problem:
-the feasible graph set, admissible recovery actions and Pareto archive are
-defined relative to runtime state, allowing the outer scheduler to decide
-when cooperative search is worth entering at all.
+Under the corrected protocol, the only robust separation on this
+single-state configuration table was between surrogate-based and
+surrogate-free search. Five GP-based methods — qNEHVI (mean true-value HV
+gap +0.0024), cost-aware EHVI (+0.0025), EHVI (+0.0029), qNParEGO (+0.0039)
+and a fixed-weight scalarized controller (+0.0048) — were statistically
+indistinguishable from one another on the final gap (all Holm-corrected
+paired P ≥ 0.05), whereas surrogate-free methods were clearly worse
+(AFlow-style MCTS +0.031, greedy +0.067, NSGA-II +0.080, random +0.093;
+all Holm-corrected P ≤ 0.004). Hypervolume-over-budget curves mildly
+favoured the EHVI family over the scalarized controllers (AUC-HV 0.909
+versus 0.888–0.892, Holm-corrected P ≤ 0.004). We therefore make no
+acquisition-level claim on this space: the data establish that a learned
+surrogate is necessary at this budget, that no acquisition family separates
+within surrogate-based search at 15 configurations, and that the complexity
+boundary at which Pareto acquisition outperforms simple scalarization
+requires a larger, cost-heterogeneous space (preregistered follow-up,
+Supplementary Note 3). SA-PGFS is consequently presented as the
+state-conditioned scheduling framework embedding this search, not as a
+superior acquisition function.
 
 ### Boundaries of the findings
 
