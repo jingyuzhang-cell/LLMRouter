@@ -1,0 +1,244 @@
+{
+ "role": "P0 capability proof: runtime DAG reconfiguration under a simulated executor (zero LLM calls; structural checks only, no performance claims)",
+ "logs": [
+  {
+   "task_id": "S1-split-on-failure",
+   "initial_DAG": {
+    "e": {
+     "deps": [],
+     "model": "large"
+    },
+    "r": {
+     "deps": [
+      "e"
+     ],
+     "model": "medium"
+    },
+    "v": {
+     "deps": [
+      "r"
+     ],
+     "model": "coder"
+    }
+   },
+   "events": [
+    {
+     "executed": "r",
+     "feedback": "reasoning output not parseable",
+     "diagnosis": "reasoning-stage failure"
+    }
+   ],
+   "patches": [
+    {
+     "decision": "split reasoning node into decomposer+combiner",
+     "removed_nodes": [
+      "r"
+     ],
+     "added_nodes": [
+      "r1",
+      "r2"
+     ],
+     "removed_edges": [
+      [
+       "e",
+       "r"
+      ],
+      [
+       "r",
+       "v"
+      ]
+     ],
+     "added_edges": [
+      [
+       "e",
+       "r1"
+      ],
+      [
+       "r1",
+       "r2"
+      ],
+      [
+       "r2",
+       "v"
+      ]
+     ]
+    }
+   ],
+   "validation": [
+    {
+     "after_patch": {
+      "V": [
+       "e",
+       "r1",
+       "r2",
+       "v"
+      ],
+      "E": [
+       [
+        "e",
+        "r1"
+       ],
+       [
+        "r1",
+        "r2"
+       ],
+       [
+        "r2",
+        "v"
+       ]
+      ]
+     },
+     "dag_check": "PASS",
+     "acyclic": true
+    }
+   ],
+   "resumed_execution": [
+    "e",
+    "r",
+    "r1",
+    "r2",
+    "v"
+   ],
+   "final_quality": 1,
+   "total_tokens": 720,
+   "simulated_steps": 5,
+   "wall_clock_note": "simulated executor \u2014 no wall-clock claimed"
+  },
+  {
+   "task_id": "S3-no-failure-control",
+   "initial_DAG": {
+    "e": {
+     "deps": [],
+     "model": "large"
+    },
+    "r": {
+     "deps": [
+      "e"
+     ],
+     "model": "medium"
+    },
+    "v": {
+     "deps": [
+      "r"
+     ],
+     "model": "coder"
+    }
+   },
+   "events": [],
+   "patches": [],
+   "validation": [],
+   "resumed_execution": [
+    "e",
+    "r",
+    "v"
+   ],
+   "final_quality": 1,
+   "total_tokens": 420,
+   "simulated_steps": 3,
+   "wall_clock_note": "simulated executor \u2014 no wall-clock claimed"
+  },
+  {
+   "task_id": "S4-insert-checker",
+   "initial_DAG": {
+    "e": {
+     "deps": [],
+     "model": "medium"
+    },
+    "r": {
+     "deps": [
+      "c"
+     ],
+     "model": "large"
+    },
+    "v": {
+     "deps": [
+      "r"
+     ],
+     "model": "coder"
+    }
+   },
+   "events": [
+    {
+     "executed": "e",
+     "feedback": "fact count at model cap",
+     "diagnosis": "extraction overload"
+    }
+   ],
+   "patches": [
+    {
+     "decision": "insert checker between extraction and reasoning",
+     "removed_nodes": [],
+     "added_nodes": [
+      "c"
+     ],
+     "removed_edges": [
+      [
+       "e",
+       "r"
+      ]
+     ],
+     "added_edges": [
+      [
+       "c",
+       "r"
+      ],
+      [
+       "e",
+       "c"
+      ]
+     ]
+    }
+   ],
+   "validation": [
+    {
+     "after_patch": {
+      "V": [
+       "c",
+       "e",
+       "r",
+       "v"
+      ],
+      "E": [
+       [
+        "c",
+        "r"
+       ],
+       [
+        "e",
+        "c"
+       ],
+       [
+        "r",
+        "v"
+       ]
+      ]
+     },
+     "dag_check": "PASS",
+     "acyclic": true
+    }
+   ],
+   "resumed_execution": [
+    "e",
+    "c",
+    "r",
+    "v"
+   ],
+   "final_quality": 1,
+   "total_tokens": 480,
+   "simulated_steps": 4,
+   "wall_clock_note": "simulated executor \u2014 no wall-clock claimed"
+  }
+ ],
+ "checks": {
+  "s1_topology_changed": true,
+  "s1_v_changed": true,
+  "s1_dataflow_new_preds": true,
+  "s1_midrun": true,
+  "s2_done_node_protected": true,
+  "s3_no_patch_without_feedback": true,
+  "s4_edge_set_changed": true,
+  "all_acyclic": true,
+  "zero_model_calls": true
+ },
+ "verdict": "P0 PASS: runtime DAG reconfiguration implemented and validated structurally (capability only; value vs Static+Reroute requires the P1/P2 real-run protocol)"
+}
