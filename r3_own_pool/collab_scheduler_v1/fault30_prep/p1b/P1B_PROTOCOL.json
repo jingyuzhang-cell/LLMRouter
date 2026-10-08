@@ -1,5 +1,5 @@
 {
- "protocol": "P1B pilot (conditional approval; smoke-gated)",
+ "protocol": "P1B pilot v2 (six audit P0s fixed)",
  "tasks": [
   {
    "uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
@@ -22,28 +22,25 @@
    "uid_sha256": "73437e8a4339d9e8"
   }
  ],
- "selection": "sha256(\"p1b:20261009:\"+uid) ascending, first 5 of 106 held-out (hybrid_pool excludes all used uids)",
- "states": [
-  "clean",
-  "fault30(seed 20260923, paired across strategies)"
- ],
+ "heldout_faults": {
+  "0dc550d6-ba0a-4f46-b606-b102f5441631": "e2"
+ },
+ "fault_rule": "Random(20260923) over the 5 held-out UIDs, 30% (2 tasks), node+pool draws per frozen200 rule",
  "strategies": [
   "single",
   "static",
   "reroute",
   "dynpatch"
  ],
- "initial_collab": "DynamicDAG-HETEROGENEOUS (LR arm for reroute/dynpatch)",
  "per_task_budget": 12,
+ "smoke_cap": 48,
  "global_budget": 480,
- "cache": "disabled across strategies",
+ "cache": "disabled",
  "concurrency": "serial",
  "retries": 0,
- "exploration": "none this pilot",
+ "smoke_budget_note": "1 task x 4 strategies x 1 state = 48 cap; both states = 96",
  "code_sha": {
   "patch": "f27d31ef2be3729e",
-  "p1b": "7995bea25abcd3b6",
-  "protocol": "e3f1f7a7a8037791"
- },
- "boundary": "validates the Dynamic-DAG-Patch ONLINE MECHANISM only; not the Outer+SA-PGFS online system"
+  "p1b": "bce3b7f9732fd328"
+ }
 }

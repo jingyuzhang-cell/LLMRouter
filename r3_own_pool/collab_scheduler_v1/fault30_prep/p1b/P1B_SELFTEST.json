@@ -1,23 +1,18 @@
 {
  "checks": {
-  "t1_patch_fired_real_prompts": true,
-  "t1_no_gold_in_detector_path": true,
-  "t2_infra_abort_no_retry": true,
-  "t3_paired_fault_registry": true,
-  "t4_ledger_persisted": true,
-  "t5_status_fidelity": true,
-  "t6_consumed_dep_protected": true
+  "t1_dynpatch_split_real_prompts": true,
+  "t1b_no_gold_leak": true,
+  "t2_reroute_recovers": true,
+  "t3_static_completes": true,
+  "t4_faults_on_heldout": true,
+  "t5_failed_no_ready": true,
+  "t6_tokens_accounted": true,
+  "t6b_global_counter_persisted": true,
+  "t6c_failed_calls_on_disk": true
  },
- "estimate": {
-  "per_track_upper": 12,
-  "tracks": 40,
-  "hard_ceiling": 480,
-  "realistic": "single~10, static~40, reroute~70-90, dynpatch~90-130 => ~210-270 expected, 480 absolute cap"
- },
- "sample_log": {
+ "sample_dynpatch": {
   "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
   "strategy": "dynpatch",
-  "state": "see_fault_arg",
   "status": "completed",
   "executed": [
    "e1",
@@ -31,8 +26,7 @@
    {
     "executed": "r",
     "kind": "r unparseable",
-    "diagnosis": "reasoning failure",
-    "decision": "split"
+    "diagnosis": "reasoning failure"
    }
   ],
   "patches": [
@@ -79,11 +73,82 @@
     ]
    }
   ],
-  "scheduler_overhead_s": 0.00015582144260406494,
-  "final_quality": 0,
-  "end_to_end_wall_s": 0.007404,
-  "node_wall_s": 0.006372,
+  "scheduler_overhead_s": 0.008217278867959976,
+  "final_quality": 1,
+  "end_to_end_wall_s": 0.008446,
+  "node_wall_s": 0.006395,
   "n_calls": 6,
-  "failed_calls": 0
+  "failed_calls": 0,
+  "total_tokens": 600
+ },
+ "sample_reroute": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "strategy": "reroute",
+  "status": "completed",
+  "executed": [
+   "e1",
+   "e2",
+   "r",
+   "r_esc",
+   "v"
+  ],
+  "events": [
+   {
+    "executed": "r",
+    "kind": "r unparseable",
+    "diagnosis": "reasoning failure"
+   },
+   {
+    "executed": "r_esc",
+    "kind": "escalated rerun",
+    "diagnosis": "local-reroute recovery"
+   }
+  ],
+  "patches": [],
+  "scheduler_overhead_s": 0.006213031709194183,
+  "final_quality": 1,
+  "end_to_end_wall_s": 0.006296,
+  "node_wall_s": 0.00531,
+  "n_calls": 5,
+  "failed_calls": 0,
+  "total_tokens": 500
+ },
+ "sample_static": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "strategy": "static",
+  "status": "completed",
+  "executed": [
+   "e1",
+   "e2",
+   "r",
+   "v"
+  ],
+  "events": [],
+  "patches": [],
+  "scheduler_overhead_s": 0.004739034920930862,
+  "final_quality": 1,
+  "end_to_end_wall_s": 0.004812,
+  "node_wall_s": 0.004242,
+  "n_calls": 4,
+  "failed_calls": 0,
+  "total_tokens": 400
+ },
+ "sample_failed": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "strategy": "static",
+  "status": "failed-no-ready",
+  "executed": [
+   "e1",
+   "e2"
+  ],
+  "events": [],
+  "patches": [],
+  "scheduler_overhead_s": 0.001074269413948059,
+  "final_quality": 0,
+  "end_to_end_wall_s": 0.001238,
+  "node_wall_s": 9e-06,
+  "n_calls": 3,
+  "failed_calls": 1,
+  "total_tokens": 200
  }
 }
