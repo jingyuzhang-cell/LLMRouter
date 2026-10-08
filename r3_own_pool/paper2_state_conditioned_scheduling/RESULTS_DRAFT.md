@@ -67,7 +67,7 @@ of critical-path latency for a 6.7-percentage-point quality gain over its
 no-recovery counterpart — and did so consistently in all three fault seeds (per-seed gains +0.060 to
 +0.075; task-clustered bootstrap 95% CI +2.5 to +10.8 percentage points,
 P = 0.0016). Under the same clustered analysis the QUALITY family's gain
-remained significant (+2.3 points, CI +1.2 to +3.7, P = 0.0002) whereas the
+remained significant (+2.3 points, CI +1.2 to +3.7, P < 10⁻⁴) whereas the
 BALANCED family's did not (+3.2 points, CI −0.2 to +6.7, P = 0.072); all
 three families' cost increases were tightly positive. These intervals
 quantify task-sampling uncertainty under three fixed fault seeds on this

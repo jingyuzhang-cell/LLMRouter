@@ -24,7 +24,7 @@ for fam in ('BALANCED', 'HETEROGENEOUS', 'QUALITY'):
         bs = np.array([np.mean(a[rng.integers(len(a), size=len(a))]) for _ in range(10000)])
         vals[m] = dict(mean=float(a.mean()),
                        ci95=[float(np.percentile(bs, 2.5)), float(np.percentile(bs, 97.5))],
-                       p_two_sided=float(2 * min((bs <= 0).mean(), (bs >= 0).mean())))
+                       p_two_sided=float(min(1.0, 2 * (((bs <= 0).sum() + 1) / (len(bs) + 1)))))
     out[fam] = vals
 doc = dict(method='task-cluster bootstrap (tasks resampled with replacement; '
                   '3 fault seeds averaged within task — preserves dependence)',
