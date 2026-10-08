@@ -536,10 +536,6 @@ def self_test():
     return all(checks.values())
 
 
-if __name__ == '__main__':
-    self_test()
-
-
 # ===================== V3 SMOKE ENTRY (double-gated, safe restart) =====================
 
 def _check_old_smoke():
@@ -566,6 +562,13 @@ def smoke_run_v3():
     import os
     import subprocess
 
+    # BUDGET SAFETY: bind to production files BEFORE any gate reads them.
+    # This ensures _load_gc() reads the PRODUCTION counter, not any test file
+    # that a prior self_test() might have left in the globals.
+    _use_test_ledger(False)
+    LEDGER_PROD = OUT / 'LEDGER_V3.jsonl'
+    GCOUNTER_PROD = OUT / 'GLOBAL_BUDGET_STATE_V3.json'
+
     # Gate 1: environment
     if os.environ.get('P1B_V3_EXECUTE') != '1':
         print('smoke_run_v3: gate 1 failed (env P1B_V3_EXECUTE=1 required); refusing')
@@ -585,22 +588,28 @@ def smoke_run_v3():
         print('Cannot start v3 smoke while v2 is active. Wait for v2 to complete.')
         return
 
-    # Gate 4: restart protection
-    gc = _load_gc()
-    if gc['n'] > 0:
-        # Check if we already completed
-        done_marker = OUT / 'SMOKE_V3_COMPLETE.json'
-        if done_marker.exists():
-            print(f'smoke_run_v3: gate 4 failed — previous v3 smoke already completed '
-                  f'(budget used: {gc["n"]}/{gc["cap"]}). Refusing to restart.')
+    # Gate 4: restart protection (reads from PRODUCTION file directly)
+    if GCOUNTER_PROD.exists():
+        gc_prod = json.loads(GCOUNTER_PROD.read_text())
+        if gc_prod['n'] > 0:
+            done_marker = OUT / 'SMOKE_V3_COMPLETE.json'
+            if done_marker.exists():
+                print(f'smoke_run_v3: gate 4 failed — previous v3 smoke already completed '
+                      f'(budget used: {gc_prod["n"]}/{gc_prod["cap"]}). Refusing to restart.')
+                return
+            print(f'smoke_run_v3: gate 4 — previous v3 smoke partial (n={gc_prod["n"]}). '
+                  f'Resume mode not yet implemented. Refusing to restart from zero.')
             return
-        print(f'smoke_run_v3: gate 4 — previous v3 smoke partial (n={gc["n"]}). '
-              f'Resume mode not yet implemented. Refusing to restart from zero.')
-        return
+    else:
+        # First ever run: initialize production counter
+        gc_prod = dict(n=0, cap=SMOKE_CAP)
+        GCOUNTER_PROD.write_text(json.dumps(gc_prod))
 
-    # All gates passed — safe to start
-    _use_test_ledger(False)  # ensure production ledger
+    # All gates passed — production budget is now safely bound
     print('smoke_run_v3: all gates passed. Starting v3 smoke...')
+    print(f'  production budget: {GCOUNTER_PROD} (n={gc_prod["n"]}, cap={gc_prod["cap"]})')
+    print(f'  production ledger: {LEDGER_PROD}')
+    gc = gc_prod
     lock = (ROOT / 'collect/logs/local_gpu.lock').open('a+')
     try:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -627,8 +636,8 @@ def smoke_run_v3():
         ftasks = [t for t in tasks if t['uid'] in faults] or [tasks[0]]
         task = ftasks[0]
         led = fp.Ledger()
-        gc = dict(n=0, cap=SMOKE_CAP)
-        _save_gc(gc)
+        # gc already bound from gate 4 (either loaded from production or initialized)
+        # NEVER reset to zero here
         results = dict(
             version='v3',
             task_uid=task['uid'],
@@ -716,15 +725,91 @@ def test_restart_protection():
     return checks
 
 
+def test_entry_level_restart():
+    """Simulates the ACTUAL execution path for restart safety.
+    1. Sets production counter to non-zero (simulating prior partial run)
+    2. Invokes smoke_run_v3() via the same __main__ dispatch
+    3. Verifies it refuses (does NOT reset or start)
+    """
+    import os, subprocess, tempfile
+    from pathlib import Path
+
+    checks = {}
+    gc_file = OUT / 'GLOBAL_BUDGET_STATE_V3.json'
+    ledger_file = OUT / 'LEDGER_V3.jsonl'
+
+    # Save current production state
+    saved_gc = gc_file.read_text() if gc_file.exists() else None
+    saved_ledger = ledger_file.read_text() if ledger_file.exists() else None
+
+    try:
+        # Simulate: production counter non-zero (partial prior run)
+        gc_file.write_text(json.dumps(dict(n=7, cap=48)))
+        # Simulate: invoke smoke via subprocess with correct env + flag
+        env = dict(os.environ, P1B_V3_EXECUTE='1')
+        r = subprocess.run(
+            [sys.executable, '-m', 'collab_scheduler_v1.dag_patch_p1b_v3', '--execute-v3'],
+            capture_output=True, text=True, env=env, timeout=15,
+            cwd=str(ROOT))
+        output = r.stdout + r.stderr
+        checks['refused_partial'] = 'gate 4' in output and 'refusing' in output.lower()
+        checks['did_not_reset'] = json.loads(gc_file.read_text())['n'] == 7
+        checks['did_not_start'] = 'Starting v3 smoke' not in output
+
+        # Simulate: production counter non-zero AND completed marker
+        (OUT / 'SMOKE_V3_COMPLETE.json').write_text(json.dumps(dict(unix_time=0)))
+        r2 = subprocess.run(
+            [sys.executable, '-m', 'collab_scheduler_v1.dag_patch_p1b_v3', '--execute-v3'],
+            capture_output=True, text=True, env=env, timeout=15,
+            cwd=str(ROOT))
+        checks['refused_completed'] = 'already completed' in r2.stdout
+        (OUT / 'SMOKE_V3_COMPLETE.json').unlink()
+
+        # Simulate: missing env var
+        env_no = dict(os.environ)
+        env_no.pop('P1B_V3_EXECUTE', None)
+        r3 = subprocess.run(
+            [sys.executable, '-m', 'collab_scheduler_v1.dag_patch_p1b_v3', '--execute-v3'],
+            capture_output=True, text=True, env=env_no, timeout=15,
+            cwd=str(ROOT))
+        checks['refused_no_env'] = 'gate 1 failed' in r3.stdout
+
+        # Simulate: missing flag
+        r4 = subprocess.run(
+            [sys.executable, '-m', 'collab_scheduler_v1.dag_patch_p1b_v3'],
+            capture_output=True, text=True, timeout=15, cwd=str(ROOT))
+        checks['no_flag_shows_usage'] = 'Usage' in r4.stdout
+        checks['no_flag_no_selftest'] = 'ALL PASS' not in r4.stdout
+
+    finally:
+        # Restore production state
+        if saved_gc:
+            gc_file.write_text(saved_gc)
+        elif gc_file.exists():
+            gc_file.unlink()
+        if saved_ledger:
+            ledger_file.write_text(saved_ledger)
+        elif ledger_file.exists():
+            ledger_file.unlink()
+        done_marker = OUT / 'SMOKE_V3_COMPLETE.json'
+        if done_marker.exists():
+            done_marker.unlink()
+
+    return checks
+
+
 if __name__ == '__main__':
     if '--execute-v3' in sys.argv:
         smoke_run_v3()  # production only; self_test NEVER runs here
     elif '--test-restart' in sys.argv:
         print(json.dumps(test_restart_protection(), indent=1))
+    elif '--test-entry-restart' in sys.argv:
+        print(json.dumps(test_entry_level_restart(), indent=1))
     elif '--self-test' in sys.argv:
         self_test()  # explicit opt-in; uses TEST ledger
     else:
         print('Usage:\n'
-              '  --self-test     run comprehensive self-test (TEST ledger)\n'
-              '  --execute-v3    run real smoke (production ledger, triple-gated)\n'
-              '  --test-restart  test restart protection logic')
+              '  --self-test          run comprehensive self-test (TEST ledger)\n'
+              '  --execute-v3         run real smoke (production, triple-gated)\n'
+              '  --test-restart       test restart protection logic\n'
+              '  --test-entry-restart test entry-level restart safety (subprocess)')
