@@ -1,0 +1,27 @@
+{
+ "checks": {
+  "p1_parse_nondict": true,
+  "p2_detect_r_unparseable": true
+ },
+ "freeze": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "injection": {
+   "label": "synthetic_unparseable_r",
+   "text": "###SYNTHETIC UNPARSEABLE r-output [not a pool draw]###",
+   "sha256": "094eaf8d2ddd3968",
+   "provenance": "newly designed controlled syntax fault; NOT a FAULT_POOLS draw"
+  },
+  "strategies": [
+   "reroute",
+   "dynpatch"
+  ],
+  "per_strategy": 12,
+  "cap": 24,
+  "code_sha": {
+   "dag_patch_directed_v3.py": "543f061940e04dbe",
+   "dag_patch_p1b_v3.py": "348a126d2a493fcf"
+  },
+  "admission_gate_note": "completed historical runs stay frozen and do NOT block new authorized runs; unfinished/abnormal runs are never silently resumed or overwritten"
+ },
+ "verdict": "PLAN-A ADMISSION PASS"
+}

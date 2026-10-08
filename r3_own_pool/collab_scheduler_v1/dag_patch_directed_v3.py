@@ -277,13 +277,12 @@ def run_directed(service, task, strategy, led, gc, run_id, failing_text):
 
 
 def _get_directed_config():
-    """Fixed config: one task, directed r-fault from pool."""
+    """Plan-A frozen config: held task + synthetic unparseable r fault."""
     tasks = select_tasks()
-    faults = build_heldout_faults(tasks)
-    pools = json.loads((ROOT / 'static_dag_v0/adaptive_benchmark/FAULT_POOLS.json')
-                       .read_text())
     task = tasks[0]
-    failing_text = pools['r'][0]
+    adm = json.loads((ROOT / 'collab_scheduler_v1/fault30_prep/p1b/'
+                      'directed_v3/PLAN_A_ADMISSION.json').read_text())
+    failing_text = adm['freeze']['injection']['text']  # synthetic_unparseable_r
     return task, failing_text
 
 
@@ -310,10 +309,13 @@ def execute_directed():
                 done = existing / 'COMPLETE.json'
                 incomplete = existing / 'INCOMPLETE.json'
                 gc_file = existing / 'BUDGET_STATE.json'
-                if done.exists():
-                    print(f'execute_directed: gate 4 failed — run {existing.name} already '
-                          f'completed; refusing')
+                if incomplete.exists():
+                    print(f'execute_directed: gate 4 failed — run {existing.name} '
+                          f'incomplete (crashed); refusing')
                     return
+                if done.exists():
+                    continue  # completed historical runs stay frozen and do NOT
+                    # block new explicitly-authorized runs (audit 2026-10-09)
                 if incomplete.exists():
                     print(f'execute_directed: gate 4 failed — run {existing.name} '
                           f'incomplete (crashed); refusing')
