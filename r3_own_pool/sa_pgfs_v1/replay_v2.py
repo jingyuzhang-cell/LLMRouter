@@ -339,8 +339,8 @@ def run(seed_master=20261008, n_seeds=200, smoke=False):
                     'ehvi-vs-other tests',
             naming='qNEHVI adapted = independent marginal sampling approximation '
                    '(no joint posterior covariance); MCTS = UCT over the legal '
-                   'Y-X-Z template tree; scalarized = fixed 7-weight Chebyshev '
-                   'library, round-robin EI'),
+                   'Y-X-Z template tree; scalarized = fixed 7-weight linear '
+                   'scalarization (arc @ w), round-robin EI'),
         n_seeds=n_seeds, true_front=true_gids, hv_true_front=float(ref_hv),
         summary=summary, per_seed=per, permutation_tests=tests,
         holm_corrected=holm if not smoke else None, zero_model_calls=True)

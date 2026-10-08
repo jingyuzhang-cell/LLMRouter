@@ -1,5 +1,17 @@
 # Reference Cube 实验台账（collab_scheduler_v1）
 
+## 2026-10-08 P1 统计验证 + 文档同步（复核后收尾，零调用）
+
+- **恢复效应任务聚类 bootstrap**（DELTA_Z_BOOTSTRAP.json，任务重采样、种子在任务内
+  平均以保留依赖）：HETEROGENEOUS ΔQ +6.67pp **CI[+2.5,+10.8] p=0.0016 显著**；
+  QUALITY +2.33pp CI[+1.2,+3.7] p=0.0002 显著；**BALANCED +3.17pp CI[−0.2,+6.7]
+  p=0.072 不显著（跨零，如实报告）**；三族 ΔC 均紧致为正（+613~+770 tokens）。
+- 草稿同步 V2_1 AUC（EHVI 0.865 / qNEHVI 0.866 / scalarized 0.852 / qnparego 0.848，
+  预算 2–8）；"有代理 vs 无代理"分组措辞更正（Greedy ≥4 观测后也用 GP，不作严格
+  分组结论）；Scalarized 命名更正为固定权重线性标量化（实现为 arc @ w，非 Chebyshev）。
+
+
+
 ## 2026-10-08 残留协议问题修复（v2_1，审计复核后第二轮，零调用）
 
 - **B1 重做为真"同样本状态特征"对照**（旧版实为分状态训练 vs 混合训练，数据组织不同）：

@@ -64,8 +64,12 @@ is made. The new front point was the recovery-enabled
 configuration DynamicDAG–HETEROGENEOUS–local-reroute (Q = 0.343 ± 0.005,
 C = 2089, L = 4.45 s), which traded roughly 622 additional tokens and 1.3 s
 of critical-path latency for a 6.7-percentage-point quality gain over its
-no-recovery counterpart — and did so consistently in all three fault seeds
-(per-seed gains +0.060 to +0.075).
+no-recovery counterpart — and did so consistently in all three fault seeds (per-seed gains +0.060 to
++0.075; task-clustered bootstrap 95% CI +2.5 to +10.8 percentage points,
+P = 0.0016). Under the same clustered analysis the QUALITY family's gain
+remained significant (+2.3 points, CI +1.2 to +3.7, P = 0.0002) whereas the
+BALANCED family's did not (+3.2 points, CI −0.2 to +6.7, P = 0.072); all
+three families' cost increases were tightly positive.
 
 Recovery bought quality at measurable cost in every model-assignment family
 (Δ_Z Q = +0.032, +0.067 and +0.023 for BALANCED, HETEROGENEOUS and QUALITY,
@@ -128,11 +132,14 @@ indistinguishable from one another on the final gap (all Holm-corrected
 paired P ≥ 0.05), whereas surrogate-free methods were clearly worse
 (AFlow-style MCTS +0.031, greedy +0.067, NSGA-II +0.080, random +0.093;
 all Holm-corrected P ≤ 0.004). Hypervolume-over-budget curves mildly
-favoured the EHVI family over the scalarized controllers (AUC-HV 0.909
-versus 0.888–0.892, Holm-corrected P ≤ 0.004). We therefore make no
-acquisition-level claim on this space: the data establish that a learned
-surrogate is necessary at this budget, that no acquisition family separates
-within surrogate-based search at 15 configurations, and that the complexity
+favoured the EHVI family over the scalarized controllers (AUC-HV 0.866
+versus 0.848–0.852, budgets 2–8, Holm-corrected P ≤ 0.004). We therefore make no
+acquisition-level claim on this space: the data establish that, at this
+budget in this finite space, EHVI-family and scalarized surrogate searches
+outperform several simpler search mechanisms (greedy here also fits the GP
+once four observations are available, so we do not frame the split as
+strictly surrogate versus surrogate-free), that no acquisition family
+separates within surrogate-based search at 15 configurations, and that the complexity
 boundary at which Pareto acquisition outperforms simple scalarization
 requires a larger, cost-heterogeneous space (preregistered follow-up,
 Supplementary Note 3). SA-PGFS is consequently presented as the
