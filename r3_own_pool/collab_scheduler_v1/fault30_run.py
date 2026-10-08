@@ -195,7 +195,7 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
         if node and node not in nodes:
             node = None
         st[uid] = dict(faulted=node is not None, node=node, facts={}, keys=[],
-                       rkeys=[], vkeys=[])
+                       rkeys=[], vkeys=[], e_recovered=set())
 
     def k(uid, node, kind=None):
         return f'f30:{topo}:{fam}:{node}' + (f':{kind}' if kind else '') + f':{uid}'
@@ -271,6 +271,7 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
 
                 def go(uid=uid, nd=nd):
                     t = task_map[uid]
+                    old_facts = st[uid]['facts'][nd]['facts']
                     key = k(uid, nd, 'fb')
                     ex.call(key, target[uid],
                             led.eprompt(t, t['ctx_table'] if nd == 'e1' else t['ctx_text']),
@@ -278,11 +279,14 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
                     st[uid]['keys'].append(key)
                     f, _ = led.parse_facts_safe(ex.answer(key))
                     st[uid]['facts'][nd] = f
+                    # Track whether this fb actually CHANGED the facts
+                    if f['facts'] != old_facts:
+                        st[uid]['e_recovered'].add(nd)
                 jobs.append(dict(model=target[uid], go=go))
         ex.run_stage(jobs)
         # ---- R2: r-refresh where e facts changed (descendant closure) ----
         chg = [t['uid'] for t in tasks
-               if any(kk.endswith(':fb') and (':e1:' in kk or ':e2:' in kk)
+               if any(':e1:fb:' in kk or ':e2:fb:' in kk
                       for kk in st[t['uid']]['keys'])]
         jobs = []
         for uid in chg:

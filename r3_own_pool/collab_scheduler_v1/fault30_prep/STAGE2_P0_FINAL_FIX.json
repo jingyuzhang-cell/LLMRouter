@@ -1,0 +1,19 @@
+{
+ "revision": "P0-1 FINAL FIX (supersedes 1afbabe audit which wrongly said PASS)",
+ "bug": "R2 r-refresh trigger used kk.endswith(\":fb\") but keys end with :{uid}, so endswith(\":fb\") NEVER matched -> R2 (and consequently V2 via rkeys>1) never fired after e-recovery. All downstream nodes ran on stale (pre-recovery) facts in every fault30 LR arm evaluation.",
+ "fix": "condition changed to ':e1:fb:' in kk or ':e2:fb:' in kk (substring, position-correct)",
+ "scoring_ok": "scoring block uses exact key membership (k(uid,nd,\"fb\") in keys) \u2014 was already correct; only R2 trigger was wrong",
+ "v2_ok": "V2 v-refresh triggers on len(rkeys)>1 \u2014 was already correct (it would have fired if R2 had worked)",
+ "impact": "ALL fault30 LOCAL_REROUTE results were computed WITHOUT downstream refresh after e-recovery. Q/C/L values for LR arms are from the stale-facts execution path. This means the published Delta_Z recovery effects may be UNDERSTATED (recovery would have improved Q more with proper downstream refresh) or otherwise biased.",
+ "historical_data": "FAULT30_RESULTS.json and derived analyses are now known to reflect a buggy execution path. They must be marked as superseded pending rerun. The clean/NONE arms are unaffected (no e-recovery in their path).",
+ "action_required": "fault30 LOCAL_REROUTE arms must be re-evaluated with the fixed code (zero new calls: cached answers exist; only the SCORING and stage routing change). The Reference Cube freeze must be versioned.",
+ "checks": {
+  "bug_was_real": true,
+  "fix_matches_actual_keys": true,
+  "scoring_exact_match_ok": true,
+  "v2_rkeys_len_ok": true,
+  "latency_serial": true
+ },
+ "zero_model_calls": true,
+ "code_sha": "c733ae84cade92df"
+}
