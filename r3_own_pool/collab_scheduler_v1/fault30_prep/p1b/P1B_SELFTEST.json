@@ -1,0 +1,89 @@
+{
+ "checks": {
+  "t1_patch_fired_real_prompts": true,
+  "t1_no_gold_in_detector_path": true,
+  "t2_infra_abort_no_retry": true,
+  "t3_paired_fault_registry": true,
+  "t4_ledger_persisted": true,
+  "t5_status_fidelity": true,
+  "t6_consumed_dep_protected": true
+ },
+ "estimate": {
+  "per_track_upper": 12,
+  "tracks": 40,
+  "hard_ceiling": 480,
+  "realistic": "single~10, static~40, reroute~70-90, dynpatch~90-130 => ~210-270 expected, 480 absolute cap"
+ },
+ "sample_log": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "strategy": "dynpatch",
+  "state": "see_fault_arg",
+  "status": "completed",
+  "executed": [
+   "e1",
+   "e2",
+   "r",
+   "r1",
+   "r2",
+   "v"
+  ],
+  "events": [
+   {
+    "executed": "r",
+    "kind": "r unparseable",
+    "diagnosis": "reasoning failure",
+    "decision": "split"
+   }
+  ],
+  "patches": [
+   {
+    "decision": "split r",
+    "removed_nodes": [
+     "r"
+    ],
+    "added_nodes": [
+     "r1",
+     "r2"
+    ],
+    "removed_edges": [
+     [
+      "e1",
+      "r"
+     ],
+     [
+      "e2",
+      "r"
+     ],
+     [
+      "r",
+      "v"
+     ]
+    ],
+    "added_edges": [
+     [
+      "e1",
+      "r1"
+     ],
+     [
+      "e2",
+      "r1"
+     ],
+     [
+      "r1",
+      "r2"
+     ],
+     [
+      "r2",
+      "v"
+     ]
+    ]
+   }
+  ],
+  "scheduler_overhead_s": 0.00015582144260406494,
+  "final_quality": 0,
+  "end_to_end_wall_s": 0.007404,
+  "node_wall_s": 0.006372,
+  "n_calls": 6,
+  "failed_calls": 0
+ }
+}
