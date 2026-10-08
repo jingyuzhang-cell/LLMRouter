@@ -1,0 +1,16 @@
+{
+ "methodology": "execution-path-aware audit stops at FIRST miss per track, so unique_misses=4 is a hard lower bound from 1 task only. Full scope estimated from fault distribution.",
+ "per_seed_e_faults": [
+  32,
+  33,
+  35
+ ],
+ "natural_empty_estimate": 157,
+ "calls_per_er_task": "r-fbd (1) + v-fbd (1) + possible v-esc (0-1) = 2-3",
+ "estimated_new_calls": {
+  "lower": "3 seeds \u00d7 ~32 e-faulted \u00d7 2 calls = ~192 unique new calls",
+  "upper": "3 seeds \u00d7 (32+nat_empty) \u00d7 3 calls = ~200-500+ calls"
+ },
+ "unique_misses_from_audit": 4,
+ "note": "audit-by-first-miss gives tight lower bound; real budget requires allowing execution past misses (needs actual responses) or pre-computing all recovered-facts prompts and checking each"
+}
