@@ -320,6 +320,19 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
                     st[uid]['r_changed'] = True
             jobs.append(dict(model='large', go=go))
         ex.run_stage(jobs)
+        # FINAL-state comparison: compare LAST r answer to ORIGINAL (pre-recovery)
+        # r answer. Overrides the process-accumulated r_changed flag so that
+        # R2=B, R3=A (restored to original) correctly yields r_changed=False.
+        for t in tasks:
+            uid = t['uid']
+            if len(st[uid]['rkeys']) > 1:
+                original = ex.answer(st[uid]['rkeys'][0])
+                final = ex.answer(st[uid]['rkeys'][-1])
+                # save process-level flag BEFORE overwriting with final state
+                old_changed = st[uid].get('r_changed', False)
+                st[uid]['r_process_changed'] = st[uid].get(
+                    'r_process_changed', False) or old_changed
+                st[uid]['r_changed'] = (final != original)
 
     # ---- stage V1: planned verification ----
     if 'v' in nodes:
@@ -389,6 +402,17 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
             val, err = r_value(uid, t)
             ok = int(not err and close(val, gold))
         used = sum(ex.cost(kk) for kk in st[uid]['keys'])
+        # Seven-layer accounting (protocol v3): distinguish logical vs physical
+        logical_calls = len(st[uid]['keys'])
+        injected_calls = sum(1 for kk in st[uid]['keys']
+                             if ex.by_key.get(kk, {}).get('response', {})
+                             .get('injected_fault'))
+        real_calls = logical_calls - injected_calls
+        cache_hits = sum(1 for kk in st[uid]['keys']
+                         if ex.by_key.get(kk, {}).get('alias_of'))
+        real_tokens = sum(ex.cost(kk) for kk in st[uid]['keys']
+                          if not ex.by_key.get(kk, {}).get('response', {})
+                          .get('injected_fault'))
         if topo in ('SER', 'SERV'):
             lats = [ex.lat(k(uid, 'e'))]
             if is_lr and k(uid, 'e', 'fb') in st[uid]['keys']:
@@ -403,7 +427,12 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
         l = max(lats) + sum(ex.lat(kk) for kk in st[uid]['rkeys']) \
             + sum(ex.lat(kk) for kk in st[uid]['vkeys'])
         rows[uid] = dict(ok=ok, used=used, lat=l, faulted=st[uid]['faulted'],
-                         fault_node=st[uid]['node'], keys=st[uid]['keys'])
+                         fault_node=st[uid]['node'], keys=st[uid]['keys'],
+                         logical_calls=logical_calls, injected_calls=injected_calls,
+                         real_calls=real_calls, cache_hits=cache_hits,
+                         real_tokens=real_tokens,
+                         r_changed_final=st[uid].get('r_changed', False),
+                         r_process_changed=st[uid].get('r_process_changed', False))
     return rows
 
 

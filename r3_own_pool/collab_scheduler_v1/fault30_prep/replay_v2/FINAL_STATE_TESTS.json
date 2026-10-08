@@ -1,0 +1,168 @@
+{
+ "results": [
+  {
+   "name": "F1_ABA_final_unchanged",
+   "result": {
+    "r_changed_final": false,
+    "r_process_changed": true,
+    "v_fbd_fired": false,
+    "r_fbd_fired": true,
+    "r_esc_fired": true,
+    "n_logical": 7,
+    "n_injected": 0,
+    "n_real": 7,
+    "n_cache": 0,
+    "real_tokens": 700.0,
+    "total_used": 700.0,
+    "ok": 1,
+    "calls": [
+     "plain",
+     "plain",
+     "plain",
+     "fb",
+     "fbd",
+     "esc",
+     "plain"
+    ]
+   },
+   "checks": {
+    "r_changed_final_is_False": true,
+    "r_process_changed_is_True": true,
+    "v_fbd_not_fired": true,
+    "r_fbd_and_esc_fired": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "F2_ABC_final_changed",
+   "result": {
+    "r_changed_final": true,
+    "r_process_changed": true,
+    "v_fbd_fired": true,
+    "r_fbd_fired": true,
+    "r_esc_fired": true,
+    "n_logical": 8,
+    "n_injected": 0,
+    "n_real": 8,
+    "n_cache": 0,
+    "real_tokens": 800.0,
+    "total_used": 800.0,
+    "ok": 1,
+    "calls": [
+     "plain",
+     "plain",
+     "plain",
+     "fb",
+     "fbd",
+     "plain",
+     "fbd",
+     "esc"
+    ]
+   },
+   "checks": {
+    "r_changed_final_is_True": true,
+    "v_fbd_fired": true,
+    "r_fbd_fired": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "F3_recovery_fails",
+   "result": {
+    "r_changed_final": true,
+    "r_process_changed": true,
+    "v_fbd_fired": true,
+    "r_fbd_fired": true,
+    "r_esc_fired": true,
+    "n_logical": 8,
+    "n_injected": 0,
+    "n_real": 8,
+    "n_cache": 0,
+    "real_tokens": 800.0,
+    "total_used": 800.0,
+    "ok": 1,
+    "calls": [
+     "plain",
+     "plain",
+     "plain",
+     "fb",
+     "fbd",
+     "esc",
+     "plain",
+     "fbd"
+    ]
+   },
+   "checks": {
+    "r_changed_final_True_on_failure": true,
+    "not_falsely_restored": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "F4_accounting",
+   "result": {
+    "r_changed_final": true,
+    "r_process_changed": true,
+    "v_fbd_fired": true,
+    "r_fbd_fired": true,
+    "r_esc_fired": true,
+    "n_logical": 8,
+    "n_injected": 0,
+    "n_real": 8,
+    "n_cache": 0,
+    "real_tokens": 800.0,
+    "total_used": 800.0,
+    "ok": 1,
+    "calls": [
+     "plain",
+     "plain",
+     "plain",
+     "fb",
+     "fbd",
+     "plain",
+     "fbd",
+     "esc"
+    ]
+   },
+   "checks": {
+    "logical_ge_real": true,
+    "logical_eq_real_plus_inj": true,
+    "real_tokens_positive": true,
+    "tokens_le_used": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "F5_no_pathology",
+   "result": {
+    "r_changed_final": false,
+    "r_process_changed": false,
+    "v_fbd_fired": false,
+    "r_fbd_fired": false,
+    "r_esc_fired": false,
+    "n_logical": 4,
+    "n_injected": 0,
+    "n_real": 4,
+    "n_cache": 0,
+    "real_tokens": 400.0,
+    "total_used": 400.0,
+    "ok": 1,
+    "calls": [
+     "plain",
+     "plain",
+     "plain",
+     "plain"
+    ]
+   },
+   "checks": {
+    "no_fb": true,
+    "no_fbd": true,
+    "no_esc": true,
+    "r_changed_final_False": true
+   },
+   "verdict": "PASS"
+  }
+ ],
+ "zero_model_calls": true,
+ "all_pass": true
+}
