@@ -1,0 +1,86 @@
+{
+ "run": "directed_1791438829_f8fdd828",
+ "budget": {
+  "n": 11,
+  "cap": 24
+ },
+ "e1_detection_event": true,
+ "e2_graph_changed": {
+  "G0": {
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r"
+    ],
+    [
+     "e2",
+     "r"
+    ],
+    [
+     "r",
+     "v"
+    ]
+   ]
+  },
+  "G1": {
+   "nodes": [
+    "e1",
+    "e2",
+    "r1",
+    "r2",
+    "v"
+   ],
+   "edges": [
+    [
+     "e1",
+     "r1"
+    ],
+    [
+     "e2",
+     "r1"
+    ],
+    [
+     "r1",
+     "r2"
+    ],
+    [
+     "r2",
+     "v"
+    ]
+   ]
+  },
+  "verdict": true
+ },
+ "e3_r1_r2_real_calls": true,
+ "e4_v_prompt_contains_real_r2val": {
+  "r2_val": -24.5,
+  "verbatim_in_prompt": true,
+  "context": "ION: [PENDING VERIFICATION: r2 computed -24.5]"
+ },
+ "e5_v_real_response": {
+  "answer": "```json\n{\n  \"value\": -24.5\n}\n```",
+  "parsed": {
+   "value": -24.5
+  },
+  "Q": 0
+ },
+ "e6_accounting": {
+  "real_calls": 9,
+  "injected_calls": 2,
+  "real_tokens": 4934,
+  "wall_s": {
+   "reroute": 149.571579,
+   "dynpatch": 151.670642
+  },
+  "scheduler_overhead_s": 0.0004710480570793152
+ },
+ "interpretation": "mechanism evidence complete under a controlled detectable fault: detection -> atomic patch -> real r1 -> real r2 -> real v consuming the REAL r2 value (-24.5) verbatim in its prompt -> fenced response parsed to the same value. Q=0 reflects answer accuracy vs gold, NOT mechanism success (per authorization: success = real execution of the reconfigured DAG + real r2->v data passing).",
+ "claim_boundary": "validated: online DAG reconfiguration + data passing under a CONTROLLED detectable fault. NOT claimed: natural-fault diagnosis; Dynamic Patch superiority over Local Reroute (paired experiments remain future work).",
+ "originals_frozen": true
+}
