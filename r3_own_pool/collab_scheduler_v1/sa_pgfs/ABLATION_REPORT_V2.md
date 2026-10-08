@@ -1,4 +1,13 @@
-# Corrected Ablation v2: State-aware vs State-blind SA-PGFS (zero LLM calls)
+# ⚠️ V2 HAS FEATURE-LABEL MISALIGNMENT BUG — see V3 for corrected results ⚠️
+
+> v2's `blind_equal` arm shuffled label indices without shuffling features,
+> causing the GP to learn wrong config→Q mappings. See ABLATION_REPORT_V3.md
+> for the fix and definitive results. Direction of findings unchanged but
+> magnitudes differ; v2 numbers are invalid.
+
+---
+
+# Corrected Ablation v2: State-aware vs State-blind SA-PGFS (zero LLM calls) [V2 — BUG FOUND, see V3]
 
 Fixes over v1: regression-tested `sa_pgfs_v1.pareto.hypervolume`; unified
 normalization across both states (pre-determined); three arms; two-sided

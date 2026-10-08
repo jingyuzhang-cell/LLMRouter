@@ -1,0 +1,103 @@
+{
+ "results": {
+  "s_clean|state_aware": {
+   "auc_mean": 0.9681897894161683,
+   "auc_std": 0.026334488243331223,
+   "auc_ci95": [
+    0.9188011862058677,
+    1.0000000000000002
+   ]
+  },
+  "s_clean|blind_equal": {
+   "auc_mean": 0.9580687891008562,
+   "auc_std": 0.03972183765098653,
+   "auc_ci95": [
+    0.8511191493694468,
+    1.0000000000000002
+   ]
+  },
+  "s_clean|blind_pooled": {
+   "auc_mean": 0.957092024319703,
+   "auc_std": 0.043844063426980835,
+   "auc_ci95": [
+    0.8321833139099324,
+    1.0000000000000002
+   ]
+  },
+  "s_fault30|state_aware": {
+   "auc_mean": 0.8973817299897948,
+   "auc_std": 0.09013477890486046,
+   "auc_ci95": [
+    0.7232997922387703,
+    0.988469362582163
+   ]
+  },
+  "s_fault30|blind_equal": {
+   "auc_mean": 0.9293946479396205,
+   "auc_std": 0.05498130357605369,
+   "auc_ci95": [
+    0.7789915037844639,
+    0.988452464020242
+   ]
+  },
+  "s_fault30|blind_pooled": {
+   "auc_mean": 0.9318778966952054,
+   "auc_std": 0.050696214811796855,
+   "auc_ci95": [
+    0.7966114230447627,
+    0.9852379929041706
+   ]
+  },
+  "pairwise_tests": {
+   "s_clean|state_aware_vs_blind_equal": {
+    "auc_a": 0.9681897894161683,
+    "auc_b": 0.9580687891008562,
+    "mean_diff": 0.010121000315312052,
+    "p_two_sided_raw": 0.0002,
+    "p_holm_adjusted": 0.0012000000000000001
+   },
+   "s_clean|state_aware_vs_blind_pooled": {
+    "auc_a": 0.9681897894161683,
+    "auc_b": 0.957092024319703,
+    "mean_diff": 0.011097765096465373,
+    "p_two_sided_raw": 0.0002,
+    "p_holm_adjusted": 0.0012000000000000001
+   },
+   "s_clean|blind_equal_vs_blind_pooled": {
+    "auc_a": 0.9580687891008562,
+    "auc_b": 0.957092024319703,
+    "mean_diff": 0.0009767647811533215,
+    "p_two_sided_raw": 0.6822,
+    "p_holm_adjusted": 0.7676
+   },
+   "s_fault30|state_aware_vs_blind_equal": {
+    "auc_a": 0.8973817299897948,
+    "auc_b": 0.9293946479396205,
+    "mean_diff": -0.03201291794982572,
+    "p_two_sided_raw": 0.0002,
+    "p_holm_adjusted": 0.0012000000000000001
+   },
+   "s_fault30|state_aware_vs_blind_pooled": {
+    "auc_a": 0.8973817299897948,
+    "auc_b": 0.9318778966952054,
+    "mean_diff": -0.03449616670541075,
+    "p_two_sided_raw": 0.0002,
+    "p_holm_adjusted": 0.0012000000000000001
+   },
+   "s_fault30|blind_equal_vs_blind_pooled": {
+    "auc_a": 0.9293946479396205,
+    "auc_b": 0.9318778966952054,
+    "mean_diff": -0.0024832487555850376,
+    "p_two_sided_raw": 0.3838,
+    "p_holm_adjusted": 0.7676
+   }
+  },
+  "protocol_note": "SUPPLEMENTARY protocol: old RBF GP (ls=1.0, sigma_f=1.0, noise=0.01), n0=3, budget=14 (full space). Differs from replay v2 main protocol (sklearn GP, n0=2, budget=8). This is a standalone training-data-source ablation, not a same-protocol main-experiment ablation.",
+  "normalization_note": "Unified min-max normalization computed from the full dual-state cube (offline). Valid for comparing arms; NOT a deployable normalization (requires knowledge of all-state objective ranges).",
+  "experiment_name": "State-specific training vs cross-state pooled/mixed training. NOT a state-feature on/off ablation (arms differ in training label source, not in the presence of a state input feature).",
+  "v2_bug_fixed": "v2 (b0d0e50) had feature-label misalignment in blind_equal (shuffled indices for labels, unshuffled features); v3 fixes with per-index coin-flip using separate RNG, features stay aligned.",
+  "v2_p_value_correction": "v2 reported p<1e-4 but actual minimum achievable with 10000 permutations is 2/10000=0.0002; v3 reports exact values with Holm correction."
+ },
+ "n_seeds": 200,
+ "n_perm": 10000
+}
