@@ -1,0 +1,149 @@
+{
+ "checks": {
+  "t1_dynpatch_split": true,
+  "t1b_no_gold_leak": true,
+  "t2_reroute_r_esc": true,
+  "t3_static_completes": true,
+  "t4_faults_valid": true,
+  "t5_failed_no_ready": true,
+  "t6_tokens": true,
+  "t7_v_consumes_r2_val": true,
+  "t7b_v_prompt_changes_with_r2": true,
+  "t8_scheduler_not_inflated": true,
+  "t9_e_fault_detected": true,
+  "t9b_static_no_recovery": true,
+  "t10_injected_marked": true,
+  "t10b_clean_not_marked": true,
+  "t11_restart_protection": true
+ },
+ "sample_dynpatch": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "strategy": "dynpatch",
+  "status": "completed",
+  "executed": [
+   "e1",
+   "e2",
+   "r",
+   "r1",
+   "r2",
+   "v"
+  ],
+  "events": [],
+  "patches": [
+   {
+    "decision": "split r",
+    "removed_nodes": [
+     "r"
+    ],
+    "added_nodes": [
+     "r1",
+     "r2"
+    ],
+    "removed_edges": [
+     [
+      "e1",
+      "r"
+     ],
+     [
+      "e2",
+      "r"
+     ],
+     [
+      "r",
+      "v"
+     ]
+    ],
+    "added_edges": [
+     [
+      "e1",
+      "r1"
+     ],
+     [
+      "e2",
+      "r1"
+     ],
+     [
+      "r1",
+      "r2"
+     ],
+     [
+      "r2",
+      "v"
+     ]
+    ]
+   }
+  ],
+  "scheduler_overhead_s": 0.00023448467254638672,
+  "detection_events": [
+   {
+    "kind": "r_unexecutable",
+    "node": "r",
+    "diagnosis": "reasoning_expression_unexecutable"
+   }
+  ],
+  "final_quality": 0,
+  "end_to_end_wall_s": 0.185216,
+  "node_wall_s": 0.00633,
+  "n_calls": 6,
+  "failed_calls": 0,
+  "total_tokens": 600
+ },
+ "sample_reroute": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "strategy": "reroute",
+  "status": "completed",
+  "executed": [
+   "e1",
+   "e2",
+   "r",
+   "r_esc",
+   "v"
+  ],
+  "events": [
+   {
+    "executed": "r_esc",
+    "kind": "escalated_rerun",
+    "diagnosis": "local-reroute recovery"
+   }
+  ],
+  "patches": [],
+  "scheduler_overhead_s": 5.955621600151062e-05,
+  "detection_events": [
+   {
+    "kind": "r_unexecutable",
+    "node": "r",
+    "diagnosis": "reasoning_expression_unexecutable"
+   }
+  ],
+  "final_quality": 0,
+  "end_to_end_wall_s": 0.161907,
+  "node_wall_s": 0.005253,
+  "n_calls": 5,
+  "failed_calls": 0,
+  "total_tokens": 500
+ },
+ "sample_static": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "strategy": "static",
+  "status": "completed",
+  "executed": [
+   "e1",
+   "e2",
+   "r",
+   "v"
+  ],
+  "events": [],
+  "patches": [],
+  "scheduler_overhead_s": 0.00023903697729110718,
+  "detection_events": [],
+  "final_quality": 0,
+  "end_to_end_wall_s": 0.357956,
+  "node_wall_s": 0.004256,
+  "n_calls": 4,
+  "failed_calls": 0,
+  "total_tokens": 400
+ },
+ "v_prompts_seen": [
+  "You are verifying a computed answer for a financial question. Given the extracted facts and a proposed expression, check that every referenced value binds to the correct fact and that the arithmetic is right, recompute independently, then return ONLY JSON {\"value\": <number>} with the corrected final value (preserve reported units; percentages as ratios x100).\nQUESTION: What was the difference between the total rent obligations and land lease agreements?\nFACTS: [{\"value\": 1.5, \"evidence\": \"a\"}, {\"value\": 2.5, \"evidence\": \"b\"}, {\"value\": 1.5, \"evidence\": \"a\"}, {\"value\": 2.5, \"evidence\": \"b\"}]\nPROPOSED EXPRESSION: r2_final_result = 99.0"
+ ]
+}
