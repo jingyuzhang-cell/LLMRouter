@@ -1,5 +1,18 @@
 # Reference Cube 实验台账（collab_scheduler_v1）
 
+## 2026-10-08 残留协议问题修复（v2_1，审计复核后第二轮，零调用）
+
+- **B1 重做为真"同样本状态特征"对照**（旧版实为分状态训练 vs 混合训练，数据组织不同）：
+  联合 GP 同样本，输入 X vs [X, state]。结果：aware gap +0.0018 vs blind +0.0040，
+  **gap p=10⁻⁴ 显著；AUC p=0.213 检不出差异**——准确表述："状态信息改善最终前沿
+  恢复；全程搜索效率优势未检出（no statistically significant difference）"。
+- **AUC/N95 计入初始设计**（预算 2–8）：REPLAY_V2_1.json gap 逐位不变（修复仅影响
+  记账），AUC 整体下移、排序与全部结论不变。消融曲线与 v2 主表因 GP 启用时机不同
+  （B 自 2 点拟合、v2 自 4 点）不可横向数值比较——已注明。
+- 版本化：MECHANISM_ABLATIONS_V2_1.json / REPLAY_V2_1.json，旧件保留未覆盖。
+
+
+
 ## 2026-10-08 工作包 B 机制消融（修正协议，200 配对种子，零调用；MECHANISM_ABLATIONS.json；取代 6e9702e 旧消融）
 
 - **B1 状态感知 vs 状态盲**（同跨状态观测流、同数据量、仅状态信息不同）：

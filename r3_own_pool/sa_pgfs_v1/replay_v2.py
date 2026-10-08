@@ -135,7 +135,11 @@ def run(seed_master=20261008, n_seeds=200, smoke=False):
             for i in init:
                 obs[i] = obs_q[i]
             mN, mV = {}, {}  # MCTS visit counts / cumulative rewards
-            hist = []
+            ev0 = sorted(obs)
+            a0 = np.array([noisy_obj(i) for i in ev0])  # v2_1: init included
+            hist = [(N_INIT, hypervolume(objs[ev0][non_dominated(objs[ev0])])
+                     / ref_hv, hypervolume(a0[non_dominated(a0)]) / ref_hv,
+                     set(), set())]
             w_ptr = 0
             while len(obs) < N_EVAL:
                 uneval = [i for i in range(15) if i not in obs]
@@ -322,7 +326,7 @@ def run(seed_master=20261008, n_seeds=200, smoke=False):
         for i, (k, p) in enumerate(fam):
             holm[k] = min(1.0, max((m_ - j) * fam[j][1] for j in range(i + 1)))
     out = dict(
-        version='replay_v2 corrected (audit RF-2/3/5 fixes; supersedes search '
+        version='replay_v2_1 (v2 fixes + AUC/N95 from initial design; supersedes '
                 'comparison claims of the frozen replay; cube measurements unchanged)',
         protocol_amendment=dict(
             features='integer categorical codes (ACTUAL frozen implementation; '
@@ -340,7 +344,7 @@ def run(seed_master=20261008, n_seeds=200, smoke=False):
         n_seeds=n_seeds, true_front=true_gids, hv_true_front=float(ref_hv),
         summary=summary, per_seed=per, permutation_tests=tests,
         holm_corrected=holm if not smoke else None, zero_model_calls=True)
-    fn = OUT / ('REPLAY_V2_SMOKE.json' if smoke else 'REPLAY_V2.json')
+    fn = OUT / ('REPLAY_V2_1_SMOKE.json' if smoke else 'REPLAY_V2_1.json')
     fn.write_text(json.dumps(out, indent=1))
     for s in STRATS:
         m = summary[s]

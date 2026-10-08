@@ -8,9 +8,10 @@ state ablation (6e9702e), which used the broken HV implementation.
 
 B1 state-aware vs state-blind (fair: SAME cross-state observation stream and
    data volume; only state information differs):
-     aware  : per-state GPs; clean observations train a clean GP used only
-              for clean-side context, fault GP drives fault-state selection
-     blind  : ONE GP trained on the pooled stream WITHOUT a state feature
+     v2_1 fair design: BOTH arms train on the SAME pooled samples (clean+fault
+              observations of every evaluated config); blind uses input X,
+              aware uses input [X, state-bit] — only the state feature differs;
+              prediction on fault-state candidates in both arms
    Both arms observe, for every evaluated config, its Q in BOTH states
    (the tables are measured); target metric = FAULT-state true HV gap.
    C/L columns visible to both arms identically.
@@ -142,7 +143,9 @@ def run(seed_master=20261009, n_seeds=200, smoke=False):
                 rng_s = np.random.default_rng(21000 + seed)
                 obs = {i: obs_q[i] for i in init}
                 obs_c = {i: obs_qc[i] for i in init}
-                hist = []
+                ev0 = sorted(obs)
+                t0 = objs[ev0][non_dominated(objs[ev0])]
+                hist = [(N_INIT, hypervolume(t0) / ref_hv)]  # init included (v2_1)
                 while len(obs) < N_EVAL:
                     ev, uneval = sorted(obs), [i for i in range(n) if i not in obs]
                     arc = np.array([nobj(i) for i in ev])
@@ -153,19 +156,20 @@ def run(seed_master=20261009, n_seeds=200, smoke=False):
                         mu, sg = sur.predict(np.zeros((len(uneval), 1)))
                     else:
                         sur = QSurrogate()
-                        if ab == 'B1_state' and a == 'blind':
+                        if ab == 'B1_state':
+                            # v2_1: same pooled samples; only the state feature
+                            # differs between arms
                             Xp = np.vstack([Xi[ev], Xi[ev]])
+                            Zp = np.vstack([np.zeros((len(ev), 1)),
+                                            np.ones((len(ev), 1))])
                             yp = np.array([obs_c[i] for i in ev] + [obs[i] for i in ev])
-                            sur.fit(Xp, yp)
-                            mu, sg = sur.predict(Xi[uneval])
-                        elif ab == 'B1_state' and a == 'aware':
-                            # clean GP consumes the same clean stream as context;
-                            # fault GP (same volume as blind's per-state share)
-                            # drives selection
-                            surc = QSurrogate()
-                            surc.fit(Xi[ev], np.array([obs_c[i] for i in ev]))
-                            sur.fit(Xi[ev], np.array([obs[i] for i in ev]))
-                            mu, sg = sur.predict(Xi[uneval])
+                            if a == 'aware':
+                                sur.fit(np.hstack([Xp, Zp]), yp)
+                                mu, sg = sur.predict(
+                                    np.hstack([Xi[uneval], np.ones((len(uneval), 1))]))
+                            else:
+                                sur.fit(Xp, yp)
+                                mu, sg = sur.predict(Xi[uneval])
                         else:
                             Xa = Xb2[a] if ab == 'B2_repr' else Xi
                             sur.fit(Xa[ev], np.array([obs[i] for i in ev]))
@@ -214,7 +218,7 @@ def run(seed_master=20261009, n_seeds=200, smoke=False):
                 for i, (k, _) in enumerate(fam)}
     else:
         holm = None
-    out = dict(version='work-package B mechanism ablations on corrected v2 protocol '
+    out = dict(version='work-package B v2_1: same-samples state-feature B1; AUC/N95 from initial design '
                         '(supersedes historical 6e9702e state ablation which used the '
                         'broken HV)',
                design_notes=dict(
@@ -229,7 +233,7 @@ def run(seed_master=20261009, n_seeds=200, smoke=False):
                n_seeds=n_seeds, true_front=true_gids, summary=summary,
                permutation_tests=tests, holm=holm, per_seed=per,
                zero_model_calls=True)
-    fn = OUT / ('MECHANISM_ABLATIONS_SMOKE.json' if smoke else 'MECHANISM_ABLATIONS.json')
+    fn = OUT / ('MECHANISM_ABLATIONS_V2_1_SMOKE.json' if smoke else 'MECHANISM_ABLATIONS_V2_1.json')
     fn.write_text(json.dumps(out, indent=1))
     for k, m in summary.items():
         print(f"{k:24s} gap={m['gap']['mean']:+.4f}/{m['gap']['median']:+.4f} "
