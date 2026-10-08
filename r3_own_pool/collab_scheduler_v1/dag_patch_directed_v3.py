@@ -376,7 +376,8 @@ def execute_directed():
         results = dict(
             run_id=run_id, scope='directed-r mechanism verification',
             task_uid=task['uid'], gold=task['answer'],
-            failing_text_preview=failing_text[:100],
+            fault_type='directed r syntax error',
+            failing_text=failing_text,
             hard_cap=HARD_CAP, per_strategy_cap=PER_STRATEGY_CAP,
             strategies=['reroute', 'dynpatch'], tracks=[])
 
@@ -494,6 +495,13 @@ def test_directed_stub():
     parsed = _parse('v', fenced)
     checks['fence_parse'] = isinstance(parsed, dict) and parsed.get('value') == 42.0
 
+    # Verify the directed fault is a syntax error that triggers r_unparseable
+    parsed_fault = _parse('r', failing_text)
+    det_fault = _detect_r(parsed_fault, [])
+    checks['injection_is_r_unparseable'] = (not isinstance(parsed_fault, dict)
+                                            and det_fault is not None
+                                            and det_fault['kind'] == 'r_unparseable')
+
     # Restart: verify gate logic detects non-zero budget in run dirs
     RUN_GCOUNTER.write_text(json.dumps(dict(n=5, cap=HARD_CAP)))
     # Simulate what execute_directed's gate 4 checks
@@ -567,6 +575,20 @@ def test_directed_stub():
                                          Q=log_dp['final_quality'],
                                          cost=log_dp['cost'],
                                          mechanism_keys=sorted(log_dp['mechanism'].keys())))
+    # Add code SHA and experiment config to readiness report
+    code_sha = hashlib.sha256(
+        (ROOT / 'collab_scheduler_v1/dag_patch_directed_v3.py').read_bytes()
+    ).hexdigest()[:16]
+    results['code_sha256'] = code_sha
+    results['experiment_config'] = dict(
+        task_uid=task['uid'],
+        fault_type='directed r syntax error (verified)',
+        fault_text=failing_text,
+        strategies=['reroute', 'dynpatch'],
+        per_strategy_cap=PER_STRATEGY_CAP,
+        hard_cap=HARD_CAP,
+        entry_command='P1B_V3_EXECUTE=1 python3 -m '
+                      'collab_scheduler_v1.dag_patch_directed_v3 --execute-directed')
     (OUT / 'DIRECTED_V3_READINESS.json').write_text(json.dumps(results, indent=1,
                                                               default=str))
     print(json.dumps(checks, indent=1))

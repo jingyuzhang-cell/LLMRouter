@@ -17,6 +17,7 @@
   "mutation_r2_changes_v_prompt": true,
   "budget_within_cap": true,
   "fence_parse": true,
+  "injection_is_r_unparseable": true,
   "restart_gate_detects_nonzero": true,
   "restart_no_reset": true,
   "old_v3_files_untouched": true,
@@ -24,8 +25,8 @@
   "exception_exit_blocks_rerun": true
  },
  "all_pass": true,
- "n_checks": 22,
- "n_pass": 22,
+ "n_checks": 23,
+ "n_pass": 23,
  "reroute_summary": {
   "status": "completed",
   "Q": 0,
@@ -35,7 +36,7 @@
    "injected_calls": 1,
    "real_tokens": 400,
    "injected_tokens_synthetic": 100,
-   "node_wall_s": 0.005262
+   "node_wall_s": 0.005267
   }
  },
  "dynpatch_summary": {
@@ -47,7 +48,7 @@
    "injected_calls": 1,
    "real_tokens": 500,
    "injected_tokens_synthetic": 100,
-   "node_wall_s": 0.006311
+   "node_wall_s": 0.006312
   },
   "mechanism_keys": [
    "G0",
@@ -62,5 +63,18 @@
    "v_prompt_has_r2_val",
    "v_response"
   ]
+ },
+ "code_sha256": "8cb4f1aa0959ef8a",
+ "experiment_config": {
+  "task_uid": "3117a2bf-abbf-4038-a450-47fc20167b4a",
+  "fault_type": "directed r syntax error (verified)",
+  "fault_text": "###SYNTHETIC UNPARSEABLE r-output [not a pool draw]###",
+  "strategies": [
+   "reroute",
+   "dynpatch"
+  ],
+  "per_strategy_cap": 12,
+  "hard_cap": 24,
+  "entry_command": "P1B_V3_EXECUTE=1 python3 -m collab_scheduler_v1.dag_patch_directed_v3 --execute-directed"
  }
 }
