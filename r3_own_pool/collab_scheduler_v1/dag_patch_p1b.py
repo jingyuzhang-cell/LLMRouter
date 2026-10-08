@@ -423,12 +423,16 @@ def smoke_run():
         ftasks = [t for t in tasks if t["uid"] in faults] or [tasks[0]]
         task = ftasks[0]
         led = fp.Ledger()
+        if (OUT / 'SMOKE_RESULTS.json').exists() and '--new-run' not in sys.argv:
+            raise SystemExit('SMOKE_RESULTS.json exists — completion marker; '
+                             'use --new-run for a fresh run id')
         gc = _load_gc()          # restart protection: reuse disk count
         if gc['n'] > 0 and '--reset-budget' not in sys.argv:
             raise SystemExit(f'refusing: disk counter n={gc["n"]} > 0 (restart '
                              f'protection); pass --reset-budget to override '
                              f'explicitly')
-        gc = dict(n=0, cap=SMOKE_CAP)
+        from collab_scheduler_v1.dag_patch_stage0 import smoke_budget
+        gc = smoke_budget(_load_gc())   # cap clamped to 48 regardless of disk
         _save_gc(gc)
         results = dict(task_uid=task["uid"], state="fault30(random, seed 20260923)",
                        drawn_fault=faults.get(task["uid"], ("none",))[0],
