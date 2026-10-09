@@ -40,7 +40,7 @@ correlation, not cross-task statistical significance.
 ## 4. Supported conclusion (final wording)
 
 "Across independently re-trained surrogate models on frozen observation data,
-the state input feature changes GP predictions by up to 7.9 percentage points
+the state input feature changes GP predictions by up to 9.12 percentage points (per-source max: without_incremental_cost 9.12, without_state 8.45, scalarized_bo 7.86, qNEHVI 7.74; earlier 7.9 was scalarized_bo only)
 and can alter the top-ranked candidate for some observation sets. Ablation
 isolation is verified: both arms share identical candidates, costs, feature
 dimensions, normalization, and GP settings; the only difference is the state
