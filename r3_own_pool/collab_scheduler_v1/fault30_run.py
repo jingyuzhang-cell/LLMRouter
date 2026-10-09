@@ -423,9 +423,11 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
         if 'v' in nodes:
             vv = json_value(ex.answer(st[uid]['vkeys'][-1]))
             ok = int(vv is not None and close(vv, gold))
+            final_value = vv
         else:
             val, err = r_value(uid, t)
             ok = int(not err and close(val, gold))
+            final_value = None if err else val
         used = sum(ex.cost(kk) for kk in st[uid]['keys'])
         # Eight-layer accounting (protocol v4): physical model cost must
         # EXCLUDE cache alias hits and injected faults — only count calls that
@@ -454,6 +456,7 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
         l = max(lats) + sum(ex.lat(kk) for kk in st[uid]['rkeys']) \
             + sum(ex.lat(kk) for kk in st[uid]['vkeys'])
         rows[uid] = dict(ok=ok, used=used, lat=l, faulted=st[uid]['faulted'],
+                         final_value=final_value,
                          fault_node=st[uid]['node'], keys=st[uid]['keys'],
                          logical_calls=logical_calls, injected_calls=injected_calls,
                          cache_hits=cache_hits, dry_calls=accounting['dry_calls'],

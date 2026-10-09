@@ -123,10 +123,30 @@ class JointEvaluator:
                 for uid,row in rerun.items():
                     rows[uid]=dict(row,keys=rows[uid]['keys']+row['keys'])
         deployment=[]
+        from collab_scheduler_v1.joint_search_v1.scoring_contract_final import (
+            score_v21)
+        from collab_scheduler_v1.joint_search_v1.task_contract_v2 import (
+            contract_v2_gold, load_native_answers)
+        if not hasattr(self, '_v21_gold'):
+            self._v21_gold = {}
+            _nat = load_native_answers()
+            for task in self.tasks:
+                uid = task['uid']
+                nat = _nat.get(uid, {})
+                self._v21_gold[uid] = contract_v2_gold(
+                    nat.get('native_answer'), nat.get('native_scale'),
+                    nat.get('raw_derivation', task.get('derivation', '')))
         for task in self.tasks:
             uid=task['uid'];row=rows[uid]
             records=[self.ex.by_key[k] for k in row['keys']]
-            deployment.append(dict(uid=uid,Q=row['ok'],
+            # v2.1 canonical Q: re-score the final answer with the frozen contract
+            v21g = self._v21_gold.get(uid, {})
+            gold_v21 = v21g.get('gold', task.get('answer'))
+            final_val = row.get('final_value')
+            Q_v21 = int(score_v21(final_val, gold_v21)) if final_val is not None else row['ok']
+            deployment.append(dict(uid=uid,Q=Q_v21,Q_v1=row['ok'],
+                v21_gold=gold_v21, v21_gold_source=v21g.get('gold_source','v1_fallback'),
+                final_value=final_val,
                 C_tokens=sum(r['response']['usage']['total_tokens'] for r in records),
                 L_serial_service_reconstructed_s=sum(r['response']['latency_s'] for r in records),
                 logical_calls=len(records)))
