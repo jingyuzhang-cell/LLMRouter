@@ -1,0 +1,65 @@
+{
+ "role": "V2 candidate freeze for NET_BENEFIT protocol",
+ "selection_rule": "config with highest mean Q across states from V2 campaign 8 tasks; selected BEFORE NET_BENEFIT 50 tasks executed; NET_BENEFIT tasks NEVER used for tuning",
+ "tie_break": "if multiple configs tie at max Q, prefer LOCAL > FULL > NONE (recovery-enabled preferred for competitive comparison); if still tied, prefer lower-cost (sum of logical tokens)",
+ "source": "V2 campaign 10/10 complete sessions across 3 directories",
+ "candidates": [
+  {
+   "rank": 1,
+   "config_id": "medium__medium__medium__coder__LOCAL",
+   "mean_Q": 0.5,
+   "Q_by_state": {
+    "clean": 0.5,
+    "fault30": 0.5
+   },
+   "X": {
+    "e1": "medium",
+    "e2": "medium",
+    "r": "medium",
+    "v": "coder"
+   },
+   "Z": "LOCAL",
+   "selection_note": "recovery-enabled; ties with several configs at Q=0.5; selected per tie_break rule (LOCAL preferred)",
+   "usable_as": "V2_candidate_dynamic"
+  },
+  {
+   "rank": 2,
+   "config_id": "large__medium__medium__large__FULL",
+   "mean_Q": 0.5,
+   "Q_by_state": {
+    "clean": 0.5,
+    "fault30": 0.5
+   },
+   "X": {
+    "e1": "large",
+    "e2": "medium",
+    "r": "medium",
+    "v": "large"
+   },
+   "Z": "FULL",
+   "selection_note": "ties at Q=0.5; selected as second candidate per tie_break (FULL second preference)",
+   "usable_as": "V2_candidate_full"
+  },
+  {
+   "rank": 3,
+   "config_id": "medium__large__medium__coder__NONE",
+   "mean_Q": 0.438,
+   "Q_by_state": {
+    "clean": 0.5,
+    "fault30": 0.375
+   },
+   "X": {
+    "e1": "medium",
+    "e2": "large",
+    "r": "medium",
+    "v": "coder"
+   },
+   "Z": "NONE",
+   "selection_note": "best NONE config; included for comparison",
+   "usable_as": "V2_candidate_static"
+  }
+ ],
+ "frozen_before_netbenefit": true,
+ "netbenefit_tasks_used_for_selection": false,
+ "protocol_sha256": "289b064f98bbdf0f"
+}
