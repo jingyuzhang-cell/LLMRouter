@@ -39,21 +39,20 @@ def quality_dispatch(model, prompt):
     Answers are always format-correct; quality varies by model capability."""
     time.sleep(0.001)
     tok = {'medium': 60, 'large': 90, 'coder': 70}.get(model, 60)
-    if 'extract' in prompt.lower():
-        # medium extraction fails ~40% (by prompt length parity)
-        if model == 'medium' and len(prompt) % 2 == 0:
-            ans = '{"facts": []}'
-        else:
-            ans = ('{"facts": [{"value": 1.5, "evidence": "a"}, '
-                   '{"value": 2.5, "evidence": "b"}]}')
-    elif 'arithmetic' in prompt.lower():
+    pl = prompt.lower()
+    if 'arithmetic reasoning' in pl:
         ans = '{"expression": "v0+v1"}'
-    elif 'verif' in prompt.lower():
-        # medium verification sometimes wrong
-        if model == 'medium' and len(prompt) % 2 == 1:
+    elif 'verifying' in pl:
+        if model == 'medium' and len(prompt) % 7 == 3:
             ans = '{"value": 99.0}'
         else:
             ans = '{"value": 4.0}'
+    elif 'extract the quantities' in pl:
+        if model == 'medium':
+            ans = '{"facts": []}'  # medium model can't extract (capability)
+        else:
+            ans = ('{"facts": [{"value": 1.5, "evidence": "a"}, '
+                   '{"value": 2.5, "evidence": "b"}]}')
     else:
         ans = '{"value": 4.0}'
     return dict(status='delivered', answer=ans,
