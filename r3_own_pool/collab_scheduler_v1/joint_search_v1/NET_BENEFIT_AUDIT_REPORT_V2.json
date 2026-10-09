@@ -1,0 +1,96 @@
+{
+ "role": "NET_BENEFIT running audit v2 (real assertions, zero model requests)",
+ "audits": {
+  "scoring": {
+   "status": "PASS",
+   "n_tests": 12,
+   "n_pass": 12,
+   "tests": {
+    "score_v21_case_0": true,
+    "score_v21_case_1": true,
+    "score_v21_case_2": true,
+    "score_v21_case_3": true,
+    "score_v21_case_4": true,
+    "score_v21_case_5": true,
+    "score_v21_case_6": true,
+    "score_v21_case_7": true,
+    "score_v21_case_8": true,
+    "score_v21_case_9": true,
+    "evaluator_Q_v21_path": true,
+    "evaluator_all_fields": true
+   },
+   "failures": {}
+  },
+  "fault": {
+   "status": "FAIL",
+   "n_tests": 8,
+   "n_pass": 5,
+   "tests": {
+    "fault_draw_deterministic": true,
+    "fault_rate_correct": true,
+    "injection_no_extra_physical": true,
+    "injection_counted_separately": "FINDING: injected_calls=0 despite fault set; events counter may not flag injections",
+    "injection_logical_delta_positive": false,
+    "fault_status_in_result": true,
+    "fault_has_effect": true,
+    "fault_changes_outcome": "FINDING: Z=NONE config with fault on cached path may not change outcome"
+   },
+   "failures": {
+    "injection_counted_separately": "FINDING: injected_calls=0 despite fault set; events counter may not flag injections",
+    "injection_logical_delta_positive": false,
+    "fault_changes_outcome": "FINDING: Z=NONE config with fault on cached path may not change outcome"
+   }
+  },
+  "cache": {
+   "status": "PASS",
+   "n_tests": 3,
+   "n_pass": 3,
+   "tests": {
+    "cache_same_output": true,
+    "cache_reduces_new_requests": true,
+    "logical_cost_invariant": true
+   },
+   "failures": {}
+  },
+  "cost": {
+   "status": "PASS",
+   "n_tests": 6,
+   "n_pass": 6,
+   "tests": {
+    "logical_from_task_record": true,
+    "logical_calls_counted": true,
+    "physical_le_logical": true,
+    "physical_tokens_positive": true,
+    "cache_savings_nonneg": true,
+    "second_run_physical_le_first": true
+   },
+   "failures": {}
+  },
+  "de_consistency": {
+   "status": "FAIL",
+   "n_tests": 7,
+   "n_pass": 4,
+   "tests": {
+    "D_configs_exist": true,
+    "E_configs_exist": true,
+    "D_E_share_X_assignments": true,
+    "detection_function_exists": true,
+    "D_config_executable": false,
+    "E_config_executable": false,
+    "E_logical_ge_D": "SKIP: one or both configs failed to execute"
+   },
+   "failures": {
+    "D_config_executable": false,
+    "E_config_executable": false,
+    "E_logical_ge_D": "SKIP: one or both configs failed to execute"
+   }
+  }
+ },
+ "all_pass": false,
+ "zero_model_requests": true,
+ "fixes": {
+  "cost_audit": "6 real assertions (was 3 hardcoded True)",
+  "de_audit": "5 real assertions incl. actual D/E execution and logical call comparison (was 3 hardcoded)",
+  "fault_audit": "7 strict assertions incl. call-delta and effect verification (was 5 loose)"
+ }
+}
