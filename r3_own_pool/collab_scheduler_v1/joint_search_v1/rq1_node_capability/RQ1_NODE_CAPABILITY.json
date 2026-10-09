@@ -1,0 +1,281 @@
+{
+ "role": "RQ1 node-capability heterogeneity — 冻结观测上的节点能力差异描述",
+ "status": "DIAGNOSTIC, descriptive only — no causal attribution, no routing claim",
+ "claim_guards": [
+  "stage-level model differences do NOT establish that node-level assignment beats query-level routing; that needs same-task, same-contract direct comparison and a routing baseline",
+  "historical static/dynamic trajectories cannot separate DAG decomposition from recovery gains when configs/prompts/tasks/fault conditions differ — differences are described, not attributed"
+ ],
+ "inputs": {
+  "fullval_runs_fullval_authorized_1h_01": {
+   "version": "authorized_fullval_1h_v1 (historical gold: eval-derivation)",
+   "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/offline_predictor_audit/copy_inputs/fullval_runs_fullval_authorized_1h_01",
+   "sha": "13dc67af107d29fc"
+  },
+  "fullval_runs_fullval_cont1_01": {
+   "version": "fullval_continuation_1_v1",
+   "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/offline_predictor_audit/copy_inputs/fullval_runs_fullval_cont1_01",
+   "sha": "85760925d63ffbab"
+  },
+  "formal_campaign_proposed_state_incremental_20261009": {
+   "version": "formal_launch_v1 (historical gold: eval-derivation; DIAGNOSTIC session)",
+   "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/offline_predictor_audit/copy_inputs/formal_campaign_proposed_state_incremental_20261009",
+   "sha": "016808206fe08c2c"
+  },
+  "formal_campaign_v2_scalarized_bo_20261009": {
+   "version": "formal_launch_v2 (historical gold: GOLD_CONTRACT_V1)",
+   "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/offline_predictor_audit/copy_inputs/formal_campaign_v2_scalarized_bo_20261009",
+   "sha": "7a5bc35c75674d15"
+  }
+ },
+ "scoring_contract": "v2.1 applied uniformly (score_v21 + contract_v2_gold); historical per-session gold versions recorded in inputs",
+ "correctness_bases": {
+  "extract": "parse_ok + operand_recall proxy (gold FACTS labels do not exist)",
+  "reason": "expr_ok/eval_ok + gold_match (conflated upstream; conditional variant restricted to full operand-recall parents)",
+  "verify": "consistency vs r-chain + gold_match (conditional on upstream valid)"
+ },
+ "stage_aggregates": {
+  "extract_e1": {
+   "large": {
+    "n": 112,
+    "parse_ok": 1.0,
+    "operand_recall": 0.821
+   },
+   "medium": {
+    "n": 168,
+    "parse_ok": 1.0,
+    "operand_recall": 0.875
+   }
+  },
+  "extract_e2": {
+   "large": {
+    "n": 152,
+    "parse_ok": 0.5,
+    "operand_recall": 0.5
+   },
+   "medium": {
+    "n": 128,
+    "parse_ok": 0.562,
+    "operand_recall": 0.333
+   }
+  },
+  "reason_r": {
+   "medium": {
+    "n": 184,
+    "expr_ok": 0.957,
+    "eval_ok": 0.875,
+    "gold_match": 0.239
+   },
+   "large": {
+    "n": 96,
+    "expr_ok": 1.0,
+    "eval_ok": 0.875,
+    "gold_match": 0.25
+   }
+  },
+  "reason_r_cond_upstream_complete": {
+   "medium": {
+    "n": 4,
+    "gold_match": 0.0
+   }
+  },
+  "verify_v": {
+   "coder": {
+    "n": 192,
+    "parse_ok": 0.943,
+    "consistency": 0.37,
+    "gold_match": 0.339
+   },
+   "large": {
+    "n": 80,
+    "parse_ok": 0.825,
+    "consistency": 0.338,
+    "gold_match": 0.287
+   }
+  }
+ },
+ "within_task_pairs": {
+  "extract_e1": {
+   "large_vs_medium": {
+    "tasks": 8,
+    "cells": 96,
+    "ok_a": 96,
+    "ok_b": 168,
+    "recall_diffs": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.5,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "recall_diff_mean": 0.062,
+    "n_recall_pairs": 8
+   }
+  },
+  "extract_e2": {
+   "large_vs_medium": {
+    "tasks": 8,
+    "cells": 128,
+    "ok_a": 60,
+    "ok_b": 72,
+    "recall_diffs": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "recall_diff_mean": 0.0,
+    "n_recall_pairs": 3
+   }
+  },
+  "reason_r_same_upstream": {
+   "large_vs_medium__upstream_large_large": {
+    "n": 32,
+    "gm_a": 12,
+    "gm_b": 8,
+    "tasks": 8
+   },
+   "large_vs_medium__upstream_medium_medium": {
+    "n": 48,
+    "gm_a": 12,
+    "gm_b": 16,
+    "tasks": 8
+   }
+  },
+  "verify_v_same_chain": {
+   "coder_vs_large__chain_large_large_large": {
+    "n": 16,
+    "gm_a": 6,
+    "gm_b": 3,
+    "tasks": 8
+   },
+   "coder_vs_large__chain_medium_large_medium": {
+    "n": 16,
+    "gm_a": 14,
+    "gm_b": 5,
+    "tasks": 8
+   },
+   "coder_vs_large__chain_medium_medium_medium": {
+    "n": 32,
+    "gm_a": 14,
+    "gm_b": 10,
+    "tasks": 8
+   },
+   "coder_vs_large__chain_medium_medium_large": {
+    "n": 16,
+    "gm_a": 14,
+    "gm_b": 5,
+    "tasks": 8
+   }
+  }
+ },
+ "missing_output_accounting": {
+  "cells": 280,
+  "refusal_or_empty_by_node": {
+   "e1:ok": 280,
+   "e2:ok": 148,
+   "e2:empty": 132
+  },
+  "e2_by_task": {
+   "5c5cb310-0607-4285-ba9f-d8b996c700db": {
+    "ok": 4
+   },
+   "1078998f-a141-45fc-918e-17ddf1da0d89": {
+    "ok": 4
+   },
+   "51f8785b-7864-4bb2-88b4-5367547de061": {
+    "ok": 4
+   },
+   "09aaae63-03dd-4173-ba29-1a4a60946982": {
+    "ok": 4
+   },
+   "660b7b1d-626d-4892-9ec6-b198fc2410ff": {
+    "ok": 33
+   },
+   "4c5cc243-cd76-42a0-8b4a-c6a1c0e75d00": {
+    "ok": 17,
+    "empty": 16
+   },
+   "093e653a-1da5-4d17-ae9e-ce7ad7275962": {
+    "empty": 33
+   },
+   "2f745dd1-c8c2-45a5-98c9-f59fc10fdbe6": {
+    "ok": 33
+   },
+   "ab6d7681-82b0-4c4b-bbc0-d7ca7491cbbd": {
+    "empty": 17,
+    "ok": 16
+   },
+   "85f0dfad-d70a-4094-810b-6a13986d1a57": {
+    "empty": 33
+   },
+   "08fbbc3f-b73f-40f6-9ac9-97e83f41df9d": {
+    "ok": 17,
+    "empty": 16
+   },
+   "a3568c44-29d3-49d0-b2b2-c692678764a2": {
+    "empty": 17,
+    "ok": 16
+   }
+  },
+  "e2_mixed_tasks_by_model": {
+   "4c5cc243-cd76-42a0-8b4a-c6a1c0e75d00": {
+    "large": {
+     "ok": 17,
+     "n": 17
+    },
+    "medium": {
+     "ok": 0,
+     "n": 16
+    }
+   },
+   "ab6d7681-82b0-4c4b-bbc0-d7ca7491cbbd": {
+    "large": {
+     "ok": 0,
+     "n": 17
+    },
+    "medium": {
+     "ok": 16,
+     "n": 16
+    }
+   },
+   "08fbbc3f-b73f-40f6-9ac9-97e83f41df9d": {
+    "large": {
+     "ok": 9,
+     "n": 17
+    },
+    "medium": {
+     "ok": 8,
+     "n": 16
+    }
+   },
+   "a3568c44-29d3-49d0-b2b2-c692678764a2": {
+    "large": {
+     "ok": 0,
+     "n": 17
+    },
+    "medium": {
+     "ok": 16,
+     "n": 16
+    }
+   }
+  },
+  "e_missing": 0,
+  "r_missing": 0,
+  "v_missing": 8,
+  "unparseable_e": 132,
+  "unparseable_v": 25
+ },
+ "evidence_gaps": [
+  "no coder-model executions at e1/e2/r stages (config space assigns coder only to v) — extraction/reasoning comparisons cover medium vs large only",
+  "extraction has no gold fact labels; operand_recall is a proxy, not fact correctness",
+  "r/v gold_match conflates upstream quality; conditional samples are small (see within_task_pairs counts)",
+  "calibration tasks (4) ran a single fixed config — no model contrast there"
+ ],
+ "hv_reference_point_sensitivity": "PLAN ONLY (per review): pre-register a sensitivity grid over HV scales and reference points to be computed on FINAL reconciled curves; no re-selection of primary metric from in-flight results",
+ "zero_llm_calls": true,
+ "zero_gpu": true,
+ "test16_used": false,
+ "production_code_unchanged": true
+}
