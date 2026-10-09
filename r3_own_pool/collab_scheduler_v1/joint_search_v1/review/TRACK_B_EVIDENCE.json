@@ -23,9 +23,9 @@
  },
  "all_pass": true,
  "calibration": {
-  "spearman_est_vs_actual_C": 0.7666666666666667,
-  "mape": 0.045044816443349726,
-  "n_unique_configs": 9
+  "spearman_est_vs_actual_C": 0.7212121212121211,
+  "mape": 0.0408941083839204,
+  "n_unique_configs": 10
  },
  "cost_predictor": {
   "deployment_range": [
@@ -45,6 +45,7 @@
    "n_selected": 5,
    "n_gp_calls": 0,
    "n_cost_preds": 0,
+   "qnehvi_estimator": "none (random/scalarized path)",
    "n_observations": 5,
    "Q_values": [
     1.0,
@@ -69,6 +70,7 @@
    "n_selected": 5,
    "n_gp_calls": 3,
    "n_cost_preds": 3,
+   "qnehvi_estimator": "none (random/scalarized path)",
    "n_observations": 5,
    "Q_values": [
     1.0,
@@ -93,6 +95,7 @@
    "n_selected": 5,
    "n_gp_calls": 3,
    "n_cost_preds": 3,
+   "qnehvi_estimator": "botorch_qnehvi (official, Track A aligned)",
    "n_observations": 5,
    "Q_values": [
     1.0,
@@ -109,14 +112,15 @@
     1630.0
    ],
    "last_round_n_candidates": 44,
-   "last_round_distinct": 14,
-   "last_round_nonzero": 13,
-   "last_round_std": 0.0007193253298124024
+   "last_round_distinct": 32,
+   "last_round_nonzero": 43,
+   "last_round_std": 0.028268410955872354
   },
   "proposed_state_incremental": {
    "n_selected": 5,
    "n_gp_calls": 3,
    "n_cost_preds": 3,
+   "qnehvi_estimator": "botorch_qnehvi (official, Track A aligned)",
    "n_observations": 5,
    "Q_values": [
     1.0,
@@ -128,19 +132,20 @@
    "C_values": [
     1776.0,
     1630.0,
-    1636.0,
     1630.0,
-    1616.0
+    1636.0,
+    1696.0
    ],
    "last_round_n_candidates": 44,
-   "last_round_distinct": 13,
-   "last_round_nonzero": 13,
-   "last_round_std": 0.03632473222951365
+   "last_round_distinct": 32,
+   "last_round_nonzero": 43,
+   "last_round_std": 0.3626290550290688
   },
   "proposed_without_state": {
    "n_selected": 5,
    "n_gp_calls": 3,
    "n_cost_preds": 3,
+   "qnehvi_estimator": "botorch_qnehvi (official, Track A aligned)",
    "n_observations": 5,
    "Q_values": [
     1.0,
@@ -152,19 +157,20 @@
    "C_values": [
     1776.0,
     1630.0,
-    1636.0,
     1630.0,
-    1616.0
+    1636.0,
+    1696.0
    ],
    "last_round_n_candidates": 44,
-   "last_round_distinct": 13,
-   "last_round_nonzero": 13,
-   "last_round_std": 0.03632473222951359
+   "last_round_distinct": 32,
+   "last_round_nonzero": 43,
+   "last_round_std": 0.3626290550290688
   },
   "proposed_without_incremental_cost": {
    "n_selected": 5,
    "n_gp_calls": 3,
    "n_cost_preds": 3,
+   "qnehvi_estimator": "botorch_qnehvi (official, Track A aligned)",
    "n_observations": 5,
    "Q_values": [
     1.0,
@@ -181,14 +187,15 @@
     1630.0
    ],
    "last_round_n_candidates": 44,
-   "last_round_distinct": 14,
-   "last_round_nonzero": 13,
-   "last_round_std": 0.0007193253298124056
+   "last_round_distinct": 32,
+   "last_round_nonzero": 43,
+   "last_round_std": 0.028268410955872354
   }
  },
  "notes": [
   "All Q/C/L from JointEvaluator returns; no synthetic injection",
   "Deployment vs incremental cost separated (two roles, two numbers)",
+  "qNEHVI-family methods score via OFFICIAL BoTorch estimator (botorch_qnehvi_scores, Track A aligned)",
   "known limitation: single clean state, so use_state ablation cannot diverge in this closed loop; state ablation needs the fault30 state panel"
  ]
 }

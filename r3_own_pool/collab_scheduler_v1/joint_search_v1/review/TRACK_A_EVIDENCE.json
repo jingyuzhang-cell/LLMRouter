@@ -1,0 +1,45 @@
+{
+ "checks": {
+  "gp_mean_aligned_1e4": true,
+  "gp_std_aligned_1e4": true,
+  "hv_aligned_1e9": true,
+  "qnehvi_argmax_agree_or_statistical_tie": true,
+  "qnehvi_rank_corr_ge_099": true,
+  "qnehvi_within_3sigma_95pct": true,
+  "qnehvi_scores_nondegenerate": true
+ },
+ "all_pass": true,
+ "alignment": {
+  "gp_mean_maxdiff": 1.609823385706477e-15,
+  "gp_std_maxdiff": 2.8199664825478976e-14,
+  "hv_max_rel_err": 1.6082266544952852e-16,
+  "qnehvi_spearman": 0.9971550497866287,
+  "qnehvi_frac_within_3sigma": 1.0,
+  "argmax_self": 14,
+  "argmax_botorch": 2,
+  "argmax_agree": false,
+  "argmax_statistical_tie": true,
+  "mc_total_samples_per_side": 6144,
+  "mc_se_median_self": 0.0006897311460904673,
+  "mc_se_median_botorch": 7.064847843851331e-05
+ },
+ "problem_spec": {
+  "n_observed": 10,
+  "n_candidates": 38,
+  "feature_dim": 7,
+  "kernel": "ScaleKernel(1.0) * Matern5/2(ls=0.4)",
+  "fixed_noise": 0.02,
+  "ref_point": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "objectives": "maximize (Q_norm, C_norm, L_norm); Q uncertain via GP, C/L deterministic"
+ },
+ "semantic_deltas_selfbuilt": [
+  "self-built adds +0.02 sampling noise diag (observation-noise sampling) vs BoTorch latent sampling",
+  "self-built clips samples to [0,1]; BoTorch does not",
+  "self-built implicit constant prior mean at empirical y-mean (equivalent to BoTorch ConstantMean(y_mean))"
+ ],
+ "production_note": "botorch_qnehvi_scores() in this module is the official estimator wired for deterministic C/L; swap into the searcher for the formal run"
+}

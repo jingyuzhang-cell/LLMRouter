@@ -34,7 +34,9 @@ from collab_scheduler_v1.joint_search_smoke.proposal_v2.smoke_runner import Budg
 from collab_scheduler_v1.fault30_protocol import Ledger
 from collab_scheduler_v1.fault30_cache_accounting_tests import make_task
 from collab_scheduler_v1.joint_search_v1.review.exact_qnehvi_test import (
-    JointPosteriorGP, exact_qnehvi_score)
+    JointPosteriorGP)
+from collab_scheduler_v1.joint_search_v1.review.track_a import (
+    botorch_qnehvi_scores)
 
 # ============ FIXED COST PREDICTOR ============
 # Data-informed per-node token estimates (cold run, no cache). Calibrated to
@@ -135,6 +137,7 @@ class ProductionSearcher:
         self.n_cost_preds = 0
         self.n_gp_calls = 0
         self.acquisition_scores = []
+        self.qnehvi_estimator = 'none (random/scalarized path)'
 
     def _norm_scales(self):
         dep_C = np.array([deployment_cost(c) for c in self.configs])
@@ -182,12 +185,17 @@ class ProductionSearcher:
             self.acquisition_scores.append(scores.tolist())
             return un_ids[int(np.argmax(scores))]
 
-        scores = exact_qnehvi_score(joint_gp, X_tr, X_te,
-                                    obs_C, obs_L, cand_C, cand_L,
-                                    self.rng, n_mc=24)
+        # Official BoTorch qNEHVI (Track A aligned): all qNEHVI-family methods
+        # score candidates through botorch_qnehvi_scores; the earlier self-built
+        # joint-posterior estimator remains in exact_qnehvi_test.py as the
+        # alignment reference. Fixed-hyperparameter GP spec matches Track A.
+        scores = botorch_qnehvi_scores(X_tr, y_tr, X_te,
+                                       obs_C, obs_L, cand_C, cand_L,
+                                       n_mc=64, seed=10000 + 13 * len(self.observations))
         if self.method in ('proposed_state_incremental', 'proposed_without_state'):
             scores = scores / (cand_inc_C / Cmax + 1e-9)
         self.acquisition_scores.append(scores.tolist())
+        self.qnehvi_estimator = 'botorch_qnehvi (official, Track A aligned)'
         return un_ids[int(np.argmax(scores))]
 
     def observe_evaluator_result(self, result):
@@ -297,6 +305,7 @@ def run():
             n_selected=len(session.selected),
             n_gp_calls=searcher.n_gp_calls,
             n_cost_preds=searcher.n_cost_preds,
+            qnehvi_estimator=searcher.qnehvi_estimator,
             n_observations=len(searcher.observations),
             Q_values=[o['Q'] for o in searcher.observations],
             C_values=[round(o['C_actual'], 1) for o in searcher.observations],
@@ -350,6 +359,8 @@ def run():
                    notes=[
                        'All Q/C/L from JointEvaluator returns; no synthetic injection',
                        'Deployment vs incremental cost separated (two roles, two numbers)',
+                       'qNEHVI-family methods score via OFFICIAL BoTorch estimator '
+                       '(botorch_qnehvi_scores, Track A aligned)',
                        'known limitation: single clean state, so use_state ablation '
                        'cannot diverge in this closed loop; state ablation needs the '
                        'fault30 state panel'])

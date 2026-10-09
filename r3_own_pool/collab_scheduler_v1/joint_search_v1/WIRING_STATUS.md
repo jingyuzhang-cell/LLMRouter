@@ -1,4 +1,4 @@
-# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.2)
+# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.3)
 
 Single source of truth for all pipeline wiring evidence. Supersedes all previous
 partial reports and the v1 of this file. Items grouped by status.
@@ -14,7 +14,11 @@ partial reports and the v1 of this file. Items grouped by status.
 - Budget tracked actual token usage ✅
 - Methods produce different selection sets ✅
 
-**qNEHVI implementation used in the 6-method pipeline**: self-built `JointPosteriorGP` + `exact_qnehvi_score()` (joint posterior Cholesky sampling). This is a SELF-BUILT baseline, distinct from the OFFICIAL BoTorch qNEHVI which is separately BLOCKING. The 6-method pipeline currently runs the self-built version under the name `official_qnehvi_same_state`; this label is misleading and should be `self_built_qnehvi_joint_posterior` until BoTorch alignment is complete.
+**qNEHVI implementation used in the 6-method pipeline** (v2.3): the OFFICIAL
+BoTorch estimator (`botorch_qnehvi_scores`, Track A aligned) scores all
+qNEHVI-family methods; `scalarized_bo` uses the self-built GP posterior mean.
+The old self-built joint-posterior estimator remains as the Track A alignment
+reference and is no longer used for selection.
 
 ## PASS: Ablation Isolation
 
@@ -34,6 +38,42 @@ partial reports and the v1 of this file. Items grouped by status.
 - Q=0 negative control (unparseable): v returns {} → Q=0.0 ✅
 - Previous Q=0 root cause: gold=4.0 (make_task default, not 200); stub {} → None → Q=0 ✅
 - Note: "Q=1.0" here means through the formal JointEvaluator→eval_config→scoring path with Stub dispatch, NOT a real LLM result.
+
+## PASS: Official BoTorch qNEHVI Alignment (Track A, 2026-10-09)
+
+**Evidence**: `review/track_a.py` → `review/TRACK_A_EVIDENCE.json` (7/7)
+
+BoTorch 0.18.1 installed. Alignment under one pinned problem spec — same GP
+(SingleTaskGP + train_Yvar, FIXED hyperparameters: ScaleKernel(1.0)×Matérn5/2,
+lengthscale 0.4, noise 0.02, zero-mean fit on centered y, no transforms), same
+data, same objectives (maximize (Q,C_norm,L_norm), ref point (0,0,0), Q
+uncertain via GP, C/L deterministic per config):
+
+- GP posterior: latent mean max diff **1.6e-15**, std max diff **2.8e-14** ✅
+- Hypervolume: `sa_pgfs_v1.pareto.hypervolume` vs BoTorch
+  `DominatedPartitioning` max rel err **1.6e-16** (6 point sets incl.
+  dominated and ref-dominated points) ✅
+- qNEHVI MC estimator (6144 samples/side): Spearman **0.997**, **100%** of
+  38 candidates within 3σ MC bounds; argmax is a statistical tie (top pair
+  score-identical to 5dp, each estimator ranks the other's argmax #2) ✅
+- Score distribution non-degenerate ✅
+
+**Official implementation for our problem class**: `track_a.botorch_qnehvi_scores()`
+— BoTorch qNEHVI with a single-output Q model and an `MCMultiOutputObjective`
+(`QConstantCL`) that attaches deterministic per-config C/L and restores the
+y-mean offset. This handles the "only Q is uncertain" objective structure
+BoTorch has no canned constructor for.
+
+**Registered semantic deltas of the old self-built in-loop estimator**
+(`exact_qnehvi_test.py`; kept as alignment reference only):
+(a) sampled with +0.02 observation-noise diagonal vs BoTorch latent sampling;
+(b) clipped samples to [0,1]; (c) implicit constant prior mean at empirical
+y-mean (equivalent to ConstantMean(ȳ) — not a bug).
+
+**Label issue RESOLVED**: the production closed loop now scores all qNEHVI-family
+methods (`official_qnehvi_same_state`, both `proposed_*`, `wo_*`) through the
+official BoTorch estimator — Track B rerun after the swap: 20/20 PASS, 32
+distinct / 43 nonzero scores of 44 candidates (`TRACK_B_EVIDENCE.json`).
 
 ## PASS: Cost Predictor Counter-example Fix (Track B, 2026-10-09)
 
@@ -70,9 +110,8 @@ Upgrades the earlier DIAGNOSTIC score-distribution result to closed-loop:
   searchers' observation stores came from `EVALUATIONS.jsonl` returns ✅
 - All Q=1.0 (positive-control responses scored through the formal path) ✅
 - GP + cost predictor called in every acquisition round for non-random methods ✅
-- Non-degenerate last-round scores from pure evaluator data: qNEHVI 14 distinct /
-  13 nonzero of 44 candidates (31 dominated candidates score exactly 0 — expected
-  HV-improvement behavior, not degeneracy); scalarized 29 distinct / 44 nonzero ✅
+- qNEHVI-family methods scored by the OFFICIAL BoTorch estimator (v2.3 rerun):
+  32 distinct / 43 nonzero of 44 candidates ✅
 - Known limitation (registered, not hidden): this closed loop runs the clean
   state only, so `use_state` ablations cannot diverge here; state-ablation
   divergence remains covered by `unified_test.py` Part B/C on the fault30 panel.
@@ -99,16 +138,6 @@ Upgrades the earlier DIAGNOSTIC score-distribution result to closed-loop:
 - `test_runtime.py`: 10/10 (campaign quotas, GPU lock, crash recovery, fail-closed) ✅
 - `review/wiring_test.py`: 13/13 (features, C/L estimates, 6 methods through stub) ✅
 
-## BLOCKING: qNEHVI BoTorch Alignment
-
-Self-built joint posterior is mathematically correct (Cholesky from full
-posterior covariance). NOT verified against BoTorch `qExpectedImprovement`
-or Ax Platform qNEHVI. Required: numerical alignment with same GP, data,
-noise, objectives, reference point; MC sampling-error bounds.
-
-Without alignment, "official_qnehvi_same_state" is a self-built baseline,
-not the strong qNEHVI baseline the experiment design promised.
-
 ## BLOCKING: FULL + New Fault Billing Real Validation
 
 Stub-verified (8 logical calls, swapped models, both charged). Requires
@@ -122,29 +151,29 @@ Data splits, sample size, budget, stopping rules — awaiting blocking items.
 
 | Item | Status | Evidence |
 |---|---|---|
-| Production pipeline 6 methods (self-built qNEHVI) | ✅ PASS | UNIFIED_PIPELINE_EVIDENCE.json |
+| Production pipeline 6 methods (official BoTorch qNEHVI wired) | ✅ PASS | UNIFIED_PIPELINE_EVIDENCE.json + TRACK_B_EVIDENCE.json |
 | Ablation isolation | ✅ PASS | UNIFIED_PIPELINE_EVIDENCE.json |
 | Q scoring controls (Stub via formal path) | ✅ PASS | Q_CONTROLS_AND_SCORES.json |
 | Score distribution (mixed obs, diagnostic) | ✅ DIAGNOSTIC PASS | Q_CONTROLS_AND_SCORES.json |
 | FULL reachability | ✅ PASS | EXACT_QNEHVI_TESTS.json |
 | Evaluator (48 configs) | ✅ PASS | test_evaluator.py 8/8 |
 | Runtime (quota, GPU, crash) | ✅ PASS | test_runtime.py 10/10 |
+| Official BoTorch qNEHVI alignment (Track A) | ✅ PASS (7/7) | TRACK_A_EVIDENCE.json |
 | Cost predictor counter-example fix (Track B) | ✅ PASS (20/20) | TRACK_B_EVIDENCE.json |
 | Closed-loop non-degenerate scores, evaluator-only obs | ✅ PASS (Track B) | TRACK_B_EVIDENCE.json |
-| Official BoTorch qNEHVI alignment | ❌ BLOCKING (Track A) | — |
 | FULL real validation | ❌ BLOCKING | — |
 | Formal experiment freeze | ❌ NOT STARTED (Track C) | — |
 
 ## Next Steps
 
-**Track A — Baseline alignment** (now primary): Install/import BoTorch qNEHVI;
-numerical alignment test with same GP, data, noise, objectives, reference point.
-Self-built version retained as diagnostic method; official version replaces
-`official_qnehvi_same_state`.
+**Track A — DONE** (2026-10-09). Official estimator wired into the closed loop.
 
 **Track B — DONE** (2026-10-09). Residual for formal experiment: rerun the
 closed loop on the fault30 state panel once state-feature interface is admitted
 (current closed loop is clean-state-only; state ablation covered separately).
 
-**Track C — Data preparation** (parallel): Task splits, sample size rationale,
+**Track C — Data preparation** (next): Task splits, sample size rationale,
 budget specification for formal experiment.
+
+**Then**: FULL + fault billing real validation protocol (approval needed);
+formal experiment launch.
