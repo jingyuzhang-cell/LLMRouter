@@ -1,0 +1,138 @@
+{
+  "protocol": "FULL_AND_FAULT_BILLING_REAL_VALIDATION",
+  "version": "v3_20261009",
+  "status": "SUBMITTED_FOR_APPROVAL \u2014 NOT AUTHORIZED",
+  "supersedes": "FULL_VALIDATION_PROTOCOL_V2.json (v2, 61de295)",
+  "frozen_tasks": [
+    {
+      "uid": "5c5cb310-0607-4285-ba9f-d8b996c700db",
+      "content_sha256": "9600361d339f61c7"
+    },
+    {
+      "uid": "1078998f-a141-45fc-918e-17ddf1da0d89",
+      "content_sha256": "34f94fcecce718fd"
+    },
+    {
+      "uid": "51f8785b-7864-4bb2-88b4-5367547de061",
+      "content_sha256": "944552b07a519281"
+    },
+    {
+      "uid": "09aaae63-03dd-4173-ba29-1a4a60946982",
+      "content_sha256": "234ecc19b542e8f0"
+    }
+  ],
+  "task_role": "calibration tasks; excluded from subsequent formal experiments",
+  "config": "DYNAMICDAG node-level: e1=large, e2=large, r=medium, v=coder",
+  "cache_identity": {
+    "implementation": "smoke_runner.py line 114",
+    "full_identity": "(model_binding, prompt_sha256, task_uid, node_name, scope)",
+    "model_binding": "resolved model name via bindings dict (e.g., 'medium'\u2192'Qwen/Qwen2.5-7B-Instruct')",
+    "prompt_sha256": "sha256 of complete prompt text (includes upstream dependency values)",
+    "task_uid": "prevents cross-task leakage",
+    "node_name": "key.split(':')[3], the logical node within the DAG",
+    "scope": "the run scope string; SHARED across all scenarios in this validation",
+    "cross_state_rule": "scope is validation-wide (includes clean AND fault scenarios); this is by design because fault injection replaces the answer AFTER the call, so the underlying (model, prompt) execution is state-independent; the INJECTED answer is never cached (smoke_runner line 117-120: fault branch returns before cache write)",
+    "S4_guarantee": "S4 uses identical scope + task + node + model + prompt as S1 \u2192 full identity match \u2192 guaranteed cache hit"
+  },
+  "budget": {
+    "global_max_new_requests": 30,
+    "global_max_total_tokens": 30000,
+    "global_max_wall_clock_seconds": 1800,
+    "per_task_per_scenario_max_logical_calls": 12,
+    "reserved_for_S3_FULL": {
+      "min_tasks": 1,
+      "reserved_requests": 8,
+      "reservation_rule": "if global requests reach 22 before S3 starts, skip remaining S2 tasks to ensure at least 1 complete S3 task",
+      "if_not_met": "log FULL_UNVERIFIED; do not claim FULL mechanism validated"
+    },
+    "budget_counter": "single global, persisted to disk, no reset"
+  },
+  "execution_order": [
+    "S1_all_tasks",
+    "S4_all_tasks",
+    "S2_task1",
+    "S3_task1",
+    "S2_task2",
+    "S3_task2",
+    "S2_task3",
+    "S3_task3",
+    "S2_task4",
+    "S3_task4"
+  ],
+  "order_rationale": "interleave S2/S3 after S4 to ensure at least one complete S3 before budget risk; S3_task1 is guaranteed by reservation",
+  "minimum_completion": {
+    "must_complete": [
+      "S1 (4 tasks)",
+      "S4 (4 tasks)",
+      "S3 (\u22651 complete task with all 4 nodes traversing FULL path)"
+    ],
+    "should_complete": [
+      "S2 (\u22652 tasks)"
+    ],
+    "may_be_partial": [
+      "S2 tasks 3-4",
+      "S3 tasks 2-4"
+    ],
+    "if_S3_not_completed": "status = FULL_UNVERIFIED; S1/S4/S2 evidence retained separately"
+  },
+  "scenarios": {
+    "S1_no_recovery": {
+      "Z": "NONE",
+      "fault": "none",
+      "purpose": "cold baseline; populates shared cache",
+      "logical_calls": "4 per task",
+      "new_requests": "\u22644 per task (cold); some may hit cross-task cache if prompts identical"
+    },
+    "S4_cache_reuse": {
+      "Z": "NONE",
+      "fault": "none (identical to S1)",
+      "purpose": "verify full-identity cache reuse",
+      "logical_calls": "4 per task",
+      "new_requests": "0 per task (all must hit S1 cache \u2014 if any new request, this is an UNEXPECTED_PATTERN stop)",
+      "acceptance": "all 4 calls per task have alias_of pointing to S1 events"
+    },
+    "S2_local_reroute": {
+      "Z": "LOCAL_REROUTE",
+      "fault": "directed r synthetic_unparseable_r",
+      "purpose": "verify local recovery billing",
+      "logical_calls": "6-7 per task",
+      "new_requests": "1-3 (e1/e2/v-planned cached from S1; r_esc + v_fbd new)",
+      "injection_note": "injection replaces answer AFTER call; no extra request; billed at clean-ref cost"
+    },
+    "S3_full_replay": {
+      "Z": "FULL_REPLAY",
+      "fault": "same directed r fault",
+      "purpose": "verify FULL: all 4 nodes traverse full logical re-execution path",
+      "logical_calls": "8 per task (4 planned + 4 replay)",
+      "new_requests": "0-4 per task depending on cache overlap; acceptance requires LOGICAL path traversal, not new requests",
+      "acceptance": "all 4 nodes appear in replay execution log with cache_hits or new_requests correctly attributed; billing separation complete"
+    }
+  },
+  "latency_calibration": {
+    "serial_reconstruction": "sum of individual latency_s from MeteredExecutor; this IS the L optimization target",
+    "wall_clock": "time.monotonic first-to-last per task; DIAGNOSTIC ONLY (includes queueing)",
+    "calibration_from_S1": "new_L_max = max(S1 serial reconstruction) * 1.4; frozen BEFORE S2/S3; version-tagged",
+    "S2_S3_out_of_range": "values exceeding frozen L scale reported as out_of_range count; NOT used to recalibrate; clipped values used for HV but real values preserved in log",
+    "no_real_latency_claim": "L objective is serial service-demand reconstruction; no claim of real E2E deployment latency advantage"
+  },
+  "stopping_rules": {
+    "budget_exhaustion": "stop; log completed vs pending; if S3 min not met \u2192 FULL_UNVERIFIED",
+    "S4_new_request": "UNEXPECTED_PATTERN stop: cache identity mismatch; investigate before any further execution",
+    "infrastructure_failure": "stop; no retry; preserve ledger"
+  },
+  "non_claims": [
+    "No algorithm advantage",
+    "No method comparison",
+    "No statistical significance (4 calibration tasks)",
+    "No real E2E latency claim",
+    "L scale is calibration-derived; out-of-range in S2/S3 reported not hidden"
+  ],
+  "execution_binding": {
+    "command": "P1B_FULLVAL_EXECUTE=1 python3 -m collab_scheduler_v1.joint_search_v1.fullval_runner --execute",
+    "protocol_sha256": "ba266d482091e3bb (self-referential, computed pre-binding)",
+    "runner_code_sha256": "TO_BE_CREATED_AT_APPROVAL",
+    "smoke_runner_sha256": "332cfbbdc7c40cc0",
+    "evaluator_sha256": "ee42a97e74f67638",
+    "binding_note": "all hashes computed and frozen at protocol approval time; any code change after freeze invalidates this protocol"
+  }
+}
