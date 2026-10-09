@@ -1,0 +1,46 @@
+{
+ "role": "Phase 0.5 resource estimate (zero model requests)",
+ "stub_structure": {
+  "requests": 671,
+  "tokens": 67100.0,
+  "natural_token_rate": 0.5811402032711852,
+  "margin": 1.25
+ },
+ "v2_real_stats": {
+  "n_calls": 3013,
+  "tok_mean": 360.1267839362761,
+  "tok_p95": 747,
+  "lat_mean": 1.0930020946958632,
+  "lat_p95": 4.746473249047995,
+  "switch_n": 416,
+  "switch_mean": 67.85554705964078
+ },
+ "verdict": {
+  "requests": {
+   "estimate": 838,
+   "cap": 4000,
+   "utilization": 0.209
+  },
+  "tokens": {
+   "estimate_mean": 301786,
+   "estimate_p95": 625986,
+   "cap": 4000000,
+   "utilization": 0.156
+  },
+  "wall": {
+   "estimate_s": 11094,
+   "cap": 21600,
+   "utilization": 0.514
+  },
+  "per_cell": {
+   "stub_max_cell": 200,
+   "cap": 400,
+   "note": "per-strategy-state physical cap never binds"
+  },
+  "de_reservation": {
+   "reserved": 800,
+   "d_e_stub_spend": 158
+  },
+  "conclusion": "All three caps hold with >=2x headroom at p95 assumptions; the dual-protocol plan (mechanism + competitive, 8 arms) fits INSIDE the frozen 4000-request / 4M-token / 6h envelope. No baseline must be dropped; the deferred FULL candidate stays deferred."
+ }
+}
