@@ -1,0 +1,87 @@
+{
+ "role": "NET_BENEFIT pre-execution running audit (zero model requests)",
+ "audits": {
+  "scoring": {
+   "status": "PASS",
+   "n_tests": 17,
+   "n_pass": 17,
+   "tests": {
+    "score_v21_case_0": true,
+    "score_v21_case_1": true,
+    "score_v21_case_2": true,
+    "score_v21_case_3": true,
+    "score_v21_case_4": true,
+    "score_v21_case_5": true,
+    "score_v21_case_6": true,
+    "score_v21_case_7": true,
+    "score_v21_case_8": true,
+    "score_v21_case_9": true,
+    "gold_percent_uses_native": true,
+    "gold_percent_resolved_by_conversion": true,
+    "evaluator_Q_present": true,
+    "evaluator_Q_v1_present": true,
+    "evaluator_v21_gold_present": true,
+    "evaluator_final_value_present": true,
+    "evaluator_Q_v21_path": true
+   },
+   "evidence": "AUDIT_SCORING_TESTS",
+   "failures": {}
+  },
+  "fault": {
+   "status": "PASS",
+   "n_tests": 5,
+   "n_pass": 5,
+   "tests": {
+    "fault_draw_deterministic": true,
+    "fault_rate_correct": true,
+    "injection_no_extra_physical_request": true,
+    "injection_logical_calls_correct": true,
+    "injection_marked_in_result": true
+   },
+   "evidence": "AUDIT_FAULT_TESTS",
+   "failures": {}
+  },
+  "cache": {
+   "status": "PASS",
+   "n_tests": 4,
+   "n_pass": 4,
+   "tests": {
+    "cache_same_output": true,
+    "cache_reduces_new_requests": true,
+    "cache_hits_recorded": true,
+    "logical_cost_invariant": true
+   },
+   "evidence": "AUDIT_CACHE_TESTS",
+   "failures": {}
+  },
+  "cost": {
+   "status": "PASS",
+   "n_tests": 3,
+   "n_pass": 3,
+   "tests": {
+    "logical_from_source_usage": true,
+    "physical_from_budget_counters": true,
+    "no_double_counting": true
+   },
+   "evidence": "AUDIT_COST_TESTS (cross-referenced with cache audit)",
+   "failures": {}
+  },
+  "de_consistency": {
+   "status": "PASS",
+   "n_tests": 5,
+   "n_pass": 5,
+   "tests": {
+    "D_configs_exist": true,
+    "E_configs_exist": true,
+    "shared_detection_function": true,
+    "shared_model_assignment": true,
+    "Z_local_vs_full_differentiated": true
+   },
+   "evidence": "AUDIT_DE_CONSISTENCY_TESTS",
+   "failures": {}
+  }
+ },
+ "all_pass": true,
+ "zero_model_requests": true,
+ "timestamp": "2026-10-09 23:16:18"
+}
