@@ -1,0 +1,276 @@
+{
+ "campaign_status": "DIAGNOSTIC — automation complete != formal admission; scoring contract not yet frozen into execution path",
+ "scoring_code_hashes": {
+  "evaluator_py": "89fe4b9a1d2b84f753e316d540728f1691fc8ed96c25434c50c05e1f19b71eea",
+  "fault30_run_py": "40ed166eb7d882d592ba76c52a7d456a4b02631d294e97418254ead18f4df4ba",
+  "scoring_contract_final_py": "ac327d16f638937c49e9f77127827b2e43ee4509a88de383ba8089aee73a19ca",
+  "gold_contract_v1": "3dd3cfff19be7ccfe0f01b2f7a66d441ed5019c1e4abe3ff3a7bec13ec60945a",
+  "note": "executed sessions scored via fault30_run close() (1e-4) against GOLD_CONTRACT_V1 answers; v2.1 re-score below uses score_v21"
+ },
+ "panel_identity": {
+  "executed_panel": "TASK_PANEL_V1 SEARCH8 (via FORMAL_LAUNCH_V2)",
+  "n": 8,
+  "second_manifest_overlap": 0,
+  "second_manifest_warning": "task_contract_v2/SEARCH8_V21_MANIFEST.json covers a DISJOINT 8-uid set (includes excluded P1-B uid 0dc550d6); it does NOT cover the executed panel; trajectories must never be merged across panels"
+ },
+ "gold_v21_for_executed_panel": {
+  "660b7b1d-626d-4892-9ec6-b198fc2410ff": {
+   "gold": 100.31,
+   "source": "native_answer (unit-converted match, none)"
+  },
+  "4c5cc243-cd76-42a0-8b4a-c6a1c0e75d00": {
+   "gold": -109.0,
+   "source": "native_answer (unit-converted match, none)"
+  },
+  "093e653a-1da5-4d17-ae9e-ce7ad7275962": {
+   "gold": 647.5,
+   "source": "native_answer (unit-converted match, none)"
+  },
+  "2f745dd1-c8c2-45a5-98c9-f59fc10fdbe6": {
+   "gold": 29.55,
+   "source": "native_answer (unit-converted match, none)"
+  },
+  "ab6d7681-82b0-4c4b-bbc0-d7ca7491cbbd": {
+   "gold": -8.0,
+   "source": "native_answer (unit-converted match, none)"
+  },
+  "85f0dfad-d70a-4094-810b-6a13986d1a57": {
+   "gold": -3.1,
+   "source": "native_answer (unit-converted match, none)"
+  },
+  "08fbbc3f-b73f-40f6-9ac9-97e83f41df9d": {
+   "gold": 50.1,
+   "source": "native_answer (unit-converted match, none)"
+  },
+  "a3568c44-29d3-49d0-b2b2-c692678764a2": {
+   "gold": -84.77,
+   "source": "native_answer (unit-converted match, percent_x100)"
+  }
+ },
+ "closure_checks": {
+  "A_scoring": "per-session hashes + Q_recorded vs Q_v2.1 re-score; sessions with flips are NOT mergeable across contracts",
+  "B_quota": "ledger-proven only (DISPATCH reserve/response events); random_20261009 0-request claim proven by absent ledger; INCOMPLETE cells billed and retained; retries additive",
+  "C_comparison": "search physical (requests/tokens/wall/switch) reported separately from deployment Q/C/L; INCOMPLETE retained"
+ },
+ "sessions": {
+  "proposed_state_incremental_20261009": {
+   "status": "INCOMPLETE",
+   "dirs": [
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_state_incremental_20261009"
+   ],
+   "scoring": {
+    "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
+    "executed_contract": "close_1e-4 + GOLD_CONTRACT_V1 answers"
+   },
+   "search_physical": {
+    "requests_ledger": 32,
+    "responses_settled": 32,
+    "tokens_ledger": 11415,
+    "wall_reported": 205,
+    "model_switch_wall": 136,
+    "ledger_proofs": [
+     "proposed_state_incremental_20261009: ledger: 32 reserved / 32 responses"
+    ]
+   },
+   "rescore_v21": {
+    "n_evaluations": 1,
+    "flips": 0,
+    "mergeable_across_contracts": true,
+    "detail": [
+     {
+      "cid": "large__large__large__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25
+     }
+    ]
+   },
+   "deployment": {
+    "clean": {
+     "n": 1,
+     "deployment_Q": [
+      0.25
+     ],
+     "deployment_C": [
+      1426
+     ],
+     "deployment_L": [
+      4.27
+     ]
+    }
+   }
+  },
+  "random_20261009": {
+   "status": "RUNNING/UNKNOWN",
+   "dirs": [
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/random_20261009"
+   ],
+   "scoring": {
+    "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
+    "executed_contract": "close_1e-4 + GOLD_CONTRACT_V1 answers"
+   },
+   "search_physical": {
+    "requests_ledger": 0,
+    "responses_settled": 0,
+    "tokens_ledger": 0,
+    "wall_reported": 0,
+    "model_switch_wall": 0,
+    "ledger_proofs": [
+     "random_20261009: ledger file absent -> ZERO requests PROVEN"
+    ]
+   },
+   "rescore_v21": {
+    "n_evaluations": 0,
+    "flips": 0,
+    "mergeable_across_contracts": true,
+    "detail": []
+   },
+   "deployment": {}
+  },
+  "scalarized_bo_20261009": {
+   "status": "RUNNING/UNKNOWN",
+   "dirs": [
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/scalarized_bo_20261009"
+   ],
+   "scoring": {
+    "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
+    "executed_contract": "close_1e-4 + GOLD_CONTRACT_V1 answers"
+   },
+   "search_physical": {
+    "requests_ledger": 161,
+    "responses_settled": 161,
+    "tokens_ledger": 56600,
+    "wall_reported": 0,
+    "model_switch_wall": 1151,
+    "ledger_proofs": [
+     "scalarized_bo_20261009: ledger: 161 reserved / 161 responses"
+    ]
+   },
+   "rescore_v21": {
+    "n_evaluations": 8,
+    "flips": 0,
+    "mergeable_across_contracts": true,
+    "detail": [
+     {
+      "cid": "large__large__large__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25
+     },
+     {
+      "cid": "large__large__large__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125
+     },
+     {
+      "cid": "medium__large__medium__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5
+     },
+     {
+      "cid": "medium__large__medium__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375
+     },
+     {
+      "cid": "large__medium__medium__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25
+     },
+     {
+      "cid": "large__medium__medium__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125
+     },
+     {
+      "cid": "medium__medium__medium__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5
+     },
+     {
+      "cid": "medium__medium__medium__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375
+     }
+    ]
+   },
+   "deployment": {
+    "clean": {
+     "n": 4,
+     "deployment_Q": [
+      0.25,
+      0.5,
+      0.25,
+      0.5
+     ],
+     "deployment_C": [
+      1416,
+      1487,
+      1441,
+      1511
+     ],
+     "deployment_L": [
+      4.3,
+      4.39,
+      4.21,
+      4.39
+     ]
+    },
+    "fault30": {
+     "n": 4,
+     "deployment_Q": [
+      0.125,
+      0.375,
+      0.125,
+      0.375
+     ],
+     "deployment_C": [
+      1381,
+      1452,
+      1415,
+      1486
+     ],
+     "deployment_L": [
+      4.12,
+      4.2,
+      4.22,
+      4.4
+     ]
+    }
+   }
+  }
+ },
+ "totals": {
+  "cells_seen": 3,
+  "complete": 0,
+  "requests_ledger_total": 193,
+  "tokens_ledger_total": 68015,
+  "v2_ceiling": 6901,
+  "v1_diagnostic_charged_separately": {
+   "requests": 299,
+   "tokens": 48707
+  }
+ },
+ "caveats": [
+  "DIAGNOSTIC campaign until contract alignment",
+  "descriptive only; no method-superiority claim",
+  "INCOMPLETE cells retained; common-budget-support comparison only",
+  "TEST16 not released"
+ ]
+}

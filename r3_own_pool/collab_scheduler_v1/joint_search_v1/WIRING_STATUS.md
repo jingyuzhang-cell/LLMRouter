@@ -1,4 +1,4 @@
-# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.6)
+# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.7)
 
 Single source of truth for all pipeline wiring evidence. Supersedes all previous
 partial reports and the v1 of this file. Items grouped by status.
@@ -243,3 +243,34 @@ Audit (RUN_ADMISSION_AUDIT_1.md, zero-call):
   decision. TEST16 not released.**
 - Session-1 "state-conditioned signal" claim downgraded to: state differences
   were observed; no search-efficiency or method-superiority claim.
+
+
+## DIAGNOSTIC CAMPAIGN REGISTRATION (v2.7, review directive)
+
+The running formal campaign is registered **DIAGNOSTIC — automation complete !=
+formal admission** until the scoring protocol aligns with the executed version.
+No new campaign stages; TEST16 not released; algorithm-advantage discussion
+blocked until ALL of:
+
+- **A. Scoring consistency**: per-session hashes of the executed scoring path
+  (evaluator.py + fault30_run.py) and the gold manifest the session ran with
+  (TASK_PANEL snapshot = GOLD_CONTRACT_V1 answers); re-score under scoring
+  contract v2.1 (contract_v2_gold + score_v21 = close OR round-2dp);
+  sessions with Q flips are NOT mergeable across contracts.
+  FLAGGED: `task_contract_v2/SEARCH8_V21_MANIFEST.json` covers a DISJOINT
+  8-uid set (0/8 overlap with the executed TASK_PANEL_V1 panel; includes
+  excluded P1-B uid 0dc550d6) — never merge across panels.
+- **B. Quota settlement**: every claim ledger-proven from the session DISPATCH
+  journal (reserve/response+usage); random_20261009's 0-request claim proven by
+  absent ledger, not inferred; incomplete/failed cells billed and retained;
+  retry consumption additive, totals never reset (cross-directory ceiling
+  6,901 = 7,200 frozen - 299 v1 diagnostic).
+- **C. Comparison basis**: search physical (requests / tokens / wall /
+  model-switch wall) reported separately from deployment Q/C/L per state;
+  budget-exhausted INCOMPLETE cells retained in all tables.
+
+Implementation: `reconcile_formal_campaign.py` (zero-call) runs all three
+checks; `FORMAL_CAMPAIGN_RECONCILIATION.json` is the wrap-up artifact. The
+post-campaign chain runs reconciliation + descriptive digest automatically
+when all drivers (main + collision retries) finish. Partial snapshot: 3 cells,
+193 ledger-proven requests, 0 v2.1 flips so far, panel overlap 0 flagged.

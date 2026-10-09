@@ -13,5 +13,8 @@ for i in $(seq 1 20); do
 done
 while pgrep -f "formal_launch --run" > /dev/null 2>&1; do sleep 120; done
 sleep 30
+# closure reconciliation (three review checks) first, then descriptive digest
+python3 -m collab_scheduler_v1.joint_search_v1.reconcile_formal_campaign \
+  >> "$LOG.analysis" 2>&1
 python3 -m collab_scheduler_v1.joint_search_v1.analyze_formal_campaign \
   >> "$LOG.analysis" 2>&1
