@@ -1,0 +1,53 @@
+{
+ "results": [
+  {
+   "name": "IC1_full_cache_hit",
+   "config": "DYNAMICDAG__HETEROGENEOUS__NONE__FRESH",
+   "actual_new_calls": 0,
+   "actual_cached": 4,
+   "checks": {
+    "zero_new_calls": true,
+    "all_cached": true
+   }
+  },
+  {
+   "name": "IC2_model_swap_r",
+   "config_from": "DYNAMICDAG__HETEROGENEOUS__NONE__FRESH",
+   "config_to": "DYNAMICDAG__QUALITY__NONE__FRESH",
+   "new_nodes": [
+    "r",
+    "v"
+   ],
+   "actual_new": 2,
+   "checks": {
+    "r_is_new": true,
+    "e_nodes_cached": true,
+    "v_downstream_cascade": true
+   }
+  },
+  {
+   "name": "IC3_upstream_e1_fault",
+   "config": "DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE__FRESH",
+   "new_nodes": [
+    "e1",
+    "r"
+   ],
+   "actual_new": 2,
+   "checks": {
+    "e1_fb_is_new": true,
+    "r_refresh_cascade": true,
+    "v_cascade_correctly_skipped": true
+   }
+  },
+  {
+   "name": "IC4_clean_rerun_all_cached",
+   "config": "DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE__FRESH",
+   "actual_new": 0,
+   "checks": {
+    "zero_new_on_clean": true
+   }
+  }
+ ],
+ "all_pass": true,
+ "zero_model_calls": true
+}
