@@ -1,4 +1,4 @@
-# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.3)
+# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.4)
 
 Single source of truth for all pipeline wiring evidence. Supersedes all previous
 partial reports and the v1 of this file. Items grouped by status.
@@ -74,6 +74,37 @@ y-mean (equivalent to ConstantMean(ȳ) — not a bug).
 methods (`official_qnehvi_same_state`, both `proposed_*`, `wo_*`) through the
 official BoTorch estimator — Track B rerun after the swap: 20/20 PASS, 32
 distinct / 43 nonzero scores of 44 candidates (`TRACK_B_EVIDENCE.json`).
+
+## PASS: Independent Task Panel + Power + Budget Fit (Track C, 2026-10-09)
+
+**Evidence**: `review/track_c.py` → `review/TASK_PANEL_V1.json` +
+`review/TRACK_C_EVIDENCE.json` (14/14). Fills the protocol's
+`task_panel: UNASSIGNED` gap; SEARCH_BUDGET_V1.json left untouched (hash-bound),
+superseded by manifest reference.
+
+- **Provenance**: same lineage and eligibility as the 4-node DAG panels
+  (TAT-QA train, `answer_from=table-text` so BOTH extractors are load-bearing,
+  arithmetic, evaluable derivation, ≥2 distinct literals, tokenizer guard
+  prompt+512≤8192 applied before split). Exposure scan = UUID superset over the
+  whole workspace excluding raw `data/` sources — strictly stronger than the
+  historical static_dag_v0-only scan; frozen200/smoke/fault30 tasks all
+  excluded. 97 fresh tasks remain of 538 eligible ✅
+- **Split** (hash-frozen `sha256("jointsearch_v1:"+uid)` ascending):
+  SEARCH8 (in-session panel, identical for all 6 methods × 3 seeds) + TEST16
+  (never evaluated during search; one-shot confirmatory evaluation of final
+  selections) + 73 reserve. Disjoint, deterministic, zero prior exposure ✅
+- **Power** (paired-binary from frozen200 corrected per-task arms, variance
+  prior only): historical discordance D=0.08 (clean static-vs-dynamic) to
+  0.155 (clean-vs-fault). MDE(SEARCH8)≈0.34 — per-config Q estimates cannot
+  resolve small differences, acceptable because search SELECTS, it does not
+  test; MDE(TEST16)≈0.24 on paired marginal delta; n=42 needed for MDE 0.15
+  (registered as an honest limitation; sub-0.24 effects need pooled seeds) ✅
+- **Budget fit**: 18 sessions = 6 methods × 3 seeds exactly; per-session
+  scenario 330 requests ≤ 400 cap, 123.6k tokens ≤ 3.28M cap, 2201s ≤ 7200s ✅
+- **Confirmation allocation** (TEST16 final evaluations, OUTSIDE the 18
+  sessions): ≤1536 logical calls, ≤0.58M tokens upper estimate — ESTIMATE
+  ONLY, separate approval required ✅
+- Manifest status `FROZEN_FOR_APPROVAL_EXECUTION_NOT_AUTHORIZED`.
 
 ## PASS: Cost Predictor Counter-example Fix (Track B, 2026-10-09)
 
@@ -162,7 +193,8 @@ Data splits, sample size, budget, stopping rules — awaiting blocking items.
 | Cost predictor counter-example fix (Track B) | ✅ PASS (20/20) | TRACK_B_EVIDENCE.json |
 | Closed-loop non-degenerate scores, evaluator-only obs | ✅ PASS (Track B) | TRACK_B_EVIDENCE.json |
 | FULL real validation | ❌ BLOCKING | — |
-| Formal experiment freeze | ❌ NOT STARTED (Track C) | — |
+| Task panel / power / budget (Track C) | ✅ PASS (14/14) | TASK_PANEL_V1.json |
+| Formal experiment freeze | ⏳ MANIFESTS FROZEN, approval pending | TASK_PANEL_V1.json |
 
 ## Next Steps
 
@@ -172,8 +204,10 @@ Data splits, sample size, budget, stopping rules — awaiting blocking items.
 closed loop on the fault30 state panel once state-feature interface is admitted
 (current closed loop is clean-state-only; state ablation covered separately).
 
-**Track C — Data preparation** (next): Task splits, sample size rationale,
-budget specification for formal experiment.
+**Track C — DONE** (2026-10-09). TASK_PANEL_V1.json frozen for approval;
+SEARCH_BUDGET_V1.json untouched (its task_panel:UNASSIGNED superseded by
+reference). Remaining approval items: resource envelope (unchanged), TEST16
+confirmation allocation (new, ~0.58M tokens upper bound).
 
 **Then**: FULL + fault billing real validation protocol (approval needed);
 formal experiment launch.

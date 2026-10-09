@@ -1,0 +1,99 @@
+{
+ "checks": {
+  "c_fresh_pool_ge_24": true,
+  "c_split_deterministic": true,
+  "c_panels_disjoint": true,
+  "c_zero_prior_exposure": true,
+  "c_panel_sizes": true,
+  "c_search_format_valid": true,
+  "c_test_format_valid": true,
+  "c_search_tokenizer_guard": true,
+  "c_test_tokenizer_guard": true,
+  "c_power_numbers_recorded": true,
+  "c_sessions_fit": true,
+  "c_scenario_requests_fit": true,
+  "c_scenario_tokens_fit": true,
+  "c_scenario_wall_fit": true
+ },
+ "all_pass": true,
+ "fresh_pool_size": 97,
+ "eligible_pool_size": 538,
+ "used_uid_count": 3479,
+ "search_uids": [
+  "660b7b1d-626d-4892-9ec6-b198fc2410ff",
+  "4c5cc243-cd76-42a0-8b4a-c6a1c0e75d00",
+  "093e653a-1da5-4d17-ae9e-ce7ad7275962",
+  "2f745dd1-c8c2-45a5-98c9-f59fc10fdbe6",
+  "ab6d7681-82b0-4c4b-bbc0-d7ca7491cbbd",
+  "85f0dfad-d70a-4094-810b-6a13986d1a57",
+  "08fbbc3f-b73f-40f6-9ac9-97e83f41df9d",
+  "a3568c44-29d3-49d0-b2b2-c692678764a2"
+ ],
+ "test_uids": [
+  "02abaa03-2a3e-4db4-8f6b-fc31acfab880",
+  "0dec39d9-3911-4286-b480-49eeffa91305",
+  "e777ea8c-c353-460e-a724-9c92a8eb6d75",
+  "0f2052a9-2761-4594-8be1-0ecf85fa47fc",
+  "08b0a9d1-7080-4412-8080-f5b5114ebd4a",
+  "718c9b4f-3907-4a12-b0c0-8bfec4d106ab",
+  "94bc4d77-55a8-4cb0-a095-f9d799b3c37b",
+  "ba2089ef-6999-4381-b677-a4f2f6af8e8e",
+  "6792fc0a-f8cf-43d8-bc1a-9a11646e7e31",
+  "2ba67b9a-9cf8-466f-81cc-b3cf0e3bec49",
+  "fedb5ce9-f135-411b-a7e5-931803df369f",
+  "6260f7c6-ca79-48ef-8c49-21ce8970e758",
+  "89afb247-5345-4b98-b42b-2e034f2feed0",
+  "88ebeaf5-d696-45a0-b5cc-7d9f3741fe69",
+  "0202dbb4-5221-42b7-96b7-5bcb476ffdec",
+  "72a4833d-a74d-410c-9311-dad856c7fe26"
+ ],
+ "power": {
+  "reference_pairs": {
+   "clean:static_vs_dynamic": {
+    "n": 200,
+    "n10": 0,
+    "n01": 16,
+    "discordance": 0.08,
+    "marginal_delta": -0.08
+   },
+   "f30:static_vs_dynamic(seed_avg)": {
+    "discordance_mean": 0.12,
+    "marginal_delta_mean_abs": 0.11
+   },
+   "clean_vs_f30:single": {
+    "n": 200,
+    "n10": 31,
+    "n01": 0,
+    "discordance": 0.155,
+    "marginal_delta": 0.155
+   }
+  },
+  "discordance_reference": 0.12,
+  "mde_search_n8": 0.3431226860517605,
+  "mde_test_n16": 0.24262437808614268,
+  "n_required_for_mde_0p15": 42,
+  "method": "paired binary, normal approx: MDE=(z_a/2+z_b)*sqrt(D/n); D=empirical discordance from frozen200 per-task arm outcomes (variance prior only; new X/Z space may differ)",
+  "interpretation": "With D=0.120: SEARCH8 MDE\u22480.343 (per-config Q estimates cannot resolve <~0.2 \u2014 acceptable: search SELECTS, it does not test); TEST16 MDE\u22480.243 on paired marginal delta; n for MDE 0.15 = 42"
+ },
+ "budget_fit": {
+  "sessions": 18,
+  "sessions_required": 18,
+  "scenario_requests": 330,
+  "cap_requests": 400,
+  "scenario_tokens": 123573,
+  "cap_tokens": 3276800,
+  "scenario_wall_s": 2200.9473663792014,
+  "cap_wall_s": 7200
+ },
+ "confirmation_allocation": {
+  "scope": "final selection of each method evaluated once on TEST16 x {clean,fault30}",
+  "max_logical_calls": 1536,
+  "est_tokens_upper": 575176.1454545454,
+  "est_tokens_upper_M": 0.58,
+  "status": "ESTIMATE ONLY \u2014 separate approval required before any execution"
+ },
+ "notes": [
+  "SEARCH_BUDGET_V1.json left untouched (hash-bound protocol); this manifest supersedes its task_panel:UNASSIGNED by reference",
+  "execution still requires approval of the resource envelope"
+ ]
+}

@@ -1,0 +1,286 @@
+{
+ "version": "TASK_PANEL_V1",
+ "status": "FROZEN_FOR_APPROVAL_EXECUTION_NOT_AUTHORIZED",
+ "source": "/root/r3_own_pool/data/tatqa/tatqa_dataset_train.json",
+ "source_sha256": "2df6e722cdbaaa37efcbfb280f5c9a15be29a6ec18f618ef936fe63cc6d07c69",
+ "eligibility": "identical to multidag_dynamic.hybrid_pool (TAT-QA train, answer_from=table-text so both extractors are load-bearing, arithmetic, evaluable derivation, >=2 distinct literals); tokenizer guard prompt+512<=8192 applied BEFORE split",
+ "exposure_rule": "UUID superset scan over whole workspace r3_own_pool EXCLUDING raw benchmark sources under data/ (source population is not exposure; historically never scanned). Strictly stronger than the historical static_dag_v0-only scan; frozen200/smoke/fault30 tasks all excluded as exposed",
+ "split_rule": "sha256(\"jointsearch_v1:\"+uid) ascending over fresh eligible pool; first 8 = search panel, next 16 = test panel",
+ "search_panel": {
+  "n": 8,
+  "role": "in-session evaluation panel for ALL methods and seeds; identical; may be observed during search"
+ },
+ "test_panel": {
+  "n": 16,
+  "role": "NEVER evaluated during search; one-shot confirmatory evaluation of final selections only"
+ },
+ "reserve": {
+  "n": 73,
+  "role": "unassigned; any use requires approval"
+ },
+ "tasks_search": [
+  {
+   "uid": "660b7b1d-626d-4892-9ec6-b198fc2410ff",
+   "question": "What is the average high closing prices per share of the Company\u2019s common stock reported by NYSE American for fiscal 2019?",
+   "derivation": "(100.00 + 100.00 + 101.51 + 99.75)/4",
+   "answer": 100.315,
+   "ctx_table": "TABLE:\n | Fiscal 2018 |  | Fiscal 2019 | \n | High | Low | High | Low\n4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10\n3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30\n2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10\n1st Quarter | 99.75 | 77.92 | 97.85 | 86.61",
+   "ctx_text": "PASSAGES:\n[0] ITEM 5. MARKET FOR REGISTRANT\u2019S COMMON EQUITY, RELATED STOCKHOLDER MATTERS AND ISSUER PURCHASES OF EQUITY SECURITIES ITEM 5. MARKET FOR REGISTRANT\u2019S COMMON EQUITY, RELATED STOCKHOLDER MATTERS AND ISSUER PURCHASES OF EQUITY SECURITIES\n[1] MARKET FOR COMMON STOCK\n[2] The Company\u2019s common stock trades on NYSE American under the trading symbol \u201cDIT\u201d. As of October 31, 2019 the closing price of our common stock on NYSE American was $73.00 and there were 565,942 common shares outstanding. As of that date, the Company had approximately 521 persons holding common shares beneficially of which approximately 121 are shareholders of record (including direct participants in the Depository Trust Company). The following table reflects the range of the high and low closing prices per share of the Company\u2019s common stock reported by NYSE American for fiscal 2019 and 2018.",
+   "sha256": "db5d8fc063bfd10f2d8664947ebad7e9a026fc406ed15e22e9c7840236c0d250"
+  },
+  {
+   "uid": "4c5cc243-cd76-42a0-8b4a-c6a1c0e75d00",
+   "question": "What was the change in Provisions for warranties issued between 2017 and 2018?",
+   "derivation": "582-691",
+   "answer": -109.0,
+   "ctx_table": "TABLE:\n | July 27, 2019 | July 28, 2018 | July 29, 2017\nBalance at beginning of fiscal year | $359 | $407 | $414\nProvisions for warranties issued | 600 | 582 | 691\nAdjustments for pre-existing warranties | (12) | (38) | (21)\nSettlements | (603) | (592) | (677)\nAcquisitions and divestitures | (2) | \u2014 | \u2014\nBalance at end of fiscal year | $342 | $359 | $407",
+   "ctx_text": "PASSAGES:\n[0] (d) Product Warranties\n[1] The following table summarizes the activity related to the product warranty liability (in millions):\n[2] We accrue for warranty costs as part of our cost of sales based on associated material product costs, labor costs for technical support staff, and associated overhead. Our products are generally covered by a warranty for periods ranging from 90 days to five years, and for some products we provide a limited lifetime warranty.",
+   "sha256": "bb83659e84739c60980cbad1beb92e3682246d2840083cbf22f51feb2459e280"
+  },
+  {
+   "uid": "093e653a-1da5-4d17-ae9e-ce7ad7275962",
+   "question": "What is the sum of the three highest expenses in 2019?",
+   "derivation": "198.1+102.4+ 347.0",
+   "answer": 647.5,
+   "ctx_table": "TABLE:\n | As of | \n | December 31, 2019 | December 31, 2018\nAccrued property and real estate taxes | $198.1 | $169.7\nAccrued pass-through costs | 74.2 | 71.2\nAmounts payable to tenants | 77.9 | 93.5\nAccrued rent | 75.6 | 61.4\nPayroll and related withholdings | 102.4 | 90.4\nAccrued construction costs | 27.8 | 41.5\nAccrued income tax payable | 55.2 | 57.9\nOther accrued expenses | 347.0 | 362.7\nAccrued expenses | $958.2 | $948.3",
+   "ctx_text": "PASSAGES:\n[0] AMERICAN TOWER CORPORATION AND SUBSIDIARIES NOTES TO CONSOLIDATED FINANCIAL STATEMENTS (Tabular amounts in millions, unless otherwise disclosed)\n[1] 8. ACCRUED EXPENSES\n[2] Accrued expenses consisted of the following:",
+   "sha256": "d039939ce9a58c5a4e02cf37cbfe66ab92186ade2dffe4f2fb875bf2a8c2012a"
+  },
+  {
+   "uid": "2f745dd1-c8c2-45a5-98c9-f59fc10fdbe6",
+   "question": "What is the average amount of adjusted EBITDA in 2018 and 2019?",
+   "derivation": "(32.8+26.3)/2",
+   "answer": 29.549999999999997,
+   "ctx_table": "TABLE:\n | Fiscal 2019 | Fiscal 2018 | % Change\n |  | (in millions) | \nSales | $  317.9 | $  325.2 | (2)%\nOperating income | 23.0 | 16.6 | 39\nAdjusted EBITDA | 32.8 | 26.3 | 25",
+   "ctx_text": "PASSAGES:\n[0] Cubic Global Defense\n[1] Sales: CGD sales decreased 2% to $317.9 million in 2019 compared to $325.2 million in 2018. The timing of sales recognition was impacted by the adoption of ASC 606. Under ASC 606, a number of our CGD contracts, most significantly in air combat training and ground live training, for which revenue was historically recorded upon delivery of products to the customer, are now accounted for on the percentage-of-completion cost-to-cost method of revenue recognition. For fiscal 2019, sales were lower from air combat training systems, simulation product development contracts, and international services contracts, partially offset by higher sales from ground combat training systems. The average exchange rates between the prevailing currencies in our foreign operations and the U.S. dollar resulted in a decrease in CGD sales of $3.2 million for 2019 compared to 2018.\n[2] Amortization of Purchased Intangibles: Amortization of purchased intangibles included in the CGD results amounted to $0.6 million in 2019 and $1.1 million in 2018.\n[3] Operating Income: CGD operating income increased by 39% to $23.0 million in 2019 compared to $16.6 million in 2018. For fiscal 2019, operating profits improved primarily due to the results of cost reduction efforts, including headcount reductions designed to optimize our cost position, and reduced R&D expenditures. Operating profits were higher from increased sales of ground combat training system sales but were lower on decreased sales from air combat training systems, simulation product development contracts, and international services contracts. The average exchange rates between the prevailing currency in our foreign operations and the U.S. dollar had no significant impact on CGD operating income between 2018 and 2019.\n[4] Adjusted EBITDA: CGD Adjusted EBITDA was $32.8 million in 2019 compared to $26.3 million in 2018. The increase in Adjusted EBITDA was primarily driven by the same factors that drove the increase in operating income described above. Adjusted EBITDA for CGD increased by $3.1 million in 2019 as a result of the adoption of the new revenue recognition standard.",
+   "sha256": "8f0de4ee0dbbb6240f664e53111e843a0559629874178fbcfeb32c875dd28f02"
+  },
+  {
+   "uid": "ab6d7681-82b0-4c4b-bbc0-d7ca7491cbbd",
+   "question": "What is the change in Total operating expenses from fiscal year 2018 to fiscal year 2019?",
+   "derivation": "70-78",
+   "answer": -8.0,
+   "ctx_table": "TABLE:\n | Fiscal Year | \n | 2019 | 2018\nNet revenues | 100% | 100%\nCost of revenues | 22 | 21\nGross profit | 78 | 79\nOperating expenses: |  | \nSales and marketing | 32 | 33\nResearch and development | 19 | 20\nGeneral and administrative | 9 | 12\nAmortization of intangible assets | 4 | 5\nRestructuring, transition and other costs | 5 | 8\nTotal operating expenses | 70 | 78\nOperating income | 8 | 1\nInterest expense | (4) | (5)\nGain on divestiture | \u2014 | 14\nOther expense, net | (1) | \u2014\nIncome from continuing operations before income taxes | 2 | 9\nIncome tax expense (benefit) | 2 | (14)\nIncome from continuing operations | \u2014 | 23\nIncome from discontinued operations, net of income taxes | \u2014 | \u2014\nNet income | 1% | 24%",
+   "ctx_text": "PASSAGES:\n[0] Fiscal 2019 compared to fiscal 2018\n[1] The following table sets forth our Consolidated Statements of Operations data as a percentage of net revenues for the periods indicated:\n[2] Note: The percentages may not add due to rounding.",
+   "sha256": "999b52a728be603c4505e2b6f443e921c3b8fea4d80f8fe2a4c7616f074a3b41"
+  },
+  {
+   "uid": "85f0dfad-d70a-4094-810b-6a13986d1a57",
+   "question": "What is the change in the total property payment due from 2018 to 2019?",
+   "derivation": "14.1 - 17.2",
+   "answer": -3.0999999999999996,
+   "ctx_table": "TABLE:\n | As at 30 Mar 2019 |  | As at 31 Mar 2018 | \n | Property | Plant and Equipment | Property | Plant and Equipment\n | \u00a3m | \u00a3m | \u00a3m | \u00a3m\nWithin one year | 1.8 | 1.3 | 2.5 | 1.8\nBetween 2 and 5 years | 6.3 | 2.4 | 5.3 | 1.9\nAfter 5 years | 6.0 | 0.5 | 9.4 | \u2013\nTotal | 14.1 | 4.2 | 17.2 | 3.7",
+   "ctx_text": "PASSAGES:\n[0] 24. Operating lease commitments\n[1] The Group has lease agreements in respect of property, plant and equipment, for which future minimum payments extend over a number of years.\n[2] Leases primarily relate to the Group\u2019s properties, which principally comprise offices and factories. Lease payments are typically subject to market review every five years to reflect market rentals, but because of the uncertainty over the amount of any future changes, such changes have not been reflected in the table below. Within our leasing arrangements there are no significant contingent rental, renewal, purchase or escalation clauses.\n[3] The future aggregate minimum lease payments under non-cancellable operating leases for continuing operations are as follows:\n[4] The Group has made provision for the aggregate minimum lease payments under non-cancellable operating leases. The Group sub-lets various properties under non-cancellable lease arrangements. Sub-lease receipts of \u00a30.2m (2017/18: \u00a30.2m) were recognised in the statement of profit or loss during the period. The total future minimum sub-lease payments at the period end is \u00a30.2m (2017/18: \u00a30.2m).",
+   "sha256": "aff916d1c866c9b1d23d8445faf0df406bc662a14e444dc6b2eaa4d64e717cc8"
+  },
+  {
+   "uid": "08fbbc3f-b73f-40f6-9ac9-97e83f41df9d",
+   "question": "What is the average operating income in 2017 and 2018?",
+   "derivation": "(60.4+39.8)/2",
+   "answer": 50.099999999999994,
+   "ctx_table": "TABLE:\n | Fiscal 2018 | Fiscal 2017 | % Change\n |  | (in millions) | \nSales | $ 670.7 | $  578.6 | 16 %\nOperating income | 60.4 | 39.8 | 52\nAdjusted EBITDA | 73.3 | 48.8 | 50",
+   "ctx_text": "PASSAGES:\n[0] Cubic Transportation Systems\n[1] Sales: CTS sales increased 16% to $670.7 million in 2018 compared to $578.6 million in 2017 and were higher in North America and the U.K., but were slightly lower in Australia. Sales in 2018 were higher in the U.S. primarily due to system development on the New York New Fare Payment System contract, which was awarded in October 2017. Increased work on both development and service contracts, including work on new change orders in London also increased CTS sales for the year. Sales were also positively impacted in the U.K. and Australia due to the impact of exchange rates. The average exchange rates between the prevailing currencies in our foreign operations and the U.S. dollar resulted in an increase in CTS sales of $12.4 million for 2018 compared to 2017, primarily due to the strengthening of the British Pound against the U.S. dollar.\n[2] Amortization of Purchased Intangibles: Amortization of purchased intangibles included in the CTS operating results totaled $5.2 million in 2018 and $5.7 million in 2017.\n[3] Operating Income: CTS operating income increased 52% in 2018 to $60.4 million compared to $39.8 million in 2017. For 2018, operating income was higher from increased volumes of system development work and services, including work on new projects and change orders, primarily in North America and the U.K. Operating income was also higher due to operational efficiencies and reductions in R&D spending. R&D expenses for CTS in 2017 included $6.4 million of system development expenses related to our anticipated contract with the New York Metropolitan Transit Authority that was awarded in early fiscal 2018; such expenses incurred in 2018 on this contract are classified as cost of sales. During the first quarter of fiscal year 2018 CTS implemented our new enterprise resource planning (ERP) system, and as a result began depreciating the cost of certain capitalized software into its operating results. This resulted in a decrease in operating income of $4.2 million between fiscal 2017 and fiscal 2018. The average exchange rates between the prevailing currency in our foreign operations and the U.S. dollar resulted in an increase in CTS operating income of $2.2 million for 2018 compared to 2017.\n[4] Adjusted EBITDA: CTS Adjusted EBITDA increased 50% to $73.3 million in 2018 compared to $48.8 million in 2017 primarily due to the same items described in the operating income section above. The increase in Adjusted EBITDA was primarily driven by the same factors that drove the increase in operating income described above excluding the increase in depreciation and decrease in amortization which are excluded from Adjusted EBITDA.",
+   "sha256": "32441c3f1539c9ad376cf67b2e5f5f3290b7950e6219dfe2b6e978fe7beddcd0"
+  },
+  {
+   "uid": "a3568c44-29d3-49d0-b2b2-c692678764a2",
+   "question": "What is the percentage change in net income (loss) from discontinued operations attributable to Conagra Brands, Inc. from 2017 to 2018?",
+   "derivation": "(14.3-93.9)/93.9",
+   "answer": -0.8477103301384452,
+   "ctx_table": "TABLE:\n | 2019 | 2018 | 2017\nNet sales | $\u2014 | $\u2014 | $1,407.9\nIncome (loss) from discontinued operations before income taxes and equity method investment earnings | $\u2014 | $(0.3) | $172.3\nIncome (loss) before income taxes and equity method investment earnings | \u2014 | (0.3) | 172.3\nIncome tax expense (benefit) | 2.8 | (14.6) | 87.5\nEquity method investment earnings | \u2014 | \u2014 | 15.9\nIncome (loss) from discontinued operations, net of tax . | (2.8) | 14.3 | 100.7\nLess: Net income attributable to noncontrolling interests . | \u2014 | \u2014 | 6.8\nNet income (loss) from discontinued operations attributable to Conagra Brands, Inc | $(2.8) | $14.3 | $93.9",
+   "ctx_text": "PASSAGES:\n[0] Notes to Consolidated Financial Statements - (Continued) Fiscal Years Ended May 26, 2019, May 27, 2018, and May 28, 2017 (columnar dollars in millions except per share amounts) Lamb Weston Spinoff\n[1] On November 9, 2016, we completed the Spinoff of our Lamb Weston business. As of such date, we did not beneficially own any equity interest in Lamb Weston and no longer consolidated Lamb Weston into our financial results. The business results were previously reported in the Commercial segment. We reflected the results of this business as discontinued operations for all periods presented.\n[2] The summary comparative financial results of the Lamb Weston business through the date of the Spinoff, included within discontinued operations, were as follows:\n[3] During fiscal 2017, we incurred $74.8 million of expenses in connection with the Spinoff primarily related to professional fees and contract services associated with preparation of regulatory filings and separation activities. These expenses are reflected in income from discontinued operations. During fiscal 2019 and 2018, we recognized income tax expense of $2.8 million and an income tax benefit of $14.5 million, respectively, due to adjustments of the estimated deductibility of these costs.\n[4] In connection with the Spinoff, total assets of $2.28 billion and total liabilities of $2.98 billion (including debt of $2.46 billion) were transferred to Lamb Weston. As part of the consideration for the Spinoff, the Company received a cash payment from Lamb Weston in the amount of $823.5 million. See Note 4 for discussion of the debt-for-debt exchange related to the Spinoff.\n[5] We entered into a transition services agreement in connection with the Lamb Weston Spinoff and recognized $2.2 million and $4.2 million of income for the performance of services during fiscal 2018 and 2017, respectively, classified within SG&A expenses.",
+   "sha256": "0dfdc22e6df3aefa0d25bfe6071d21ad85b0d25282993efee1f445bbe7429dab"
+  }
+ ],
+ "tasks_test": [
+  {
+   "uid": "02abaa03-2a3e-4db4-8f6b-fc31acfab880",
+   "question": "What is the percentage change in the company's total prepaid expenses and other current assets between 2018 and 2019?",
+   "derivation": "(7.1 - 4.9)/4.9",
+   "answer": 0.4489795918367345,
+   "ctx_table": "TABLE:\n | September 2019 | September 2018\nPrepaid expenses | $1.8 | $1.6\nPrepaid inventory | 5.3 | 3.3\n | $7.1 | $4.9",
+   "ctx_text": "PASSAGES:\n[0] (g) Prepaid Expenses and Other Current Assets:\n[1] A summary of prepaid expenses and other current assets is as follows (in millions):\n[2] Prepaid inventory represents inventory in-transit that has been paid for but not received.",
+   "sha256": "aaa5582e0e02c5c7a066354187f354fd852cbf45bd8271b2da7421271c5e89d3"
+  },
+  {
+   "uid": "0dec39d9-3911-4286-b480-49eeffa91305",
+   "question": "What was the change in capital expenditures incurred but not paid between 2017 and 2018?",
+   "derivation": "24-19",
+   "answer": 5.0,
+   "ctx_table": "TABLE:\n |  | Year Ended | \n | April 26, 2019 | April 27, 2018 | April 28, 2017\nNon-cash Investing and Financing Activities: |  |  | \nCapital expenditures incurred but not paid | $ 9 | $ 24 | $ 19\nNon-cash extinguishment of sale-leaseback financing obligations | $ \u2014 | $ 130 | $ 19\nSupplemental Cash Flow Information: |  |  | \nIncome taxes paid, net of refunds | $ 205 | $ 87 | $ 102\nInterest paid | $ 53 | $ 58 | $ 44",
+   "ctx_text": "PASSAGES:\n[0] Statements of cash flows additional information (in millions):\n[1] Non-cash investing and financing activities and supplemental cash flow information are as follows:",
+   "sha256": "2a0479bc27f4a32b0ffbec5ee5d44d423dcf5446b233f97768e852533776d840"
+  },
+  {
+   "uid": "e777ea8c-c353-460e-a724-9c92a8eb6d75",
+   "question": "What was the change in current State income tax expense between 2018 and 2019?",
+   "derivation": "900-653",
+   "answer": 247.0,
+   "ctx_table": "TABLE:\n |  | Year Ended December 31, | \n | 2019 | 2018 | 2017\nCurrent |  |  | \nFederal | $1,615 | $741 | $584\nState | 900 | 653 | (88)\nForeign | 452 | 263 | 6\nTotal Current | 2,967 | 1,657 | 502\nDeferred |  |  | \nFederal | 2,622 | (8,821) | 3,837\nState | (23) | (2,643) | (1,368)\nForeign | \u2014 | (18) | 19\nTotal Deferred | 2,599 | (11,482) | 2,488\nTotal | $5,566 | $ (9,825) | $2,990",
+   "ctx_text": "PASSAGES:\n[0] Note 18. Income Taxes\n[1] The Tax Cuts and Jobs Act, or the Tax Act, was signed into law on December 22, 2017. This legislation made significant changes in U.S. tax law, including a reduction in the corporate tax rate, changes to net operating loss carryforwards and carrybacks and a repeal of the corporate alternative minimum tax. The legislation reduced the U.S. corporate income tax rate from 35% to 21%. As a result of the enacted Tax Act, we were required to revalue deferred tax assets and liabilities at the rate in effect when the deferred tax balances are scheduled to reverse. This revaluation resulted in an additional $8.8 million of income tax expense and a corresponding reduction in the deferred tax asset which was recorded during the year ended December 31, 2017.\n[2] Additionally, on December 22, 2017, the Securities and Exchange Commission staff issued Staff Accounting Bulletin No. 118, or SAB 118, to address the application of GAAP in situations when a registrant does not have the necessary information available, prepared, or analyzed in reasonable detail to complete the accounting for certain income tax effects of the Tax Act. Specifically, SAB 118 provides a measurement period for companies to evaluate the impacts of the Tax Act on their financial statements. We completed the accounting for the tax effects of the Tax Act during the three months ended September 30, 2018 and decreased our provisional estimate from $8.8 million to $8.7 million.\n[3] The components of our income tax expense are as follows (in thousands):",
+   "sha256": "1f332d97b7a87f45fc76afd7877dade7d5b4256712ccd751f075a9760d5620db"
+  },
+  {
+   "uid": "0f2052a9-2761-4594-8be1-0ecf85fa47fc",
+   "question": "What was the change in Prepaids and other current assets between 2018 and 2019?",
+   "derivation": "8.3-7.7",
+   "answer": 0.6000000000000005,
+   "ctx_table": "TABLE:\n | December 31, 2019 | December 31, 2018 (1)\nAccounts receivable | $80.5 | $92.6\nPrepaids and other current assets | 8.3 | 7.7\nNotes receivable and other non-current assets | 21.3 | 22.2\nUnearned revenue (2) | 35.0 | 35.0\nOther non-current liabilities (3) | 79.0 | 54.1",
+   "ctx_text": "PASSAGES:\n[0] AMERICAN TOWER CORPORATION AND SUBSIDIARIES NOTES TO CONSOLIDATED FINANCIAL STATEMENTS (Tabular amounts in millions, unless otherwise disclosed)\n[1] Information about receivables, contract assets and contract liabilities from contracts with tenants is as follows:\n[2] (1) Prior-period amounts adjusted with the adoption of the new lease accounting guidance, as applicable.\n[3] (2) Excludes $56.7 million and $55.0 million of capital contributions related to DAS networks as of December 31, 2019 and 2018, respectively.\n[4] (3) Excludes $300.2 million and $313.6 million of capital contributions related to DAS networks as of December 31, 2019 and 2018, respectively.\n[5] The Company records unearned revenue when payments are received from tenants in advance of the completion of the Company\u2019s performance obligations. Long-term unearned revenue is included in Other non-current liabilities. During the year ended December 31, 2019, the Company recognized $62.2 million of revenue that was included in the Unearned revenue balance as of December 31, 2018.\u00a0During the year ended December 31, 2018, the Company recognized $44.4 million of revenue that was included in the Unearned revenue balance as of January 1, 2018. The Company also recognized revenues of $59.2 million and $55.4 million during the years ended December 31, 2019 and December 31, 2018, respectively, for capital contributions related to DAS networks. There was $0.4 million of revenue recognized from Other non-current liabilities during each of the years ended December 31, 2019 and 2018. $59.2 million and $55.4 million during the years ended December 31, 2019 and December 31, 2018, respectively, for capital contributions related to DAS networks. There was $0.4 million of revenue recognized from Other non-current liabilities during each of the years ended December 31, 2019 and 2018.\n$59.2 million and $55.4 million during the years ended December 31, 2019 and December 31, 2018, respectively, for capital\ncontributions related to DAS networks. There was $0.4 million of revenue recognized from Other non-current liabilities during\neach of the years ended December 31, 2019 and 2018.",
+   "sha256": "89e16694a19498baa52388777e46109d47648449274f425809456822cc0049ea"
+  },
+  {
+   "uid": "08b0a9d1-7080-4412-8080-f5b5114ebd4a",
+   "question": "What was the change in Share-based compensation expense between 2018 and 2019?",
+   "derivation": "164-190",
+   "answer": -26.0,
+   "ctx_table": "TABLE:\n | July 27, 2019 | July 28, 2018\nASSETS |  | \nAllowance for doubtful accounts and returns . | $ 127 | $ 285\nSales-type and direct-financing leases | 176 | 171\nInventory write-downs and capitalization | 409 | 289\nInvestment provisions . | \u2014 | 54\nIPR&D, goodwill, and purchased intangible assets | 1,427 | 63\nDeferred revenue . | 1,150 | 1,584\nCredits and net operating loss carryforwards . | 1,241 | 1,087\nShare-based compensation expense | 164 | 190\nAccrued compensation | 342 | 370\nOther | 419 | 408\nGross deferred tax assets | 5,455 | 4,501\nValuation allowance | (457) | (374)\nTotal deferred tax assets . | 4,998 | 4,127\nLIABILITIES |  | \nPurchased intangible assets . | (705) | (753)\nDepreciation . | (141) | (118)\nUnrealized gains on investments . | (70) | (33)\nOther | (112) | (145)\nTotal deferred tax liabilities | (1,028) | (1,049)\nTotal net deferred tax assets | $3,970 | $3,078",
+   "ctx_text": "PASSAGES:\n[0] The following table presents the components of the deferred tax assets and liabilities (in millions):\n[1] As of July 27, 2019, our federal, state, and foreign net operating loss carryforwards for income tax purposes were $676 million, $1 billion, and $756 million, respectively. A significant amount of the net operating loss carryforwards relates to acquisitions and, as a result, is limited in the amount that can be recognized in any one year. If not utilized, the federal, state and foreign net operating loss carryforwards will begin to expire in fiscal 2020. We have provided a valuation allowance of $111 million for deferred tax assets related to foreign net operating losses that are not expected to be realized.\n[2] As of July 27, 2019, our federal, state, and foreign tax credit carryforwards for income tax purposes were approximately $25 million, $1.1 billion, and $5 million, respectively. The federal tax credit carryforwards will begin to expire in fiscal 2020. The majority of state and foreign tax credits can be carried forward indefinitely. We have provided a valuation allowance of $346 million for deferred tax assets related to state and foreign tax credits that are not expected to be realized.",
+   "sha256": "f85cfea4b22e473edeed48cddf3b4f63ed7f400da064a2f285bab69050219ac0"
+  },
+  {
+   "uid": "718c9b4f-3907-4a12-b0c0-8bfec4d106ab",
+   "question": "What was the change in interest cost in 2019 from 2018?",
+   "derivation": "254-196",
+   "answer": 58.0,
+   "ctx_table": "TABLE:\n |  | Years Ended December 31, | \n | 2019 | 2018 | 2017\nService cost | $405 | $448 | $443\nInterest cost | 254 | 196 | 194\nRecognized actuarial (gains) | (86) | (58) | (43)\nNet periodic benefit cost | 573 | 586 | 594\nUnrealized net actuarial (gains), net of tax | (2,324) | (2,256) | (1,574)\nTotal amount recognized in net periodic benefit cost and accumulated other comprehensive income (loss) | $(1,751) | $(1,670) | $(980)",
+   "ctx_text": "PASSAGES:\n[0] The Company evaluates these assumptions on a periodic basis taking into consideration current market conditions and historical market data. The discount rate is used to calculate expected future cash flows at a present value on the measurement date, which is December 31. This rate represents the market rate for high-quality fixed income investments. A lower discount rate would increase the present value of benefit obligations. Other assumptions include demographic factors such as retirement, mortality and turnover.\n[1] The following table provides information about the net periodic benefit cost and other accumulated comprehensive income for the Pension Plans (in thousands):\n[2] In March 2017, the FASB issued ASU 2017-07, Compensation \u2013 Retirement Benefits (Topic 715) \u2013 Improving the Presentation of Net Periodic Pension Cost and Net Periodic Postretirement Benefit Cost (\u201cASU 2017-07\u201d). These amendments require that an employer report the service cost component in the same line item or items as other compensation costs arising from services rendered by the pertinent employees during the period. The other components of net periodic benefit cost are required to be presented in the income statement separately from the service cost component outside of a subtotal of income from operations. If a separate line item is not used, the line items used in the income statement to present other components of net benefit cost must be disclosed. These amendments are effective for annual periods beginning after December 15, 2017, including interim periods within those annual periods. These amendments were applied retrospectively for the presentation of the service cost component and the other components of net periodic pension cost and net periodic postretirement benefit cost in the income statement and prospectively, on and after the effective date, for the capitalization of the service cost component of net periodic pension cost and net periodic postretirement benefit in assets. The amendments allow a practical expedient that permits an employer to use the amounts disclosed in its pension and other postretirement benefit plan note for the prior comparative periods as the estimation basis for applying the retrospective presentation requirements.",
+   "sha256": "473dfb7b395786b4e7cce0f662e1294529368d3d9f545b78b6de7ff8d2d24229"
+  },
+  {
+   "uid": "94bc4d77-55a8-4cb0-a095-f9d799b3c37b",
+   "question": "What was the change in other receivables from 2018 to 2019?",
+   "derivation": "123 - 113",
+   "answer": 10.0,
+   "ctx_table": "TABLE:\n | As of December 31, | \n | 2018 | 2019\nDividends receivable from associate (Note 5) | 885 | 450\nDue from The Cool Pool Limited | 32,397 | \u2014\nOther receivables | 113 | 123\nTotal | 33,395 | 573",
+   "ctx_text": "PASSAGES:\n[0] GasLog Ltd. and its Subsidiaries\nNotes to the consolidated financial statements (Continued)\nFor the years ended December 31, 2017, 2018 and 2019\n(All amounts expressed in thousands of U.S. Dollars, except share and per share data)\n[1] 21. Related Party Transactions\n[2] The Group had the following balances with related parties which have been included in the consolidated statements of financial position:\n[3] Current Assets\n[4] Dividends receivable and other amounts due from related parties\n[5] On June 28, 2019, GasLog transferred to Golar its 100 shares of the common capital stock of the Cool Pool Limited (Note 1). As of December 31, 2019, the receivable balance from the Cool Pool is nil.",
+   "sha256": "29944c8149fe6f2fd8dba395c35dddd3af4c4c69ab6a91385a88d38c80681fc7"
+  },
+  {
+   "uid": "ba2089ef-6999-4381-b677-a4f2f6af8e8e",
+   "question": "What was the change in the Effect of dilutive potential common shares between 2017 and 2018?",
+   "derivation": "44-39",
+   "answer": 5.0,
+   "ctx_table": "TABLE:\nYears Ended | July 27, 2019 | July 28, 2018 | July 29, 2017\nNet income . | $11,621 | $110 | $9,609\nWeighted-average shares\u2014basic | 4,419 | 4,837 | 5,010\nEffect of dilutive potential common shares | 34 | 44 | 39\nWeighted-average shares\u2014diluted . | 4,453 | 4,881 | 5,049\nNet income per share\u2014basic . | $2.63 | $0.02 | $1.92\nNet income per share\u2014diluted | $2.61 | $0.02 | $1.90\nAntidilutive employee share-based awards, excluded | 55 | 61 | 136",
+   "ctx_text": "PASSAGES:\n[0] 19. Net Income per Share\n[1] The following table presents the calculation of basic and diluted net income per share (in millions, except per-share amounts):\n[2] Employee equity share options, unvested shares, and similar equity instruments granted and assumed by Cisco are treated as potential common shares outstanding in computing diluted earnings per share. Diluted shares outstanding include the dilutive effect of in-the-money options, unvested restricted stock, and restricted stock units. The dilutive effect of such equity awards is calculated based on the average share price for each fiscal period using the treasury stock method. Under the treasury stock method, the amount the employee must pay for exercising stock options and the amount of compensation cost for future service that has not yet recognized are collectively assumed to be used to repurchase shares.",
+   "sha256": "fe9fc0e4fa7d8d26ae6d3f7a26f6a262ad9f6efa2c3c51e4d2d035eddc849149"
+  },
+  {
+   "uid": "6792fc0a-f8cf-43d8-bc1a-9a11646e7e31",
+   "question": "What was the percentage change in the tax charge in the income statement?",
+   "derivation": "(11.6-5.4)/5.4",
+   "answer": 1.148148148148148,
+   "ctx_table": "TABLE:\n | 2019 | 2018\n | $ million | $ million\nTax charge in the income statement |  | \nCurrent income tax |  | \nUK tax | 0.3 | 0.1\nForeign tax | 9.2 | 6.2\nAmounts underprovided/(overprovided) in previous years | 0.3 | (1.2)\nTotal current income tax charge | 9.8 | 5.1\nDeferred tax |  | \nRecognition of deferred tax assets | (1.5) | (0.8)\nReversal of temporary differences | 3.5 | 1.4\nAdjustments in respect of prior years | (0.2) | (0.3)\nTotal deferred tax charge | 1.8 | 0.3\nTax charge in the income statement | 11.6 | 5.4",
+   "ctx_text": "PASSAGES:\n[0] 10. Tax\n[1] The tax charge for the year ended 31 December 2019 was $11.6 million (2018 $5.4 million). This was after a prior year tax charge of $0.1 million and a tax credit on the adjusting items of $0.7 million (2018 prior year credit of $1.5 million and tax credit on adjusting items of $5.2 million). Excluding the prior year and tax credit on adjusting items, the effective tax rate was 13.0 per cent (2018 15.4 per cent).",
+   "sha256": "bb44b82a91b7dbcc9147ea89247010ef5f6f8afe4d1af054b70dc039417faba2"
+  },
+  {
+   "uid": "2ba67b9a-9cf8-466f-81cc-b3cf0e3bec49",
+   "question": "What was the average Gross increases for tax positions of current year for 2017-2019?",
+   "derivation": "(34 + 45 + 110) / 3",
+   "answer": 63.0,
+   "ctx_table": "TABLE:\n |  | Years Ended December 31, | \n | 2019 | 2018 | 2017\nBalance at beginning of year | $4,611 | $4,672 | $6,232\nGross increases for tax positions of prior years | 394 | \u2014 | \u2014\nGross decreases for federal tax rate change for tax positions of prior years | \u2014 | \u2014 | (1,670)\nGross increases for tax positions of current year | 34 | 45 | 110\nLapse of statute of limitations | (213) | (106) | \u2014\nBalance at end of year | $4,826 | 4,611 | 4,672",
+   "ctx_text": "PASSAGES:\n[0] The Company maintains liabilities for uncertain tax positions. These liabilities involve considerable judgment and estimation and are continuously monitored by management based on the best information available, including changes in tax regulations, the outcome of relevant court cases, and other information. A reconciliation of the beginning and ending amount of gross unrecognized tax benefits is as follows (in thousands):\n[1] The unrecognized tax benefits relate primarily to federal and state research and development credits and intercompany profit on the transfer of certain IP rights to one of the Company\u2019s foreign subsidiaries as part of the Company\u2019s tax reorganization completed in 2015. The Company\u2019s policy is to account for interest and penalties related to uncertain tax positions as a component of income tax expense. As of December 31, 2019, the Company accrued interest or penalties related to uncertain tax positions in the amount of $25,000. As of December 31, 2019, the total amount of unrecognized tax benefits that would affect the Company\u2019s effective tax rate, if recognized, is $97,000.\n[2] Because the Company has net operating loss and credit carryforwards, there are open statutes of limitations in which federal, state and foreign taxing authorities may examine the Company\u2019s tax returns for all years from 2000 through the current period.",
+   "sha256": "f2b4cc6bab8c5b4fb8899e5d7fd02ba4c618b72c2f24691deaef739bad043171"
+  },
+  {
+   "uid": "fedb5ce9-f135-411b-a7e5-931803df369f",
+   "question": "What was the percentage change in the Collaborative technology project receipts revenue between 2019 and 2020?",
+   "derivation": "(10-4)/4",
+   "answer": 1.5,
+   "ctx_table": "TABLE:\n |  | Revenue and Receipts |  | Unearned Revenue | \n |  | For the Year Ended |  | As of | \n | January 31, 2020 | February 1, 2019 | February 2, 2018 | January 31, 2020 | February 1, 2019\nReseller revenue | $3,288 | $2,355 | $1,464 | $3,787 | $2,554\nInternal-use revenue | 82 | 41 | 46 | 57 | 29\nCollaborative technology project receipts | 10 | 4 | \u2014 | n/a | n/a",
+   "ctx_text": "PASSAGES:\n[0] Transactions with Dell\n[1] VMware and Dell engaged in the following ongoing related party transactions, which resulted in revenue and receipts, and unearned revenue for VMware:\n[2] \u2022 Pursuant to OEM and reseller arrangements, Dell integrates or bundles VMware\u2019s products and services with Dell\u2019s products and sells them to end users. Dell also acts as a distributor, purchasing VMware\u2019s standalone products and services for resale to end-user customers through VMwareauthorized resellers. Revenue under these arrangements is presented net of related marketing development funds and rebates paid to Dell. In addition, VMware provides professional services to end users based upon contractual agreements with Dell. \u2022 Dell purchases products and services from VMware for its internal use. \u2022 From time to time, VMware and Dell enter into agreements to collaborate on technology projects, and Dell pays VMware for services or reimburses VMware for costs incurred by VMware, in connection with such projects.\n[3] Dell purchases VMware products and services directly from VMware, as well as through VMware\u2019s channel partners. Information about VMware\u2019s\nrevenue and receipts, and unearned revenue from such arrangements, for the periods presented consisted of the following (table in millions):\n[4] Customer deposits resulting from transactions with Dell were $194 million and $85 million as of January 31, 2020 and February 1, 2019, respectively",
+   "sha256": "a95da3d7fc8648d9574e5c77b10ca3b922fb031035f317283b5a568fcc6d8e59"
+  },
+  {
+   "uid": "6260f7c6-ca79-48ef-8c49-21ce8970e758",
+   "question": "What is the proportion of income tax benefit over income from discontinued operations during the fiscal year 2017?",
+   "derivation": "0.3/2.6",
+   "answer": 0.11538461538461538,
+   "ctx_table": "TABLE:\n | 2019 | 2018 | 2017\nLoss on sale of business | $\u2014 | $\u2014 | $(1.6)\nIncome from discontinued operations before income taxes and equity method investment earnings | 0.9 | 0.4 | 3.9\nIncome before income taxes and equity method investment earnings . | 0.9 | 0.4 | 2.3\nIncome tax expense (benefit) . | \u2014 | 0.5 | (0.3)\nIncome (loss) from discontinued operations, net of tax | $0.9 | $(0.1) | $2.6",
+   "ctx_text": "PASSAGES:\n[0] Notes to Consolidated Financial Statements - (Continued) Fiscal Years Ended May 26, 2019, May 27, 2018, and May 28, 2017 (columnar dollars in millions except per share amounts) Private Brands Operations\n[1] On February 1, 2016, pursuant to the Stock Purchase Agreement, dated as of November 1, 2015, we completed the disposition of our Private Brands operations to TreeHouse Foods, Inc. (\"TreeHouse\").\n[2] The summary comparative financial results of the Private Brands business, included within discontinued operations, were as follows:\n[3] We entered into a transition services agreement with TreeHouse and recognized $2.2 million and $16.9 million of income for the performance of services during fiscal 2018 and 2017, respectively, classified within SG&A expenses.",
+   "sha256": "6ca2d81a843af9b39b12c7ec5250438f226581d49ec77c62d2e631ade881d4a8"
+  },
+  {
+   "uid": "89afb247-5345-4b98-b42b-2e034f2feed0",
+   "question": "What was the percentage change in purchase obligations between 2022 and 2023?",
+   "derivation": "(13-74)/74",
+   "answer": -0.8243243243243243,
+   "ctx_table": "TABLE:\n | Future Lease Commitments(1) | Purchase Obligations | Asset Retirement Obligations | Total\n2021 | $144 | $168 | $1 | $313\n2022 | 141 | 74 | 3 | 218\n2023 | 127 | 13 | 2 | 142\n2024 | 101 | \u2014 | \u2014 | 101\n2025 | 77 | \u2014 | 2 | 79\nThereafter | 612 | \u2014 | 5 | 617\nTotal | $1,202 | $255 | $13 | $1,470",
+   "ctx_text": "PASSAGES:\n[0] Operating Leases and Other Contractual Commitments\n[1] VMware leases office facilities and equipment under various operating arrangements. VMware\u2019s minimum future lease commitments and other contractual commitments at January 31, 2020 were as follows (table in millions):\n[2] (1) Amounts in the table above exclude legally binding minimum lease payments for leases signed but not yet commenced of $361 million, as well as expected sublease income.\n[3] The amount of the future lease commitments after fiscal 2025 is primarily for the ground leases on VMware\u2019s Palo Alto, California headquarter facilities, which expire in fiscal 2047. As several of VMware\u2019s operating leases are payable in foreign currencies, the operating lease payments may fluctuate in response to changes in the exchange rate between the U.S. dollar and the foreign currencies in which the commitments are payable.",
+   "sha256": "4a8cbcf174534ca863f82f849382d3de50830641b08d944dc9892009a0124afe"
+  },
+  {
+   "uid": "88ebeaf5-d696-45a0-b5cc-7d9f3741fe69",
+   "question": "What is the percentage change in the company's Level 3 liabilities between 2018 and 2019?",
+   "derivation": "(145 - 184)/184",
+   "answer": -0.21195652173913043,
+   "ctx_table": "TABLE:\n | December 31, 2019 |  |  | December 31, 2018 |  | \n | Level 1 | Level 2 | Level 3 | Level 1 | Level 2 | Level 3\nAssets |  |  |  |  |  | \nCash and cash equivalents |  |  |  |  |  | \nMoney market funds | $256,915 | $ - | $ - | $254,552 | $ - | $ -\nOther current assets: |  |  |  |  |  | \nIndemnification - Sale of SSL | $ - | $ - | $598 | $ - | $ - | $2,410\nLiabilities |  |  |  |  |  | \nLong term liabilities |  |  |  |  |  | \nIndemnification - Globalstar do Brasil S.A. | $ - | $ - | $145 | $ - | $ - | $184",
+   "ctx_text": "PASSAGES:\n[0] Assets and Liabilities Measured at Fair Value\n[1] The following table presents our assets and liabilities measured at fair value on a recurring or non-recurring basis (in thousands):\n[2] The carrying amount of cash equivalents approximates fair value as of each reporting date because of the short maturity of those instruments.\n[3] The Company did not have any non-financial assets or non-financial liabilities that were recognized or disclosed at fair value as of December 31, 2019 and December 31, 2018.",
+   "sha256": "0b35f4298e94128c26e013165731fb20bf941ef9d0de832bcac704d46db10b4f"
+  },
+  {
+   "uid": "0202dbb4-5221-42b7-96b7-5bcb476ffdec",
+   "question": "What is the change in Basic weighted average common shares outstanding from year ended December 31, 2018 to 2019?",
+   "derivation": "410.9-423.8",
+   "answer": -12.900000000000034,
+   "ctx_table": "TABLE:\n |  | Year ended December 31, | \n | 2019 | 2018 | 2017\nNet income attributable to ON Semiconductor Corporation | $211.7 | $627.4 | $810.7\nBasic weighted average common shares outstanding | 410.9 | 423.8 | 421.9\nAdd: Incremental shares for: |  |  | \nDilutive effect of share-based awards | 1.9 | 4.3 | 5.5\nDilutive effect of convertible notes | 3.2 | 7.8 | 0.9\nDiluted weighted average common shares outstanding | 416.0 | 435.9 | 428.3\nNet income per common share attributable to ON Semiconductor Corporation: |  |  | \nBasic | $0.52 | $1.48 | $1.92\nDiluted | $0.51 | $1.44 | $1.89",
+   "ctx_text": "PASSAGES:\n[0] Earnings Per Share\n[1] Calculations of net income per common share attributable to ON Semiconductor Corporation are as follows (in millions, except per share data):\n[2] Basic income per common share is computed by dividing net income attributable to ON Semiconductor Corporation by the weighted average number of common shares outstanding during the period.\n[3] To calculate the diluted weighted-average common shares outstanding, the number of incremental shares from the assumed exercise of stock options and assumed issuance of shares relating to RSUs is calculated by applying the treasury stock method. Share-based awards whose impact is considered to be anti-dilutive under the treasury stock method were excluded from the diluted net income per share calculation.\n[4] The excluded number of anti-dilutive share-based awards was approximately 0.8 million, 0.6 million and 0.2 million for the years ended December 31, 2019, 2018 and 2017, respectively.\n[5] The dilutive impact related to the Company\u2019s 1.00% Notes and 1.625% Notes is determined in accordance with the net share settlement requirements, under which the Company\u2019s convertible notes are assumed to be convertible into cash up to the par value, with the excess of par value being convertible into common stock.\n[6] Additionally, if the average price of the Company\u2019s common stock exceeds $ 25.96 per share, with respect to the 1.00% Notes, or $30.70 per share, with respect to the 1.625% Notes, during the relevant reporting period, the effect of the additional potential shares that may be issued related to the warrants that were issued concurrently with the issuance of the convertible notes will also be included in the calculation of diluted weighted-average common shares outstanding.\n[7] Prior to conversion, the convertible note hedges are not considered for purposes of the earnings per share calculations, as their effect would be anti-dilutive. Upon conversion, the convertible note hedges are expected to offset the dilutive effect of the 1.00% Notes and 1.625% Notes, respectively, when the stock price is above $18.50 per share, with respect to the 1.00% Notes, and $20.72 per share, with respect to the 1.625% Notes.",
+   "sha256": "b5b8a14994bb52a0461b98adb56e2c1434c8acf9f973b216852e8c57c01dcb29"
+  },
+  {
+   "uid": "72a4833d-a74d-410c-9311-dad856c7fe26",
+   "question": "What was the percentage change in Interest income between 2018 and 2019?",
+   "derivation": "(88-79)/79",
+   "answer": 0.11392405063291139,
+   "ctx_table": "TABLE:\n |  | Year Ended | \n | April 26, 2019 | April 27, 2018 | April 28, 2017\nInterest income | $ 88 | $ 79 | $ 44\nInterest expense | (58) | (62) | (52)\nOther income, net | 17 | 24 | 8\nOther income, net | $ 47 | $ 41 | $ \u2014",
+   "ctx_text": "PASSAGES:\n[0] 8. Other income, net\n[1] Other income, net consists of the following (in millions):",
+   "sha256": "2847c425ea5a740405b68b2d9d37e0ca69b5780cfc0744981c73a360eed2dfc2"
+  }
+ ],
+ "power": {
+  "reference_pairs": {
+   "clean:static_vs_dynamic": {
+    "n": 200,
+    "n10": 0,
+    "n01": 16,
+    "discordance": 0.08,
+    "marginal_delta": -0.08
+   },
+   "f30:static_vs_dynamic(seed_avg)": {
+    "discordance_mean": 0.12,
+    "marginal_delta_mean_abs": 0.11
+   },
+   "clean_vs_f30:single": {
+    "n": 200,
+    "n10": 31,
+    "n01": 0,
+    "discordance": 0.155,
+    "marginal_delta": 0.155
+   }
+  },
+  "discordance_reference": 0.12,
+  "mde_search_n8": 0.3431226860517605,
+  "mde_test_n16": 0.24262437808614268,
+  "n_required_for_mde_0p15": 42,
+  "method": "paired binary, normal approx: MDE=(z_a/2+z_b)*sqrt(D/n); D=empirical discordance from frozen200 per-task arm outcomes (variance prior only; new X/Z space may differ)",
+  "interpretation": "With D=0.120: SEARCH8 MDE\u22480.343 (per-config Q estimates cannot resolve <~0.2 \u2014 acceptable: search SELECTS, it does not test); TEST16 MDE\u22480.243 on paired marginal delta; n for MDE 0.15 = 42"
+ },
+ "budget_fit": {
+  "sessions": 18,
+  "sessions_required": 18,
+  "scenario_requests": 330,
+  "cap_requests": 400,
+  "scenario_tokens": 123573,
+  "cap_tokens": 3276800,
+  "scenario_wall_s": 2200.9473663792014,
+  "cap_wall_s": 7200
+ },
+ "confirmation_allocation": {
+  "scope": "final selection of each method evaluated once on TEST16 x {clean,fault30}",
+  "max_logical_calls": 1536,
+  "est_tokens_upper": 575176.1454545454,
+  "est_tokens_upper_M": 0.58,
+  "status": "ESTIMATE ONLY \u2014 separate approval required before any execution"
+ }
+}
