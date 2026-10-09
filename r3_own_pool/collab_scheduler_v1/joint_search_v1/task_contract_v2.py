@@ -69,7 +69,21 @@ def load_native_answers():
 
 
 def contract_v2_gold(native_answer, native_scale, raw_derivation):
-    """Apply v2 gold selection rules."""
+    """Apply v2 gold selection rules (amended: unit conversion before conflict check).
+
+    Priority chain (explicit):
+      1. If native_scale is known and convertible (percent → ×100), apply the
+         conversion to derived_value FIRST, then compare with native_answer.
+      2. If converted derived matches native_answer within close() tolerance:
+         NO conflict; gold = native_answer.
+      3. If converted derived does NOT match native_answer even after unit
+         conversion: genuine annotation conflict; gold = native_answer
+         (original annotation takes precedence); reason='annotation_conflict'.
+      4. If native_scale is None/empty: compare derived directly with
+         native_answer; if they match → gold = derived (v1 compatible);
+         if they differ → gold = native_answer; reason='annotation_conflict'.
+      5. If derivation unparseable: gold = native_answer; reason='fallback'.
+    """
     try:
         derived = float(eval(raw_derivation, {'__builtins__': {}}, {}))
     except Exception:
@@ -81,32 +95,49 @@ def contract_v2_gold(native_answer, native_scale, raw_derivation):
     except (TypeError, ValueError):
         pass
 
+    # Step 1: determine if unit conversion is needed by checking BOTH raw
+    # and ×100 against native_answer (the derivation may already be in
+    # percentage units, or it may be a ratio needing ×100)
+    converted = derived
+    unit_applied = 'none'
     conflict = False
+    reason = 'scale_compatible'
     if na is not None and derived is not None:
-        ratio = abs(na / derived) if abs(derived) > 1e-12 else float('inf')
-        if ratio > 50 or ratio < 0.02:  # ~100x mismatch
+        if close(derived, na):
+            # Derived already matches native — no conversion needed
+            pass
+        elif native_scale == 'percent' and close(derived * 100.0, na):
+            # Derived is a ratio; ×100 makes it match native percentage
+            converted = derived * 100.0
+            unit_applied = 'percent_x100'
+        else:
+            # Neither raw nor ×100 matches — genuine conflict
             conflict = True
+            reason = 'annotation_conflict'
+    elif na is None and derived is None:
+        reason = 'unresolvable'
 
-    if native_scale == 'percent' and na is not None:
+    # Step 3-5: gold selection by priority chain
+    if na is not None:
         gold = na
-        gold_source = 'native_answer (percent scale)'
-    elif na is not None and conflict:
-        gold = na
-        gold_source = 'native_answer (derivation conflict, native takes precedence)'
+        if not conflict and native_scale is None:
+            gold_source = 'native_answer (no scale, matches derived)'
+        elif not conflict:
+            gold_source = f'native_answer (unit-converted match, {unit_applied})'
+        else:
+            gold_source = 'native_answer (annotation conflict, native takes precedence)'
     elif derived is not None:
         gold = derived
-        gold_source = 'derived_value (no scale conflict)'
-    elif na is not None:
-        gold = na
-        gold_source = 'native_answer (derivation unparseable)'
+        gold_source = 'derived_value (no native answer)'
     else:
         gold = None
         gold_source = 'UNRESOLVABLE'
 
     return dict(gold=gold, gold_source=gold_source,
                 native_answer=na, derived_value=derived,
+                converted_value=converted, unit_applied=unit_applied,
                 native_scale=native_scale, raw_derivation=raw_derivation,
-                derivation_conflict=conflict)
+                derivation_conflict=conflict, reason=reason)
 
 
 def upgrade_pool():
@@ -126,6 +157,15 @@ def upgrade_pool():
                               nat.get('raw_derivation', t['derivation']))
         if v2['gold'] != v1_gold:
             changes += 1
+            # Classify the change
+            if v2['unit_applied'] == 'percent_x100' and not v2['derivation_conflict']:
+                change_class = 'unit_conversion_only'  # scale fixed by conversion
+            elif v2['derivation_conflict']:
+                change_class = 'annotation_conflict'  # real disagreement
+            else:
+                change_class = 'other'  # rounding or minor difference
+        else:
+            change_class = 'no_change'
         if v2['derivation_conflict']:
             conflicts += 1
         upgraded.append(dict(
@@ -138,8 +178,12 @@ def upgrade_pool():
             native_answer=v2['native_answer'],
             native_scale=v2['native_scale'],
             derived_value=v2['derived_value'],
-            derivation_conflict=v2['derivation_conflict']))
-    return upgraded, changes, conflicts
+            derivation_conflict=v2['derivation_conflict'],
+            change_class=change_class, unit_applied=v2['unit_applied']))
+    classes = [t['change_class'] for t in upgraded]
+    from collections import Counter
+    class_counts = dict(Counter(classes))
+    return upgraded, changes, conflicts, class_counts
 
 
 def run_tests():
@@ -150,7 +194,7 @@ def run_tests():
     r1 = contract_v2_gold('517.5', 'percent', '(24.7-4)/4')
     checks['t1_percent_uses_native'] = r1['gold'] == 517.5
     checks['t1_percent_not_derived'] = r1['gold'] != 5.175
-    checks['t1_conflict_detected'] = r1['derivation_conflict'] is True
+    checks['t1_conflict_resolved_by_conversion'] = r1['derivation_conflict'] is False
 
     # T2: no-scale task uses derived (v1 compatible)
     r2 = contract_v2_gold('4.0', None, '1.5+2.5')
@@ -167,7 +211,7 @@ def run_tests():
     checks['t4_unparseable_falls_back'] = r4['gold'] == 123.0
 
     # T5: scale the full pool
-    upgraded, changes, conflicts = upgrade_pool()
+    upgraded, changes, conflicts, class_counts = upgrade_pool()
     checks['t5_pool_nonempty'] = len(upgraded) > 0
     checks['t5_changes_counted'] = changes >= 0
     checks['t5_conflicts_counted'] = conflicts >= 0
@@ -194,7 +238,8 @@ def run_tests():
         tests=checks, all_pass=all_pass,
         pool_stats=dict(
             total=len(upgraded), gold_changed=changes,
-            derivation_conflicts=conflicts),
+            derivation_conflicts=conflicts,
+            change_classification=class_counts),
         frozen='v1 answers preserved as v1_answer; no historical Q modified',
         zero_model_calls=True)
     (OUT / 'CONTRACT_V2_TEST.json').write_text(json.dumps(out, indent=1))
