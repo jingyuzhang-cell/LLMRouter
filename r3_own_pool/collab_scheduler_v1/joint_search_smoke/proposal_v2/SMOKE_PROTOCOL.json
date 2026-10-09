@@ -1,0 +1,93 @@
+{
+  "version": "joint_smoke_v2",
+  "status": "ZERO_CALL_CHECKS_PASSED_PENDING_EXECUTION_APPROVAL",
+  "tasks": "TASK_MANIFEST.json (8 previously exposed tasks)",
+  "purpose": "Physical metering, valid cache reuse, fresh-prompt miss handling and budget stops; not algorithm efficacy.",
+  "states": [
+    {
+      "name": "clean",
+      "rate": 0
+    },
+    {
+      "name": "fault30",
+      "rate": 0.3,
+      "seed": 20260923
+    }
+  ],
+  "configs": [
+    "DYNAMICDAG__HETEROGENEOUS__NONE__FRESH",
+    "DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE__FRESH",
+    "DYNAMICDAG__QUALITY__NONE__FRESH",
+    "DYNAMICDAG__QUALITY__LOCAL_REROUTE__FRESH"
+  ],
+  "logical_max": 768,
+  "proposed_hard_budget": {
+    "new_request_attempts": 200,
+    "new_total_tokens": 1638400,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 512,
+    "wall_seconds": 3600,
+    "logical_calls_per_task_config_state": 12,
+    "automatic_retries": 0,
+    "note": "Operational ceilings for approval, NOT cost predictions or a guarantee of completing all cells."
+  },
+  "dispatch_guard": [
+    "Persist and reserve request attempt and token upper bound BEFORE server dispatch.",
+    "Count failed and timed-out dispatched requests too. Unknown usage retains full reservation.",
+    "Do not dispatch if request/token/wall cap would be exceeded.",
+    "Release unused reservation only after actual usage is recorded.",
+    "Cache hits and injections consume zero physical requests/tokens/service time; lookup overhead stays in wall time.",
+    "After crash, reconcile pending reservations; never reset budget or retry automatically."
+  ],
+  "termination": [
+    "Stop on any cap, accounting mismatch, invalid cache provenance, stale successor, gold-dependent decision, infra error or missing usage.",
+    "Persist partial trajectories and INCOMPLETE status; never turn partial panels into completed Q/C/L.",
+    "No automatic budget increase, fallback experiment or full 48-config search."
+  ],
+  "cache": {
+    "policy": "COLD_START: no historical answer cache imported; only successful fresh responses within this run may be reused.",
+    "key": [
+      "model_provenance_sha",
+      "generation_code_sha",
+      "full_serialized_prompt_sha",
+      "task_uid",
+      "node_role",
+      "fault_scope"
+    ],
+    "dependency_semantics": "Full prompt binds the serialized dependency values actually consumed by the node; raw upstream response identity is not separately keyed. Task/node/state scope is conservative.",
+    "legal": "Unchanged exact node inputs only, with source request provenance.",
+    "forbidden": "Old LR outcomes as labels; copying historical token/latency into physical counters; alias to injected/dry/failed output.",
+    "repeated_request_check": "Stub verifies exact alias adds zero physical charge; real trajectories must be checked for natural aliases, and absence of aliases means this acceptance item remains unverified."
+  },
+  "metrics": {
+    "new_requests": "successful new server requests per completed row; run attempt ledger also counts failures",
+    "new_tokens": "actual newly consumed input+output tokens, never alias usage",
+    "new_latency_s": "sum of actual new request service duration, never source historical latency",
+    "logical_calls": "all logical node attempts",
+    "cache_hits": "alias reads",
+    "injected_calls": "synthetic failures",
+    "dry_calls": "structural placeholders",
+    "wall_time": "monotonic observed execution time; cache overhead and model switching reported separately",
+    "legacy": "used/lat retained as historical workflow diagnostics, not physical cost"
+  },
+  "admission_requirements": [
+    "Accounting regressions pass and recorded code hashes match.",
+    "Isolated smoke_runner.py dispatch guard and 64-cell Stub integration passed; no real cost validation yet.",
+    "Runner records wall and failed attempts; unknown usage retains reservation; interrupted runs require manual reconciliation and cannot resume automatically. Wall deadline stops work; GPU cleanup may extend elapsed wall.",
+    "Explicit user execution approval; GPU lock available; no other window executes."
+  ],
+  "output": "proposal_v2/runs/<run_id>/ (runner must refuse overwrite)",
+  "code_sha256": {
+    "collab_scheduler_v1/fault30_run.py": "a31170cfc5aa0266339049bcbb4a9b9390f6d6cd40614d7663fb7c05251f52c3",
+    "collab_scheduler_v1/fault30_cache_accounting_tests.py": "d76d6ef83eca63265ff6dce315315099045150349020a5d3a3039c56e98fb392",
+    "collab_scheduler_v1/test_physical_accounting.py": "e53eacf1cd68f132674f9d365c9210124f5a2b055b6f32d78fb8d236f63a3794",
+    "collab_scheduler_v1/joint_search_smoke/proposal_v2/smoke_runner.py": "332cfbbdc7c40cc0e54189b38e53fa214a76cb215e3f242b1471410822798aaa",
+    "collab_scheduler_v1/joint_search_smoke/proposal_v2/test_smoke_runner.py": "a1786ec100956482fb51ff953e573c1fbf93b7676904973c98a916d4cb1f710d",
+    "collab_scheduler_v1/fault30_protocol.py": "e3f1f7a7a8037791ad006d7362ff57cd358564febcb5a155fb199ff7dc9411f7",
+    "static_dag_v0/run.py": "770e3aabfabda2cc1faf476277448050c5e6bc747b848c6861eb227204c96f5b",
+    "static_dag_v0/multidag_dynamic.py": "0f1b85b4f73f057c598cd7488d6956bf3f7b666b52ed6e9da8492206c8ede0ea",
+    "static_dag_v0/tool_aware_v1.py": "67554b92fc1c5d15b946580f6a1a7264d221a71006a2a62f21af8f9df9275f71",
+    "static_dag_v0/adaptive_benchmark/FAULT_POOLS.json": "332f5e2c817952f21f155bdfac867f65a64ebac1ed897a6d790990c4fb9279d0"
+  },
+  "execution_authorized": false
+}

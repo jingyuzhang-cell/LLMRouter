@@ -1,0 +1,134 @@
+{
+  "purpose": "Physical metering smoke acceptance; NOT algorithm efficacy",
+  "all_pass": true,
+  "checks": {
+    "completed_64_cells": true,
+    "no_pending_or_failed": true,
+    "unique_event_ids": true,
+    "all_aliases_have_prior_exact_valid_source": true,
+    "physical_events_equal_reserved_requests": true,
+    "physical_tokens_equal_ledger_and_status": true,
+    "logical_partition": true,
+    "no_errors": true,
+    "within_caps": true,
+    "rows_match_clean_DYNAMICDAG__HETEROGENEOUS__NONE__FRESH": true,
+    "rows_match_clean_DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE__FRESH": true,
+    "rows_match_clean_DYNAMICDAG__QUALITY__NONE__FRESH": true,
+    "rows_match_clean_DYNAMICDAG__QUALITY__LOCAL_REROUTE__FRESH": true,
+    "rows_match_fault30_DYNAMICDAG__HETEROGENEOUS__NONE__FRESH": true,
+    "rows_match_fault30_DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE__FRESH": true,
+    "rows_match_fault30_DYNAMICDAG__QUALITY__NONE__FRESH": true,
+    "rows_match_fault30_DYNAMICDAG__QUALITY__LOCAL_REROUTE__FRESH": true,
+    "changed_input_fresh_requests_observed": true
+  },
+  "summary": {
+    "cells": 64,
+    "logical_calls": 295,
+    "new_requests": 110,
+    "cache_hits": 177,
+    "injected_calls": 8,
+    "new_tokens": 41191,
+    "new_service_latency_s": 127.16953129693866,
+    "observed_wall_s": 733.6491221264005,
+    "model_switch_wall_s": 604.5983346290886,
+    "historical_alias_tokens_excluded": 75108,
+    "historical_alias_latency_s_excluded": 267.21598820388317,
+    "changed_prompt_groups": 8
+  },
+  "panels": [
+    {
+      "state": "clean",
+      "cid": "DYNAMICDAG__HETEROGENEOUS__NONE__FRESH",
+      "logical_calls": 32,
+      "cache_hits": 0,
+      "injected_calls": 0,
+      "new_requests": 32,
+      "new_tokens": 13491,
+      "new_latency_s": 42.32091471552849,
+      "observed_panel_wall_s": 264.1682291775942
+    },
+    {
+      "state": "clean",
+      "cid": "DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE__FRESH",
+      "logical_calls": 42,
+      "cache_hits": 32,
+      "injected_calls": 0,
+      "new_requests": 10,
+      "new_tokens": 2971,
+      "new_latency_s": 8.738110143691301,
+      "observed_panel_wall_s": 139.37227385118604
+    },
+    {
+      "state": "clean",
+      "cid": "DYNAMICDAG__QUALITY__NONE__FRESH",
+      "logical_calls": 32,
+      "cache_hits": 17,
+      "injected_calls": 0,
+      "new_requests": 15,
+      "new_tokens": 4222,
+      "new_latency_s": 4.620824705809355,
+      "observed_panel_wall_s": 4.6861479096114635
+    },
+    {
+      "state": "clean",
+      "cid": "DYNAMICDAG__QUALITY__LOCAL_REROUTE__FRESH",
+      "logical_calls": 41,
+      "cache_hits": 41,
+      "injected_calls": 0,
+      "new_requests": 0,
+      "new_tokens": 0,
+      "new_latency_s": 0,
+      "observed_panel_wall_s": 0.010419666767120361
+    },
+    {
+      "state": "fault30",
+      "cid": "DYNAMICDAG__HETEROGENEOUS__NONE__FRESH",
+      "logical_calls": 32,
+      "cache_hits": 0,
+      "injected_calls": 2,
+      "new_requests": 30,
+      "new_tokens": 11646,
+      "new_latency_s": 39.798052314668894,
+      "observed_panel_wall_s": 158.5746757760644
+    },
+    {
+      "state": "fault30",
+      "cid": "DYNAMICDAG__HETEROGENEOUS__LOCAL_REROUTE__FRESH",
+      "logical_calls": 42,
+      "cache_hits": 30,
+      "injected_calls": 2,
+      "new_requests": 10,
+      "new_tokens": 4796,
+      "new_latency_s": 20.79071770980954,
+      "observed_panel_wall_s": 154.42232931032777
+    },
+    {
+      "state": "fault30",
+      "cid": "DYNAMICDAG__QUALITY__NONE__FRESH",
+      "logical_calls": 32,
+      "cache_hits": 17,
+      "injected_calls": 2,
+      "new_requests": 13,
+      "new_tokens": 4065,
+      "new_latency_s": 10.900911707431078,
+      "observed_panel_wall_s": 10.926748845726252
+    },
+    {
+      "state": "fault30",
+      "cid": "DYNAMICDAG__QUALITY__LOCAL_REROUTE__FRESH",
+      "logical_calls": 42,
+      "cache_hits": 40,
+      "injected_calls": 2,
+      "new_requests": 0,
+      "new_tokens": 0,
+      "new_latency_s": 0,
+      "observed_panel_wall_s": 0.011440243571996689
+    }
+  ],
+  "limitations": [
+    "Exposed diagnostic tasks; no algorithm efficacy or generalization claims.",
+    "Cold historical cache and fixed shared-cache config order; not a fair configuration-cost ranking.",
+    "Serialized prompt identity does not independently prove causal successor correctness.",
+    "No 48-configuration/six-method search executed; formal search budget not approved."
+  ]
+}

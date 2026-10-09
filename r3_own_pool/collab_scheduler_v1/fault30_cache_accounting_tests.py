@@ -150,7 +150,8 @@ def run():
                 'logical_gt_new_requests': r['logical'] > r['new_requests'],
                 'new_requests_eq_executor_physical': r['new_requests'] ==
                                                      r['executor_physical'],
-                'new_tokens_excludes_alias': r['new_tokens'] < r['total_used'],
+                'new_tokens_excludes_alias': r['new_tokens'] == 100 * r['executor_physical'],
+                'new_latency_excludes_alias': abs(r['new_latency'] - 0.2 * r['executor_physical']) < 1e-9,
             }))
     except Exception as e:
         results.append(dict(name='T1_v_planned_is_alias',
@@ -207,8 +208,8 @@ def run():
         results.append(dict(name='T3_v1_v2_both_aliases',
                             error=f'{type(e).__name__}: {str(e)[:100]}'))
 
-    all_pass = all(r.get('checks', {}) and all(r['checks'].values())
-                   for r in results if 'checks' in r)
+    all_pass = len(results) == 3 and all(
+        bool(r.get('checks')) and all(r['checks'].values()) for r in results)
     out = dict(results=results, all_pass=all_pass, zero_model_calls=True)
     (OUT / 'CACHE_ACCOUNTING_TESTS.json').write_text(json.dumps(out, indent=1,
                                                                 default=str))
@@ -225,6 +226,8 @@ def run():
         elif 'error' in r:
             print(f'  ERROR: {r["error"]}')
     print(f'\n{"ALL PASS" if all_pass else "FAIL PRESENT"}')
+    if not all_pass:
+        raise SystemExit(1)
 
 
 if __name__ == '__main__':

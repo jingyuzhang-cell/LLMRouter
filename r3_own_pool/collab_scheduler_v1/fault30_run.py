@@ -181,6 +181,31 @@ class Executor:
                 self.lock.close()
 
 
+def physical_accounting(records):
+    """Count this run's model work, never historical alias or dry-run usage.
+
+    Historical response usage remains available for workflow accounting.
+    Cache lookup overhead belongs to wall time, not model service time.
+    """
+    counts = dict(logical_calls=len(records), injected_calls=0, cache_hits=0,
+                  dry_calls=0, new_requests=0, new_tokens=0, new_latency_s=0.0)
+    for rec in records:
+        response = rec.get('response', {})
+        if response.get('injected_fault'):
+            counts['injected_calls'] += 1
+        elif rec.get('alias_of'):
+            counts['cache_hits'] += 1
+        elif response.get('dry_new'):
+            counts['dry_calls'] += 1
+        else:
+            counts['new_requests'] += 1
+            counts['new_tokens'] += float(response.get('usage', {}).get('total_tokens') or 0)
+            counts['new_latency_s'] += float(response.get('latency_s') or 0)
+    assert counts['logical_calls'] == sum(counts[k] for k in
+        ('injected_calls', 'cache_hits', 'dry_calls', 'new_requests'))
+    return counts
+
+
 def eval_config(cid, ex, led, tasks, faults, task_map):
     """Stage-batched evaluation of one (seed, config). Same calls, keys and
     decision rules as the sequential v1 walk; stage order A -> R1 -> (ER ->
@@ -405,25 +430,13 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
         # Eight-layer accounting (protocol v4): physical model cost must
         # EXCLUDE cache alias hits and injected faults — only count calls that
         # actually issued a new request to the model server.
-        logical_calls = len(st[uid]['keys'])
-        injected_calls = sum(1 for kk in st[uid]['keys']
-                             if ex.by_key.get(kk, {}).get('response', {})
-                             .get('injected_fault'))
-        cache_hits = sum(1 for kk in st[uid]['keys']
-                         if ex.by_key.get(kk, {}).get('alias_of'))
-        # NEW physical model requests = logical - injected - cache_alias
-        new_requests = logical_calls - injected_calls - cache_hits
-        # NEW physical tokens: only from calls that were NOT cache aliases
-        # and NOT injected faults (i.e., actual server round-trips this run)
-        new_tokens = sum(ex.cost(kk) for kk in st[uid]['keys']
-                         if not ex.by_key.get(kk, {}).get('alias_of')
-                         and not ex.by_key.get(kk, {}).get('response', {})
-                         .get('injected_fault'))
-        # NEW physical latency: only from non-alias, non-injected calls
-        new_latency = sum(ex.lat(kk) for kk in st[uid]['keys']
-                          if not ex.by_key.get(kk, {}).get('alias_of')
-                          and not ex.by_key.get(kk, {}).get('response', {})
-                          .get('injected_fault'))
+        accounting = physical_accounting([ex.by_key[kk] for kk in st[uid]['keys']])
+        logical_calls = accounting['logical_calls']
+        injected_calls = accounting['injected_calls']
+        cache_hits = accounting['cache_hits']
+        new_requests = accounting['new_requests']
+        new_tokens = accounting['new_tokens']
+        new_latency = accounting['new_latency_s']
         # Legacy fields (kept for compatibility with historical results)
         real_calls = new_requests  # corrected: was logical - injected
         real_tokens = new_tokens   # corrected: was non-injected sum (included cache)
@@ -443,7 +456,7 @@ def eval_config(cid, ex, led, tasks, faults, task_map):
         rows[uid] = dict(ok=ok, used=used, lat=l, faulted=st[uid]['faulted'],
                          fault_node=st[uid]['node'], keys=st[uid]['keys'],
                          logical_calls=logical_calls, injected_calls=injected_calls,
-                         cache_hits=cache_hits,
+                         cache_hits=cache_hits, dry_calls=accounting['dry_calls'],
                          new_requests=new_requests, new_tokens=new_tokens,
                          new_latency_s=new_latency,
                          real_calls=real_calls, real_tokens=real_tokens,
