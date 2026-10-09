@@ -83,3 +83,18 @@ points are implemented in the machine-readable report:
 
 Positioning unchanged: mechanism diagnostic only; algorithm-efficiency claims
 await the campaign's measured comparison on common physical budget.
+
+## 5. Final naming and interpretation guards (review)
+
+- Final name: **冻结观测上的状态输入敏感性诊断** (state-input sensitivity
+  diagnostic on frozen observations) — not production algorithm acceptance.
+- A top-1 change on a source means the audit's re-trained STATE-AWARE proxy
+  differs from the masked proxy; it is NOT state leakage in the state-removed
+  arm (the bit is constant-0 there by construction).
+- rho=1.000 means ranking unchanged only, never identical predictions; read
+  with pred_diff (wo_incremental_cost: rho=1.000, pred_diff mean 0.0098 /
+  max 0.0884).
+- Scope guard: audit-local cost table + posterior-mean acquisition CANNOT
+  replace production EHVI/cost-predictor ablation evidence. Auxiliary
+  diagnostic; efficiency conclusions rest on post-campaign reconciled curves
+  on the common measured physical budget.

@@ -236,8 +236,23 @@ def run():
     all_pass = all(r.get('all_isolation_pass', False)
                    for r in results if r.get('status') == 'AUDITED_v2')
     out = dict(
-        role='state-feature effectiveness: QUANTIFIED sensitivity + isolation verification',
-        evidence_class='mechanism diagnostic (corrected framing)',
+        role='冻结观测上的状态输入敏感性诊断 / state-input sensitivity diagnostic '
+             'on frozen observations — NOT production algorithm acceptance',
+        evidence_class='auxiliary mechanism diagnostic (corrected framing)',
+        interpretation=dict(
+            top1_change='a top-1 change on a source means the audit\'s re-trained '
+                        'STATE-AWARE proxy differs from the masked proxy; it does '
+                        'NOT indicate state leakage in the state-removed arm (the '
+                        'bit is constant-0 there by construction)',
+            spearman='rho=1.000 means ranking unchanged, NOT identical '
+                     'predictions; always read together with pred_diff '
+                     '(e.g. wo_incremental_cost: rho=1.000 with pred_diff '
+                     'mean 0.0098 / max 0.0884)',
+            scope='this audit uses an audit-local cost table and posterior-mean '
+                  'acquisition; it CANNOT replace production EHVI / '
+                  'cost-predictor ablation evidence — auxiliary diagnostic only; '
+                  'efficiency conclusions rest on post-campaign reconciled '
+                  'curves on the common measured physical budget'),
         observation_sources='frozen campaign trajectories used as training data only',
         sessions=results,
         all_isolation_pass=all_pass,
