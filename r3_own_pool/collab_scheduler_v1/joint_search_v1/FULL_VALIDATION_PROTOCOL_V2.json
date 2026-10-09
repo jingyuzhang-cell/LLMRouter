@@ -1,0 +1,126 @@
+{
+ "protocol": "FULL_AND_FAULT_BILLING_REAL_VALIDATION",
+ "version": "v2_20261009",
+ "status": "SUBMITTED_FOR_APPROVAL — NOT AUTHORIZED",
+ "supersedes": "FULL_VALIDATION_PROTOCOL_DRAFT.json (v1, 86375ac)",
+
+ "frozen_tasks": [
+  {"uid": "5c5cb310-0607-4285-ba9f-d8b996c700db", "content_sha256": "9600361d339f61c7", "question_head": "What was the percentage change in the free cash flow between"},
+  {"uid": "1078998f-a141-45fc-918e-17ddf1da0d89", "content_sha256": "34f94fcecce718fd", "question_head": "What is the average high closing prices per share of the Com"},
+  {"uid": "51f8785b-7864-4bb2-88b4-5367547de061", "content_sha256": "944552b07a519281", "question_head": "Excluding the restructuring spend related to recent acquisit"},
+  {"uid": "09aaae63-03dd-4173-ba29-1a4a60946982", "content_sha256": "234ecc19b542e8f0", "question_head": "What is the difference in weighted-average grant date fair v"}
+ ],
+ "excluded_uids": "5 P1-B tasks (3117a2bf, cf179156, 0dc550d6, 34e4e2e9, d8b972a6) + all main120/frozen200",
+ "task_role": "these 4 tasks are CALIBRATION tasks: used for L-scale calibration AND mechanism validation; NOT independent test tasks; excluded from any subsequent formal experiment",
+
+ "config": "DYNAMICDAG node-level: e1=large, e2=large, r=medium, v=coder (same X for all scenarios)",
+
+ "scenarios": {
+  "execution_order": ["S1_no_recovery", "S4_cache_reuse", "S2_local_reroute", "S3_full_replay"],
+  "order_rationale": "S1 populates cache → S4 immediately verifies reuse → S2/S3 add recovery/FULL on warm cache",
+
+  "S1_no_recovery": {
+   "Z": "NONE", "fault": "none",
+   "purpose": "cold baseline: all planned nodes execute; populates shared cache",
+   "expected_logical_calls_per_task": 4,
+   "expected_new_requests_per_task": "4 (cold, no prior cache for these prompts)",
+   "cache_sharing": "results written to SHARED run cache"
+  },
+  "S4_cache_reuse": {
+   "Z": "NONE", "fault": "none (identical to S1)",
+   "purpose": "verify legitimate cache reuse: all calls should hit S1's cache",
+   "expected_logical_calls_per_task": 4,
+   "expected_new_requests_per_task": "0 (all cache hits from S1)",
+   "cache_sharing": "reads from SHARED cache (S1's entries); writes back (no-op if identical)"
+  },
+  "S2_local_reroute": {
+   "Z": "LOCAL_REROUTE", "fault": "directed r-node synthetic_unparseable_r (from P1-B Plan-A frozen injection)",
+   "purpose": "verify local recovery billing: faulted r uses clean-ref cost (no extra request); r_esc is a new request; v_fbd if r_changed_final=True",
+   "expected_logical_calls_per_task": "4 planned + 1 injected-replacement + 1-2 recovery (r_esc, v_fbd) = 6-7",
+   "expected_new_requests_per_task": "r_esc (1) + v_fbd (0-1) + possible e-node if not cached = 1-3 (e1/e2/v-planned may hit S1 cache)",
+   "injection_note": "injection REPLACES the answer AFTER obtaining the response for cost metering; does NOT produce an extra model request; the 4th planned call still occurs (billed attempt)",
+   "cache_sharing": "e1/e2 prompts identical to S1 → cache hit; r/v prompts differ (fault/recovery) → new requests"
+  },
+  "S3_full_replay": {
+   "Z": "FULL_REPLAY", "fault": "same directed r-node fault",
+   "purpose": "verify FULL: all 4 nodes re-executed logically after detection; cache reuse allowed for identical prompts",
+   "expected_logical_calls_per_task": "4 planned + 4 full-replay = 8 (injection is answer-replacement, not extra call)",
+   "expected_new_requests_per_task": "0-4 depending on cache overlap with S1/S2; e1/e2 replay prompts = same as S1 → likely cached; r replay with fault context may differ → new; v replay after r change → new",
+   "acceptance": "verify all 4 nodes traverse FULL logical re-execution path (even if cache hit), with correct per-node billing separation",
+   "cache_sharing": "reads from SHARED cache; accepts hits for identical prompts"
+  }
+ },
+
+ "budget": {
+  "global_max_new_requests": 30,
+  "global_max_total_tokens": 30000,
+  "global_max_wall_clock_seconds": 1800,
+  "per_task_per_scenario_max_logical_calls": 12,
+  "scope": "SINGLE GLOBAL budget across ALL scenarios (not per-scenario)",
+  "budget_counter": "persisted to disk; global across scenarios; no reset",
+  "failed_call_billing": "counted; no automatic retry",
+  "insufficient_budget": "stop; log partial results; record which scenarios completed vs pending"
+ },
+
+ "minimum_completion": {
+  "must_complete": ["S1_no_recovery (all 4 tasks)", "S4_cache_reuse (all 4 tasks)"],
+  "should_complete": ["S2_local_reroute (at least 2 tasks)"],
+  "may_be_partial": ["S3_full_replay (any number of tasks; mechanism evidence from partial acceptable)"],
+  "insufficient_budget_action": "if budget exhausted before must_complete: log as VALIDATION_INCOMPLETE; do not claim FULL verification"
+ },
+
+ "cache_sharing_rules": {
+  "shared_cache": "single cache identity: (model, prompt_sha256) across ALL scenarios in this validation",
+  "S1_populates": "S1 is executed first specifically to populate the cache",
+  "S4_reads": "S4 uses identical prompts → must find S1 entries",
+  "S2_S3_partial": "S2/S3 may find e1/e2 entries from S1 (same model+prompt); recovery-path prompts are new",
+  "prohibited": "no cross-validation-set cache leakage; this cache is validation-local"
+ },
+
+ "latency_calibration": {
+  "record_per_call": "serial service-demand (individual latency_s from MeteredExecutor) AND task wall-clock (time.monotonic from first to last call per task)",
+  "wall_clock_semantics": "wall-clock includes queueing/scheduling under batch processing; recorded as DIAGNOSTIC, not used as optimization objective",
+  "serial_reconstruction_semantics": "sum of individual service latencies; this is the L optimization target",
+  "current_scale": "L_SCALE=(0,12) is PLACEHOLDER from Cube critical-path; TO BE RECALIBRATED",
+  "calibration_procedure": "after S1 completes: new_L_max = max(observed serial reconstruction across S1 tasks) * 1.4; frozen as L_SCALE_v2 BEFORE S2/S3; version-tagged; not adjustable from formal test results",
+  "these_tasks_are": "calibration tasks — L scale from here applies to subsequent formal experiments; these tasks excluded from formal experiment task pool"
+ },
+
+ "acceptance_evidence": {
+  "per_node": "node, model, prompt_sha256, raw answer head, parsed result, latency_s, tokens — every call",
+  "billing_separation": "logical_calls, injected_calls, cache_hits, new_requests, new_tokens, new_latency_s, wall_clock_s — per task per scenario",
+  "quality": "Q from JointEvaluator formal path; gold only post-hoc",
+  "cache_provenance": "each cache_hit annotated with source (which scenario's execution)"
+ },
+
+ "stopping_rules": {
+  "normal": "all scenarios complete within global budget",
+  "budget_exhaustion": "stop immediately; log which scenarios completed; status=partial",
+  "infrastructure_failure": "stop; no retry; preserve partial ledger",
+  "unexpected_pattern": "S4 producing new requests → stop; investigate cache identity mismatch"
+ },
+
+ "prerequisites_status": {
+  "passed": [
+    "tri-objective deterministic improvement (9252930)",
+    "6-method wiring + BoTorch qNEHVI (9d770ef)",
+    "score chain positive/negative controls",
+    "cost predictor Track B (Stub)",
+    "48-config evaluator + 18/18 unit tests"
+  ],
+  "outstanding_after_this_validation": [
+    "observation-influence verification",
+    "cost predictor accuracy under real costs",
+    "L scale v2 freeze (from this validation's calibration data)"
+  ]
+ },
+
+ "non_claims": [
+  "No algorithm advantage claim",
+  "No method comparison (single config, mechanism focus)",
+  "No statistical significance (4 calibration tasks)",
+  "No final L scale (placeholder until calibrated from this data)"
+ ],
+
+ "execution_command": "P1B_FULLVAL_EXECUTE=1 python3 -m collab_scheduler_v1.joint_search_v1.fullval_runner --execute"
+}
