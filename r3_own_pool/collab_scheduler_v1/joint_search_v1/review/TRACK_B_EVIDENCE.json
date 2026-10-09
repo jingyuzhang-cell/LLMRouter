@@ -1,0 +1,194 @@
+{
+ "checks": {
+  "cp_deployment_positive": true,
+  "cp_deployment_varies": true,
+  "cp_incremental_le_deployment": true,
+  "cp_exact_repeat_below_deployment": true,
+  "cp_fully_overlapped_floor": true,
+  "b_all_methods_completed": true,
+  "b_all_obs_from_evaluator": true,
+  "b_gp_used": true,
+  "b_cost_pred_used": true,
+  "b_calibration_rank_corr_positive": true,
+  "b_actual_C_varies_by_X": true,
+  "b_scalarized_bo_nonzero": true,
+  "b_scalarized_bo_distinct": true,
+  "b_scalarized_bo_nondegenerate_std": true,
+  "b_official_qnehvi_same_state_nonzero": true,
+  "b_official_qnehvi_same_state_distinct": true,
+  "b_official_qnehvi_same_state_nondegenerate_std": true,
+  "b_proposed_state_incremental_nonzero": true,
+  "b_proposed_state_incremental_distinct": true,
+  "b_proposed_state_incremental_nondegenerate_std": true
+ },
+ "all_pass": true,
+ "calibration": {
+  "spearman_est_vs_actual_C": 0.7666666666666667,
+  "mape": 0.045044816443349726,
+  "n_unique_configs": 9
+ },
+ "cost_predictor": {
+  "deployment_range": [
+   1540.0,
+   3070.0
+  ],
+  "incremental_first": 1540.0,
+  "incremental_same_x_other_z": 150.0,
+  "old_estimator_failures": {
+   "HET_LOCAL": "est 1280 vs actual 371 (+245%, cache ignored)",
+   "QUAL_LOCAL": "est 1430 vs actual 0 (fully cached)",
+   "HET_NONE": "est 1130 vs cold 1686 (-49%)"
+  }
+ },
+ "method_data": {
+  "random": {
+   "n_selected": 5,
+   "n_gp_calls": 0,
+   "n_cost_preds": 0,
+   "n_observations": 5,
+   "Q_values": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "C_values": [
+    1776.0,
+    1630.0,
+    1616.0,
+    1770.0,
+    1710.0
+   ],
+   "last_round_n_candidates": 0,
+   "last_round_distinct": 0,
+   "last_round_nonzero": 0,
+   "last_round_std": 0.0
+  },
+  "scalarized_bo": {
+   "n_selected": 5,
+   "n_gp_calls": 3,
+   "n_cost_preds": 3,
+   "n_observations": 5,
+   "Q_values": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "C_values": [
+    1776.0,
+    1630.0,
+    1610.0,
+    1616.0,
+    1630.0
+   ],
+   "last_round_n_candidates": 44,
+   "last_round_distinct": 29,
+   "last_round_nonzero": 44,
+   "last_round_std": 0.07120217508710448
+  },
+  "official_qnehvi_same_state": {
+   "n_selected": 5,
+   "n_gp_calls": 3,
+   "n_cost_preds": 3,
+   "n_observations": 5,
+   "Q_values": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "C_values": [
+    1776.0,
+    1630.0,
+    1610.0,
+    1616.0,
+    1630.0
+   ],
+   "last_round_n_candidates": 44,
+   "last_round_distinct": 14,
+   "last_round_nonzero": 13,
+   "last_round_std": 0.0007193253298124024
+  },
+  "proposed_state_incremental": {
+   "n_selected": 5,
+   "n_gp_calls": 3,
+   "n_cost_preds": 3,
+   "n_observations": 5,
+   "Q_values": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "C_values": [
+    1776.0,
+    1630.0,
+    1636.0,
+    1630.0,
+    1616.0
+   ],
+   "last_round_n_candidates": 44,
+   "last_round_distinct": 13,
+   "last_round_nonzero": 13,
+   "last_round_std": 0.03632473222951365
+  },
+  "proposed_without_state": {
+   "n_selected": 5,
+   "n_gp_calls": 3,
+   "n_cost_preds": 3,
+   "n_observations": 5,
+   "Q_values": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "C_values": [
+    1776.0,
+    1630.0,
+    1636.0,
+    1630.0,
+    1616.0
+   ],
+   "last_round_n_candidates": 44,
+   "last_round_distinct": 13,
+   "last_round_nonzero": 13,
+   "last_round_std": 0.03632473222951359
+  },
+  "proposed_without_incremental_cost": {
+   "n_selected": 5,
+   "n_gp_calls": 3,
+   "n_cost_preds": 3,
+   "n_observations": 5,
+   "Q_values": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "C_values": [
+    1776.0,
+    1630.0,
+    1610.0,
+    1616.0,
+    1630.0
+   ],
+   "last_round_n_candidates": 44,
+   "last_round_distinct": 14,
+   "last_round_nonzero": 13,
+   "last_round_std": 0.0007193253298124056
+  }
+ },
+ "notes": [
+  "All Q/C/L from JointEvaluator returns; no synthetic injection",
+  "Deployment vs incremental cost separated (two roles, two numbers)",
+  "known limitation: single clean state, so use_state ablation cannot diverge in this closed loop; state ablation needs the fault30 state panel"
+ ]
+}
