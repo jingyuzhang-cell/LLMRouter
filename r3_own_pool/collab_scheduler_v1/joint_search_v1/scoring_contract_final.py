@@ -56,8 +56,22 @@ def rounding_ok_v21(a, b):
 
 
 def score_v21(model_answer, gold):
-    """Unified scoring: close OR rounding_ok."""
-    return close_v21(model_answer, gold) or rounding_ok_v21(model_answer, gold)
+    """Unified scoring: close OR rounding_ok. Rejects NaN/Inf/bool/string."""
+    import math
+    if model_answer is None or gold is None:
+        return False
+    if isinstance(model_answer, bool) or isinstance(gold, bool):
+        return False
+    if isinstance(model_answer, str) or isinstance(gold, str):
+        return False
+    try:
+        fa = float(model_answer)
+        fg = float(gold)
+    except (ValueError, TypeError, OverflowError):
+        return False
+    if math.isnan(fa) or math.isnan(fg) or math.isinf(fa) or math.isinf(fg):
+        return False
+    return close_v21(fa, fg) or rounding_ok_v21(fa, fg)
 
 
 # ==== Unit conversion (from contract v2) ====
@@ -73,19 +87,26 @@ FIXTURES = [
     ('exact_match', 4.0, 4.0, True, 'identical values'),
     ('percent_scale', 517.5, 517.5, True, 'percent value matches native'),
     ('percent_ratio_wrong', 5.175, 517.5, False, 'ratio vs percent — should fail'),
-    ('rounding_2dp_ok', 1.0274, 1.03, True, 'within 2dp rounding (0.0026 diff)'),
-    ('rounding_2dp_fail', 1.05, 1.10, False, 'beyond 2dp rounding (0.05 diff)'),
+    ('rounding_2dp_true', 1.0274, 1.03, True, 'round(1.0274,2)=1.03 == round(1.03,2)=1.03'),
+    ('rounding_2dp_fail', 1.05, 1.10, False, 'round(1.05,2)=1.05 != round(1.10,2)=1.10'),
     ('negative_exact', -38.54, -38.54, True, 'negative exact'),
-    ('negative_rounding', -38.5, -38.54, False, '0.04 diff > 0.01 — NOT 2dp rounding'),
-    ('negative_rounding_ok', -38.53, -38.54, True, '0.01 diff = 2dp boundary'),
-    ('close_relative', 1000.0, 1000.05, True, 'relative tolerance at scale'),
+    ('neg_0.04_diff', -38.5, -38.54, False, 'round(-38.5,2)=-38.5 != round(-38.54,2)=-38.54'),
+    # BOUNDARY: fixed-tol would accept but round-then-compare rejects
+    ('boundary_4.009_vs_4.0', 4.009, 4.0, False, 'round(4.009,2)=4.01 != round(4.0,2)=4.0 — REJECTED'),
+    ('boundary_neg38.53_vs_38.54', -38.53, -38.54, False, 'round(-38.53,2)=-38.53 != round(-38.54,2)=-38.54 — REJECTED'),
+    ('close_relative', 1000.0, 1000.05, True, 'close_v21 relative tolerance at scale'),
     ('none_answer', None, 5.0, False, 'unparseable model answer'),
-    ('zero_vs_nonzero', 0.0, 0.001, True, 'within absolute tolerance'),
+    ('nan_answer', float('nan'), 5.0, False, 'NaN model answer'),
+    ('inf_answer', float('inf'), 5.0, False, 'Infinite model answer'),
+    ('bool_true', True, 1.0, False, 'boolean True is not a numeric match'),
+    ('bool_false', False, 0.0, False, 'boolean False is not a numeric match'),
+    ('zero_vs_nonzero', 0.0, 0.001, True, 'within close_v21 absolute tolerance'),
     ('large_percent', 300.0, 300.0, True, 'large percent exact'),
     ('percent_negative', -25.0, -25.0, True, 'negative percent'),
-    ('small_diff', 0.8969, 0.9, True, '0.0031 diff — 2dp rounding'),
-    ('boundary_01', 1.0099, 1.01, True, '0.0001 diff — well within rounding'),
-    ('boundary_011', 1.0, 1.011, False, '0.011 diff — beyond both close and rounding tolerance'),
+    ('rounding_true_0.8969', 0.8969, 0.9, True, 'round(0.8969,2)=0.9 == round(0.9,2)=0.9'),
+    ('rounding_true_1.004', 1.004, 1.0, True, 'round(1.004,2)=1.0 == round(1.0,2)=1.0'),
+    ('rounding_false_1.011', 1.011, 1.0, False, 'round(1.011,2)=1.01 != round(1.0,2)=1.0'),
+    ('string_answer', '4.0', 4.0, False, 'string answer not numeric'),
 ]
 
 
