@@ -1,34 +1,96 @@
-# Formal Pipeline Wiring Status (2026-10-09)
+# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2)
 
-## What EXISTS and PASSES (18 unit tests)
-- `evaluator.py:space()` — 48 configs (4-node independent X × 3 Z)
-- `evaluator.py:JointEvaluator` — evaluates via MeteredExecutor, ledger-based costs
-- `evaluator.py:SearchSession` — callback interface: `step(select, states)`
-- `runtime.py:run_session()` — wires campaign/quota/evaluator/session
-- `smoke_runner.py:Budget` — attempts/tokens caps with pending/settle
-- 8 evaluator tests + 10 runtime tests ALL PASS
+Single source of truth for all pipeline wiring evidence. Supersedes all previous
+partial reports and the v1 of this file. Items grouped by status.
 
-## What DOES NOT EXIST yet (the gap)
-SearchSession docstring says "six algorithm implementations are external."
-No selector callbacks have been written for the six METHODS:
-1. proposed_state_incremental — NOT IMPLEMENTED
-2. random — trivially implementable
-3. scalarized_bo — NOT IMPLEMENTED
-4. official_qnehvi_same_state — NOT IMPLEMENTED (mark BLOCKED: no official BoTorch)
-5. proposed_without_state — NOT IMPLEMENTED (ablation)
-6. proposed_without_incremental_cost — NOT IMPLEMENTED (ablation)
+## PASS: Production Pipeline
 
-Incremental cost predictor not yet called by any selector on this pipeline.
+**Path**: `ProductionSelector.select()` → `SearchSession.step()` → `JointEvaluator.evaluate()` → `MeteredExecutor.call()` → `Budget` → `observe_evaluator_result()` → next `select()`
 
-## Next window's single deliverable
-Write the six `select(candidates, observations) -> config_id` callbacks for
-SearchSession.step(), wire the incremental cost predictor into the proposed
-selector's scoring, drive with independent Stub responses, and verify:
-- At least one model update → re-selection round (not just init)
-- Non-degenerate acquisition scores (not all zero)
-- wo_state and wo_incr_cost correctly disable their respective mechanisms
-- Costs from ledger, not from predictor values
-- Official qNEHVI marked BLOCKED if BoTorch unavailable
+**Evidence**: `review/unified_test.py` → `review/UNIFIED_PIPELINE_EVIDENCE.json` (12/12)
+- All 6 methods run through SearchSession→JointEvaluator→Budget ✅
+- Incremental cost predictor called BEFORE each selection ✅
+- Both clean and fault30 states evaluated ✅
+- Budget tracked actual token usage ✅
+- Methods produce different selection sets ✅
 
-The `select` callback receives (candidates_list, observations_list) and must
-return a config_id string. It CANNOT see states/faults (correct isolation).
+**qNEHVI implementation used**: self-built `JointPosteriorGP` + `exact_qnehvi_score()`
+(joint posterior Cholesky sampling). NOT BoTorch-aligned. See BLOCKING items.
+
+## PASS: Ablation Isolation
+
+**Evidence**: `review/unified_test.py` (Part B/C) + `review/acquisition_evidence.py`
+- State-blind picks identical across clean/fault30 (insensitive) ✅
+- Feature dimensions differ (state bit present vs absent) ✅
+- use_state/use_cost flags correctly set per method ✅
+- Cost divisor removal exactly recovers base scores ✅
+- Ranking changes with cost toggle (corr=0.994≠1.0) ✅
+- Both ablations share SAME JointPosteriorGP + exact_qnehvi_score ✅
+
+## PASS: Q Scoring Controls (NEW this session)
+
+**Evidence**: `review/Q_CONTROLS_AND_SCORES.json` (9/9)
+- Q=1 positive control: facts(1.5,2.5), expr(v0+v1), v={"value":4.0}, gold=4.0 → Q=1.0 ✅
+- Q=0 negative control (wrong value): v returns 999 → Q=0.0 ✅
+- Q=0 negative control (unparseable): v returns {} → Q=0.0 ✅
+- Previous Q=0 root cause: gold=4.0 (make_task default, not 200); stub {} → None → Q=0 ✅
+
+## PASS: Per-Round Candidate Score Distribution (NEW this session)
+
+**Evidence**: `review/Q_CONTROLS_AND_SCORES.json`
+- 40 candidates scored with mixed Q observations (4 Q=1.0 + 4 Q=0.3-0.5)
+- 30 distinct @10dp, 31 nonzero, 1 tied@max (2.5%) ✅
+- Range [0, 0.0022], std 0.0006, non-degenerate, all finite ✅
+
+## PASS: FULL Reachability
+
+**Evidence**: `review/exact_qnehvi_test.py` (8/8) + `review/wiring_test.py` (13/13)
+- FULL present in 48-config space (16 FULL configs) ✅
+- Random search selects FULL with sufficient budget ✅
+- Acquisition selects FULL when FULL Pareto-dominates ✅
+- Cost-aware EHVI correctly avoids FULL when cost high (documented behavior) ✅
+
+## PASS: Prior Unit Tests (not superseded)
+
+- `test_evaluator.py`: 8/8 (48 configs execute, FULL=8 calls, cache, fault cost, detector) ✅
+- `test_runtime.py`: 10/10 (campaign quotas, GPU lock, crash recovery, fail-closed) ✅
+- `review/wiring_test.py`: 13/13 (features, C/L estimates, 6 methods through stub) ✅
+
+## BLOCKING: qNEHVI BoTorch Alignment
+
+Self-built joint posterior is mathematically correct (Cholesky from full
+posterior covariance). NOT verified against BoTorch `qExpectedImprovement`
+or Ax Platform qNEHVI. Required: numerical alignment with same GP, data,
+noise, objectives, reference point; MC sampling-error bounds.
+
+Without alignment, "official_qnehvi_same_state" is a self-built baseline,
+not the strong qNEHVI baseline the experiment design promised.
+
+## BLOCKING: Incremental Cost Predictor Counter-example Fix
+
+Identified in prior review. Not yet fixed.
+
+## BLOCKING: FULL + New Fault Billing Real Validation
+
+Stub-verified (8 logical calls, swapped models, both charged). Requires
+small-scale real LLM validation before formal experiment.
+
+## NOT STARTED: Formal Experiment Protocol Freeze
+
+Data splits, sample size, budget, stopping rules — awaiting blocking items.
+
+## Summary
+
+| Item | Status | Evidence |
+|---|---|---|
+| Production pipeline 6 methods | ✅ PASS | UNIFIED_PIPELINE_EVIDENCE.json |
+| Ablation isolation | ✅ PASS | UNIFIED_PIPELINE_EVIDENCE.json |
+| Q scoring controls | ✅ PASS | Q_CONTROLS_AND_SCORES.json |
+| Score distribution | ✅ PASS | Q_CONTROLS_AND_SCORES.json |
+| FULL reachability | ✅ PASS | EXACT_QNEHVI_TESTS.json |
+| Evaluator (48 configs) | ✅ PASS | test_evaluator.py 8/8 |
+| Runtime (quota, GPU, crash) | ✅ PASS | test_runtime.py 10/10 |
+| qNEHVI BoTorch alignment | ❌ BLOCKING | — |
+| Cost predictor fix | ❌ BLOCKING | — |
+| FULL real validation | ❌ BLOCKING | — |
+| Formal experiment freeze | ❌ NOT STARTED | — |
