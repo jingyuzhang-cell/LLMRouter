@@ -57,8 +57,8 @@ ax.set_xticks(xs)
 ax.set_xticklabels(labels, fontsize=7)
 ax.set_ylabel('usable-facts rate')
 ax.set_ylim(0, 1.15)
-ax.set_title('e2 (text extraction) on MIXED tasks: complementary, task-dependent '
-             'model failures (green=large, blue=medium; grey=empty facts)', fontsize=9)
+ax.set_title('e2 output-USABILITY proxy on mixed tasks, EXECUTED calls only '
+             '(cache aliases and fault-injected cells excluded; green=large, blue=medium; grey=no usable facts)', fontsize=8)
 fig.tight_layout()
 fig.savefig(HERE / 'fig2_e2_mixed_tasks.png', dpi=150)
 print('figures written')

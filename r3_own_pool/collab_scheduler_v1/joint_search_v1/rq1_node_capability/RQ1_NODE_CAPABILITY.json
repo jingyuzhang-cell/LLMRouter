@@ -36,60 +36,60 @@
  "stage_aggregates": {
   "extract_e1": {
    "large": {
-    "n": 112,
+    "n": 36,
     "parse_ok": 1.0,
-    "operand_recall": 0.821
+    "operand_recall": 0.833
    },
    "medium": {
-    "n": 168,
+    "n": 32,
     "parse_ok": 1.0,
     "operand_recall": 0.875
    }
   },
   "extract_e2": {
    "large": {
-    "n": 152,
-    "parse_ok": 0.5,
+    "n": 34,
+    "parse_ok": 0.529,
     "operand_recall": 0.5
    },
    "medium": {
-    "n": 128,
-    "parse_ok": 0.562,
+    "n": 15,
+    "parse_ok": 0.6,
     "operand_recall": 0.333
    }
   },
   "reason_r": {
    "medium": {
-    "n": 184,
-    "expr_ok": 0.957,
-    "eval_ok": 0.875,
-    "gold_match": 0.239
+    "n": 60,
+    "expr_ok": 1.0,
+    "eval_ok": 0.583,
+    "gold_match": 0.2
    },
    "large": {
-    "n": 96,
+    "n": 46,
     "expr_ok": 1.0,
-    "eval_ok": 0.875,
-    "gold_match": 0.25
+    "eval_ok": 0.696,
+    "gold_match": 0.174
    }
   },
   "reason_r_cond_upstream_complete": {
    "medium": {
-    "n": 4,
+    "n": 1,
     "gold_match": 0.0
    }
   },
   "verify_v": {
    "coder": {
-    "n": 192,
-    "parse_ok": 0.943,
-    "consistency": 0.37,
-    "gold_match": 0.339
+    "n": 95,
+    "parse_ok": 1.0,
+    "consistency": 0.316,
+    "gold_match": 0.337
    },
    "large": {
-    "n": 80,
-    "parse_ok": 0.825,
-    "consistency": 0.338,
-    "gold_match": 0.287
+    "n": 49,
+    "parse_ok": 0.959,
+    "consistency": 0.0,
+    "gold_match": 0.265
    }
   }
  },
@@ -97,9 +97,9 @@
   "extract_e1": {
    "large_vs_medium": {
     "tasks": 8,
-    "cells": 96,
-    "ok_a": 96,
-    "ok_b": 168,
+    "cells": 32,
+    "ok_a": 32,
+    "ok_b": 32,
     "recall_diffs": [
      0.0,
      0.0,
@@ -117,9 +117,9 @@
   "extract_e2": {
    "large_vs_medium": {
     "tasks": 8,
-    "cells": 128,
-    "ok_a": 60,
-    "ok_b": 72,
+    "cells": 15,
+    "ok_a": 14,
+    "ok_b": 9,
     "recall_diffs": [
      0.0,
      0.0,
@@ -131,141 +131,180 @@
   },
   "reason_r_same_upstream": {
    "large_vs_medium__upstream_large_large": {
-    "n": 32,
-    "gm_a": 12,
-    "gm_b": 8,
-    "tasks": 8
+    "n": 4,
+    "gm_a": 4,
+    "gm_b": 0,
+    "tasks": 2
    },
    "large_vs_medium__upstream_medium_medium": {
-    "n": 48,
-    "gm_a": 12,
-    "gm_b": 16,
-    "tasks": 8
+    "n": 4,
+    "gm_a": 0,
+    "gm_b": 0,
+    "tasks": 2
    }
   },
   "verify_v_same_chain": {
    "coder_vs_large__chain_large_large_large": {
-    "n": 16,
+    "n": 15,
     "gm_a": 6,
     "gm_b": 3,
     "tasks": 8
    },
    "coder_vs_large__chain_medium_large_medium": {
-    "n": 16,
+    "n": 15,
     "gm_a": 14,
     "gm_b": 5,
     "tasks": 8
    },
    "coder_vs_large__chain_medium_medium_medium": {
-    "n": 32,
-    "gm_a": 14,
-    "gm_b": 10,
-    "tasks": 8
+    "n": 5,
+    "gm_a": 3,
+    "gm_b": 1,
+    "tasks": 3
    },
    "coder_vs_large__chain_medium_medium_large": {
-    "n": 16,
-    "gm_a": 14,
-    "gm_b": 5,
-    "tasks": 8
+    "n": 10,
+    "gm_a": 2,
+    "gm_b": 2,
+    "tasks": 5
    }
   }
  },
  "missing_output_accounting": {
-  "cells": 280,
+  "cells": 168,
+  "execution_accounting": {
+   "e1": {
+    "large": {
+     "executed": 36,
+     "alias": 76,
+     "injected": 0
+    },
+    "medium": {
+     "executed": 32,
+     "alias": 136,
+     "injected": 0
+    }
+   },
+   "e2": {
+    "large": {
+     "executed": 34,
+     "alias": 110,
+     "injected": 8
+    },
+    "medium": {
+     "executed": 15,
+     "alias": 105,
+     "injected": 8
+    }
+   },
+   "r": {
+    "medium": {
+     "executed": 60,
+     "alias": 116,
+     "injected": 8
+    },
+    "large": {
+     "executed": 46,
+     "alias": 50,
+     "injected": 0
+    }
+   },
+   "v": {
+    "coder": {
+     "executed": 95,
+     "alias": 86,
+     "injected": 11
+    },
+    "large": {
+     "executed": 49,
+     "alias": 26,
+     "injected": 5
+    }
+   }
+  },
   "refusal_or_empty_by_node": {
-   "e1:ok": 280,
-   "e2:ok": 148,
-   "e2:empty": 132
+   "e1:ok": 68,
+   "e2:ok": 27,
+   "e2:empty": 22
   },
   "e2_by_task": {
    "5c5cb310-0607-4285-ba9f-d8b996c700db": {
-    "ok": 4
+    "ok": 1
    },
    "1078998f-a141-45fc-918e-17ddf1da0d89": {
-    "ok": 4
+    "ok": 1
    },
    "51f8785b-7864-4bb2-88b4-5367547de061": {
-    "ok": 4
+    "ok": 1
    },
    "09aaae63-03dd-4173-ba29-1a4a60946982": {
-    "ok": 4
+    "ok": 1
    },
    "660b7b1d-626d-4892-9ec6-b198fc2410ff": {
-    "ok": 33
+    "ok": 6
    },
    "4c5cc243-cd76-42a0-8b4a-c6a1c0e75d00": {
-    "ok": 17,
-    "empty": 16
+    "ok": 4,
+    "empty": 2
    },
    "093e653a-1da5-4d17-ae9e-ce7ad7275962": {
-    "empty": 33
+    "empty": 6
    },
    "2f745dd1-c8c2-45a5-98c9-f59fc10fdbe6": {
-    "ok": 33
+    "ok": 6
    },
    "ab6d7681-82b0-4c4b-bbc0-d7ca7491cbbd": {
-    "empty": 17,
-    "ok": 16
+    "empty": 4,
+    "ok": 2
    },
    "85f0dfad-d70a-4094-810b-6a13986d1a57": {
-    "empty": 33
+    "empty": 6
    },
    "08fbbc3f-b73f-40f6-9ac9-97e83f41df9d": {
-    "ok": 17,
-    "empty": 16
+    "ok": 3
    },
    "a3568c44-29d3-49d0-b2b2-c692678764a2": {
-    "empty": 17,
-    "ok": 16
+    "empty": 4,
+    "ok": 2
    }
   },
   "e2_mixed_tasks_by_model": {
    "4c5cc243-cd76-42a0-8b4a-c6a1c0e75d00": {
     "large": {
-     "ok": 17,
-     "n": 17
+     "ok": 4,
+     "n": 4
     },
     "medium": {
      "ok": 0,
-     "n": 16
+     "n": 2
     }
    },
    "ab6d7681-82b0-4c4b-bbc0-d7ca7491cbbd": {
     "large": {
      "ok": 0,
-     "n": 17
+     "n": 4
     },
     "medium": {
-     "ok": 16,
-     "n": 16
-    }
-   },
-   "08fbbc3f-b73f-40f6-9ac9-97e83f41df9d": {
-    "large": {
-     "ok": 9,
-     "n": 17
-    },
-    "medium": {
-     "ok": 8,
-     "n": 16
+     "ok": 2,
+     "n": 2
     }
    },
    "a3568c44-29d3-49d0-b2b2-c692678764a2": {
     "large": {
      "ok": 0,
-     "n": 17
+     "n": 4
     },
     "medium": {
-     "ok": 16,
-     "n": 16
+     "ok": 2,
+     "n": 2
     }
    }
   },
-  "e_missing": 0,
-  "r_missing": 0,
-  "v_missing": 8,
-  "unparseable_e": 132,
-  "unparseable_v": 25
+  "e_missing": 219,
+  "r_missing": 62,
+  "v_missing": 24,
+  "unparseable_e": 22,
+  "unparseable_v": 2
  },
  "evidence_gaps": [
   "no coder-model executions at e1/e2/r stages (config space assigns coder only to v) — extraction/reasoning comparisons cover medium vs large only",

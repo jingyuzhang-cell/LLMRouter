@@ -183,14 +183,27 @@ def load_cells():
                 first[k] = dict(source=name, scope=r['state'], cid=r['cid'],
                                 uid=parts[4], node=parts[3], model=r['model'],
                                 answer=r['response']['answer'],
-                                usage=r['response'].get('usage', {}))
+                                usage=r['response'].get('usage', {}),
+                                alias='alias_of' in r,
+                                injected=bool(r['response'].get('injected_fault')))
         records.extend(first.values())
     return records
 
 
 def main():
-    recs = load_cells()
-    uids = sorted({r['uid'] for r in recs})
+    recs_all = load_cells()
+    acct = defaultdict(lambda: defaultdict(lambda: [0, 0, 0]))  # node -> model -> [executed, alias, injected]
+    for r in recs_all:
+        a = acct[r['node']][r['model']]
+        if r['injected']:
+            a[2] += 1
+        elif r['alias']:
+            a[1] += 1
+        else:
+            a[0] += 1
+    # capability metrics use ONLY executed, non-injected records
+    recs = [r for r in recs_all if not r['alias'] and not r['injected']]
+    uids = sorted({r['uid'] for r in recs_all})
     gold = gold21_for(uids)
 
     # (source, scope, cid, uid) -> node -> record  (campaign cells are multi-task)
@@ -367,6 +380,8 @@ def main():
     # mixed tasks (both ok and empty observed): empty-rate by MODEL — the
     # capability cut, separated from always-empty task properties
     mixed = [u for u, v in e2_by_task.items() if v.get('ok') and v.get('empty')]
+    # executed-level only (rows already filtered); injected observations were
+    # excluded upstream (fault30 panel corrupts e2 on 08fbbc3f, v on 2f745dd1)
     e2_mixed_by_model = defaultdict(lambda: defaultdict(lambda: [0, 0]))
     for row in rows:
         if row.get('e2') and row['uid'] in mixed:
@@ -375,6 +390,9 @@ def main():
             e2_mixed_by_model[row['uid']][m][1] += 1
 
     missing = dict(cells=len(rows),
+                   execution_accounting={nd: {m: dict(executed=a[0], alias=a[1], injected=a[2])
+                                              for m, a in mm.items()}
+                                         for nd, mm in acct.items()},
                    refusal_or_empty_by_node=dict(refusal_counts),
                    e2_by_task=e2_by_task,
                    e2_mixed_tasks_by_model={u: {m: dict(ok=ok, n=n) for m, (ok, n) in v.items()}
