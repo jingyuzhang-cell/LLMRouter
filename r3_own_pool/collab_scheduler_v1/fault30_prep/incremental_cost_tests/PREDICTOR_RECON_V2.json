@@ -1,0 +1,141 @@
+{
+ "results": [
+  {
+   "name": "T1_swap_all_cached",
+   "prediction": {
+    "lower": 0,
+    "upper": 4,
+    "unconditional_calls": 0,
+    "conditional_calls": 2,
+    "detail": {
+     "unconditional_nodes": [],
+     "conditional_nodes": [
+      "r",
+      "v"
+     ]
+    }
+   },
+   "actual": {
+    "physical": 0,
+    "logical": 4,
+    "non_injected_logical": 4,
+    "injected": 0,
+    "cache": 4,
+    "new_nodes": []
+   },
+   "checks": {
+    "actual_zero_new": true,
+    "actual_all_cached": true,
+    "lower_le_actual": true,
+    "upper_ge_actual": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "T2_e_cached_rv_missing",
+   "prediction": {
+    "lower": 0,
+    "upper": 2,
+    "unconditional_calls": 0,
+    "conditional_calls": 1,
+    "detail": {
+     "unconditional_nodes": [],
+     "conditional_nodes": [
+      "r"
+     ]
+    }
+   },
+   "actual": {
+    "physical": 2,
+    "logical": 4,
+    "non_injected_logical": 4,
+    "injected": 0,
+    "cache": 2,
+    "new_nodes": [
+     "r",
+     "v"
+    ]
+   },
+   "checks": {
+    "actual_gt_zero": true,
+    "predicted_lower_gt_zero": true,
+    "r_v_new": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "T3_r_output_changes",
+   "prediction": {
+    "lower": 0,
+    "upper": 4,
+    "unconditional_calls": 0,
+    "conditional_calls": 2,
+    "detail": {
+     "unconditional_nodes": [],
+     "conditional_nodes": [
+      "r",
+      "v"
+     ]
+    }
+   },
+   "actual": {
+    "physical": 2,
+    "logical": 4,
+    "non_injected_logical": 4,
+    "injected": 0,
+    "cache": 2,
+    "new_nodes": [
+     "r",
+     "v"
+    ]
+   },
+   "checks": {
+    "r_new": true,
+    "r_unconditional_or_upper": true,
+    "bounds_contain_actual": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "T4_running_cache_reuse",
+   "prediction": {
+    "lower": 3,
+    "upper": 5,
+    "unconditional_calls": 3,
+    "conditional_calls": 1,
+    "detail": {
+     "unconditional_nodes": [
+      "e1",
+      "e2",
+      "r"
+     ],
+     "conditional_nodes": [
+      "v"
+     ]
+    }
+   },
+   "actual": {
+    "physical": 4,
+    "logical": 8,
+    "non_injected_logical": 8,
+    "injected": 0,
+    "cache": 4,
+    "new_nodes": [
+     "e1",
+     "e2",
+     "r",
+     "v"
+    ]
+   },
+   "checks": {
+    "cache_hits_present": true,
+    "second_run_all_cached": true,
+    "running_cache_grew": true
+   },
+   "verdict": "PASS"
+  }
+ ],
+ "all_pass": true,
+ "zero_model_calls": true,
+ "version": "predictor_v2"
+}
