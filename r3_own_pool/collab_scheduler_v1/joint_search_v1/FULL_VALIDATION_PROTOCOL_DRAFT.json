@@ -1,0 +1,95 @@
+{
+ "protocol": "FULL_AND_FAULT_BILLING_REAL_VALIDATION",
+ "version": "DRAFT_v1_20261009",
+ "status": "SUBMITTED_FOR_APPROVAL — NOT AUTHORIZED",
+ "purpose": "Verify FULL execution, fault billing, and same-semantics service latency on real LLM calls. NOT a claim of algorithm advantage.",
+
+ "tasks": {
+  "source": "hybrid_pool() held-out tasks, excluding all previously used UIDs (P1-B 5 + any data-window usage)",
+  "selection": "sha256('fullval:20261009:'+uid) ascending, first 4 tasks",
+  "freeze": "UIDs and hashes committed before any real call; no post-hoc task changes",
+  "panel_note": "4 tasks is a mechanism-validation pilot, not a performance experiment; no significance claims"
+ },
+
+ "scenarios": {
+  "S1_no_recovery": {
+   "config": "DYNAMICDAG node-level: e1=large, e2=large, r=medium, v=coder, Z=NONE",
+   "fault": "none (clean state)",
+   "purpose": "baseline: all planned nodes execute normally, no recovery events expected",
+   "expected_calls": "4 (e1+e2+r+v), 0 injected, 0 recovery"
+  },
+  "S2_local_reroute": {
+   "config": "same X assignment, Z=LOCAL_REROUTE",
+   "fault": "directed r-node syntax fault (synthetic_unparseable_r from P1-B)",
+   "purpose": "verify local recovery billing: faulted r attempt billed, r_esc new call billed, v_refresh billed if r_changed_final=True",
+   "expected_calls": "4 planned + 1 injected + 1-3 recovery (r_esc, v_fbd depending on detection)"
+  },
+  "S3_full_replay": {
+   "config": "same X assignment, Z=FULL_REPLAY",
+   "fault": "same directed r-node fault",
+   "purpose": "verify FULL: entire DAG re-executed from scratch after detection; all nodes get new calls",
+   "expected_calls": "4 planned + 1 injected + 4 full re-execution = 9"
+  },
+  "S4_cache_reuse": {
+   "config": "same as S1 (exact same prompts)",
+   "fault": "none",
+   "purpose": "verify legitimate cache reuse: all calls should hit cache from S1; physical new_requests=0",
+   "expected_calls": "4 logical, 0 new physical requests, 4 cache_hits"
+  }
+ },
+
+ "budget": {
+  "max_real_requests": 30,
+  "max_total_tokens": 30000,
+  "max_wall_clock_seconds": 1800,
+  "per_task_per_scenario_max": 12,
+  "failed_call_billing": "infrastructure failures counted toward budget; no automatic retry",
+  "budget_reset": "prohibited; global counter persisted to disk",
+  "output_isolation": "each scenario gets an independent run directory with its own ledger, budget, and completion marker"
+ },
+
+ "latency_calibration": {
+  "record": "for every call: serial service-demand reconstruction (sum of individual latencies) AND actual wall-clock (time.monotonic between first and last call per task)",
+  "current_scale": "L_SCALE=(0,12) is a PLACEHOLDER from Cube critical-path; must be recalibrated from this validation's serial reconstruction data",
+  "calibration_rule": "new scale = max(observed serial reconstruction) * 1.4 margin; frozen BEFORE any formal experiment; version-tagged; NOT adjusted using formal test results",
+  "out_of_range": "values exceeding frozen scale clipped to [0,1]; clip fraction reported per scenario"
+ },
+
+ "acceptance_evidence": {
+  "per_node_trace": "node, model, prompt_sha, raw answer head, parsed result, latency, tokens — for every call",
+  "billing_separation": "logical_calls, injected_calls, cache_hits, new_requests, new_tokens, new_latency_s — per task per scenario",
+  "quality_scoring": "Q from JointEvaluator formal path (fence-parsed); gold used only post-hoc",
+  "cache_provenance": "each cache_hit annotated with source ledger key",
+  "hv_improvement": "not claimed — this is mechanism validation only"
+ },
+
+ "stopping_rules": {
+  "normal": "all 4 scenarios complete within budget",
+  "budget_exhaustion": "stop immediately; log partial results with status=aborted-budget",
+  "infrastructure_failure": "stop; log failure; NO automatic retry; preserve partial ledger",
+  "protocol_violation": "any unexpected call pattern (e.g., S4 producing new requests) → stop and investigate"
+ },
+
+ "prerequisites": {
+  "all_checks": [
+    "tri-objective deterministic improvement test: PASSED (9252930)",
+    "6-method production wiring: PASSED (9d770ef)",
+    "BoTorch qNEHVI integration: PASSED (9/9)",
+    "score chain positive/negative controls: PASSED",
+    "cost predictor Track B: PASSED (Stub level)",
+    "48-config space + evaluator + metered executor: PASSED (18/18 unit tests)"
+  ],
+  "outstanding": [
+    "observation-influence verification (fixed candidates+seed, vary Q/C/L)",
+    "cost predictor accuracy under real model costs",
+    "L scale recalibration from real serial reconstruction data"
+  ]
+ },
+
+ "explicit_non_claims": [
+  "This validation does NOT prove algorithm advantage",
+  "Does NOT compare methods (single method, mechanism focus)",
+  "Does NOT establish statistical significance (4 tasks)",
+  "Does NOT finalize L scale (placeholder until calibrated)"
+ ]
+}
