@@ -1,6 +1,6 @@
 {
  "protocol": "END_TO_END_NET_BENEFIT_VALIDATION",
- "version": "DRAFT_v3_1_20261009",
+ "version": "DRAFT_v3_2_20261009",
  "status": "SUBMITTED_FOR_APPROVAL \u2014 NOT AUTHORIZED",
  "purpose": "Test hypothesis H on a frozen independent panel: does Dynamic DAG's feedback-driven local recovery produce net benefit over Single LLM under specific fault/budget conditions? NOT a search efficiency experiment.",
  "hypothesis": {
@@ -80,7 +80,10 @@
     "mechanism_comparison": "current mapping: any node fault exposes in Single (all nodes map to single call). Interpretation: \"under a synthetic fault protocol where Single is fault-affected for all node types, how much can structural recovery recover?\" Answers the MECHANISM question, not the deployment question.",
     "competitive_comparison": "fair-competition variant: fault defined on (model, service) not (task, node). A strategy is fault-affected ONLY when it actually calls the faulted (model, prompt_sha) pair. Single is affected only if the fault targets the large model on that task's prompt. DAG is affected when the faulted (node, model) triple is executed. Exposure rate and severity reported per strategy. STRONG conclusions about \"DAG > Single\" should prefer this variant.",
     "recommendation": "run mechanism comparison as primary (current protocol); add competitive comparison as secondary arm with service-level fault mapping; if DAG > Single in mechanism but NOT in competitive, attribute to exposure protocol not recovery"
-   }
+   },
+   "confirmatory_status": "MECHANISM comparison (current protocol): primary for proving the RECOVERY MECHANISM works. If D > A here, it proves structural recovery CAN recover quality under synthetic fault mapping. COMPETITIVE comparison (fair-competition variant): primary for claiming \"DAG > Single\" in deployment-like conditions. If the paper claims net benefit of DAG over Single, the COMPETITIVE result must also be positive. If mechanism passes but competitive fails: paper claims \"recovery mechanism works under controlled faults; deployment advantage not established.\" Both protocols share the same confirmatory gate (D>A then D>A') and the same pre-specified (fault30, B*=3000).",
+   "competitive_fault_spec": "Fault defined at (model, service) level: a specific model (e.g., large) produces degraded output for a specific task's prompt (identified by prompt_sha). A strategy is fault-affected ONLY when it actually calls that (model, prompt_sha) pair. Single LLM is affected only when the fault targets large on that task's single prompt. DAG is affected when the faulted (node, model, prompt) is in its execution path. Exposure rate and severity reported per strategy per state. NOTE: if Single uses large and fault targets medium (DAG's r-node), Single is NOT affected \u2014 this asymmetry is INHERENT to competitive fault mapping and must be reported transparently.",
+   "resource_impact": "If BOTH fault protocols run: 6 strategies x 4 states x 50 tasks x 2 protocols = 2,400 base evaluations. With 2 V2 candidates: up to 3,200. Current budget of 4,000 physical requests and 4M tokens may be INSUFFICIENT. Recommendation: run mechanism protocol first (1,200 evals); run competitive protocol as second phase if budget allows; or pre-select a subset of fault rates for competitive comparison. FINAL RESOURCE BUDGET TO BE FROZEN AFTER AUDIT PHASE."
   },
   "seed_replication": "each fault rate uses ONE seed from the frozen set (20261023/24/25); one draw per rate is acknowledged as a limitation; multiple seeds per rate deferred to follow-up if primary result is borderline"
  },
@@ -118,7 +121,7 @@
    "secondary_confirmatory": "\u0394Q_B = Q_B(D|fault30,B*) \u2212 Q_B(A'|fault30,B*) tests whether D beats the competitive fallback baseline",
    "test_statistic": "paired task-level: exact McNemar on correct-within-budget indicators",
    "significance_level": "one-sided \u03b1=0.05 for each gate step; two-sided p reported alongside; hierarchical gate means only one test is \"active\" at each step",
-   "hierarchical_gate": "Step 1: test D > A at (fault30, B*=3000) with one-sided McNemar (\u03b1=0.05). If NOT significant OR direction is negative \u2192 STOP; claim \"no net benefit over Single\". Step 2 (only if Step 1 passes): test D > A' at same (state, budget) with one-sided McNemar (\u03b1=0.05). If Step 2 passes \u2192 claim \"net benefit over competitive fallback baseline\". If Step 2 fails \u2192 claim \"net benefit over Single but not over fallback\". Both tests require POSITIVE direction (D > comparator); two-sided p reported alongside one-sided decision. This gate controls familywise error without Bonferroni; pre-specified order D>A then D>A'."
+   "hierarchical_gate": "Step 1: test D > A at (fault30, B*=3000) with one-sided McNemar (alpha=0.05). If NOT significant OR direction is negative: conclude \"FAILED TO DEMONSTRATE positive net benefit of D over A\" (NOT \"no difference exists\" \u2014 absence of evidence is not evidence of absence). Step 2 (only if Step 1 passes): test D > A' at same (state, budget) with one-sided McNemar (alpha=0.05). If Step 2 passes: claim \"net benefit demonstrated over competitive fallback baseline\". If Step 2 fails: claim \"net benefit over Single DEMONSTRATED but not over fallback baseline\" (NOT \"D and A' are equivalent\"). Both tests require POSITIVE direction. Two-sided p reported alongside one-sided decision. This gate controls familywise error without Bonferroni; pre-specified order D>A then D>A'."
   },
   "exploratory": {
    "all_other_qb_pairs": "\u0394Q_B at remaining 39 (state, budget) pairs (40 total - 1 confirmatory); Holm-corrected; reported as exploratory",
@@ -151,15 +154,7 @@
   "estimated_calls_per_eval": "A: 1, A': 1-2, B/C: 4, D: 4-7, E: 4-8 (LOGICAL calls; physical reduced by cache reuse)",
   "estimated_total_logical_calls": "~5000-8000 (includes V2 candidate arms)",
   "estimated_total_physical_requests": "~2000-3500 (cache reuse reduces physical; logical stays full)",
-  "power_analysis": {
-   "confirmatory_test": "fault30 state: ~15 faulted tasks of 50; exact McNemar on budget-within-completion indicators",
-   "ideal_recovery": "15 Help / 0 Harm \u2192 p=0.000122 (well-powered)",
-   "strong_recovery": "10 Help / 2 Harm \u2192 p=0.019 (adequate)",
-   "moderate_recovery": "8 Help / 4 Harm \u2192 p=0.115 (underpowered for sole confirmatory)",
-   "weak_recovery": "5 Help / 3 Harm \u2192 p=0.727 (not detectable)",
-   "conclusion": "50 tasks is a PILOT-scale validation; sufficient for strong recovery effects (\u226510pp net recovery gain on faulted tasks); NOT adequate for moderate effects; if confirmatory test is borderline, larger panel recommended before paper claim",
-   "recommendation": "estimate actual Help/Harm distribution from historical fault30 paired records before execution to refine power estimate"
-  },
+  "power_analysis": "see statistical_tests.power_table for verified exact McNemar p-values (scipy.stats.binomtest). power_table reports TWO-SIDED p-values; the confirmatory gate uses ONE-SIDED tests: one-sided p = two-sided p / 2 when direction is positive. Example: Help=10/Harm=2 two-sided p=0.038574, one-sided p=0.019287. These are ILLUSTRATIVE scenario p-values, NOT a power analysis. A proper power simulation from historical Help/Harm paired distributions is REQUIRED before final freeze. 50 tasks is pilot-scale; adequately powered only for near-total recovery (Help>=12/Harm<=3).",
   "expansion_rule": "if confirmatory result is borderline (0.05 < p < 0.20), do NOT add tasks to this panel; instead plan a SEPARATE independent validation panel with pre-fixed sample size and rules. No optional stopping, no sequential addition based on interim results."
  },
  "budget": {
