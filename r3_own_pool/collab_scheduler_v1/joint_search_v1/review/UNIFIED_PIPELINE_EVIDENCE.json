@@ -1,0 +1,168 @@
+{
+ "checks": {
+  "a_all_ran": true,
+  "a_cost_predictor_called": true,
+  "a_both_states_evaluated": true,
+  "a_budget_tracked": true,
+  "a_methods_differ": true,
+  "b_state_blind_insensitive": true,
+  "b_state_feature_differs": true,
+  "b_aware_state_bit_present": true,
+  "b_blind_state_bit_absent": true,
+  "c_cost_aware_uses_predictor": true,
+  "c_cost_blind_still_calls_predictor": true
+ },
+ "all_pass": true,
+ "method_data": {
+  "random": {
+   "n_selected": 4,
+   "n_selections": 2,
+   "n_cost_predictions": 2,
+   "use_state": false,
+   "use_cost": false,
+   "budget_attempts": 20,
+   "n_observations": 8,
+   "states_covered": [
+    "fault30",
+    "clean"
+   ]
+  },
+  "scalarized_bo": {
+   "n_selected": 4,
+   "n_selections": 2,
+   "n_cost_predictions": 2,
+   "use_state": false,
+   "use_cost": false,
+   "budget_attempts": 20,
+   "n_observations": 8,
+   "states_covered": [
+    "fault30",
+    "clean"
+   ]
+  },
+  "official_qnehvi_same_state": {
+   "n_selected": 4,
+   "n_selections": 2,
+   "n_cost_predictions": 2,
+   "use_state": true,
+   "use_cost": false,
+   "budget_attempts": 20,
+   "n_observations": 8,
+   "states_covered": [
+    "fault30",
+    "clean"
+   ]
+  },
+  "proposed_state_incremental": {
+   "n_selected": 4,
+   "n_selections": 2,
+   "n_cost_predictions": 2,
+   "use_state": true,
+   "use_cost": true,
+   "budget_attempts": 20,
+   "n_observations": 8,
+   "states_covered": [
+    "fault30",
+    "clean"
+   ]
+  },
+  "proposed_without_state": {
+   "n_selected": 4,
+   "n_selections": 2,
+   "n_cost_predictions": 2,
+   "use_state": false,
+   "use_cost": true,
+   "budget_attempts": 20,
+   "n_observations": 8,
+   "states_covered": [
+    "fault30",
+    "clean"
+   ]
+  },
+  "proposed_without_incremental_cost": {
+   "n_selected": 4,
+   "n_selections": 2,
+   "n_cost_predictions": 2,
+   "use_state": true,
+   "use_cost": false,
+   "budget_attempts": 20,
+   "n_observations": 8,
+   "states_covered": [
+    "fault30",
+    "clean"
+   ]
+  },
+  "state_aware_clean": {},
+  "state_aware_fault30": {},
+  "state_blind_clean": {},
+  "state_blind_fault30": {}
+ },
+ "picks": {
+  "random": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__large__LOCAL",
+   "large__large__medium__coder__NONE"
+  ],
+  "scalarized_bo": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ],
+  "official_qnehvi_same_state": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ],
+  "proposed_state_incremental": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ],
+  "proposed_without_state": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ],
+  "proposed_without_incremental_cost": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ],
+  "state_aware_clean": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ],
+  "state_aware_fault30": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ],
+  "state_blind_clean": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ],
+  "state_blind_fault30": [
+   "large__large__medium__large__LOCAL",
+   "medium__medium__large__coder__LOCAL",
+   "medium__medium__medium__coder__NONE",
+   "medium__medium__medium__coder__LOCAL"
+  ]
+ },
+ "pipeline_path": "ProductionSelector.select() \u2192 SearchSession.step() \u2192 JointEvaluator.evaluate() \u2192 MeteredExecutor.call() \u2192 Budget \u2192 ProductionSelector.observe_evaluator_result() \u2192 next select()",
+ "ablation_mechanism": {
+  "state": "use_state flag: True adds state bit to features; False uses base features only",
+  "cost": "use_cost flag: True divides acquisition by incremental cost; False does not",
+  "shared": "Both ablations use the SAME JointPosteriorGP and exact_qnehvi_score"
+ }
+}
