@@ -156,6 +156,39 @@ def eval_expr(expr, fact_vals):
         return None
 
 
+def e2_text_input():
+    """uid -> the TEXT passage (e2's input) from the frozen manifests."""
+    out = {}
+    JS_DIR = ROOT / 'collab_scheduler_v1/joint_search_v1'
+    for f, key in ((JS_DIR / 'FORMAL_LAUNCH_V2.json', 'tasks'),
+                   (JS_DIR / 'FULLVAL_AUTHORIZED_1H.json', 'tasks'),
+                   (JS_DIR / 'FULLVAL_CONTINUATION_1.json', 'tasks')):
+        if not f.exists():
+            continue
+        for t in json.loads(f.read_text()).get(key, []):
+            txt = t.get('ctx_text')
+            if txt is None and 'para' in t:
+                from static_dag_v0.multidag_dynamic import ctx_text
+                txt = ctx_text(t['para'])
+            if txt:
+                out[t['uid']] = txt
+    return out
+
+
+def supported_fraction(values, text):
+    """Fraction of extracted values that appear (tolerantly) in the text input.
+    Values absent from the input are unsupported (hallucination risk) and an
+    output containing them must NOT be auto-counted as success."""
+    if not text:
+        return None
+    low = text.lower()
+    hits = 0
+    for v in values:
+        if any(fmt in low for fmt in (f'{v:g}', f'{v:.2f}', f'{v:.1f}')):
+            hits += 1
+    return hits / len(values) if values else None
+
+
 def gold21_for(uids):
     native = load_native_answers()
     out = {}
@@ -211,6 +244,7 @@ def main():
     for r in recs:
         cell_nodes[(r['source'], r['scope'], r['cid'], r['uid'])][r['node']] = r
 
+    e2_text = e2_text_input()
     rows = []
     refusal_counts = defaultdict(int)
     for (src, scope, cid, uid), sub in cell_nodes.items():
@@ -226,11 +260,21 @@ def main():
                 continue
             status, facts = classify_facts(rec['answer'])
             refusal_counts[f'{nd}:{status}'] += 1
+            # support check (e2 only): extracted values must appear in the
+            # TEXT input; unsupported numbers are NOT auto-successes
+            supported = None
+            if nd == 'e2' and facts:
+                supported = supported_fraction(facts, e2_text.get(uid, ''))
             row[nd] = dict(
                 model=rec['model'], status=status, parse_ok=status == 'ok',
                 n_facts=len(facts) if facts else 0,
                 operand_recall=(sum(1 for L in lits if any(
                     close_v1(f, L) for f in facts)) / len(lits)) if (facts and lits) else None,
+                supported=supported,
+                supported_ok=(status == 'ok' and supported is not None and supported >= 1.0
+                              and all(any(fmt in (e2_text.get(uid, '') or '').lower()
+                                          for fmt in (f'{f:g}', f'{f:.2f}')) for f in facts))
+                if nd == 'e2' else None,
                 tokens=rec['usage'].get('total_tokens'))
         # upstream completeness for conditioning
         e_recs = [row.get(nd) for nd in ('e1', 'e2')]
@@ -283,8 +327,8 @@ def main():
         for row in rows:
             if row.get(nd):
                 per[row[nd]['model']].append(row[nd])
-        stages[f'extract_{nd}'] = {m: agg(v, ['parse_ok', 'operand_recall'])
-                                   for m, v in per.items()}
+        metrics = ['parse_ok', 'operand_recall'] + (['supported_ok'] if nd == 'e2' else [])
+        stages[f'extract_{nd}'] = {m: agg(v, metrics) for m, v in per.items()}
     per = defaultdict(list)
     for row in rows:
         if row.get('r'):
@@ -380,13 +424,20 @@ def main():
     # mixed tasks (both ok and empty observed): empty-rate by MODEL — the
     # capability cut, separated from always-empty task properties
     mixed = [u for u, v in e2_by_task.items() if v.get('ok') and v.get('empty')]
+    # operand-absent tasks: e2 input lacks the target operands; empty extraction
+    # is an input-split property and is NOT counted as model failure
+    operand_absent = sorted(u for u in e2_by_task
+                            if all(not any(fmt in (e2_text.get(u, '') or '').lower()
+                                           for fmt in (f'{L:g}', f'{L:.1f}'))
+                                   for L in literals(gold.get(u, {}).get('derivation', '')))
+                            and gold.get(u, {}).get('derivation'))
     # executed-level only (rows already filtered); injected observations were
     # excluded upstream (fault30 panel corrupts e2 on 08fbbc3f, v on 2f745dd1)
     e2_mixed_by_model = defaultdict(lambda: defaultdict(lambda: [0, 0]))
     for row in rows:
         if row.get('e2') and row['uid'] in mixed:
             m = row['e2']['model']
-            e2_mixed_by_model[row['uid']][m][0] += int(row['e2']['parse_ok'])
+            e2_mixed_by_model[row['uid']][m][0] += int(bool(row['e2']['supported_ok']))
             e2_mixed_by_model[row['uid']][m][1] += 1
 
     missing = dict(cells=len(rows),
@@ -395,6 +446,7 @@ def main():
                                          for nd, mm in acct.items()},
                    refusal_or_empty_by_node=dict(refusal_counts),
                    e2_by_task=e2_by_task,
+                   e2_operand_absent_not_model_failure=operand_absent,
                    e2_mixed_tasks_by_model={u: {m: dict(ok=ok, n=n) for m, (ok, n) in v.items()}
                                             for u, v in e2_mixed_by_model.items()},
                    e_missing=sum(1 for row in rows for nd in ('e1', 'e2') if not row.get(nd)),
