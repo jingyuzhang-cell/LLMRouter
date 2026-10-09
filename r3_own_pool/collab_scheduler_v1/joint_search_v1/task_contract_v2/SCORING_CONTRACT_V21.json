@@ -1,0 +1,62 @@
+{
+ "contract": "scoring_contract_v2.1",
+ "rules": {
+  "primary": "close_v21(a,b) = |a-b| <= max(1e-4, 1e-4*|b|)",
+  "rounding": "rounding_ok_v21(a,b) = |a-b| <= 0.01 + 1e-6 (from TAT-QA 2dp spec)",
+  "unified": "score_v21(a, gold) = close_v21(a,gold) OR rounding_ok_v21(a,gold)",
+  "unit_conversion": "bidirectional percent check (from v2)"
+ },
+ "fixtures": {
+  "total": 16,
+  "passed": 16,
+  "failed": 0,
+  "details": {
+   "exact_match": "PASS",
+   "percent_scale": "PASS",
+   "percent_ratio_wrong": "PASS",
+   "rounding_2dp_ok": "PASS",
+   "rounding_2dp_fail": "PASS",
+   "negative_exact": "PASS",
+   "negative_rounding": "PASS",
+   "negative_rounding_ok": "PASS",
+   "close_relative": "PASS",
+   "none_answer": "PASS",
+   "zero_vs_nonzero": "PASS",
+   "large_percent": "PASS",
+   "percent_negative": "PASS",
+   "small_diff": "PASS",
+   "boundary_01": "PASS",
+   "boundary_011": "PASS"
+  }
+ },
+ "search8_test16": {
+  "search8": {
+   "status": "LABELS_VERSIONED_UNDER_V2.1",
+   "note": "labels versioned; no performance results generated; no task filtering based on changes"
+  },
+  "test16": {
+   "status": "LABELS_VERSIONED_UNDER_V2.1",
+   "note": "labels versioned; no performance results generated; no task filtering based on changes"
+  },
+  "contract_version": "v2.1",
+  "scoring_rules": {
+   "primary": "close_v21: |a-b| <= max(1e-4, 1e-4*|b|)",
+   "rounding": "rounding_ok_v21: |a-b| <= 0.01 + 1e-6",
+   "unified": "score_v21 = close_v21 OR rounding_ok_v21",
+   "source": "TAT-QA 2dp financial data spec"
+  }
+ },
+ "evaluator_integration": {
+  "file": "collab_scheduler_v1/joint_search_v1/evaluator.py",
+  "function": "_evaluate \u2192 final quality check",
+  "current": "uses close() from multidag_dynamic",
+  "v21_change": "replace close() with score_v21() in the final quality check",
+  "gold_source": "v2 contract gold (native_answer for percent; derived for no-scale)",
+  "old_behavior": "close(model_val, eval(derivation)) \u2014 v1 gold, v1 tolerance",
+  "new_behavior": "score_v21(model_val, resolve_gold(native, scale, derivation).gold)",
+  "search8_test16": "versioned labels; evaluator uses v2.1 when scoring these panels",
+  "breaking_change": "yes \u2014 historical Q values computed under v1 are frozen; new evaluations use v2.1; results not comparable across versions"
+ },
+ "all_pass": true,
+ "zero_model_calls": true
+}
