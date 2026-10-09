@@ -1,0 +1,56 @@
+{
+ "smoke_actuals": {
+  "cells": 64,
+  "new_requests": 110,
+  "new_tokens": 41191,
+  "cache_hits": 177,
+  "injected": 8,
+  "wall_minutes": 12.2,
+  "tokens_per_cell": 644,
+  "requests_per_cell": 1.7,
+  "cache_rate": 0.617
+ },
+ "scenario_a_full_ground_truth": {
+  "description": "Evaluate all 32 configs on 16 cal + 16 test tasks \u00d7 2 states",
+  "total_cells": 2048,
+  "est_new_requests": 2434,
+  "est_new_tokens": 911655,
+  "est_wall_hours": 6.5,
+  "verdict": "NOT RECOMMENDED: cost too high for ground truth that search should approximate"
+ },
+ "scenario_b_search_based": {
+  "description": "Search reveals t=12 configs on 16 cal tasks \u00d7 2 states; then evaluate each method best config on 16 test tasks",
+  "search_cells": 384,
+  "search_est_requests": 456,
+  "search_est_tokens": 170935,
+  "search_est_wall_hours": 1.2,
+  "test_cells": 192,
+  "test_est_requests": 187,
+  "test_est_tokens": 70225,
+  "test_est_wall_hours": 0.6,
+  "total_est_requests": 644,
+  "total_est_tokens": 241161,
+  "total_est_wall_hours": 1.8,
+  "verdict": "RECOMMENDED: provides search comparison + generalization test at ~50% of full cost"
+ },
+ "recommended": {
+  "n_tasks_calibration": 16,
+  "n_tasks_test": 16,
+  "n_configs": 32,
+  "n_methods": 6,
+  "n_states": 2,
+  "search_budget_t": 12,
+  "hard_cap_real_requests": 600,
+  "hard_cap_tokens": 250000,
+  "hard_cap_wall_hours": 3,
+  "abnormal_stop": "any method fails on >20% of tasks; GPU error; budget exceeded before t=6"
+ },
+ "go_conditions": [
+  "ISSUE-1/2/3 from SMOKE_ADMISSION_E.json resolved",
+  "Closed-loop test 5/5 PASS (verified)",
+  "Unified 32-config space frozen (verified)",
+  "6-method search interface frozen (verified)",
+  "Budget approved: ~350 total requests, ~150k tokens, ~1.5h wall",
+  "GPU available, no conflicting processes"
+ ]
+}
