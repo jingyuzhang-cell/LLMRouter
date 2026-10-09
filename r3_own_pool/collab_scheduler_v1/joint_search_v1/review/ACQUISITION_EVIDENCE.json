@@ -1,0 +1,84 @@
+{
+ "checks": {
+  "s_ehvi_non_degenerate": true,
+  "s_cost_aware_non_degenerate": true,
+  "s_scalarized_non_degenerate": true,
+  "s_ehvi_distinct_values": true,
+  "s_cost_distinct_values": true,
+  "s_ehvi_no_max_tie": true,
+  "s_cost_no_max_tie": true,
+  "a_cost_toggle_changes_ranking": true,
+  "a_cost_removal_recovers_base": true,
+  "a_state_feature_changes_input": true,
+  "a_state_awareness_changes_predictions": true
+ },
+ "all_pass": true,
+ "score_statistics": {
+  "ehvi": {
+   "min": 0.0,
+   "max": 0.01555887393272466,
+   "mean": 0.004095131385676833,
+   "std": 0.003976384888495206,
+   "n_candidates": 40,
+   "n_distinct_12dp": 38,
+   "n_distinct_6dp": 37,
+   "n_tied_at_max": 1,
+   "tie_ratio_at_max": 0.025,
+   "is_non_degenerate": true,
+   "is_non_constant": true,
+   "all_finite": true
+  },
+  "cost_aware_ehvi": {
+   "min": 0.0,
+   "max": 0.03572778450421504,
+   "mean": 0.008542687225770552,
+   "std": 0.008709252002779848,
+   "n_candidates": 40,
+   "n_distinct_12dp": 38,
+   "n_distinct_6dp": 37,
+   "n_tied_at_max": 1,
+   "tie_ratio_at_max": 0.025,
+   "is_non_degenerate": true,
+   "is_non_constant": true,
+   "all_finite": true
+  },
+  "scalarized": {
+   "min": 0.1676501019096579,
+   "max": 0.5713914903521985,
+   "mean": 0.3902493270187001,
+   "std": 0.14287667846029176,
+   "n_candidates": 40,
+   "n_distinct_12dp": 28,
+   "n_distinct_6dp": 27,
+   "n_tied_at_max": 1,
+   "tie_ratio_at_max": 0.025,
+   "is_non_degenerate": true,
+   "is_non_constant": true,
+   "all_finite": true
+  }
+ },
+ "ablation_details": {
+  "cost_toggle": {
+   "base_top5": [
+    19,
+    34,
+    7,
+    4,
+    25
+   ],
+   "cost_top5": [
+    19,
+    7,
+    34,
+    4,
+    25
+   ],
+   "ranking_correlation": 0.9939962476547843
+  },
+  "state_toggle": {
+   "predictions_differ": true,
+   "note": "state feature changes GP kernel distances; predictions may be identical if the added dimension has constant values (Matern kernel insensitivity to constant dims)"
+  }
+ },
+ "note": "All evidence extracted from existing pipeline machinery; no new system created."
+}
