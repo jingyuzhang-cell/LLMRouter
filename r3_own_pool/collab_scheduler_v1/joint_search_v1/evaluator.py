@@ -47,6 +47,11 @@ class MeteredExecutor(make_executor_class()):
                 self.faults[fault_key] = fault
         rec = copy.deepcopy(source)
         if fault is not None:
+            # The underlying request is real and charged (kept in events as
+            # new_request/cache_hit). Only the returned answer is corrupted;
+            # flag both views so audits can count injections per ledger.
+            if self.events:
+                self.events[-1]['answer_replaced_after_call'] = True
             rec['response']['answer'] = fault[0]
             rec['response']['injected_fault'] = True
         self.by_key[key] = rec

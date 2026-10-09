@@ -188,9 +188,15 @@ def physical_accounting(records):
     Cache lookup overhead belongs to wall time, not model service time.
     """
     counts = dict(logical_calls=len(records), injected_calls=0, cache_hits=0,
-                  dry_calls=0, new_requests=0, new_tokens=0, new_latency_s=0.0)
+                  dry_calls=0, new_requests=0, new_tokens=0, new_latency_s=0.0,
+                  answer_replaced_calls=0)
     for rec in records:
         response = rec.get('response', {})
+        # Orthogonal marker: metered executor made a real (charged) request and
+        # corrupted the returned answer afterwards. The record keeps its
+        # physical class below; this counter only flags the replacement.
+        if rec.get('answer_replaced_after_call'):
+            counts['answer_replaced_calls'] += 1
         if response.get('injected_fault'):
             counts['injected_calls'] += 1
         elif rec.get('alias_of'):
