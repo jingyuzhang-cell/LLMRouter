@@ -1,0 +1,90 @@
+{
+ "results": [
+  {
+   "name": "R1_r_and_v_model_swap",
+   "prediction": {
+    "lower": 2,
+    "upper": 3,
+    "unconditional": [
+     "r",
+     "v"
+    ],
+    "conditional": [
+     "v"
+    ]
+   },
+   "actual": {
+    "new_physical_calls": 2,
+    "logical_calls": 4,
+    "cache_hits": 2,
+    "new_nodes": [
+     "r",
+     "v"
+    ]
+   },
+   "checks": {
+    "lower_le_actual": true,
+    "actual_le_upper": true,
+    "r_in_unconditional": true,
+    "v_in_unconditional_or_conditional": true,
+    "e_nodes_not_new": true
+   }
+  },
+  {
+   "name": "R2_e1_fault_cascade",
+   "prediction": {
+    "lower": 1,
+    "upper": 3,
+    "unconditional": [
+     "e1"
+    ],
+    "conditional": [
+     "r",
+     "v"
+    ]
+   },
+   "actual": {
+    "new_physical_calls": 2,
+    "logical_calls": 5,
+    "cache_hits": 3,
+    "new_nodes": [
+     "e1",
+     "r"
+    ]
+   },
+   "checks": {
+    "lower_le_actual": true,
+    "actual_le_upper": true,
+    "e1_fb_predicted": true,
+    "r_conditional": true,
+    "v_conditional": true,
+    "logical_ge_physical": true
+   }
+  },
+  {
+   "name": "R3_full_cache",
+   "prediction": {
+    "lower": 0,
+    "upper": 0,
+    "unconditional": [],
+    "conditional": []
+   },
+   "actual": {
+    "new_physical_calls": 0,
+    "logical_calls": 4,
+    "cache_hits": 4,
+    "new_nodes": []
+   },
+   "checks": {
+    "lower_le_actual": true,
+    "actual_le_upper": true,
+    "lower_is_zero": true,
+    "actual_is_zero": true,
+    "all_cached": true
+   }
+  }
+ ],
+ "all_pass": true,
+ "zero_model_calls": true,
+ "note": "predictor sees only configs+cache+task, never reads candidate outputs; bounds must contain actual"
+}
