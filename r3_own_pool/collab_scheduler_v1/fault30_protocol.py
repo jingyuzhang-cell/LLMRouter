@@ -41,6 +41,20 @@ X_MAP = {
     'BALANCED': {'e': 'medium', 'r': 'large', 'v': 'medium'},
     'HETEROGENEOUS': {'e': 'large', 'r': 'medium', 'v': 'coder'},
     'QUALITY': {'e': 'large', 'r': 'large', 'v': 'large'},
+    # Joint-search extended families (asymmetric e1/e2 supported)
+    'CHEAP': {'e1': 'medium', 'e2': 'medium', 'r': 'medium', 'v': 'medium'},
+    'TYPE_PRIOR': {'e1': 'large', 'e2': 'medium', 'r': 'coder', 'v': 'large'},
+    'CODER_HEAVY': {'e1': 'coder', 'e2': 'coder', 'r': 'medium', 'v': 'coder'},
+    'MIXED_EXTRACT': {'e1': 'large', 'e2': 'coder', 'r': 'medium', 'v': 'coder'},
+    'REV_EXTRACT': {'e1': 'coder', 'e2': 'large', 'r': 'medium', 'v': 'large'},
+    'ASYM_EXT_LARGE': {'e1': 'coder', 'e2': 'large', 'r': 'medium', 'v': 'coder'},
+    'CODER_REASON': {'e1': 'large', 'e2': 'large', 'r': 'coder', 'v': 'coder'},
+    'CHEAP_R_CODER': {'e1': 'medium', 'e2': 'medium', 'r': 'coder', 'v': 'coder'},
+    'VERIFY_LARGE': {'e1': 'large', 'e2': 'large', 'r': 'medium', 'v': 'large'},
+    'VERIFY_MEDIUM': {'e1': 'large', 'e2': 'large', 'r': 'medium', 'v': 'medium'},
+    'CHEAP_V_LARGE': {'e1': 'medium', 'e2': 'medium', 'r': 'medium', 'v': 'large'},
+    'LARGE_REASONER': {'e1': 'medium', 'e2': 'medium', 'r': 'large', 'v': 'coder'},
+    'MED_COD_LAR_COD': {'e1': 'medium', 'e2': 'coder', 'r': 'large', 'v': 'coder'},
 }
 FAMS = ('BALANCED', 'HETEROGENEOUS', 'QUALITY')
 SER_TOPOS = ('SER', 'SERV')
@@ -60,9 +74,10 @@ def planned_models(cid):
     topo, fam, z = config_parts(cid)
     xm = X_MAP[fam]
     if topo in SER_TOPOS:
-        nodes = {'e': xm['e'], 'r': xm['r']}
+        nodes = {'e': xm.get('e', xm.get('e1')), 'r': xm['r']}
     else:
-        nodes = {'e1': xm['e'], 'e2': xm['e'], 'r': xm['r']}
+        nodes = {'e1': xm.get('e1', xm.get('e')), 'e2': xm.get('e2', xm.get('e')),
+                 'r': xm['r']}
     if topo in ('SERV', 'DYNAMICDAG'):
         nodes['v'] = xm['v']
     return topo, fam, z, nodes

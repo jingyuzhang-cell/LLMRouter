@@ -31,7 +31,7 @@ X_ASSIGNMENTS = [
     ('coder_heavy',    {'e1': 'coder',  'e2': 'coder',  'r': 'medium', 'v': 'coder'}),
     ('mixed_extract',  {'e1': 'large',  'e2': 'coder',  'r': 'medium', 'v': 'coder'}),
     ('rev_extract',    {'e1': 'coder',  'e2': 'large',  'r': 'medium', 'v': 'large'}),
-    ('asym_ext_coder', {'e1': 'large',  'e2': 'coder',  'r': 'medium', 'v': 'coder'}),
+    ('med_cod_lar_cod', {'e1': 'medium', 'e2': 'coder',  'r': 'large',  'v': 'coder'}),
     ('asym_ext_large', {'e1': 'coder',  'e2': 'large',  'r': 'medium', 'v': 'coder'}),
     ('coder_reason',   {'e1': 'large',  'e2': 'large',  'r': 'coder',  'v': 'coder'}),
     ('cheap_r_coder',  {'e1': 'medium', 'e2': 'medium', 'r': 'coder',  'v': 'coder'}),

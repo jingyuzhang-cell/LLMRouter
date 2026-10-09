@@ -1,0 +1,127 @@
+{
+ "checks": {
+  "all_methods_completed": true,
+  "within_budget": true,
+  "methods_differ": true,
+  "dual_cost_separated": true,
+  "independent_evaluation": true,
+  "no_unrevealed_access": true
+ },
+ "all_pass": true,
+ "methods": {
+  "random": {
+   "n_revealed": 10,
+   "new_evaluations": 10,
+   "cache_hits": 0,
+   "deployment_QCL_tokens": 11050,
+   "search_physical_tokens": 11050,
+   "hv": 2367.3246,
+   "revealed_ids": [
+    "cod_lar_med_lar__NONE",
+    "lar_cod_med_cod__LOCAL_REROUTE",
+    "lar_lar_cod_cod__NONE",
+    "lar_lar_lar_lar__LOCAL_REROUTE",
+    "lar_lar_lar_lar__NONE"
+   ]
+  },
+  "greedy_q": {
+   "n_revealed": 10,
+   "new_evaluations": 10,
+   "cache_hits": 0,
+   "deployment_QCL_tokens": 11150,
+   "search_physical_tokens": 11150,
+   "hv": 2367.3246,
+   "revealed_ids": [
+    "lar_lar_cod_cod__LOCAL_REROUTE",
+    "lar_lar_cod_cod__NONE",
+    "lar_lar_lar_lar__LOCAL_REROUTE",
+    "lar_lar_lar_lar__NONE",
+    "lar_lar_med_lar__LOCAL_REROUTE"
+   ]
+  },
+  "scalarized_bo": {
+   "n_revealed": 10,
+   "new_evaluations": 10,
+   "cache_hits": 0,
+   "deployment_QCL_tokens": 11950,
+   "search_physical_tokens": 11950,
+   "hv": 2367.3246,
+   "revealed_ids": [
+    "cod_lar_med_lar__LOCAL_REROUTE",
+    "lar_lar_cod_cod__LOCAL_REROUTE",
+    "lar_lar_lar_lar__LOCAL_REROUTE",
+    "lar_lar_lar_lar__NONE",
+    "lar_lar_med_cod__LOCAL_REROUTE"
+   ]
+  },
+  "qnehvi": {
+   "n_revealed": 10,
+   "new_evaluations": 10,
+   "cache_hits": 0,
+   "deployment_QCL_tokens": 10650,
+   "search_physical_tokens": 10650,
+   "hv": 2367.3246,
+   "revealed_ids": [
+    "lar_lar_lar_lar__LOCAL_REROUTE",
+    "lar_lar_lar_lar__NONE",
+    "lar_lar_med_cod__LOCAL_REROUTE",
+    "lar_lar_med_cod__NONE",
+    "lar_lar_med_lar__NONE"
+   ]
+  },
+  "proposed": {
+   "n_revealed": 10,
+   "new_evaluations": 10,
+   "cache_hits": 0,
+   "deployment_QCL_tokens": 10650,
+   "search_physical_tokens": 10650,
+   "hv": 2367.3246,
+   "revealed_ids": [
+    "lar_lar_lar_lar__LOCAL_REROUTE",
+    "lar_lar_lar_lar__NONE",
+    "lar_lar_med_cod__LOCAL_REROUTE",
+    "lar_lar_med_cod__NONE",
+    "lar_lar_med_lar__NONE"
+   ]
+  },
+  "wo_state": {
+   "n_revealed": 10,
+   "new_evaluations": 10,
+   "cache_hits": 0,
+   "deployment_QCL_tokens": 10650,
+   "search_physical_tokens": 10650,
+   "hv": 2367.3246,
+   "revealed_ids": [
+    "lar_lar_lar_lar__LOCAL_REROUTE",
+    "lar_lar_lar_lar__NONE",
+    "lar_lar_med_cod__LOCAL_REROUTE",
+    "lar_lar_med_cod__NONE",
+    "lar_lar_med_lar__NONE"
+   ]
+  },
+  "wo_incr_cost": {
+   "n_revealed": 10,
+   "new_evaluations": 10,
+   "cache_hits": 0,
+   "deployment_QCL_tokens": 10650,
+   "search_physical_tokens": 10650,
+   "hv": 2367.3246,
+   "revealed_ids": [
+    "lar_lar_lar_lar__LOCAL_REROUTE",
+    "lar_lar_lar_lar__NONE",
+    "lar_lar_med_cod__LOCAL_REROUTE",
+    "lar_lar_med_cod__NONE",
+    "lar_lar_med_lar__NONE"
+   ]
+  }
+ },
+ "note": "Each method evaluates independently; shared cache is a deployment optimization",
+ "dual_cost_note": "deployment_QCL_tokens: total tokens if each method deployed all its revealed configs. search_physical_tokens: only NEW evaluations (shared across methods via cache). The difference is cache savings.",
+ "budget_recalc": {
+  "unique_configs_per_method": 10,
+  "n_methods": 7,
+  "per_method_evaluations": 10,
+  "total_evaluations_all_methods": 70,
+  "note": "10 configs/method \u00d7 7 methods \u00d7 16 cal tasks \u00d7 2 states = 2240 task-evals. With shared cache: ~320 unique cells. At ~644 tok/cell: ~206k tokens (shared) vs ~1442k (no sharing)."
+ }
+}
