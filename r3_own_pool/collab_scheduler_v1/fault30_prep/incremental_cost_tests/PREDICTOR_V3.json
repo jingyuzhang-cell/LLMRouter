@@ -1,0 +1,134 @@
+{
+ "results": [
+  {
+   "name": "C1_het_to_qual",
+   "prediction": {
+    "lower": 0,
+    "upper": 2,
+    "certain": [],
+    "conditional": [
+     "planned:r",
+     "planned:v"
+    ],
+    "total_events": 4
+   },
+   "actual": {
+    "physical": 2,
+    "all_logical": 4,
+    "non_inj_logical": 4,
+    "injected": 0,
+    "cache_hits": 2,
+    "new_nodes": [
+     "r",
+     "v"
+    ]
+   },
+   "checks": {
+    "lower_le_actual": true,
+    "actual_le_upper": true,
+    "e_nodes_cached": true,
+    "r_or_v_new": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "C2_e_missing_rv_cached",
+   "prediction": {
+    "lower": 2,
+    "upper": 4,
+    "certain": [
+     "planned:e1",
+     "planned:e2"
+    ],
+    "conditional": [
+     "planned:r",
+     "planned:v"
+    ],
+    "total_events": 4
+   },
+   "actual": {
+    "physical": 2,
+    "all_logical": 4,
+    "non_inj_logical": 4,
+    "injected": 0,
+    "cache_hits": 2,
+    "new_nodes": [
+     "e1",
+     "e2"
+    ]
+   },
+   "checks": {
+    "e_nodes_new": true,
+    "rv_cached": true,
+    "lower_includes_e": true,
+    "bounds_valid": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "C3_full_cache",
+   "prediction": {
+    "lower": 0,
+    "upper": 2,
+    "certain": [],
+    "conditional": [
+     "planned:r",
+     "planned:v"
+    ],
+    "total_events": 4
+   },
+   "actual": {
+    "physical": 0,
+    "all_logical": 4,
+    "non_inj_logical": 4,
+    "injected": 0,
+    "cache_hits": 4,
+    "new_nodes": []
+   },
+   "checks": {
+    "actual_zero": true,
+    "lower_zero": true,
+    "all_cached": true
+   },
+   "verdict": "PASS"
+  },
+  {
+   "name": "C4_lr_e1_fault",
+   "prediction": {
+    "lower": 0,
+    "upper": 8,
+    "certain": [],
+    "conditional": [
+     "planned:r",
+     "planned:v",
+     "e_fb:e1",
+     "e_fb:e2",
+     "r_fbd:r",
+     "r_esc:r",
+     "v_fbd:v",
+     "v_esc:v"
+    ],
+    "total_events": 10
+   },
+   "actual": {
+    "physical": 2,
+    "all_logical": 6,
+    "cache": 3,
+    "inj": 1,
+    "new_nodes": [
+     "e1",
+     "r"
+    ]
+   },
+   "checks": {
+    "lower_le_actual": true,
+    "actual_le_upper": true,
+    "events_enumerated": true
+   },
+   "verdict": "PASS"
+  }
+ ],
+ "all_pass": true,
+ "zero_model_calls": true,
+ "version": "predictor_v3_unified"
+}
