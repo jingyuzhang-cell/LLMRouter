@@ -5,6 +5,7 @@
  "sessions": [
   {
    "source": "official_qnehvi_same_state_20261009 (OBSERVATION DATA SOURCE \u2014 not mechanism provenance)",
+   "produces_no_claim_about": "production selector internals or mechanism use",
    "status": "AUDITED_v2",
    "n_obs": 24,
    "sensitivity": {
@@ -21,13 +22,41 @@
     "n_candidates": 36
    },
    "isolation_checks": {
-    "isolation_same_candidates": true,
-    "isolation_same_costs": true,
-    "isolation_feat_dims_match": true,
-    "isolation_only_diff_is_state_bit": true,
+    "isolation_same_candidates_in_order": true,
+    "isolation_same_costs_same_function": true,
+    "isolation_feat_dims_match_6v6": true,
+    "isolation_only_diff_is_state_bit_all_candidates": true,
+    "isolation_training_rows_bit_only": true,
+    "isolation_same_gp_settings_recorded": true,
     "isolation_same_norm_scales": true,
-    "isolation_no_acquisition_diff": true,
-    "isolation_no_mc_diff": true
+    "isolation_shared_acquisition_path": true,
+    "isolation_no_mc_sampling": true
+   },
+   "isolation_evidence": {
+    "gp_settings": {
+     "kernel": "ConstantKernel(0.2)*Matern(nu=1.5,ls=ones(6))+WhiteKernel(0.02)",
+     "normalize_y": true,
+     "n_restarts_optimizer": 2,
+     "random_state": 42,
+     "shared_code_path": "run_gp (same function object for both arms)"
+    },
+    "norm_scales": {
+     "Q": [
+      0.0,
+      1.0
+     ],
+     "C": [
+      0.0,
+      2500.0
+     ],
+     "L": [
+      0.0,
+      12.0
+     ]
+    },
+    "acquisition": "shared: plain GP posterior-mean ranking for both arms; no acquisition-function difference exists in this audit by construction (single code path); no MC sampling anywhere",
+    "cost_function": "AUDIT-LOCAL identical-for-both-arms constant table (4/10/8 by Z) \u2014 NOT the production CacheIdentityPredictor; it exists only so both arms share SOME cost view; it plays no role in posterior-mean ranking",
+    "without_state_bit_semantics": "the state bit exists in the public input but is masked to a CONSTANT 0.0 column in the without_state arm proxy \u2014 no state information enters that proxy; this masking is the AUDIT construction and verifies nothing about any production selector"
    },
    "all_isolation_pass": true,
    "input_sha256": "d10eb6d7ab2432ac",
@@ -35,6 +64,7 @@
   },
   {
    "source": "proposed_without_incremental_cost_20261009 (OBSERVATION DATA SOURCE \u2014 not mechanism provenance)",
+   "produces_no_claim_about": "production selector internals or mechanism use",
    "status": "AUDITED_v2",
    "n_obs": 5,
    "sensitivity": {
@@ -51,13 +81,41 @@
     "n_candidates": 45
    },
    "isolation_checks": {
-    "isolation_same_candidates": true,
-    "isolation_same_costs": true,
-    "isolation_feat_dims_match": true,
-    "isolation_only_diff_is_state_bit": true,
+    "isolation_same_candidates_in_order": true,
+    "isolation_same_costs_same_function": true,
+    "isolation_feat_dims_match_6v6": true,
+    "isolation_only_diff_is_state_bit_all_candidates": true,
+    "isolation_training_rows_bit_only": true,
+    "isolation_same_gp_settings_recorded": true,
     "isolation_same_norm_scales": true,
-    "isolation_no_acquisition_diff": true,
-    "isolation_no_mc_diff": true
+    "isolation_shared_acquisition_path": true,
+    "isolation_no_mc_sampling": true
+   },
+   "isolation_evidence": {
+    "gp_settings": {
+     "kernel": "ConstantKernel(0.2)*Matern(nu=1.5,ls=ones(6))+WhiteKernel(0.02)",
+     "normalize_y": true,
+     "n_restarts_optimizer": 2,
+     "random_state": 42,
+     "shared_code_path": "run_gp (same function object for both arms)"
+    },
+    "norm_scales": {
+     "Q": [
+      0.0,
+      1.0
+     ],
+     "C": [
+      0.0,
+      2500.0
+     ],
+     "L": [
+      0.0,
+      12.0
+     ]
+    },
+    "acquisition": "shared: plain GP posterior-mean ranking for both arms; no acquisition-function difference exists in this audit by construction (single code path); no MC sampling anywhere",
+    "cost_function": "AUDIT-LOCAL identical-for-both-arms constant table (4/10/8 by Z) \u2014 NOT the production CacheIdentityPredictor; it exists only so both arms share SOME cost view; it plays no role in posterior-mean ranking",
+    "without_state_bit_semantics": "the state bit exists in the public input but is masked to a CONSTANT 0.0 column in the without_state arm proxy \u2014 no state information enters that proxy; this masking is the AUDIT construction and verifies nothing about any production selector"
    },
    "all_isolation_pass": true,
    "input_sha256": "3e0b60c036822896",
@@ -65,6 +123,7 @@
   },
   {
    "source": "proposed_without_state_20261009 (OBSERVATION DATA SOURCE \u2014 not mechanism provenance)",
+   "produces_no_claim_about": "production selector internals or mechanism use",
    "status": "AUDITED_v2",
    "n_obs": 24,
    "sensitivity": {
@@ -81,13 +140,41 @@
     "n_candidates": 36
    },
    "isolation_checks": {
-    "isolation_same_candidates": true,
-    "isolation_same_costs": true,
-    "isolation_feat_dims_match": true,
-    "isolation_only_diff_is_state_bit": true,
+    "isolation_same_candidates_in_order": true,
+    "isolation_same_costs_same_function": true,
+    "isolation_feat_dims_match_6v6": true,
+    "isolation_only_diff_is_state_bit_all_candidates": true,
+    "isolation_training_rows_bit_only": true,
+    "isolation_same_gp_settings_recorded": true,
     "isolation_same_norm_scales": true,
-    "isolation_no_acquisition_diff": true,
-    "isolation_no_mc_diff": true
+    "isolation_shared_acquisition_path": true,
+    "isolation_no_mc_sampling": true
+   },
+   "isolation_evidence": {
+    "gp_settings": {
+     "kernel": "ConstantKernel(0.2)*Matern(nu=1.5,ls=ones(6))+WhiteKernel(0.02)",
+     "normalize_y": true,
+     "n_restarts_optimizer": 2,
+     "random_state": 42,
+     "shared_code_path": "run_gp (same function object for both arms)"
+    },
+    "norm_scales": {
+     "Q": [
+      0.0,
+      1.0
+     ],
+     "C": [
+      0.0,
+      2500.0
+     ],
+     "L": [
+      0.0,
+      12.0
+     ]
+    },
+    "acquisition": "shared: plain GP posterior-mean ranking for both arms; no acquisition-function difference exists in this audit by construction (single code path); no MC sampling anywhere",
+    "cost_function": "AUDIT-LOCAL identical-for-both-arms constant table (4/10/8 by Z) \u2014 NOT the production CacheIdentityPredictor; it exists only so both arms share SOME cost view; it plays no role in posterior-mean ranking",
+    "without_state_bit_semantics": "the state bit exists in the public input but is masked to a CONSTANT 0.0 column in the without_state arm proxy \u2014 no state information enters that proxy; this masking is the AUDIT construction and verifies nothing about any production selector"
    },
    "all_isolation_pass": true,
    "input_sha256": "a9e050cee4203ce2",
@@ -95,6 +182,7 @@
   },
   {
    "source": "scalarized_bo_20261009 (OBSERVATION DATA SOURCE \u2014 not mechanism provenance)",
+   "produces_no_claim_about": "production selector internals or mechanism use",
    "status": "AUDITED_v2",
    "n_obs": 24,
    "sensitivity": {
@@ -111,13 +199,41 @@
     "n_candidates": 36
    },
    "isolation_checks": {
-    "isolation_same_candidates": true,
-    "isolation_same_costs": true,
-    "isolation_feat_dims_match": true,
-    "isolation_only_diff_is_state_bit": true,
+    "isolation_same_candidates_in_order": true,
+    "isolation_same_costs_same_function": true,
+    "isolation_feat_dims_match_6v6": true,
+    "isolation_only_diff_is_state_bit_all_candidates": true,
+    "isolation_training_rows_bit_only": true,
+    "isolation_same_gp_settings_recorded": true,
     "isolation_same_norm_scales": true,
-    "isolation_no_acquisition_diff": true,
-    "isolation_no_mc_diff": true
+    "isolation_shared_acquisition_path": true,
+    "isolation_no_mc_sampling": true
+   },
+   "isolation_evidence": {
+    "gp_settings": {
+     "kernel": "ConstantKernel(0.2)*Matern(nu=1.5,ls=ones(6))+WhiteKernel(0.02)",
+     "normalize_y": true,
+     "n_restarts_optimizer": 2,
+     "random_state": 42,
+     "shared_code_path": "run_gp (same function object for both arms)"
+    },
+    "norm_scales": {
+     "Q": [
+      0.0,
+      1.0
+     ],
+     "C": [
+      0.0,
+      2500.0
+     ],
+     "L": [
+      0.0,
+      12.0
+     ]
+    },
+    "acquisition": "shared: plain GP posterior-mean ranking for both arms; no acquisition-function difference exists in this audit by construction (single code path); no MC sampling anywhere",
+    "cost_function": "AUDIT-LOCAL identical-for-both-arms constant table (4/10/8 by Z) \u2014 NOT the production CacheIdentityPredictor; it exists only so both arms share SOME cost view; it plays no role in posterior-mean ranking",
+    "without_state_bit_semantics": "the state bit exists in the public input but is masked to a CONSTANT 0.0 column in the without_state arm proxy \u2014 no state information enters that proxy; this masking is the AUDIT construction and verifies nothing about any production selector"
    },
    "all_isolation_pass": true,
    "input_sha256": "ea8d65c93fe00cce",

@@ -55,3 +55,31 @@ It does NOT answer:
     → That is the running campaign's job
   "Is the production without_state selector truly state-blind?"
     → Not verified (would need code inspection or runtime feature dumps)
+
+## 4. Closure — v2 audit run with programmatic isolation (final)
+
+`STATE_AUDIT_V2.json` supersedes the v1 PASS-list framing. All four review
+points are implemented in the machine-readable report:
+
+- Every session is labeled "(OBSERVATION DATA SOURCE — not mechanism
+  provenance)" and carries `produces_no_claim_about: production selector
+  internals or mechanism use`. The with/without-state comparison is an
+  independent re-training on frozen observations.
+- `without_state_bit_semantics` recorded explicitly: the state bit exists in
+  the public input but is masked to a CONSTANT 0.0 column in the without_state
+  proxy — no state information enters it; this masking is the audit's
+  construction.
+- Isolation is runtime-verified, not asserted: same candidates in order, same
+  cost function (audit-local identical-for-both-arms table, explicitly NOT the
+  production predictor), 6-vs-6 feature dims, bit-only difference across ALL
+  candidates and ALL training rows, identical recorded GP settings (kernel /
+  normalize_y / restarts / seed via a single shared code path), identical
+  normalization scales, shared posterior-mean acquisition, no MC sampling.
+- Sensitivity is quantified per source: prediction-diff mean/max, Spearman
+  rho (+p), top-1 identity change, top-5 overlap. Headline numbers:
+  proposed_without_state obs rho=0.827 with top-1 CHANGE (most state-sensitive);
+  official_qnehvi rho=0.992 top-1 same; wo_incremental_cost rho=1.000;
+  scalarized rho=0.937.
+
+Positioning unchanged: mechanism diagnostic only; algorithm-efficiency claims
+await the campaign's measured comparison on common physical budget.
