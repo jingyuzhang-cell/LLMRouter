@@ -186,8 +186,16 @@ def main():
         status='DIAGNOSTIC EVIDENCE — not performance comparison',
         gpu_calls=0, inputs={},
         conventions=dict(
-            error='signed (prediction - actual)',
-            coverage_upper='pred >= actual', coverage_lower='pred <= actual',
+            error_sign='unified: error = prediction - actual (negative = underestimate)',
+            coverage_upper='fraction of cells with actual <= prediction '
+                           '(prediction treated as candidate upper bound)',
+            coverage_lower='fraction of cells with actual >= prediction',
+            token_scale='the predictor outputs a PER-TASK MEAN; ledger new_tokens '
+                        'is the CELL TOTAL over n tasks. Both scales are reported: '
+                        'per_task (pred vs actual/n) and cell_total (pred*n vs '
+                        'actual). v1 of this audit compared per-task prediction '
+                        'against cell-total actual — an 8x scale artifact that '
+                        'masqueraded as systematic underestimation; corrected here.',
             separation='deployment C and search physical spend NEVER merged',
             oracle='same identity rules, single shared scope per run — isolates '
                    'scope-split conservatism from identity-rule error'),
@@ -230,6 +238,7 @@ def main():
                     seen_models.setdefault(key, set()).add(rec['model'])
             act_tok = c['spend']['new_tokens']
             act_req = c['spend']['new_requests']
+            n_tasks = max(1, len(c['uids']))
             pred_nodes = sum(1 for uid in c['uids'] for nd in NODES
                              if p['per_task'][uid][nd] == 'new')
             oracle_nodes = sum(1 for uid in c['uids'] for nd in NODES
@@ -237,12 +246,15 @@ def main():
             n_rec = sum(1 for r in recovery
                         if r['scope'] == c['state'] and r['cid'] == c['cid'])
             per_cell.append(dict(
-                bucket=c['bucket'], cid=c['cid'], state=c['state'],
-                pred_new_tokens=round(p['est_new_tokens'], 1),
-                oracle_new_tokens=round(o['est_new_tokens'], 1),
-                actual_new_tokens=act_tok,
-                token_err=round(p['est_new_tokens'] - act_tok, 1),
-                oracle_token_err=round(o['est_new_tokens'] - act_tok, 1),
+                bucket=c['bucket'], cid=c['cid'], state=c['state'], n_tasks=n_tasks,
+                pred_new_tokens_per_task=round(p['est_new_tokens'], 1),
+                oracle_new_tokens_per_task=round(o['est_new_tokens'], 1),
+                actual_new_tokens_per_task=round(act_tok / n_tasks, 1),
+                actual_new_tokens_cell_total=act_tok,
+                # scale-matched errors: per-task basis AND cell-total basis
+                token_err_per_task=round(p['est_new_tokens'] - act_tok / n_tasks, 1),
+                oracle_token_err_per_task=round(o['est_new_tokens'] - act_tok / n_tasks, 1),
+                token_err_cell_total=round(p['est_new_tokens'] * n_tasks - act_tok, 1),
                 pred_new_nodes=pred_nodes, oracle_new_nodes=oracle_nodes,
                 actual_new_requests=act_req,
                 request_err=pred_nodes - act_req,
@@ -258,8 +270,10 @@ def main():
             rows = [c for c in per_cell if c['bucket'] == b]
             buckets[b] = dict(
                 cells=len(rows),
-                token_err=stats([c['token_err'] for c in rows]),
-                oracle_token_err=stats([c['oracle_token_err'] for c in rows]),
+                token_err_per_task=stats([c['token_err_per_task'] for c in rows]),
+                oracle_token_err_per_task=stats(
+                    [c['oracle_token_err_per_task'] for c in rows]),
+                token_err_cell_total=stats([c['token_err_cell_total'] for c in rows]),
                 request_err=stats([float(c['request_err']) for c in rows]))
         nacc = {}
         for variant in ('predictor', 'oracle'):
@@ -279,7 +293,7 @@ def main():
             n_cells=len(per_cell),
             predictor_mismatches=mismatches,
             cell_totals=dict(
-                actual_new_tokens=sum(c['actual_new_tokens'] for c in per_cell),
+                actual_new_tokens=sum(c['actual_new_tokens_cell_total'] for c in per_cell),
                 actual_new_requests=sum(c['actual_new_requests'] for c in per_cell),
                 deployment_C_sum=round(sum(c['deployment_C_actual'] for c in per_cell), 1)),
             buckets=buckets, node_accuracy=nacc,
@@ -299,7 +313,7 @@ def main():
     for name, s in audit['inputs'].items():
         print(f"== {name} ({s['n_cells']} cells) ==")
         for b, bs in s['buckets'].items():
-            print(f"  {b:16} tok_err{bs['token_err']} req_err{bs['request_err']}")
+            print(f"  {b:16} tok_err{bs["token_err_per_task"]} req_err{bs["request_err"]}")
         print('  node acc:', {k: v for k, v in s['node_accuracy'].items()
                                if k.startswith('predictor')})
     print('cross-source predictor node accuracy:', audit['node_level_predictor'])
