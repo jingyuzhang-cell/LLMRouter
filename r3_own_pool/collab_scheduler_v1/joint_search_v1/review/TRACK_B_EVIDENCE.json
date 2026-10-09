@@ -1,201 +1,477 @@
 {
  "checks": {
-  "cp_deployment_positive": true,
-  "cp_deployment_varies": true,
-  "cp_incremental_le_deployment": true,
-  "cp_exact_repeat_below_deployment": true,
-  "cp_fully_overlapped_floor": true,
-  "b_all_methods_completed": true,
-  "b_all_obs_from_evaluator": true,
-  "b_gp_used": true,
-  "b_cost_pred_used": true,
-  "b_calibration_rank_corr_positive": true,
-  "b_actual_C_varies_by_X": true,
-  "b_scalarized_bo_nonzero": true,
-  "b_scalarized_bo_distinct": true,
-  "b_scalarized_bo_nondegenerate_std": true,
-  "b_official_qnehvi_same_state_nonzero": true,
-  "b_official_qnehvi_same_state_distinct": true,
-  "b_official_qnehvi_same_state_nondegenerate_std": true,
-  "b_proposed_state_incremental_nonzero": true,
-  "b_proposed_state_incremental_distinct": true,
-  "b_proposed_state_incremental_nondegenerate_std": true
+  "cp_exact_repeat_all_hit": true,
+  "cp_same_e_new_r_charged": true,
+  "cp_r_chain_new_v_charged": true,
+  "cp_scope_isolated": true,
+  "cp_recovery_conditional": true,
+  "x_all_methods_complete": true,
+  "x_both_states_per_selection": true,
+  "x_fault30_q_z_dependent": true,
+  "x_scores_nondegen_clean": true,
+  "x_scores_nondegen_fault30": true,
+  "x_state_ablation_diverges_in_loop": true,
+  "x_state_blind_label_invariant": true,
+  "x_cache_precision_1": true,
+  "x_cache_recall_measured": true,
+  "x_calibration_rank_corr_positive": true
  },
  "all_pass": true,
  "calibration": {
-  "spearman_est_vs_actual_C": 0.7212121212121211,
-  "mape": 0.0408941083839204,
-  "n_unique_configs": 10
+  "spearman": 0.7984962406015037,
+  "n_units": 20
  },
- "cost_predictor": {
-  "deployment_range": [
-   1540.0,
-   3070.0
-  ],
-  "incremental_first": 1540.0,
-  "incremental_same_x_other_z": 150.0,
-  "old_estimator_failures": {
-   "HET_LOCAL": "est 1280 vs actual 371 (+245%, cache ignored)",
-   "QUAL_LOCAL": "est 1430 vs actual 0 (fully cached)",
-   "HET_NONE": "est 1130 vs cold 1686 (-49%)"
-  }
+ "recovery_calibration": {
+  "params": {
+   "clean": {
+    "NONE": 0.0,
+    "LOCAL": 0.0,
+    "FULL": 0.0
+   },
+   "fault30": {
+    "NONE": 0.0,
+    "LOCAL": 0.3,
+    "FULL": 0.3
+   }
+  },
+  "note": "E[new recovery tokens] = overhead x P_fire(state), frozen; measured recovery-call counts reported per method"
+ },
+ "cache_identity_rule": {
+  "e": "(node, model) \u2014 prompt depends only on task+node",
+  "r": "(m_e1, m_e2, m_r) \u2014 prompt consumes e outputs; planned r runs before any recovery",
+  "v": "(m_e1, m_e2, m_r, m_v, Z) \u2014 prompt consumes facts and r output; Z-conditioned because e-node faults are rerouted at extraction stage, so v may consume recovered facts",
+  "scope": "state scopes are separate caches (executor identity includes scope)"
  },
  "method_data": {
   "random": {
    "n_selected": 5,
+   "picks": [
+    "large__large__medium__large__LOCAL",
+    "medium__medium__large__coder__LOCAL",
+    "medium__medium__medium__large__LOCAL",
+    "large__large__medium__coder__NONE",
+    "large__medium__large__coder__NONE"
+   ],
+   "n_observations": 10,
+   "states_covered": [
+    "clean",
+    "fault30"
+   ],
+   "Q_by_state": {
+    "clean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fault30": [
+     1.0,
+     0.5,
+     1.0,
+     0.0,
+     0.0
+    ]
+   },
+   "C_by_state": {
+    "clean": [
+     1776.0,
+     1630.0,
+     1616.0,
+     1770.0,
+     1710.0
+    ],
+    "fault30": [
+     2379.0,
+     2243.0,
+     2219.0,
+     1770.0,
+     1710.0
+    ]
+   },
    "n_gp_calls": 0,
    "n_cost_preds": 0,
-   "qnehvi_estimator": "none (random/scalarized path)",
-   "n_observations": 5,
-   "Q_values": [
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0
-   ],
-   "C_values": [
-    1776.0,
-    1630.0,
-    1616.0,
-    1770.0,
-    1710.0
-   ],
-   "last_round_n_candidates": 0,
-   "last_round_distinct": 0,
-   "last_round_nonzero": 0,
-   "last_round_std": 0.0
+   "use_state": false,
+   "use_cost": false,
+   "cache_precision": 1.0,
+   "cache_recall": 1.0,
+   "cache_recall_per_node": {
+    "e1": 1.0,
+    "e2": 1.0,
+    "r": 1.0,
+    "v": NaN
+   },
+   "n_prediction_rows": 48,
+   "n_recovery_calls": 12,
+   "last_round_scores": {}
   },
   "scalarized_bo": {
    "n_selected": 5,
+   "picks": [
+    "large__large__medium__large__LOCAL",
+    "medium__medium__large__coder__LOCAL",
+    "medium__medium__medium__large__LOCAL",
+    "medium__medium__medium__large__NONE",
+    "medium__medium__large__large__LOCAL"
+   ],
+   "n_observations": 10,
+   "states_covered": [
+    "clean",
+    "fault30"
+   ],
+   "Q_by_state": {
+    "clean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fault30": [
+     1.0,
+     0.5,
+     1.0,
+     0.0,
+     0.5
+    ]
+   },
+   "C_by_state": {
+    "clean": [
+     1776.0,
+     1630.0,
+     1616.0,
+     1616.0,
+     1636.0
+    ],
+    "fault30": [
+     2379.0,
+     2243.0,
+     2219.0,
+     1616.0,
+     2249.0
+    ]
+   },
    "n_gp_calls": 3,
    "n_cost_preds": 3,
-   "qnehvi_estimator": "none (random/scalarized path)",
-   "n_observations": 5,
-   "Q_values": [
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0
-   ],
-   "C_values": [
-    1776.0,
-    1630.0,
-    1610.0,
-    1616.0,
-    1630.0
-   ],
-   "last_round_n_candidates": 44,
-   "last_round_distinct": 29,
-   "last_round_nonzero": 44,
-   "last_round_std": 0.07120217508710448
+   "use_state": false,
+   "use_cost": false,
+   "cache_precision": 1.0,
+   "cache_recall": 0.9444444444444444,
+   "cache_recall_per_node": {
+    "e1": 1.0,
+    "e2": 1.0,
+    "r": 1.0,
+    "v": 0.5
+   },
+   "n_prediction_rows": 48,
+   "n_recovery_calls": 16,
+   "last_round_scores": {
+    "pooled": {
+     "n": 44,
+     "distinct": 32,
+     "nonzero": 44,
+     "std": 0.06312505451931055
+    }
+   }
   },
   "official_qnehvi_same_state": {
    "n_selected": 5,
+   "picks": [
+    "large__large__medium__large__LOCAL",
+    "medium__medium__large__coder__LOCAL",
+    "medium__medium__medium__coder__NONE",
+    "medium__medium__medium__large__NONE",
+    "medium__medium__large__coder__NONE"
+   ],
+   "n_observations": 10,
+   "states_covered": [
+    "clean",
+    "fault30"
+   ],
+   "Q_by_state": {
+    "clean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fault30": [
+     1.0,
+     0.5,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "C_by_state": {
+    "clean": [
+     1776.0,
+     1630.0,
+     1610.0,
+     1616.0,
+     1630.0
+    ],
+    "fault30": [
+     2379.0,
+     2243.0,
+     1610.0,
+     1616.0,
+     1630.0
+    ]
+   },
    "n_gp_calls": 3,
    "n_cost_preds": 3,
-   "qnehvi_estimator": "botorch_qnehvi (official, Track A aligned)",
-   "n_observations": 5,
-   "Q_values": [
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0
-   ],
-   "C_values": [
-    1776.0,
-    1630.0,
-    1610.0,
-    1616.0,
-    1630.0
-   ],
-   "last_round_n_candidates": 44,
-   "last_round_distinct": 32,
-   "last_round_nonzero": 43,
-   "last_round_std": 0.028268410955872354
+   "use_state": true,
+   "use_cost": false,
+   "cache_precision": 1.0,
+   "cache_recall": 0.918918918918919,
+   "cache_recall_per_node": {
+    "e1": 1.0,
+    "e2": 1.0,
+    "r": 1.0,
+    "v": 0.4
+   },
+   "n_prediction_rows": 48,
+   "n_recovery_calls": 8,
+   "last_round_scores": {
+    "clean": {
+     "n": 44,
+     "distinct": 32,
+     "nonzero": 43,
+     "std": 0.028610715346878347
+    },
+    "fault30": {
+     "n": 44,
+     "distinct": 32,
+     "nonzero": 43,
+     "std": 0.030121167261328838
+    }
+   }
   },
   "proposed_state_incremental": {
    "n_selected": 5,
+   "picks": [
+    "large__large__medium__large__LOCAL",
+    "medium__medium__large__coder__LOCAL",
+    "medium__medium__large__coder__NONE",
+    "medium__medium__large__large__NONE",
+    "medium__medium__large__large__LOCAL"
+   ],
+   "n_observations": 10,
+   "states_covered": [
+    "clean",
+    "fault30"
+   ],
+   "Q_by_state": {
+    "clean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fault30": [
+     1.0,
+     0.5,
+     0.0,
+     0.0,
+     0.5
+    ]
+   },
+   "C_by_state": {
+    "clean": [
+     1776.0,
+     1630.0,
+     1630.0,
+     1636.0,
+     1636.0
+    ],
+    "fault30": [
+     2379.0,
+     2243.0,
+     1630.0,
+     1636.0,
+     2249.0
+    ]
+   },
    "n_gp_calls": 3,
    "n_cost_preds": 3,
-   "qnehvi_estimator": "botorch_qnehvi (official, Track A aligned)",
-   "n_observations": 5,
-   "Q_values": [
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0
-   ],
-   "C_values": [
-    1776.0,
-    1630.0,
-    1630.0,
-    1636.0,
-    1696.0
-   ],
-   "last_round_n_candidates": 44,
-   "last_round_distinct": 32,
-   "last_round_nonzero": 43,
-   "last_round_std": 0.3626290550290688
+   "use_state": true,
+   "use_cost": true,
+   "cache_precision": 1.0,
+   "cache_recall": 0.9302325581395349,
+   "cache_recall_per_node": {
+    "e1": 1.0,
+    "e2": 1.0,
+    "r": 1.0,
+    "v": 0.5714285714285714
+   },
+   "n_prediction_rows": 48,
+   "n_recovery_calls": 12,
+   "last_round_scores": {
+    "clean": {
+     "n": 44,
+     "distinct": 32,
+     "nonzero": 43,
+     "std": 0.028920131383049982
+    },
+    "fault30": {
+     "n": 44,
+     "distinct": 32,
+     "nonzero": 43,
+     "std": 0.030364397717638977
+    }
+   }
   },
   "proposed_without_state": {
    "n_selected": 5,
+   "picks": [
+    "large__large__medium__large__LOCAL",
+    "medium__medium__large__coder__LOCAL",
+    "medium__medium__large__coder__NONE",
+    "medium__medium__large__large__NONE",
+    "medium__medium__medium__coder__NONE"
+   ],
+   "n_observations": 10,
+   "states_covered": [
+    "clean",
+    "fault30"
+   ],
+   "Q_by_state": {
+    "clean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fault30": [
+     1.0,
+     0.5,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "C_by_state": {
+    "clean": [
+     1776.0,
+     1630.0,
+     1630.0,
+     1636.0,
+     1610.0
+    ],
+    "fault30": [
+     2379.0,
+     2243.0,
+     1630.0,
+     1636.0,
+     1610.0
+    ]
+   },
    "n_gp_calls": 3,
    "n_cost_preds": 3,
-   "qnehvi_estimator": "botorch_qnehvi (official, Track A aligned)",
-   "n_observations": 5,
-   "Q_values": [
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0
-   ],
-   "C_values": [
-    1776.0,
-    1630.0,
-    1630.0,
-    1636.0,
-    1696.0
-   ],
-   "last_round_n_candidates": 44,
-   "last_round_distinct": 32,
-   "last_round_nonzero": 43,
-   "last_round_std": 0.3626290550290688
+   "use_state": false,
+   "use_cost": true,
+   "cache_precision": 1.0,
+   "cache_recall": 0.918918918918919,
+   "cache_recall_per_node": {
+    "e1": 1.0,
+    "e2": 1.0,
+    "r": 1.0,
+    "v": 0.4
+   },
+   "n_prediction_rows": 48,
+   "n_recovery_calls": 8,
+   "last_round_scores": {
+    "pooled": {
+     "n": 44,
+     "distinct": 32,
+     "nonzero": 43,
+     "std": 0.023629421890737908
+    }
+   }
   },
   "proposed_without_incremental_cost": {
    "n_selected": 5,
+   "picks": [
+    "large__large__medium__large__LOCAL",
+    "medium__medium__large__coder__LOCAL",
+    "medium__medium__medium__coder__NONE",
+    "medium__medium__medium__large__NONE",
+    "medium__medium__large__coder__NONE"
+   ],
+   "n_observations": 10,
+   "states_covered": [
+    "clean",
+    "fault30"
+   ],
+   "Q_by_state": {
+    "clean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "fault30": [
+     1.0,
+     0.5,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "C_by_state": {
+    "clean": [
+     1776.0,
+     1630.0,
+     1610.0,
+     1616.0,
+     1630.0
+    ],
+    "fault30": [
+     2379.0,
+     2243.0,
+     1610.0,
+     1616.0,
+     1630.0
+    ]
+   },
    "n_gp_calls": 3,
    "n_cost_preds": 3,
-   "qnehvi_estimator": "botorch_qnehvi (official, Track A aligned)",
-   "n_observations": 5,
-   "Q_values": [
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0
-   ],
-   "C_values": [
-    1776.0,
-    1630.0,
-    1610.0,
-    1616.0,
-    1630.0
-   ],
-   "last_round_n_candidates": 44,
-   "last_round_distinct": 32,
-   "last_round_nonzero": 43,
-   "last_round_std": 0.028268410955872354
+   "use_state": true,
+   "use_cost": false,
+   "cache_precision": 1.0,
+   "cache_recall": 0.918918918918919,
+   "cache_recall_per_node": {
+    "e1": 1.0,
+    "e2": 1.0,
+    "r": 1.0,
+    "v": 0.4
+   },
+   "n_prediction_rows": 48,
+   "n_recovery_calls": 8,
+   "last_round_scores": {
+    "clean": {
+     "n": 44,
+     "distinct": 32,
+     "nonzero": 43,
+     "std": 0.028610715346878347
+    },
+    "fault30": {
+     "n": 44,
+     "distinct": 32,
+     "nonzero": 43,
+     "std": 0.030121167261328838
+    }
+   }
   }
  },
  "notes": [
-  "All Q/C/L from JointEvaluator returns; no synthetic injection",
-  "Deployment vs incremental cost separated (two roles, two numbers)",
-  "qNEHVI-family methods score via OFFICIAL BoTorch estimator (botorch_qnehvi_scores, Track A aligned)",
-  "known limitation: single clean state, so use_state ablation cannot diverge in this closed loop; state ablation needs the fault30 state panel"
+  "GAP-1 fixed: full identity chain; predicted hits verified against TRAJECTORY.jsonl (precision must be 1.0)",
+  "GAP-2 fixed: same loop evaluates clean+fault30 with a real fault panel; state ablation inside this loop",
+  "GAP-3: evaluated units use ACTUAL C/L; candidates frozen ex-ante predictions; identical boundary for all methods"
  ]
 }

@@ -1,0 +1,177 @@
+{
+ "version": "ADMISSION_PACKAGE_V1",
+ "date": "2026-10-09",
+ "status": "ASSEMBLED_FOR_REVIEW \u2014 this package is NOT execution authorization",
+ "staged_approval": {
+  "stage_1": "FULL small-scale real validation (envelope A) \u2014 already authorized for 1h; finish remaining 3 calibration tasks within existing caps",
+  "stage_2": "formal search (envelope B) decided ONLY from stage-1 measurements; no blanket release of all stages"
+ },
+ "component_1_cross_state_loop": {
+  "evidence": "review/TRACK_B_EVIDENCE.json (v2, 15/15 ALL PASS)",
+  "what": "SAME production closed loop evaluates every selected config on clean AND fault30 (real fault panel: r-corruption + empty-e2) per step; state ablation runs INSIDE this loop",
+  "results": {
+   "both_states_per_selection": true,
+   "fault30_Q_Z_dependent": true,
+   "per_state_scores_nondegenerate": true,
+   "state_ablation_diverges_in_loop": true,
+   "state_blind_label_invariant": true,
+   "calibration_spearman": 0.7984962406015037
+  },
+  "cache_prediction": {
+   "identity_rule": {
+    "e": "(node, model) \u2014 prompt depends only on task+node",
+    "r": "(m_e1, m_e2, m_r) \u2014 prompt consumes e outputs; planned r runs before any recovery",
+    "v": "(m_e1, m_e2, m_r, m_v, Z) \u2014 prompt consumes facts and r output; Z-conditioned because e-node faults are rerouted at extraction stage, so v may consume recovered facts",
+    "scope": "state scopes are separate caches (executor identity includes scope)"
+   },
+   "precision": "1.0 for all six methods \u2014 every predicted hit is an actual TRRAJECTORY hit; the incremental estimate never underestimates new search tokens (budget-safe direction)",
+   "recall_e_r": "1.0 (exact)",
+   "recall_v": "0.40-0.57, conservative by design: recovery-driven executions (v escalation, FULL replay chains) populate cache entries whose firing depends on outputs \u2014 NOT knowable inside the searcher information boundary; unpredicted hits are charged as new",
+   "verification": "predicted vs executor TRAJECTORY.jsonl alias_of records"
+  },
+  "information_boundary": "evaluated (config,state) units use ACTUAL evaluator C/L; candidates use frozen ex-ante predictions; identical boundary for all six methods; ablations toggle only declared bits",
+  "known_limits": "stub-quality structure is uniform (clean Q=1.0); real-model Q heterogeneity expected to strengthen, not change, the wiring"
+ },
+ "component_2_full_validation": {
+  "protocol": "FULL_VALIDATION_PROTOCOL_V2.json (v2_20261009)",
+  "frozen_tasks": [
+   "5c5cb310-0607-4285-ba9f-d8b996c700db",
+   "1078998f-a141-45fc-918e-17ddf1da0d89",
+   "51f8785b-7864-4bb2-88b4-5367547de061",
+   "09aaae63-03dd-4173-ba29-1a4a60946982"
+  ],
+  "scenarios": [
+   "execution_order",
+   "order_rationale",
+   "S1_no_recovery",
+   "S4_cache_reuse",
+   "S2_local_reroute",
+   "S3_full_replay"
+  ],
+  "global_budget": {
+   "global_max_new_requests": 30,
+   "global_max_total_tokens": 30000,
+   "global_max_wall_clock_seconds": 1800,
+   "per_task_per_scenario_max_logical_calls": 12,
+   "scope": "SINGLE GLOBAL budget across ALL scenarios (not per-scenario)",
+   "budget_counter": "persisted to disk; global across scenarios; no reset",
+   "failed_call_billing": "counted; no automatic retry",
+   "insufficient_budget": "stop; log partial results; record which scenarios completed vs pending"
+  },
+  "minimum_completion": {
+   "must_complete": [
+    "S1_no_recovery (all 4 tasks)",
+    "S4_cache_reuse (all 4 tasks)"
+   ],
+   "should_complete": [
+    "S2_local_reroute (at least 2 tasks)"
+   ],
+   "may_be_partial": [
+    "S3_full_replay (any number of tasks; mechanism evidence from partial acceptable)"
+   ],
+   "insufficient_budget_action": "if budget exhausted before must_complete: log as VALIDATION_INCOMPLETE; do not claim FULL verification"
+  },
+  "execution_command": "P1B_FULLVAL_EXECUTE=1 python3 -m collab_scheduler_v1.joint_search_v1.fullval_runner --execute",
+  "execution_state": {
+   "authorization": "SUBMITTED_FOR_APPROVAL \u2014 NOT AUTHORIZED",
+   "authorized_caps": {
+    "new_request_attempts": 30,
+    "new_total_tokens": 30000,
+    "wall_seconds": 3600,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 512,
+    "logical_calls_per_task_config_state": 12,
+    "automatic_retries": 0
+   },
+   "run": "fullval_runs/fullval_authorized_1h_01",
+   "tasks_completed": [
+    "1078998f-a141-45fc-918e-17ddf1da0d89",
+    "5c5cb310-0607-4285-ba9f-d8b996c700db"
+   ],
+   "scenario_summary": {
+    "S1": {
+     "new_requests": 4,
+     "new_tokens": 1726.0,
+     "Q": 0.0
+    },
+    "S4": {
+     "new_requests": 0,
+     "new_tokens": 0,
+     "Q": 0.0
+    },
+    "S3": {
+     "new_requests": 5,
+     "new_tokens": 1728.0,
+     "Q": 0.0
+    },
+    "S2": {
+     "new_requests": 2,
+     "new_tokens": 791.0,
+     "Q": 0.0
+    }
+   },
+   "mechanism_findings": [
+    "S4 cache reuse: 0 new requests \u2014 full-prompt-identity cache reuse verified on real models",
+    "S2 LOCAL: 2 new requests (recovery-path prompts) \u2014 billing separation recorded",
+    "S3 FULL: 5 new requests (replay) \u2014 8 logical calls billed with cache reuse on identical prompts",
+    "Q=0 on the executed task for all scenarios (real model answered wrong); mechanism evidence unaffected (billing/caching, not quality)"
+   ],
+   "remaining": "3 of 4 frozen calibration tasks unexecuted; completion inside the authorized envelope pending"
+  }
+ },
+ "component_3_resource_envelopes": {
+  "envelope_A_full_validation": {
+   "status": "AUTHORIZED (1h) and partially executed",
+   "budget_global": {
+    "new_requests": 30,
+    "new_tokens": 30000,
+    "wall_seconds": 3600
+   },
+   "scope": "4 frozen calibration tasks x 4 scenarios; single global budget",
+   "incomplete_reporting": "VALIDATION_INCOMPLETE logged if must-complete scope missed; partial ledger preserved; no retry"
+  },
+  "envelope_B_formal_search": {
+   "status": "PENDING stage-1 measurements \u2014 NOT approved by this package",
+   "sessions": 18,
+   "per_session": {
+    "new_request_attempts": 400,
+    "new_total_tokens": 3276800,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 512,
+    "wall_seconds": 7200,
+    "logical_calls_per_task_config_state": 12,
+    "automatic_retries": 0
+   },
+   "task_panel": "review/TASK_PANEL_V1.json SEARCH8",
+   "caveat": "caps are operational ceilings, NOT completion guarantees: the 330-request scenario reference below the 400 cap does not ensure completion with new configs and FULL; completion is reported as measured",
+   "incomplete_reporting": "First config/request/token/wall/global cap or infrastructure error stops; incomplete candidate never scored; failed partial work still charged. Compare curves on common budget support; no extension to manufacture equal completed counts."
+  },
+  "envelope_B_test16_confirmation": {
+   "status": "PENDING \u2014 separate sub-envelope, NOT approved by this package",
+   "scope": "final selection of each of 6 methods, evaluated ONCE on TEST16 x {clean, fault30}",
+   "max_logical_calls": 2304,
+   "hard_upper_bound": {
+    "new_requests": 2304,
+    "new_tokens_reservation_basis": 18874368,
+    "wall_seconds_estimate": 15366
+   },
+   "realistic_estimate": {
+    "basis": "mean 374.5 tok/new request (smoke measured)",
+    "new_tokens": 862764
+   },
+   "declared_for_approval": "HARD upper bound (reservation basis); settlement at actuals",
+   "positioning": "SMALL-SCALE INDEPENDENT CONFIRMATION ONLY: MDE(TEST16)=0.24 on paired marginal delta; cannot exclude small differences and cannot support equivalence claims",
+   "cache_policy": "fresh per-method cache; no cross-method subsidy"
+  }
+ },
+ "non_claims": [
+  "Budget-fit does not guarantee experiment completion",
+  "TEST16 cannot exclude small differences (MDE 0.24) or support equivalence claims",
+  "Cross-state loop is stub-backed (zero real calls): wiring admission, not performance evidence"
+ ],
+ "references": {
+  "wiring_status": "collab_scheduler_v1/joint_search_v1/WIRING_STATUS.md",
+  "task_panel": "collab_scheduler_v1/joint_search_v1/review/TASK_PANEL_V1.json",
+  "power": "collab_scheduler_v1/joint_search_v1/review/TRACK_C_EVIDENCE.json"
+ }
+}

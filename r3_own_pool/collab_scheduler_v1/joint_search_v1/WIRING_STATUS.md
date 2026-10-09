@@ -1,4 +1,4 @@
-# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.4)
+# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.5)
 
 Single source of truth for all pipeline wiring evidence. Supersedes all previous
 partial reports and the v1 of this file. Items grouped by status.
@@ -102,50 +102,65 @@ superseded by manifest reference.
 - **Budget fit**: 18 sessions = 6 methods × 3 seeds exactly; per-session
   scenario 330 requests ≤ 400 cap, 123.6k tokens ≤ 3.28M cap, 2201s ≤ 7200s ✅
 - **Confirmation allocation** (TEST16 final evaluations, OUTSIDE the 18
-  sessions): ≤1536 logical calls, ≤0.58M tokens upper estimate — ESTIMATE
-  ONLY, separate approval required ✅
+  sessions): recomputed at the FULL call ceiling (v2.5) — 6×2×16×12 = 2304 max
+  logical calls; HARD upper bound 2304 requests / 18,874,368 tokens (reservation
+  basis, failed calls retain full reservation); realistic estimate ≈ 863k tokens
+  (mean 374.5 tok/req). The earlier 0.58M figure was an optimistic mean-basis
+  estimate and is superseded. Declared for approval: the HARD bound.
 - Manifest status `FROZEN_FOR_APPROVAL_EXECUTION_NOT_AUTHORIZED`.
+- Budget-fit caveat (registered): caps are operational ceilings, NOT completion
+  guarantees; the 330-request scenario reference under the 400 cap does not
+  ensure completion with new configs and FULL; incomplete runs reported as
+  measured (stopping rules in SEARCH_BUDGET_V1).
 
-## PASS: Cost Predictor Counter-example Fix (Track B, 2026-10-09)
+## PASS: Cross-State Production Closed Loop + Full-Identity Cache Prediction (Track B v2, 2026-10-09)
 
-**Evidence**: `review/track_b.py` → `review/TRACK_B_EVIDENCE.json` (20/20)
+**Evidence**: `review/track_b.py` (v2, same file — no parallel suite) →
+`review/TRACK_B_EVIDENCE.json` (**15/15 ALL PASS**). Supersedes the v1
+single-state closed loop (20/20) after review identified two admission gaps.
 
-**Counter-examples found (METERING_AUDIT.json smoke actuals)**:
-- HET-LOCAL: old est 1280 vs actual 371/task (+245% — cache hits ignored)
-- QUAL-LOCAL: old est 1430 vs actual 0/task (fully cached)
-- HET-NONE: old est 1130 vs cold 1686/task (−49% — per-model constants too low)
+**Gap 1 fixed — cache deduction by full identity, not node+model**:
+`CacheIdentityPredictor` verifies the complete per-(state, task) identity chain:
+e=(node, model); r=(m_e1, m_e2, m_r); v=(m_e1, m_e2, m_r, m_v) with Z-context in
+fault30 (e-node faults are rerouted at extraction stage, so v's realized input
+is recovery-path dependent). Unknown successors are never predicted as hits.
+Verified against the executor's own TRAJECTORY.jsonl hit records:
+- **precision = 1.0 for all six methods** — every predicted hit is an actual
+  hit; the incremental estimate never underestimates new search tokens ✅
+- e/r recall = 1.0 (exact); v recall 0.40–0.57 conservative by design —
+  recovery-driven cache population (v escalation, FULL replay chains) is
+  output-dependent and outside the searcher's information boundary; unpredicted
+  hits are charged as new ✅
+- recovery charged conditionally: E[new tokens] = overhead × P_fire(state),
+  frozen params; measured recovery-call counts reported per method ✅
+- the reviewed counter-example is now a pinned test: same e-models + different
+  r-model ⇒ e hit, r charged NEW ✅
 
-**Fix — two separated costs with two roles**:
-1. `deployment_cost(config)`: cold-run estimate, data-informed per-node tokens
-   (e1/e2≈700, r≈200, v≈100 × model multiplier, + recovery overhead). Used for
-   the deployment C/L objective normalization. Range over 48 configs: 1540–3070.
-2. `incremental_cost(config, revealed)`: acquisition-time NEW-token estimate —
-   subtracts cache overlap with already-revealed configs (same node+model ⇒
-   prompt-identical ⇒ cached), floor 100. Used ONLY as the acquisition divisor.
-   A fully-overlapped config now estimates 100, not its full deployment cost
-   (fixes the QUAL-LOCAL 1430-vs-0 failure class).
+**Gap 2 fixed — clean+fault30 in the SAME loop**: every selection is evaluated
+on both states with a real fault panel (r-corruption + empty-e2-facts).
+- both states observed per selection (10 obs / 5 selections × 6 methods) ✅
+- fault30 Q is Z-dependent inside the loop (NONE=0, LOCAL/FULL recover) ✅
+- per-state acquisition scores non-degenerate from pure evaluator data ✅
+- state ablation diverges WITHIN this loop (aware vs blind pick sequences) ✅
+- state-blind search is label-invariant (swapping state labels changes nothing) ✅
+- calibration Spearman(est, actual C) = 0.798 over 20 (config,state) units ✅
 
-**Calibration** (closed-loop actuals from JointEvaluator, 9 unique configs):
-Spearman(est, actual C) = 0.767, MAPE = 4.5%. Note: stub dispatch usage was
-shaped to realistic model-dependent costs, so MAPE measures consistency of the
-estimator with a realistic cost field; the rank correlation is the wiring-level
-claim (predictor orders configs by actual cost correctly).
+**Gap 3 — C/L information boundary**: evaluated units use ACTUAL evaluator C/L;
+candidates use frozen ex-ante predictions; identical boundary for all six
+methods; ablations toggle only declared bits (state features / cost divisor).
 
-## PASS: Production Closed-Loop, 100% Evaluator Observations (Track B)
+**Stub semantics for this wiring admission** (zero real calls): output-coupled
+chain (v recomputes from r's expression over parsed facts — r corruption
+propagates to Q), model-tagged outputs (facts evidence and expression spacing
+vary by model) so cache identity structure matches real deployments. Registered
+limit: clean-state stub Q is uniformly 1.0; real-model heterogeneity expected
+to strengthen, not change, the wiring.
 
-**Evidence**: `review/track_b.py` → `review/TRACK_B_EVIDENCE.json` (20/20)
+## PASS: Cost Predictor Counter-example Fix (Track B v1, 2026-10-09 — superseded by v2 above)
 
-Upgrades the earlier DIAGNOSTIC score-distribution result to closed-loop:
-- All 6 methods ran 5/5 selections through SearchSession→JointEvaluator→
-  MeteredExecutor→Budget with **zero synthetic injection** — every Q/C/L in the
-  searchers' observation stores came from `EVALUATIONS.jsonl` returns ✅
-- All Q=1.0 (positive-control responses scored through the formal path) ✅
-- GP + cost predictor called in every acquisition round for non-random methods ✅
-- qNEHVI-family methods scored by the OFFICIAL BoTorch estimator (v2.3 rerun):
-  32 distinct / 43 nonzero of 44 candidates ✅
-- Known limitation (registered, not hidden): this closed loop runs the clean
-  state only, so `use_state` ablations cannot diverge here; state-ablation
-  divergence remains covered by `unified_test.py` Part B/C on the fault30 panel.
+v1 separated deployment vs incremental cost and calibrated against smoke
+counter-examples (HET-LOCAL +245%, QUAL-LOCAL est-1430-vs-0, HET-NONE −49%).
+v2 replaces the incremental estimator with the full-identity predictor.
 
 ## PASS (DIAGNOSTIC): Per-Round Candidate Score Distribution
 
@@ -182,32 +197,27 @@ Data splits, sample size, budget, stopping rules — awaiting blocking items.
 
 | Item | Status | Evidence |
 |---|---|---|
+| Cross-state closed loop + full-identity cache prediction (Track B v2) | ✅ PASS (15/15) | TRACK_B_EVIDENCE.json |
+| Cache prediction vs executor ground truth | ✅ precision 1.0 all methods | TRACK_B_EVIDENCE.json |
 | Production pipeline 6 methods (official BoTorch qNEHVI wired) | ✅ PASS | UNIFIED_PIPELINE_EVIDENCE.json + TRACK_B_EVIDENCE.json |
-| Ablation isolation | ✅ PASS | UNIFIED_PIPELINE_EVIDENCE.json |
+| Ablation isolation (in-loop, cross-state) | ✅ PASS | TRACK_B_EVIDENCE.json |
 | Q scoring controls (Stub via formal path) | ✅ PASS | Q_CONTROLS_AND_SCORES.json |
-| Score distribution (mixed obs, diagnostic) | ✅ DIAGNOSTIC PASS | Q_CONTROLS_AND_SCORES.json |
 | FULL reachability | ✅ PASS | EXACT_QNEHVI_TESTS.json |
 | Evaluator (48 configs) | ✅ PASS | test_evaluator.py 8/8 |
 | Runtime (quota, GPU, crash) | ✅ PASS | test_runtime.py 10/10 |
 | Official BoTorch qNEHVI alignment (Track A) | ✅ PASS (7/7) | TRACK_A_EVIDENCE.json |
-| Cost predictor counter-example fix (Track B) | ✅ PASS (20/20) | TRACK_B_EVIDENCE.json |
-| Closed-loop non-degenerate scores, evaluator-only obs | ✅ PASS (Track B) | TRACK_B_EVIDENCE.json |
-| FULL real validation | ❌ BLOCKING | — |
+| FULL real validation (envelope A) | ⏳ AUTHORIZED 1h, 1/4 tasks executed | fullval_runs/fullval_authorized_1h_01 |
 | Task panel / power / budget (Track C) | ✅ PASS (14/14) | TASK_PANEL_V1.json |
-| Formal experiment freeze | ⏳ MANIFESTS FROZEN, approval pending | TASK_PANEL_V1.json |
+| TEST16 envelope (hard bound 2304 req / 18.87M tok) | ✅ recomputed | ADMISSION_PACKAGE_V1.json |
+| Formal experiment freeze | ⏳ MANIFESTS FROZEN, staged approval | ADMISSION_PACKAGE_V1.md |
 
 ## Next Steps
 
-**Track A — DONE** (2026-10-09). Official estimator wired into the closed loop.
+**Single admission package**: `ADMISSION_PACKAGE_V1.md` / `.json` (2026-10-09).
+Staged approval only — Stage 1: finish FULL validation (envelope A, already
+authorized; 3 of 4 calibration tasks remain, S4 cache-reuse already verified at
+0 new requests). Stage 2: formal search (envelope B = 18 sessions + TEST16
+sub-envelope at the hard bound) decided ONLY from stage-1 measurements.
 
-**Track B — DONE** (2026-10-09). Residual for formal experiment: rerun the
-closed loop on the fault30 state panel once state-feature interface is admitted
-(current closed loop is clean-state-only; state ablation covered separately).
-
-**Track C — DONE** (2026-10-09). TASK_PANEL_V1.json frozen for approval;
-SEARCH_BUDGET_V1.json untouched (its task_panel:UNASSIGNED superseded by
-reference). Remaining approval items: resource envelope (unchanged), TEST16
-confirmation allocation (new, ~0.58M tokens upper bound).
-
-**Then**: FULL + fault billing real validation protocol (approval needed);
-formal experiment launch.
+**Track A — DONE**. **Track B v2 — DONE** (cross-state + full-identity cache,
+this file). **Track C — DONE** (TEST16 bound recomputed at call ceiling).
