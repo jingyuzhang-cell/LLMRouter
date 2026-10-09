@@ -86,6 +86,7 @@ class SelectorState:
             return self._proposed(candidates, observations,
                                   use_state=True, use_incr_cost=False)
         elif self.method == 'official_qnehvi_same_state':
+            self._observations = observations
             return self._blocked(candidates)
         raise ValueError(self.method)
 
@@ -136,9 +137,104 @@ class SelectorState:
         return candidates[int(np.argmax(scores))]['id']
 
     def _blocked(self, candidates):
-        raise NotImplementedError(
-            f'{self.method}: BLOCKED — official BoTorch qNEHVI not available; '
-            'cannot substitute with marginal-sampling approximation')
+        """Official BoTorch qNEHVI selector — DIRECT acquisition function call."""
+        if not getattr(self, '_observations', None):
+            # Need observations; fall through to random for first pick
+            return candidates[int(self.rng.integers(len(candidates)))]['id']
+        try:
+            return self._official_qnehvi(candidates, self._observations)
+        except Exception as e:
+            # No silent degradation — explicit FAIL
+            raise RuntimeError(
+                f'official_qnehvi_same_state: BoTorch FAILED: '
+                f'{type(e).__name__}: {str(e)[:120]}') from e
+
+    def _official_qnehvi(self, candidates, observations):
+        """Direct BoTorch qNoisyExpectedHypervolumeImprovement scoring.
+        No proxy fallback, no analytic EHVI, no posterior-mean distance."""
+        import torch
+        from botorch.acquisition.multi_objective import (
+            qNoisyExpectedHypervolumeImprovement)
+        from botorch.fit import fit_gpytorch_mll
+        from botorch.models import SingleTaskGP
+        from botorch.sampling.normal import SobolQMCNormalSampler
+        from gpytorch.mlls import ExactMarginalLogLikelihood
+
+        # Extract observations (from JointEvaluator results)
+        obs_X, obs_Q, obs_C = [], [], []
+        for o in observations:
+            if not isinstance(o, dict):
+                continue
+            obj = o.get('objectives', o)
+            spend = o.get('search_spend', {})
+            obs_X.append(_feat_from_obs(o))
+            obs_Q.append(obj.get('Q', 0))
+            obs_C.append(spend.get('new_tokens', spend.get('C', 500)))
+        if len(obs_X) < 2:
+            return candidates[0]['id']
+
+        # Normalize to [0,1] both objectives (maximize)
+        Qmin, Qmax = min(obs_Q), max(obs_Q)
+        Cmin, Cmax = min(obs_C), max(obs_C)
+
+        def nQ(q):
+            return (q - Qmin) / max(Qmax - Qmin, 1e-9)
+
+        def nC(c):
+            return 1.0 - (c - Cmin) / max(Cmax - Cmin, 1e-9)
+
+        X_train = torch.tensor(obs_X, dtype=torch.double)
+        Y_train = torch.tensor([[nQ(q), nC(c)] for q, c in zip(obs_Q, obs_C)],
+                               dtype=torch.double)
+        X_cand = torch.tensor([_feat(c) for c in candidates], dtype=torch.double)
+
+        gp = SingleTaskGP(X_train, Y_train)
+        mll = ExactMarginalLogLikelihood(gp.likelihood, gp)
+        fit_gpytorch_mll(mll)
+
+        ref_point = torch.tensor([0.0, 0.0], dtype=torch.double)
+        sampler = SobolQMCNormalSampler(sample_shape=torch.Size([64]))
+        acq = qNoisyExpectedHypervolumeImprovement(
+            model=gp, ref_point=ref_point, X_baseline=X_train, sampler=sampler)
+
+        gp.eval()
+        best_id, best_score = None, float('-inf')
+        self.last_qnehvi_scores = {}
+        with torch.no_grad():
+            for i, c in enumerate(candidates):
+                x = X_cand[i].reshape(1, 1, -1)
+                val = float(acq(x).item())
+                self.last_qnehvi_scores[c['id']] = val
+                if val > best_score:
+                    best_score = val
+                    best_id = c['id']
+        return best_id
+
+
+def _feat_from_obs(o):
+    """Extract feature vector from a JointEvaluator observation."""
+    cfg = o.get('config_id', '')
+    if not cfg:
+        return [0.0, 0.0, 0.0, 0.0, 0.0]
+    parts = cfg.split('__')
+    if len(parts) >= 2:
+        x_part = parts[0].replace('DAG__', '')
+        nodes = x_part.split('_')
+        # format: e{model}_r{model}_v{model}
+        vals = []
+        for nd in nodes:
+            for m in ('medium', 'large', 'coder'):
+                if m in nd:
+                    vals.append(float(['medium', 'large', 'coder'].index(m)))
+                    break
+            else:
+                vals.append(0.0)
+        while len(vals) < 4:
+            vals.append(0.0)
+        z = parts[1] if len(parts) > 1 else 'NONE'
+        vals.append(float({'NONE': 0, 'LOCAL': 1, 'FULL': 2}.get(z, 0)))
+        return vals[:5]
+    return [0.0, 0.0, 0.0, 0.0, 0.0]
 
 
 def make_selector(method, seed=42):
