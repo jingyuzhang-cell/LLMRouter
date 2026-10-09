@@ -75,8 +75,8 @@
 
  "objectives": {
   "Q": "final answer correctness via scoring contract v2.1 (score_v21 + GOLD_CONTRACT_V1)",
-  "C": "total tokens from MeteredExecutor ledger (physical new_requests only)",
-  "L": "serial service-demand reconstruction (sum of individual latency_s; NOT real E2E wall-clock)"
+  "C_logical": "logical execution cost (see cost_accounting): total tokens from source records for all logical calls",
+  "L_service_demand": "serial service-demand reconstruction (sum of individual latency_s from source records; NOT real E2E wall-clock)"
  },
 
  "statistical_tests": {
@@ -112,9 +112,34 @@
  },
 
  "execution_order": {
-  "phase1_clean": ["A_single", "B_same_model_dag", "C_static_hetero_dag", "A_single_cross_fallback"],
-  "phase2_faulted": ["A_single (reuse clean + fault injection)", "C_static (reuse base + fault)", "D_dynamic", "E_full_replay"],
-  "rationale": "Phase 1 populates cache for B/C base calls; Phase 2 reuses cache for unfaulted nodes; D/E add recovery calls"
+  "full_matrix": "ALL 6 strategies × ALL 4 states = 24 strategy-state combinations × 50 tasks = 1200 evaluations (matches sample_size)",
+  "phase1_clean": ["A_single", "A_single_cross_fallback", "B_same_model_dag", "C_static_hetero_dag", "D_dynamic_dag", "E_full_replay"],
+  "phase2_fault10": ["A_single", "A_single_cross_fallback", "B_same_model_dag", "C_static_hetero_dag", "D_dynamic_dag", "E_full_replay"],
+  "phase3_fault20": ["A_single", "A_single_cross_fallback", "B_same_model_dag", "C_static_hetero_dag", "D_dynamic_dag", "E_full_replay"],
+  "phase4_fault30": ["A_single", "A_single_cross_fallback", "B_same_model_dag", "C_static_hetero_dag", "D_dynamic_dag", "E_full_replay"],
+  "rationale": "Clean first to populate cache; faulted states after (reusing cache for unfaulted nodes); A' participates in ALL faulted states (critical: tests whether DAG benefit is just extra model attempts); B also participates in faulted states (isolates decomposition effect under fault)",
+  "ordering_within_phase": "A → A' → B → C → D → E (cheapest first to maximize cache reuse for expensive strategies)"
+ },
+
+ "cost_accounting": {
+  "dual_track": "two separate cost metrics, never mixed",
+  "logical_cost": {
+    "definition": "total tokens a strategy would consume executing ALL its nodes from scratch (cold-run), including faulted attempts and recovery",
+    "source": "sum of usage from MeteredExecutor ledger for each logical call in the strategy's trajectory, using source-recorded usage even for cache-alias calls",
+    "purpose": "strategy quality-cost comparison, budget-within-completion-rate Q_B, Pareto analysis",
+    "note": "this is the FAIR comparison metric: each strategy's cost reflects its full execution, independent of execution order"
+  },
+  "physical_spend": {
+    "definition": "actual new model requests issued during the experiment",
+    "source": "MeteredExecutor budget counters (attempts, actual_tokens)",
+    "purpose": "experiment resource monitoring, cache savings measurement, total experiment cost",
+    "note": "this reflects experiment efficiency, NOT strategy cost; never used for Q_B or strategy comparison"
+  },
+  "service_latency": {
+    "definition": "serial service-demand reconstruction (sum of individual latency_s from source records)",
+    "purpose": "supplementary resource dimension; NOT real E2E wall-clock"
+  },
+  "rule": "Q_B and all strategy-vs-strategy cost comparisons use LOGICAL cost; physical spend is reported separately as experiment overhead; cache savings = logical_cost − physical_spend per strategy"
  },
 
  "cache_sharing": {
