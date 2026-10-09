@@ -1,0 +1,153 @@
+{
+ "protocol": "END_TO_END_NET_BENEFIT_VALIDATION",
+ "version": "DRAFT_v1_20261009",
+ "status": "SUBMITTED_FOR_APPROVAL — NOT AUTHORIZED",
+ "purpose": "Test hypothesis H on a frozen independent panel: does Dynamic DAG's feedback-driven local recovery produce net benefit over Single LLM under specific fault/budget conditions? NOT a search efficiency experiment.",
+
+ "hypothesis": {
+  "H": "In conditions where observable, repairable faults constitute a high proportion and the resource budget permits, Dynamic DAG can partially recover decomposition-induced quality loss through feedback-driven local recovery, and achieve higher budget-within-completion-rate than the Single LLM baseline in predefined state and budget ranges.",
+  "falsifiable": true,
+  "pre_registration": "state strata and budget ranges defined BEFORE any execution; no post-hoc cherry-picking of favorable conditions",
+  "three_possible_outcomes": {
+   "conditional_net_benefit": "Dynamic DAG achieves net benefit in some predefined conditions, replicated on independent tasks → paper claims conditional net benefit",
+   "quality_cost_tradeoff": "Dynamic DAG has higher quality but higher cost → paper claims existence of a trade-off, adoption depends on budget",
+   "no_net_benefit": "Single LLM is not worse in any validated condition → paper contribution repositioned as recoverable execution mechanism + applicability boundary analysis"
+  }
+ },
+
+ "task_panel": {
+  "source": "TAT-QA train, hybrid_pool() held-out UIDs excluding ALL previously used panels",
+  "exclusions": "main120, frozen200, P1-B 5 tasks, FULLVAL 4 tasks, V2 campaign 8 tasks",
+  "n_tasks": 50,
+  "selection": "sha256('netbenefit:20261009:'+uid) ascending from remaining pool",
+  "freeze": "UIDs + content_sha256 committed before any model call",
+  "note": "50 tasks for adequate power for McNemar on ~15pp differences; task-level paired design"
+ },
+
+ "strategies": {
+  "A_single": {
+   "description": "Single LLM (large model) direct answer",
+   "role": "baseline",
+   "retry": "none (single attempt)"
+  },
+  "A_single_cross_fallback": {
+   "description": "Single LLM with cross-model fallback on parse failure (large → medium → coder)",
+   "role": "competitive baseline — tests whether DAG's benefit is just 'extra model attempts'",
+   "retry": "max 1 fallback per task, triggered by unparseable output only"
+  },
+  "B_same_model_dag": {
+   "description": "4-node DAG, all nodes use same model (large)",
+   "role": "isolates pure decomposition effect",
+   "recovery": "none"
+  },
+  "C_static_hetero_dag": {
+   "description": "4-node DAG, heterogeneous assignment (e1/e2=large, r=medium, v=coder)",
+   "role": "isolates heterogeneity effect",
+   "recovery": "none"
+  },
+  "D_dynamic_dag": {
+   "description": "Same as C + feedback-driven local recovery (Z=LOCAL_REROUTE)",
+   "role": "tests recovery benefit",
+   "recovery": "detection on parse/exec/verification failure; reroute to alternative model; descendant closure; one attempt"
+  },
+  "E_full_replay": {
+   "description": "Same detection as D but full-graph re-execution on recovery trigger",
+   "role": "isolates recovery SCOPE effect",
+   "recovery": "detection same as D; re-executes entire DAG with frozen alternative models"
+  }
+ },
+
+ "states": {
+  "clean": "no fault injection",
+  "fault10": "10% tasks faulted, Random(20261023) on this panel's UIDs",
+  "fault20": "20% tasks faulted, Random(20261024)",
+  "fault30": "30% tasks faulted, Random(20261025)",
+  "fault_model": "persistent capability fault on (task, node, planned_model); answer-replacement (no extra request for injection itself); bit-identical draw rule from frozen200",
+  "pre_registration": "fault draw computed and committed BEFORE execution; same draw used across all strategies (paired)"
+ },
+
+ "budgets": {
+  "token_budgets": [600, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000],
+  "metric": "Q_B(strategy) = (# tasks correct AND total_tokens ≤ B) / n_tasks",
+  "note": "post-hoc from complete trajectories; NOT online hard budget cutoff",
+  "primary_comparison": "ΔQ_B(s) = Q_B(D | s) − Q_B(A | s) at each (state, budget) pair"
+ },
+
+ "objectives": {
+  "Q": "final answer correctness via scoring contract v2.1 (score_v21 + GOLD_CONTRACT_V1)",
+  "C": "total tokens from MeteredExecutor ledger (physical new_requests only)",
+  "L": "serial service-demand reconstruction (sum of individual latency_s; NOT real E2E wall-clock)"
+ },
+
+ "statistical_tests": {
+  "primary": "paired task-level comparison of Q (McNemar exact) between A vs D at each state",
+  "secondary": "budget-within-completion-rate difference at each (state, budget)",
+  "confidence_intervals": "task-cluster bootstrap 95% CI for all differences",
+  "multiple_comparison": "Holm correction over 4 states × 10 budgets = 40 comparisons for budget analysis; 4 comparisons for primary Q analysis",
+  "pre_specified_subgroups": {
+   "detectable_fault_tasks": "tasks where the injected fault is detectable by the frozen detection rules",
+   "undetectable_fault_tasks": "tasks where the fault is NOT detectable (recovery cannot help)",
+   "recovery_success_rate": "among detectable-fault tasks, % where D recovers to correct answer",
+   "recovery_cost_overhead": "average extra tokens for D vs C on faulted tasks"
+  }
+ },
+
+ "sample_size": {
+  "n_tasks": 50,
+  "n_states": 4,
+  "n_strategies": 6,
+  "n_evaluations": "50 × 6 × 4 = 1200 strategy-state evaluations",
+  "estimated_calls_per_eval": "A: 1, A_fallback: 1-2, B/C: 4, D: 4-7, E: 4-8 (with cache reuse reducing this)",
+  "estimated_total_new_requests": "~2000-3500 (with cross-strategy cache reuse for B/C base calls)",
+  "power_analysis": "50 tasks, paired McNemar: can detect ~20pp Q difference at α=0.05 with power ~0.7; sufficient for the 15-25pp effects expected"
+ },
+
+ "budget": {
+  "global_max_requests": 4000,
+  "global_max_tokens": 4000000,
+  "global_max_wall_seconds": 21600,
+  "per_strategy_per_state_max": 200,
+  "failed_call_billing": "counted; no retry",
+  "budget_reservation": "D and E strategies reserved 800 requests minimum"
+ },
+
+ "execution_order": {
+  "phase1_clean": ["A_single", "B_same_model_dag", "C_static_hetero_dag", "A_single_cross_fallback"],
+  "phase2_faulted": ["A_single (reuse clean + fault injection)", "C_static (reuse base + fault)", "D_dynamic", "E_full_replay"],
+  "rationale": "Phase 1 populates cache for B/C base calls; Phase 2 reuses cache for unfaulted nodes; D/E add recovery calls"
+ },
+
+ "cache_sharing": {
+  "identity": "(model_binding, prompt_sha256, task_uid, node_name, scope) from smoke_runner.py:114",
+  "scope": "validation-wide (all strategies share)",
+  "clean_to_fault_reuse": "unfaulted nodes' prompts are state-independent → cache hits allowed",
+  "fault_injection": "answer replaced AFTER call; injected answer NEVER cached; underlying response cached for cost reference"
+ },
+
+ "scoring": {
+  "contract": "GOLD_CONTRACT_V1 + scoring_contract_final.py score_v21",
+  "gold_source": "v2.1 contract gold (native_answer for percent; derived for no-scale)",
+  "tolerance": "close_v21 OR rounding_ok_v21 (round-then-compare at 2dp)",
+  "version_control": "both Q_v1 and Q_v2_1 recorded; Q_v2_1 is canonical"
+ },
+
+ "prerequisites": {
+  "must_pass_before_execution": [
+    "V2 campaign completes (provides best DAG candidates for C/D config)",
+    "Scoring path audit (GOLD_CONTRACT_V1 verified in running evaluator)",
+    "Fault injection path audit (injection replaces answer, not extra call)",
+    "Cost accounting audit (physical new_requests from ledger, not predictor)",
+    "Cache identity audit (S4 zero-new-request guarantee)"
+  ]
+ },
+
+ "non_claims": [
+  "Does NOT prove DAG is universally better than Single",
+  "Does NOT prove search efficiency (that is V2 campaign)",
+  "Does NOT test multi-turn recovery (single recovery attempt only)",
+  "Does NOT claim real E2E deployment latency",
+  "Pre-defined conditions only; no post-hoc condition selection"
+ ],
+
+ "execution_command": "P1B_NETBENEFIT_EXECUTE=1 python3 -m collab_scheduler_v1.joint_search_v1.netbenefit_runner --execute"
+}
