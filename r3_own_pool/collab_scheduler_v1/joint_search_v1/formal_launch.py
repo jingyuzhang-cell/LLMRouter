@@ -127,6 +127,44 @@ def make_admission():
     print(json.dumps(dict(admission=str(ADMISSION), sha256=sha(ADMISSION))))
 
 
+def make_admission_v2():
+    """V2 admission: gold contract gate added after RUN ADMISSION AUDIT 1."""
+    out = JS / 'FORMAL_ADMISSION_V2.json'
+    if out.exists():
+        raise FileExistsError('Admission exists; no silent rebinding')
+    launch2 = JS / 'FORMAL_LAUNCH_V2.json'
+    gold = JS / 'GOLD_CONTRACT_V1.json'
+    a = dict(
+        version='formal_admission_v2',
+        status='READY',
+        protocol_sha256=sha(PROTOCOL),
+        execution_authorized=True,
+        authorization='User: 跑完继续跑就行 (2026-10-09), following RUN ADMISSION '
+                      'AUDIT 1 closure (old-gold defect fixed via GOLD_CONTRACT_V1)',
+        selector_review_pass=True,
+        selector_review_evidence='TRACK_B_EVIDENCE.json cross-state 15/15; '
+                                 'TRACK_A_EVIDENCE.json BoTorch alignment 7/7',
+        independent_splits_verified=True,
+        independent_splits_evidence='TASK_PANEL_V1.json frozen; '
+                                    'TRACK_C_EVIDENCE.json 14/14 zero-exposure',
+        new_semantics_real_validation_pass=True,
+        new_semantics_evidence='FULLVAL_STAGE1_REPORT.json + RESCORE_FINAL_CONTRACT_1.json '
+                               '(t1 flips under final contract; recovery confirmed t1+t4)',
+        runtime_tests_pass=True,
+        runtime_tests_evidence='test_runtime.py 10/10',
+        gold_contract_verified=True,
+        gold_contract_evidence='RUN_ADMISSION_AUDIT_1.md; GOLD_CONTRACT_V1.json '
+                               '(annotation-authoritative; contamination listed per panel; '
+                               'V1 diagnostic session registered)',
+        campaign_headroom_rule='driver enforces v2-journal requests <= 7,200 - 299 '
+                               '(prior v1 diagnostic consumption charged to the same '
+                               'frozen campaign envelope; no expansion)',
+        blockers=[],
+        bindings={str(p): sha(p) for p in frozen_inputs() + [launch2, gold]})
+    out.write_text(json.dumps(a, ensure_ascii=False, indent=1))
+    print(json.dumps(dict(admission=str(out), sha256=sha(out))))
+
+
 class SyncedSelector:
     """Bridges run_session's selector contract (candidates, observations) to
     ProductionSearcher: ingests any evaluator observations not yet seen (the
@@ -145,7 +183,7 @@ class SyncedSelector:
         return self.searcher.select(candidates)
 
 
-def run_campaign(launch, only=None):
+def run_campaign(launch, admission_path, only=None):
     import sys
     sys.path.insert(0, str(ROOT))
     from collab_scheduler_v1.joint_search_v1.runtime import run_session, require_admission
@@ -153,7 +191,7 @@ def run_campaign(launch, only=None):
     from collab_scheduler_v1.joint_search_v1.evaluator import space
     from collab_scheduler_v1.fault30_protocol import Ledger
 
-    protocol = require_admission(PROTOCOL, ADMISSION, launch['protocol_sha256'])
+    protocol = require_admission(PROTOCOL, admission_path, launch['protocol_sha256'])
     tasks = launch['tasks']
     faults = {u: tuple(f) for u, f in launch['fault30_panel'].items()}
     states = [('clean', {}), ('fault30', faults)]
@@ -161,41 +199,97 @@ def run_campaign(launch, only=None):
     sp = space()
     bindings = {slot: launch['models'][slot] for slot in ('medium', 'large', 'coder')}
 
+    # Global envelope honesty: v1 diagnostic consumption (299 requests) came out
+    # of the SAME frozen 7,200-request campaign cap. The v2 journals alone would
+    # not see it, so the driver enforces the remaining campaign headroom itself
+    # across ALL v2 campaign roots (base + retry dirs): stop launching further
+    # sessions once cumulative requests would exceed campaign_cap - prior.
+    prior = launch.get('prior_consumption', {})
+    campaign_total = protocol['campaign_caps']['new_request_attempts']
+    v2_ceiling = campaign_total - prior.get('requests', 0)
+
     from static_dag_v0 import run as engine
-    campaign = JS / 'formal_campaign'
-    results = []
-    for sid in launch['session_order']:
-        if only and sid not in only:
-            continue
+    base_campaign = JS / launch.get('campaign_root', 'formal_campaign')
+    base_campaign.mkdir(parents=True, exist_ok=True)
+
+    def journal_used(campaign_dir):
+        used = 0
+        jf = Path(campaign_dir) / 'CAMPAIGN.jsonl'
+        if jf.exists():
+            for line in jf.read_text().splitlines():
+                d = json.loads(line)
+                if d.get('event') == 'reserved':
+                    used += protocol['per_session_caps']['new_request_attempts']
+                elif d.get('event') == 'settled':
+                    used += d['charge'].get('new_request_attempts', 0) \
+                        - protocol['per_session_caps']['new_request_attempts']
+        return max(0, used)
+
+    def v2_requests_used():
+        roots = sorted(JS.glob(launch.get('campaign_root', 'formal_campaign') + '*'))
+        return sum(journal_used(r) for r in roots)
+
+    def log_campaign(report):
+        with open(base_campaign / 'CAMPAIGN_LOG.jsonl', 'a') as fh:
+            fh.write(json.dumps(report, default=str) + '\n')
+
+    INFRA_FAILURE = ('termination', 'File exists', 'interrupted', 'deadline')
+
+    def run_cell(sid, campaign_dir):
         method, seed = sid.rsplit('_', 1)
         seed = int(seed)
-        # deterministic per-session searcher seed
         searcher = ProductionSearcher(method, sp, task_uids, rng_seed=seed)
         selector = SyncedSelector(searcher)
         t0 = time.time()
-        report = run_session(campaign=campaign, protocol_sha=launch['protocol_sha256'],
+        report = run_session(campaign=campaign_dir, protocol_sha=launch['protocol_sha256'],
                              protocol=protocol, method=method, seed=seed,
                              tasks=tasks, states=states, selector=selector,
                              ledger=Ledger(), backend=engine, bindings=bindings,
                              gpu_lock_path=GPU_LOCK)
         report['session_id'] = sid
-        results.append(report)
+        report['campaign_dir'] = str(campaign_dir)
         print(json.dumps(dict(session=sid, status=report['status'],
                               wall_s=round(time.time() - t0),
-                              requests=report.get('new_requests'))))
-        (JS / 'formal_campaign' / 'CAMPAIGN_LOG.jsonl').parent.mkdir(exist_ok=True)
-        with open(JS / 'formal_campaign' / 'CAMPAIGN_LOG.jsonl', 'a') as fh:
-            fh.write(json.dumps(report, default=str) + '\n')
+                              requests=report.get('new_requests'))), flush=True)
+        log_campaign(report)
+        return report
+
+    results = []
+    retry_n = 0
+    for sid in launch['session_order']:
+        if only and sid not in only:
+            continue
+        remaining = v2_ceiling - v2_requests_used()
+        if remaining < 50:
+            print(json.dumps(dict(skipped=sid, reason='campaign headroom < 50 requests',
+                                  remaining=remaining)), flush=True)
+            continue
+        report = run_cell(sid, base_campaign)
+        results.append(report)
+        # one infra-retry in a fresh retry root (external kills / dir collisions);
+        # search-logic failures are NOT retried
+        if report['status'] != 'COMPLETE' and any(
+                k in report.get('reason', '') for k in INFRA_FAILURE):
+            retry_n += 1
+            retry_dir = JS / f"{launch.get('campaign_root', 'formal_campaign')}_retry{retry_n}"
+            print(json.dumps(dict(retrying=sid, in_dir=str(retry_dir))), flush=True)
+            report = run_cell(sid, retry_dir)
+            results.append(report)
     done = sum(1 for r in results if r['status'] == 'COMPLETE')
-    print(json.dumps(dict(sessions_run=len(results), complete=done)))
+    print(json.dumps(dict(sessions_run=len(results), complete=done,
+                          v2_requests_used=v2_requests_used(),
+                          v2_ceiling=v2_ceiling)), flush=True)
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--build', action='store_true')
     p.add_argument('--admit', action='store_true')
+    p.add_argument('--admission-v2', action='store_true')
     p.add_argument('--preflight', action='store_true')
     p.add_argument('--run', action='store_true')
+    p.add_argument('--launch', default=str(LAUNCH))
+    p.add_argument('--admission', default=str(ADMISSION))
     p.add_argument('--only', help='comma-separated session ids')
     a = p.parse_args()
     if a.build:
@@ -204,8 +298,12 @@ def main():
     if a.admit:
         make_admission()
         return
-    launch = json.loads(LAUNCH.read_text())
-    for path, digest in json.loads(ADMISSION.read_text())['bindings'].items():
+    if a.admission_v2:
+        make_admission_v2()
+        return
+    launch = json.loads(Path(a.launch).read_text())
+    admission = json.loads(Path(a.admission).read_text())
+    for path, digest in admission['bindings'].items():
         if sha(path) != digest:
             raise ValueError('Binding mismatch: ' + path)
     if launch['protocol_sha256'] != sha(PROTOCOL):
@@ -213,13 +311,15 @@ def main():
     if a.preflight:
         print(json.dumps(dict(status='PREFLIGHT_PASS', sessions=len(launch['session_order']),
                               tasks=launch['n_tasks'],
-                              faulted=len(launch['fault30_panel']), model_calls=0)))
+                              faulted=len(launch['fault30_panel']), model_calls=0,
+                              gold_contract=launch.get('gold_contract', 'v1-legacy'))))
         return
     import os
     if a.run:
         if os.environ.get('JOINT_SEARCH_EXECUTE') != '1':
             raise PermissionError('Execution environment required')
-        run_campaign(launch, only=set(a.only.split(',')) if a.only else None)
+        run_campaign(launch, Path(a.admission),
+                     only=set(a.only.split(',')) if a.only else None)
 
 
 if __name__ == '__main__':
