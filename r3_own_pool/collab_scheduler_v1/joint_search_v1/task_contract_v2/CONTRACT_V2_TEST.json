@@ -1,0 +1,36 @@
+{
+ "contract": "task_adaptation_and_scoring_v2",
+ "rules": {
+  "R1": "native_answer stored verbatim from TAT-QA",
+  "R2": "native_scale stored (percent/million/etc.)",
+  "R3": "raw_derivation stored unmodified",
+  "R4": "derived_value = eval(raw_derivation), backward compatible",
+  "R5": "gold: percent scale \u2192 native_answer; no scale \u2192 derived; conflict \u2192 native takes precedence",
+  "R6": "close() tolerance: abs diff \u2264 max(1e-4, 1e-4*|gold|)",
+  "R7": "model outputs in same unit as native answer",
+  "R8": "derivation conflicts recorded, not hidden or excluded"
+ },
+ "tests": {
+  "t1_percent_uses_native": true,
+  "t1_percent_not_derived": true,
+  "t1_conflict_detected": true,
+  "t2_no_scale_uses_derived": true,
+  "t2_no_conflict": true,
+  "t3_percent_no_conflict": true,
+  "t3_no_false_conflict": true,
+  "t4_unparseable_falls_back": true,
+  "t5_pool_nonempty": true,
+  "t5_changes_counted": true,
+  "t5_conflicts_counted": true,
+  "t6_close_percent": true,
+  "t6_close_derived": true
+ },
+ "all_pass": true,
+ "pool_stats": {
+  "total": 106,
+  "gold_changed": 35,
+  "derivation_conflicts": 30
+ },
+ "frozen": "v1 answers preserved as v1_answer; no historical Q modified",
+ "zero_model_calls": true
+}
