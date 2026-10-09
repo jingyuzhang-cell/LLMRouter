@@ -1,0 +1,85 @@
+{
+ "scenario": {
+  "obs": [
+   {
+    "id": "obs_1",
+    "Q": 1.0,
+    "C": 800,
+    "L": 2.0
+   },
+   {
+    "id": "obs_2",
+    "Q": 1.0,
+    "C": 500,
+    "L": 4.0
+   },
+   {
+    "id": "obs_3",
+    "Q": 1.0,
+    "C": 1200,
+    "L": 1.0
+   },
+   {
+    "id": "obs_4",
+    "Q": 1.0,
+    "C": 300,
+    "L": 6.0
+   }
+  ],
+  "candidates": [
+   {
+    "id": "BETTER_lowCL",
+    "Q_est": 1.0,
+    "C_est": 150,
+    "L_est": 0.5,
+    "expect": "positive"
+   },
+   {
+    "id": "DOMINATED_highCL",
+    "Q_est": 1.0,
+    "C_est": 1500,
+    "L_est": 8.0,
+    "expect": "zero"
+   },
+   {
+    "id": "L_ONLY_lowL",
+    "Q_est": 1.0,
+    "C_est": 500,
+    "L_est": 0.5,
+    "expect": "positive"
+   }
+  ],
+  "front_size": 4,
+  "base_hv": 0.73
+ },
+ "exact_improvement": {
+  "BETTER_lowCL": 0.17083333333333328,
+  "DOMINATED_highCL": 0.0,
+  "L_ONLY_lowL": 0.07666666666666666
+ },
+ "proposed_scores": {
+  "BETTER_lowCL": 0.17065789781980265,
+  "DOMINATED_highCL": 0.0,
+  "L_ONLY_lowL": 0.07656249822714294
+ },
+ "botorch_scores": {
+  "BETTER_lowCL": 0.08236510596061818,
+  "DOMINATED_highCL": 0.022029933889800048,
+  "L_ONLY_lowL": 0.047216081237252856
+ },
+ "checks": {
+  "exact_BETTER_lowCL_correct": true,
+  "proposed_BETTER_lowCL_correct": true,
+  "botorch_BETTER_lowCL_correct": true,
+  "exact_DOMINATED_highCL_correct": true,
+  "proposed_DOMINATED_highCL_correct": true,
+  "botorch_DOMINATED_highCL_correct": false,
+  "exact_L_ONLY_lowL_correct": true,
+  "proposed_L_ONLY_lowL_correct": true,
+  "botorch_L_ONLY_lowL_correct": true,
+  "front_nonempty": true,
+  "base_hv_positive": true
+ },
+ "all_pass": false,
+ "zero_model_calls": true
+}
