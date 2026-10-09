@@ -1,0 +1,114 @@
+{
+ "positive": {
+  "label": "POSITIVE",
+  "config": "medium__medium__medium__coder__NONE",
+  "trace": [
+   {
+    "model": "medium",
+    "prompt_head": "Read the financial report and extract the quantities needed to answer the questi",
+    "answer": "{\"facts\": [{\"value\": 1.5, \"evidence\": \"a\"}, {\"value\": 2.5, \"evidence\": \"b\"}]}"
+   },
+   {
+    "model": "medium",
+    "prompt_head": "Read the financial report and extract the quantities needed to answer the questi",
+    "answer": "{\"facts\": [{\"value\": 1.5, \"evidence\": \"a\"}, {\"value\": 2.5, \"evidence\": \"b\"}]}"
+   },
+   {
+    "model": "medium",
+    "prompt_head": "Choose the arithmetic reasoning needed to answer the financial question using th",
+    "answer": "{\"expression\": \"v0+v1\"}"
+   },
+   {
+    "model": "coder",
+    "prompt_head": "You are verifying a computed answer for a financial question. Given the extracte",
+    "answer": "{\"value\": 4.0}"
+   }
+  ],
+  "result": {
+   "config_id": "medium__medium__medium__coder__NONE",
+   "state": "clean",
+   "objectives": {
+    "Q": 1.0,
+    "C": 400.0,
+    "L": 0.004258163273334503
+   },
+   "objective_semantics": "cold logical workflow tokens; reconstructed SERIAL service demand; no observed deployment wall latency claim",
+   "search_spend": {
+    "logical_calls": 4,
+    "injected_calls": 0,
+    "cache_hits": 0,
+    "dry_calls": 0,
+    "new_requests": 4,
+    "new_tokens": 400.0,
+    "new_latency_s": 0.004258163273334503,
+    "observed_wall_s": 0.008093532174825668
+   },
+   "tasks": [
+    {
+     "uid": "cache-acct-test-uid",
+     "Q": 1,
+     "C_tokens": 400,
+     "L_serial_service_reconstructed_s": 0.004258163273334503,
+     "logical_calls": 4
+    }
+   ]
+  },
+  "gold": 4.0
+ },
+ "negative": {
+  "label": "NEGATIVE",
+  "config": "medium__medium__medium__coder__NONE",
+  "trace": [
+   {
+    "model": "medium",
+    "prompt_head": "Read the financial report and extract the quantities needed to answer the questi",
+    "answer": "{\"facts\": [{\"value\": 1.5, \"evidence\": \"a\"}, {\"value\": 2.5, \"evidence\": \"b\"}]}"
+   },
+   {
+    "model": "medium",
+    "prompt_head": "Read the financial report and extract the quantities needed to answer the questi",
+    "answer": "{\"facts\": [{\"value\": 1.5, \"evidence\": \"a\"}, {\"value\": 2.5, \"evidence\": \"b\"}]}"
+   },
+   {
+    "model": "medium",
+    "prompt_head": "Choose the arithmetic reasoning needed to answer the financial question using th",
+    "answer": "{\"expression\": \"v0+v1\"}"
+   },
+   {
+    "model": "coder",
+    "prompt_head": "You are verifying a computed answer for a financial question. Given the extracte",
+    "answer": "{\"value\": 99.0}"
+   }
+  ],
+  "result": {
+   "config_id": "medium__medium__medium__coder__NONE",
+   "state": "clean",
+   "objectives": {
+    "Q": 0.0,
+    "C": 400.0,
+    "L": 0.004253894090652466
+   },
+   "objective_semantics": "cold logical workflow tokens; reconstructed SERIAL service demand; no observed deployment wall latency claim",
+   "search_spend": {
+    "logical_calls": 4,
+    "injected_calls": 0,
+    "cache_hits": 0,
+    "dry_calls": 0,
+    "new_requests": 4,
+    "new_tokens": 400.0,
+    "new_latency_s": 0.004253894090652466,
+    "observed_wall_s": 0.008330188691616058
+   },
+   "tasks": [
+    {
+     "uid": "cache-acct-test-uid",
+     "Q": 0,
+     "C_tokens": 400,
+     "L_serial_service_reconstructed_s": 0.004253894090652466,
+     "logical_calls": 4
+    }
+   ]
+  },
+  "gold": 4.0
+ }
+}

@@ -36,8 +36,11 @@ def _feat(cfg):
 
 
 def _obs_q(obs):
-    return [o.get('Q', o.get('quality', 0)) if isinstance(o, dict) else 0
-            for o in obs]
+    def _q(o):
+        if not isinstance(o, dict): return 0
+        obj = o.get('objectives', o)
+        return obj.get('Q', obj.get('quality', 0))
+    return [_q(o) for o in obs]
 
 
 def _predict_incr_cost(cfg):

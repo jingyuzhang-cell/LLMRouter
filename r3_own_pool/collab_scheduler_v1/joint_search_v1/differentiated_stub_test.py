@@ -39,19 +39,19 @@ def diff_dispatch(model, prompt):
     tok = {'medium': 60, 'large': 90, 'coder': 70}.get(model, 60)
     if 'extract' in prompt.lower():
         # large extracts better facts; medium sometimes garbled
-        if model == 'medium' and hash(prompt) % 3 == 0:
+        if model == 'medium' and len(prompt) % 3 == 0:
             ans = '{"facts": []}'  # extraction failure
         else:
             ans = '{"facts": [{"value": 1.5, "evidence": "a"}, {"value": 2.5, "evidence": "b"}]}'
     elif 'arithmetic' in prompt.lower() or 'reasoning' in prompt.lower():
         # medium computes correct; large sometimes wrong
-        if model == 'large' and hash(prompt) % 4 == 0:
+        if model == 'large' and len(prompt) % 4 == 0:
             ans = '{"expression": "v0-v1"}'  # wrong expression
         else:
             ans = '{"expression": "v0+v1"}'
     elif 'verif' in prompt.lower():
         # coder verifies correctly; large sometimes wrong value
-        if model == 'large' and hash(prompt) % 5 == 0:
+        if model == 'large' and len(prompt) % 5 == 0:
             ans = '{"value": 99.0}'  # wrong
         else:
             ans = '{"value": 4.0}'
