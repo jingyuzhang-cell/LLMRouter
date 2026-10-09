@@ -98,3 +98,22 @@ await the campaign's measured comparison on common physical budget.
   replace production EHVI/cost-predictor ablation evidence. Auxiliary
   diagnostic; efficiency conclusions rest on post-campaign reconciled curves
   on the common measured physical budget.
+
+## 6. Erratum — the "qNEHVI top-1 changed" discrepancy (final entry; diagnostic closed)
+
+Commit 2c7f8fc's MESSAGE claimed "top1 changes in qNEHVI session
+(medium_large_medium_coder vs medium_large_large_coder_LOCAL)". Both committed
+JSON versions (2c7f8fc and 2107963) are byte-identical on this point and were
+all along:
+
+- official_qnehvi_same_state_20261009: top1_same = TRUE, rho = 0.9917,
+  input_sha256 = d10eb6d7ab2432ac, n_obs = 24.
+- The quoted top-1 pair (medium__large__medium__coder vs
+  medium__large__large__coder__LOCAL) belongs to the
+  proposed_without_state_20261009 observation source
+  (input_sha256 = a9e050cee4203ce2, n_obs = 24, top1_same = FALSE,
+  rho = 0.8274).
+
+The discrepancy was a commit-message misattribution, not a data or code
+change: no input hash or comparison basis differed between versions. The
+diagnostic is closed with this entry; no further versions.
