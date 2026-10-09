@@ -170,14 +170,19 @@ class OracleScopePredictor:
             s['v'].add(self._vsig(cfg, state))
 
 
-def stats(errs):
+def stats(errs, actuals=None):
     if not errs:
         return dict(n=0)
-    return dict(n=len(errs),
-                signed_mean=round(sum(errs) / len(errs), 1),
-                mae=round(sum(abs(e) for e in errs) / len(errs), 1),
-                upper_cover=round(sum(1 for e in errs if e >= 0) / len(errs), 3),
-                lower_cover=round(sum(1 for e in errs if e <= 0) / len(errs), 3))
+    out = dict(n=len(errs),
+               signed_mean=round(sum(errs) / len(errs), 1),
+               mae=round(sum(abs(e) for e in errs) / len(errs), 1),
+               upper_cover=round(sum(1 for e in errs if e >= 0) / len(errs), 3),
+               lower_cover=round(sum(1 for e in errs if e <= 0) / len(errs), 3))
+    if actuals:
+        scale = sum(actuals) / len(actuals)
+        out['relative_mae'] = round(out['mae'] / scale, 3) if scale else None
+        out['actual_mean'] = round(scale, 1)
+    return out
 
 
 def main():
@@ -212,10 +217,37 @@ def main():
         cells = cells_of(meta, d, name)
         seen_models = {}   # (scope,uid,node) -> set(models executed before)
         per_cell, node_rows, mismatches = [], [], []
+        def cell_est(flags_by_uid, cfg, state):
+            est = sum(sum(NODE_EST_TOKENS[nd] * MODEL_MULTIPLIER[cfg['X'][nd]]
+                          for nd in NODES if flags[nd] == 'new')
+                      for flags in flags_by_uid.values()) / max(1, len(flags_by_uid))
+            return est + RECOVERY_COST.get(cfg['Z'], 0) * RECOVERY_FIRE_E[state][cfg['Z']]
+
+        def register_uids(sigs, cfg, state, uids):
+            x = cfg['X']
+            for u in uids:
+                sg = sigs[state][u] if 'clean' in sigs else sigs[u]  # predictor is [state][uid]; oracle is [uid]
+                sg['e'].add(('e1', x['e1']))
+                sg['e'].add(('e2', x['e2']))
+                sg['r'].add((x['e1'], x['e2'], x['r']))
+                sg['v'].add((x['e1'], x['e2'], x['r'], x['v'],
+                             (('z', cfg['Z']),) if state == 'fault30' else ()))
+
         for c in cells:
             cfg = cfg_of(c['cid'])
             p = pred.predict(cfg, c['state'])
             o = oracle.predict(cfg, c['state'])
+            # fullval cells are SINGLE-TASK: the production predictor's
+            # panel-wide register/average does not apply; use the cell's own
+            # uids for both the estimate and the registration (searcher cells
+            # cover the whole panel and are unaffected by this adaptation).
+            if meta['kind'] == 'fullval':
+                p_est = max(100.0, cell_est({u: p['per_task'][u] for u in c['uids']},
+                                            cfg, c['state']))
+                o_est = max(100.0, cell_est({u: o['per_task'][u] for u in c['uids']},
+                                            cfg, c['state']))
+            else:
+                p_est, o_est = p['est_new_tokens'], o['est_new_tokens']
             for uid in c['uids']:
                 for nd in NODES:
                     rec = planned.get((c['traj_scope'], c['traj_cid'], uid, nd))
@@ -247,14 +279,14 @@ def main():
                         if r['scope'] == c['state'] and r['cid'] == c['cid'])
             per_cell.append(dict(
                 bucket=c['bucket'], cid=c['cid'], state=c['state'], n_tasks=n_tasks,
-                pred_new_tokens_per_task=round(p['est_new_tokens'], 1),
-                oracle_new_tokens_per_task=round(o['est_new_tokens'], 1),
+                pred_new_tokens_per_task=round(p_est, 1),
+                oracle_new_tokens_per_task=round(o_est, 1),
                 actual_new_tokens_per_task=round(act_tok / n_tasks, 1),
                 actual_new_tokens_cell_total=act_tok,
                 # scale-matched errors: per-task basis AND cell-total basis
-                token_err_per_task=round(p['est_new_tokens'] - act_tok / n_tasks, 1),
-                oracle_token_err_per_task=round(o['est_new_tokens'] - act_tok / n_tasks, 1),
-                token_err_cell_total=round(p['est_new_tokens'] * n_tasks - act_tok, 1),
+                token_err_per_task=round(p_est - act_tok / n_tasks, 1),
+                oracle_token_err_per_task=round(o_est - act_tok / n_tasks, 1),
+                token_err_cell_total=round(p_est * n_tasks - act_tok, 1),
                 pred_new_nodes=pred_nodes, oracle_new_nodes=oracle_nodes,
                 actual_new_requests=act_req,
                 request_err=pred_nodes - act_req,
@@ -263,18 +295,22 @@ def main():
                 deployment_C_static_est=round(
                     sum(NODE_EST_TOKENS[nd] * MODEL_MULTIPLIER[cfg['X'][nd]]
                         for nd in NODES) + RECOVERY_COST.get(cfg['Z'], 0), 1)))
-            pred.register(cfg, c['state'])
-            oracle.register(cfg, c['state'])
+            register_uids(pred.sigs, cfg, c['state'], c['uids'])
+            register_uids(oracle.sigs, cfg, c['state'], c['uids'])
+            if meta['kind'] != 'fullval':  # panel-wide semantics preserved
+                pass
         buckets = {}
         for b in sorted({c['bucket'] for c in per_cell}):
             rows = [c for c in per_cell if c['bucket'] == b]
             buckets[b] = dict(
                 cells=len(rows),
-                token_err_per_task=stats([c['token_err_per_task'] for c in rows]),
+                token_err_per_task=stats([c['token_err_per_task'] for c in rows],
+                    [c['actual_new_tokens_per_task'] for c in rows]),
                 oracle_token_err_per_task=stats(
                     [c['oracle_token_err_per_task'] for c in rows]),
                 token_err_cell_total=stats([c['token_err_cell_total'] for c in rows]),
-                request_err=stats([float(c['request_err']) for c in rows]))
+                request_err=stats([float(c['request_err']) for c in rows],
+                    [float(c['actual_new_requests']) for c in rows]))
         nacc = {}
         for variant in ('predictor', 'oracle'):
             vr = [r for r in node_rows if r['variant'] == variant]

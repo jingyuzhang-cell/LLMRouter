@@ -1,87 +1,75 @@
-# Offline Incremental-Cost Predictor Error Audit (DIAGNOSTIC EVIDENCE)
+# Offline Incremental-Cost Predictor Error Audit (DIAGNOSTIC EVIDENCE, v3 final)
 
 2026-10-09. Zero GPU calls, zero production changes. Inputs are frozen COPIES
-under `copy_inputs/` (no active file read for any conclusion); TEST16 untouched.
+under `copy_inputs/`; TEST16 untouched; no active file read for any conclusion.
 
-## Conventions (explicit, per review)
+## Conventions
 
-- **Error sign**: everywhere `error = prediction − actual` (negative = underestimate).
-- **coverage_upper** = fraction of cells with `actual ≤ prediction` (prediction
-  treated as a CANDIDATE upper bound). **coverage_lower** = `actual ≥ prediction`.
-  These are bound-direction rates, NOT interval hit rates.
-- **Token scale**: the predictor outputs a PER-TASK MEAN; ledger `new_tokens` is
-  the CELL TOTAL over n tasks. Both scales are reported (`*_per_task`,
-  `*_cell_total`).
-- Deployment C and search physical spend are never merged.
+- **Error sign**: `error = prediction − actual` (negative = underestimate).
+- **coverage_upper** = fraction of cells with `actual ≤ prediction` (bound
+  direction), NOT an interval hit rate.
+- **signed_mean alone is insufficient**: per-node errors of opposite sign can
+  cancel. The cold-S1 decomposition below is the worked example; conclusions
+  use MAE + relative_mae (MAE / mean actual) + coverage.
+- Token scales: predictor emits a PER-TASK MEAN; ledger new_tokens is CELL
+  TOTAL. Both reported (`*_per_task`, `*_cell_total`).
+- Deployment C and search physical spend never merged.
 
-## ERRATUM (v1 of this audit)
+## Erratum chain (both errors AUDIT-SIDE; production predictor unchanged)
 
-v1 compared the per-task prediction against the cell-total actual on campaign
-cells — an 8× scale artifact that masqueraded as systematic underestimation
-(signed_mean ≈ −3,044) and was mis-narrated as "constants overestimate".
-Corrected numbers below. The v1 conclusion "token estimates are not a bound"
-STANDS, with the corrected magnitudes.
+- **v1**: compared per-task prediction against cell-total actual (8× scale
+  artifact on campaign cells; mis-narrated as "constants overestimate").
+- **v2**: registered signatures panel-wide on fullval SINGLE-TASK cells (the
+  production predictor's register covers the whole panel because searcher
+  cells evaluate all tasks; fullval cells contain one). This produced phantom
+  "false hits" (22.7% / 66.7% in the model-changed bucket) that were replay
+  artifacts, not predictor failures. v3 registers/estimates only the executed
+  task's signatures for fullval cells; campaign cells keep panel semantics.
 
-## Inputs (completed/terminated runs with explicit versions)
+## Inputs (completed/terminated, versioned; sha256 in JSON)
 
-| source | kind | version manifest | cells |
-|---|---|---|---|
-| fullval_runs_fullval_authorized_1h_01 | calibration | FULLVAL_AUTHORIZED_1H.json (old gold) | 11 (terminated, VALIDATION_INCOMPLETE) |
-| fullval_runs_fullval_cont1_01 | calibration | FULLVAL_CONTINUATION_1.json | 4 (COMPLETE) |
-| formal_campaign_proposed_state_incremental_20261009 | campaign | FORMAL_LAUNCH_V1.json (old gold, DIAGNOSTIC) | 8 completed cells |
-| formal_campaign_v2_scalarized_bo_20261009 | campaign | FORMAL_LAUNCH_V2.json (GOLD_CONTRACT_V1) | 24 (COMPLETE) |
+fullval_authorized_1h_01 (11 cells, old gold) · fullval_cont1_01 (4, COMPLETE)
+· campaign v1 proposed (8 completed cells, old gold, DIAGNOSTIC)
+· campaign v2 scalarized (24, COMPLETE, GOLD_CONTRACT_V1).
+Excluded: sessions without terminal records; all running sessions.
 
-Excluded: sessions without a terminal record (random_20261009), all running
-sessions. Manifest sha256 per source recorded in the JSON.
+## Final findings (PREDICTOR_ERROR_AUDIT.json has every row)
 
-## Method
+1. **Node-level, corrected replay**: false-hit = **0 / 1,084** decisions
+   (predicted hit ⇒ ledger hit on every audited row); overall accuracy 0.854 —
+   all errors are the SAFE direction (predicted new, actually hit).
+   model-changed buckets: accuracy 0.93–1.0, false-hit 0 (model changes are
+   correctly charged as new). The earlier retraction of precision-1.0 was
+   driven by the v2 audit artifact; on these four sources precision holds,
+   but we register it as "supported on audited sources", not a guarantee.
+2. **Token-level — heuristic only, no bound in either direction**:
+   - cold-S1: signed +170.3 (run01) / +52 (cont1) LOOKS calibrated, but the
+     per-node decomposition shows cancellation: e1 +389/+452 (over), e2
+     +211/+229 (over), r −182/−281 (under), v −248/−348 (under). relative_mae
+     10.3% / 2.9%.
+   - LOCAL: relative_mae 59% (run01) / 305% (cont1), upper cover 33%/100% —
+     the 0.3×overhead expectation is too coarse in both directions.
+   - FULL: relative_mae 44–74%, under-estimates (replay spend exceeds the
+     recovery expectation).
+   - campaign: v2 signed +4.6 / MAE 135.8 (relative 31.2%) / upper cover 54.2%;
+     v1 +11 / MAE 222 / 25%. Near-zero means do NOT establish calibration
+     (cancellation); treat as a scoring heuristic only.
+3. **Request-level**: campaign v1 exact 8/8; v2 upper cover 91.7% with
+   relative_mae 50% (actual mean 10 req/cell-task, MAE 5.0); fullval S2/S3
+   undercount by construction (node-derived view excludes recovery calls).
 
-Production `CacheIdentityPredictor` imported UNMODIFIED, replayed
-chronologically per cell exactly as the searcher uses it (predict → register,
-clean/fault30 scopes). Actuals from the copies' ledgers: per-node hit/new from
-TRAJECTORY alias records; cell spend from search_spend; deployment C separate.
-Oracle-scope variant (same identity rules, one shared scope per run) isolates
-scope-split conservatism from identity-rule error.
+## Registrations (review directives, standing)
 
-## Corrected findings (PREDICTOR_ERROR_AUDIT.json has every row)
-
-1. **Node-level: the stub-era "precision = 1.0" claim is WITHDRAWN for real
-   executions.** Cross-source accuracy 0.877; false-hit rate (predicted hit,
-   ledger shows a NEW request — unsafe direction) 1.3% overall, 22.7% on
-   fullval run01, **66.7% in the model-changed bucket** there (FULL replay
-   swaps models; recovery-path prompts diverge). All 14 false-hit rows are
-   itemized (`predictor_mismatches`).
-2. **Request-level**: campaign v1 proposed exact on 8/8 cells; v2 scalarized
-   MAE 4.5 requests, upper cover 83% — useful heuristic, **no guarantee**.
-   fullval S2/S3 undercount by construction (node-derived view excludes
-   recovery/replay calls: −2..−3 per cell).
-3. **Token-level (scale-corrected, per-task)**: campaign v2 signed mean +4.1
-   (near-unbiased) with MAE 135 and **upper cover 54.2%** — a calibrated-on-
-   average heuristic, NOT an upper bound. Campaign v1: +11 / MAE 222 / upper
-   25%. fullval: cold-S1 UNDER-estimates (−976: per-node constants exceed real
-   cold usage), LOCAL mixed (−1,010 run01 / +1,404 cont1: the 0.3×overhead
-   recovery expectation is both too small and too coarse), S4 +100 floor vs 0.
-4. **Deployment vs search physical**: side-by-side per cell, never merged.
-
-## Registrations (review directives, accepted)
-
-- **Resource safety**: the predictor is ONLY a heuristic penalty inside the
-  acquisition function (sole consumer: the divisor in candidate scores,
-  `review/track_b.py:247`). Hard budgets and settlement are controlled by the
-  real ledger: every dispatch passes `budget.check()` before the call and
-  `budget.reserve()` per request (`smoke_runner.py:106,127`) — a false
-  "predicted hit" can shape WHICH candidate is picked but can NEVER bypass or
-  relax the pre-dispatch quota check or the charging path.
-- **Algorithm claims**: "precision = 1.0" and "conservative upper-bound
-  guarantee" are retracted for real executions; 83% request / 54% token upper
-  coverage supports no guarantee.
-- **Current campaign**: predictor version FROZEN for the running campaign (no
-  mid-campaign change to the selection mechanism). Any calibration or fix from
-  this audit must be separately versioned and validated on NEW trajectories —
-  current trajectories cannot be used to both tune and confirm.
-- **Post-war judgment criterion**: whether Proposed achieves better search
-  curves at LOWER ACTUAL physical spend (ledger-measured). Prediction error
-  neither proves nor disproves algorithm advantage.
-
-Diagnostic evidence only. No method comparison, no TEST16 access, no
-modification to production code, caches, quotas, or run configuration.
+- **Resource safety**: predictor is ONLY an acquisition-function heuristic
+  (sole consumer: candidate-score divisor, `review/track_b.py:247`). Hard
+  budget and settlement are ledger-controlled: every dispatch passes
+  `budget.check()` pre-call and `budget.reserve()` per request
+  (`smoke_runner.py:106,127`). No prediction can bypass or relax charging.
+- **Claims language**: no "guarantee"/"upper bound" wording for predictions;
+  precision-1.0 phrased as "supported on audited sources" pending broader data.
+- **Current campaign**: predictor version FROZEN; calibration/fixes from this
+  audit must be separately versioned and validated on NEW trajectories.
+- **Post-war judgment**: compare search curves on the COMMON MEASURED physical
+  budget; failed and retried trajectories listed separately with additive
+  costs, never spliced. Prediction error neither proves nor disproves
+  algorithm advantage.
