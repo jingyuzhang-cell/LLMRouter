@@ -34,12 +34,25 @@ def close_v21(a, b):
 
 
 def rounding_ok_v21(a, b):
-    """2-decimal-place rounding compatibility (from TAT-QA financial spec).
-    |a-b| ≤ 0.01 means the values agree to within one unit in the last
-    significant digit at the data's native 2dp precision."""
+    """True round-then-compare at 2 decimal places (TAT-QA financial spec).
+    NOT a fixed tolerance — this is the mathematically correct definition:
+    two values are 'equal after 2dp rounding' iff round(a,2) == round(b,2).
+    This rejects 4.009 vs 4.0 (rounds to 4.01 vs 4.00) and -38.53 vs -38.54.
+    Rejects NaN, Inf, bool, and non-numeric inputs."""
     if a is None or b is None:
         return False
-    return abs(a - b) <= 0.01 + 1e-6
+    if isinstance(a, bool) or isinstance(b, bool):
+        return False
+    if not (isinstance(a, (int, float)) and isinstance(b, (int, float))):
+        return False
+    try:
+        fa, fb = float(a), float(b)
+    except (ValueError, OverflowError):
+        return False
+    import math
+    if math.isnan(fa) or math.isnan(fb) or math.isinf(fa) or math.isinf(fb):
+        return False
+    return round(fa, 2) == round(fb, 2)
 
 
 def score_v21(model_answer, gold):

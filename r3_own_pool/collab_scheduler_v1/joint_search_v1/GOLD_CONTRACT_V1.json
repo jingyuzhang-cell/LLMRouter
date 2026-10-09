@@ -1,0 +1,220 @@
+{
+ "version": "GOLD_CONTRACT_V1",
+ "status": "FROZEN — authoritative scoring gold for the formal campaign",
+ "rule": "gold(uid) = raw TAT-QA annotation float(answer) with its scale semantics; eval(derivation) values are DIAGNOSTIC ONLY and must not be used for scoring; tolerance unchanged: close(a,b) = |a-b| <= max(1e-4, 1e-4*|b|); scoring path unchanged: ok = close(v_value, gold)",
+ "source": "data/tatqa/tatqa_dataset_train.json",
+ "source_sha256": "2df6e722cdbaaa37efcbfb280f5c9a15be29a6ec18f618ef936fe63cc6d07c69",
+ "reason": "old-gold conversion defect: lineage builders set answer=float(eval(derivation)); on percent-scale questions the annotation differs by x100 (user-confirmed reconciliation; e.g. 5c5cb310 ann=517.5 scale=percent vs eval=5.175)",
+ "contaminated_uids": [
+  {
+   "uid": "a3568c44-29d3-49d0-b2b2-c692678764a2",
+   "section": "tasks_search",
+   "used": -0.8477103301384452,
+   "annotated": -84.77,
+   "scale": "percent",
+   "ratio": 99.99878140703517
+  },
+  {
+   "uid": "02abaa03-2a3e-4db4-8f6b-fc31acfab880",
+   "section": "tasks_test",
+   "used": 0.4489795918367345,
+   "annotated": 44.9,
+   "scale": "percent",
+   "ratio": 100.0045454545455
+  },
+  {
+   "uid": "6792fc0a-f8cf-43d8-bc1a-9a11646e7e31",
+   "section": "tasks_test",
+   "used": 1.148148148148148,
+   "annotated": 114.81,
+   "scale": "percent",
+   "ratio": 99.99580645161292
+  },
+  {
+   "uid": "fedb5ce9-f135-411b-a7e5-931803df369f",
+   "section": "tasks_test",
+   "used": 1.5,
+   "annotated": 150.0,
+   "scale": "percent",
+   "ratio": 100.0
+  },
+  {
+   "uid": "6260f7c6-ca79-48ef-8c49-21ce8970e758",
+   "section": "tasks_test",
+   "used": 0.11538461538461538,
+   "annotated": 0.12,
+   "scale": "",
+   "ratio": 1.04
+  },
+  {
+   "uid": "89afb247-5345-4b98-b42b-2e034f2feed0",
+   "section": "tasks_test",
+   "used": -0.8243243243243243,
+   "annotated": -82.43,
+   "scale": "percent",
+   "ratio": 99.99704918032788
+  },
+  {
+   "uid": "88ebeaf5-d696-45a0-b5cc-7d9f3741fe69",
+   "section": "tasks_test",
+   "used": -0.21195652173913043,
+   "annotated": -21.2,
+   "scale": "percent",
+   "ratio": 100.02051282051282
+  },
+  {
+   "uid": "72a4833d-a74d-410c-9311-dad856c7fe26",
+   "section": "tasks_test",
+   "used": 0.11392405063291139,
+   "annotated": 11.39,
+   "scale": "percent",
+   "ratio": 99.9788888888889
+  }
+ ],
+ "golds": {
+  "660b7b1d-626d-4892-9ec6-b198fc2410ff": {
+   "gold_final": 100.31,
+   "gold_eval_derivation": 100.315,
+   "scale": "",
+   "question": "What is the average high closing prices per share of the Com"
+  },
+  "4c5cc243-cd76-42a0-8b4a-c6a1c0e75d00": {
+   "gold_final": -109.0,
+   "gold_eval_derivation": -109.0,
+   "scale": "million",
+   "question": "What was the change in Provisions for warranties issued betw"
+  },
+  "093e653a-1da5-4d17-ae9e-ce7ad7275962": {
+   "gold_final": 647.5,
+   "gold_eval_derivation": 647.5,
+   "scale": "million",
+   "question": "What is the sum of the three highest expenses in 2019?"
+  },
+  "2f745dd1-c8c2-45a5-98c9-f59fc10fdbe6": {
+   "gold_final": 29.55,
+   "gold_eval_derivation": 29.549999999999997,
+   "scale": "million",
+   "question": "What is the average amount of adjusted EBITDA in 2018 and 20"
+  },
+  "ab6d7681-82b0-4c4b-bbc0-d7ca7491cbbd": {
+   "gold_final": -8.0,
+   "gold_eval_derivation": -8.0,
+   "scale": "percent",
+   "question": "What is the change in Total operating expenses from fiscal y"
+  },
+  "85f0dfad-d70a-4094-810b-6a13986d1a57": {
+   "gold_final": -3.1,
+   "gold_eval_derivation": -3.0999999999999996,
+   "scale": "million",
+   "question": "What is the change in the total property payment due from 20"
+  },
+  "08fbbc3f-b73f-40f6-9ac9-97e83f41df9d": {
+   "gold_final": 50.1,
+   "gold_eval_derivation": 50.099999999999994,
+   "scale": "million",
+   "question": "What is the average operating income in 2017 and 2018?"
+  },
+  "a3568c44-29d3-49d0-b2b2-c692678764a2": {
+   "gold_final": -84.77,
+   "gold_eval_derivation": -0.8477103301384452,
+   "scale": "percent",
+   "question": "What is the percentage change in net income (loss) from disc"
+  },
+  "02abaa03-2a3e-4db4-8f6b-fc31acfab880": {
+   "gold_final": 44.9,
+   "gold_eval_derivation": 0.4489795918367345,
+   "scale": "percent",
+   "question": "What is the percentage change in the company's total prepaid"
+  },
+  "0dec39d9-3911-4286-b480-49eeffa91305": {
+   "gold_final": 5.0,
+   "gold_eval_derivation": 5.0,
+   "scale": "million",
+   "question": "What was the change in capital expenditures incurred but not"
+  },
+  "e777ea8c-c353-460e-a724-9c92a8eb6d75": {
+   "gold_final": 247.0,
+   "gold_eval_derivation": 247.0,
+   "scale": "thousand",
+   "question": "What was the change in current State income tax expense betw"
+  },
+  "0f2052a9-2761-4594-8be1-0ecf85fa47fc": {
+   "gold_final": 0.6,
+   "gold_eval_derivation": 0.6000000000000005,
+   "scale": "million",
+   "question": "What was the change in Prepaids and other current assets bet"
+  },
+  "08b0a9d1-7080-4412-8080-f5b5114ebd4a": {
+   "gold_final": -26.0,
+   "gold_eval_derivation": -26.0,
+   "scale": "million",
+   "question": "What was the change in Share-based compensation expense betw"
+  },
+  "718c9b4f-3907-4a12-b0c0-8bfec4d106ab": {
+   "gold_final": 58.0,
+   "gold_eval_derivation": 58.0,
+   "scale": "thousand",
+   "question": "What was the change in interest cost in 2019 from 2018?"
+  },
+  "94bc4d77-55a8-4cb0-a095-f9d799b3c37b": {
+   "gold_final": 10.0,
+   "gold_eval_derivation": 10.0,
+   "scale": "thousand",
+   "question": "What was the change in other receivables from 2018 to 2019?"
+  },
+  "ba2089ef-6999-4381-b677-a4f2f6af8e8e": {
+   "gold_final": 5.0,
+   "gold_eval_derivation": 5.0,
+   "scale": "million",
+   "question": "What was the change in the Effect of dilutive potential comm"
+  },
+  "6792fc0a-f8cf-43d8-bc1a-9a11646e7e31": {
+   "gold_final": 114.81,
+   "gold_eval_derivation": 1.148148148148148,
+   "scale": "percent",
+   "question": "What was the percentage change in the tax charge in the inco"
+  },
+  "2ba67b9a-9cf8-466f-81cc-b3cf0e3bec49": {
+   "gold_final": 63.0,
+   "gold_eval_derivation": 63.0,
+   "scale": "thousand",
+   "question": "What was the average Gross increases for tax positions of cu"
+  },
+  "fedb5ce9-f135-411b-a7e5-931803df369f": {
+   "gold_final": 150.0,
+   "gold_eval_derivation": 1.5,
+   "scale": "percent",
+   "question": "What was the percentage change in the Collaborative technolo"
+  },
+  "6260f7c6-ca79-48ef-8c49-21ce8970e758": {
+   "gold_final": 0.12,
+   "gold_eval_derivation": 0.11538461538461538,
+   "scale": "",
+   "question": "What is the proportion of income tax benefit over income fro"
+  },
+  "89afb247-5345-4b98-b42b-2e034f2feed0": {
+   "gold_final": -82.43,
+   "gold_eval_derivation": -0.8243243243243243,
+   "scale": "percent",
+   "question": "What was the percentage change in purchase obligations betwe"
+  },
+  "88ebeaf5-d696-45a0-b5cc-7d9f3741fe69": {
+   "gold_final": -21.2,
+   "gold_eval_derivation": -0.21195652173913043,
+   "scale": "percent",
+   "question": "What is the percentage change in the company's Level 3 liabi"
+  },
+  "0202dbb4-5221-42b7-96b7-5bcb476ffdec": {
+   "gold_final": -12.9,
+   "gold_eval_derivation": -12.900000000000034,
+   "scale": "million",
+   "question": "What is the change in Basic weighted average common shares o"
+  },
+  "72a4833d-a74d-410c-9311-dad856c7fe26": {
+   "gold_final": 11.39,
+   "gold_eval_derivation": 0.11392405063291139,
+   "scale": "percent",
+   "question": "What was the percentage change in Interest income between 20"
+  }
+ }
+}

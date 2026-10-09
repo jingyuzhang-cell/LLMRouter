@@ -1,0 +1,1770 @@
+{
+  "role": "Unit/scoring audit, no historical rescoring, no test-performance inspection",
+  "physical_calls": 0,
+  "inputs": {
+    "/root/r3_own_pool/data/tatqa/tatqa_dataset_train.json": "2df6e722cdbaaa37efcbfb280f5c9a15be29a6ec18f618ef936fe63cc6d07c69",
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/review/TASK_PANEL_V1.json": "1003b044a08ff8971d6a8df119547d45e2c2c9204843a7fb8587d96b5aa92cf0",
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/fullval_runs/fullval_authorized_1h_01/WORKFLOW.jsonl": "13dc67af107d29fcfa9ee6b0a03c03fb8b0f82aea2b882870d2735c87498bff3",
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/fullval_runs/fullval_authorized_1h_01/SCENARIOS.jsonl": "352c57986f9e3880de92fde758c36219751299d4139b1fb44228c468b5ae35a9"
+  },
+  "traces": [
+    {
+      "uid": "5c5cb310-0607-4285-ba9f-d8b996c700db",
+      "question": "What was the percentage change in the free cash flow between 2018 and 2019?",
+      "source_answer": 517.5,
+      "source_scale": "percent",
+      "source_derivation": "(24.7-4.0)/4.0",
+      "frozen_gold": 5.175,
+      "source_answer_matches_frozen_gold": false,
+      "table": [
+        [
+          "",
+          "2019",
+          "2018"
+        ],
+        [
+          "Cash flows provided by operating activities",
+          "$115.3",
+          "$66.8"
+        ],
+        [
+          "Payments for property, plant and equipment",
+          "(90.6)",
+          "(62.8)"
+        ],
+        [
+          "Free cash flow",
+          "24.7",
+          "4.0"
+        ]
+      ],
+      "executions": [
+        {
+          "scenario": "S1",
+          "original_Q": 0.0,
+          "final_value": 517.5,
+          "diagnostic_matches_source_annotation": true,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e1",
+              "model": "large",
+              "answer": "{\"facts\":[{\"value\":24.7,\"evidence\":\"\\\"Free cash flow | 24.7 | 4.0\\\"\"},{\"value\":4.0,\"evidence\":\"\\\"Free cash flow | 24.7 | 4.0\\\"\"}]}",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 24.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    },\n    {\n      \"value\": 4.0,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    },\n    {\n      \"value\": 20.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  },
+                  {
+                    "value": 20.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                },
+                {
+                  "value": 20.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "r",
+              "model": "medium",
+              "answer": "{\"expression\":\"((v3 - v1) / v1) * 100\"}",
+              "decoded": {
+                "expression": "((v3 - v1) / v1) * 100"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "expression_value": 0.0,
+              "expression_error": false,
+              "merged_values": [
+                24.7,
+                4.0,
+                24.7,
+                4.0,
+                20.7
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 517.5}\n```",
+              "decoded": {
+                "value": 517.5
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 517.5
+            }
+          ]
+        },
+        {
+          "scenario": "S4",
+          "original_Q": 0.0,
+          "final_value": 517.5,
+          "diagnostic_matches_source_annotation": true,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e1",
+              "model": "large",
+              "answer": "{\"facts\":[{\"value\":24.7,\"evidence\":\"\\\"Free cash flow | 24.7 | 4.0\\\"\"},{\"value\":4.0,\"evidence\":\"\\\"Free cash flow | 24.7 | 4.0\\\"\"}]}",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e1:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 24.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    },\n    {\n      \"value\": 4.0,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    },\n    {\n      \"value\": 20.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  },
+                  {
+                    "value": 20.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e2:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                },
+                {
+                  "value": 20.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "r",
+              "model": "medium",
+              "answer": "{\"expression\":\"((v3 - v1) / v1) * 100\"}",
+              "decoded": {
+                "expression": "((v3 - v1) / v1) * 100"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:r:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "expression_value": 0.0,
+              "expression_error": false,
+              "merged_values": [
+                24.7,
+                4.0,
+                24.7,
+                4.0,
+                20.7
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 517.5}\n```",
+              "decoded": {
+                "value": 517.5
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:v:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "decoded_value": 517.5
+            }
+          ]
+        },
+        {
+          "scenario": "S3",
+          "original_Q": 0.0,
+          "final_value": 517.5,
+          "diagnostic_matches_source_annotation": true,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e1",
+              "model": "large",
+              "answer": "{\"facts\":[{\"value\":24.7,\"evidence\":\"\\\"Free cash flow | 24.7 | 4.0\\\"\"},{\"value\":4.0,\"evidence\":\"\\\"Free cash flow | 24.7 | 4.0\\\"\"}]}",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e1:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 24.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    },\n    {\n      \"value\": 4.0,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    },\n    {\n      \"value\": 20.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  },
+                  {
+                    "value": 20.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e2:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                },
+                {
+                  "value": 20.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "r",
+              "model": "medium",
+              "answer": "###SYNTHETIC UNPARSEABLE r-output [directed syntax corruption]###",
+              "decoded": null,
+              "decode_error": "Expecting value: line 1 column 1 (char 0)",
+              "injected": true,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:r:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "expression_value": null,
+              "expression_error": true,
+              "merged_values": [
+                24.7,
+                4.0,
+                24.7,
+                4.0,
+                20.7
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 517.5}\n```",
+              "decoded": {
+                "value": 517.5
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 517.5
+            },
+            {
+              "key": "f30:DYNAMICDAG:replay:e1:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e1",
+              "model": "coder",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 24.7,\n      \"evidence\": \"Free cash flow in 2019 was $24.7 million\"\n    },\n    {\n      \"value\": 4.0,\n      \"evidence\": \"Free cash flow in 2018 was $4.0 million\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "Free cash flow in 2019 was $24.7 million"
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "Free cash flow in 2018 was $4.0 million"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "Free cash flow in 2019 was $24.7 million"
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "Free cash flow in 2018 was $4.0 million"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:replay:e2:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e2",
+              "model": "coder",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 24.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019\"\n    },\n    {\n      \"value\": 4.0,\n      \"evidence\": \"FCF was $4.0 million for fiscal 2018\"\n    },\n    {\n      \"value\": 20.7,\n      \"evidence\": \"an increase of $20.7 million\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019"
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "FCF was $4.0 million for fiscal 2018"
+                  },
+                  {
+                    "value": 20.7,
+                    "evidence": "an increase of $20.7 million"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019"
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "FCF was $4.0 million for fiscal 2018"
+                },
+                {
+                  "value": 20.7,
+                  "evidence": "an increase of $20.7 million"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:replay:r:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "r",
+              "model": "large",
+              "answer": "{\"expression\":\"((v0-v1)/v1)*100\"}",
+              "decoded": {
+                "expression": "((v0-v1)/v1)*100"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "expression_value": 517.5,
+              "expression_error": false,
+              "merged_values": [
+                24.7,
+                4.0,
+                24.7,
+                4.0,
+                20.7
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:replay:v:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "v",
+              "model": "large",
+              "answer": "{\n  \"value\": 517.5\n}",
+              "decoded": {
+                "value": 517.5
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 517.5
+            }
+          ]
+        },
+        {
+          "scenario": "S2",
+          "original_Q": 0.0,
+          "final_value": 517.5,
+          "diagnostic_matches_source_annotation": true,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e1",
+              "model": "large",
+              "answer": "{\"facts\":[{\"value\":24.7,\"evidence\":\"\\\"Free cash flow | 24.7 | 4.0\\\"\"},{\"value\":4.0,\"evidence\":\"\\\"Free cash flow | 24.7 | 4.0\\\"\"}]}",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e1:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "\"Free cash flow | 24.7 | 4.0\""
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 24.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    },\n    {\n      \"value\": 4.0,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    },\n    {\n      \"value\": 20.7,\n      \"evidence\": \"FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 24.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  },
+                  {
+                    "value": 4.0,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  },
+                  {
+                    "value": 20.7,
+                    "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e2:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "valid_facts": [
+                {
+                  "value": 24.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                },
+                {
+                  "value": 4.0,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                },
+                {
+                  "value": 20.7,
+                  "evidence": "FCF was $24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "r",
+              "model": "medium",
+              "answer": "###SYNTHETIC UNPARSEABLE r-output [directed syntax corruption]###",
+              "decoded": null,
+              "decode_error": "Expecting value: line 1 column 1 (char 0)",
+              "injected": true,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:r:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "expression_value": null,
+              "expression_error": true,
+              "merged_values": [
+                24.7,
+                4.0,
+                24.7,
+                4.0,
+                20.7
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:esc:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "r",
+              "model": "large",
+              "answer": "{\"expression\":\"((v2 - v3) / v3) * 100\"}",
+              "decoded": {
+                "expression": "((v2 - v3) / v3) * 100"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "expression_value": 517.5,
+              "expression_error": false,
+              "merged_values": [
+                24.7,
+                4.0,
+                24.7,
+                4.0,
+                20.7
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 517.5}\n```",
+              "decoded": {
+                "value": 517.5
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 517.5
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:fbd:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 517.5}\n```",
+              "decoded": {
+                "value": 517.5
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S2:large__large__medium__coder__LOCAL:f30:DYNAMICDAG:base:v:5c5cb310-0607-4285-ba9f-d8b996c700db",
+              "decoded_value": 517.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "1078998f-a141-45fc-918e-17ddf1da0d89",
+      "question": "What is the average high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018?",
+      "source_answer": 96.27,
+      "source_scale": "",
+      "source_derivation": "(89.00 + 98.35 + 99.87 + 97.85)/4 ",
+      "frozen_gold": 96.26750000000001,
+      "source_answer_matches_frozen_gold": true,
+      "table": [
+        [
+          "",
+          "Fiscal 2018",
+          "",
+          "Fiscal 2019",
+          ""
+        ],
+        [
+          "",
+          "High",
+          "Low",
+          "High",
+          "Low"
+        ],
+        [
+          "4th Quarter",
+          "$100.00",
+          "$73.41",
+          "$89.00",
+          "$ 81.10"
+        ],
+        [
+          "3rd Quarter",
+          "100.00",
+          "88.27",
+          "98.35",
+          "81.30"
+        ],
+        [
+          "2nd Quarter",
+          "101.51",
+          "88.01",
+          "99.87",
+          "84.10"
+        ],
+        [
+          "1st Quarter",
+          "99.75",
+          "77.92",
+          "97.85",
+          "86.61"
+        ]
+      ],
+      "executions": [
+        {
+          "scenario": "S1",
+          "original_Q": 0.0,
+          "final_value": 99.98,
+          "diagnostic_matches_source_annotation": false,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e1",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 100.00,\n      \"evidence\": \"4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10\"\n    },\n    {\n      \"value\": 100.00,\n      \"evidence\": \"3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30\"\n    },\n    {\n      \"value\": 101.51,\n      \"evidence\": \"2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10\"\n    },\n    {\n      \"value\": 99.75,\n      \"evidence\": \"1st Quarter | 99.75 | 77.92 | 97.85 | 86.61\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 100.0,
+                    "evidence": "4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10"
+                  },
+                  {
+                    "value": 100.0,
+                    "evidence": "3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30"
+                  },
+                  {
+                    "value": 101.51,
+                    "evidence": "2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10"
+                  },
+                  {
+                    "value": 99.75,
+                    "evidence": "1st Quarter | 99.75 | 77.92 | 97.85 | 86.61"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [
+                {
+                  "value": 100.0,
+                  "evidence": "4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10"
+                },
+                {
+                  "value": 100.0,
+                  "evidence": "3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30"
+                },
+                {
+                  "value": 101.51,
+                  "evidence": "2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10"
+                },
+                {
+                  "value": 99.75,
+                  "evidence": "1st Quarter | 99.75 | 77.92 | 97.85 | 86.61"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": \"102.00\",\n      \"evidence\": \"the high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $102.00\"\n    },\n    {\n      \"value\": \"60.00\",\n      \"evidence\": \"the low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $60.00\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": "102.00",
+                    "evidence": "the high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $102.00"
+                  },
+                  {
+                    "value": "60.00",
+                    "evidence": "the low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $60.00"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [],
+              "facts_parse_error": true
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "r",
+              "model": "medium",
+              "answer": "{\"expression\":\"(v0+v1+v2+v3)/4\"}",
+              "decoded": {
+                "expression": "(v0+v1+v2+v3)/4"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "expression_value": 100.315,
+              "expression_error": false,
+              "merged_values": [
+                100.0,
+                100.0,
+                101.51,
+                99.75
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 99.98}\n```",
+              "decoded": {
+                "value": 99.98
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 99.98
+            }
+          ]
+        },
+        {
+          "scenario": "S4",
+          "original_Q": 0.0,
+          "final_value": 99.98,
+          "diagnostic_matches_source_annotation": false,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e1",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 100.00,\n      \"evidence\": \"4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10\"\n    },\n    {\n      \"value\": 100.00,\n      \"evidence\": \"3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30\"\n    },\n    {\n      \"value\": 101.51,\n      \"evidence\": \"2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10\"\n    },\n    {\n      \"value\": 99.75,\n      \"evidence\": \"1st Quarter | 99.75 | 77.92 | 97.85 | 86.61\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 100.0,
+                    "evidence": "4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10"
+                  },
+                  {
+                    "value": 100.0,
+                    "evidence": "3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30"
+                  },
+                  {
+                    "value": 101.51,
+                    "evidence": "2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10"
+                  },
+                  {
+                    "value": 99.75,
+                    "evidence": "1st Quarter | 99.75 | 77.92 | 97.85 | 86.61"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e1:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "valid_facts": [
+                {
+                  "value": 100.0,
+                  "evidence": "4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10"
+                },
+                {
+                  "value": 100.0,
+                  "evidence": "3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30"
+                },
+                {
+                  "value": 101.51,
+                  "evidence": "2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10"
+                },
+                {
+                  "value": 99.75,
+                  "evidence": "1st Quarter | 99.75 | 77.92 | 97.85 | 86.61"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": \"102.00\",\n      \"evidence\": \"the high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $102.00\"\n    },\n    {\n      \"value\": \"60.00\",\n      \"evidence\": \"the low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $60.00\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": "102.00",
+                    "evidence": "the high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $102.00"
+                  },
+                  {
+                    "value": "60.00",
+                    "evidence": "the low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $60.00"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e2:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "valid_facts": [],
+              "facts_parse_error": true
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "r",
+              "model": "medium",
+              "answer": "{\"expression\":\"(v0+v1+v2+v3)/4\"}",
+              "decoded": {
+                "expression": "(v0+v1+v2+v3)/4"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:r:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "expression_value": 100.315,
+              "expression_error": false,
+              "merged_values": [
+                100.0,
+                100.0,
+                101.51,
+                99.75
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 99.98}\n```",
+              "decoded": {
+                "value": 99.98
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:v:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "decoded_value": 99.98
+            }
+          ]
+        },
+        {
+          "scenario": "S2",
+          "original_Q": 0.0,
+          "final_value": 97.5375,
+          "diagnostic_matches_source_annotation": false,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e1",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 100.00,\n      \"evidence\": \"4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10\"\n    },\n    {\n      \"value\": 100.00,\n      \"evidence\": \"3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30\"\n    },\n    {\n      \"value\": 101.51,\n      \"evidence\": \"2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10\"\n    },\n    {\n      \"value\": 99.75,\n      \"evidence\": \"1st Quarter | 99.75 | 77.92 | 97.85 | 86.61\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 100.0,
+                    "evidence": "4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10"
+                  },
+                  {
+                    "value": 100.0,
+                    "evidence": "3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30"
+                  },
+                  {
+                    "value": 101.51,
+                    "evidence": "2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10"
+                  },
+                  {
+                    "value": 99.75,
+                    "evidence": "1st Quarter | 99.75 | 77.92 | 97.85 | 86.61"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e1:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "valid_facts": [
+                {
+                  "value": 100.0,
+                  "evidence": "4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10"
+                },
+                {
+                  "value": 100.0,
+                  "evidence": "3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30"
+                },
+                {
+                  "value": 101.51,
+                  "evidence": "2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10"
+                },
+                {
+                  "value": 99.75,
+                  "evidence": "1st Quarter | 99.75 | 77.92 | 97.85 | 86.61"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": \"102.00\",\n      \"evidence\": \"the high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $102.00\"\n    },\n    {\n      \"value\": \"60.00\",\n      \"evidence\": \"the low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $60.00\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": "102.00",
+                    "evidence": "the high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $102.00"
+                  },
+                  {
+                    "value": "60.00",
+                    "evidence": "the low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $60.00"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e2:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "valid_facts": [],
+              "facts_parse_error": true
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "r",
+              "model": "medium",
+              "answer": "###SYNTHETIC UNPARSEABLE r-output [directed syntax corruption]###",
+              "decoded": null,
+              "decode_error": "Expecting value: line 1 column 1 (char 0)",
+              "injected": true,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:r:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "expression_value": null,
+              "expression_error": true,
+              "merged_values": [
+                100.0,
+                100.0,
+                101.51,
+                99.75
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:fb:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e2",
+              "model": "coder",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 73.00,\n      \"evidence\": \"As of October 31, 2019 the closing price of our common stock on NYSE American was $73.00\"\n    },\n    {\n      \"value\": 565942,\n      \"evidence\": \"As of October 31, 2019 there were 565,942 common shares outstanding\"\n    },\n    {\n      \"value\": 521,\n      \"evidence\": \"The Company had approximately 521 persons holding common shares beneficially\"\n    },\n    {\n      \"value\": 121,\n      \"evidence\": \"including direct participants in the Depository Trust Company\"\n    },\n    {\n      \"value\": 2019,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 2018,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 73.00,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 73.00,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 73.00,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 73.00,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company",
+              "decoded": null,
+              "decode_error": "Unterminated string starting at: line 41 column 19 (char 1672)",
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [],
+              "facts_parse_error": true
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:esc:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "r",
+              "model": "large",
+              "answer": "{\"expression\":\"((v0 + v1 + v2 + v3) / 4)\"}",
+              "decoded": {
+                "expression": "((v0 + v1 + v2 + v3) / 4)"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "expression_value": 100.315,
+              "expression_error": false,
+              "merged_values": [
+                100.0,
+                100.0,
+                101.51,
+                99.75
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 99.98}\n```",
+              "decoded": {
+                "value": 99.98
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 99.98
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:fbd:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 99.98}\n```",
+              "decoded": {
+                "value": 99.98
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S2:large__large__medium__coder__LOCAL:f30:DYNAMICDAG:base:v:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "decoded_value": 99.98
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:esc:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "v",
+              "model": "large",
+              "answer": "{\n  \"value\": 97.5375\n}",
+              "decoded": {
+                "value": 97.5375
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 97.5375
+            }
+          ]
+        },
+        {
+          "scenario": "S3",
+          "original_Q": 0.0,
+          "final_value": 100.3875,
+          "diagnostic_matches_source_annotation": false,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e1",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 100.00,\n      \"evidence\": \"4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10\"\n    },\n    {\n      \"value\": 100.00,\n      \"evidence\": \"3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30\"\n    },\n    {\n      \"value\": 101.51,\n      \"evidence\": \"2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10\"\n    },\n    {\n      \"value\": 99.75,\n      \"evidence\": \"1st Quarter | 99.75 | 77.92 | 97.85 | 86.61\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 100.0,
+                    "evidence": "4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10"
+                  },
+                  {
+                    "value": 100.0,
+                    "evidence": "3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30"
+                  },
+                  {
+                    "value": 101.51,
+                    "evidence": "2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10"
+                  },
+                  {
+                    "value": 99.75,
+                    "evidence": "1st Quarter | 99.75 | 77.92 | 97.85 | 86.61"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e1:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "valid_facts": [
+                {
+                  "value": 100.0,
+                  "evidence": "4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10"
+                },
+                {
+                  "value": 100.0,
+                  "evidence": "3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30"
+                },
+                {
+                  "value": 101.51,
+                  "evidence": "2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10"
+                },
+                {
+                  "value": 99.75,
+                  "evidence": "1st Quarter | 99.75 | 77.92 | 97.85 | 86.61"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": \"102.00\",\n      \"evidence\": \"the high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $102.00\"\n    },\n    {\n      \"value\": \"60.00\",\n      \"evidence\": \"the low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $60.00\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": "102.00",
+                    "evidence": "the high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $102.00"
+                  },
+                  {
+                    "value": "60.00",
+                    "evidence": "the low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018 was $60.00"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e2:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "valid_facts": [],
+              "facts_parse_error": true
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "r",
+              "model": "medium",
+              "answer": "###SYNTHETIC UNPARSEABLE r-output [directed syntax corruption]###",
+              "decoded": null,
+              "decode_error": "Expecting value: line 1 column 1 (char 0)",
+              "injected": true,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:r:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "expression_value": null,
+              "expression_error": true,
+              "merged_values": [
+                100.0,
+                100.0,
+                101.51,
+                99.75
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 99.98}\n```",
+              "decoded": {
+                "value": 99.98
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 99.98
+            },
+            {
+              "key": "f30:DYNAMICDAG:replay:e1:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e1",
+              "model": "coder",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 100.00,\n      \"evidence\": \"4th Quarter High: $100.00\"\n    },\n    {\n      \"value\": 100.00,\n      \"evidence\": \"3rd Quarter High: 100.00\"\n    },\n    {\n      \"value\": 101.51,\n      \"evidence\": \"2nd Quarter High: 101.51\"\n    },\n    {\n      \"value\": 99.75,\n      \"evidence\": \"1st Quarter High: 99.75\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 100.0,
+                    "evidence": "4th Quarter High: $100.00"
+                  },
+                  {
+                    "value": 100.0,
+                    "evidence": "3rd Quarter High: 100.00"
+                  },
+                  {
+                    "value": 101.51,
+                    "evidence": "2nd Quarter High: 101.51"
+                  },
+                  {
+                    "value": 99.75,
+                    "evidence": "1st Quarter High: 99.75"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [
+                {
+                  "value": 100.0,
+                  "evidence": "4th Quarter High: $100.00"
+                },
+                {
+                  "value": 100.0,
+                  "evidence": "3rd Quarter High: 100.00"
+                },
+                {
+                  "value": 101.51,
+                  "evidence": "2nd Quarter High: 101.51"
+                },
+                {
+                  "value": 99.75,
+                  "evidence": "1st Quarter High: 99.75"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:replay:e2:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "e2",
+              "model": "coder",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 73.00,\n      \"evidence\": \"As of October 31, 2019 the closing price of our common stock on NYSE American was $73.00\"\n    },\n    {\n      \"value\": 565942,\n      \"evidence\": \"As of October 31, 2019 there were 565,942 common shares outstanding\"\n    },\n    {\n      \"value\": 521,\n      \"evidence\": \"The Company had approximately 521 persons holding common shares beneficially\"\n    },\n    {\n      \"value\": 121,\n      \"evidence\": \"including direct participants in the Depository Trust Company\"\n    },\n    {\n      \"value\": 2019,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 2018,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 73.00,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 73.00,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 73.00,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018\"\n    },\n    {\n      \"value\": 73.00,\n      \"evidence\": \"The following table reflects the range of the high and low closing prices per share of the Company",
+              "decoded": null,
+              "decode_error": "Unterminated string starting at: line 41 column 19 (char 1672)",
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S2:large__large__medium__coder__LOCAL:f30:DYNAMICDAG:base:e2:fb:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "valid_facts": [],
+              "facts_parse_error": true
+            },
+            {
+              "key": "f30:DYNAMICDAG:replay:r:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "r",
+              "model": "large",
+              "answer": "{\"expression\":\"(v0 + v1 + v2 + v3) / 4\"}",
+              "decoded": {
+                "expression": "(v0 + v1 + v2 + v3) / 4"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "expression_value": 100.315,
+              "expression_error": false,
+              "merged_values": [
+                100.0,
+                100.0,
+                101.51,
+                99.75
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:replay:v:1078998f-a141-45fc-918e-17ddf1da0d89",
+              "node": "v",
+              "model": "large",
+              "answer": "{\n  \"value\": 100.3875\n}",
+              "decoded": {
+                "value": 100.3875
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 100.3875
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "51f8785b-7864-4bb2-88b4-5367547de061",
+      "question": "Excluding the restructuring spend related to recent acquisitions, what is the low Total estimated cash cost?",
+      "source_answer": 837.7,
+      "source_scale": "million",
+      "source_derivation": "840-2.3",
+      "frozen_gold": 837.7,
+      "source_answer_matches_frozen_gold": true,
+      "table": [
+        [
+          "(in millions)",
+          "Total Restructuring program range",
+          "Total Restructuring program range",
+          "Less Cumulative Spend to Date",
+          "Remaining Restructuring Spend(2)",
+          ""
+        ],
+        [
+          "",
+          "Low",
+          "High",
+          "",
+          "Low",
+          "High"
+        ],
+        [
+          "Costs of reduction in headcount as a result of reorganization",
+          "$ 355",
+          "$ 370",
+          "$ (325)",
+          "$ 30",
+          "$ 45"
+        ],
+        [
+          "Other expenses associated with the Program",
+          "230",
+          "245",
+          "(196)",
+          "34",
+          "49"
+        ],
+        [
+          "Total expense",
+          "585",
+          "615",
+          "(521)",
+          "64",
+          "94"
+        ],
+        [
+          "Capital expenditures",
+          "255",
+          "270",
+          "(239)",
+          "16",
+          "31"
+        ],
+        [
+          "Total estimated cash cost(1)",
+          "$ 840",
+          "$ 885",
+          "$ (760)",
+          "$ 80",
+          "$ 125"
+        ]
+      ],
+      "executions": [
+        {
+          "scenario": "S1",
+          "original_Q": 0.0,
+          "final_value": 765.0,
+          "diagnostic_matches_source_annotation": false,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "e1",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 80,\n      \"evidence\": \"Remaining Restructuring Spend Low: $ 80\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 80,
+                    "evidence": "Remaining Restructuring Spend Low: $ 80"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [
+                {
+                  "value": 80,
+                  "evidence": "Remaining Restructuring Spend Low: $ 80"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 840,\n      \"evidence\": \"The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program.\"\n    },\n    {\n      \"value\": 885,\n      \"evidence\": \"The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program.\"\n    },\n    {\n      \"value\": 6,\n      \"evidence\": \"Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019.\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 840,
+                    "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                  },
+                  {
+                    "value": 885,
+                    "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                  },
+                  {
+                    "value": 6,
+                    "evidence": "Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019."
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "valid_facts": [
+                {
+                  "value": 840,
+                  "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                },
+                {
+                  "value": 885,
+                  "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                },
+                {
+                  "value": 6,
+                  "evidence": "Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019."
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "r",
+              "model": "medium",
+              "answer": "{\"expression\":\"v1 - v3\"}",
+              "decoded": {
+                "expression": "v1 - v3"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "expression_value": 834.0,
+              "expression_error": false,
+              "merged_values": [
+                80,
+                840,
+                885,
+                6
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 765}\n```",
+              "decoded": {
+                "value": 765
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 765.0
+            }
+          ]
+        },
+        {
+          "scenario": "S4",
+          "original_Q": 0.0,
+          "final_value": 765.0,
+          "diagnostic_matches_source_annotation": false,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "e1",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 80,\n      \"evidence\": \"Remaining Restructuring Spend Low: $ 80\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 80,
+                    "evidence": "Remaining Restructuring Spend Low: $ 80"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e1:51f8785b-7864-4bb2-88b4-5367547de061",
+              "valid_facts": [
+                {
+                  "value": 80,
+                  "evidence": "Remaining Restructuring Spend Low: $ 80"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 840,\n      \"evidence\": \"The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program.\"\n    },\n    {\n      \"value\": 885,\n      \"evidence\": \"The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program.\"\n    },\n    {\n      \"value\": 6,\n      \"evidence\": \"Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019.\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 840,
+                    "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                  },
+                  {
+                    "value": 885,
+                    "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                  },
+                  {
+                    "value": 6,
+                    "evidence": "Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019."
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e2:51f8785b-7864-4bb2-88b4-5367547de061",
+              "valid_facts": [
+                {
+                  "value": 840,
+                  "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                },
+                {
+                  "value": 885,
+                  "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                },
+                {
+                  "value": 6,
+                  "evidence": "Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019."
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "r",
+              "model": "medium",
+              "answer": "{\"expression\":\"v1 - v3\"}",
+              "decoded": {
+                "expression": "v1 - v3"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:r:51f8785b-7864-4bb2-88b4-5367547de061",
+              "expression_value": 834.0,
+              "expression_error": false,
+              "merged_values": [
+                80,
+                840,
+                885,
+                6
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 765}\n```",
+              "decoded": {
+                "value": 765
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:v:51f8785b-7864-4bb2-88b4-5367547de061",
+              "decoded_value": 765.0
+            }
+          ]
+        },
+        {
+          "scenario": "S2",
+          "original_Q": 0.0,
+          "final_value": 794.0,
+          "diagnostic_matches_source_annotation": false,
+          "note": "Diagnostic comparison only; original Q preserved.",
+          "stages": [
+            {
+              "key": "f30:DYNAMICDAG:base:e1:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "e1",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 80,\n      \"evidence\": \"Remaining Restructuring Spend Low: $ 80\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 80,
+                    "evidence": "Remaining Restructuring Spend Low: $ 80"
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e1:51f8785b-7864-4bb2-88b4-5367547de061",
+              "valid_facts": [
+                {
+                  "value": 80,
+                  "evidence": "Remaining Restructuring Spend Low: $ 80"
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:e2:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "e2",
+              "model": "large",
+              "answer": "```json\n{\n  \"facts\": [\n    {\n      \"value\": 840,\n      \"evidence\": \"The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program.\"\n    },\n    {\n      \"value\": 885,\n      \"evidence\": \"The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program.\"\n    },\n    {\n      \"value\": 6,\n      \"evidence\": \"Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019.\"\n    }\n  ]\n}\n```",
+              "decoded": {
+                "facts": [
+                  {
+                    "value": 840,
+                    "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                  },
+                  {
+                    "value": 885,
+                    "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                  },
+                  {
+                    "value": 6,
+                    "evidence": "Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019."
+                  }
+                ]
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:e2:51f8785b-7864-4bb2-88b4-5367547de061",
+              "valid_facts": [
+                {
+                  "value": 840,
+                  "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                },
+                {
+                  "value": 885,
+                  "evidence": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program."
+                },
+                {
+                  "value": 6,
+                  "evidence": "Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019."
+                }
+              ],
+              "facts_parse_error": false
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "r",
+              "model": "medium",
+              "answer": "###SYNTHETIC UNPARSEABLE r-output [directed syntax corruption]###",
+              "decoded": null,
+              "decode_error": "Expecting value: line 1 column 1 (char 0)",
+              "injected": true,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:r:51f8785b-7864-4bb2-88b4-5367547de061",
+              "expression_value": null,
+              "expression_error": true,
+              "merged_values": [
+                80,
+                840,
+                885,
+                6
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:r:esc:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "r",
+              "model": "large",
+              "answer": "{\"expression\":\"v1 - v3\"}",
+              "decoded": {
+                "expression": "v1 - v3"
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "expression_value": 834.0,
+              "expression_error": false,
+              "merged_values": [
+                80,
+                840,
+                885,
+                6
+              ]
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 765}\n```",
+              "decoded": {
+                "value": 765
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:v:51f8785b-7864-4bb2-88b4-5367547de061",
+              "decoded_value": 765.0
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:fbd:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "v",
+              "model": "coder",
+              "answer": "```json\n{\"value\": 765}\n```",
+              "decoded": {
+                "value": 765
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": "fullval_shared_underlying:S1:large__large__medium__coder__NONE:f30:DYNAMICDAG:base:v:51f8785b-7864-4bb2-88b4-5367547de061",
+              "decoded_value": 765.0
+            },
+            {
+              "key": "f30:DYNAMICDAG:base:v:esc:51f8785b-7864-4bb2-88b4-5367547de061",
+              "node": "v",
+              "model": "large",
+              "answer": "{\n  \"value\": 794\n}",
+              "decoded": {
+                "value": 794
+              },
+              "decode_error": null,
+              "injected": false,
+              "alias_of": null,
+              "decoded_value": 794.0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "panel_metadata_only": {
+    "tasks_search": {
+      "n": 8,
+      "source_numeric": 8,
+      "source_scale_counts": {
+        "": 1,
+        "million": 5,
+        "percent": 2
+      },
+      "frozen_gold_mismatch_with_source_numeric": 1,
+      "percent_factor100_mismatch": 1,
+      "discrepancy_diagnostics": {
+        "factor100_percent": 1,
+        "equal_at_two_decimal_places": 0,
+        "other_discrepancy": 0
+      }
+    },
+    "tasks_test": {
+      "n": 16,
+      "source_numeric": 16,
+      "source_scale_counts": {
+        "percent": 6,
+        "million": 5,
+        "thousand": 4,
+        "": 1
+      },
+      "frozen_gold_mismatch_with_source_numeric": 7,
+      "percent_factor100_mismatch": 4,
+      "discrepancy_diagnostics": {
+        "factor100_percent": 4,
+        "equal_at_two_decimal_places": 1,
+        "other_discrepancy": 2
+      }
+    }
+  },
+  "findings": [
+    "Task1: raw percent answer=517.5, derivation ratio=5.175; hybrid_pool discarded scale and used eval(derivation) as gold. Final outputs match raw annotation but fail frozen gold.",
+    "Task1 also has an incorrect initial fact-index expression; verifier independently returns raw annotation. Final correctness does not establish every intermediate node correct.",
+    "Task2: question fiscal2018, table2018 highs=100,100,101.51,99.75; raw derivation uses table2019 highs=89,98.35,99.87,97.85. Source question/annotation conflict. Do not silently change task or gold.",
+    "Task2 numeric strings fail facts schema; recovery response is truncated JSON. Prompt permits only constants0,1,100 but actual exec_calc accepts rational constants, so /4 is executed successfully: prompt/executor contract mismatch, NOT a runtime arithmetic parse failure. Verification outputs disagree with arithmetic.",
+    "Task3: required cash cost840 and acquisition spend2.3; extractor instead selects remaining spend80 and acquisition6, omits2.3; reasoning yields834 but verification765/794 disagrees. Actual extraction and verification errors.",
+    "SEARCH8/TEST16 use same eval(derivation) label conversion. Metadata aggregate alone identifies percent label mismatch; no candidate execution outcomes accessed for either panel."
+  ],
+  "next_step": "Version task adapter/evaluation policy using native annotations and scale with independent development fixtures; validate source question/derivation conflicts under a preregistered common rule. Do not mutate frozen panels or historical Q. No real reruns authorized here."
+}

@@ -1,368 +1,159 @@
-"""FULL/fault-billing real validation runner (gated, zero-call self-test).
+"""One authorized FULL validation, <=1h, <=30 dispatches, <=30000 tokens.
 
-BOUND to FULL_VALIDATION_PROTOCOL_V3.json. Uses MeteredExecutor's injection
-path (obtains underlying response FIRST, then replaces answer) — NOT
-smoke_runner's direct-fault-return. Cache stores only the un-corrupted
-underlying response.
-
-Budget reservation: S3 (FULL) resources (requests + tokens + wall-clock)
-are held BEFORE S2 dispatch, guaranteeing at least 1 complete S3 task.
-
-Self-test verifies: S4 zero new cost, S3 full coverage, budget blocking,
-failed-call ledger preservation. Zero LLM calls.
-
-Real run: P1B_FULLVAL_EXECUTE=1 python3 -m collab_scheduler_v1.joint_search_v1.fullval_runner --execute
+Default creates no calls. Freeze builds a versioned approval manifest. Execute
+checks that manifest before GPU startup. No retries or overwrite/resume.
 """
+import argparse
 import fcntl
 import hashlib
 import json
-import sys
-import time
+import os
 from pathlib import Path
+import signal
+import time
+from .evaluator import JointEvaluator,MeteredExecutor,NODES
+from collab_scheduler_v1.joint_search_smoke.proposal_v2.smoke_runner import Budget,StopRun,append
 
-ROOT = Path('/root/r3_own_pool')
-sys.path.insert(0, str(ROOT))
-
-OUT = ROOT / 'collab_scheduler_v1/joint_search_v1/fullval_runs'
-OUT.mkdir(exist_ok=True)
-
-PROTOCOL = ROOT / 'collab_scheduler_v1/joint_search_v1/FULL_VALIDATION_PROTOCOL_V3.json'
-FROZEN_TASKS = [
-    '5c5cb310-0607-4285-ba9f-d8b996c700db',
-    '1078998f-a141-45fc-918e-17ddf1da0d89',
-    '51f8785b-7864-4bb2-88b4-5367547de061',
-    '09aaae63-03dd-4173-ba29-1a4a60946982',
-]
-CONFIG_X = dict(e1='large', e2='large', r='medium', v='coder')
-SYNTH_FAULT_R = '###SYNTHETIC UNPARSEABLE r-output [not a pool draw]###'
-
-# Budget: S3 reservation + global caps
-S3_RESERVE_REQUESTS = 6   # 1 task × ≤6 new requests (e1/e2 likely cached)
-S3_RESERVE_TOKENS = 12000  # 1 task × worst-case 8 calls × ~1500 tokens
-S3_RESERVE_WALL_S = 300    # 5 minutes for 1 FULL task
-GLOBAL_MAX_REQUESTS = 30
-GLOBAL_MAX_TOKENS = 30000
-GLOBAL_MAX_WALL_S = 1800
+ROOT=Path('/root/r3_own_pool')
+HERE=Path(__file__).resolve().parent
+MANIFEST=HERE/'FULLVAL_AUTHORIZED_1H.json'
+UIDS=['5c5cb310-0607-4285-ba9f-d8b996c700db','1078998f-a141-45fc-918e-17ddf1da0d89','51f8785b-7864-4bb2-88b4-5367547de061','09aaae63-03dd-4173-ba29-1a4a60946982']
+X=('large','large','medium','coder')
+FAULT='###SYNTHETIC UNPARSEABLE r-output [directed syntax corruption]###'
 
 
-def _sha(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()[:16]
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def canonical(x):return json.dumps(x,sort_keys=True,ensure_ascii=False,separators=(',',':'))
 
 
-def _code_hashes():
-    return dict(
-        fullval_runner=_sha(__file__),
-        smoke_runner=_sha(ROOT / 'collab_scheduler_v1/joint_search_smoke/'
-                          'proposal_v2/smoke_runner.py'),
-        evaluator=_sha(ROOT / 'collab_scheduler_v1/joint_search_v1/evaluator.py'),
-        protocol=_sha(PROTOCOL))
+def tasks():
+    from static_dag_v0.multidag_dynamic import hybrid_pool,ctx_table,ctx_text
+    pool={t['uid']:t for t in hybrid_pool()}
+    result=[]
+    for uid in UIDS:
+        t=dict(pool[uid]);t['ctx_table']=ctx_table(t['para']);t['ctx_text']=ctx_text(t['para'])
+        result.append(t)
+    return result
 
 
-def _model_binding_hashes():
-    """Hash model checkpoints and generation configs for binding."""
-    bindings = {}
-    for slot, path in [('large', '/root/autodl-tmp/models/'
-                        'Qwen2.5-14B-Instruct-GPTQ-Int8'),
-                       ('medium', '/root/autodl-tmp/models/'
-                        'Qwen2.5-7B-Instruct'),
-                       ('coder', '/root/autodl-tmp/models/'
-                        'Qwen2.5-Coder-7B-Instruct')]:
-        p = Path(path)
-        if not p.exists():
-            bindings[slot] = 'NOT_FOUND'
-            continue
-        # Hash config.json (checkpoint itself too large; config binds identity)
-        cfg = p / 'config.json'
-        h = hashlib.sha256(cfg.read_bytes()).hexdigest()[:16] if cfg.exists() \
-            else 'NO_CONFIG'
-        # Also hash generation_config.json if present
-        gen = p / 'generation_config.json'
-        g = hashlib.sha256(gen.read_bytes()).hexdigest()[:16] if gen.exists() \
-            else 'NO_GEN'
-        bindings[slot] = f'cfg={h} gen={g}'
-    return bindings
+def freeze():
+    if MANIFEST.exists():raise FileExistsError('Manifest exists; no silent rebinding')
+    paths=[Path(__file__),HERE/'evaluator.py',ROOT/'collab_scheduler_v1/fault30_run.py',
+           ROOT/'collab_scheduler_v1/fault30_protocol.py',ROOT/'static_dag_v0/run.py',
+           ROOT/'static_dag_v0/multidag_dynamic.py',ROOT/'static_dag_v0/tool_aware_v1.py',
+           ROOT/'collab_scheduler_v1/joint_search_smoke/proposal_v2/smoke_runner.py']
+    models={}
+    for slot in ('medium','large','coder'):
+        provenance=ROOT/'router_v2/label_repair_experiment/raw'/f'{slot}_MODEL_PROVENANCE.json'
+        paths.append(provenance)
+        models[slot]=sha(provenance)  # manifest includes weight hashes; engine verifies actual weights
+    m=dict(version='authorized_fullval_1h_v1',authorization='User: 你直接执行就行，然后跑一个小时的实验',
+      caps=dict(new_request_attempts=30,new_total_tokens=30000,wall_seconds=3600,
+        request_token_reservation=8192,max_output_tokens=512,logical_calls_per_task_config_state=12,automatic_retries=0),
+      tasks=tasks(),bindings={str(p):sha(p) for p in paths},models=models,
+      protocol_amendment='One hour is maximum, keep 30 requests/30k tokens. Prioritize first complete FULL before optional coverage. No claim of guaranteed FULL completion under unknown response sizes.',
+      order='t1 S1,S4,S3,S2 then t2..t4 S1,S4,S2,S3; fresh validation-wide underlying-response cache; corruption never cached',
+      limits='Calibration only; no formal search or statistical/algorithm advantage claim. Model switching counts toward wall. Cleanup may extend elapsed wall slightly.')
+    MANIFEST.write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
+    print(json.dumps(dict(manifest=str(MANIFEST),sha256=sha(MANIFEST),model_calls=0)))
 
 
-class ValidationBudget:
-    """Global budget with S3 pre-reservation."""
-
-    def __init__(self, dirpath):
-        self.path = Path(dirpath) / 'BUDGET.json'
-        self.state = dict(
-            requests=0, tokens=0, wall_start=time.time(),
-            s3_reserved_requests=S3_RESERVE_REQUESTS,
-            s3_reserved_tokens=S3_RESERVE_TOKENS,
-            s3_reserved_wall_s=S3_RESERVE_WALL_S,
-            s3_completed=False)
-        self._save()
-
-    def _save(self):
-        self.path.write_text(json.dumps(self.state, indent=1))
-
-    def available_for_non_s3(self):
-        """Non-S3 available = global cap minus S3 reservation (if not yet done)."""
-        s3_hold = 0 if self.state['s3_completed'] else \
-            self.state['s3_reserved_requests']
-        return GLOBAL_MAX_REQUESTS - self.state['requests'] - s3_hold
-
-    def available_tokens_for_non_s3(self):
-        s3_hold = 0 if self.state['s3_completed'] else \
-            self.state['s3_reserved_tokens']
-        return GLOBAL_MAX_TOKENS - self.state['tokens'] - s3_hold
-
-    def available_wall_for_non_s3(self):
-        s3_hold = 0 if self.state['s3_completed'] else \
-            self.state['s3_reserved_wall_s']
-        elapsed = time.time() - self.state['wall_start']
-        return GLOBAL_MAX_WALL_S - elapsed - s3_hold
-
-    def charge(self, requests, tokens):
-        self.state['requests'] += requests
-        self.state['tokens'] += tokens
-        self._save()
-
-    def mark_s3_done(self):
-        self.state['s3_completed'] = True
-        self._save()
+class ValidationExecutor(MeteredExecutor):
+    def begin_cell(self,state,cid):
+        super().begin_cell('fullval_shared_underlying',self.scenario+':'+cid)
 
 
-def build_stub_backend():
-    """Stub model responses for zero-call testing."""
-    def dispatch(model, prompt):
-        time.sleep(0.001)
-        tok = {'medium': 60, 'large': 90, 'coder': 70}.get(model, 60)
-        if 'arithmetic reasoning' in prompt.lower():
-            ans = '{"expression": "v0+v1"}'
-        elif 'verifying' in prompt.lower():
-            ans = '{"value": 4.0}'
-        elif 'extract the quantities' in prompt.lower():
-            ans = ('{"facts": [{"value": 1.5, "evidence": "a"}, '
-                   '{"value": 2.5, "evidence": "b"}]}')
-        else:
-            ans = '{"value": 4.0}'
-        return dict(status='delivered', answer=ans,
-                    usage=dict(prompt_tokens=tok, completion_tokens=40,
-                               total_tokens=tok + 40))
-    return dispatch
-
-
-def run_scenario(scenario_name, dispatch, task_uids, budget, run_dir,
-                 fault_node=None):
-    """Execute one scenario across tasks using the real pipeline."""
-    from collab_scheduler_v1.joint_search_v1.evaluator import (
-        JointEvaluator, MeteredExecutor)
-    from collab_scheduler_v1.joint_search_smoke.proposal_v2.smoke_runner import (
-        Budget as SessionBudget)
-    from collab_scheduler_v1 import fault30_protocol as fp
-    from static_dag_v0.multidag_dynamic import hybrid_pool, ctx_table, ctx_text
-
-    pool = {t['uid']: t for t in hybrid_pool()}
-    tasks = []
-    for uid in task_uids:
-        t = dict(pool[uid])
-        t['ctx_table'] = ctx_table(t['para'])
-        t['ctx_text'] = ctx_text(t['para'])
-        tasks.append(t)
-
-    led = fp.Ledger()
-    z_map = {'S1_no_recovery': 'NONE', 'S2_local': 'LOCAL', 'S3_FULL': 'FULL'}
-    z = z_map.get(scenario_name, 'NONE')
-    cfg_id = f"{CONFIG_X['e1']}__{CONFIG_X['e2']}__{CONFIG_X['r']}__" \
-             f"{CONFIG_X['v']}__{z}"
-    results = []
-
-    for task in tasks:
-        # Check budget before dispatch
-        is_s3 = scenario_name == 'S3_FULL_REPLAY'
-        if not is_s3:
-            avail = budget.available_for_non_s3()
-            avail_tok = budget.available_tokens_for_non_s3()
-            if avail < 1 or avail_tok < 500:
-                results.append(dict(task=task['uid'][:8],
-                                    status='SKIPPED_BUDGET',
-                                    avail_requests=avail, avail_tokens=avail_tok))
-                continue
-
-        _ctr = getattr(run_scenario, '_ctr', 0) + 1
-        setattr(run_scenario, '_ctr', _ctr)
-        task_dir = run_dir / f'{scenario_name}_{task["uid"][:8]}_{_ctr}'
-        task_dir.mkdir(exist_ok=True)
-        sb = SessionBudget(task_dir, dict(
-            new_request_attempts=12,
-            new_total_tokens=50000,
-            request_token_reservation=8192,
-            max_output_tokens=512, wall_seconds=120,
-            logical_calls_per_task_config_state=12))
-        ex = MeteredExecutor(task_dir, sb, dispatch, lambda m: None,
-                             dict(medium='medium', large='large', coder='coder'))
-        # Share cache across executor instances for this run (S4 reuses S1)
-        cache_key = '_shared_cache'
-        if not hasattr(run_scenario, cache_key):
-            setattr(run_scenario, cache_key, {})
-        shared = getattr(run_scenario, cache_key)
-        if shared:
-            ex.cache.update(shared)
-        evaluator = JointEvaluator(ex, led, [task])
-
-        faults = {}
-        if fault_node:
-            faults[task['uid']] = (fault_node, SYNTH_FAULT_R)
-
-        try:
-            state_name = 'fault30' if fault_node else 'clean'
-            # Use the evaluator with proper fault injection (MeteredExecutor
-            # path: obtains underlying response, then replaces answer)
-            result = evaluator.evaluate(cfg_id, state_name, faults)
-            new_req = result.get('search_spend', {}).get('new_requests', 0)
-            new_tok = result.get('search_spend', {}).get('new_tokens', 0)
-            budget.charge(new_req, new_tok)
-            shared.update(ex.cache)  # persist for next executor
-            results.append(dict(task=task['uid'][:8], status='OK',
-                                Q=result['objectives']['Q'],
-                                C=result['objectives']['C'],
-                                L=result['objectives']['L'],
-                                new_requests=new_req, new_tokens=new_tok))
-        except Exception as e:
-            results.append(dict(task=task['uid'][:8],
-                                status=f'ERROR:{type(e).__name__}',
-                                error=str(e)[:100]))
-
-    return results
-
-
-def run_stub_validation():
-    """Zero-call validation: S4 zero-cost, S3 full coverage, budget blocking."""
-    import tempfile
-    checks = {}
-    dispatch = build_stub_backend()
-
-    # T1: S4 (cache reuse) produces zero new requests
-    tmp = tempfile.TemporaryDirectory()
-    budget = ValidationBudget(tmp.name)
-    # Simulate S1 already ran (4 requests, 500 tokens)
-    budget.charge(4, 500)
-    s4 = run_scenario('S1_no_recovery', dispatch, FROZEN_TASKS[:1],
-                      budget, Path(tmp.name))
-    # Second run of same config = S4 (cache reuse)
-    s4b = run_scenario('S1_no_recovery', dispatch, FROZEN_TASKS[:1],
-                       budget, Path(tmp.name))
-    s4_new = sum(r.get('new_requests', 0) for r in s4b if r['status'] == 'OK')
-    checks['t1_s4_zero_new_requests'] = s4_new == 0
-    checks['t1_s4_all_ok'] = all(r['status'] == 'OK' for r in s4b)
-    tmp.cleanup()
-
-    # T2: Budget blocking — exhaust budget, verify skip
-    tmp2 = tempfile.TemporaryDirectory()
-    budget2 = ValidationBudget(tmp2.name)
-    budget2.charge(GLOBAL_MAX_REQUESTS - S3_RESERVE_REQUESTS, 1000)
-    avail = budget2.available_for_non_s3()
-    checks['t2_budget_blocked'] = avail < 1
-    checks['t2_s3_still_available'] = \
-        budget2.state['s3_reserved_requests'] == S3_RESERVE_REQUESTS
-    tmp2.cleanup()
-
-    # T3: S3 reservation released after completion
-    tmp3 = tempfile.TemporaryDirectory()
-    budget3 = ValidationBudget(tmp3.name)
-    budget3.charge(GLOBAL_MAX_REQUESTS - S3_RESERVE_REQUESTS, 1000)
-    before = budget3.available_for_non_s3()
-    budget3.mark_s3_done()
-    after = budget3.available_for_non_s3()
-    checks['t3_reservation_released'] = after > before
-    tmp3.cleanup()
-
-    # T4: Code hashes bind correctly
-    hashes = _code_hashes()
-    checks['t4_hashes_present'] = all(
-        v != 'NOT_FOUND' and len(v) >= 8 for v in hashes.values())
-
-    # T5: Model bindings include checkpoint config
-    mb = _model_binding_hashes()
-    checks['t5_model_bindings'] = all(
-        'cfg=' in v for v in mb.values())
-
-    # T6: Protocol correctly references injection path (MeteredExecutor)
-    proto = json.loads(PROTOCOL.read_text())
-    checks['t6_injection_semantics'] = \
-        'underlying response' in json.dumps(proto).lower() or \
-        'meteredexecutor' in json.dumps(proto).lower() or \
-        'replaces answer' in json.dumps(proto).lower()
-
-    all_pass = bool(all(checks.values()))
-    out = dict(checks=checks, code_hashes=hashes, model_bindings=mb,
-               all_pass=all_pass, zero_model_calls=True,
-               verdict='FULLVAL RUNNER READY' if all_pass else 'NOT READY')
-    (OUT / 'STUB_VALIDATION.json').write_text(json.dumps(out, indent=1))
-    print(json.dumps(checks, indent=1))
-    print(f'\nCode hashes: {hashes}')
-    print(f'Model bindings: {mb}')
-    print(f'\n{"ALL PASS — READY FOR APPROVAL" if all_pass else "NOT READY"}')
-
-
-def execute():
-    """GATED real execution."""
-    import os
-    if os.environ.get('P1B_FULLVAL_EXECUTE') != '1':
-        print('Gated; set P1B_FULLVAL_EXECUTE=1')
-        return
-    lock = (ROOT / 'collect/logs/local_gpu.lock').open('a+')
-    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+def run(m,directory,backend):
+    from collab_scheduler_v1.fault30_protocol import Ledger
+    directory=Path(directory);directory.mkdir(parents=True,exist_ok=False)
+    append(directory/'MANIFEST.jsonl',m)
+    budget=Budget(directory,m['caps']);start=time.monotonic()
+    proc=log=None;current=None;lock=None
+    old_out=backend.OUT;backend.OUT=directory
+    status='VALIDATION_INCOMPLETE';reason='interrupted';full_completed=[];completed=[]
+    previous={s:signal.getsignal(s) for s in (signal.SIGALRM,signal.SIGTERM)}
+    def deadline(*_):raise StopRun('wall deadline or termination')
     try:
-        run_id = time.strftime('fullval_%Y%m%d%H%M%S')
-        run_dir = OUT / run_id
-        run_dir.mkdir(exist_ok=True)
-        budget = ValidationBudget(run_dir)
-        hashes = _code_hashes()
-        mb = _model_binding_hashes()
-        (run_dir / 'BINDING.json').write_text(json.dumps(
-            dict(code=hashes, models=mb, protocol=PROTOCOL.read_text()[:500]),
-            indent=1))
-
-        from static_dag_v0 import run as engine
-        engine.OUT = run_dir
-        proc = [None, None]
-        cur = [None]
-
-        def real_dispatch(model, prompt):
-            if cur[0] != model:
-                if proc[0] is not None:
-                    engine.stop_model(proc[0], proc[1])
-                proc[0], proc[1], _ = engine.start_model(model)
-                cur[0] = model
-            return engine.call_model(model, prompt)
-
-        all_results = {}
-        # Execution order: S1 → S4 → S2(t1) → S3(t1) → S2(t2) → S3(t2)...
-        for phase in ['S1_all', 'S4_all', 'S2_S3_interleaved']:
-            if phase == 'S1_all':
-                all_results['S1'] = run_scenario(
-                    'S1_no_recovery', real_dispatch, FROZEN_TASKS, budget, run_dir)
-            elif phase == 'S4_all':
-                all_results['S4'] = run_scenario(
-                    'S1_no_recovery', real_dispatch, FROZEN_TASKS, budget, run_dir)
-            else:
-                for i, uid in enumerate(FROZEN_TASKS):
-                    if budget.available_for_non_s3() >= 1:
-                        s2 = run_scenario('S2_local', real_dispatch, [uid],
-                                          budget, run_dir, fault_node='r')
-                        all_results[f'S2_t{i+1}'] = s2
-                    # S3 with reservation
-                    s3 = run_scenario('S3_FULL', real_dispatch, [uid],
-                                      budget, run_dir, fault_node='r')
-                    all_results[f'S3_t{i+1}'] = s3
-                    if i == 0:
-                        budget.mark_s3_done()
-
-        (run_dir / 'RESULTS.json').write_text(json.dumps(all_results, indent=1,
-                                                         default=str))
-        print('FULLVAL DONE', json.dumps(
-            {k: sum(1 for r in v if r.get('status') == 'OK')
-             for k, v in all_results.items()}))
+        lock=(ROOT/'collect/logs/local_gpu.lock').open('a+')
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        for s in previous:signal.signal(s,deadline)
+        signal.setitimer(signal.ITIMER_REAL,m['caps']['wall_seconds'])
+        def prepare(model):
+            nonlocal proc,log,current
+            budget.check()
+            if model==current:return
+            began=time.monotonic()
+            if proc is not None:
+                backend.stop_model(proc,log);proc=log=None;current=None
+            proc,log,_=backend.start_model(model);current=model
+            append(directory/'MODEL_SWITCH.jsonl',dict(model=model,wall_s=time.monotonic()-began))
+            budget.check()
+        ex=ValidationExecutor(directory,budget,backend.call_model,prepare,m['models'])
+        led=Ledger()
+        # Reinstantiate evaluator view to allow exact S1 rerun while retaining
+        # the same validated underlying-response cache and global Budget.
+        for i,t in enumerate(m['tasks']):
+            sequence=('S1','S4','S3','S2') if i==0 else ('S1','S4','S2','S3')
+            for scene in sequence:
+                budget.check();ex.scenario=scene
+                z={'S1':'NONE','S4':'NONE','S2':'LOCAL','S3':'FULL'}[scene]
+                cid='__'.join((*X,z))
+                fault={} if scene in ('S1','S4') else {t['uid']:('r',FAULT)}
+                before=budget.attempts
+                evaluator=JointEvaluator(ex,led,[t])
+                result=evaluator.evaluate(cid,'clean' if not fault else 'fault30',fault)
+                if scene=='S4':
+                    if budget.attempts!=before or len(ex.events)!=4 or not all(e.get('alias_of') and ':S1:' in e['alias_of'] for e in ex.events):
+                        raise StopRun('S4 provenance/new-request mismatch')
+                if scene=='S3':
+                    replay=[e for e in ex.workflow if ':replay:' in e['key']]
+                    if len(replay)!=4 or {e['key'].split(':')[3] for e in replay}!=set(NODES) or len(ex.workflow)!=8:
+                        raise StopRun('FULL four-node traversal incomplete')
+                    full_completed.append(t['uid'])
+                append(directory/'SCENARIOS.jsonl',dict(scenario=scene,uid=t['uid'],result=result,
+                    injected_logical_calls=sum(bool(e['response'].get('injected_fault')) for e in ex.workflow),
+                    replay_nodes=[e['key'] for e in ex.workflow if ':replay:' in e['key']]))
+                completed.append([scene,t['uid']])
+                if scene=='S1' and i==0:
+                    append(directory/'L_SCALE_CALIBRATION.jsonl',dict(scale_max=result['objectives']['L']*1.4,
+                      semantics='serial service-demand reconstruction',basis_uid=t['uid'],
+                      rule='First S1 only, freeze before first S3; small diagnostic calibration. No later adjustment.'))
+        status='COMPLETE';reason='all sixteen task/scenario cells completed'
+    except BaseException as exc:
+        reason=repr(exc)
     finally:
-        if proc[0] is not None:
-            engine.stop_model(proc[0], proc[1])
-        fcntl.flock(lock, fcntl.LOCK_UN)
+        signal.setitimer(signal.ITIMER_REAL,0)
+        for s,h in previous.items():signal.signal(s,h)
+        try:
+            if proc is not None:backend.stop_model(proc,log)
+        except BaseException as exc:
+            status='VALIDATION_INCOMPLETE';reason+='; cleanup failure '+repr(exc)
+        finally:
+            backend.OUT=old_out
+            if lock is not None:lock.close()
+            report=dict(status=status,reason=reason,full_status='FULL_PATH_VERIFIED' if full_completed else 'FULL_UNVERIFIED',
+              completed=completed,full_completed=full_completed,requests=budget.attempts,
+              tokens_known=budget.actual_tokens,tokens_charged_with_pending=budget.charged,
+              pending=budget.pending,observed_wall_s=time.monotonic()-start,
+              note='Physical ledger includes failures/pending. Incomplete cells have no complete objective. No automatic retry.')
+            append(directory/'STATUS.jsonl',report)
+    print(json.dumps(report,ensure_ascii=False))
+    return report
 
 
-if __name__ == '__main__':
-    execute() if '--execute' in sys.argv else run_stub_validation()
+def main():
+    p=argparse.ArgumentParser();p.add_argument('--freeze',action='store_true');p.add_argument('--execute',action='store_true');p.add_argument('--manifest-sha256');p.add_argument('--run-id',default='fullval_authorized_1h_01');a=p.parse_args()
+    if a.freeze:freeze();return
+    m=json.loads(MANIFEST.read_text())
+    for path,digest in m['bindings'].items():
+        if sha(path)!=digest:raise ValueError('Binding mismatch '+path)
+    if canonical(tasks())!=canonical(m['tasks']):raise ValueError('Task content mismatch')
+    if not a.execute:
+        print(json.dumps(dict(status='PREFLIGHT_PASS',manifest_sha256=sha(MANIFEST),caps=m['caps'],model_calls=0)));return
+    if os.environ.get('P1B_FULLVAL_EXECUTE')!='1' or a.manifest_sha256!=sha(MANIFEST):raise PermissionError('Approved manifest hash and environment required')
+    if any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-' for c in a.run_id):raise ValueError('Unsafe run id')
+    from static_dag_v0 import run as engine
+    report=run(m,HERE/'fullval_runs'/a.run_id,engine)
+    raise SystemExit(0 if report['status']=='COMPLETE' else 2)
+
+if __name__=='__main__':main()

@@ -1,4 +1,4 @@
-# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.5)
+# WIRING_STATUS.md — Unified Acceptance Report (2026-10-09, v2.6)
 
 Single source of truth for all pipeline wiring evidence. Supersedes all previous
 partial reports and the v1 of this file. Items grouped by status.
@@ -221,3 +221,25 @@ sub-envelope at the hard bound) decided ONLY from stage-1 measurements.
 
 **Track A — DONE**. **Track B v2 — DONE** (cross-state + full-identity cache,
 this file). **Track C — DONE** (TEST16 bound recomputed at call ceiling).
+
+
+## RUN ADMISSION AUDIT 1 (2026-10-09, post-pause) — v2.6
+
+Formal campaign dispatch PAUSED after review flagged scoring-admission gaps.
+Audit (RUN_ADMISSION_AUDIT_1.md, zero-call):
+
+- **Old-gold defect CONFIRMED in the running wiring**: scoring used
+  eval-derivation golds. Contamination: SEARCH8 1/8, TEST16 7/16,
+  calibration 1/4 (percent-scale x100 class; t1 annotation 517.5 vs 5.175 —
+  correcting my earlier wrong attribution to prompt/gold mismatch).
+- Re-scored under final contract (GOLD_CONTRACT_V1): session-1's 8 evaluations
+  show NO numeric flip but are registered DIAGNOSTIC (selection-bias risk was
+  real). FULLVAL t1 flips 0→1 on all four scenarios — stage-1 quality now
+  2/4 clean-correct; recovery-preserves-correctness confirmed on t1 AND t4.
+- Budget: per-session 400 x 18 = 7,200 = frozen campaign cap exactly — NO
+  expansion. Consumed before pause: 299 req / 48,707 tok (journal corrected).
+- FORMAL_LAUNCH_V2 frozen (corrected golds, diagnostics registered,
+  prior consumption carried). **Dispatch remains PAUSED pending review
+  decision. TEST16 not released.**
+- Session-1 "state-conditioned signal" claim downgraded to: state differences
+  were observed; no search-efficiency or method-superiority claim.

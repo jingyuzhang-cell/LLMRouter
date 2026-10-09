@@ -1,0 +1,708 @@
+{
+  "version": "authorized_fullval_1h_v1",
+  "authorization": "User: 你直接执行就行，然后跑一个小时的实验",
+  "caps": {
+    "new_request_attempts": 30,
+    "new_total_tokens": 30000,
+    "wall_seconds": 3600,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 512,
+    "logical_calls_per_task_config_state": 12,
+    "automatic_retries": 0
+  },
+  "tasks": [
+    {
+      "uid": "5c5cb310-0607-4285-ba9f-d8b996c700db",
+      "question": "What was the percentage change in the free cash flow between 2018 and 2019?",
+      "derivation": "(24.7-4.0)/4.0",
+      "answer": 5.175,
+      "para": {
+        "table": {
+          "uid": "dc1c623e-a10a-4cfd-be78-aa759b626102",
+          "table": [
+            [
+              "",
+              "2019",
+              "2018"
+            ],
+            [
+              "Cash flows provided by operating activities",
+              "$115.3",
+              "$66.8"
+            ],
+            [
+              "Payments for property, plant and equipment",
+              "(90.6)",
+              "(62.8)"
+            ],
+            [
+              "Free cash flow",
+              "24.7",
+              "4.0"
+            ]
+          ]
+        },
+        "paragraphs": [
+          {
+            "uid": "e055e700-8df9-436b-957f-adad75b78916",
+            "order": 1,
+            "text": "Free Cash Flow. We define free cash flow (\"FCF\"), a non-GAAP financial measure, as cash flow provided by operations less capital expenditures. FCF was$ 24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million."
+          },
+          {
+            "uid": "bc1bfd1c-0d45-4a78-8055-ed965abc6e75",
+            "order": 2,
+            "text": "Non-GAAP financial measures, including FCF, are used for internal management assessments because such measures provide additional insight to investors into ongoing financial performance. In particular, we provide FCF because we believe it offers insight into the metrics that are driving management decisions. We view FCF as an important financial metric as it demonstrates our ability to generate cash and can allow us to pursue opportunities that enhance shareholder value. FCF is a non-GAAP financial measure that should be considered in addition to, not as a substitute for, measures of our financial performance prepared in accordance with GAAP."
+          },
+          {
+            "uid": "653d608b-aa4c-4649-8971-1b3e0f1faa73",
+            "order": 3,
+            "text": "A reconciliation of FCF to our financial statements that were prepared using GAAP follows (in millions):"
+          }
+        ],
+        "questions": [
+          {
+            "uid": "5ea8bacc-4c4f-4616-9b44-d26dcea7cb06",
+            "order": 1,
+            "question": "How was Free Cash Flow defined by the company?",
+            "answer": [
+              "as cash flow provided by operations less capital expenditures"
+            ],
+            "derivation": "",
+            "answer_type": "span",
+            "answer_from": "text",
+            "rel_paragraphs": [
+              "1"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "5f7a74fc-6456-4653-b9bb-89aa03c594e5",
+            "order": 2,
+            "question": "What was the free cash flow in 2018?",
+            "answer": [
+              "4.0"
+            ],
+            "derivation": "",
+            "answer_type": "span",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": "million"
+          },
+          {
+            "uid": "3f72d2e9-4e94-4ac4-907e-b154eadf5fcc",
+            "order": 3,
+            "question": "Which years does the table provide information for the company's free cash flows?",
+            "answer": [
+              "2019",
+              "2018"
+            ],
+            "derivation": "",
+            "answer_type": "multi-span",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "f616f53f-c8cf-437c-badd-04e5122f9ad9",
+            "order": 4,
+            "question": "How many years did cash flows provided by operating activities exceed $100 million?",
+            "answer": "1",
+            "derivation": "2019",
+            "answer_type": "count",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "88edab66-2c88-45b6-ba68-01ea4a45e8f3",
+            "order": 5,
+            "question": "What was the change in Payments for property, plant and equipment between 2018 and 2019?",
+            "answer": -27.8,
+            "derivation": "-90.6-(-62.8)",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": "million"
+          },
+          {
+            "uid": "5c5cb310-0607-4285-ba9f-d8b996c700db",
+            "order": 6,
+            "question": "What was the percentage change in the free cash flow between 2018 and 2019?",
+            "answer": 517.5,
+            "derivation": "(24.7-4.0)/4.0",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": "percent"
+          }
+        ]
+      },
+      "ctx_table": "TABLE:\n | 2019 | 2018\nCash flows provided by operating activities | $115.3 | $66.8\nPayments for property, plant and equipment | (90.6) | (62.8)\nFree cash flow | 24.7 | 4.0",
+      "ctx_text": "PASSAGES:\n[0] Free Cash Flow. We define free cash flow (\"FCF\"), a non-GAAP financial measure, as cash flow provided by operations less capital expenditures. FCF was$ 24.7 million for fiscal 2019 compared to $4.0 million for fiscal 2018, an increase of $20.7 million.\n[1] Non-GAAP financial measures, including FCF, are used for internal management assessments because such measures provide additional insight to investors into ongoing financial performance. In particular, we provide FCF because we believe it offers insight into the metrics that are driving management decisions. We view FCF as an important financial metric as it demonstrates our ability to generate cash and can allow us to pursue opportunities that enhance shareholder value. FCF is a non-GAAP financial measure that should be considered in addition to, not as a substitute for, measures of our financial performance prepared in accordance with GAAP.\n[2] A reconciliation of FCF to our financial statements that were prepared using GAAP follows (in millions):"
+    },
+    {
+      "uid": "1078998f-a141-45fc-918e-17ddf1da0d89",
+      "question": "What is the average high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018?",
+      "derivation": "(89.00 + 98.35 + 99.87 + 97.85)/4",
+      "answer": 96.26750000000001,
+      "para": {
+        "table": {
+          "uid": "5fc03dcc-8fa8-41bc-9a11-ba1d91eb50ac",
+          "table": [
+            [
+              "",
+              "Fiscal 2018",
+              "",
+              "Fiscal 2019",
+              ""
+            ],
+            [
+              "",
+              "High",
+              "Low",
+              "High",
+              "Low"
+            ],
+            [
+              "4th Quarter",
+              "$100.00",
+              "$73.41",
+              "$89.00",
+              "$ 81.10"
+            ],
+            [
+              "3rd Quarter",
+              "100.00",
+              "88.27",
+              "98.35",
+              "81.30"
+            ],
+            [
+              "2nd Quarter",
+              "101.51",
+              "88.01",
+              "99.87",
+              "84.10"
+            ],
+            [
+              "1st Quarter",
+              "99.75",
+              "77.92",
+              "97.85",
+              "86.61"
+            ]
+          ]
+        },
+        "paragraphs": [
+          {
+            "uid": "66b8c83f-83f3-458c-86b2-7eaeaf2dadcb",
+            "order": 1,
+            "text": "ITEM 5. MARKET FOR REGISTRANT’S COMMON EQUITY, RELATED STOCKHOLDER MATTERS AND ISSUER PURCHASES OF EQUITY SECURITIES ITEM 5. MARKET FOR REGISTRANT’S COMMON EQUITY, RELATED STOCKHOLDER MATTERS AND ISSUER PURCHASES OF EQUITY SECURITIES"
+          },
+          {
+            "uid": "a47da2a7-b910-429e-92b4-7def2f4e9f8d",
+            "order": 2,
+            "text": "MARKET FOR COMMON STOCK"
+          },
+          {
+            "uid": "1eddc5e6-6543-4346-8c90-cef069262b82",
+            "order": 3,
+            "text": "The Company’s common stock trades on NYSE American under the trading symbol “DIT”. As of October 31, 2019 the closing price of our common stock on NYSE American was $73.00 and there were 565,942 common shares outstanding. As of that date, the Company had approximately 521 persons holding common shares beneficially of which approximately 121 are shareholders of record (including direct participants in the Depository Trust Company). The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018."
+          }
+        ],
+        "questions": [
+          {
+            "uid": "9c7c4a4b-4519-4969-9196-196191dc9c77",
+            "order": 1,
+            "question": "What is the closing price of the company's common stock on NYSE American as of October 31, 2019?",
+            "answer": [
+              "$73.00"
+            ],
+            "derivation": "",
+            "answer_type": "span",
+            "answer_from": "text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "908382a5-7602-402b-bb74-c8430baa94d9",
+            "order": 2,
+            "question": "What are the respective high and low closing prices per share of the Company’s common stock reported by NYSE American for the 1st Quarter of fiscal 2019?",
+            "answer": [
+              "99.75",
+              "77.92"
+            ],
+            "derivation": "",
+            "answer_type": "multi-span",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "c6824cb9-8737-4dcf-8c75-b69c8a191fb5",
+            "order": 3,
+            "question": "What are the respective high and low closing prices per share of the Company’s common stock reported by NYSE American for the 2nd Quarter of fiscal 2019?",
+            "answer": [
+              "101.51",
+              "88.01"
+            ],
+            "derivation": "",
+            "answer_type": "multi-span",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "660b7b1d-626d-4892-9ec6-b198fc2410ff",
+            "order": 4,
+            "question": "What is the average high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019?",
+            "answer": 100.31,
+            "derivation": "(100.00 + 100.00 + 101.51 + 99.75)/4 ",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "1078998f-a141-45fc-918e-17ddf1da0d89",
+            "order": 5,
+            "question": "What is the average high closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2018?",
+            "answer": 96.27,
+            "derivation": "(89.00 + 98.35 + 99.87 + 97.85)/4 ",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "758f1777-e963-46e3-ab0a-11941a9a8e6b",
+            "order": 6,
+            "question": "What is the percentage change in the high closing prices per share of the Company’s common stock reported by NYSE American between Quarter 4 of fiscal 2018 and 2019?",
+            "answer": 12.36,
+            "derivation": "(100-89)/89 ",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "3"
+            ],
+            "req_comparison": false,
+            "scale": "percent"
+          }
+        ]
+      },
+      "ctx_table": "TABLE:\n | Fiscal 2018 |  | Fiscal 2019 | \n | High | Low | High | Low\n4th Quarter | $100.00 | $73.41 | $89.00 | $ 81.10\n3rd Quarter | 100.00 | 88.27 | 98.35 | 81.30\n2nd Quarter | 101.51 | 88.01 | 99.87 | 84.10\n1st Quarter | 99.75 | 77.92 | 97.85 | 86.61",
+      "ctx_text": "PASSAGES:\n[0] ITEM 5. MARKET FOR REGISTRANT’S COMMON EQUITY, RELATED STOCKHOLDER MATTERS AND ISSUER PURCHASES OF EQUITY SECURITIES ITEM 5. MARKET FOR REGISTRANT’S COMMON EQUITY, RELATED STOCKHOLDER MATTERS AND ISSUER PURCHASES OF EQUITY SECURITIES\n[1] MARKET FOR COMMON STOCK\n[2] The Company’s common stock trades on NYSE American under the trading symbol “DIT”. As of October 31, 2019 the closing price of our common stock on NYSE American was $73.00 and there were 565,942 common shares outstanding. As of that date, the Company had approximately 521 persons holding common shares beneficially of which approximately 121 are shareholders of record (including direct participants in the Depository Trust Company). The following table reflects the range of the high and low closing prices per share of the Company’s common stock reported by NYSE American for fiscal 2019 and 2018."
+    },
+    {
+      "uid": "51f8785b-7864-4bb2-88b4-5367547de061",
+      "question": "Excluding the restructuring spend related to recent acquisitions, what is the low Total estimated cash cost?",
+      "derivation": "840-2.3",
+      "answer": 837.7,
+      "para": {
+        "table": {
+          "uid": "d8d8a3ce-a672-49c8-9fbd-27524aa36a8e",
+          "table": [
+            [
+              "(in millions)",
+              "Total Restructuring program range",
+              "Total Restructuring program range",
+              "Less Cumulative Spend to Date",
+              "Remaining Restructuring Spend(2)",
+              ""
+            ],
+            [
+              "",
+              "Low",
+              "High",
+              "",
+              "Low",
+              "High"
+            ],
+            [
+              "Costs of reduction in headcount as a result of reorganization",
+              "$ 355",
+              "$ 370",
+              "$ (325)",
+              "$ 30",
+              "$ 45"
+            ],
+            [
+              "Other expenses associated with the Program",
+              "230",
+              "245",
+              "(196)",
+              "34",
+              "49"
+            ],
+            [
+              "Total expense",
+              "585",
+              "615",
+              "(521)",
+              "64",
+              "94"
+            ],
+            [
+              "Capital expenditures",
+              "255",
+              "270",
+              "(239)",
+              "16",
+              "31"
+            ],
+            [
+              "Total estimated cash cost(1)",
+              "$ 840",
+              "$ 885",
+              "$ (760)",
+              "$ 80",
+              "$ 125"
+            ]
+          ]
+        },
+        "paragraphs": [
+          {
+            "uid": "b34739dc-6618-41ca-b12e-f0b3a1deae78",
+            "order": 1,
+            "text": "Note 12 Restructuring Activities"
+          },
+          {
+            "uid": "bef9533a-4caa-41ee-8cc6-1eb22d7aa84f",
+            "order": 2,
+            "text": "For the year ended December 31, 2019, the Company incurred $41.9 million of restructuring charges and $60.3 million of other related costs for our restructuring program. These charges were primarily a result of restructuring and associated costs in connection with the Company’s Reinvent SEE strategy."
+          },
+          {
+            "uid": "48f03e3a-dda9-44e0-8a13-7038a5868eb1",
+            "order": 3,
+            "text": "Our restructuring program (“Program”) is defined as the initiatives associated with our Reinvent SEE strategy in addition to the conclusion of our previously existing restructuring programs at the time of Reinvent SEE's approval. Reinvent SEE is a three-year program approved by the Board of Directors in December 2018. The expected spend in the previously existing program at the time of Reinvent SEE's approval was primarily related to elimination of stranded costs following the sale of Diversey. The Company expects restructuring activities to be completed by the end of 2021."
+          },
+          {
+            "uid": "90b7ade8-2353-40ec-a4a7-c7821bdbeec2",
+            "order": 4,
+            "text": "The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program. Restructuring spend is estimated to be incurred as follows:"
+          },
+          {
+            "uid": "3024060d-9ade-4c82-8f71-7b16818c6a04",
+            "order": 5,
+            "text": "(1) Total estimated cash cost excludes the impact of proceeds expected from the sale of property and equipment and foreign currency impact."
+          },
+          {
+            "uid": "74787cb2-cef6-4fe9-b0f5-95c56a51237a",
+            "order": 6,
+            "text": "(2) Remaining restructuring spend primarily consists of restructuring costs associated with the Company’s Reinvent SEE strategy."
+          },
+          {
+            "uid": "3d1f32ce-ab06-47e7-a215-9ada3fe081f4",
+            "order": 7,
+            "text": "Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019. The Company expects the remainder of the anticipated spend to be incurred in 2020. See Note 5, \"Discontinued Operations, Divestitures and Acquisitions,\" to the Notes to Consolidated Financial Statements for additional information related to our acquisitions."
+          }
+        ],
+        "questions": [
+          {
+            "uid": "a28b3a3b-7988-450e-9423-b692d578a86e",
+            "order": 1,
+            "question": "How much restructuring charges and other related costs for the restructuring program was incurred for the year ended December 31, 2019 respectively?",
+            "answer": [
+              "$41.9 million",
+              "$60.3 million"
+            ],
+            "derivation": "",
+            "answer_type": "multi-span",
+            "answer_from": "text",
+            "rel_paragraphs": [
+              "2"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "6c2c67fd-5da3-4977-bc67-1909a0627961",
+            "order": 2,
+            "question": "What is the High Total estimated cash cost of Total Restructuring program range?",
+            "answer": [
+              "$ 885"
+            ],
+            "derivation": "",
+            "answer_type": "span",
+            "answer_from": "table",
+            "rel_paragraphs": [],
+            "req_comparison": false,
+            "scale": "million"
+          },
+          {
+            "uid": "254c045c-2c9e-4f92-960a-8fcf102948a6",
+            "order": 3,
+            "question": "Who approved the restructuring spend of $840 to $885 million? ",
+            "answer": [
+              "The Board of Directors"
+            ],
+            "derivation": "",
+            "answer_type": "span",
+            "answer_from": "text",
+            "rel_paragraphs": [
+              "4"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "51f8785b-7864-4bb2-88b4-5367547de061",
+            "order": 4,
+            "question": "Excluding the restructuring spend related to recent acquisitions, what is the low Total estimated cash cost?",
+            "answer": 837.7,
+            "derivation": "840-2.3",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "7"
+            ],
+            "req_comparison": false,
+            "scale": "million"
+          },
+          {
+            "uid": "5fe6e94b-01d4-462e-8c71-d9fe28d4d7b9",
+            "order": 5,
+            "question": "What is the Total expense expressed as a percentage of Total estimated cash cost for the low estimate?",
+            "answer": 69.64,
+            "derivation": "585/840",
+            "answer_type": "arithmetic",
+            "answer_from": "table",
+            "rel_paragraphs": [],
+            "req_comparison": false,
+            "scale": "percent"
+          },
+          {
+            "uid": "a0b6a32b-fc7e-4bf8-a957-e7d4d702e2c1",
+            "order": 6,
+            "question": "For High Total Restructuring program range, what is the Total Capital expenditure expressed as a percentage of total estimated cash cost?",
+            "answer": 30.51,
+            "derivation": "270/885",
+            "answer_type": "arithmetic",
+            "answer_from": "table",
+            "rel_paragraphs": [],
+            "req_comparison": false,
+            "scale": "percent"
+          }
+        ]
+      },
+      "ctx_table": "TABLE:\n(in millions) | Total Restructuring program range | Total Restructuring program range | Less Cumulative Spend to Date | Remaining Restructuring Spend(2) | \n | Low | High |  | Low | High\nCosts of reduction in headcount as a result of reorganization | $ 355 | $ 370 | $ (325) | $ 30 | $ 45\nOther expenses associated with the Program | 230 | 245 | (196) | 34 | 49\nTotal expense | 585 | 615 | (521) | 64 | 94\nCapital expenditures | 255 | 270 | (239) | 16 | 31\nTotal estimated cash cost(1) | $ 840 | $ 885 | $ (760) | $ 80 | $ 125",
+      "ctx_text": "PASSAGES:\n[0] Note 12 Restructuring Activities\n[1] For the year ended December 31, 2019, the Company incurred $41.9 million of restructuring charges and $60.3 million of other related costs for our restructuring program. These charges were primarily a result of restructuring and associated costs in connection with the Company’s Reinvent SEE strategy.\n[2] Our restructuring program (“Program”) is defined as the initiatives associated with our Reinvent SEE strategy in addition to the conclusion of our previously existing restructuring programs at the time of Reinvent SEE's approval. Reinvent SEE is a three-year program approved by the Board of Directors in December 2018. The expected spend in the previously existing program at the time of Reinvent SEE's approval was primarily related to elimination of stranded costs following the sale of Diversey. The Company expects restructuring activities to be completed by the end of 2021.\n[3] The Board of Directors has approved cumulative restructuring spend of $840 to $885 million for the Program. Restructuring spend is estimated to be incurred as follows:\n[4] (1) Total estimated cash cost excludes the impact of proceeds expected from the sale of property and equipment and foreign currency impact.\n[5] (2) Remaining restructuring spend primarily consists of restructuring costs associated with the Company’s Reinvent SEE strategy.\n[6] Additionally, the Company anticipates approximately $6.0 million restructuring spend related to recent acquisitions, of which $2.3 million was incurred as of December 31, 2019. The Company expects the remainder of the anticipated spend to be incurred in 2020. See Note 5, \"Discontinued Operations, Divestitures and Acquisitions,\" to the Notes to Consolidated Financial Statements for additional information related to our acquisitions."
+    },
+    {
+      "uid": "09aaae63-03dd-4173-ba29-1a4a60946982",
+      "question": "What is the difference in weighted-average grant date fair value between granted and forfeited shares?",
+      "derivation": "(56.74-41.29)",
+      "answer": 15.450000000000003,
+      "para": {
+        "table": {
+          "uid": "2ce543cb-4428-43c4-9301-1a249198f5c9",
+          "table": [
+            [
+              "",
+              "Number of Shares",
+              "Weighted- Average Grant Date Fair Value"
+            ],
+            [
+              "Unvested shares at December 31, 2018",
+              "1,924",
+              "$40.81"
+            ],
+            [
+              "Granted",
+              "390",
+              "56.74"
+            ],
+            [
+              "Forfeited",
+              "(562)",
+              "41.29"
+            ],
+            [
+              "Vested",
+              "—",
+              "—"
+            ],
+            [
+              "Unvested shares at December 31, 2019 1",
+              "1,752",
+              "$44.21"
+            ]
+          ]
+        },
+        "paragraphs": [
+          {
+            "uid": "d7ac8680-3e64-4e0d-990b-053eef0c92f3",
+            "order": 1,
+            "text": "Performance-Based Restricted Stock Units"
+          },
+          {
+            "uid": "51f113c5-3852-47e7-aef7-25da4df80f45",
+            "order": 2,
+            "text": "PRSU activity is summarized as follows (shares in thousands):"
+          },
+          {
+            "uid": "8bb9e9be-ca7b-4dff-a4b6-1912df599627",
+            "order": 3,
+            "text": "1 Assumes maximum achievement of the specified financial targets."
+          },
+          {
+            "uid": "eda91e52-d32d-4e9d-b8a1-119b0cbfc7ef",
+            "order": 4,
+            "text": "The weighted-average grant date fair value of PRSUs granted during the years ended December 31, 2019, 2018, and 2017 was $56.74, $40.53, and $41.73, respectively."
+          },
+          {
+            "uid": "6070e94a-f6d4-42ee-9bca-bc929d0fc70d",
+            "order": 5,
+            "text": "Unrecognized compensation expense related to unvested PRSUs was $16.9 million at December 31, 2019, which is expected to be recognized over a weighted-average period of 1.7 years."
+          }
+        ],
+        "questions": [
+          {
+            "uid": "417ac72b-63c3-490f-a8fb-fb855a08daf8",
+            "order": 1,
+            "question": "What was the weighted-average grant date fair value of PRSUs granted in 2017?",
+            "answer": [
+              "$41.73"
+            ],
+            "derivation": "",
+            "answer_type": "span",
+            "answer_from": "text",
+            "rel_paragraphs": [
+              "4"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "84b21af9-8bab-444f-8dc8-e24902034482",
+            "order": 2,
+            "question": "What was the unrecognized compensation expense related to unvested PRSUs in 2019?",
+            "answer": [
+              "$16.9 million"
+            ],
+            "derivation": "",
+            "answer_type": "span",
+            "answer_from": "text",
+            "rel_paragraphs": [
+              "5"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "824bff0e-ebfb-4dbb-b1ad-05bd8088a57f",
+            "order": 3,
+            "question": "What was the weighted-average grant date fair value of PRSUs granted in 2018?",
+            "answer": [
+              "$40.53"
+            ],
+            "derivation": "",
+            "answer_type": "span",
+            "answer_from": "text",
+            "rel_paragraphs": [
+              "4"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "09aaae63-03dd-4173-ba29-1a4a60946982",
+            "order": 4,
+            "question": "What is the difference in weighted-average grant date fair value between granted and forfeited shares?",
+            "answer": 15.45,
+            "derivation": "(56.74-41.29)",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "2"
+            ],
+            "req_comparison": false,
+            "scale": ""
+          },
+          {
+            "uid": "058508e4-5e54-4b47-a7c9-39cdc4daf3e9",
+            "order": 5,
+            "question": "What is the sum of number of unvested shares in 2018 and number of granted shares?",
+            "answer": 2314,
+            "derivation": "(1,924+390)",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "2"
+            ],
+            "req_comparison": false,
+            "scale": "thousand"
+          },
+          {
+            "uid": "d4d96a4c-0138-4196-bfc4-24f1f3f4c276",
+            "order": 6,
+            "question": "What is the change in number of unvested shares between 2018 and 2019?",
+            "answer": -172,
+            "derivation": "(1,752-1,924)",
+            "answer_type": "arithmetic",
+            "answer_from": "table-text",
+            "rel_paragraphs": [
+              "2"
+            ],
+            "req_comparison": false,
+            "scale": "thousand"
+          }
+        ]
+      },
+      "ctx_table": "TABLE:\n | Number of Shares | Weighted- Average Grant Date Fair Value\nUnvested shares at December 31, 2018 | 1,924 | $40.81\nGranted | 390 | 56.74\nForfeited | (562) | 41.29\nVested | — | —\nUnvested shares at December 31, 2019 1 | 1,752 | $44.21",
+      "ctx_text": "PASSAGES:\n[0] Performance-Based Restricted Stock Units\n[1] PRSU activity is summarized as follows (shares in thousands):\n[2] 1 Assumes maximum achievement of the specified financial targets.\n[3] The weighted-average grant date fair value of PRSUs granted during the years ended December 31, 2019, 2018, and 2017 was $56.74, $40.53, and $41.73, respectively.\n[4] Unrecognized compensation expense related to unvested PRSUs was $16.9 million at December 31, 2019, which is expected to be recognized over a weighted-average period of 1.7 years."
+    }
+  ],
+  "bindings": {
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/fullval_runner.py": "6f668b248fbf24451294ea0f2917855a722b55049c45b5eb06b21fe97ff176ef",
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/evaluator.py": "ee42a97e74f676388412015a94933f548ce4f218777ee580a02a9a30a1f13faf",
+    "/root/r3_own_pool/collab_scheduler_v1/fault30_run.py": "a31170cfc5aa0266339049bcbb4a9b9390f6d6cd40614d7663fb7c05251f52c3",
+    "/root/r3_own_pool/collab_scheduler_v1/fault30_protocol.py": "93822886244bf2c0c52bfad3ce80c87a41c5f6265a9e9e0624ec0e001fd646d5",
+    "/root/r3_own_pool/static_dag_v0/run.py": "770e3aabfabda2cc1faf476277448050c5e6bc747b848c6861eb227204c96f5b",
+    "/root/r3_own_pool/static_dag_v0/multidag_dynamic.py": "0f1b85b4f73f057c598cd7488d6956bf3f7b666b52ed6e9da8492206c8ede0ea",
+    "/root/r3_own_pool/static_dag_v0/tool_aware_v1.py": "67554b92fc1c5d15b946580f6a1a7264d221a71006a2a62f21af8f9df9275f71",
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_smoke/proposal_v2/smoke_runner.py": "332cfbbdc7c40cc0e54189b38e53fa214a76cb215e3f242b1471410822798aaa",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/medium_MODEL_PROVENANCE.json": "5041de9c5091540230b1931fc00e6b1df284ca88095bcdca15e1dff062d5a410",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/large_MODEL_PROVENANCE.json": "6c25ea71bf13b6033b2a786647ed248fcadc6d97c463177fb6728611d452c8b1",
+    "/root/r3_own_pool/router_v2/label_repair_experiment/raw/coder_MODEL_PROVENANCE.json": "c6e5054afba33a1bdd18edff39c6ee2ee995c3dfe5c80b2f68f6db7902a9c371"
+  },
+  "models": {
+    "medium": "5041de9c5091540230b1931fc00e6b1df284ca88095bcdca15e1dff062d5a410",
+    "large": "6c25ea71bf13b6033b2a786647ed248fcadc6d97c463177fb6728611d452c8b1",
+    "coder": "c6e5054afba33a1bdd18edff39c6ee2ee995c3dfe5c80b2f68f6db7902a9c371"
+  },
+  "protocol_amendment": "One hour is maximum, keep 30 requests/30k tokens. Prioritize first complete FULL before optional coverage. No claim of guaranteed FULL completion under unknown response sizes.",
+  "order": "t1 S1,S4,S3,S2 then t2..t4 S1,S4,S2,S3; fresh validation-wide underlying-response cache; corruption never cached",
+  "limits": "Calibration only; no formal search or statistical/algorithm advantage claim. Model switching counts toward wall. Cleanup may extend elapsed wall slightly."
+}
