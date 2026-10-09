@@ -1,6 +1,6 @@
 {
  "protocol": "END_TO_END_NET_BENEFIT_VALIDATION",
- "version": "DRAFT_v1_20261009",
+ "version": "DRAFT_v3_20261009",
  "status": "SUBMITTED_FOR_APPROVAL — NOT AUTHORIZED",
  "purpose": "Test hypothesis H on a frozen independent panel: does Dynamic DAG's feedback-driven local recovery produce net benefit over Single LLM under specific fault/budget conditions? NOT a search efficiency experiment.",
 
@@ -25,6 +25,13 @@
  },
 
  "strategies": {
+  "attribution_note": "B/C/D/E use THE SAME frozen DAG topology (4-node e1∥e2→r→v), THE SAME prompt interfaces, and THE SAME model assignment (e1/e2=large, r=medium, v=coder) for mechanism attribution. The ONLY differences between arms are the target factors (decomposition, heterogeneity, recovery scope). V2's best-found config is tested as a SEPARATE pre-registered competitive candidate (see v2_candidate below), NOT as a replacement for any attribution arm.",
+  "v2_candidate": {
+    "role": "pre-registered competitive candidate from V2 campaign's best search result",
+    "selection_rule": "from V2 campaign's 18-session results, the config with highest mean Q across states; selection uses ONLY V2's 8 campaign tasks (NOT this protocol's 50 held-out tasks); rule frozen before this protocol's execution",
+    "isolation": "tested as additional arms (V2_static, V2_dynamic) alongside the attribution arms; results compared separately; NEVER substituted into B/C/D/E attribution comparisons",
+    "purpose": "answers 'is the search-found config competitive?' NOT 'what is the mechanism attribution?'"
+  },
   "A_single": {
    "description": "Single LLM (large model) direct answer",
    "role": "baseline",
@@ -33,7 +40,8 @@
   "A_single_cross_fallback": {
    "description": "Single LLM with cross-model fallback on parse failure (large → medium → coder)",
    "role": "competitive baseline — tests whether DAG's benefit is just 'extra model attempts'",
-   "retry": "max 1 fallback per task, triggered by unparseable output only"
+   "retry": "max 1 fallback per task, triggered by unparseable output only",
+   "fairness_note": "A' has NARROWER detection (parse-only) than D (parse + expression-exec + verification consistency); this asymmetry is documented; if D > A', the surplus is attributable to broader detection + structural recovery, not just extra attempts; however, D > A' alone does not prove structural benefit over a hypothetical single-LLM-with-full-detection baseline (which is not implementable without decomposition)"
   },
   "B_same_model_dag": {
    "description": "4-node DAG, all nodes use same model (large)",
@@ -42,18 +50,20 @@
   },
   "C_static_hetero_dag": {
    "description": "4-node DAG, heterogeneous assignment (e1/e2=large, r=medium, v=coder)",
-   "role": "isolates heterogeneity effect",
+   "role": "isolates heterogeneity effect; SAME config as D minus recovery",
    "recovery": "none"
   },
   "D_dynamic_dag": {
-   "description": "Same as C + feedback-driven local recovery (Z=LOCAL_REROUTE)",
+   "description": "Same topology/model as C + feedback-driven local recovery (Z=LOCAL_REROUTE)",
    "role": "tests recovery benefit",
-   "recovery": "detection on parse/exec/verification failure; reroute to alternative model; descendant closure; one attempt"
+   "recovery": "detection on parse/exec/verification failure; reroute to alternative model; descendant closure; one attempt",
+   "vs_C": "identical to C except recovery; ΔQ_recovery = Q_D − Q_C is the clean recovery effect"
   },
   "E_full_replay": {
-   "description": "Same detection as D but full-graph re-execution on recovery trigger",
+   "description": "Same detection and recovery target as D but full-graph re-execution on trigger",
    "role": "isolates recovery SCOPE effect",
-   "recovery": "detection same as D; re-executes entire DAG with frozen alternative models"
+   "recovery": "detection SAME as D; recovery target SAME as D; ONLY difference is re-execution scope (full DAG vs affected subgraph)",
+   "vs_D": "ΔQ_scope = Q_E − Q_D isolates the scope effect; D and E share identical detection rules, identical recovery triggers, identical alternative models"
   }
  },
 
@@ -63,7 +73,15 @@
   "fault20": "20% tasks faulted, Random(20261024)",
   "fault30": "30% tasks faulted, Random(20261025)",
   "fault_model": "persistent capability fault on (task, node, planned_model); answer-replacement (no extra request for injection itself); bit-identical draw rule from frozen200",
-  "pre_registration": "fault draw computed and committed BEFORE execution; same draw used across all strategies (paired)"
+  "pre_registration": "fault draw computed and committed BEFORE execution; same draw used across all strategies (paired)",
+  "exposure_fairness": {
+   "problem": "Single LLM has 1 node; DAG has 4 nodes; same fault draw does NOT guarantee equal fault impact across strategies",
+   "node_selection": "fault node drawn uniform from {e1,e2,r,v}; for Single A: fault applied to the single call if the drawn node maps to it (all nodes map to the single call since Single is undecomposed — see mapping below)",
+    "single_mapping": "for A/A', all node faults (e1/e2/r/v) map to the single LLM call; fault ALWAYS exposes in A; in DAG, fault exposes only if the DAG actually executes the faulted (task,node,model) triple",
+    "exposure_audit": "for each faulted task, record: which node was faulted, which strategy actually executed the faulted triple, how many times; report as exposure_matrix",
+    "fairness_note": "unequal exposure is INHERENT to comparing different execution structures; it is reported transparently (exposure_matrix) rather than artificially equalized; the paired comparison remains valid (same task, same fault draw) but the MECHANISM of impact differs by structure"
+  },
+  "seed_replication": "each fault rate uses ONE seed from the frozen set (20261023/24/25); one draw per rate is acknowledged as a limitation; multiple seeds per rate deferred to follow-up if primary result is borderline"
  },
 
  "budgets": {
@@ -80,35 +98,62 @@
  },
 
  "statistical_tests": {
-  "primary": "paired task-level comparison of Q (McNemar exact) between A vs D at each state",
-  "secondary": "budget-within-completion-rate difference at each (state, budget)",
+  "primary_confirmatory": {
+   "endpoint": "budget-within-completion-rate difference ΔQ_B = Q_B(D|s,B*) − Q_B(A|s,B*)",
+   "state_budget_pair": {
+    "state": "fault30",
+    "budget": "B* = 3000 tokens",
+    "selection_rule": "pre-specified from domain knowledge: 30% fault is the condition where recovery is hypothesized to help most; B*=3000 is the smallest budget where dynamic DAG trajectories are expected to complete",
+    "no_post_hoc": "this (state, budget) pair is the SOLE confirmatory test; all other pairs are exploratory"
+   },
+   "secondary_confirmatory": "ΔQ_B = Q_B(D|fault30,B*) − Q_B(A'|fault30,B*) tests whether D beats the competitive fallback baseline",
+   "test_statistic": "paired task-level: exact McNemar on correct-within-budget indicators",
+   "significance_level": "α = 0.05 two-sided, no correction needed for the 2 confirmatory tests (pre-specified); Holm correction applied to remaining 38 exploratory pairs"
+  },
+  "exploratory": {
+   "all_other_qb_pairs": "ΔQ_B at remaining 38 (state, budget) combinations; Holm-corrected; reported as exploratory",
+   "plain_q_comparison": "A vs D raw accuracy at each state; reported as secondary analysis",
+   "subgroup_analyses": "detectable vs undetectable fault tasks; recovery success rate; recovery cost overhead"
+  },
   "confidence_intervals": "task-cluster bootstrap 95% CI for all differences",
-  "multiple_comparison": "Holm correction over 4 states × 10 budgets = 40 comparisons for budget analysis; 4 comparisons for primary Q analysis",
+  "power_note": "50 tasks with ~15 faulted tasks at 30%; exact McNemar with 15 discordant pairs (all Help, no Harm) gives p=0.000122 — sufficient for large recovery effects; moderate effects (~8/15 Help) give p~0.0078; small effects (~5/15) give p~0.0625 (underpowered); power analysis from historical Help/Harm distribution recommended before final freeze",
   "pre_specified_subgroups": {
-   "detectable_fault_tasks": "tasks where the injected fault is detectable by the frozen detection rules",
-   "undetectable_fault_tasks": "tasks where the fault is NOT detectable (recovery cannot help)",
-   "recovery_success_rate": "among detectable-fault tasks, % where D recovers to correct answer",
-   "recovery_cost_overhead": "average extra tokens for D vs C on faulted tasks"
+   "detectable_fault_tasks": "tasks where the injected fault is detectable by the frozen detection rules (mechanism detectability, determined from fault type and detection rule BEFORE execution; NOT deployment observability)",
+   "undetectable_fault_tasks": "tasks where the fault is NOT detectable by frozen rules (recovery cannot help)",
+   "recovery_success_rate": "among mechanism-detectable fault tasks, % where D recovers to correct answer",
+   "recovery_cost_overhead": "average extra logical tokens for D vs C on faulted tasks",
+   "subgroup_note": "mechanism detectability (frozen rules + fault type) is distinct from deployment detectability (runtime observability); only mechanism detectability is used for pre-specified subgroup analysis; deployment detectability would require separate online decision experiments"
   }
  },
 
  "sample_size": {
   "n_tasks": 50,
   "n_states": 4,
-  "n_strategies": 6,
-  "n_evaluations": "50 × 6 × 4 = 1200 strategy-state evaluations",
-  "estimated_calls_per_eval": "A: 1, A_fallback: 1-2, B/C: 4, D: 4-7, E: 4-8 (with cache reuse reducing this)",
-  "estimated_total_new_requests": "~2000-3500 (with cross-strategy cache reuse for B/C base calls)",
-  "power_analysis": "50 tasks, paired McNemar: can detect ~20pp Q difference at α=0.05 with power ~0.7; sufficient for the 15-25pp effects expected"
+  "n_strategies": "6 attribution arms + up to 2 V2-candidate arms",
+  "n_evaluations": "50 × 6 × 4 = 1200 attribution evaluations (+ up to 200 V2-candidate evaluations)",
+  "estimated_calls_per_eval": "A: 1, A': 1-2, B/C: 4, D: 4-7, E: 4-8 (LOGICAL calls; physical reduced by cache reuse)",
+  "estimated_total_logical_calls": "~4000-6000",
+  "estimated_total_physical_requests": "~2000-3500 (cache reuse reduces physical; logical stays full)",
+  "power_analysis": {
+   "confirmatory_test": "fault30 state: ~15 faulted tasks of 50; exact McNemar on budget-within-completion indicators",
+   "ideal_recovery": "15 Help / 0 Harm → p=0.000122 (well-powered)",
+   "strong_recovery": "10 Help / 2 Harm → p=0.019 (adequate)",
+   "moderate_recovery": "8 Help / 4 Harm → p=0.115 (underpowered for sole confirmatory)",
+   "weak_recovery": "5 Help / 3 Harm → p=0.727 (not detectable)",
+   "conclusion": "50 tasks is a PILOT-scale validation; sufficient for strong recovery effects (≥10pp net recovery gain on faulted tasks); NOT adequate for moderate effects; if confirmatory test is borderline, larger panel recommended before paper claim",
+   "recommendation": "estimate actual Help/Harm distribution from historical fault30 paired records before execution to refine power estimate"
+  }
  },
 
  "budget": {
-  "global_max_requests": 4000,
-  "global_max_tokens": 4000000,
+  "global_max_physical_requests": 4000,
+  "global_max_physical_tokens": 4000000,
   "global_max_wall_seconds": 21600,
-  "per_strategy_per_state_max": 200,
-  "failed_call_billing": "counted; no retry",
-  "budget_reservation": "D and E strategies reserved 800 requests minimum"
+  "per_strategy_per_state_physical_max": 400,
+  "physical_vs_logical_note": "per_strategy_per_state_physical_max = 400 limits PHYSICAL new requests (not logical calls); 50 tasks × 4 nodes = 200 logical base calls + recovery extras; with cache reuse, physical requests should be well under 400; if physical cap truncates a strategy, it is logged as INCOMPLETE for that state",
+  "no_logical_cap": "no cap on logical calls (strategies must complete their full trajectory for fair evaluation)",
+  "failed_call_billing": "counted in physical; no retry",
+  "budget_reservation": "D and E strategies reserved 800 physical requests minimum (to prevent earlier strategies from consuming the budget needed for recovery evaluations)"
  },
 
  "execution_order": {
@@ -158,12 +203,15 @@
 
  "prerequisites": {
   "must_pass_before_execution": [
-    "V2 campaign completes (provides best DAG candidates for C/D config)",
+    "V2 campaign completes (provides best DAG candidates for V2-candidate arms)",
     "Scoring path audit (GOLD_CONTRACT_V1 verified in running evaluator)",
     "Fault injection path audit (injection replaces answer, not extra call)",
-    "Cost accounting audit (physical new_requests from ledger, not predictor)",
-    "Cache identity audit (S4 zero-new-request guarantee)"
-  ]
+    "Cost accounting audit (logical vs physical separation in running code)",
+    "Cache identity audit (S4 zero-new-request guarantee)",
+    "Cache-order invariance test: same strategy's logical tokens identical regardless of execution order (cache hits vs cold)",
+    "D/E detection equivalence test: identical detection rules, identical triggers, only scope differs"
+  ],
+  "v2_candidate_freeze_rule": "V2's config selection rule frozen BEFORE this protocol's 50 tasks are executed; selection uses ONLY V2's 8 campaign tasks; NEVER uses this protocol's 50 tasks for tuning or filtering"
  },
 
  "non_claims": [
