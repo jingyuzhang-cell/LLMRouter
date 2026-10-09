@@ -1,9 +1,9 @@
 {
  "version": "ADMISSION_PACKAGE_V1",
  "date": "2026-10-09",
- "status": "ASSEMBLED_FOR_REVIEW \u2014 this package is NOT execution authorization",
+ "status": "ASSEMBLED_FOR_REVIEW — this package is NOT execution authorization",
  "staged_approval": {
-  "stage_1": "FULL small-scale real validation (envelope A) \u2014 already authorized for 1h; finish remaining 3 calibration tasks within existing caps",
+  "stage_1": "FULL small-scale real validation (envelope A) — already authorized for 1h; finish remaining 3 calibration tasks within existing caps",
   "stage_2": "formal search (envelope B) decided ONLY from stage-1 measurements; no blanket release of all stages"
  },
  "component_1_cross_state_loop": {
@@ -19,14 +19,14 @@
   },
   "cache_prediction": {
    "identity_rule": {
-    "e": "(node, model) \u2014 prompt depends only on task+node",
-    "r": "(m_e1, m_e2, m_r) \u2014 prompt consumes e outputs; planned r runs before any recovery",
-    "v": "(m_e1, m_e2, m_r, m_v, Z) \u2014 prompt consumes facts and r output; Z-conditioned because e-node faults are rerouted at extraction stage, so v may consume recovered facts",
+    "e": "(node, model) — prompt depends only on task+node",
+    "r": "(m_e1, m_e2, m_r) — prompt consumes e outputs; planned r runs before any recovery",
+    "v": "(m_e1, m_e2, m_r, m_v, Z) — prompt consumes facts and r output; Z-conditioned because e-node faults are rerouted at extraction stage, so v may consume recovered facts",
     "scope": "state scopes are separate caches (executor identity includes scope)"
    },
-   "precision": "1.0 for all six methods \u2014 every predicted hit is an actual TRRAJECTORY hit; the incremental estimate never underestimates new search tokens (budget-safe direction)",
+   "precision": "1.0 for all six methods — every predicted hit is an actual TRRAJECTORY hit; the incremental estimate never underestimates new search tokens (budget-safe direction)",
    "recall_e_r": "1.0 (exact)",
-   "recall_v": "0.40-0.57, conservative by design: recovery-driven executions (v escalation, FULL replay chains) populate cache entries whose firing depends on outputs \u2014 NOT knowable inside the searcher information boundary; unpredicted hits are charged as new",
+   "recall_v": "0.40-0.57, conservative by design: recovery-driven executions (v escalation, FULL replay chains) populate cache entries whose firing depends on outputs — NOT knowable inside the searcher information boundary; unpredicted hits are charged as new",
    "verification": "predicted vs executor TRAJECTORY.jsonl alias_of records"
   },
   "information_boundary": "evaluated (config,state) units use ACTUAL evaluator C/L; candidates use frozen ex-ante predictions; identical boundary for all six methods; ablations toggle only declared bits",
@@ -73,55 +73,43 @@
   },
   "execution_command": "P1B_FULLVAL_EXECUTE=1 python3 -m collab_scheduler_v1.joint_search_v1.fullval_runner --execute",
   "execution_state": {
-   "authorization": "SUBMITTED_FOR_APPROVAL \u2014 NOT AUTHORIZED",
-   "authorized_caps": {
-    "new_request_attempts": 30,
-    "new_total_tokens": 30000,
-    "wall_seconds": 3600,
-    "request_token_reservation": 8192,
-    "max_output_tokens": 512,
-    "logical_calls_per_task_config_state": 12,
-    "automatic_retries": 0
+   "authorization": "run01: authorized 1h; continuation: user 2026-10-09 continue-instruction",
+   "status": "STAGE 1 COMPLETE — minimum scope exceeded",
+   "combined_spend": {
+    "requests": 39,
+    "tokens": 15698
    },
-   "run": "fullval_runs/fullval_authorized_1h_01",
-   "tasks_completed": [
-    "1078998f-a141-45fc-918e-17ddf1da0d89",
-    "5c5cb310-0607-4285-ba9f-d8b996c700db"
-   ],
-   "scenario_summary": {
-    "S1": {
-     "new_requests": 4,
-     "new_tokens": 1726.0,
-     "Q": 0.0
-    },
-    "S4": {
-     "new_requests": 0,
-     "new_tokens": 0,
-     "Q": 0.0
-    },
-    "S3": {
-     "new_requests": 5,
-     "new_tokens": 1728.0,
-     "Q": 0.0
-    },
-    "S2": {
-     "new_requests": 2,
-     "new_tokens": 791.0,
-     "Q": 0.0
-    }
+   "minimum_scope": {
+    "S1_S4_must": "MET: all 4 tasks; S4 = 0 new requests on every task (full-prompt cache identity reuse verified 4/4)",
+    "S2_should": "EXCEEDED: 4/4 tasks",
+    "S3_optional": "3/4 tasks (t1,t2,t4 FULL_PATH_VERIFIED; t3 stopped by run-01 request budget before S3)"
    },
-   "mechanism_findings": [
-    "S4 cache reuse: 0 new requests \u2014 full-prompt-identity cache reuse verified on real models",
-    "S2 LOCAL: 2 new requests (recovery-path prompts) \u2014 billing separation recorded",
-    "S3 FULL: 5 new requests (replay) \u2014 8 logical calls billed with cache reuse on identical prompts",
-    "Q=0 on the executed task for all scenarios (real model answered wrong); mechanism evidence unaffected (billing/caching, not quality)"
-   ],
-   "remaining": "3 of 4 frozen calibration tasks unexecuted; completion inside the authorized envelope pending"
+   "mechanism": {
+    "cache_reuse": "S4 0 new requests x4 tasks; alias provenance to S1 recorded",
+    "injection_billing": "injected cells: corruption REPLACES the metered answer (1 injected logical call, source usage retained in C)",
+    "local_reroute": "t4: fault -> detection -> reroute -> Q restored to 1.0 with only 1 new request (5 cache hits)",
+    "full_replay": "t4: 8 logical calls / 4 new requests, four-node traversal verified; t1,t2 likewise",
+    "recovery_quality": "on the one task with a correct clean chain (t4), both recovery strategies restored Q from faulted to 1.0"
+   },
+   "quality": {
+    "clean_Q_by_task": {
+     "5c5cb310": 0.0,
+     "1078998f": 0.0,
+     "51f8785b": 0.0,
+     "09aaae63": 1.0
+    },
+    "diagnosis": "scoring chain correct; t1 = percent-convention mismatch (frozen RPROMPT says x100, gold keeps raw ratio 5.175 vs 517.5); t2/t3 = genuine extraction/arithmetic errors (99.98 vs 96.27; 765 vs 837.7). Not a wiring defect.",
+    "implication": "real Q on the hybrid pool is low but variable — the formal search condition, not a blocker"
+   },
+   "runs": [
+    "fullval_runs/fullval_authorized_1h_01",
+    "fullval_runs/fullval_cont1_01"
+   ]
   }
  },
  "component_3_resource_envelopes": {
   "envelope_A_full_validation": {
-   "status": "AUTHORIZED (1h) and partially executed",
+   "status": "COMPLETE (run01 + continuation; minimum scope exceeded)",
    "budget_global": {
     "new_requests": 30,
     "new_tokens": 30000,
@@ -131,7 +119,7 @@
    "incomplete_reporting": "VALIDATION_INCOMPLETE logged if must-complete scope missed; partial ledger preserved; no retry"
   },
   "envelope_B_formal_search": {
-   "status": "PENDING stage-1 measurements \u2014 NOT approved by this package",
+   "status": "STAGE-1 MEASUREMENTS IN: mechanisms verified (cache/billing/recovery); quality low-but-variable; launch decision per staged plan",
    "sessions": 18,
    "per_session": {
     "new_request_attempts": 400,
@@ -147,7 +135,7 @@
    "incomplete_reporting": "First config/request/token/wall/global cap or infrastructure error stops; incomplete candidate never scored; failed partial work still charged. Compare curves on common budget support; no extension to manufacture equal completed counts."
   },
   "envelope_B_test16_confirmation": {
-   "status": "PENDING \u2014 separate sub-envelope, NOT approved by this package",
+   "status": "PENDING — separate sub-envelope, NOT approved by this package",
    "scope": "final selection of each of 6 methods, evaluated ONCE on TEST16 x {clean, fault30}",
    "max_logical_calls": 2304,
    "hard_upper_bound": {

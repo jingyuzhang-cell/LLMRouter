@@ -206,7 +206,7 @@ Data splits, sample size, budget, stopping rules — awaiting blocking items.
 | Evaluator (48 configs) | ✅ PASS | test_evaluator.py 8/8 |
 | Runtime (quota, GPU, crash) | ✅ PASS | test_runtime.py 10/10 |
 | Official BoTorch qNEHVI alignment (Track A) | ✅ PASS (7/7) | TRACK_A_EVIDENCE.json |
-| FULL real validation (envelope A) | ⏳ AUTHORIZED 1h, 1/4 tasks executed | fullval_runs/fullval_authorized_1h_01 |
+| FULL real validation (envelope A) | ✅ COMPLETE (min scope exceeded, 4/4 S4=0-req) | FULLVAL_STAGE1_REPORT.json |
 | Task panel / power / budget (Track C) | ✅ PASS (14/14) | TASK_PANEL_V1.json |
 | TEST16 envelope (hard bound 2304 req / 18.87M tok) | ✅ recomputed | ADMISSION_PACKAGE_V1.json |
 | Formal experiment freeze | ⏳ MANIFESTS FROZEN, staged approval | ADMISSION_PACKAGE_V1.md |

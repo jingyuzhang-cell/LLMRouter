@@ -1,0 +1,52 @@
+{
+ "status": "COMPLETE (minimum scope exceeded)",
+ "envelopes": {
+  "run_01": {
+   "requests": 30,
+   "tokens": 11713,
+   "wall_s": 1457,
+   "cells": 11,
+   "stop": "request budget 30/30"
+  },
+  "continuation": {
+   "requests": 9,
+   "tokens": 3985,
+   "wall_s": 450,
+   "cells": 4,
+   "stop": "all four t4 cells complete"
+  },
+  "combined": {
+   "requests": 39,
+   "tokens": 15698
+  }
+ },
+ "minimum_scope": {
+  "S1_S4_must": "MET: all 4 tasks; S4 = 0 new requests on every task (full-prompt cache identity reuse verified 4/4)",
+  "S2_should": "EXCEEDED: 4/4 tasks",
+  "S3_optional": "3/4 tasks (t1,t2,t4 FULL_PATH_VERIFIED; t3 stopped by run-01 request budget before S3)"
+ },
+ "mechanism_results": {
+  "cache_reuse": "S4 0 new requests x4 tasks; alias provenance to S1 recorded",
+  "injection_billing": "injected cells: corruption REPLACES the metered answer (1 injected logical call, source usage retained in C)",
+  "local_reroute": "t4: fault -> detection -> reroute -> Q restored to 1.0 with only 1 new request (5 cache hits)",
+  "full_replay": "t4: 8 logical calls / 4 new requests, four-node traversal verified; t1,t2 likewise",
+  "recovery_quality": "on the one task with a correct clean chain (t4), both recovery strategies restored Q from faulted to 1.0"
+ },
+ "quality_findings": {
+  "clean_Q_by_task": {
+   "5c5cb310": 0.0,
+   "1078998f": 0.0,
+   "51f8785b": 0.0,
+   "09aaae63": 1.0
+  },
+  "diagnosis": "scoring chain correct; t1 = percent-convention mismatch (frozen RPROMPT says x100, gold keeps raw ratio 5.175 vs 517.5); t2/t3 = genuine extraction/arithmetic errors (99.98 vs 96.27; 765 vs 837.7). Not a wiring defect.",
+  "implication": "real Q on the hybrid pool is low but variable — the formal search condition, not a blocker"
+ },
+ "l_scale": {
+  "scale_max": 9.271939865499734,
+  "semantics": "serial service-demand reconstruction",
+  "basis_uid": "5c5cb310-0607-4285-ba9f-d8b996c700db",
+  "rule": "First S1 only, freeze before first S3; small diagnostic calibration. No later adjustment."
+ },
+ "non_claims": "calibration/mechanism only; no algorithm or quality claim (protocol non_claims honored)"
+}

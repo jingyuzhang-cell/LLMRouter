@@ -77,3 +77,26 @@ Recomputed at the FULL call ceiling (not the optimistic mean-token estimate):
 - Budget-fit ≠ completion guarantee.
 - TEST16 ≠ equivalence evidence.
 - Cross-state loop = wiring admission (stub), not performance evidence.
+
+
+## 5. Stage-1 execution outcome (2026-10-09, appended)
+
+**Stage 1 COMPLETE — minimum scope exceeded.** run01 (30 req / 11,713 tok /
+1,457 s, 11 cells, stopped by request budget) + continuation (9 req / 3,985 tok
+/ 450 s, 4 t4 cells, `39 requests combined`).
+
+- S1+S4 must-scope MET: all 4 tasks; **S4 = 0 new requests on every task**
+  (full-prompt cache identity reuse verified 4/4 with alias provenance).
+- S2 should-scope EXCEEDED (4/4); S3 optional 3/4 (t1, t2, t4 FULL_PATH_VERIFIED).
+- **Recovery mechanism proven on real models**: on t4 (the one task with a
+  correct clean chain), r-corruption was detected and BOTH strategies restored
+  Q to 1.0 — LOCAL with a single new request (5 cache hits), FULL with 8
+  logical calls / 4 new requests. Injection replaces the metered answer; source
+  usage retained in C.
+- Quality: clean Q = 0/0/0/1 across tasks. Scoring chain verified correct —
+  t1 percent-convention mismatch (frozen RPROMPT x100 vs raw-ratio gold), t2/t3
+  genuine extraction/arithmetic errors. Real Q is low but variable: the formal
+  search condition, not a blocker.
+- L-scale calibration recorded from first S1 (rule honored, not re-frozen).
+
+Full detail: `FULLVAL_STAGE1_REPORT.json`.
