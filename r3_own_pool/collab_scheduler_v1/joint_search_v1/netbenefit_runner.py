@@ -228,18 +228,81 @@ def eval_single_arm(arm, arm_cfg, ex, tasks, registry, golds):
     return rows
 
 
+def recovery_plans(rows, ex, led, tasks):
+    """Per-task recovery plan EXACTLY mirroring D's LOCAL machinery so that
+    D and E differ ONLY in re-execution scope.
+
+    Triggers are D's ungated stage detections evaluated on the base pass:
+      e-level  any extractor with empty facts (D's ER stage)
+      r-level  reasoning unparseable (value_of error; D's R3)
+      v-level  verifier None or mismatch with a parseable r (D's V3)
+    Alternative models are D's: e-nodes use the memory rule ('coder' for the
+    FIRST e-detected task in panel order, else 'medium'); r escalates to
+    'large'; v escalates to 'large'. D's descendant refreshes (R2/V2) re-run
+    on PLANNED models, which E's full-graph replay also uses.
+
+    Task-level trigger truth is identical to detected_failure() (verified by
+    audit v4 empirically); this function additionally yields the node-level
+    plan that E's replay needs."""
+    from static_dag_v0.multidag_dynamic import value_of, json_value, close
+    state = {}
+    e_det = []
+    for t in tasks:
+        uid = t['uid']
+        latest = {k.split(':')[3]: ex.by_key[k]['response']['answer']
+                  for k in rows[uid]['keys']}
+        f1, _ = led.parse_facts_safe(latest['e1'])
+        f2, _ = led.parse_facts_safe(latest['e2'])
+        state[uid] = (f1, f2, latest)
+        if not f1['facts'] or not f2['facts']:
+            e_det.append(uid)
+    target = {uid: ('coder' if i == 0 else 'medium')
+              for i, uid in enumerate(e_det)}
+    plans = {}
+    for t in tasks:
+        uid = t['uid']
+        f1, f2, latest = state[uid]
+        plan = {}
+        if not f1['facts']:
+            plan['e1'] = target[uid]
+        if not f2['facts']:
+            plan['e2'] = target[uid]
+        facts = dict(facts=f1['facts'] + f2['facts'])
+        value, error = value_of(latest['r'], facts)
+        verified = json_value(latest['v'])
+        if error:
+            plan['r'] = 'large'
+        if verified is None or (not error and not close(value, verified)):
+            plan['v'] = 'large'
+        if plan:
+            plans[uid] = plan
+    return plans
+
+
 def eval_dag_arm(arm, arm_cfg, ex, led, tasks, registry, golds, state):
     faults = {uid: (node, failing) for uid, (node, _m, failing) in registry.items()}
     config = dict(id=f'nb:{arm}:{state}', X=arm_cfg['X'])
     rows = _evaluate(config, ex, led, tasks, faults, label=arm,
                      recovery=arm_cfg['Z'] == 'LOCAL')
     if arm_cfg['Z'] == 'FULL':
-        retry = [t for t in tasks if detected_failure(rows[t['uid']], ex, led)]
-        if retry:
+        # E uses the SAME detection and per-task alternative models as D
+        # (recovery_plans); only the re-execution scope is the full graph:
+        # recovery nodes switch to D's alternative model, every other node
+        # re-executes on its planned model. No cache substitution — all
+        # replayed logical calls are charged.
+        plans = recovery_plans(rows, ex, led, tasks)
+        retry = [t for t in tasks if t['uid'] in plans]
+        groups = {}
+        for t in retry:
+            key = tuple(sorted(plans[t['uid']].items()))
+            groups.setdefault(key, []).append(t)
+        for key, group in sorted(groups.items()):
+            plan = dict(key)
             retry_config = copy.deepcopy(config)
-            retry_config['X'] = {n: ('coder' if m == 'large' else 'large')
-                                 for n, m in arm_cfg['X'].items()}
-            rerun = _evaluate(retry_config, ex, led, retry, faults, label=arm + ':replay')
+            retry_config['id'] = f'nb:{arm}:{state}:replay'
+            retry_config['X'] = {**arm_cfg['X'], **plan}
+            rerun = _evaluate(retry_config, ex, led, group, faults,
+                              label=arm + ':replay')
             for uid, row in rerun.items():
                 rows[uid] = dict(row, keys=rows[uid]['keys'] + row['keys'])
     out = []
@@ -306,7 +369,7 @@ def completed_cells(execute):
     return done
 
 
-def run(execute=False, run_id=None):
+def run(execute=False, run_id=None, budget_caps_override=None):
     from collab_scheduler_v1 import fault30_protocol as fp
     freeze, tasks = load_freeze()
     RUNROOT.mkdir(exist_ok=True)
@@ -340,6 +403,10 @@ def run(execute=False, run_id=None):
         budget_caps = dict(new_request_attempts=6000, new_total_tokens=50_000_000,
                            request_token_reservation=8192, max_output_tokens=2048,
                            wall_seconds=3600, logical_calls_per_task_config_state=24)
+    if budget_caps_override and not execute:
+        # audit-only hook: prove the runner stops safely at a hard cap and
+        # resumes; never used for real execution
+        budget_caps.update(budget_caps_override)
 
     directory = RUNROOT / run_id
     pending = [c for c in CELL_ORDER
@@ -424,8 +491,10 @@ def run(execute=False, run_id=None):
     results = []
     status = 'COMPLETE'
     reason = 'all cells done'
+    current_cell = None
     try:
         for protocol, arm, state in CELL_ORDER:
+            current_cell = (protocol, arm, state)
             cell = (protocol, arm, state)
             if state == 'clean' and protocol == 'competitive':
                 continue  # clean is shared; mechanism clean is authoritative
@@ -492,6 +561,7 @@ def run(execute=False, run_id=None):
             append(ledger_path, dict(protocol=protocol, arm=arm, state=state,
                                      status='COMPLETE', execute=execute,
                                      physical=record['physical']))
+            current_cell = None
             cell_spend[cell] = cell_spend.get(cell, 0) + physical['new_requests']
             results.append(record)
             print(f'[ok] {label}: Q={record["objectives"]["Q"]:.3f} '
@@ -502,6 +572,20 @@ def run(execute=False, run_id=None):
         status = 'INCOMPLETE'
         reason = repr(exc)
         print(f'[stop] {reason}')
+        if current_cell is not None:
+            # partial spend of the interrupted cell belongs to the physical
+            # ledger; record it so DISPATCH reconciles exactly on resume
+            try:
+                partial = fr.physical_accounting(ex.events)
+                append(rows_path, dict(
+                    protocol=current_cell[0], arm=current_cell[1],
+                    state=current_cell[2], execute=execute,
+                    status='INCOMPLETE', reason='interrupted: ' + reason[:200],
+                    partial_physical={k: partial[k] for k in (
+                        'logical_calls', 'new_requests', 'new_tokens',
+                        'answer_replaced_calls')}))
+            except Exception as e:  # noqa: BLE001 - best effort bookkeeping
+                print(f'[warn] partial-cell bookkeeping failed: {e!r}')
     finally:
         if execute and proc is not None:
             try:

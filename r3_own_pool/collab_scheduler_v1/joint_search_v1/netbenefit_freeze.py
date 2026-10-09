@@ -59,7 +59,18 @@ ARMS = {
     'D_dynamic_local': dict(kind='dag', X=dict(e1='large', e2='large',
                                                r='medium', v='coder'), Z='LOCAL'),
     'E_dynamic_full': dict(kind='dag', X=dict(e1='large', e2='large',
-                                              r='medium', v='coder'), Z='FULL'),
+                                              r='medium', v='coder'), Z='FULL',
+                           replay_rule=(
+                               'SAME detection predicate and per-task '
+                               'alternative models as D (recovery_plans: '
+                               'e-nodes use the memory rule coder/medium by '
+                               'panel det order; r escalates to large; v '
+                               'escalates to large); every other node '
+                               're-executes on its PLANNED model. D and E '
+                               'differ ONLY in re-execution scope (local '
+                               'subtree vs full graph). D post-repair '
+                               'cascades (R2/V2 refresh, V3) are D-defined '
+                               'behavior on non-trigger nodes.')),
     'V2_static': dict(kind='dag', X=dict(e1='medium', e2='large',
                                          r='medium', v='coder'), Z='NONE',
                       role='v2_candidate'),
@@ -185,8 +196,17 @@ def run():
 
     freeze = dict(
         protocol='NET_BENEFIT_FINAL_FREEZE',
-        version='FREEZE_v1_20261009',
-        status='FROZEN before any NET-BENEFIT model call',
+        version='FREEZE_v2_20261010',
+        status='FROZEN; v2 aligns E-arm replay with D detection/targets '
+               'before any E cell ever ran (no E real call exists)',
+        pre_halt_real_spend=dict(
+            note='3 real cells (A/A-prime/B clean) executed under FREEZE_v1 '
+                 'on 2026-10-10 before the halt directive; arm definitions '
+                 'are unchanged in v2, records preserved in NB_ROWS.jsonl, '
+                 '252 physical requests charged to the global real budget; '
+                 'resume will not re-pay them (cache seeded from TRAJECTORY)',
+            cells=['mechanism:A_single:clean', 'mechanism:A_single_cross_fallback:clean',
+                   'mechanism:B_same_model_dag:clean']),
         task_selection=dict(
             source='static_dag_v0.multidag_dynamic.hybrid_pool()',
             rule=f'sha256("{SEED_TAG}"+uid) ascending, first {N_TASKS}',

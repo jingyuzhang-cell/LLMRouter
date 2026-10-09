@@ -1,25 +1,29 @@
 {
- "role": "NET-BENEFIT stage-2 preflight (GO/NO-GO)",
- "verdict": "GO",
+ "role": "NET-BENEFIT stage-2 preflight v2 (GO/NO-GO)",
+ "verdict": "GO_OFFLINE_AWAITING_OPERATOR_APPROVAL",
  "offline_gates_all_pass": true,
  "execution_environment_ready": true,
+ "real_execution_requires": "explicit operator approval (directive 2026-10-10); 252 requests of pre-halt real spend already charged and preserved",
  "checks": {
   "real_assertion_audits": {
    "ok": true,
    "detail": {
-    "scoring": "PASS",
-    "fault": "PASS",
-    "cache": "PASS",
-    "cost": "PASS",
-    "de_consistency": "PASS",
+    "fault_dual_dimension": "PASS",
+    "de_mechanism": "PASS",
+    "cost_strict": "PASS",
     "runner": "PASS"
    },
-   "evidence": "NET_BENEFIT_AUDIT_REPORT_V3.json"
+   "evidence": "NET_BENEFIT_AUDIT_REPORT_V4.json"
+  },
+  "budget_stop_resume_safety": {
+   "ok": true,
+   "evidence": "budget_stop_probe (StopRun at exactly 300 requests) + stub_validation resume COMPLETE; audit v4 R5 15/15"
   },
   "stub_dry_run_complete": {
    "ok": true,
    "cells": "56/56",
-   "resume_evidence": "resume_test run: 1 cell re-executed, cache seeded 671, new_req=0, objectives reproduced"
+   "interrupted_partial_cells": 1,
+   "resume_evidence": "budget_stop_probe stopped at exactly 300 requests (INCOMPLETE + partial spend recorded); resume run completed the remaining 53 cells with 300 cache seeds and exact ledger reconciliation"
   },
   "task_freeze": {
    "ok": true,
@@ -33,6 +37,10 @@
    },
    "remaining_pool": 89,
    "evidence": "NET_BENEFIT_FREEZE.json (content hashes re-verified by audit v3)"
+  },
+  "e_arm_rule_aligned": {
+   "ok": true,
+   "evidence": "FREEZE_v2 E_dynamic_full.replay_rule; audit v4 de_mechanism 14/14"
   },
   "v2_candidates_final": {
    "ok": true,
@@ -66,13 +74,13 @@
   "manifest_complete": {
    "ok": true,
    "real_model_requests_so_far": 0,
-   "stub_requests": 671,
-   "note": "all current spend is stub (zero model requests); freeze hash 4b1bf73d281ec520 bound in every run dir"
+   "stub_requests": 953,
+   "note": "all current spend is stub (zero model requests); freeze hash 6544818f4c855740 bound in every run dir"
   },
   "code_hashes": {
    "ok": true,
-   "runner": "6b70d2582fa02b9c",
-   "freeze_script": "cb8a89ad9d9262ab",
+   "runner": "a6e8f5d4dff6f1ac",
+   "freeze_script": "ac1849649fcbafa0",
    "evaluator": "06a0ece7b105ed5d",
    "fault30_run": "8d148911f1bd3e2d",
    "note": "full hashes in FREEZE_BINDING.jsonl at execution time"

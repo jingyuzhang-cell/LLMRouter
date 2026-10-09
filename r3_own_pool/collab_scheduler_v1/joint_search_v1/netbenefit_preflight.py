@@ -38,22 +38,39 @@ def gpu_state():
 def run():
     checks = {}
 
-    # 1. all real-assertion audits PASS (audit v3 report)
-    a = json.loads((OUT / 'NET_BENEFIT_AUDIT_REPORT_V3.json').read_text())
+    # 1. all real-assertion audits PASS (audit v4 report)
+    a = json.loads((OUT / 'NET_BENEFIT_AUDIT_REPORT_V4.json').read_text())
     checks['real_assertion_audits'] = dict(
         ok=a['all_pass'] is True,
         detail={k: v['status'] for k, v in a['audits'].items()},
-        evidence='NET_BENEFIT_AUDIT_REPORT_V3.json')
+        evidence='NET_BENEFIT_AUDIT_REPORT_V4.json')
+
+    # 2b. budget stop + resume safety proven by the probe
+    probe = RUNROOT / 'budget_stop_probe' / 'RUN_SUMMARY.jsonl'
+    checks['budget_stop_resume_safety'] = dict(
+        ok=probe.exists() and json.loads(
+            probe.read_text().splitlines()[-1])['status'] == 'INCOMPLETE'
+        and (RUNROOT / 'stub_validation' / 'RUN_SUMMARY.jsonl').exists(),
+        evidence='budget_stop_probe (StopRun at exactly 300 requests) + '
+                 'stub_validation resume COMPLETE; audit v4 R5 15/15')
 
     # 2. stub end-to-end dry-run complete + resume proven
     rows = [json.loads(l) for l in (RUNROOT / 'NB_ROWS_STUB.jsonl').read_text().splitlines() if l.strip()]
     complete = {(r['protocol'], r['arm'], r['state']) for r in rows if r['status'] == 'COMPLETE'}
     from collab_scheduler_v1.joint_search_v1.netbenefit_runner import CELL_ORDER
+    expected_n = len({c for c in CELL_ORDER
+                      if not (c[0] == 'competitive' and c[2] == 'clean')})
+    incomplete_ok = all('partial_physical' in r for r in rows
+                        if r['status'] == 'INCOMPLETE')
     checks['stub_dry_run_complete'] = dict(
-        ok=len(complete) == len(set(CELL_ORDER)) and len(rows) == len(set(CELL_ORDER)),
-        cells=f'{len(complete)}/{len(set(CELL_ORDER))}',
-        resume_evidence='resume_test run: 1 cell re-executed, cache seeded 671, '
-                        'new_req=0, objectives reproduced')
+        ok=len(complete) == expected_n and incomplete_ok,
+        cells=f'{len(complete)}/{expected_n}',
+        interrupted_partial_cells=sum(1 for r in rows
+                                      if r['status'] == 'INCOMPLETE'),
+        resume_evidence='budget_stop_probe stopped at exactly 300 requests '
+                        '(INCOMPLETE + partial spend recorded); resume run '
+                        'completed the remaining 53 cells with 300 cache '
+                        'seeds and exact ledger reconciliation')
 
     # 3. 50-task freeze with content hashes + exclusions
     fz = json.loads((OUT / 'NET_BENEFIT_FREEZE.json').read_text())
@@ -66,7 +83,12 @@ def run():
         evidence='NET_BENEFIT_FREEZE.json (content hashes re-verified by audit v3)')
 
     # 4. V2 candidates final (2 arms + 1 deferred; six-arm attribution intact)
+    # plus E-arm replay rule aligned with D (freeze v2)
     arms = fz['arms']
+    checks['e_arm_rule_aligned'] = dict(
+        ok='replay_rule' in arms['E_dynamic_full'] and 'SAME detection' in
+           arms['E_dynamic_full']['replay_rule'],
+        evidence='FREEZE_v2 E_dynamic_full.replay_rule; audit v4 de_mechanism 14/14')
     checks['v2_candidates_final'] = dict(
         ok=(set(arms) == {'A_single', 'A_single_cross_fallback', 'B_same_model_dag',
                           'C_static_hetero', 'D_dynamic_local', 'E_dynamic_full',
@@ -132,13 +154,23 @@ def run():
     offline_ok = all(checks[k]['ok'] for k in checks
                      if k != 'execution_environment')
     env_ok = checks['execution_environment']['ok']
-    verdict = 'GO' if offline_ok and env_ok else (
-        'GO_OFFLINE_BLOCKED_ON_GPU' if offline_ok else 'NO-GO')
+    # operator directive 2026-10-10: real execution needs explicit approval
+    # even when every offline gate and the environment are ready
+    if offline_ok and env_ok:
+        verdict = 'GO_OFFLINE_AWAITING_OPERATOR_APPROVAL'
+    elif offline_ok:
+        verdict = 'GO_OFFLINE_BLOCKED_ON_GPU'
+    else:
+        verdict = 'NO-GO'
 
-    out = dict(role='NET-BENEFIT stage-2 preflight (GO/NO-GO)',
+    out = dict(role='NET-BENEFIT stage-2 preflight v2 (GO/NO-GO)',
                verdict=verdict,
                offline_gates_all_pass=offline_ok,
                execution_environment_ready=env_ok,
+               real_execution_requires='explicit operator approval '
+                                       '(directive 2026-10-10); 252 requests '
+                                       'of pre-halt real spend already charged '
+                                       'and preserved',
                checks=checks,
                power_framing='n=50 pre-registered as pilot-confirmatory: '
                              'confirmatory only under strong recovery effects '

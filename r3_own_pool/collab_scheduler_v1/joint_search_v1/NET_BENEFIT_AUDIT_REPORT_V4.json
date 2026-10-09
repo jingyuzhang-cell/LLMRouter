@@ -1,0 +1,85 @@
+{
+ "role": "NET-BENEFIT audit v4",
+ "audits": {
+  "fault_dual_dimension": {
+   "status": "PASS",
+   "n_tests": 12,
+   "n_pass": 12,
+   "tests": {
+    "R3_none_replaces_target_node_content": true,
+    "R3_none_target_differs_from_clean": true,
+    "R3_none_no_extra_logical_calls": true,
+    "R2_partition_exclusive": true,
+    "R2_replacement_counted_orthogonally": true,
+    "R2_call_is_both_physical_and_replaced": true,
+    "R2_postfault_clean_reproduces": true,
+    "R2_cache_unpolluted": true,
+    "R3_local_recovery_calls_fire": true,
+    "R3_local_escalation_model_large": true,
+    "R3_full_replays_all_four_nodes": true,
+    "negative_wrong_model_no_replacement": true
+   },
+   "failures": {}
+  },
+  "de_mechanism": {
+   "status": "PASS",
+   "n_tests": 14,
+   "n_pass": 14,
+   "tests": {
+    "R1_matched_configs_declared": true,
+    "R1_D_E_same_X_only_Z_differs": true,
+    "R1_r_fault_both_triggered": true,
+    "R1_r_fault_trigger_sets_equal": true,
+    "R1_r_fault_alt_models_match_large": true,
+    "R1_r_fault_scope_D_subset_E": true,
+    "R1_e1_fault_both_triggered": true,
+    "R1_e1_fault_trigger_sets_equal": true,
+    "R1_e1_fault_alt_models_match_coder": true,
+    "R1_e1_fault_scope_D_subset_E": true,
+    "R1_v_fault_both_triggered": true,
+    "R1_v_fault_trigger_sets_equal": true,
+    "R1_v_fault_alt_models_match_large": true,
+    "R1_v_fault_scope_D_subset_E": true
+   },
+   "failures": {}
+  },
+  "cost_strict": {
+   "status": "PASS",
+   "n_tests": 5,
+   "n_pass": 5,
+   "tests": {
+    "R4_task_C_equals_trajectory_records": true,
+    "R4_physical_equals_dispatch_and_budget": true,
+    "R4_warm_run_zero_new_physical": true,
+    "R4_logical_invariant_cold_warm": true,
+    "negative_tampered_trajectory_detected": true
+   },
+   "failures": {}
+  },
+  "runner": {
+   "status": "PASS",
+   "n_tests": 15,
+   "n_pass": 15,
+   "tests": {
+    "R5_all_cells_complete": true,
+    "R5_paired_panels_identical": true,
+    "R5_freeze_content_hashes_valid": true,
+    "R5_real_records_flagged_execute": true,
+    "R5_stub_records_not_flagged_execute": true,
+    "negative_mode_filtered_checkpoint_reads": true,
+    "R5_budget_stop_probe_exists": true,
+    "R5_budget_stop_was_incomplete": true,
+    "R5_budget_stop_no_overrun": true,
+    "R5_resume_completed_everything": true,
+    "R5_DE_trigger_sets_equal_full_run": true,
+    "R5_incomplete_cells_carry_partial_spend": true,
+    "R5_dispatch_equals_cell_ledger_requests": true,
+    "R5_dispatch_equals_cell_ledger_tokens": true,
+    "negative_dropped_cell_detected": true
+   },
+   "failures": {}
+  }
+ },
+ "all_pass": true,
+ "zero_model_requests": true
+}
