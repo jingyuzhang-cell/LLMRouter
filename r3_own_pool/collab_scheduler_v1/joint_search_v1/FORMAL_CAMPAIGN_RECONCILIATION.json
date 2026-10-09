@@ -1,11 +1,11 @@
 {
  "campaign_status": "DIAGNOSTIC — automation complete != formal admission; scoring contract not yet frozen into execution path",
- "scoring_code_hashes": {
+ "current_source_hashes": {
   "evaluator_py": "89fe4b9a1d2b84f753e316d540728f1691fc8ed96c25434c50c05e1f19b71eea",
   "fault30_run_py": "40ed166eb7d882d592ba76c52a7d456a4b02631d294e97418254ead18f4df4ba",
   "scoring_contract_final_py": "ac327d16f638937c49e9f77127827b2e43ee4509a88de383ba8089aee73a19ca",
   "gold_contract_v1": "3dd3cfff19be7ccfe0f01b2f7a66d441ed5019c1e4abe3ff3a7bec13ec60945a",
-  "note": "executed sessions scored via fault30_run close() (1e-4) against GOLD_CONTRACT_V1 answers; v2.1 re-score below uses score_v21"
+  "note": "CURRENT FILE hashes only; NOT proof of loaded execution version. Rescore uses current score_v21; recorded scoring version remains UNVERIFIED"
  },
  "panel_identity": {
   "executed_panel": "TASK_PANEL_V1 SEARCH8 (via FORMAL_LAUNCH_V2)",
@@ -48,11 +48,352 @@
   }
  },
  "closure_checks": {
-  "A_scoring": "per-session hashes + Q_recorded vs Q_v2.1 re-score; sessions with flips are NOT mergeable across contracts",
-  "B_quota": "ledger-proven only (DISPATCH reserve/response events); random_20261009 0-request claim proven by absent ledger; INCOMPLETE cells billed and retained; retries additive",
+  "A_scoring": "per-session hashes + Q_recorded vs Q_v2.1 re-score; no cross-contract merge without runtime version and selector observation proof",
+  "B_quota": "ledger-proven only (DISPATCH reserve/response events); missing ledgers imply UNKNOWN spend, not zero; INCOMPLETE cells billed and retained; retries additive",
   "C_comparison": "search physical (requests/tokens/wall/switch) reported separately from deployment Q/C/L; INCOMPLETE retained"
  },
  "sessions": {
+  "official_qnehvi_same_state_20261009": {
+   "status": "COMPLETE",
+   "dirs": [
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/official_qnehvi_same_state_20261009"
+   ],
+   "scoring": {
+    "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
+    "executed_contract": "UNVERIFIED: protocol close vs production score_v21 mismatch",
+    "execution_hash_status": "NOT_PROVEN_BY_CURRENT_SOURCE",
+    "selector_observation_trace_status": "NOT_VERIFIED"
+   },
+   "search_physical": {
+    "requests_ledger": 223,
+    "responses_settled": 223,
+    "unresolved_attempts": 0,
+    "spend_status": "RECORDED_LOWER_BOUND",
+    "tokens_ledger": 77483,
+    "wall_reported": 1869,
+    "model_switch_wall": 1644,
+    "ledger_proofs": [
+     "official_qnehvi_same_state_20261009: ledger: 223 attempts / 223 responses / 0 unresolved; tokens are recorded lower bound"
+    ]
+   },
+   "rescore_v21": {
+    "n_evaluations": 24,
+    "flips": 0,
+    "unscorable_evaluations": 0,
+    "mergeable_across_contracts": false,
+    "note": "Zero flips cannot establish execution-version or selector-observation equivalence",
+    "detail": [
+     {
+      "cid": "large__large__large__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__large__NONE",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__large__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__large__NONE",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__large__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__large__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__large__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__large__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__large__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__large__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__large__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
+     }
+    ]
+   },
+   "deployment": {
+    "clean": {
+     "n": 12,
+     "deployment_Q": [
+      0.25,
+      0.5,
+      0.5,
+      0.375,
+      0.5,
+      0.5,
+      0.375,
+      0.375,
+      0.5,
+      0.5,
+      0.375,
+      0.25
+     ],
+     "deployment_C": [
+      1407,
+      1477,
+      1511,
+      1602,
+      1512,
+      2127,
+      1531,
+      2230,
+      2059,
+      2306,
+      2446,
+      1405
+     ],
+     "deployment_L": [
+      4.14,
+      4.23,
+      4.37,
+      6.11,
+      4.45,
+      7.07,
+      5.3,
+      9.04,
+      6.19,
+      7.2,
+      9.92,
+      4.13
+     ]
+    },
+    "fault30": {
+     "n": 12,
+     "deployment_Q": [
+      0.125,
+      0.375,
+      0.375,
+      0.25,
+      0.375,
+      0.5,
+      0.25,
+      0.25,
+      0.5,
+      0.5,
+      0.25,
+      0.125
+     ],
+     "deployment_C": [
+      1381,
+      1452,
+      1486,
+      1577,
+      1487,
+      2305,
+      1506,
+      2467,
+      2237,
+      2538,
+      2737,
+      1380
+     ],
+     "deployment_L": [
+      4.1,
+      4.2,
+      4.35,
+      6.0,
+      4.47,
+      7.93,
+      5.2,
+      10.97,
+      7.1,
+      8.18,
+      11.97,
+      4.1
+     ]
+    }
+   }
+  },
   "proposed_state_incremental_20261009": {
    "status": "INCOMPLETE",
    "dirs": [
@@ -60,29 +401,37 @@
    ],
    "scoring": {
     "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
-    "executed_contract": "close_1e-4 + GOLD_CONTRACT_V1 answers"
+    "executed_contract": "UNVERIFIED: protocol close vs production score_v21 mismatch",
+    "execution_hash_status": "NOT_PROVEN_BY_CURRENT_SOURCE",
+    "selector_observation_trace_status": "NOT_VERIFIED"
    },
    "search_physical": {
     "requests_ledger": 32,
     "responses_settled": 32,
+    "unresolved_attempts": 0,
+    "spend_status": "RECORDED_LOWER_BOUND",
     "tokens_ledger": 11415,
     "wall_reported": 205,
     "model_switch_wall": 136,
     "ledger_proofs": [
-     "proposed_state_incremental_20261009: ledger: 32 reserved / 32 responses"
+     "proposed_state_incremental_20261009: ledger: 32 attempts / 32 responses / 0 unresolved; tokens are recorded lower bound"
     ]
    },
    "rescore_v21": {
     "n_evaluations": 1,
     "flips": 0,
-    "mergeable_across_contracts": true,
+    "unscorable_evaluations": 0,
+    "mergeable_across_contracts": false,
+    "note": "Zero flips cannot establish execution-version or selector-observation equivalence",
     "detail": [
      {
       "cid": "large__large__large__coder__NONE",
       "state": "clean",
       "Q_recorded": 0.25,
       "Q_close_v1": 0.25,
-      "Q_v21": 0.25
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
      }
     ]
    },
@@ -101,6 +450,403 @@
     }
    }
   },
+  "proposed_without_incremental_cost_20261009": {
+   "status": "RUNNING/UNKNOWN",
+   "dirs": [
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_without_incremental_cost_20261009"
+   ],
+   "scoring": {
+    "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
+    "executed_contract": "UNVERIFIED: protocol close vs production score_v21 mismatch",
+    "execution_hash_status": "NOT_PROVEN_BY_CURRENT_SOURCE",
+    "selector_observation_trace_status": "NOT_VERIFIED"
+   },
+   "search_physical": {
+    "requests_ledger": 32,
+    "responses_settled": 32,
+    "unresolved_attempts": 0,
+    "spend_status": "RECORDED_LOWER_BOUND",
+    "tokens_ledger": 11256,
+    "wall_reported": 0,
+    "model_switch_wall": 131,
+    "ledger_proofs": [
+     "proposed_without_incremental_cost_20261009: ledger: 32 attempts / 32 responses / 0 unresolved; tokens are recorded lower bound"
+    ]
+   },
+   "rescore_v21": {
+    "n_evaluations": 1,
+    "flips": 0,
+    "unscorable_evaluations": 0,
+    "mergeable_across_contracts": false,
+    "note": "Zero flips cannot establish execution-version or selector-observation equivalence",
+    "detail": [
+     {
+      "cid": "large__large__large__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     }
+    ]
+   },
+   "deployment": {
+    "clean": {
+     "n": 1,
+     "deployment_Q": [
+      0.25
+     ],
+     "deployment_C": [
+      1407
+     ],
+     "deployment_L": [
+      4.14
+     ]
+    }
+   }
+  },
+  "proposed_without_state_20261009": {
+   "status": "COMPLETE",
+   "dirs": [
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_without_state_20261009"
+   ],
+   "scoring": {
+    "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
+    "executed_contract": "UNVERIFIED: protocol close vs production score_v21 mismatch",
+    "execution_hash_status": "NOT_PROVEN_BY_CURRENT_SOURCE",
+    "selector_observation_trace_status": "NOT_VERIFIED"
+   },
+   "search_physical": {
+    "requests_ledger": 226,
+    "responses_settled": 226,
+    "unresolved_attempts": 0,
+    "spend_status": "RECORDED_LOWER_BOUND",
+    "tokens_ledger": 77465,
+    "wall_reported": 2466,
+    "model_switch_wall": 2250,
+    "ledger_proofs": [
+     "proposed_without_state_20261009: ledger: 226 attempts / 226 responses / 0 unresolved; tokens are recorded lower bound"
+    ]
+   },
+   "rescore_v21": {
+    "n_evaluations": 24,
+    "flips": 0,
+    "unscorable_evaluations": 0,
+    "mergeable_across_contracts": false,
+    "note": "Zero flips cannot establish execution-version or selector-observation equivalence",
+    "detail": [
+     {
+      "cid": "large__large__large__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__large__NONE",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__large__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__large__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__large__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__large__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__large__medium__large__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__large__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__large__large__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__large__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__large__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__large__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__large__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
+     }
+    ]
+   },
+   "deployment": {
+    "clean": {
+     "n": 12,
+     "deployment_Q": [
+      0.25,
+      0.5,
+      0.375,
+      0.25,
+      0.5,
+      0.375,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25
+     ],
+     "deployment_C": [
+      1426,
+      1476,
+      1547,
+      1426,
+      2348,
+      2544,
+      2114,
+      2207,
+      1427,
+      1426,
+      2020,
+      1988
+     ],
+     "deployment_L": [
+      4.28,
+      4.21,
+      5.58,
+      4.25,
+      7.69,
+      11.4,
+      6.41,
+      8.24,
+      4.32,
+      4.29,
+      5.57,
+      5.53
+     ]
+    },
+    "fault30": {
+     "n": 12,
+     "deployment_Q": [
+      0.125,
+      0.375,
+      0.25,
+      0.125,
+      0.5,
+      0.25,
+      0.25,
+      0.125,
+      0.125,
+      0.125,
+      0.25,
+      0.125
+     ],
+     "deployment_C": [
+      1381,
+      1452,
+      1492,
+      1380,
+      2524,
+      2709,
+      2209,
+      2208,
+      1382,
+      1381,
+      2206,
+      2174
+     ],
+     "deployment_L": [
+      4.12,
+      4.21,
+      4.95,
+      4.07,
+      7.92,
+      11.43,
+      5.7,
+      5.74,
+      4.14,
+      4.06,
+      5.73,
+      5.69
+     ]
+    }
+   }
+  },
   "random_20261009": {
    "status": "RUNNING/UNKNOWN",
    "dirs": [
@@ -108,159 +854,379 @@
    ],
    "scoring": {
     "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
-    "executed_contract": "close_1e-4 + GOLD_CONTRACT_V1 answers"
+    "executed_contract": "UNVERIFIED: protocol close vs production score_v21 mismatch",
+    "execution_hash_status": "NOT_PROVEN_BY_CURRENT_SOURCE",
+    "selector_observation_trace_status": "NOT_VERIFIED"
    },
    "search_physical": {
     "requests_ledger": 0,
     "responses_settled": 0,
+    "unresolved_attempts": 0,
+    "spend_status": "UNKNOWN",
     "tokens_ledger": 0,
     "wall_reported": 0,
     "model_switch_wall": 0,
     "ledger_proofs": [
-     "random_20261009: ledger file absent -> ZERO requests PROVEN"
+     "random_20261009: UNKNOWN: ledger absent; zero spend not proven"
     ]
    },
    "rescore_v21": {
     "n_evaluations": 0,
     "flips": 0,
-    "mergeable_across_contracts": true,
+    "unscorable_evaluations": 0,
+    "mergeable_across_contracts": false,
+    "note": "Zero flips cannot establish execution-version or selector-observation equivalence",
     "detail": []
    },
    "deployment": {}
   },
   "scalarized_bo_20261009": {
-   "status": "RUNNING/UNKNOWN",
+   "status": "COMPLETE",
    "dirs": [
     "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/scalarized_bo_20261009"
    ],
    "scoring": {
     "panel_snapshot_sha": "86a302f6a4f24497fad8259b2a1ba4ba5a76fa2765df06d6fa5fef8e94cb7f18",
-    "executed_contract": "close_1e-4 + GOLD_CONTRACT_V1 answers"
+    "executed_contract": "UNVERIFIED: protocol close vs production score_v21 mismatch",
+    "execution_hash_status": "NOT_PROVEN_BY_CURRENT_SOURCE",
+    "selector_observation_trace_status": "NOT_VERIFIED"
    },
    "search_physical": {
-    "requests_ledger": 161,
-    "responses_settled": 161,
-    "tokens_ledger": 56600,
-    "wall_reported": 0,
-    "model_switch_wall": 1151,
+    "requests_ledger": 241,
+    "responses_settled": 241,
+    "unresolved_attempts": 0,
+    "spend_status": "RECORDED_LOWER_BOUND",
+    "tokens_ledger": 83607,
+    "wall_reported": 2424,
+    "model_switch_wall": 2190,
     "ledger_proofs": [
-     "scalarized_bo_20261009: ledger: 161 reserved / 161 responses"
+     "scalarized_bo_20261009: ledger: 241 attempts / 241 responses / 0 unresolved; tokens are recorded lower bound"
     ]
    },
    "rescore_v21": {
-    "n_evaluations": 8,
+    "n_evaluations": 24,
     "flips": 0,
-    "mergeable_across_contracts": true,
+    "unscorable_evaluations": 0,
+    "mergeable_across_contracts": false,
+    "note": "Zero flips cannot establish execution-version or selector-observation equivalence",
     "detail": [
      {
       "cid": "large__large__large__coder__NONE",
       "state": "clean",
       "Q_recorded": 0.25,
       "Q_close_v1": 0.25,
-      "Q_v21": 0.25
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
      },
      {
       "cid": "large__large__large__coder__NONE",
       "state": "fault30",
       "Q_recorded": 0.125,
       "Q_close_v1": 0.125,
-      "Q_v21": 0.125
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
      },
      {
       "cid": "medium__large__medium__coder__NONE",
       "state": "clean",
       "Q_recorded": 0.5,
       "Q_close_v1": 0.5,
-      "Q_v21": 0.5
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
      },
      {
       "cid": "medium__large__medium__coder__NONE",
       "state": "fault30",
       "Q_recorded": 0.375,
       "Q_close_v1": 0.375,
-      "Q_v21": 0.375
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
      },
      {
       "cid": "large__medium__medium__coder__NONE",
       "state": "clean",
       "Q_recorded": 0.25,
       "Q_close_v1": 0.25,
-      "Q_v21": 0.25
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
      },
      {
       "cid": "large__medium__medium__coder__NONE",
       "state": "fault30",
       "Q_recorded": 0.125,
       "Q_close_v1": 0.125,
-      "Q_v21": 0.125
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
      },
      {
       "cid": "medium__medium__medium__coder__NONE",
       "state": "clean",
       "Q_recorded": 0.5,
       "Q_close_v1": 0.5,
-      "Q_v21": 0.5
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
      },
      {
       "cid": "medium__medium__medium__coder__NONE",
       "state": "fault30",
       "Q_recorded": 0.375,
       "Q_close_v1": 0.375,
-      "Q_v21": 0.375
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__large__NONE",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__large__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__large__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__medium__large__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__large__NONE",
+      "state": "clean",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__large__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.5,
+      "Q_close_v1": 0.5,
+      "Q_v21": 0.5,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "medium__medium__large__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.375,
+      "Q_close_v1": 0.375,
+      "Q_v21": 0.375,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__coder__LOCAL",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__coder__LOCAL",
+      "state": "fault30",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__coder__NONE",
+      "state": "clean",
+      "Q_recorded": 0.25,
+      "Q_close_v1": 0.25,
+      "Q_v21": 0.25,
+      "status": "RESCORED",
+      "missing_uids": []
+     },
+     {
+      "cid": "large__large__medium__coder__NONE",
+      "state": "fault30",
+      "Q_recorded": 0.125,
+      "Q_close_v1": 0.125,
+      "Q_v21": 0.125,
+      "status": "RESCORED",
+      "missing_uids": []
      }
     ]
    },
    "deployment": {
     "clean": {
-     "n": 4,
+     "n": 12,
      "deployment_Q": [
       0.25,
       0.5,
       0.25,
-      0.5
+      0.5,
+      0.5,
+      0.375,
+      0.375,
+      0.375,
+      0.5,
+      0.5,
+      0.25,
+      0.25
      ],
      "deployment_C": [
       1416,
       1487,
       1441,
-      1511
+      1511,
+      2115,
+      1590,
+      2206,
+      1555,
+      2059,
+      1512,
+      1965,
+      1417
      ],
      "deployment_L": [
       4.3,
       4.39,
       4.21,
-      4.39
+      4.39,
+      6.88,
+      5.84,
+      8.61,
+      5.21,
+      6.26,
+      4.47,
+      5.34,
+      4.33
      ]
     },
     "fault30": {
-     "n": 4,
+     "n": 12,
      "deployment_Q": [
       0.125,
       0.375,
       0.125,
-      0.375
+      0.375,
+      0.5,
+      0.25,
+      0.25,
+      0.25,
+      0.5,
+      0.375,
+      0.25,
+      0.125
      ],
      "deployment_C": [
       1381,
       1452,
       1415,
-      1486
+      1486,
+      2305,
+      1577,
+      2466,
+      1530,
+      2237,
+      1487,
+      2206,
+      1382
      ],
      "deployment_L": [
       4.12,
       4.2,
       4.22,
-      4.4
+      4.4,
+      8.04,
+      6.07,
+      11.07,
+      5.18,
+      7.21,
+      4.44,
+      5.65,
+      4.15
      ]
     }
    }
   }
  },
  "totals": {
-  "cells_seen": 3,
-  "complete": 0,
-  "requests_ledger_total": 193,
-  "tokens_ledger_total": 68015,
+  "cells_seen": 6,
+  "complete": 3,
+  "requests_ledger_total": 754,
+  "tokens_ledger_total": 261226,
   "v2_ceiling": 6901,
   "v1_diagnostic_charged_separately": {
    "requests": 299,
@@ -271,6 +1237,9 @@
   "DIAGNOSTIC campaign until contract alignment",
   "descriptive only; no method-superiority claim",
   "INCOMPLETE cells retained; common-budget-support comparison only",
+  "Live snapshot: counters may advance during reading",
+  "Missing dispatch ledgers imply unknown spend; totals are lower bounds",
+  "Current-source hashes are not execution-time hashes",
   "TEST16 not released"
  ]
 }

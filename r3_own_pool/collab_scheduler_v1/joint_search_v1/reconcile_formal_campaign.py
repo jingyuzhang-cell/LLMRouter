@@ -1,30 +1,8 @@
-"""Zero-call DIAGNOSTIC reconciliation + descriptive analysis of the formal
-campaign (V2). Implements the three closure checks mandated by review:
-
-  A. SCORING CONSISTENCY — per session: hashes of the scoring code path that
-     actually executed (evaluator.py + fault30_run.py), the gold manifest the
-     session ran with (TASK_PANEL snapshot answers = GOLD_CONTRACT_V1 values),
-     plus GOLD_CONTRACT_V1 / scoring_contract_final.py hashes. Then re-scores
-     every stored evaluation under scoring contract v2.1
-     (contract_v2_gold + score_v21 = close OR round-2dp) and flags every
-     session where Q changes. Sessions under different scoring contracts are
-     NOT mergeable — the campaign stays DIAGNOSTIC until the contract is
-     frozen into the execution path and cells re-run or re-registered.
-     ALSO: flags the existence of a second, DISJOINT 'SEARCH8' manifest
-     (task_contract_v2/SEARCH8_V21_MANIFEST.json, 0/8 overlap, contains
-     excluded P1-B uid 0dc550d6) which does NOT cover the executed panel.
-
-  B. QUOTA SETTLEMENT — every request/token claim is proven by the session's
-     own DISPATCH ledger (reserve/response events with usage), never inferred
-     from evaluation counts. Incomplete/failed cells are billed and retained.
-     Retry consumption is additive (cross-directory ceiling; totals never reset).
-
-  C. COMPARISON BASIS — per cell: search physical (requests, tokens, wall,
-     model-switch wall) reported separately from deployment Q/C/L per state;
-     INCOMPLETE cells retained, never dropped.
-
-DESCRIPTIVE ONLY: no method-superiority claim. V1 diagnostic session (old
-gold, formal_campaign/) excluded from all tables.
+"""Zero-call diagnostic live reconciliation. Current-source hashes are not
+execution-time evidence. Missing ledgers leave spend UNKNOWN. Request attempts
+include reserved requests without responses; recorded tokens are lower bounds.
+Re-score persisted final_value (including recovery/FULL), never infer it from
+base-node responses. Zero flips do not permit cross-contract merging.
 """
 import hashlib
 import json
@@ -83,7 +61,7 @@ def session_ledger(sdir):
     p = sdir / 'DISPATCH.jsonl'
     events = {'reserved': 0, 'response': 0, 'tokens': 0, 'pending': 0}
     if not p.exists():
-        return events, 'ledger file absent -> ZERO requests PROVEN'
+        return events, 'UNKNOWN: ledger absent; zero spend not proven'
     for line in p.read_text().splitlines():
         d = json.loads(line)
         if d.get('event') == 'reserved':
@@ -92,7 +70,8 @@ def session_ledger(sdir):
             events['response'] += 1
             events['tokens'] += int(d['response'].get('usage', {})
                                     .get('total_tokens') or 0)
-    return events, f"ledger: {events['reserved']} reserved / {events['response']} responses"
+    events['pending'] = max(0, events['reserved'] - events['response'])
+    return events, f"ledger: {events['reserved']} attempts / {events['response']} responses / {events['pending']} unresolved; tokens are recorded lower bound"
 
 
 def main():
@@ -102,8 +81,7 @@ def main():
         fault30_run_py=sha(ROOT / 'collab_scheduler_v1/fault30_run.py'),
         scoring_contract_final_py=sha(JS / 'scoring_contract_final.py'),
         gold_contract_v1=gold_contract_sha,
-        note='executed sessions scored via fault30_run close() (1e-4) against '
-             'GOLD_CONTRACT_V1 answers; v2.1 re-score below uses score_v21')
+        note='CURRENT FILE hashes only; NOT proof of loaded execution version. Rescore uses current score_v21; recorded scoring version remains UNVERIFIED')
 
     # executed panel identity + second-panel divergence flag
     panel_v2 = load_json(JS / 'FORMAL_LAUNCH_V2.json')
@@ -145,6 +123,8 @@ def main():
             e.setdefault('ledger', dict(reserved=0, response=0, tokens=0, proofs=[]))
             for k in ('reserved', 'response', 'tokens'):
                 e['ledger'][k] += led[k]
+            e['ledger'].setdefault('unknown_spend', False)
+            e['ledger']['unknown_spend'] |= not (sdir / 'DISPATCH.jsonl').exists()
             e['ledger']['proofs'].append(f'{sdir.name}: {proof}')
             swf = sdir / 'MODEL_SWITCH.jsonl'
             if swf.exists():
@@ -157,30 +137,24 @@ def main():
 
     recon_sessions = {}
     for sid, e in sorted(sessions.items()):
-        # A. re-score stored evaluations under v2.1
-        v_ans = {}
-        for r in e['workflows']:
-            parts = r['key'].split(':')
-            if len(parts) == 5 and parts[2] == 'base' and parts[3] == 'v':
-                v_ans.setdefault((r['state'], r['cid'], parts[4]), []).append(
-                    r['response']['answer'])
+        # Missing stored field is unknown; persisted null is a parsed failure.
         rescore = []
         for ev in e['evals']:
-            n = q_rec = q_v21 = 0
-            for uid in executed_uids:
-                answers = v_ans.get((ev['state'], ev['config_id'], uid))
-                vv = json_value(answers[-1]) if answers else None
-                g1 = gold_v1[uid]
-                g21 = v21g[uid]['gold']
-                n += 1
-                q_rec += int(close_v1(vv, g1))
-                q_v21 += int(score_v21(vv, g21) if vv is not None and g21 is not None
-                             else False)
+            stored_tasks = {t['uid']: t for t in ev.get('tasks', [])}
+            missing = [u for u in executed_uids
+                       if u not in stored_tasks or 'final_value' not in stored_tasks[u]
+                       or v21g[u]['gold'] is None]
+            old = new = None
+            if not missing:
+                old = sum(int(close_v1(stored_tasks[u]['final_value'], gold_v1[u]))
+                          for u in executed_uids) / len(executed_uids)
+                new = sum(int(score_v21(stored_tasks[u]['final_value'], v21g[u]['gold']))
+                          for u in executed_uids) / len(executed_uids)
             rescore.append(dict(cid=ev['config_id'], state=ev['state'],
-                                Q_recorded=round(ev['objectives']['Q'], 4),
-                                Q_close_v1=round(q_rec / max(n, 1), 4),
-                                Q_v21=round(q_v21 / max(n, 1), 4)))
-        flips = [r for r in rescore if abs(r['Q_v21'] - r['Q_recorded']) > 1e-9]
+                Q_recorded=ev['objectives']['Q'], Q_close_v1=old, Q_v21=new,
+                status='UNSCORABLE' if missing else 'RESCORED', missing_uids=missing))
+        flips = [r for r in rescore if r['Q_v21'] is not None
+                 and abs(r['Q_v21'] - r['Q_recorded']) > 1e-9]
         # B. ledger-proven spend
         # C. comparison basis
         per_state = {}
@@ -197,16 +171,22 @@ def main():
             status=st.get('status', 'RUNNING/UNKNOWN'),
             dirs=e['dirs'],
             scoring=dict(panel_snapshot_sha=e.get('panel_sha'),
-                         executed_contract='close_1e-4 + GOLD_CONTRACT_V1 answers'),
+                         executed_contract='UNVERIFIED: protocol close vs production score_v21 mismatch',
+                         execution_hash_status='NOT_PROVEN_BY_CURRENT_SOURCE',
+                         selector_observation_trace_status='NOT_VERIFIED'),
             search_physical=dict(
-                requests_ledger=e['ledger']['response'],
+                requests_ledger=e['ledger']['reserved'],
                 responses_settled=e['ledger']['response'],
+                unresolved_attempts=max(0,e['ledger']['reserved']-e['ledger']['response']),
+                spend_status='UNKNOWN' if e['ledger']['unknown_spend'] else 'RECORDED_LOWER_BOUND',
                 tokens_ledger=e['ledger']['tokens'],
                 wall_reported=round(st.get('observed_wall_s', 0)),
                 model_switch_wall=round(e.get('switch_wall', 0)),
                 ledger_proofs=e['ledger']['proofs']),
             rescore_v21=dict(n_evaluations=len(rescore), flips=len(flips),
-                             mergeable_across_contracts=(len(flips) == 0),
+                             unscorable_evaluations=sum(r['status']=='UNSCORABLE' for r in rescore),
+                             mergeable_across_contracts=False,
+                             note='Zero flips cannot establish execution-version or selector-observation equivalence',
                              detail=rescore),
             deployment=per_state)
 
@@ -218,16 +198,16 @@ def main():
     out = dict(
         campaign_status='DIAGNOSTIC — automation complete != formal admission; '
                         'scoring contract not yet frozen into execution path',
-        scoring_code_hashes=scoring_code,
+        current_source_hashes=scoring_code,
         panel_identity=panel_identity,
         gold_v21_for_executed_panel={u: dict(gold=v21g[u]['gold'],
                                              source=v21g[u]['gold_source'])
                                      for u in executed_uids},
         closure_checks=dict(
             A_scoring='per-session hashes + Q_recorded vs Q_v2.1 re-score; '
-                      'sessions with flips are NOT mergeable across contracts',
+                      'no cross-contract merge without runtime version and selector observation proof',
             B_quota='ledger-proven only (DISPATCH reserve/response events); '
-                    'random_20261009 0-request claim proven by absent ledger; '
+                    'missing ledgers imply UNKNOWN spend, not zero; '
                     'INCOMPLETE cells billed and retained; retries additive',
             C_comparison='search physical (requests/tokens/wall/switch) reported '
                          'separately from deployment Q/C/L; INCOMPLETE retained'),
@@ -239,6 +219,9 @@ def main():
         caveats=['DIAGNOSTIC campaign until contract alignment',
                  'descriptive only; no method-superiority claim',
                  'INCOMPLETE cells retained; common-budget-support comparison only',
+                 'Live snapshot: counters may advance during reading',
+                 'Missing dispatch ledgers imply unknown spend; totals are lower bounds',
+                 'Current-source hashes are not execution-time hashes',
                  'TEST16 not released'])
     (JS / 'FORMAL_CAMPAIGN_RECONCILIATION.json').write_text(
         json.dumps(out, indent=1, ensure_ascii=False))

@@ -92,7 +92,7 @@ def audit_scoring():
     # negative: contract must NOT accept a value beyond round-2 tolerance
     tests['negative_round_boundary'] = score_v21(4.011, 4.0) is False
     # production path: final scoring in runner rows uses the same contract
-    rows = [json.loads(l) for l in (RUNROOT / 'NB_ROWS.jsonl').read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in (RUNROOT / 'NB_ROWS_STUB.jsonl').read_text().splitlines() if l.strip()]
     bad = 0
     for r in rows:
         for t in r['tasks']:
@@ -357,7 +357,7 @@ def audit_de(tmp):
 # ---------------------------------------------------------------- runner
 def audit_runner():
     tests = {}
-    rows = [json.loads(l) for l in (RUNROOT / 'NB_ROWS.jsonl').read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in (RUNROOT / 'NB_ROWS_STUB.jsonl').read_text().splitlines() if l.strip()]
     complete = {(r['protocol'], r['arm'], r['state']) for r in rows
                 if r['status'] == 'COMPLETE'}
     expected = set(nbr_cell_order())

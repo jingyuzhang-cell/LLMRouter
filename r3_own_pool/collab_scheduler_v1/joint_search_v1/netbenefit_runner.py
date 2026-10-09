@@ -281,14 +281,27 @@ def prior_spend(run_dirs):
     return requests, tokens
 
 
-def completed_cells():
-    path = RUNROOT / 'NB_ROWS.jsonl'
+def _dir_is_real(d):
+    """A run dir counts toward the REAL budget only if it bound the freeze
+    with execute=true. Stub spend never inflates or blocks real execution."""
+    fb = Path(d) / 'FREEZE_BINDING.jsonl'
+    if not fb.exists():
+        return False
+    first = fb.read_text().splitlines()
+    return bool(first) and json.loads(first[0]).get('execute') is True
+
+
+def completed_cells(execute):
+    """Checkpoint isolation: real runs resume only from real records; stub
+    runs only from stub records. Neither is ever upgraded into the other."""
+    path = RUNROOT / ('NB_ROWS.jsonl' if execute else 'NB_ROWS_STUB.jsonl')
     done = set()
     if path.exists():
         for line in path.read_text().splitlines():
             if line.strip():
                 r = json.loads(line)
-                if r.get('status') == 'COMPLETE':
+                # legacy stub records predate the execute field; they are stub
+                if r.get('status') == 'COMPLETE' and r.get('execute', False) is execute:
                     done.add((r['protocol'], r['arm'], r['state']))
     return done
 
@@ -299,9 +312,13 @@ def run(execute=False, run_id=None):
     RUNROOT.mkdir(exist_ok=True)
     golds = v21_gold_map(tasks)
     led = fp.Ledger()
-    done = completed_cells()
+    done = completed_cells(execute)
+    rows_path = RUNROOT / ('NB_ROWS.jsonl' if execute else 'NB_ROWS_STUB.jsonl')
+    ledger_path = RUNROOT / ('NB_CELL_LEDGER.jsonl' if execute
+                             else 'NB_CELL_LEDGER_STUB.jsonl')
     prior_dirs = sorted(d for d in RUNROOT.iterdir()
-                        if d.is_dir() and (d / 'DISPATCH.jsonl').exists())
+                        if d.is_dir() and (d / 'DISPATCH.jsonl').exists()
+                        and _dir_is_real(d) == execute)
     prior_req, prior_tok = prior_spend(prior_dirs)
     caps = freeze['budgets']
 
@@ -325,6 +342,16 @@ def run(execute=False, run_id=None):
                            wall_seconds=3600, logical_calls_per_task_config_state=24)
 
     directory = RUNROOT / run_id
+    pending = [c for c in CELL_ORDER
+               if c not in done and not (c[0] == 'competitive' and c[2] == 'clean')]
+    if not pending:
+        total_req, total_tok = prior_spend(prior_dirs)
+        summary = dict(run_id=run_id, execute=execute, status='COMPLETE',
+                       reason='nothing to do (all cells already complete '
+                               'in this mode)', cells_this_run=0,
+                       cumulative_spend=dict(requests=total_req, tokens=total_tok))
+        print(json.dumps(summary, indent=1))
+        return summary
     directory.mkdir(exist_ok=False)
     freeze_digest = hashlib.sha256(FREEZE_PATH.read_bytes()).hexdigest()
     append(directory / 'FREEZE_BINDING.jsonl',
@@ -337,16 +364,44 @@ def run(execute=False, run_id=None):
         proc = log = None
         current = None
 
+        def start_with_retry(model, attempts=3, wait_s=150):
+            """Shared-host GPU: an external workload may hold memory; retry
+            with backoff instead of failing the whole validation."""
+            nonlocal proc, log, current
+            import subprocess as _sp
+            last = None
+            for i in range(attempts):
+                mem = _sp.run(['nvidia-smi', '--query-gpu=memory.used',
+                               '--format=csv,noheader'], capture_output=True, text=True)
+                used = int(mem.stdout.strip().rstrip(' MiB')) if mem.returncode == 0 else 99999
+                if used > 4000:
+                    print(f'[wait] GPU busy ({used} MiB used), '
+                          f'attempt {i + 1}/{attempts}, sleeping {wait_s}s')
+                    time.sleep(wait_s)
+                try:
+                    budget.check()
+                    if proc is not None:
+                        engine.stop_model(proc, log)
+                        proc = log = None
+                        current = None
+                    p, lg, _ = engine.start_model(model)
+                    return p, lg
+                except Exception as e:  # noqa: BLE001 - retry any startup failure
+                    last = e
+                    print(f'[retry] start_model({model}) failed: {e!r}')
+                    time.sleep(wait_s)
+            raise last
+
         def prepare(model):
             nonlocal proc, log, current
             budget.check()
             if model == current:
                 return
-            if proc is not None:
-                engine.stop_model(proc, log)
-                proc = log = None
-            proc, log, _ = engine.start_model(model)
+            begin = time.monotonic()
+            proc, log = start_with_retry(model)
             current = model
+            append(directory / 'MODEL_SWITCH.jsonl',
+                   dict(model=model, wall_s=time.monotonic() - begin))
             budget.check()
     else:
         def prepare(model):
@@ -357,12 +412,11 @@ def run(execute=False, run_id=None):
     seeded = ex.seed_from_trajectories(prior_dirs)
 
     cell_spend = {}
-    ledger_path = RUNROOT / 'NB_CELL_LEDGER.jsonl'
     if ledger_path.exists():
         for line in ledger_path.read_text().splitlines():
             if line.strip():
                 r = json.loads(line)
-                if r.get('status') == 'COMPLETE':
+                if r.get('status') == 'COMPLETE' and r.get('execute', False) is execute:
                     k = (r['protocol'], r['arm'], r['state'])
                     p = r['physical']
                     cell_spend[k] = cell_spend.get(k, 0) + p.get('new_requests', 0)
@@ -387,8 +441,9 @@ def run(execute=False, run_id=None):
                 raise StopRun('budget reserve for D/E would be violated')
             per_cell = cell_spend.get(cell, 0)
             if per_cell >= caps['per_strategy_per_state_physical_max']:
-                append(RUNROOT / 'NB_ROWS.jsonl',
+                append(rows_path,
                        dict(protocol=protocol, arm=arm, state=state,
+                            execute=execute,
                             status='INCOMPLETE',
                             reason='per-strategy-state physical cap'))
                 continue
@@ -419,6 +474,7 @@ def run(execute=False, run_id=None):
             n = len(rows)
             record = dict(
                 protocol=protocol, arm=arm, state=state, status='COMPLETE',
+                execute=execute,
                 freeze_sha256=freeze_digest,
                 objectives=dict(
                     Q=sum(r['Q'] for r in rows) / n,
@@ -432,9 +488,9 @@ def run(execute=False, run_id=None):
                     faulted_tasks=len(registry),
                     tasks_with_replaced_answer=sum(1 for r in rows if r['replaced_calls'] > 0)),
                 tasks=rows)
-            append(RUNROOT / 'NB_ROWS.jsonl', record)
+            append(rows_path, record)
             append(ledger_path, dict(protocol=protocol, arm=arm, state=state,
-                                     status='COMPLETE',
+                                     status='COMPLETE', execute=execute,
                                      physical=record['physical']))
             cell_spend[cell] = cell_spend.get(cell, 0) + physical['new_requests']
             results.append(record)
@@ -446,6 +502,12 @@ def run(execute=False, run_id=None):
         status = 'INCOMPLETE'
         reason = repr(exc)
         print(f'[stop] {reason}')
+    finally:
+        if execute and proc is not None:
+            try:
+                engine.stop_model(proc, log)
+            except Exception as e:  # noqa: BLE001 - cleanup best effort
+                print(f'[warn] model cleanup failed: {e!r}')
 
     total_req, total_tok = prior_spend(prior_dirs + [directory])
     summary = dict(run_id=run_id, execute=execute, status=status, reason=reason,

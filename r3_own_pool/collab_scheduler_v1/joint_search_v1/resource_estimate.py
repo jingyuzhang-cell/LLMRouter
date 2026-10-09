@@ -51,7 +51,7 @@ def v2_stats():
 
 
 def run():
-    rows = [json.loads(l) for l in (RUNROOT / 'NB_ROWS.jsonl').read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in (RUNROOT / 'NB_ROWS_STUB.jsonl').read_text().splitlines() if l.strip()]
     stub_requests = sum(r['physical']['new_requests'] for r in rows if r['status'] == 'COMPLETE')
     stub_tokens = sum(r['physical']['new_tokens'] for r in rows if r['status'] == 'COMPLETE')
     max_cell = max(r['physical']['new_requests'] for r in rows if r['status'] == 'COMPLETE')

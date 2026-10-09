@@ -1,0 +1,93 @@
+{
+ "role": "NET-BENEFIT stage-2 preflight (GO/NO-GO)",
+ "verdict": "GO",
+ "offline_gates_all_pass": true,
+ "execution_environment_ready": true,
+ "checks": {
+  "real_assertion_audits": {
+   "ok": true,
+   "detail": {
+    "scoring": "PASS",
+    "fault": "PASS",
+    "cache": "PASS",
+    "cost": "PASS",
+    "de_consistency": "PASS",
+    "runner": "PASS"
+   },
+   "evidence": "NET_BENEFIT_AUDIT_REPORT_V3.json"
+  },
+  "stub_dry_run_complete": {
+   "ok": true,
+   "cells": "56/56",
+   "resume_evidence": "resume_test run: 1 cell re-executed, cache seeded 671, new_req=0, objectives reproduced"
+  },
+  "task_freeze": {
+   "ok": true,
+   "n": 50,
+   "exclusions": {
+    "frozen200": 0,
+    "main120": 0,
+    "p1b_5": 5,
+    "fullval_4": 4,
+    "v2_campaign_8": 8
+   },
+   "remaining_pool": 89,
+   "evidence": "NET_BENEFIT_FREEZE.json (content hashes re-verified by audit v3)"
+  },
+  "v2_candidates_final": {
+   "ok": true,
+   "attribution_note": "C/D/E share X (large,large,medium,coder); V2 arms separate"
+  },
+  "power_simulation": {
+   "ok": true,
+   "anchor_q": 0.514,
+   "power_n50_at_anchor": 0.032,
+   "evidence": "POWER_SIMULATION.json"
+  },
+  "dual_fault_resources": {
+   "ok": true,
+   "requests": {
+    "estimate": 838,
+    "cap": 4000,
+    "utilization": 0.209
+   },
+   "tokens": {
+    "estimate_mean": 301786,
+    "estimate_p95": 625986,
+    "cap": 4000000,
+    "utilization": 0.156
+   },
+   "wall": {
+    "estimate_s": 11094,
+    "cap": 21600,
+    "utilization": 0.514
+   }
+  },
+  "manifest_complete": {
+   "ok": true,
+   "real_model_requests_so_far": 0,
+   "stub_requests": 671,
+   "note": "all current spend is stub (zero model requests); freeze hash 4b1bf73d281ec520 bound in every run dir"
+  },
+  "code_hashes": {
+   "ok": true,
+   "runner": "6b70d2582fa02b9c",
+   "freeze_script": "cb8a89ad9d9262ab",
+   "evaluator": "06a0ece7b105ed5d",
+   "fault30_run": "8d148911f1bd3e2d",
+   "note": "full hashes in FREEZE_BINDING.jsonl at execution time"
+  },
+  "execution_environment": {
+   "ok": true,
+   "gpu": {
+    "used_mib": 0,
+    "total_mib": 24564,
+    "visible_compute_apps": "",
+    "free_mib": 24564
+   },
+   "launch": "P1B_NETBENEFIT_EXECUTE=1 python3 -m collab_scheduler_v1.joint_search_v1.netbenefit_runner --execute",
+   "policy": "engine refuses to start while another compute app holds the GPU (guard retained); no bypass permitted"
+  }
+ },
+ "power_framing": "n=50 pre-registered as pilot-confirmatory: confirmatory only under strong recovery effects (q>=~0.8); no post-hoc task addition may be counted as the same confirmatory test"
+}

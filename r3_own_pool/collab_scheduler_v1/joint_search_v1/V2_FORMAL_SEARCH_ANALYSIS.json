@@ -1,0 +1,925 @@
+{
+ "role": "Experiment 5: V2 search efficiency + ablations (zero model requests)",
+ "sessions_used": {
+  "official_qnehvi_same_state_20261009": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/official_qnehvi_same_state_20261009",
+  "official_qnehvi_same_state_20261010": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/official_qnehvi_same_state_20261010",
+  "proposed_state_incremental_20261009": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2_retry1/proposed_state_incremental_20261009",
+  "proposed_state_incremental_20261010": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_state_incremental_20261010",
+  "proposed_without_incremental_cost_20261009": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_without_incremental_cost_20261009",
+  "proposed_without_state_20261009": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_without_state_20261009",
+  "proposed_without_state_20261010": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_without_state_20261010",
+  "random_20261010": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2_retry3/random_20261010",
+  "scalarized_bo_20261009": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/scalarized_bo_20261009",
+  "scalarized_bo_20261010": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/scalarized_bo_20261010",
+  "random_20261009": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2_retry2/random_20261009"
+ },
+ "partial_dirs_excluded": [
+  "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_state_incremental_20261009",
+  "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/random_20261010"
+ ],
+ "methods": {
+  "proposed_state_incremental": {
+   "label": "SA-PGFS (proposed)",
+   "n_complete_seeds": 2,
+   "seeds": {
+    "20261009": {
+     "n_evals": 24,
+     "final_best_config": "medium__large__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.1875,
+      "step2": 0.1875,
+      "step3": 0.4375,
+      "step4": 0.4375,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.5,
+      "step10": 0.5,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 226,
+      "tokens": 76733.0
+     },
+     "hv_final": 0.1166481366163121,
+     "nd_configs": [
+      {
+       "config": "medium__large__medium__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2465.9375,
+       "L": 8.395
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1477.875,
+       "L": 4.4837
+      },
+      {
+       "config": "large__large__large__large__NONE",
+       "Q": 0.1875,
+       "C": 1406.125,
+       "L": 4.3399
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2_retry1/proposed_state_incremental_20261009"
+    },
+    "20261010": {
+     "n_evals": 24,
+     "final_best_config": "medium__large__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.3125,
+      "step2": 0.3125,
+      "step3": 0.3125,
+      "step4": 0.3125,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.4375,
+      "step10": 0.4375,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 220,
+      "tokens": 83614.0
+     },
+     "hv_final": 0.11920743345072922,
+     "nd_configs": [
+      {
+       "config": "medium__large__large__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2324.375,
+       "L": 7.3273
+      },
+      {
+       "config": "medium__medium__medium__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2234.0,
+       "L": 7.8117
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1464.5625,
+       "L": 4.271
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_state_incremental_20261010"
+    }
+   },
+   "multi_seed": true,
+   "best_Q_mean_by_step": {
+    "step1": 0.25,
+    "step2": 0.25,
+    "step3": 0.375,
+    "step4": 0.375,
+    "step5": 0.4375,
+    "step6": 0.4375,
+    "step7": 0.4375,
+    "step8": 0.4375,
+    "step9": 0.4688,
+    "step10": 0.4688,
+    "step11": 0.5,
+    "step12": 0.5,
+    "step13": 0.5,
+    "step14": 0.5,
+    "step15": 0.5,
+    "step16": 0.5,
+    "step17": 0.5,
+    "step18": 0.5,
+    "step19": 0.5,
+    "step20": 0.5,
+    "step21": 0.5,
+    "step22": 0.5,
+    "step23": 0.5,
+    "step24": 0.5
+   },
+   "seed_stability_final_best_Q": [
+    0.5,
+    0.5
+   ]
+  },
+  "random": {
+   "label": "Random",
+   "n_complete_seeds": 2,
+   "seeds": {
+    "20261009": {
+     "n_evals": 24,
+     "final_best_config": "medium__large__large__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.1875,
+      "step2": 0.1875,
+      "step3": 0.4375,
+      "step4": 0.4375,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.4375,
+      "step10": 0.4375,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 359,
+      "tokens": 130584.0
+     },
+     "hv_final": 0.11408727447217618,
+     "nd_configs": [
+      {
+       "config": "medium__medium__large__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2174.4375,
+       "L": 7.0181
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1525.5,
+       "L": 4.5618
+      },
+      {
+       "config": "large__medium__large__coder__NONE",
+       "Q": 0.1875,
+       "C": 1438.0625,
+       "L": 4.4208
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2_retry2/random_20261009"
+    },
+    "20261010": {
+     "n_evals": 24,
+     "final_best_config": "medium__large__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.3125,
+      "step2": 0.3125,
+      "step3": 0.3125,
+      "step4": 0.3125,
+      "step5": 0.3125,
+      "step6": 0.3125,
+      "step7": 0.3125,
+      "step8": 0.3125,
+      "step9": 0.5,
+      "step10": 0.5,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 327,
+      "tokens": 118156.0
+     },
+     "hv_final": 0.0880504091731209,
+     "nd_configs": [
+      {
+       "config": "medium__medium__medium__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2229.9375,
+       "L": 7.8669
+      },
+      {
+       "config": "medium__large__large__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2319.5625,
+       "L": 7.2476
+      },
+      {
+       "config": "medium__medium__large__large__NONE",
+       "Q": 0.3125,
+       "C": 1542.25,
+       "L": 5.3836
+      },
+      {
+       "config": "large__large__large__coder__NONE",
+       "Q": 0.1875,
+       "C": 1393.5625,
+       "L": 4.1952
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2_retry3/random_20261010"
+    }
+   },
+   "multi_seed": true,
+   "best_Q_mean_by_step": {
+    "step1": 0.25,
+    "step2": 0.25,
+    "step3": 0.375,
+    "step4": 0.375,
+    "step5": 0.375,
+    "step6": 0.375,
+    "step7": 0.375,
+    "step8": 0.375,
+    "step9": 0.4688,
+    "step10": 0.4688,
+    "step11": 0.5,
+    "step12": 0.5,
+    "step13": 0.5,
+    "step14": 0.5,
+    "step15": 0.5,
+    "step16": 0.5,
+    "step17": 0.5,
+    "step18": 0.5,
+    "step19": 0.5,
+    "step20": 0.5,
+    "step21": 0.5,
+    "step22": 0.5,
+    "step23": 0.5,
+    "step24": 0.5
+   },
+   "seed_stability_final_best_Q": [
+    0.5,
+    0.5
+   ]
+  },
+  "scalarized_bo": {
+   "label": "Scalarized BO",
+   "n_complete_seeds": 2,
+   "seeds": {
+    "20261009": {
+     "n_evals": 24,
+     "final_best_config": "medium__medium__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.1875,
+      "step2": 0.1875,
+      "step3": 0.4375,
+      "step4": 0.4375,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.5,
+      "step10": 0.5,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 241,
+      "tokens": 83607.0
+     },
+     "hv_final": 0.12361012478959976,
+     "nd_configs": [
+      {
+       "config": "medium__medium__large__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2148.1875,
+       "L": 6.7327
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1469.75,
+       "L": 4.2956
+      },
+      {
+       "config": "large__large__large__coder__NONE",
+       "Q": 0.1875,
+       "C": 1399.125,
+       "L": 4.2092
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/scalarized_bo_20261009"
+    },
+    "20261010": {
+     "n_evals": 24,
+     "final_best_config": "medium__medium__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.3125,
+      "step2": 0.3125,
+      "step3": 0.3125,
+      "step4": 0.3125,
+      "step5": 0.3125,
+      "step6": 0.3125,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.4375,
+      "step10": 0.4375,
+      "step11": 0.4375,
+      "step12": 0.4375,
+      "step13": 0.4375,
+      "step14": 0.4375,
+      "step15": 0.4375,
+      "step16": 0.4375,
+      "step17": 0.4375,
+      "step18": 0.4375,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 258,
+      "tokens": 92663.0
+     },
+     "hv_final": 0.12193925394906346,
+     "nd_configs": [
+      {
+       "config": "medium__medium__medium__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2222.875,
+       "L": 7.6002
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1464.9375,
+       "L": 4.3317
+      },
+      {
+       "config": "large__large__medium__coder__NONE",
+       "Q": 0.1875,
+       "C": 1394.8125,
+       "L": 4.29
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/scalarized_bo_20261010"
+    }
+   },
+   "multi_seed": true,
+   "best_Q_mean_by_step": {
+    "step1": 0.25,
+    "step2": 0.25,
+    "step3": 0.375,
+    "step4": 0.375,
+    "step5": 0.375,
+    "step6": 0.375,
+    "step7": 0.4375,
+    "step8": 0.4375,
+    "step9": 0.4688,
+    "step10": 0.4688,
+    "step11": 0.4688,
+    "step12": 0.4688,
+    "step13": 0.4688,
+    "step14": 0.4688,
+    "step15": 0.4688,
+    "step16": 0.4688,
+    "step17": 0.4688,
+    "step18": 0.4688,
+    "step19": 0.5,
+    "step20": 0.5,
+    "step21": 0.5,
+    "step22": 0.5,
+    "step23": 0.5,
+    "step24": 0.5
+   },
+   "seed_stability_final_best_Q": [
+    0.5,
+    0.5
+   ]
+  },
+  "official_qnehvi_same_state": {
+   "label": "qNEHVI (BoTorch)",
+   "n_complete_seeds": 2,
+   "seeds": {
+    "20261009": {
+     "n_evals": 24,
+     "final_best_config": "medium__medium__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.1875,
+      "step2": 0.1875,
+      "step3": 0.4375,
+      "step4": 0.4375,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.4375,
+      "step10": 0.4375,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 223,
+      "tokens": 77483.0
+     },
+     "hv_final": 0.1256116561221451,
+     "nd_configs": [
+      {
+       "config": "medium__medium__large__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2148.375,
+       "L": 6.6412
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1464.9375,
+       "L": 4.2158
+      },
+      {
+       "config": "large__large__large__large__NONE",
+       "Q": 0.1875,
+       "C": 1393.1875,
+       "L": 4.1153
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/official_qnehvi_same_state_20261009"
+    },
+    "20261010": {
+     "n_evals": 24,
+     "final_best_config": "medium__medium__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.3125,
+      "step2": 0.3125,
+      "step3": 0.3125,
+      "step4": 0.3125,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.4375,
+      "step10": 0.4375,
+      "step11": 0.4375,
+      "step12": 0.4375,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 241,
+      "tokens": 88609.0
+     },
+     "hv_final": 0.12157226346068514,
+     "nd_configs": [
+      {
+       "config": "medium__medium__large__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2171.875,
+       "L": 7.1689
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1469.75,
+       "L": 4.403
+      },
+      {
+       "config": "large__large__large__coder__NONE",
+       "Q": 0.1875,
+       "C": 1399.125,
+       "L": 4.2903
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/official_qnehvi_same_state_20261010"
+    }
+   },
+   "multi_seed": true,
+   "best_Q_mean_by_step": {
+    "step1": 0.25,
+    "step2": 0.25,
+    "step3": 0.375,
+    "step4": 0.375,
+    "step5": 0.4375,
+    "step6": 0.4375,
+    "step7": 0.4375,
+    "step8": 0.4375,
+    "step9": 0.4375,
+    "step10": 0.4375,
+    "step11": 0.4688,
+    "step12": 0.4688,
+    "step13": 0.5,
+    "step14": 0.5,
+    "step15": 0.5,
+    "step16": 0.5,
+    "step17": 0.5,
+    "step18": 0.5,
+    "step19": 0.5,
+    "step20": 0.5,
+    "step21": 0.5,
+    "step22": 0.5,
+    "step23": 0.5,
+    "step24": 0.5
+   },
+   "seed_stability_final_best_Q": [
+    0.5,
+    0.5
+   ]
+  },
+  "proposed_without_state": {
+   "label": "w/o state (ablation)",
+   "n_complete_seeds": 2,
+   "seeds": {
+    "20261009": {
+     "n_evals": 24,
+     "final_best_config": "medium__large__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.1875,
+      "step2": 0.1875,
+      "step3": 0.4375,
+      "step4": 0.4375,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.5,
+      "step10": 0.5,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 226,
+      "tokens": 77465.0
+     },
+     "hv_final": 0.12150789247135374,
+     "nd_configs": [
+      {
+       "config": "medium__large__medium__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2436.625,
+       "L": 7.8022
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1464.5625,
+       "L": 4.2094
+      },
+      {
+       "config": "large__large__large__large__NONE",
+       "Q": 0.1875,
+       "C": 1403.375,
+       "L": 4.1605
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_without_state_20261009"
+    },
+    "20261010": {
+     "n_evals": 24,
+     "final_best_config": "medium__large__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.3125,
+      "step2": 0.3125,
+      "step3": 0.3125,
+      "step4": 0.3125,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.4375,
+      "step10": 0.4375,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 222,
+      "tokens": 83592.0
+     },
+     "hv_final": 0.11843779941922775,
+     "nd_configs": [
+      {
+       "config": "medium__large__large__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2322.9375,
+       "L": 7.3551
+      },
+      {
+       "config": "medium__medium__medium__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2233.375,
+       "L": 7.8424
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1464.9375,
+       "L": 4.3186
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_without_state_20261010"
+    }
+   },
+   "multi_seed": true,
+   "best_Q_mean_by_step": {
+    "step1": 0.25,
+    "step2": 0.25,
+    "step3": 0.375,
+    "step4": 0.375,
+    "step5": 0.4375,
+    "step6": 0.4375,
+    "step7": 0.4375,
+    "step8": 0.4375,
+    "step9": 0.4688,
+    "step10": 0.4688,
+    "step11": 0.5,
+    "step12": 0.5,
+    "step13": 0.5,
+    "step14": 0.5,
+    "step15": 0.5,
+    "step16": 0.5,
+    "step17": 0.5,
+    "step18": 0.5,
+    "step19": 0.5,
+    "step20": 0.5,
+    "step21": 0.5,
+    "step22": 0.5,
+    "step23": 0.5,
+    "step24": 0.5
+   },
+   "seed_stability_final_best_Q": [
+    0.5,
+    0.5
+   ]
+  },
+  "proposed_without_incremental_cost": {
+   "label": "w/o incremental cost (ablation)",
+   "n_complete_seeds": 1,
+   "seeds": {
+    "20261009": {
+     "n_evals": 24,
+     "final_best_config": "medium__medium__medium__coder__LOCAL",
+     "final_best_Q": 0.5,
+     "best_so_far_Q_at": {
+      "step1": 0.1875,
+      "step2": 0.1875,
+      "step3": 0.4375,
+      "step4": 0.4375,
+      "step5": 0.4375,
+      "step6": 0.4375,
+      "step7": 0.4375,
+      "step8": 0.4375,
+      "step9": 0.4375,
+      "step10": 0.4375,
+      "step11": 0.5,
+      "step12": 0.5,
+      "step13": 0.5,
+      "step14": 0.5,
+      "step15": 0.5,
+      "step16": 0.5,
+      "step17": 0.5,
+      "step18": 0.5,
+      "step19": 0.5,
+      "step20": 0.5,
+      "step21": 0.5,
+      "step22": 0.5,
+      "step23": 0.5,
+      "step24": 0.5
+     },
+     "cum_spend_final": {
+      "requests": 223,
+      "tokens": 77519.0
+     },
+     "hv_final": 0.12442763492363342,
+     "nd_configs": [
+      {
+       "config": "medium__medium__large__coder__LOCAL",
+       "Q": 0.5,
+       "C": 2148.75,
+       "L": 6.7509
+      },
+      {
+       "config": "medium__large__medium__coder__NONE",
+       "Q": 0.4375,
+       "C": 1464.9375,
+       "L": 4.2175
+      },
+      {
+       "config": "large__large__large__large__NONE",
+       "Q": 0.1875,
+       "C": 1403.8125,
+       "L": 4.1972
+      }
+     ],
+     "directory": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/formal_campaign_v2/proposed_without_incremental_cost_20261009"
+    }
+   },
+   "multi_seed": false,
+   "best_Q_mean_by_step": {
+    "step1": 0.1875,
+    "step2": 0.1875,
+    "step3": 0.4375,
+    "step4": 0.4375,
+    "step5": 0.4375,
+    "step6": 0.4375,
+    "step7": 0.4375,
+    "step8": 0.4375,
+    "step9": 0.4375,
+    "step10": 0.4375,
+    "step11": 0.5,
+    "step12": 0.5,
+    "step13": 0.5,
+    "step14": 0.5,
+    "step15": 0.5,
+    "step16": 0.5,
+    "step17": 0.5,
+    "step18": 0.5,
+    "step19": 0.5,
+    "step20": 0.5,
+    "step21": 0.5,
+    "step22": 0.5,
+    "step23": 0.5,
+    "step24": 0.5
+   },
+   "seed_stability_final_best_Q": [
+    0.5
+   ]
+  }
+ },
+ "equal_budget_comparison": {
+  "step": 24,
+  "best_Q": {
+   "proposed_state_incremental": 0.5,
+   "random": 0.5,
+   "scalarized_bo": 0.5,
+   "official_qnehvi_same_state": 0.5,
+   "proposed_without_state": 0.5,
+   "proposed_without_incremental_cost": 0.5
+  },
+  "note": "config quality = mean Q across its evaluated states (frozen selection rule); 8-task campaign panel; NOT an independent accuracy"
+ },
+ "ablations": {
+  "proposed_without_state": {
+   "n_common_seeds": 2,
+   "per_seed": [
+    {
+     "seed": "20261009",
+     "ablation_best_Q": 0.5,
+     "base_best_Q": 0.5,
+     "delta": 0.0
+    },
+    {
+     "seed": "20261010",
+     "ablation_best_Q": 0.5,
+     "base_best_Q": 0.5,
+     "delta": 0.0
+    }
+   ],
+   "evidence_level": "dual-seed"
+  },
+  "proposed_without_incremental_cost": {
+   "n_common_seeds": 1,
+   "per_seed": [
+    {
+     "seed": "20261009",
+     "ablation_best_Q": 0.5,
+     "base_best_Q": 0.5,
+     "delta": 0.0
+    }
+   ],
+   "evidence_level": "PRELIMINARY (single seed)"
+  }
+ },
+ "non_claims": [
+  "search call cost is the cost of FINDING a candidate, not deploying it",
+  "campaign-panel Q (8 tasks) is not an independent validation accuracy",
+  "single-seed ablations are preliminary; no cross-seed stability claim"
+ ]
+}
