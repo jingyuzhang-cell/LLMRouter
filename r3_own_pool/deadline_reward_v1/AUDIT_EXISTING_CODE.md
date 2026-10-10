@@ -1,219 +1,244 @@
-# AUDIT_EXISTING_CODE — Phase 1 deliverable 1/4 (deadline_reward_v1)
+# AUDIT_EXISTING_CODE — deadline_reward_v1 (rev B)
 
 Date: 2026-10-10. Method: read-only source review. Model calls: **0**.
 Files written by this phase: only under `r3_own_pool/deadline_reward_v1/`.
-No file used by the running Formal campaign was modified (verified: Formal
-driver PID 4815 writes only under `joint_search_v1/formal_campaign_v2*`).
 
-## 1. What was audited
+**Rev B scope change (operator ruling, 2026-10-10):** the research target is
+the EXECUTION layer — feedback-driven DAG dynamic recovery scheduling — not
+the Formal configuration search. Part I (search-layer facts, rev A, commit
+0d381a8) is retained as review evidence and context; **Part II is the new
+execution-layer audit that rev B designs build on.** Every claim carries a
+code citation; implementation status is marked [EXISTS] / [MISSING].
 
-Core (read in full):
-- `collab_scheduler_v1/joint_search_v1/evaluator.py` (201 L) — space(), MeteredExecutor, JointEvaluator, SearchSession
-- `collab_scheduler_v1/joint_search_v1/runtime.py` (190 L) — CampaignQuota, require_admission, run_session
-- `collab_scheduler_v1/joint_search_v1/formal_launch.py` (329 L) — the RUNNING driver (read-only)
-- `collab_scheduler_v1/joint_search_v1/selectors.py` (357 L) — six selector callbacks
-- `collab_scheduler_v1/joint_search_smoke/proposal_v2/smoke_runner.py` (266 L) — Budget, StopRun, SmokeExecutor
-- `collab_scheduler_v1/predictor_v3.py` (348 L) — incremental-cost event enumeration predictor
+## Corrections to rev A (kept visible, per review policy)
 
-Referenced (symbols used above): `fault30_protocol.py` (Ledger, planned_models,
-build_faults), `fault30_run.py` (eval_config, physical_accounting),
-`sa_pgfs_v1/surrogate.py` (QSurrogate), `static_dag_v0/run.py` (engine:
-start_model/stop_model/call_model), `static_dag_v0/multidag_dynamic.py`
-(value_of, json_value, close).
+1. **Config count**: rev A said "96 configs". `evaluator.space()`
+   (evaluator.py:22-26) = product of four 2-slot model choices (2⁴=16 X)
+   × 3 Z = **48**, not 96. Corrected everywhere in rev B. The execution
+   layer anyway does not use the search space as its test range (it operates
+   on one DAG at a time; see Part II).
+2. **Normal lateness expectation (E1)**: rev A wrote
+   Ê[(T−D)₊] = σ[φ(z) + z(1−Φ(z))] with z=(μ−D)/σ. The correct identity is
+   **σ[φ(z) + zΦ(z)]** (equivalent to σ[φ(α) − α(1−Φ(α))] with α=(D−μ)/σ);
+   the two agree only at z=0. Verified at D=μ (0.399σ), D=μ+σ (0.0833σ),
+   D→−∞ (→μ−D). Fixed in DESIGN_PREDICTOR_INTERFACE §5.1 and
+   DESIGN_REWARD_FUNCTION §3.1; VERIFICATION_PLAN P3 goldens regenerated
+   from the corrected closed form.
 
-## 2. System snapshot (facts the reward/penalty design must build on)
+---
 
-### 2.1 Workflow and search space
-- Fixed 4-node DAG: `e1, e2, r, v`. Config = `X` (per-node model in
-  {medium, large} for e1/e2/r, {coder, large} for v) × `Z` (recovery policy:
-  NONE | LOCAL | FULL). 96 configs total (`evaluator.space()`).
-- Deployment objectives per (config, state): `Q` (v2.1 contract correctness,
-  mean over task panel), `C` (cold logical workflow tokens, mean),
-  `L` (SERIAL service-demand reconstruction = Σ per-call latency_s, mean —
-  explicitly *not* an end-to-end wall claim).
-- Search spend (physical) tracked separately in `search_spend`:
-  `new_requests`, `new_tokens`, `new_latency_s`, plus `observed_wall_s`.
+# Part I — search layer (rev A, retained; superseded as design target)
 
-### 2.2 Scheduling loop (what "dynamic scheduling" plugs into)
-- `SearchSession.step(select, states)`: selector is a pure callback
-  `select(candidates, observations) -> config_id`. It receives **deep copies**.
-  Constraints: no repeated/illegal selection; max_configurations budget.
-- Information boundary (enforced in code): `states` and the fault registry are
-  NEVER passed to `select`; selectors see only candidates + accumulated
-  `observations` (each with `objectives` and `search_spend`). Gold answers are
-  never exposed to the selector path (`detected_failure` reads observable
-  outputs only; Q_v1/Q_v21 computed after the reveal, stored in observations).
-- Production selectors live in `joint_search_v1/review/track_b.py`
-  (`ProductionSearcher` + `SyncedSelector` bridge, formal_launch.py:168-183).
-  The audited `selectors.py` variants: `proposed` = QSurrogate GP + EI, score
-  divided by `(1 + alpha * incremental_cost_upper_bound)` (alpha=0.5);
-  two single-mechanism ablations; `scalarized_bo`; `random`; official BoTorch
-  qNEHVI (fail-closed, raises on BoTorch error — no silent degradation).
+§2.1–§2.8 (system snapshot: scheduling loop, Budget, deadline handling,
+predictor landscape, faults, stub infra, authorization style) and §4–§6
+(gap analysis, constraints, verdict) are unchanged at commit **0d381a8** —
+the review baseline — except the config-count correction above (96→48).
+§2.9 and §3 are reproduced verbatim below because rev B still builds on
+them.
 
-### 2.3 Budget and stop rules (current state — no anticipatory control)
-`smoke_runner.Budget` (per session):
-- Caps: `new_request_attempts`, `new_total_tokens`,
-  `request_token_reservation` (pre-charged per call, settled to actual),
-  `max_output_tokens`, `wall_seconds`,
-  `logical_calls_per_task_config_state`.
-- Semantics: reserve→settle ledger in `DISPATCH.jsonl` (append-only, fsync);
-  crash ⇒ reservation stays charged. A new Budget on an existing
-  DISPATCH.jsonl is an ERROR ("explicit reconciliation required") — no silent
-  resume.
-- `check()` is **passive**: raises StopRun when already over the wall cap;
-  called before each dispatch, in `prepare()`, and after each settle. There is
-  no prediction of "will the NEXT config fit in remaining budget".
-
-### 2.4 Deadline handling today (the gap deadline_compensator addresses)
-- `runtime.run_session`: work window = `per_session_caps.wall_seconds − 60`
-  (60 s reserved for backend shutdown ≤ 40 s), enforced by
-  `signal.setitimer(ITIMER_REAL, ...)`; SIGALRM/SIGTERM raise StopRun →
-  session settles INCOMPLETE. (runtime.py:133-138)
-- Model switches are IN the work window: `prepare(model)` stops the current
-  model, starts the new one, appends cost to `MODEL_SWITCH.jsonl`
-  (wall_s per switch). Switch latency is measured but **never used
-  predictively** — a config whose model set guarantees a switch can silently
-  consume a large fraction of the remaining wall budget.
-- Campaign level: `CampaignQuota` (flock + append-only CAMPAIGN.jsonl;
-  reserve at session start, settle with actual charge; overrun is recorded,
-  never hidden). Formal driver additionally enforces a campaign headroom rule
-  (7,200 − 299 prior requests) across all campaign roots before each session.
-
-### 2.5 Predictor landscape (what outcome_predictor must interoperate with)
-- `predictor_v3.predict_v3(config, task, cache_shas, led)` →
-  `{lower, upper, certain[], conditional[], total_events}`: enumerates call
-  events (planned e/r/v; under Z=LOCAL also e_fb×2, r_fbd, r_esc, v_fbd,
-  v_esc), exact SHA cache check only for deterministic e-node prompts.
-- `selectors._predict_incr_cost(cfg)`: static upper bound table
-  (NONE=4, LOCAL=10, FULL=8 events) — no cache awareness in the search loop.
-- `sa_pgfs_v1.surrogate.QSurrogate`: `fit(X, y)`, `predict(X, return_std=True)`
-  — the existing quality surrogate used inside EI. Features: 5-dim
-  `[e1, e2, r, v, Z]` ordinal encoding (`selectors._feat`).
-- **Missing**: no explicit outcome (Q) predictor interface; no latency
-  predictor; no feasibility/completion predictor; nothing reads
-  MODEL_SWITCH history.
-
-### 2.6 Faults and recovery (reward must stay blind to these)
-- Fault panel: 30% of task uids, node uniform over e1/e2/r/v, typed
-  corruption (empty facts / unparseable r / null v), frozen at build time
-  (FAULT_SEED 20261009), hidden from selectors by construction.
-- Z=LOCAL recovery: fb (first→coder, rest→medium), fbd refresh, esc
-  escalation events, all enumerated by predictor_v3.
-- Z=FULL: exactly one full-graph replay with frozen alternative models
-  (large↔coder swap), all logical nodes re-charged in C/L.
-- MeteredExecutor: corruption is injected AFTER a metered valid response —
-  faulted calls keep real deployment cost; ledger/trajectory unchanged.
-
-### 2.7 Stub/simulation infrastructure (phase 2/3 test bed)
-- `predictor_v3.V3Executor`: answers-map executor with fault injection,
-  running cache, full call_log — a proven zero-call executor pattern.
-- `selectors.run_closed_loop()`: drives the REAL SearchSession +
-  MeteredExecutor + real Budget with a stub `dispatch(model, prompt)` —
-  the exact pattern phase 2 should reuse (zero_model_calls=True convention).
-- `Budget.__init__(..., clock=time.monotonic)` already accepts an injectable
-  clock — controlled-time tests for deadline logic need no monkeypatching.
-- Existing per-module test files (`test_runtime.py` 10/10, `test_evaluator.py`,
-  `test_fast_backend.py`) set the expected style: real assertions, JSON
-  evidence files, `all_pass` flags.
-
-### 2.8 Authorization style (phase 4 will need the same)
-- `require_admission`: protocol SHA binding + admission JSON gates
-  (selector_review, independent_splits, new_semantics_real_validation,
-  runtime_tests) + `JOINT_SEARCH_EXECUTE=1` env + frozen input bindings
-  (per-file SHA). Fail-closed everywhere; no silent rebinding
-  (`FileExistsError` on existing launch/admission files).
-
-### 2.9 Wall-clock reconstructability verdict (added in revision A — evidence, not gap analysis)
-
-Question put by the phase-1 reviewer: are historical task-level latencies
-RECONSTRUCTABLE / PARTIALLY_RECONSTRUCTABLE / NOT_RECONSTRUCTABLE, and are
-the observation fields needed for future task/node/recovery/scheduling
-overhead prediction complete? Evidence below is a READ-ONLY schema
-inspection of one COMPLETE finished session
-(`formal_campaign_v2/official_qnehvi_same_state_20261009/`, 2026-10-10;
-nothing was written). Code-level facts cited from the audited sources.
-
-**Verdict table:**
+### §2.9 Wall-clock reconstructability verdict (rev A, verbatim — superseded
+### for design purposes by Part II §II.6, kept as evidence)
 
 | Quantity | Verdict | Evidence |
 |---|---|---|
-| Per-call service latency (physical + faulted) | **RECONSTRUCTABLE** | `TRAJECTORY.jsonl`/`WORKFLOW.jsonl`: every logical call has `response.start_unix`, `end_unix`, `latency_s` (930 records in the inspected session). Faulted calls keep the real metered latency (MeteredExecutor replaces only the answer; AUDIT §2.6). |
-| Per-task serial service demand (L semantics) | **RECONSTRUCTABLE** | Recorded directly per task in `EVALUATIONS.jsonl → tasks[].L_serial_service_reconstructed_s`; independently recomputable from WORKFLOW by summing `latency_s` over the task's keys (cold/alias semantics by design, evaluator docstring). |
-| Per-cell (config×state) evaluation wall | **RECONSTRUCTABLE** | `EVALUATIONS.jsonl → search_spend.observed_wall_s` per reveal. |
-| Per-session wall | **RECONSTRUCTABLE** | `STATUS.jsonl → observed_wall_s`; bracketed by first/last `DISPATCH.jsonl → unix`. |
-| Per-task E2E wall | **PARTIALLY_RECONSTRUCTABLE** | (a) cache hits carry the SOURCE call's timestamps (alias reuses the cached response object), and the TRAJECTORY append itself is untimestamped — a hit's instant is only bracketed by the surrounding physical calls' unix times (execution is serial, so the bracket is tight but not exact); (b) `MODEL_SWITCH.jsonl` (26 switches inspected) has `wall_s` but no cell/task attribution. |
-| Per-(node, model) latency samples for priors | **FIELDS PRESENT** | node is embedded in every `key` (4th colon field); recovery events (fb/fbd/esc) appear as ordinary calls when they fire (`search_spend.injected_calls`, `dry_calls` counters exist). Usable for PRIORS only after the phase-4 provenance gate (§4 of the scheduler doc). |
+| Per-call service latency (physical + faulted) | **RECONSTRUCTABLE** | `TRAJECTORY.jsonl`/`WORKFLOW.jsonl`: every logical call has `response.start_unix`, `end_unix`, `latency_s` (930 records, inspected session official_qnehvi_same_state_20261009, read-only). Faulted calls keep real metered latency. |
+| Per-task serial service demand (L semantics) | **RECONSTRUCTABLE** | `EVALUATIONS.jsonl → tasks[].L_serial_service_reconstructed_s`; recomputable from WORKFLOW. |
+| Per-cell evaluation wall | **RECONSTRUCTABLE** | `EVALUATIONS.jsonl → search_spend.observed_wall_s`. |
+| Per-session wall | **RECONSTRUCTABLE** | `STATUS.jsonl → observed_wall_s`; DISPATCH unix brackets. |
+| Per-task E2E wall | **PARTIALLY_RECONSTRUCTABLE** | cache hits carry source timestamps (append untimestamped); MODEL_SWITCH has wall_s but no cell/task attribution. |
+| Per-(node, model) latency samples for priors | **FIELDS PRESENT** | node embedded in every key; recovery events appear as ordinary calls. Usable for PRIORS only after the phase-4 provenance gate. |
 
-**Completeness for the future predictor (question's second half):** node-level
-service samples, recovery-event samples, and switch-cost samples all exist as
-fields. What does NOT exist anywhere: per-hit timestamps, per-switch→cell
-attribution, and any inter-call scheduling-gap record beyond the unix
-brackets. Consequently the R0 deadline terms must be defined on serial service
-demand + recorded wall brackets, NOT on a claim of exact E2E per-task wall.
+Double gate (G1 per-cell deadline D̂ ⊂ G2 session wall cap + SIGALRM at
+wall_seconds − 60, runtime.py:133-138) — carried over into rev B's
+compensator design with per-task granularity.
 
-**Double wall-clock gate (explicit conclusion):** two independent gates exist
-and must stay consistent in the design: (G1) the R0 task/cell deadline D vs
-realized T (reward-level), and (G2) the production hard caps —
-`Budget.wall_seconds` + `run_session`'s SIGALRM at `wall_seconds − 60`
-(audit §2.4). Resolution adopted by the design docs (rev A): D for the next
-cell is ALLOCATED by `deadline_compensator` inside the G2 work window
-(`D̂ = wall_cap − 60 − elapsed − predicted_switch_overhead − safety_margin`);
-G2 remains the unconditional backstop. A cell that violates its allocated D
-triggers the R0 over-deadline terms; a session that hits G2 settles INCOMPLETE
-exactly as today. The two gates therefore never conflict: G1 ⊂ G2 by
-construction, and G1 violations are observable strictly before G2 can fire.
+### §3 Running Formal campaign — keep-out list (rev A, verbatim)
 
-## 3. Running Formal campaign — files this project must not touch
+Driver + vLLM + GPU lock own: `joint_search_v1/formal_campaign_v2*` (incl.
+retry roots) — CAMPAIGN/CAMPAIGN_LOG/PROTOCOL_SNAPSHOT/MODEL_BINDINGS/
+TASK_PANEL/STATE_PANELS/DISPATCH/TRAJECTORY/EVALUATIONS/WORKFLOW/STATUS/
+MODEL_SWITCH jsonl and per-session trees. Read-only schema inspection is the
+only permitted contact (§2.9 evidence). Net-benefit runs/ledgers are under
+the same rule. Phases 1–3 of this project write ONLY under
+`deadline_reward_v1/`.
 
-- Driver: PID 4815, `formal_launch --run --launch FORMAL_LAUNCH_V2.json
-  --admission FORMAL_ADMISSION_V2B.json --only <7 sessions>`, plus a vLLM
-  server (Qwen2.5-7B, port 8128) and GPU lock `collect/logs/local_gpu.lock`.
-- HOT directories (append-only, owned by the driver):
-  `joint_search_v1/formal_campaign_v2*` (incl. retry1..7), i.e.
-  `CAMPAIGN.jsonl`, `CAMPAIGN_LOG.jsonl`, per-session `*/` trees
-  (DISPATCH/TRAJECTORY/EVALUATIONS/WORKFLOW/STATUS/MODEL_SWITCH jsonl).
-- Read-only consumption of finished artifacts for calibration is a phase-3/4
-  question (data provenance review), not something phase 1 does.
+---
 
-## 4. Gap analysis (why deadline_reward_v1 exists)
+# Part II — execution layer audit (rev B, new)
 
-| Need | Current state | Gap |
-|---|---|---|
-| Per-decision reward/penalty signal | Q/C/L aggregated per (config, state) reveal | No reward defined over scheduling decisions; no deadline term |
-| Deadline awareness in selection | Selector sees candidates+observations only; Budget never passed in | No remaining-time feasibility gating; switch cost ignored prospectively |
-| Deadline compensation | Fixed −60 s cleanup reserve; MODEL_SWITCH.jsonl recorded, unused | No compensator predicting switch/startup overhead against remaining wall |
-| Outcome prediction | Implicit GP-EI inside selectors; explicit cost-bound predictor_v3 (offline tooling) | No uniform predictor interface (Q̂, Ĉ, L̂, feasibility) usable by both scheduler and reward |
-| Failure recovery in new code | CampaignQuota crash-safe; Budget no-resume | Phase-2 scheduler_state must replicate crash-honest semantics in its own ledger |
-| Information boundaries | Enforced at SearchSession; faults/states hidden | Reward features must be derived from legal observations only — needs explicit test |
+## II.1 The real DAG executor and its stage structure [EXISTS]
 
-## 5. Design constraints extracted for the three design docs
+`collab_scheduler_v1/fault30_run.py::eval_config` (fault30_run.py:215-474)
+is the production execution path for the 4-node DYNAMICDAG
+(e1, e2, r, v). Stage order (fault30_run.py:218, 234-422):
 
-1. Reward signals must be computable from `observations` entries
-   (`objectives.Q/C/L`, `search_spend.*`) + Budget state that run_session
-   already holds — anything else (faults, gold, task labels) is leakage.
-2. A deadline-aware selector cannot be dropped into the running Formal: it
-   changes selection behavior. Phase 2/3 code must therefore live in
-   `deadline_reward_v1/` and be exercised on stub replay only; any future
-   real run is a separately admitted campaign (phase 4).
-3. Wall-clock semantics differ by surface: search wall (Budget.wall_seconds,
-   hard SIGALRM) vs deployment L (serial service demand). The reward function
-   must not conflate them.
-4. Crash semantics: any scheduler_state ledger must be append-only,
-   reserve-before-spend, and must refuse silent resume — mirroring Budget /
-   CampaignQuota conventions.
-5. Stub tests must inject the clock (Budget already supports `clock=`), inject
-   model-switch latencies, and assert zero real model calls
-   (`zero_model_calls: true` evidence keys, existing convention).
-6. Predictor interface must compose with predictor_v3's event enumeration
-   (cost side) and QSurrogate (quality side) rather than duplicate them.
+```
+A  planned extraction    e1(ctx_table), e2(ctx_text)          L234-258
+R1 planned reasoning     r(facts)                             L265-277
+[LOCAL_REROUTE only:]
+ER  e-recovery (fb)      trigger: empty facts                 L292-317
+R2  r-refresh (fbd)      trigger: e facts actually changed    L318-335
+R3  r-escalation (esc)   trigger: r unparseable               L336-353
+V1  planned verification v(facts, expr)                       L368-382
+V2  v-refresh (fbd)      trigger: r output changed (final)    L385-401
+V3  v-escalation (esc)   trigger: v None or v-vs-r mismatch   L402-422
+scoring                  ok / physical accounting / L         L424-473
+```
 
-## 6. Verdict
+Which recovery stages run is fixed STATICALLY by the config's Z
+(fault30_run.py:220: `is_lr = z == 'LOCAL_REROUTE'`). There is **no runtime
+branch point where a policy could choose an action** — [MISSING: online
+decision hook].
 
-The codebase provides everything phase 2 needs to build against WITHOUT
-touching the Formal campaign: pure-callback selector seam
-(`SearchSession.step`), injectable-clock Budget, an executor whose dispatch is
-a callable (stub-friendly), measured-but-unused switch latencies, and an
-established zero-call test convention. The main design work is (a) defining
-the reward without oracle access, (b) deadline compensation that is honest
-about the −60 s reserve and switch overhead, (c) a predictor interface that
-unifies cost bounds and quality surrogates.
+## II.2 Detection predicates (the feedback that genuinely exists) [EXISTS]
+
+| # | Signal | Predicate | Code | Used today as trigger for |
+|---|---|---|---|---|
+| D1 | e-node failure | `parse_facts_safe(answer)` → empty `facts` list | fault30_run.py:246,255; 293-295 | ER fb |
+| D2 | e-repair changed facts | new facts ≠ old facts | fault30_run.py:313-315 | R2 fbd (descendant closure) |
+| D3 | r failure | `value_of(r_answer, facts)` error / UNPARSEABLE expr | fault30_run.py:282-289, 337 | R3 esc |
+| D4 | r output changed (final-state rule: last vs ORIGINAL r answer; process flag kept separately) | answer diff | fault30_run.py:354-366 | V2 fbd |
+| D5 | v failure | `json_value(v)` None, or not `close(vv, rv)` vs r value | fault30_run.py:403-409 | V3 esc |
+| D6 | task-level terminal failure | same three families over final outputs | evaluator.py:74-84 `detected_failure` | FULL replay gate (search layer) |
+
+All predicates are observable-output-only (no gold, no fault registry). This
+is the complete, real feedback interface — anything finer (per-node
+confidence, token-level signals, latency anomalies) **does not exist**
+[MISSING; not assumed by rev B designs].
+
+## II.3 LOCAL recovery events — exact semantics [EXISTS, static]
+
+| Event | Trigger (from II.2) | Re-execution scope | Model rule | Cap |
+|---|---|---|---|---|
+| `e_fb` | D1 on e1/e2 | only the empty e-node | **memory rule by panel detection order**: first detected task → coder, rest → medium (fault30_run.py:296) | one pass per node |
+| `r_fbd` | D2 | r node only | **planned r model unchanged** (fault30_run.py:327) | once |
+| `r_esc` | D3 | r node only | **hardcoded large** (fault30_run.py:345) | once |
+| `v_fbd` | D4 | v node only | planned v model unchanged (fault30_run.py:395) | once |
+| `v_esc` | D5 | v node only | **hardcoded large** (fault30_run.py:416) | once |
+
+Note the scope×model coupling baked into these rules (see II.6).
+
+## II.4 FULL replay — two DIFFERENT semantics coexist [EXISTS, ambiguous]
+
+1. **Search-layer FULL** (evaluator.py:118-129): on D6, exactly one replay
+   with X′ = {n: coder if m==large else large} — **every node's model
+   swapped**; all logical calls re-charged.
+2. **Net-benefit E-arm FULL** (NET_BENEFIT_FREEZE.json `arms.E_dynamic_full`):
+   SAME detection predicate and SAME per-task alternative models as D
+   (e: memory rule coder/medium; r→large; v→large); **every other node
+   re-executes on its PLANNED model**; "D and E differ ONLY in re-execution
+   scope (local subtree vs full graph)".
+
+Rev B treats "FULL" as one decision with two candidate execution semantics —
+pinned as OPEN-B1 (default: E-arm semantics, because it is the one that
+supports scope-only attribution).
+
+## II.5 Confound: recovery actions change scope AND models simultaneously
+
+Every existing recovery rule substitutes models at the same time as it
+changes re-execution scope (II.3: fb→coder/medium, esc→large; II.4.1:
+full-swap). A reward-driven policy choosing between them therefore confounds
+"how much to re-run" with "who re-runs it". Existing decomposition precedent
+(NET_BENEFIT_FREEZE.json, arms B/C/D/E):
+
+- B (all-large, NONE) vs C (hetero X, NONE): static model-assignment effect.
+- C vs D (same X + LOCAL): adds local recovery.
+- D vs E (same X, same detection, same alternative models; scope-only
+  differs): recovery-SCOPE effect, model effect held fixed.
+
+The dynamic scheduler's evaluation must inherit exactly this ladder
+(DESIGN_DYNAMIC_SCHEDULER §7); single-factor switches are already proven
+implementable in this codebase.
+
+## II.6 Time semantics at the execution layer — three distinct quantities
+
+1. **Per-call service latency** `latency_s` [EXISTS]: recorded per call
+   (real: engine-measured + start/end_unix in campaign artifacts; stub:
+   scripted value).
+2. **Critical-path reconstructed L** [EXISTS]: fault30_run.py:451-463 —
+   L = max(e-chain incl. serial fb) + Σ r-keys + Σ v-keys. A RECONSTRUCTION
+   of serial service demand on the critical path. It is **not** wall time:
+   no cache-lookup overhead, no model switch time, no scheduling gaps
+   (physical_accounting docstring: "Cache lookup overhead belongs to wall
+   time, not model service time", fault30_run.py:187-189).
+3. **Real per-task E2E wall** [MISSING in executors]: no executor tracks
+   task-level wall (start→finish). Only session/cell walls exist
+   (`observed_wall_s`, Part I §2.9). The stub engine of phase 2 MUST add
+   per-task wall on the injected clock; nothing in production records it
+   today.
+
+Design consequence (feeds all rev B docs): reward deadlines and predictor
+time estimates must be explicit about which of the three they mean; serial
+service demand may never be silently used as E2E.
+
+## II.7 Model switch overhead at execution layer [PARTIALLY EXISTS]
+
+- `Executor.call` switches models inline (stop + start) when the next call's
+  model differs (fault30_run.py:131-135) — cost lands in wall time, NOT in
+  any recorded field of the call.
+- `run_stage` batches jobs by model to reduce switches (fault30_run.py:159-164)
+  — a REAL scheduling lever already in production.
+- MODEL_SWITCH.jsonl wall_s exists only in the campaign/session runtime
+  (Part I §2.4), not inside eval_config.
+- [MISSING] per-switch records inside a task's execution; attribution of
+  switch time to tasks. Phase-2 stub engine must make switch events
+  first-class records.
+
+## II.8 Budget semantics at execution layer [EXISTS at session level only]
+
+Budget caps (requests/tokens/wall, Part I §2.3) bind the SESSION, enforced
+passively via `check()` before each dispatch. Per-TASK budget/deadline
+allocation does not exist [MISSING]. The rev B DeadlineCompensator therefore
+allocates per-task deadlines D from the session envelope — a new, additive
+layer, not a modification of Budget.
+
+## II.9 Planning helpers reusable without execution [EXISTS]
+
+`fault30_protocol.py::plan_none` (L199) and `plan_reroute` (L253) enumerate
+planned calls WITHOUT executing — the same pattern predictor_v3 uses for
+cost bounds. Reusable as the action-enumeration core (task 4 of the
+instruction): enumerate(action, state) → call-event list → cost/time bounds.
+Also `predictor_v3.enumerate_call_events` (predictor_v3.py:41-81) hard-codes
+the same table for the 4-node DAG.
+
+## II.10 Reuse list vs missing-interface list (deliverable)
+
+**Reuse as-is (import or re-derive, zero modification to owners):**
+| Capability | Source |
+|---|---|
+| Prompt builders (e/r/v prompts, parse_facts_safe) | fault30_protocol.Ledger L147-166 |
+| Detection predicates D1–D6 | fault30_run.py / evaluator.py:74-84 |
+| Stage/recovery semantics reference | fault30_run.eval_config L215-474 |
+| Event-planning without execution | plan_none/plan_reroute; predictor_v3.enumerate_call_events |
+| Physical accounting (8-layer) | fault30_run.physical_accounting L184-212 |
+| Metered fault injection (corruption after metered call) | evaluator.MeteredExecutor L29-60 |
+| Budget with injectable clock | smoke_runner.Budget L32-81 (`clock=` param) |
+| Stub executor pattern (answers-map + faults + cache) | predictor_v3.V3Executor L124-193 |
+| Scope/model decomposition ladder | NET_BENEFIT_FREEZE.json arms B/C/D/E |
+| Crash-honest append-only ledger conventions | CampaignQuota, Budget, DISPATCH.jsonl |
+
+**Missing (must be built in deadline_reward_v1/ phases 2–3; none exists
+anywhere in production):**
+1. Online decision hook between detection and recovery (policy injection
+   point) — eval_config has none.
+2. Execution-layer SchedulerState (node status/dependency/model/recovery
+   counts per task).
+3. Recovery-action interface with legality enumeration (NONE/LOCAL/FULL as
+   runtime choices).
+4. OutcomePredictor over (decision point, action) outcomes.
+5. DeadlineCompensator: per-task D allocation, switch-overhead accounting,
+   unified with predictor to avoid double-charging.
+6. Per-task real wall tracking (stub first; production later).
+7. Per-switch records inside task execution (stub first).
+8. Task-level terminal reward R0 wiring (scoring exists; reward does not).
+
+## II.11 What rev B must NOT claim (honesty ledger)
+
+- No online recovery interface exists to "plug into" — phase 2 builds a
+  stub execution engine INSIDE deadline_reward_v1/ that mirrors eval_config's
+  stage semantics (the V3Executor precedent), driven by the new policy. Any
+  future production integration is a separately admitted change.
+- Detection capability is exactly D1–D6; nothing finer.
+- The Formal campaign (search layer) keeps its independent research value;
+  nothing in rev B redefines or reuses its ledgers as training signal
+  (provenance gate unchanged, Part I §3).

@@ -1,130 +1,126 @@
-# DESIGN_PREDICTOR_INTERFACE — Phase 1 deliverable 4/4 (deadline_reward_v1)
+# DESIGN_PREDICTOR_INTERFACE — deadline_reward_v1 (rev B)
 
-Status: DRAFT v0.2 (revision A) for phase-1 review. Governs phase-2 file
-`outcome_predictor.py`. Zero model calls in all phases through 3.
-Executable leakage-firewall test specs live in `VERIFICATION_PLAN.md`
-(L1–L6); the §7 list below is the same content in contract form.
+Status: DRAFT v0.3 (rev B) — predictor target changed from search
+configurations to RECOVERY ACTIONS at execution-layer decision points.
+Governs phase-2 file `outcome_predictor.py`. Zero model calls, phases 1–3.
 
 ## 1. Role
 
-One interface serving three consumers:
-- the dynamic scheduler's feasibility gate (`W_predicted(c)`, DESIGN_DYNAMIC_SCHEDULER §2),
-- the deadline compensator's demand estimates (§3 there),
-- the reward's predicted-work term (DESIGN_REWARD_FUNCTION §3).
-
-It UNIFIES two existing, currently disconnected capabilities (AUDIT §2.5):
-the call-event cost enumerator (predictor_v3) and the quality surrogate
-(QSurrogate/EI). It must compose with them, not duplicate or import-and-mutate
-them (phase 2 re-implements the small enumeration table locally so that no
-`collab_scheduler_v1` file is touched; behavior parity is asserted against
-predictor_v3's published event table in tests — see §6).
+At a decision point (detection event e, task state s, candidate action a),
+the predictor returns the three quantities Ê[R0|H,a] needs
+(DESIGN_REWARD_FUNCTION §3.2): post-recovery quality belief, incremental
+physical cost, and completion-time belief — plus on-time probability via
+estimator E1. Time estimates are PURE service demand; switch overhead is
+owned by the compensator (scheduler doc §6, no double charge).
 
 ## 2. Interface (contract to freeze at review)
 
 ```python
 @dataclass(frozen=True)
-class Prediction:
-    q_mean: float;  q_std: float            # deployment Q belief
-    c_upper_tokens: int                     # search-side physical token upper bound
-    w_mean_s: float;  w_p90_s: float        # serial service demand est. for THIS round
-    feasible: bool;  margin_s: float        # vs the compensator's D̂
+class ActionPrediction:
+    q_mean: float;  q_std: float          # post-recovery task-quality belief
+    d_cost_tokens: int                     # incremental physical tokens (bound)
+    mu_s: float;  w_p90_s: float           # completion-time belief (service only)
     basis: tuple[str, ...]                  # provenance tags of estimators used
 
 class OutcomePredictor(Protocol):
-    def observe(self, observation: dict) -> None: ...      # legal schema only
-    def predict(self, config: ConfigView, ctx: DeadlineContext) -> Prediction: ...
+    def observe_episode_feedback(self, fb: EpisodeFeedback) -> None: ...
+    def predict(self, ctx: DecisionContext, action: ActionView) -> ActionPrediction: ...
 ```
 
-- `ConfigView`: id + X (node→model) + Z. Nothing else from the candidate.
-- `DeadlineContext`: current model, D̂ (from compensator), elapsed, remaining
-  rounds. Assembled by the driver from legal sources only.
-- `observe()` accepts ONLY the observation schema keys
-  (`config_id, state, objectives{Q,C,L}, search_spend{...}`); any other key
-  (faults, gold, task fields) ⇒ ValueError. This is the leakage firewall at
-  the interface level, testable without the scheduler.
+- `DecisionContext`: detection event enum (D1–D6), SchedulerState view
+  (node statuses, models, recovery counts — scheduler doc §3), deadline
+  margin from the compensator, within-episode observed feedback. Structurally
+  CANNOT carry gold/fault registry/unexecuted outputs (constructor whitelist;
+  firewall tests L2/L3).
+- `ActionView`: the action id + its resolved model substitution + enumerated
+  call-event list (from the action interface, scheduler doc §4). No future
+  outputs.
+- `observe_episode_feedback`: legal within-episode signals only (repair
+  succeeded/failed per predicates, changed-outputs). OPEN-D8 controls
+  whether q̂ uses them (default yes; ablation arm feedback-off).
 
-## 3. Cost side (deterministic core)
+## 3. Quality side (q̂)
 
-Event enumeration per config (parity with predictor_v3 / AUDIT §2.5):
-`NONE → e1,e2,r,v (4); LOCAL → +e_fb×2,r_fbd,r_esc,v_fbd,v_esc (10);
-FULL → +4 replay nodes (8)`. Multiply by per-model token/latency profiles:
-`Profile(model) = (p50_tokens, p90_tokens, p50_lat_s, p90_lat_s)` from a
-frozen `PRIORS.json` (provenance rule of DESIGN_DYNAMIC_SCHEDULER §4 applies:
-constants now, campaign-fitted priors only after the phase-4 gate).
-`c_upper_tokens = Σ_events p90_tokens(model(e))`;
-`w_p90_s = Σ_events p90_lat_s(model(e))` (serial sum — consistent with the
-campaign's L semantics, AUDIT §2.1). No cache exploitation in the default:
-cross-config cache hits are a known lower-bound refinement, deferred
-(OPEN-P2) because search sessions are explicitly no-historical-cache
-(runtime.py docstring).
+`RecoveryQualityEstimator`: per (detection family, action, model-delta)
+success-rate belief, initialized from frozen PRIORS (stub-world constants;
+real-data fitting is phase-4 provenance-gated), updated within-episode from
+observed repair outcomes (legal feedback), with a beta-style prior so early
+episodes are prior-dominated. Never receives this task's gold (§2 firewall;
+test L2). Cross-task pooling within a session is allowed (other tasks'
+OUTCOMES — ok/cost — become observable only at THEIR termination; gold-free
+aggregate statistics only — OPEN-P6 whether pooling uses other tasks'
+terminal ok at all; default: no, priors + within-episode only, strictest).
 
-## 4. Quality side
+## 4. Cost side (ΔC) — deterministic core
 
-Default `GPQualityEstimator`: wrap `sa_pgfs_v1.surrogate.QSurrogate` with the
-5-dim `_feat` encoding [e1,e2,r,v,Z] (audited encoding, selectors.py:27-34);
-features computed locally. `observe()` refits on ≥2 points, else returns the
-uninformative prior `q_mean=0, q_std=σ₀` (frozen constant). No task-uid
-features, no state features (state-blindness preserved, matching the
-`proposed_without_state` ablation boundary, AUDIT §2.2).
+Action event enumeration (reuses the audited tables verbatim; AUDIT II §3,
+II §9 — predictor_v3.enumerate_call_events is the precedent; re-implemented
+locally, zero production imports):
 
-## 5. Deadline side (bridge to compensator)
+| Action | Events |
+|---|---|
+| NONE | 0 |
+| LOCAL @D1 (e empty) | e_fb(1 per empty node) + r_fbd·1{facts changed} + v_fbd·1{r changed} (bounds: include both branches, count max) |
+| LOCAL @D3 (r unparseable) | r_esc + v_fbd·1{r changed} |
+| LOCAL @D4 (r changed) | v_fbd |
+| LOCAL @D5 (v fail) | v_esc |
+| FULL | 4 planned nodes + (E-arm semantics: alternative-model events on trigger nodes; all-swap semantics: 4 swapped nodes) — bound includes the production cascade caps |
 
-`feasible/margin_s` are computed by the caller-injected `D̂` vs `w_p90_s`:
-the predictor stays clock-free and purely computational; all timing authority
-lives in `deadline_compensator` + the injected clock. This keeps the
-predictor unit-testable with plain numbers.
+`d_cost_tokens = Σ_events p90_tokens(model(event))` from PRIORS profiles.
+Parity test P1 (rev B): enumeration counts per (action, trigger family)
+match a frozen golden table derived from the audited production tables —
+NOT the search-space size (48/96 issue retired; AUDIT corrections §1).
 
-### 5.1 On-time estimator E1 (feeds Ê[R0 | H, a], DESIGN_REWARD_FUNCTION §3.1)
+## 5. Time side (μ, w_p90) + E1 (corrected)
 
-The interface additionally exposes, from `(w_mean_s, w_p90_s)`:
+`mu_s = t_now_service_remaining + Σ_events p50_lat(model(event))`;
+`w_p90_s` analogously with p90 latencies. Service only — no switch time, no
+gaps. On-time quantities (owner: reward doc §3.3):
 
 ```
-sigma = (w_p90_s − w_mean_s) / 1.2816                # normal approx (z_0.9)
-P_on_time(D)   = Φ((D − w_mean_s)/sigma)             # P̂(T ≤ D)
-E_late(D)      = sigma·[φ(z) + z·(1 − Φ(z))],  z = (w_mean_s − D)/sigma   # Ê[(T−D)₊]
+σ  = (w_p90_s − μ_s)/1.2816                # degenerate σ≤0 → point mass
+P̂(T≤D)    = Φ((D−μ_s)/σ)
+Ê[(T−D)₊] = σ·[φ(z) + z·Φ(z)],  z = (μ_s−D)/σ        # CORRECTED (rev A was wrong off z=0)
 ```
 
-Degenerate cases pinned by tests: `sigma ≤ 0` ⇒ P_on_time = 1{w_mean ≤ D},
-E_late = (w_mean − D)₊. Distribution form is OPEN-D6 (reward doc);
-log-normal / empirical-quantile variants are phase-3 ablations behind the
-same two methods, so R0 code never changes when the estimator swaps.
+Feasibility itself is the compensator's call (`w_p90 ≤ margin`), the
+predictor stays clock-free and purely computational.
 
 ## 6. Implementations shipped in phase 2
 
-| Class | Purpose | Determinism |
-|---|---|---|
-| `PriorOnlyPredictor` | profiles + priors, no learning | fully |
-| `GPQualityEstimator` | priors + QSurrogate quality | seeded fit |
-| `StubOutcomePredictor` | scripted predictions incl. adversarial (NaN, inf, zero-std, flip-flop) for F5/F3 tests | scripted |
-| `CalibratedPredictor` | STUB SKELETON ONLY: future fitting on admitted frozen campaign artifacts; raises NotImplementedError until the phase-4 authorization exists | — |
+| Class | Purpose |
+|---|---|
+| `PriorOnlyPredictor` | PRIORS + estimators, no learning |
+| `RecoveryQualityEstimator` | §3 (priors + within-episode updates) |
+| `StubOutcomePredictor` | scripted predictions incl. adversarial (NaN, inf, zero-σ, flip-flop) for F5/B6 tests |
+| `CalibratedPredictor` | SKELETON ONLY; raises NotImplementedError until phase-4 authorization (provenance-gated fit on admitted frozen artifacts) |
 
-## 7. Parity and acceptance tests (phase-3 review)
+## 7. Acceptance criteria (contracts; executable specs in VERIFICATION_PLAN)
 
-1. Event-table parity: for all 96 configs, enumeration counts equal the
-   predictor_v3 table (4/10/8 by Z) — assert from a frozen golden file
-   generated once during phase 2 with zero model calls.
-2. Schema firewall: `observe()` rejects every illegal key (enumerated list in
-   test), including nested injection (`objectives.__gold__` style).
-3. Determinism: same observation stream ⇒ identical Prediction sequence
-   (bitwise on floats via seeded GP fit).
-4. Degenerate inputs: <2 observations, single-model configs, all-coder v,
-   Z=FULL with fault-replay sizing — no NaN/inf leaks past `Prediction`
-   construction (adversarial values must be caught, not propagated).
-5. Profile monotonicity: scaling any p90 latency profile by k scales
-   `w_p90_s` by k; feasibility flips sign correctly around `D̂ = w_p90_s`.
-6. Zero model calls (`zero_model_calls: true`), no network imports, no
-   filesystem writes outside the run directory.
+1. P1 action-event parity vs golden table (per trigger family).
+2. L2/L3 schema firewall: DecisionContext/ActionView/feedback reject all
+   illegal keys (enumerated LEAK_PROBES.json), incl. nested smuggles.
+3. Determinism: same inputs ⇒ bitwise identical ActionPrediction.
+4. Degenerate inputs (σ→0, zero-event actions, replay-exhausted) → finite,
+   well-defined outputs; NaN/inf never escapes (adversarial stub tests).
+5. Profile monotonicity: p90 latency ×k ⇒ w_p90 ×k; boundary flip at
+   margin = w_p90.
+6. E1 goldens on the CORRECTED closed form (P3), incl. D=μ, D=μ+σ, D≪μ.
+7. `zero_model_calls: true`; no network; no filesystem writes outside run dir.
 
-## 8. Open decisions (finalize at phase-1 review)
+## 8. Open decisions
 
-- OPEN-P1 whether `q_mean` may use the v2.1-rescored Q only (default: yes —
-  it is what observations carry; no re-scoring in the predictor).
-- OPEN-P2 cache-aware cost refinement (default: out of scope for phase 2).
-- OPEN-P3 quality prior σ₀ and whether an uninformative prior participates
-  in gating (default: gating uses cost/w side only; quality never gates
-  feasibility).
-- OPEN-P4 profile granularity: per-model vs per-(model,node) priors
-  (default: per-model; per-node after phase-4 calibration review).
-- OPEN-P5 whether `Prediction` should carry interval (p10/p90) instead of
-  mean/std for Q (default: mean/std now — matches QSurrogate output; revisit
-  if R3 frontier reward is chosen).
+- OPEN-P1 (revised): q̂ target = task-level terminal quality (v2.1 contract
+  semantics); no re-scoring inside the predictor. [unchanged default]
+- OPEN-P2 (carried): cache-aware cost refinement — OUT of phase-2 scope
+  (stub engine has deterministic cache semantics; refine later).
+- OPEN-P3 (revised): quality never gates feasibility (feasibility = cost/time
+  only); q̂ enters only through the score. [default unchanged]
+- OPEN-P4 (carried): profile granularity per-model (default) vs
+  per-(model,node).
+- OPEN-P6 (new): cross-task pooling of terminal outcomes into q̂ priors
+  (default: OFF — strictest leakage posture).
+- OPEN-P7 (new): prior VALUES for (family, action, model-delta) success
+  rates and token/latency profiles — stub-world constants set at phase-2
+  freeze, listed in PRIORS.json with provenance notes.

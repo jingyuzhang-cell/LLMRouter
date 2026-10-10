@@ -1,140 +1,145 @@
-# VERIFICATION_PLAN — executable test design for phases 2–3 (deadline_reward_v1)
+# VERIFICATION_PLAN — executable test design, phases 2–3 (deadline_reward_v1, rev B)
 
-Status: DRAFT v0.1, added in revision A (2026-10-10) as the direct answer to
-review finding #4 ("验收需要看到可执行测试设计"). This file consolidates every
-executable test the three modules must ship with; phase-2 code without these
-tests is not admissible to phase 3. All tests run with ZERO real model calls.
+Status: DRAFT v0.2 (rev B) — re-targeted to the execution layer. Phase-2
+code is not admissible to phase 3 without these tests. Zero real model
+calls. Run convention unchanged: one JSON evidence file per group, per-test
+PASS/FAIL, `all_pass`, `zero_model_calls: true`, seeded RNG, injected clock
+(`Budget(clock=)` precedent), socket disabled (Z2).
 
-Run convention (matches codebase style): one JSON evidence file per group
-(e.g. `LEAKAGE_TESTS.json`) with per-test PASS/FAIL, an `all_pass` flag, and
-`zero_model_calls: true`; exit code 0 iff all_pass. Deterministic: seeded
-RNG, injected clock (`Budget(clock=)` convention, AUDIT §2.7).
+## L — information-leakage firewall
 
-## L — information-leakage firewall (finding #4)
+Decision-time property under test: the policy and predictor can obtain
+neither task gold, nor the hidden fault registry/labels, nor outputs of
+nodes not executed in this episode.
 
-The property under test: **at decision time, nothing can obtain task gold,
-hidden fault assignments/labels, or outputs of nodes that were not executed
-in this session.**
+- **L1 differential fault-blindness.** Same seeds/task panel/scripted
+  server; hidden fault panel redrawn (same rate) or removed ⇒ identical
+  decision sequences, scores, and action traces (bitwise). ≥3 seeds × 3
+  panels. (Fault content reaches the policy only through detection events +
+  outcomes — both legal.)
+- **L2 gold-blindness matrix.** Every ingestion point (DecisionContext,
+  ActionView, EpisodeFeedback, SchedulerState constructor, scorer-to-policy
+  channel) rejects an enumerated probe list (`gold`, `answer`,
+  `derivation`, `faults`, `fault_panel`, `states`, future outputs, nested
+  and callable smuggles). Probes live in `LEAK_PROBES.json` (extensible by
+  the reviewer without writing code). The scorer's own terminal use of gold
+  is asserted to be the ONLY read path (static + runtime check).
+- **L3 unexecuted-node-output probe.** No legal construction exposes node
+  outputs absent from this episode's TASK_LEDGER; synthetic "future"
+  payloads injected through every channel are rejected.
+- **L4 hidden-assignment blindness.** Shuffling fault ASSIGNMENTS within
+  the same detection families leaves decisions identical (complements L1:
+  no inference of WHICH node/task is faulted beyond observable predicates).
+- **L5 import-graph assertion.** AST-level: the three modules import only
+  {stdlib, numpy, PRIORS.json, sibling modules}; no production
+  execution-path import (fault30_run/evaluator/runtime/engine); no
+  torch/botorch; R1 absent from the decision path (OPEN-D7 carried).
+- **L6 provenance hashing.** Every recorded decision carries SHA-256 of its
+  legal-input snapshot; replayer recomputes and asserts 100% match.
 
-- **L1 differential fault-blindness (the decisive test).**
-  GIVEN the same seed, task panel, and observation stream; WHEN the hidden
-  fault panel is redrawn (different uid→node assignment, same rate) or
-  removed entirely; THEN the decision sequence, all Ê[R0|H,a] scores, and the
-  realized R0 trajectory are BITWISE identical. Runs across ≥3 seeds ×
-  {none, redraw-1, redraw-2} panels. PASSES iff every pairwise diff is empty.
-  (Faults influence answers only through evaluation results, which the legal
-  view already prices in — decisions must not move when only the hidden panel
-  moves.)
-- **L2 illegal-key rejection matrix.** For EVERY entry point that ingests
-  data (`OutcomePredictor.observe`, `state_view` factory, `ConfigView`
-  constructor, `DeadlineContext` constructor): feed a enumerated probe list —
-  `gold`, `answer`, `derivation`, `faults`, `fault_panel`, `states`,
-  `task_labels`, `ok_internals`, plus nested probes (`objectives.__gold__`,
-  `search_spend.fault_map`) and non-scalar smuggles (callable, object with
-  `__getitem__`). PASSES iff each raises ValueError naming the rejected key,
-  and the whitelist accept-list still works. The probe list lives in this
-  repo as `LEAK_PROBES.json` so reviewers can extend it without writing code.
-- **L3 unexecuted-node-output probe.** `ConfigView` is structurally limited
-  to (id, X: node→model, Z) — it cannot carry node outputs. Runtime probe:
-  construct ConfigView with extra fields → TypeError/ValueError; then, for a
-  scripted history, append synthetic "future" node outputs through every
-  legal channel (observe/state_view) in mutated payloads → all rejected by
-  L2's whitelist. PASSES iff no legal construction path exposes node outputs
-  of calls not present in this session's own TRAJECTORY-equivalent stub log.
-- **L4 hidden-state blindness vs public state labels.** The state NAME in
-  observations (`clean`/`fault30`) is public protocol knowledge; the fault
-  ASSIGNMENT is not. GIVEN identical seeds; WHEN fault assignments are
-  shuffled within the same state label (L1's redraw restricted to keep labels
-  fixed); THEN decisions are identical. (Complements L1: proves the scheduler
-  cannot infer WHICH tasks are faulted, only react to revealed results.)
-- **L5 import-graph assertion.** Static check over the three modules' ASTs:
-  no import of `fault30_run`, `fault30_protocol`, evaluator internals, ledger
-  objects, tasks, or any `static_dag_v0` engine symbol; no import of
-  torch/botorch; and — enforcing OPEN-D7 — the scheduler's selection path
-  must not reference the R1 symbol (`import`/attribute graph assertion).
-  PASSES iff the dependency graph is exactly: {stdlib, numpy, PRIORS.json,
-  the three sibling modules, QSurrogate (predictor quality side only)}.
-- **L6 state_view provenance hashing.** Every reward/score evaluation appends
-  the SHA-256 of its legal-input snapshot; a replayer recomputes hashes from
-  the stub logs and asserts equality. PASSES iff replayed hashes match 100% —
-  proves no off-ledger data influenced any recorded decision.
+## A — recovery-action legality
 
-## R-F — failure recovery (mirrors DESIGN_DYNAMIC_SCHEDULER §6)
+- **A1** cap enforcement: no LOCAL recipe event exceeds its production cap;
+  no second FULL replay ever executes (exactly-one rule).
+- **A2** legality under exhaustion: with caps exhausted, exhausted actions
+  are absent from legal_actions; policy cannot select them (attempt → F6
+  rejection path).
+- **A3** NONE always legal: including at every detection family and at
+  budget-exhausted states.
 
-R-F1 clock jump past work window mid-round → StopRun propagates, terminal
-INCOMPLETE + `−P` exactly once, ledger closed.
-R-F2 all candidates infeasible → wind-down pick `argmin W_predicted`,
-`mode=winddown` logged, never a silent random choice.
-R-F3 pathological 600 s startup recorded → next D̂ drops by ≥ the estimate;
-that model's candidates gated out.
-R-F4 SIGTERM/crash between events → no settle-after-crash; restart refuses
-existing SCHEDULER_STATE.jsonl (no silent resume).
-R-F5 predictor returns NaN/inf → round skipped for that candidate, treated
-infeasible, error event logged, no crash.
-R-F6 duplicate/illegal selection attempt → rejected exactly like
-SearchSession's guard.
-R-F7 torn-final-line robustness → kill -9 during append; loader treats a
-partial last line as absent-but-flagged, never as complete.
+## T — state, transition, engine fidelity
 
-## B — budget constraints
+- **T1** state update: after each applied action, node_status/recovery_cnt/
+  observed match hand-specified expected states on scripted scenarios
+  (one per action × trigger family).
+- **T2** transition determinism: same seeds + server script ⇒ identical
+  episode traces (two runs, bitwise).
+- **T3 policy–static equivalence** (scheduler doc §2): π≡NONE ≡ Z=NONE
+  trace; π≡LOCAL ≡ D-arm recipe; π≡FULL-on-D6 ≡ E-arm replay — bitwise call
+  sequences on the scripted panel. This is the fidelity proof of the stub
+  engine against the audited production semantics (AUDIT II §1–§4).
+- **T4** cascade semantics: LOCAL cascades (fb→fbd→refresh) follow
+  production trigger rules; final-state comparison rule (D4) reproduced
+  incl. the R2=B,R3=A ⇒ r_changed=False case (fault30_run.py:354-366).
 
-- **B1 dual-ledger agreement.** Scheduler's own per-round token accounting ==
-  stub `Budget.actual_tokens` at every round boundary (independent ledgers
-  must agree; mirrors the evaluator's physical-ledger assertion, AUDIT §2.3).
-- **B2 crash-honest reservation.** Kill mid-round → the round's reservation
-  stays charged in both ledgers; STATUS-equivalent shows pending ≠ 0 and no
-  fabricated settle.
-- **B3 wall-cap under adversarial clock.** Injected clock fast-forwards past
-  `wall_seconds` → next `check()` raises StopRun BEFORE any new dispatch is
-  reserved (assert: attempts did not increase after the raise point).
-- **B4 token-cap rejection.** Stub dispatch returns usage exceeding
-  reservation caps / malformed usage → settle raises (production semantics),
-  scheduler records infra failure, does not retry silently.
-- **B5 D̂-window containment.** For every round, allocated D ≤
-  `wall_cap − 60 − elapsed_at_allocation` − safety margin (assert from
-  SCHEDULER_STATE.jsonl; G1 ⊂ G2, AUDIT §2.9).
+## B — budget & time accounting
+
+- **B1** dual-ledger agreement: TASK_LEDGER vs stub Budget reconcile at
+  every decision (tokens, requests).
+- **B2** crash honesty: mid-episode kill ⇒ spent-so-far charged, no
+  fabricated settle, restart refuses.
+- **B3** wall-cap: injected clock past mission window ⇒ next check raises
+  StopRun before any new reserve.
+- **B4** malformed/oversized usage ⇒ settle raises, infra failure recorded,
+  no silent retry.
+- **B5** G1⊂G2 containment: every D_task and every margin ≤ mission work
+  window at all times (assert from ledgers).
+- **B6 double-charge audit**: for every decision, switch cost appears in
+  exactly one of {predictor time estimate, compensator margin} — never
+  both, never neither; safety margin likewise single-counted.
+- **B7 three-quantity separation** (AUDIT II §6): recorded per-task wall T ≥
+  Σ service latency (equality when zero gaps/switches scripted); critical-
+  path L (production formula) recomputed and distinct from both; no test
+  may assert T == Σ service when switches/gaps > 0 are scripted.
+
+## R-F — failure recovery
+
+F1 clock jump past D_task mid-episode → atomic call finishes, no new
+action, (T−D)₊/1(T>D) charged in R0.
+F2 all actions infeasible → forced NONE logged, no crash.
+F3 pathological 600 s switch → estimate rises, that model gated next
+decision.
+F4 crash mid-episode → ledger INCOMPLETE, charged, restart refused.
+F5 predictor NaN/inf → action infeasible this decision, error event, no
+propagation.
+F6 illegal action attempt → rejected with reason, next-best legal chosen.
+F7 kill −9 during append → partial line never parsed as complete.
+F8 FULL replay still fails D6 → terminal, q as-is.
+F9 cascade hits cap mid-LOCAL → stops at cap, state consistent.
 
 ## Z — zero-call
 
-- **Z1 dispatch isolation.** Import-graph (L5) + runtime: the only callable
-  ever invoked is the stub `dispatch` passed by the test driver; a sentinel
-  counter asserts engine functions are never reached. Evidence keys
-  `zero_model_calls: true`.
-- **Z2 network-proof execution.** All L/B/R-F tests run under a context
-  manager that patches `socket.socket` to raise; PASSES iff no test touches
-  the network (catches accidental real-API usage, including imports with
-  lazy network side effects).
+- **Z1** sentinel counter + L5: only the stub scripted server is ever
+  invoked; engine functions unreachable.
+- **Z2** socket disabled during all tests.
 
-## P — parity & predictor
+## P — predictor parity & estimators
 
-- **P1 event-table parity.** All 96 configs enumerate 4/10/8 events by
-  Z=NONE/LOCAL/FULL vs a frozen golden file (generated once, zero calls) —
-  parity with predictor_v3's published table (AUDIT §2.5).
-- **P2 profile monotonicity.** Scaling any p90 latency profile by k scales
-  `w_p90_s` by k; feasibility flips exactly at `D̂ = w_p90_s`.
-- **P3 E1 estimator goldens.** `P_on_time`/`E_late` match closed-form values
-  to 1e-9 on a golden grid incl. boundary D = w_mean and the σ→0 degenerate
-  branch (DESIGN_PREDICTOR_INTERFACE §5.1).
+- **P1** action-event parity: enumeration per (action × trigger family)
+  matches the frozen golden table (production-derived; search-space sizing
+  retired — see AUDIT corrections §1).
+- **P2** profile monotonicity + feasibility boundary flip at margin=w_p90.
+- **P3 E1 goldens (CORRECTED formula)**: P̂/Ê on a golden grid incl. D=μ
+  (0.399σ), D=μ+σ (0.0833σ), D≪μ (→μ−D), σ→0 point mass. The rev A
+  formula is asserted WRONG on off-boundary points (negative/absurd values)
+  as a regression tripwire.
 
-## C — R0 consistency & ablation (DESIGN_REWARD_FUNCTION §4–5)
+## C — reward consistency & ablations
 
-- **C1 policy dominance.** On ≥5 scripted stub scenarios (adversarial mix:
-  heavy-switch, tight-deadline, cheap-quality, degenerate-prior), session
-  return of arm A1 (R0-greedy) ≥ A2 (EI/cost) ≥ A3 (random) in ≥4/5
-  scenarios, and never below random anywhere (one-sided scripted-world check,
-  not a statistical claim).
-- **C2 R1 explanatory power.** Sign agreement between R1 trajectory and
-  realized R0 outcome ≥80% of rounds per scenario (gate for any future
-  promotion of R1, per the reviewer's ruling).
-- **C3 R0 golden table.** Scripted (q, C, T, D) grid incl. boundary T=D →
-  exact-match vs hand-computed values; monotonicity ∂R0/∂T≤0 (T>D), ∂R0/∂q≥0,
-  ∂R0/∂C≤0.
+- **C1** R0 golden grid incl. T=D boundary; monotonicity (T>D: ∂R0/∂T≤0;
+  ∂R0/∂q≥0; ∂R0/∂C≤0).
+- **C2** E[R0] closed-form agreement with scripted predictor outputs
+  (1e-9).
+- **C3** telescoping: adding constant spent-so-far to all actions leaves
+  argmax unchanged; final R0 reconciles with score components.
+- **C4** NONE-never-free: scripted accept-the-failure episode scores below
+  successful LOCAL by the q gap.
+- **C5** ablation sanity (stub world only): π_R0 ≥ π_random-legal on ≥4/5
+  adversarial scenarios; feedback-blind π_R0 variant strictly differs on
+  ≥1 scenario (i.e., the feedback channel is live); action distributions
+  logged per fault family for the confound audit (scheduler doc §7).
 
-## Coverage map to the reviewer's four findings
+## Coverage map to the rev B instruction (items 1–10 + deliverables)
 
-| Finding | Covered by |
+| Instruction item | Covered by |
 |---|---|
-| 1. R0 primary / R1 candidate + consistency | reward doc rev A §3–5; C1–C3 |
-| 2. wall-clock verdict + double gate | AUDIT §2.9 (evidence table); B5; P2 |
-| 3. path/file-count change | README rev A §"Location decision" |
-| 4. executable leakage tests | L1–L6 (+L2's extensible LEAK_PROBES.json) |
+| 1 execution-layer audit | AUDIT Part II (all §) |
+| 2 R0 task-level + conditional expectation | reward doc §3; C2–C4 |
+| 3 SchedulerState | scheduler doc §3; T1 |
+| 4 recovery action interface | scheduler doc §4; A1–A3, T3/T4 |
+| 5 OutcomePredictor → action outcomes | predictor doc §3–5; P1–P3 |
+| 6 compensator unified, no double charge | scheduler doc §6; B5–B7 |
+| 7 wall vs serial separation | AUDIT II §6; B7 |
+| 8 verification plan retarget | this file |
+| 9 96→48 + E1 corrections | AUDIT corrections; P3 tripwire |
+| 10 confound + ablation | AUDIT II §5; scheduler doc §7; C5 |

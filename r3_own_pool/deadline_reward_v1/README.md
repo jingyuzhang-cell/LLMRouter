@@ -1,71 +1,57 @@
-# deadline_reward_v1 — deadline reward/penalty mechanism for the joint-search scheduler
+# deadline_reward_v1 — feedback-driven DAG dynamic recovery scheduling (rev B)
 
-Started 2026-10-10, developed in parallel with the Formal campaign (v2B,
-now reporting 18/18 COMPLETE, pending its own settlement audit — separate
-workstream, untouched by this one).
+**Scope (operator ruling 2026-10-10):** the reward/penalty mechanism targets
+the EXECUTION layer — dynamic recovery-action selection (NONE / LOCAL / FULL)
+inside DAG task execution under quality–cost–latency constraints. The Formal
+six-method configuration search keeps its independent research value and is
+NOT this mechanism's object.
 
-Hard boundary for phases 1–3: ZERO real model calls; NEVER import/modify/
-write anything under `collab_scheduler_v1/joint_search_v1/formal_campaign_v2*`
-or any other live campaign artifact. **Phase 2 is NOT started — blocked on
-the operator's phase-1 admission decision (this directory is review-only).**
+Hard boundaries (phases 1–3): zero real model calls; no modification of
+Formal/net-benefit code, protocols, ledgers, or results; no fabricated
+capabilities (detection = exactly the audited predicates D1–D6); **phase 2
+NOT started — this revision awaits human review.**
 
-## Location decision (review finding #3 — the path change is deliberate)
+## Document map (rev B; rev A preserved at commit 0d381a8 as review baseline)
 
-Original plan: `collab_scheduler_v1/deadline_reward_v1/` with three docs.
-Actual: top-level `r3_own_pool/deadline_reward_v1/` with six files. Reasons:
+| File | Content |
+|---|---|
+| `AUDIT_EXISTING_CODE.md` | Part I search layer (rev A evidence, §2.9 + §3 verbatim) · **Part II execution layer**: stage structure, detection predicates D1–D6, LOCAL event table, two FULL semantics, confound ladder, three time quantities, reuse list vs missing-interface list (§II.10), honesty ledger (§II.11) · corrections log (96→48; E1 formula) |
+| `DESIGN_REWARD_FUNCTION.md` | R0 = task-level terminal reward; gold enters ONLY terminal scoring (§3.1); online score = Ê[R0\|H,a] at detection points (§3.2); corrected E1 (§3.3); time-ownership no-double-charge (§3.3a); R1 stays demoted |
+| `DESIGN_DYNAMIC_SCHEDULER.md` | Architecture (§1), decision loop + policy–static equivalence (§2), SchedulerState full definition (§3), NONE/LOCAL/FULL action interface (§4), transition (§5), compensator unified accounting (§6), confound & ablation design (§7), failure matrix F1–F9 |
+| `DESIGN_PREDICTOR_INTERFACE.md` | Per-action prediction contract (q̂, ΔC, μ/w_p90), corrected E1, action-event tables, PRIORS provenance, phase-2 class inventory |
+| `VERIFICATION_PLAN.md` | Executable tests L/A/T/B/R-F/Z/P/C with coverage map to the instruction's ten items |
 
-1. **Isolation from an audited, SHA-bound package.** The Formal launch
-   admission binds specific files inside `collab_scheduler_v1/` by SHA
-   (formal_launch.py `frozen_inputs()` + `bindings`). Developing new files
-   inside that tree risks tripping those bindings and any future audit that
-   walks the package. A top-level sibling (like `sa_pgfs_v1`, `static_dag_v0`)
-   makes accidental interference structurally impossible.
-2. **Phase-4 needs its own admission chain** (protocol/admission/bindings,
-   AUDIT §2.8 style); every prior workstream that reached real execution has
-   been a top-level package.
-3. **No interface misalignment:** the three phase-2 module names are exactly
-   as planned (`scheduler_state.py`, `outcome_predictor.py`,
-   `deadline_compensator.py`); they import production code ONLY through the
-   stable seams identified in the audit (SearchSession callback, Budget
-   clock=, QSurrogate) and are exercised via stub replay — verified
-   structurally by VERIFICATION_PLAN L5 (import-graph assertion), which also
-   guards against duplicate re-implementations by pinning the allowed
-   dependency set.
+## Corrections carried from rev A (visible, with rationale)
 
-File count: the three planned design docs are unchanged in role; AUDIT and
-README are additive context; VERIFICATION_PLAN.md was added in revision A as
-the direct response to review finding #4 (executable test design).
+1. Config count 96 → **48** (2⁴ X × 3 Z, evaluator.py:22-26); the search
+   space is anyway retired as the test range.
+2. Normal lateness expectation: correct form **σ[φ(z)+zΦ(z)]**, z=(μ−D)/σ
+   (rev A had z(1−Φ(z)) — agrees only at z=0). Fixed in both docs; P3
+   includes a regression tripwire asserting the old form fails.
 
-## Files (revision A, 2026-10-10)
+## Consolidated open decisions (16; defaults proposed)
 
-- `AUDIT_EXISTING_CODE.md` — audit incl. **§2.9 wall-clock reconstructability
-  verdict with artifact evidence** and the double-gate (G1/G2) conclusion.
-- `DESIGN_REWARD_FUNCTION.md` — **R0 primary** (finalized task-level formula,
-  conditional expectation as the online score, §3), R1 demoted to
-  candidate/ablation (§4), ablation arms (§5).
-- `DESIGN_DYNAMIC_SCHEDULER.md` — scheduler_state + deadline_compensator;
-  default score = Ê[R0|H,c]; failure-mode matrix F1–F7.
-- `DESIGN_PREDICTOR_INTERFACE.md` — OutcomePredictor contract, E1 on-time
-  estimator (§5.1), priors provenance rule, parity tests.
-- `VERIFICATION_PLAN.md` — executable tests L1–L6 / R-F1–7 / B1–B5 / Z1–Z2 /
-  P1–P3 / C1–C3, with the coverage map to the four review findings.
-- `README.md` — this file.
+Reward: D3 (λ, C₀, B, P) · D5 (C₀ granularity) · D6 (E1 family) ·
+D8 (q̂ within-episode feedback) · D9 (tie-break).
+Scheduler: B1 (FULL semantics — default E-arm matched) · B2 (fb memory-rule
+granularity) · B3 (D_task allocation) · B4 (cascade decision granularity) ·
+S5 (stub-only exercise).
+Predictor: P1/P3/P4 (carried defaults) · P6 (cross-task pooling — default
+OFF) · P7 (PRIORS values at phase-2 freeze).
 
-## Phase gates
+## Phase-2 admission recommendation (deliverable)
 
-| Phase | Scope | Model calls | Status |
-|---|---|---|---|
-| 1 | Audit + design docs + verification plan | 0 | **rev A submitted for review; NOT accepted yet** |
-| 2 | `scheduler_state.py`, `outcome_predictor.py`, `deadline_compensator.py` + tests | 0 | blocked on phase-1 admission |
-| 3 | Verification: logic, budget, leakage, recovery | 0 | blocked on phase 2 |
-| 4 | Real-model experiments | >0 | blocked on: Formal settlement audit + net-benefit gates + independent authorization |
+**Recommend: ADMIT phase 2 conditionally**, gated on the operator resolving
+four decision points before coding starts, since they change module
+structure or comparability: **B1** (FULL semantics), **B2** (memory-rule
+granularity), **D3** (weights/C₀), **P7** (prior values + provenance notes
+for PRIORS.json). All other OPENs may proceed on documented defaults and be
+revisited at the phase-3 review.
 
-## Reviewer checklist (rev A)
-
-1. Reward: R0 formula instantiation table (§3), E1 estimator (§3.1), unit
-   choice OPEN-D5; R1 consistency answers (§4).
-2. Wall-clock: AUDIT §2.9 verdict table + double-gate resolution; B5 test.
-3. Location: the section above; L5 import-graph test.
-4. Leakage: VERIFICATION_PLAN L1–L6; extensible LEAK_PROBES.json.
-5. OPEN decisions: D1–D7, S1–S5, P1–P5 (17 after rev A additions; v0.1's
-   14 kept their numbering, D2 resolved by your ruling).
+Phase-2 scope if admitted: `scheduler_state.py`, `outcome_predictor.py`,
+`deadline_compensator.py`, the stub execution engine (inside this package,
+mirroring audited stage semantics), PRIORS.json freeze, and the full
+VERIFICATION_PLAN suite — all zero-call, verified by T3 (policy–static
+equivalence) as the engine-fidelity proof. Phase 4 (real models) remains
+gated on Formal settlement audit + net-benefit gates + independent
+authorization, unchanged.

@@ -1,140 +1,201 @@
-# DESIGN_DYNAMIC_SCHEDULER — Phase 1 deliverable 3/4 (deadline_reward_v1)
+# DESIGN_DYNAMIC_SCHEDULER — deadline_reward_v1 (rev B)
 
-Status: DRAFT v0.2 (revision A) for phase-1 review. Governs phase-2 files
-`scheduler_state.py` and `deadline_compensator.py`. Zero model calls in all
-phases through 3. Never imports or modifies `collab_scheduler_v1` runtime
-files; runs beside the Formal campaign only in stub replay. Executable test
-specs for §6 live in `VERIFICATION_PLAN.md` (F1–F7 mirrored there as
-recovery tests R-F1…R-F7).
+Status: DRAFT v0.3 (rev B) — execution-layer redesign per the operator
+ruling. Governs phase-2 files `scheduler_state.py` and
+`deadline_compensator.py` plus the stub execution engine. Zero model calls
+in phases 1–3; no modification to any production file. This document is the
+single source for the architecture and the complete
+state/action/reward/transition definitions (reward definition itself:
+DESIGN_REWARD_FUNCTION §3).
 
-## 1. Positioning
-
-The production loop (AUDIT §2.2) is `SearchSession.step(select, states)` with
-a pure selector callback. The dynamic scheduler therefore wraps, not patches:
+## 1. Architecture (deliverable: 执行层架构)
 
 ```
-deadline_reward_v1 scheduler (new)                existing production seam
-┌──────────────────────────────┐   select(candidates, observations)
-│ SchedulerState               │ ───────────────────────────────────► SearchSession
-│  + deadline_compensator      │ ◄───────────────────────────────────
-│  + outcome_predictor         │            observations (legal view)
-│  + reward                    │
-└──────────────────────────────┘
+deadline_reward_v1/ (all NEW code, phases 2–3)
+┌─────────────────────────────────────────────────────────────────┐
+│  StubExecutionEngine   mirrors fault30_run.eval_config stages    │
+│  (A → R1 → [decision] → ER/R2/R3 → V1 → [decision] → V2/V3)      │
+│    calls ──► StubModelServer (scripted answers + injected        │
+│               faults + per-model token/latency profiles +        │
+│               switch costs), all on an INJECTED CLOCK            │
+│    emits ──► per-call records (usage, latency, switch events,    │
+│               wall stamps) → TASK_LEDGER.jsonl (append-only)     │
+└──────────────┬──────────────────────────────────────────────────┘
+               │ detection events D1–D6 (real predicates, AUDIT II §2)
+               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  SchedulerState (§3)  +  Policy π = argmax_a Ê[R0|H,a]           │
+│      │legal_actions(state) (§4)                                  │
+│      ├─► OutcomePredictor  per-action q̂, ΔĈ, (μ,w_p90) (doc §3–5)│
+│      └─► DeadlineCompensator  D_task, margins M(a,t) (§6)        │
+└──────────────┬──────────────────────────────────────────────────┘
+               │ chosen action a
+               ▼
+          engine.apply(a) → transition (§5) → next detection / terminal
+Terminal: scorer computes realized R0 (gold used HERE only) → REWARDS.jsonl
 ```
 
-Phase 2 drives this against the REAL `SearchSession` + `MeteredExecutor`
-classes with a stub `dispatch` (the proven `selectors.run_closed_loop`
-pattern, AUDIT §2.7) — no edit to any running file.
+Positioning vs production (honesty, AUDIT II §11): there is no online
+decision hook in `eval_config` today. Phase 2 builds the stub engine INSIDE
+this package, mirroring the audited stage semantics (II §1–§3) — the
+V3Executor precedent. Production integration, if ever, is a separately
+admitted change under the authorization style of AUDIT Part I §2.8.
 
-## 2. `scheduler_state.py` — responsibilities
-
-1. **Decision state**: selected set, per-round rewards (per
-   DESIGN_REWARD_FUNCTION), budget snapshot trail, current model, switch
-   history, rounds remaining vs `max_configurations`.
-2. **Deadline-aware selection policy** (rev A; per the reviewer's ruling the
-   R0 conditional expectation is the primary score — DESIGN_REWARD_FUNCTION §3.1):
-   ```
-   feasible(c)   := W_p90(c) ≤ D̂(c)                    # hard gate first (G1)
-   score(c)      := Ê[R0 | H, c]                        # primary (rev A)
-                    = P̂(T≤D)·q̂ − λ_c·Ĉ/C₀ − λ_t·Ê[(T−D)₊]/D − λ_f·(1−P̂(T≤D))
-   choose        := argmax over feasible of score; if none feasible,
-                    choose argmin W_predicted (graceful wind-down)
-   ```
-   The v0.1 default score `EI/(1+α·cost)` (the existing proposed form,
-   AUDIT §2.2) is retained ONLY as ablation baseline arm A2
-   (DESIGN_REWARD_FUNCTION §5); `random` is arm A3. Selector arms are chosen
-   at construction, mirroring the campaign's per-method session style.
-   **Double gate (AUDIT §2.9):** G1 = the per-cell feasibility gate and R0
-   deadline terms against the compensator-allocated D̂; G2 = the production
-   `Budget.wall_seconds` + SIGALRM backstop (unchanged, runtime.py:133-138).
-   G1 ⊂ G2 by construction (D̂ is allocated inside the work window), so the
-   scheduler can never authorize work the hard cap would kill; wind-down that
-   finishes inside the window is COMPLETE, not an R0 violation.
-3. **Event hooks** (called by the phase-2 stub driver):
-   `on_round_start`, `on_switch(model, wall_s)`, `on_reveal(observation)`,
-   `on_stop(reason)` → terminal reward, `snapshot()`.
-4. **Own ledger** `SCHEDULER_STATE.jsonl`: append-only, fsync, one event per
-   hook + per decision (terms, features, hashes of legal inputs). Resume
-   policy mirrors Budget/CampaignQuota: existing ledger ⇒ refuse to start a
-   second state over it; explicit reconciliation tool only (OPEN-S3: whether
-   a `--reconcile` subcommand is in phase-2 scope; default: error out only).
-5. **Crash honesty**: any exception path appends a terminal INCOMPLETE event
-   before re-raising; reward charges `−P_incomplete` exactly once.
-
-## 3. `deadline_compensator.py` — responsibilities
-
-Converts raw wall budget into an honest per-candidate usable deadline.
+## 2. The decision loop
 
 ```
-inputs : wall_cap, cleanup_reserve (default 60 s, matches runtime.py:136),
-         switch history of THIS session [(from_model, to_model, wall_s)],
-         per-model E[start_s], E[stop_s] estimators (see §4)
-output : D̂(c | current_model) = wall_cap − cleanup_reserve − elapsed
-                       − Σ_{m ∈ models(c), m ≠ current_model}
-                             (E[stop_cur_share] + E[start_m])
-         − safety_margin
+for each task in panel (serial; engine batching by model preserved):
+    D_task ← compensator.allocate(state)                    # §6
+    execute planned stages A, R1 (evaluator semantics)
+    at each detection event e ∈ {D1..D6} for this task:
+        A ← legal_actions(task_state, e)                    # §4
+        for a in A: score(a) ← Ê[R0|H,a]                    # reward doc §3.2
+        a* ← argmax (tie-break OPEN-D9)
+        if a* ≠ NONE: engine.apply(a*)                      # transition §5
+        re-evaluate predicates on new outputs (same rules as production)
+    terminal: score task → realized R0; update session aggregates
 ```
 
-- `models(c)`: distinct model slots in candidate c's X.
-- Safety margin (OPEN-S4): default `max(0, q90(switch_overhead_history))`
-  once ≥3 switches observed, else a frozen prior of 45 s (justified from
-  MODEL_SWITCH data only AFTER phase-3 provenance review; frozen constant
-  until then).
-- Estimator update rule: running mean + count per (from,to) pair; priors
-  seeded from frozen constants, never from other sessions' files.
-- `remaining_rounds_budget()`: maps `D̂` into "how many more expected rounds
-  fit" — used by the wind-down path and the reward's DeadlineDebt.
+Policy–static equivalence property (testable, T3): a constant policy
+π≡NONE reproduces Z=NONE behavior; π≡LOCAL (where legal) reproduces the
+D-arm LOCAL recipe; π≡FULL-on-D6 reproduces the E-arm replay. This pins the
+stub engine's fidelity to the audited semantics and defines the dynamic
+policy as a strict generalization of the static arms.
 
-## 4. Where estimator priors may come from (provenance rule)
+## 3. SchedulerState — complete definition (deliverable)
 
-Phase 2/3: frozen constants in a versioned `PRIORS.json` inside
-`deadline_reward_v1/` (values chosen manually, documented). Reading the
-Formal campaign's MODEL_SWITCH.jsonl to fit priors is a data-provenance
-decision reserved for the phase-4 gate (AUDIT §3); until admitted, tests use
-stub switch latencies via the injected clock.
+Per task (one SchedulerState instance per task episode; session-level
+envelope held alongside):
 
-## 5. Determinism and testability
+```
+node_status   : {node ∈ {e1,e2,r,v} → PENDING | RUNNING | DONE | FAILED(detected)}
+                FAILED = a detection predicate fired on its latest output
+node_model    : {node → model id}          # current binding; changes on substitution
+recovery_cnt  : {event ∈ {e_fb,r_fbd,r_esc,v_fbd,v_esc,replay} → int}   # caps in §4
+observed      : per-node latest detection outcome (D1–D6 enum) + repair
+                feedback (facts_changed, answer_changed_final) — exactly the
+                signals of AUDIT II §2, nothing finer
+calls         : this task's call records (key, model, usage, latency, switch)
+budget        : {tokens_spent, requests_spent} (physical, reserve/settle)
+time          : {t_now (injected clock), D_task, mission_deadline}
+history       : ordered (detection, action, score-vector, outcome) tuples
+```
 
-- All time reads via injected clock (`clock=` convention, AUDIT §2.7).
-- No RNG except seeded `random.Random(seed)`; seeds recorded per run.
-- Scheduler never holds references to evaluator/ledger/tasks/faults; the
-  driver hands it only the legal view (reward doc §2 table).
-- Module import must have zero side effects (no model startup, no GPU locks —
-  mirroring runtime.py's import-time guarantees).
+Update rules are part of the transition (§5). The state EXCLUDES gold, the
+fault registry, and any unexecuted-node output (firewall tests L2/L3).
 
-## 6. Failure-mode matrix (each row = one phase-3 test)
+## 4. Recovery action interface (deliverable: NONE/LOCAL/FULL 语义)
 
-| # | Scenario | Expected behavior |
+| | NONE | LOCAL | FULL |
+|---|---|---|---|
+| Semantics | accept current state; continue/terminate without repair | apply the production LOCAL recipe for the triggering detection (AUDIT II §3) | one full-graph replay from scratch (see model rule) |
+| Trigger | any decision point | decision points D1–D5 | any decision point (incl. D6 terminal-check) |
+| Legality | always legal | legal iff every event in the recipe's causal chain has remaining capacity: e_fb<1 per empty e-node, r_fbd<1, r_esc<1, v_fbd<1, v_esc<1 (production caps, II §3) AND its ΔC lower bound fits the remaining budget | legal iff replay_cnt==0 (exactly-one rule, evaluator.py:118-129) AND budget/time lower bound fits |
+| Affected set | ∅ | trigger node ∪ descendant closure per production rules (fb→{e}; facts_changed→+r; r_changed→+v; esc→node) | all four nodes (re-scheduled from A) |
+| Model substitution | — | production rules verbatim: fb memory rule (coder/medium), r_esc/v_esc → large, refreshes keep planned model | **OPEN-B1**: (a) E-arm matched — alternatives only on trigger nodes (e: memory rule; r,v: large), others on planned models [DEFAULT, scope-only attribution]; (b) search-layer all-swap (evaluator.py:124-126) |
+| Extra cost | 0 new calls | enumerated events × profiles | 4-node replay × profiles (+switches to its model set) |
+
+Additional constraints: actions are chosen BETWEEN calls (calls are atomic);
+legality and feasibility are re-checked after every applied action; the
+recipe's internal cascades (e.g., fb → facts changed → r_fbd) follow
+production trigger rules automatically, not by extra decisions (decision
+granularity = the initial trigger; OPEN-B4 whether cascades become
+decisions too — default: no, to preserve D-arm comparability).
+
+## 5. Transition (deliverable)
+
+`s' = τ(s, a; stub responses)` — deterministic given the scripted server:
+
+1. NONE: node_status unchanged (FAILED stays FAILED); if at terminal point →
+   episode ends, scorer computes R0.
+2. LOCAL: engine executes the recipe's events in production order
+   (ER→R2→R3 / V2→V3); each call: budget reserve→settle, clock advances by
+   service latency (+ switch cost iff model changes); predicates re-run on
+   new outputs; recovery_cnt increments; observed updated
+   (facts_changed/answer_changed_final per II §2 D2/D4 rules).
+3. FULL: recovery_cnt[replay]=1; the task's schedule restarts at stage A
+   with the substituted model set (per OPEN-B1); all replay calls charged;
+   previous calls REMAIN charged (physical honesty — matches campaign
+   semantics where the failed attempt is real spend); predicates re-run.
+4. Every applied action appends one line to TASK_LEDGER.jsonl
+   (action, scores, legal set, chosen, outcome) — append-only, fsync.
+5. Episode ends at: terminal point with no legal/necessary action, or
+   mission wall reached (StopRun → session terminal −P per reward doc §5).
+
+## 6. DeadlineCompensator — unified accounting (deliverable; no double charge)
+
+One component owns each time ingredient; the others must not re-count it:
+
+| Ingredient | Owner |
+|---|---|
+| Absolute mission deadline (wall cap − cleanup reserve, G2) | frozen session envelope |
+| Per-task deadline D_task | compensator.allocate: rolling split `D_task = min(mission_end, t_now + remaining_wall/remaining_tasks)` (OPEN-B3 alternatives: equal static split, Q-aware split) |
+| Service demand of remaining/replay calls (μ, w_p90) | OutcomePredictor (pure service, NO switch time) |
+| Model-switch overhead at decision time | compensator.switch_overhead(models(a) vs current, from switch history + PRIORS) |
+| Safety margin | compensator: max(q90 observed switch error, frozen floor) |
+| Idle/scheduling gaps | stub clock (recorded, not estimated) |
+
+```
+margin(a, t) = D_task − t − switch_overhead(a) − safety_margin
+feasible(a)  := w_p90(a) ≤ margin(a, t)          # hard gate G1 (per task)
+```
+
+G1 ⊂ G2 by construction (D_task ≤ mission work window); test B5 asserts
+containment every decision; test B6 asserts each ingredient is counted in
+exactly one place (double-charge audit).
+
+## 7. Confound control & ablation design (deliverable; AUDIT II §5)
+
+Static baselines (exactly the net-benefit ladder, re-run in stub):
+B (all-large, NONE) · C (hetero X, NONE) · D (same X, LOCAL) · E (same X,
+FULL matched). Effects: B→C = model assignment; C→D = local recovery;
+D→E = recovery SCOPE with models held fixed.
+
+Dynamic policy arms (the contribution): π_R0 (argmax Ê[R0], primary) ·
+π_random-legal (floor) · π_cheapest (min ΔC, cost-only) · π_eager (always
+strongest legal action, no deadline term). Decomposition claims supported:
+(i) dynamic vs best static (D, E): value of ADAPTIVITY;
+(ii) π_R0 vs π_cheapest/π_eager: value of the FULL R0 structure (deadline
++ quality terms, ablated one at a time — λ-terms off);
+(iii) feedback value: π_R0 with detection inputs frozen at episode start
+(feedback-blind) vs live — isolates the feedback channel.
+Scope×model deconfounding is inherited from D/E matched design; the policy's
+chosen actions are additionally logged per (trigger family, model delta) so
+post-hoc analysis can verify the policy is not merely re-discovering a fixed
+model preference (test C5: action distribution shift across fault families).
+
+## 8. Failure-mode matrix (phase-3 tests R-F1…)
+
+| # | Scenario | Expected |
 |---|---|---|
-| F1 | Stub clock jumps past work window mid-round | StopRun propagates; terminal INCOMPLETE event + `−P` exactly once; ledger closed |
-| F2 | Every candidate infeasible under D̂ | Wind-down pick (argmin W), never a silent random choice; event logged `mode=winddown` |
-| F3 | Switch estimator sees pathological 600 s start | Next D̂ drops by ≥ that estimate; candidate needing that model gated out |
-| F4 | Crash (SIGTERM simulation) between events | Ledger shows no settle-after-crash; restart refuses (no silent resume) |
-| F5 | Predictor returns NaN/inf | Decision skipped this round, candidate treated infeasible, error event logged; no crash |
-| F6 | Duplicate selection attempt | Rejected exactly like SearchSession does (illegal selection guard) |
-| F7 | Reward trajectory fault-blindness | Same seeds ± hidden faults ⇒ identical decisions & rewards |
+| F1 | injected clock jumps past D_task mid-episode | current call finishes (atomic), no new action admitted; episode settles; (T−D)₊/1(T>D) charged in R0 |
+| F2 | all recovery actions infeasible (margin < 0) | NONE forced (always legal); logged mode=forced-none; no crash |
+| F3 | pathological switch (600 s) observed | switch_overhead estimate rises ≥ observation; actions needing that model gated out next decision |
+| F4 | crash mid-episode (SIGTERM sim) | TASK_LEDGER closed INCOMPLETE, spent-so-far charged, restart refuses existing ledger |
+| F5 | predictor NaN/inf for an action | that action infeasible this decision; error event; no propagation |
+| F6 | illegal action attempted (cap/exactly-one violated) | rejected with reason; falls back to next-best legal |
+| F7 | kill −9 during ledger append | partial last line never parsed as complete |
+| F8 | FULL replay finishes but D6 still fails | episode terminal (replay once); R0 reflects q as-is |
+| F9 | recipe cascade hits internal cap mid-LOCAL | cascade stops at cap (production semantics); state consistent |
 
-## 7. Acceptance criteria (phase-3 review)
+## 9. Acceptance criteria
 
-1. All F1–F7 pass with `zero_model_calls: true`.
-2. Selection respects feasibility gate: no chosen candidate with
-   `W_predicted > D̂` unless in wind-down mode (assert over full replay).
-3. Ledger reconciliation: event counts, fsync'd appends, no mid-file rewrites;
-   SCHEDULER_STATE.jsonl survives kill -9 mid-write without a torn final line
-   being interpreted as complete (length-prefixed or line-atomic appends).
-4. Budget double-check: scheduler's own accounting of new_tokens equals the
-   stub Budget's `actual_tokens` at every round boundary (two independent
-   ledgers must agree — mirrors evaluator's physical-ledger assertion).
-5. No import of torch/botorch anywhere in scheduler_state/compensator.
+1. T3 policy–static equivalence (§2) passes bitwise on scripted panels.
+2. Legality: no executed action ever violates §4 constraints (assert over
+   full replays; test A1–A3).
+3. Ledger/budget: TASK_LEDGER reconciles with stub Budget counts every
+   decision (B1); crash honesty (B2/F4); G1⊂G2 containment (B5);
+   double-charge audit (B6).
+4. Determinism: same seeds + scripted server ⇒ identical episode trace.
+5. Import-graph (L5): no production execution-path import; stdlib+numpy+
+   PRIORS only; R1 absent from decision path.
 
-## 8. Open decisions (finalize at phase-1 review)
+## 10. Open decisions
 
-- OPEN-S1 hard gate vs multiplicative penalty (default: hard gate).
-- OPEN-S2 wind-down policy: argmin predicted demand vs stop-early-and-settle
-  (default: argmin; stopping early wastes reserved-but-unspent budget).
-- OPEN-S3 reconcile subcommand scope (default: out of phase-2 scope).
-- OPEN-S4 safety margin form (default: q90 after 3 switches, frozen prior
-  before).
-- OPEN-S5 whether SchedulerState also emits the `select` callback directly
-  for run_session compatibility, or stays driver-mediated (default:
-  driver-mediated; keeps production seam untouched).
+- OPEN-B1 FULL semantics (default: E-arm matched; alternative: all-swap).
+- OPEN-B2 fb memory-rule granularity under per-task decisions (default:
+  panel-detection-order, D/E comparable).
+- OPEN-B3 D_task allocation (default: rolling split).
+- OPEN-B4 decision granularity: cascades as separate decisions (default: no).
+- OPEN-S5 (carried, revised): the policy is exercised ONLY inside this
+  package's stub engine in phases 2–3; no run_session integration.
