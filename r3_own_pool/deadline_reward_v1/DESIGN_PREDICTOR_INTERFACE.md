@@ -1,9 +1,9 @@
-# DESIGN_PREDICTOR_INTERFACE — deadline_reward_v1 (rev C)
+# DESIGN_PREDICTOR_INTERFACE — deadline_reward_v1 (rev D)
 
-Status: DRAFT v0.4 (rev C) — prediction target extended to the JOINT action
-a = (Z, R, π) (recovery strategy, re-execution set, model assignment for
-affected + unexecuted nodes). Governs phase-2 `outcome_predictor.py`.
-Zero model calls, phases 1–3.
+Status: DRAFT v0.5 (rev D) — applies review rulings of 2026-10-10
+(baseline fc201ae + interim 57f2553): OPEN-P3 retired (quality gates
+feasibility via Q_min), E2E composition rule fixed, B1/P7 rulings recorded.
+Governs phase-2 `outcome_predictor.py`. Zero model calls, phases 1–3.
 
 ## 1. Role
 
@@ -86,9 +86,32 @@ w_p90_s = path-conservative p90 aggregation (default: sum of per-node p90
 Ê[(T−D)₊] = σ[φ(z) + zΦ(z)],  z = (μ−D)/σ          # corrected rev A error
 ```
 
-Feasibility decision itself is the compensator's (`w_p90 ≤ margin`); the
-predictor stays clock-free. The filter uses P̂ (distribution), never the
-mean alone — the operator's P90 trap is pinned by test V2.
+**E2E composition (rev D, review ruling 3):** the quantity the on-time
+constraint compares is the REMAINING-TO-COMPLETION E2E time of the WHOLE
+DAG — unexecuted nodes + recovery cascades + necessary model switches, from
+the decision instant. Ownership stays split (predictor = service,
+compensator = switches) but the POLICY composes them before E1, exactly
+once:
+
+```
+μ_E2E(a) = μ_service(a) + switch_overhead(a)      # compensator-injected
+σ from service p90 (switch estimates deterministic priors; switch-variance
+    modeling = OPEN-P8 companion)
+P̂(T_a ≤ D_remain) and Ê[(T−D)₊] computed via E1 on (μ_E2E, σ)
+```
+
+B6 audits that switch overhead enters exactly one term. The predictor
+itself stays clock-free and returns service-only values; it never estimates
+only the fault node's repair — its event set always covers R ∪ unexec under
+π (§4).
+
+**Feasibility (rev D, review ruling 2 / replaces retired OPEN-P3):** an
+action is feasible iff ALL THREE hold — `q̂(a) ≥ Q_min` (whole-DAG final
+quality prediction, §3 — NOT an isolated model accuracy), `P̂ ≤` rule above
+`≥ 1−ε`, and `ΔC(a) ≤ B_remain`. Quality gating is part of the filter by
+design; the retired rev B/C default ("quality never gates feasibility") is
+VOID. `w_p90 ≤ margin` remains the compensator's hard safety view. The
+filter uses the distribution, never the mean alone — pinned by test V2.
 
 ## 6. Implementations shipped in phase 2
 
@@ -109,13 +132,24 @@ monotonicity, E1 goldens, zero-call. Added:
 3. Chain semantics: q̂ strictly increases when a FAILED node's π-model
    upgrades (PRIORS ordering), all else fixed.
 
-## 8. Open decisions
+## 8. Open decisions & rulings (rev D)
 
-Carried: P1 (q̂ target = terminal v2.1 semantics), P2 (cache-aware cost
-refinement out of scope), P3 (quality never gates feasibility), P4 (profile
-granularity per-model default), P6 (cross-task pooling default OFF),
-P7 (PRIORS values at phase-2 freeze).
-New: **OPEN-P8** node-correctness correlation model (default: independent
-chain; alternatives: copula/simulation-based — phase-3 ablation);
-**OPEN-P9** observed-state belief update rule for reused DONE nodes
-(default: frozen bounded table in PRIORS).
+**RULED by operator review 2026-10-10 (no longer open):**
+- ~~OPEN-P3~~ **RETIRED** — quality DOES gate feasibility via Q_min on the
+  whole-DAG q̂ (§5 feasibility block).
+- **B1 (predictor side)**: static FULL baseline = net-benefit E-arm matched
+  semantics; DYNAMIC FULL may carry its own π, and every applied FULL is
+  recorded with (scope, model-delta) separated so scope and model effects
+  stay attributable.
+- **P7**: PRIORS.json may contain SYNTHETIC stub priors WITH provenance
+  notes; they must never be labeled real-model calibration, and confirmation
+  tests must not write/tune PRIORS (read-only; V7 enforces).
+
+Still open: P1 (q̂ target semantics — default terminal v2.1), P2
+(cache-aware cost refinement — out of phase-2 scope), P4 (profile
+granularity per-model default), P6 (cross-task pooling — default OFF), P7
+VALUES (stub prior numbers at phase-2 freeze), **P8** node-correctness
+correlation model (default independent chain), **P9** observed-state belief
+update rule for reused DONE nodes (default frozen bounded table), **P10**
+(new) switch-variance treatment in σ (default: deterministic switch
+estimates, σ service-only).

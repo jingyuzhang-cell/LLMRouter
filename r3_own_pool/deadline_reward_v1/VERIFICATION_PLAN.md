@@ -1,40 +1,51 @@
-# VERIFICATION_PLAN — executable test design, phases 2–3 (deadline_reward_v1, rev C)
+# VERIFICATION_PLAN — executable test design, phases 2–3 (deadline_reward_v1, rev D)
 
-Status: DRAFT v0.3 (rev C) — adds group V (two-stage decision, degradation,
-cost separation, joint-action consistency). All prior groups carried.
-Phase-2 code is not admissible to phase 3 without these tests. Zero real
-model calls; seeded RNG, injected clock, socket disabled (Z2).
+Status: DRAFT v0.4 (rev D) — applies review rulings 2026-10-10: L1/L4
+redesigned (same-legal-history semantics), C5 performance thresholds moved
+out of correctness, T3/V6 upgraded to independent production-reference
+equivalence, V1 expanded to the full worked scenario with the uncertainty
+variant, V7 parameter hygiene added. Zero real model calls; seeded RNG,
+injected clock, socket disabled (Z2).
 
-## L — information-leakage firewall
+## L — information-leakage firewall (rev D redesign)
 
-Decision-time property under test: the policy and predictor can obtain
-neither task gold, nor the hidden fault registry/labels, nor outputs of
-nodes not executed in this episode.
+Decision-time property under test: the policy conditions ONLY on the legal
+observation history — hidden state (fault registry, gold, future) can
+neither enter structurally nor be inferred beyond what legal observations
+reveal. NOTE (review ruling 6): redrawing hidden faults legitimately
+changes legal feedback (faults alter answers → detections), so
+"whole trace always identical" is NOT a well-formed requirement. The
+well-formed form is conditional:
 
-- **L1 differential fault-blindness.** Same seeds/task panel/scripted
-  server; hidden fault panel redrawn (same rate) or removed ⇒ identical
-  decision sequences, scores, and action traces (bitwise). ≥3 seeds × 3
-  panels. (Fault content reaches the policy only through detection events +
-  outcomes — both legal.)
-- **L2 gold-blindness matrix.** Every ingestion point (DecisionContext,
-  ActionView, EpisodeFeedback, SchedulerState constructor, scorer-to-policy
-  channel) rejects an enumerated probe list (`gold`, `answer`,
-  `derivation`, `faults`, `fault_panel`, `states`, future outputs, nested
-  and callable smuggles). Probes live in `LEAK_PROBES.json` (extensible by
-  the reviewer without writing code). The scorer's own terminal use of gold
-  is asserted to be the ONLY read path (static + runtime check).
-- **L3 unexecuted-node-output probe.** No legal construction exposes node
-  outputs absent from this episode's TASK_LEDGER; synthetic "future"
-  payloads injected through every channel are rejected.
-- **L4 hidden-assignment blindness.** Shuffling fault ASSIGNMENTS within
-  the same detection families leaves decisions identical (complements L1:
-  no inference of WHICH node/task is faulted beyond observable predicates).
-- **L5 import-graph assertion.** AST-level: the three modules import only
-  {stdlib, numpy, PRIORS.json, sibling modules}; no production
-  execution-path import (fault30_run/evaluator/runtime/engine); no
-  torch/botorch; R1 absent from the decision path (OPEN-D7 carried).
-- **L6 provenance hashing.** Every recorded decision carries SHA-256 of its
-  legal-input snapshot; replayer recomputes and asserts 100% match.
+- **L1 same-legal-history ⇒ same-decisions.** Two counterfactual WORLDS are
+  scripted with DIFFERENT hidden fault panels but PINNED IDENTICAL legal
+  observation streams (the stub server returns the same observable outputs,
+  detections, and timings in both worlds; only the hidden registry
+  differs). PASSES iff the decision sequence, scores, and applied actions
+  are bitwise identical, over ≥3 seeds × 3 panel pairs. This is the exact
+  statement "the policy is a function of legal history only" — any hidden-
+  state dependence breaks it.
+- **L2 gold-blindness matrix** (carried): every ingestion point rejects the
+  enumerated probe list (LEAK_PROBES.json); the scorer's terminal gold use
+  is the only read path.
+- **L3 unexecuted-node-output probe** (carried).
+- **L4 no-hidden-inference-beyond-observations.** Worlds where hidden
+  assignments differ but the legal observation PREFIX is identical must
+  share identical decision prefixes for as long as the prefixes remain
+  identical (streaming form of L1); divergence is allowed exactly at the
+  first observation that legally differs. Implemented with scripted
+  prefix-identical / suffix-divergent server plans; assert decision
+  divergence occurs no earlier than the first legal divergence.
+- **L4b causality / no future cross-task detections (ruling B2).** At every
+  decision point, the SchedulerState view exposes only tasks whose stage
+  the engine has actually reached; a probe replays a scenario where task B's
+  detection WOULD be known later under production batching — the policy
+  must not condition on it (assert decision unchanged when the future
+  event is removed from the world entirely).
+- **L5 import-graph assertion** (carried; R1 absent from decision path).
+- **L6 provenance hashing** (carried: recorded decisions hash their legal
+  inputs; replay recomputes 100% match — this is the audit trail that makes
+  L1/L4 checks mechanical).
 
 ## A — recovery-action legality
 
@@ -53,10 +64,21 @@ nodes not executed in this episode.
   (one per action × trigger family).
 - **T2** transition determinism: same seeds + server script ⇒ identical
   episode traces (two runs, bitwise).
-- **T3 policy–static equivalence** (scheduler doc §2): π≡NONE ≡ Z=NONE
-  trace; π≡LOCAL ≡ D-arm recipe; π≡FULL-on-D6 ≡ E-arm replay — bitwise call
-  sequences on the scripted panel. This is the fidelity proof of the stub
-  engine against the audited production semantics (AUDIT II §1–§4).
+- **T3 production-reference equivalence (rev D: independent references,
+  not self-written goldens).** Reference trajectories are generated BY THE
+  PRODUCTION CODE driven through stub executors — `fault30_run.eval_config`
+  and `JointEvaluator` with recording stub executors (the proven zero-call
+  harness: predictor_v3.V3Executor / selectors.run_closed_loop patterns) —
+  then the NEW engine runs the same scripted server + constant policies and
+  must match the reference bitwise on ALL of: (i) call order and keys incl.
+  CROSS-TASK STAGE BATCHING BY MODEL (run_stage's sorted-model order,
+  fault30_run.py:159-164 — the semantics most likely to diverge), (ii)
+  detection firing order, (iii) recovery cascade triggering (fb→fbd→esc,
+  final-state comparison rule), (iv) physical cost accounting equality
+  (per-task new_tokens/new_requests vs physical_accounting), (v) critical-
+  path L values. Policies: π≡NONE ≡ Z=NONE; π≡LOCAL-static ≡ D-arm;
+  π≡FULL-static-on-D6 ≡ E-arm. Self-written golden tables remain only as
+  format fixtures, never as the equivalence proof.
 - **T4** cascade semantics: LOCAL cascades (fb→fbd→refresh) follow
   production trigger rules; final-state comparison rule (D4) reproduced
   incl. the R2=B,R3=A ⇒ r_changed=False case (fault30_run.py:354-366).
@@ -123,23 +145,48 @@ F9 cascade hits cap mid-LOCAL → stops at cap, state consistent.
   argmax unchanged; final R0 reconciles with score components.
 - **C4** NONE-never-free: scripted accept-the-failure episode scores below
   successful LOCAL by the q gap.
-- **C5** ablation sanity (stub world only): π_R0 ≥ π_random-legal on ≥4/5
-  adversarial scenarios; feedback-blind π_R0 variant strictly differs on
-  ≥1 scenario (i.e., the feedback channel is live); action distributions
-  logged per fault family for the confound audit (scheduler doc §7).
+- **C5** ablations & comparisons (rev D: performance OUT of correctness).
+  Correctness obligations live entirely in V2/C2/C3 (filter arithmetic,
+  argmax faithfulness, determinism) — no win-rate is a correctness
+  criterion. The policy arms (π_R0, π_random-legal, π_cheapest, π_eager,
+  frozen-π, feedback-blind, static B/C/D/E) run on the scenario bank; their
+  session returns / R_task distributions are REPORTED as experimental
+  comparison metrics (tables + JSON), with per-(trigger family, scope,
+  model-delta) action logs for the confound audit (scheduler doc §7).
+  Claim strength is decided by the eventual experiment design (phase-3
+  review / real experiments), never by a pass/fail threshold here.
+- **V7** parameter hygiene (rulings D3/P7). PRIORS.json asserts: every
+  stub-phase parameter carries `stub_test_only: true`; no entry claims
+  real-model provenance; **C₀ > 0** strictly; the file is hash-frozen per
+  run — confirmation tests open it READ-ONLY (write attempt or mid-suite
+  content change fails the suite), so no reverse-tuning from test outcomes.
 
 ## V — two-stage decision, joint actions, degradation (rev C)
 
-- **V1 worked-example golden (operator's A/B/C).** Scripted decision point:
-  D_remain=20 s, Q_min=0.80, ε=0.10; three joint actions with (μ, w_p90, q̂)
-  = A(24,–,0.95), B(17,21,0.85), C(12,–,0.60). PASSES iff A excluded on
-  P̂<0.9 (time), C excluded on q̂<Q_min (quality), B chosen; AND in the
-  variant where B's P90 pushes P̂ below 0.9, the feasible set is EMPTY and
-  the degradation path fires (never a forced B).
-- **V2 filter correctness incl. the uncertainty trap.** Across a scripted
-  grid: no action with mean ≤ D but P̂ < 1−ε is ever admitted; no action
-  with q̂ < Q_min admitted; ΔC > B_remain excluded; boundary equalities
-  (q̂=Q_min, P̂=1−ε) admitted exactly (≥ semantics pinned).
+- **V1 full worked scenario (operator's A/B/C, review ruling 10) — zero
+  calls, two variants.** Setup: 4-node DAG, initial X = {e1:large,
+  e2:large, r:medium, v:coder}; e1/e2 DONE (outputs cached, reusable);
+  r FAILED via detection D3 (unparseable); v PENDING. D_remain = 20 s,
+  Q_min = 0.80, ε = 0.10, B_remain ample; switch overhead scripted 0
+  (composition itself is tested by B6/B7). Candidate joint actions
+  (Z=LOCAL, R={r}∪closure, π over {r-repair, v}) with PRIORS-scripted
+  predictions:
+  A "original-quality": r→large, v→large — (μ=24 s, q̂=0.95)
+  B "faster":           r→large, v→coder — (μ=17 s, q̂=0.85)
+  C "fastest":          r→medium, v→coder — (μ=12 s, q̂=0.60)
+  Variant 1 (deterministic predictions, tight σ): P̂(A) < 0.9 → A excluded
+  (time); q̂(C) < Q_min → C excluded (quality); B feasible → **B chosen**;
+  downstream: v executes on coder, episode settles, realized R_task from
+  realized (q, C_full, T) — full ledger assertions included.
+  Variant 2 (uncertainty): B's P90 = 21 s ⇒ σ=(21−17)/1.2816≈3.12 ⇒
+  P̂(B≤20)=Φ(0.96)≈0.83 < 0.90 → B EXCLUDED; A_feasible = ∅ → degradation
+  mode fires (D10 policy), violation vector recorded
+  (time-deficit for A/B, quality-deficit for C), `degraded` flag set;
+  NEVER a forced B. Both variants assert the exact filter arithmetic
+  (means alone must not decide — see V2).
+- **V2 filter correctness incl. the uncertainty trap** (carried; now the
+  arithmetic engine behind V1: no mean-pass/P90-fail action admitted;
+  boundary equalities ≥-admitted exactly).
 - **V3 degradation & violation recording.** A_feasible=∅ scenarios: the
   chosen degraded action, violation vector (Q_min−q̂, 1−ε−P̂, ΔC−B_remain),
   and episode `degraded` flag all recorded; realized R_task settles from
@@ -154,7 +201,9 @@ F9 cascade hits cap mid-LOCAL → stops at cap, state consistent.
   whose input changed is in R or provably invariant (F12); reused nodes
   contribute zero ΔC (P-companion); engine never executes an inconsistent R.
 - **V6 policy–static equivalence under the joint space** (extends T3):
-  constant joint policies reproduce Z=NONE / D-arm / E-arm bitwise.
+  constant joint policies over the STATIC variants reproduce Z=NONE /
+  D-arm / E-arm bitwise against the PRODUCTION-REFERENCE trajectories
+  (T3's independently generated references — not self-written goldens).
 
 ## Coverage map to the rev B/C instructions
 
@@ -170,6 +219,12 @@ F9 cascade hits cap mid-LOCAL → stops at cap, state consistent.
 | verification plan retarget | this file |
 | 96→48 + E1 corrections | AUDIT corrections; P3 tripwire |
 | confound + ablation | AUDIT II §5; scheduler doc §7; C5 |
-| **two-stage filter + no-forced-action (rev C)** | reward doc §3.2; V1–V3 |
-| **C_new vs settlement (rev C)** | reward doc §3.2; V4 |
-| **runtime-interface checklist (rev C)** | AUDIT II §12; M1–M6 build order |
+| two-stage filter + no-forced-action | reward doc §3.2; V1–V3 |
+| C_new vs settlement | reward doc §3.2; V4 |
+| runtime-interface checklist | AUDIT II §12; M1–M6 build order |
+| **quality gate via Q_min (rev D, retires OPEN-P3)** | predictor doc §5; V1/V2 |
+| **E2E口径: service+switch composed once (rev D)** | reward doc §3.3a; B6/B7 |
+| **L1/L4 same-legal-history redesign (rev D)** | this file §L; L4b causality |
+| **C5 thresholds → experimental metrics (rev D)** | this file §C |
+| **T3 production-reference equivalence (rev D)** | this file §T; V6 |
+| **D3/P7 parameter hygiene (rev D)** | V7 |

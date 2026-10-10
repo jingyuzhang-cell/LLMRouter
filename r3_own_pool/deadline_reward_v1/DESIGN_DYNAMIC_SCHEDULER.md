@@ -1,12 +1,11 @@
-# DESIGN_DYNAMIC_SCHEDULER — deadline_reward_v1 (rev C)
+# DESIGN_DYNAMIC_SCHEDULER — deadline_reward_v1 (rev D)
 
-Status: DRAFT v0.4 (rev C) — decision object extended from recovery-mode
-selection to the JOINT action **a_t = (Z_t, R_t, π_t)**: recovery strategy +
-legal re-execution set + model assignment for affected AND not-yet-executed
-nodes, chosen by two-stage **constraint filtering + reward optimization**
-(operator directive, 2026-10-10). Governs phase-2 `scheduler_state.py`,
-`deadline_compensator.py`, and the stub execution engine. Zero model calls,
-phases 1–3; no production file modified.
+Status: DRAFT v0.5 (rev D) — applies the review rulings of 2026-10-10:
+fixed-model NONE/LOCAL/FULL retained as production-equivalence baselines,
+dynamic versions carry their own π (B1); π's domain restricted to still-
+executable nodes; B2 causality constraint on the dynamic policy; E2E口径
+pointer to reward doc §3.3a. Zero model calls, phases 1–3; no production
+file modified.
 
 Frozen research objective (operator, verbatim): 面向截止时间约束的反馈驱动
 异构多智能体 DAG 动态调度方法 — after an execution anomaly, jointly optimize
@@ -97,9 +96,20 @@ Excludes (firewall L2/L3): gold, fault registry, unexecuted-node outputs.
 
 ### 4a. Components
 
-**Z_t ∈ {NONE, LOCAL, FULL}** — base recovery strategy; semantics and caps
-as rev B §4 (production: LOCAL recipe events with caps; FULL exactly-once;
-NONE always legal).
+**Z_t ∈ {NONE, LOCAL, FULL}** — two registered variants per Z (review
+ruling B1):
+
+- **Static fixed-model variant** (production-equivalence baseline): the
+  rev B §4 substitution rules verbatim (LOCAL: fb memory rule / esc→large /
+  refresh keeps planned model; FULL: E-arm matched replay). Constant joint
+  policies over these reproduce Z=NONE / D-arm / E-arm bitwise (T3/V6).
+  The memory rule keeps PANEL DETECTION ORDER here (ruling B2), because it
+  is mirroring production batch semantics.
+- **Dynamic variant**: same recovery SCOPE semantics, but π_t may carry its
+  own model assignment (within menus, §4a) — e.g. time-rich → higher-quality
+  models for r-repair/v; time-tight → faster models that still clear Q_min.
+  Every applied dynamic FULL is recorded with (scope, model-delta) separated
+  so scope and model effects remain individually attributable (B1).
 
 **R_t ⊆ legal re-execution set** — nodes to re-execute under Z_t:
 - Z=NONE ⇒ R=∅; Z=FULL ⇒ R={all four} (+ completed-output reuse per 4b where
@@ -110,11 +120,22 @@ NONE always legal).
   n ∈ DONE, then CLOSURE(n) ∩ (DONE ∪ RUNNING) must be in R or their cached
   outputs must be provably invariant (4b). Assert in test V5.
 
-**π_t : nodes → models** — assignment for R_t ∪ unexec_set. Per-node model
-menus FROM AUDITED PRODUCTION PATHS (not invented): e1/e2 ∈ {medium, large,
-coder} (coder occurs via fb); r ∈ {medium, large}; v ∈ {coder, large}.
-π_t leaves DONE nodes' bindings unchanged unless R_t re-executes them.
-Widening menus = OPEN-C1.
+**π_t : nodes → models** — assignment whose DOMAIN is exactly the
+still-executable set: `R_t ∪ unexec_set` (PENDING nodes, or nodes being
+re-executed). A DONE node NOT in R_t is IMMUTABLE under π_t (its binding and
+cached output stand — review ruling 1); changing it would require adding it
+to R_t via the closure rule (4b). Per-node model menus FROM AUDITED
+PRODUCTION PATHS (not invented): e1/e2 ∈ {medium, large, coder} (coder
+occurs via fb); r ∈ {medium, large}; v ∈ {coder, large}. Menu widening =
+OPEN-C1.
+
+**Causality constraint (ruling B2):** the dynamic policy may use only
+information available AT THE DECISION INSTANT. Cross-task detection results
+that production would only obtain in LATER batched stages are future
+information — SchedulerState exposes per-task state only for tasks whose
+stage the engine has actually reached, and the fb memory rule's panel-order
+dependence is a property of the STATIC baseline only; the dynamic variant
+must not read other tasks' not-yet-occurred detections (test L4b).
 
 ### 4b. Completed-node reuse rule (operator: "e1/e2 输出是否仍可复用?")
 
@@ -195,11 +216,18 @@ determinism, import graph. Added: V1 golden (2a example), V5 closure/menu
 consistency on every applied action, degradation recording (F10), C_new vs
 settlement separation (V4).
 
-## 10. Open decisions (rev C consolidated)
+## 10. Open decisions & rulings (rev D)
 
-Carried: B1 (FULL semantics; default E-arm), B2 (fb memory-rule
-granularity), B3 (D_task/token allocation), B4 (cascade granularity), S5.
-New: **OPEN-C1** menu widening beyond audited paths (default: audited menus
-only); **OPEN-D10** degradation policy choice (default BEST_EFFORT_QUALITY);
-**OPEN-D11** Q_min, ε, and B_remain floor values (PRIORS; defaults proposed
-at phase-2 freeze, e.g. Q_min=0.80, ε=0.10 as in the worked example).
+**RULED by operator review 2026-10-10 (recorded verbatim in README §Rulings):**
+- **B1**: FULL — E-arm matched semantics as the STATIC baseline; dynamic
+  FULL may specify its own model assignment, with scope and model effects
+  recorded separately. (Implemented §4 Z variants.)
+- **B2**: static-equivalence tests keep panel detection order; the dynamic
+  policy must not exploit cross-task detection results that have not yet
+  occurred. (Implemented §4a causality constraint; test L4b.)
+
+Still open: B3 (D_task/token allocation; default rolling split), B4
+(cascade granularity; default automatic), S5 (stub-only exercise), **C1**
+(menu widening beyond audited paths; default audited menus only), **D10**
+(degradation policy; default BEST_EFFORT_QUALITY), **D11** (Q_min/ε/
+B_remain values — stub-test values allowed under the D3 labeling rule).

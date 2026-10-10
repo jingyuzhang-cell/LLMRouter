@@ -1,8 +1,10 @@
-# DESIGN_REWARD_FUNCTION — deadline_reward_v1 (rev C)
+# DESIGN_REWARD_FUNCTION — deadline_reward_v1 (rev D)
 
-Status: DRAFT v0.4 (rev C) — two-stage decision (constraint filter + reward
-argmax) and the C_new/settlement cost separation per the operator directive
-of 2026-10-10; R_task formula unchanged. Zero model calls, phases 1–3.
+Status: DRAFT v0.5 (rev D) — applies the review rulings of 2026-10-10:
+E2E time口径 unified (remaining-to-completion, service + switches composed
+once), D3 ruling recorded (stub-test constants vs future frozen formal
+weights). R_task formula and two-stage structure unchanged from rev C.
+Zero model calls, phases 1–3.
 
 Buddy docs: `AUDIT_EXISTING_CODE.md` Part II (execution-layer audit, cited as
 II §n), `DESIGN_DYNAMIC_SCHEDULER.md` (state/actions/transition),
@@ -119,14 +121,28 @@ Check values: D=μ → 0.399σ; D=μ+σ → 0.0833σ; D≪μ → → μ−D. The
 regenerated (VERIFICATION_PLAN P3). Distribution form beyond normal is
 OPEN-D6 (log-normal / empirical variants behind the same interface).
 
-### 3.3a Time-accounting ownership (no double charge)
+### 3.3a Time-accounting ownership — E2E口径 (rev D, review ruling 3)
 
-The predictor's (μ, w_p90) cover PURE service demand of the remaining calls
-incl. action re-execution. Model-switch overhead is added ONCE by the
-compensator when it forms the effective deadline/margin (scheduler doc §6),
-and idle/gap time is tracked by the stub clock. Test B6 asserts switch cost
-appears in exactly one of {predictor time estimate, compensator margin} per
-decision — never both, never neither.
+The on-time constraint and Ê[R_task] compare the **remaining-to-completion
+E2E time of the whole DAG from the decision instant** — including unexecuted
+nodes, recovery cascades, and necessary model switches. Never the fault
+node's repair time alone. Single-source ownership, composed once:
+
+| Ingredient | Owner | Enters |
+|---|---|---|
+| Service demand of R ∪ unexec under π (μ_service, w_p90) | predictor | μ_E2E |
+| Switch overhead of a's model plan (vs current, batched order) | compensator | μ_E2E AND margin — same single estimate, one destination each |
+
+```
+μ_E2E(a) = μ_service(a) + switch_overhead(a)     # policy composes, once
+σ         = from service p90 (P10: switch variance treatment)
+E1 inputs = (μ_E2E, σ) → P̂(T_a ≤ D_remain), Ê[(T−D)₊]
+margin(a) = D_remain − switch_overhead(a) − safety   # compensator hard view
+```
+
+B6 asserts the switch VALUE is counted exactly once in μ_E2E and once in
+margin (same source, different destinations) and nowhere else; idle/gap
+time is recorded by the stub clock, never estimated.
 
 ## 4. R1 — candidate incremental accounting reward (unchanged ruling)
 
@@ -164,15 +180,17 @@ NONE is never "free".
    violation vector + degraded flag; no forced feasible-looking action.
 9. `zero_model_calls: true` on every evidence file.
 
-## 7. Open decisions
+## 7. Open decisions & rulings (rev D)
 
-- OPEN-D3 (carried): λ_c, λ_t, λ_f, C₀, B, P values + calibration on stub
-  replay before any real-data fit.
-- OPEN-D5 (carried): C₀ granularity (default per-task allocation).
-- OPEN-D6 (carried): E1 distribution family (default: corrected normal).
-- OPEN-D8 (carried): q̂ within-episode feedback (default yes; ablation arm).
-- OPEN-D9 (carried): tie-breaking (default: smallest ΔC, then NONE<LOCAL<FULL).
-- OPEN-D10 (new): degradation policy (default BEST_EFFORT_QUALITY with the
-  call-atomicity safety rule; alternatives EARLY_STOP / FORCED_NONE).
-- OPEN-D11 (new): Q_min, ε, B_remain floor values (PRIORS freeze; worked
-  example assumes 0.80 / 0.10).
+**RULED (operator review 2026-10-10):**
+- **D3**: scientific experiment weights are NOT frozen yet. Stub phases 2–3
+  may use parameter values ONLY when explicitly labeled
+  `stub_test_only` in PRIORS.json; **C₀ must be strictly > 0** (asserted,
+  test V7); formal-experiment weights must be independently calibrated and
+  pre-frozen before any real run (phase-4 admission item).
+
+Still open: D5 (C₀ granularity — default per-task allocation), D6 (E1
+distribution family), D8 (q̂ within-episode feedback; default yes),
+D9 (tie-break), D10 (degradation policy; default BEST_EFFORT_QUALITY),
+D11 (Q_min, ε, B_remain floor values — stub-test values allowed under the
+D3 labeling rule; worked example uses 0.80/0.10).

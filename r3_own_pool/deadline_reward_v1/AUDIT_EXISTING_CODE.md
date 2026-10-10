@@ -1,4 +1,11 @@
-# AUDIT_EXISTING_CODE — deadline_reward_v1 (rev B)
+# AUDIT_EXISTING_CODE — deadline_reward_v1 (rev B content; rev D status note)
+
+Rev D note (2026-10-10): the rev B audit PASSED the operator review
+("执行层真实代码审计:通过"). Part II §II.12 additionally grounds the rev D
+test upgrade: production reference trajectories for T3 are generatable by
+driving `eval_config`/`JointEvaluator` through the stub-executor harnesses
+already listed in §II.10 (zero real calls) — this is how "independent
+production references" are obtained without touching live code.
 
 Date: 2026-10-10. Method: read-only source review. Model calls: **0**.
 Files written by this phase: only under `r3_own_pool/deadline_reward_v1/`.
