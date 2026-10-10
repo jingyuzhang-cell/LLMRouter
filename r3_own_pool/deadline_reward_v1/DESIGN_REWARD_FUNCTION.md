@@ -1,10 +1,12 @@
-# DESIGN_REWARD_FUNCTION — deadline_reward_v1 (rev D)
+# DESIGN_REWARD_FUNCTION — deadline_reward_v1 (rev E)
 
-Status: DRAFT v0.5 (rev D) — applies the review rulings of 2026-10-10:
-E2E time口径 unified (remaining-to-completion, service + switches composed
-once), D3 ruling recorded (stub-test constants vs future frozen formal
-weights). R_task formula and two-stage structure unchanged from rev C.
-Zero model calls, phases 1–3.
+Status: DRAFT v0.6 (rev E, final errata): D10 ruled (degradation default =
+EARLY_STOP — no further calls once the feasible set is empty;
+BEST_EFFORT_QUALITY is a hard-bounded ablation only) and D11 ruled (stub
+goldens Q_min=0.80/ε=0.10; formal thresholds pending protocol freeze;
+B_remain always computed from live budget state). R_task formula,
+two-stage structure, E2E口径 (§3.3a) carried unchanged. Zero model calls,
+phases 1–3.
 
 Buddy docs: `AUDIT_EXISTING_CODE.md` Part II (execution-layer audit, cited as
 II §n), `DESIGN_DYNAMIC_SCHEDULER.md` (state/actions/transition),
@@ -187,10 +189,18 @@ NONE is never "free".
   may use parameter values ONLY when explicitly labeled
   `stub_test_only` in PRIORS.json; **C₀ must be strictly > 0** (asserted,
   test V7); formal-experiment weights must be independently calibrated and
-  pre-frozen before any real run (phase-4 admission item).
+  pre-frozen before any real run (phase-4 admission item). No optimality
+  claim may be attached to current values.
+- **D10**: no-feasible-action default = **EARLY_STOP** — once
+  A_feasible(s_t)=∅ the episode settles with no further model calls;
+  violation vector recorded; BEST_EFFORT_QUALITY is a testable ablation
+  only (hard-bound by mission wall + B_remain floor), never the default
+  and never presumed correct.
+- **D11**: stub golden tests use Q_min=0.80, ε=0.10 (worked example/V1);
+  formal-experiment thresholds await an independently frozen protocol;
+  **B_remain is always computed from live budget state (allocation −
+  spent)**, never a PRIORS constant (V7 asserts).
 
 Still open: D5 (C₀ granularity — default per-task allocation), D6 (E1
 distribution family), D8 (q̂ within-episode feedback; default yes),
-D9 (tie-break), D10 (degradation policy; default BEST_EFFORT_QUALITY),
-D11 (Q_min, ε, B_remain floor values — stub-test values allowed under the
-D3 labeling rule; worked example uses 0.80/0.10).
+D9 (tie-break).

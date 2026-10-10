@@ -1,103 +1,100 @@
-# deadline_reward_v1 — deadline-constrained feedback-driven DAG dynamic scheduling (rev D)
+# deadline_reward_v1 — deadline-constrained feedback-driven DAG dynamic scheduling (rev E)
 
 **Frozen research objective (operator, verbatim):**
 
 > 提出一种面向截止时间约束的反馈驱动异构多智能体 DAG 动态调度方法。在执行异常发生后,系统依据 DAG 依赖关系、节点级模型能力、剩余时间及资源预算,联合优化故障恢复范围与后续节点模型分配,通过按时正确完成奖励、新增执行成本惩罚和超时惩罚,实现质量、成本与时延之间的动态权衡。
 
 Core decision: a_t = (Z_t, R_t, π_t); two-stage filter (Q_min,
-P̂(T≤D_remain)≥1−ε, ΔC≤B_remain) → argmax Ê[R_task]; explicit degradation +
-violation recording when nothing is feasible.
+P̂(T≤D_remain)≥1−ε, ΔC≤B_remain) → argmax Ê[R_task]; A_feasible=∅ ⇒
+**EARLY_STOP** degradation + violation recording.
 
 Version history: rev A @0d381a8 (search-layer draft) → rev B @fc201ae
-(execution-layer pivot; **review baseline**) → interim rev C @57f2553
-(joint-action anticipation) → **rev D (this revision): review rulings
-applied**. Phase 2 remains HOLD pending review of rev D.
+(execution-layer pivot) → interim rev C @57f2553 (joint-action; review
+baseline for the final errata) → rev D @09d6b4d (rev-B review rulings:
+P3 retired, E2E口径, L1/L4/C5/T3-references, B1/B2/D3/P7) → **rev E (this,
+final errata): D10/D11 rulings, V1 scenario split, T3a/T3b gates,
+synthetic-distribution statistical assumptions.** Phase 2 remains HOLD
+pending admission confirmation of rev E.
 
-## Operator rulings (2026-10-10 review, recorded verbatim)
+## Operator rulings (2026-10-10 review; SIX, all frozen)
 
-- **B1 (FULL semantics)**: net-benefit E-arm matched semantics is the
-  STATIC baseline; DYNAMIC FULL may specify its own model assignment, but
-  scope effects and model effects must be recorded separately.
-  → scheduler doc §4 (Z variants), predictor doc §8.
-- **B2 (feedback memory rule)**: static-equivalence tests keep PANEL
-  DETECTION ORDER; the dynamic policy must not exploit cross-task detection
-  results that have not yet occurred.
-  → scheduler doc §4a causality constraint; test L4b.
-- **D3 (weights & C₀)**: scientific experiment weights are NOT frozen now;
-  stub phases may use parameters ONLY when explicitly labeled
-  `stub_test_only`; **C₀ must be strictly > 0**; formal weights must be
-  independently calibrated and pre-frozen before real runs.
-  → reward doc §7; test V7.
-- **P7 (PRIORS.json)**: synthetic stub priors allowed WITH provenance
-  notes; never labeled real-model calibration; no reverse-tuning from
-  confirmation-test outcomes.
-  → predictor doc §8; test V7.
+- **B1 (FULL semantics)**: E-arm matched semantics = fixed-policy baseline;
+  dynamic model assignment controlled separately, (scope, model-delta)
+  recorded separately. → scheduler §4.
+- **B2 (memory rule)**: static-equivalence tests keep the ORIGINAL panel
+  detection order; the dynamic policy reads only legal observations that
+  have ALREADY occurred. → scheduler §4a; test L4b.
+- **D3 (reward weights)**: synthetic test constants allowed (labeled);
+  formal weights and C₀ frozen only after independent calibration — no
+  optimality claim now. C₀ > 0 strictly. → reward §7; V7.
+- **P7 (priors)**: synthetic stub priors with recorded source, version,
+  and hash; never presented as real calibration. → predictor §5/§8; V7.
+- **D10 (no-feasible-action default)**: **EARLY_STOP** — no further calls
+  once nothing satisfies the quality/time/budget constraints;
+  BEST_EFFORT_QUALITY kept only as a testable ablation under hard budget
+  and task-wall constraints. → scheduler §4c; tests F2/F10/V1-Scenario2.
+- **D11 (thresholds)**: stub goldens use Q_min=0.80, ε=0.10;
+  formal-experiment thresholds await an independently frozen protocol;
+  **B_remain is computed from actual budget state**, never a constant.
+  → reward §7, predictor §8; V7.
 
-**Parameter separation rule:** every parameter file entry carries a class
-tag — `stub_test_only` (phases 2–3) vs `formal_experiment` (empty until the
-phase-4 calibration+freeze process). V7 enforces the tags, C₀>0, and
-read-only PRIORS during confirmation tests.
+## Errata diff summary (57f2553/09d6b4d → rev E)
 
-## Issue → fix → test mapping (review's four must-fix items + rulings)
-
-| # | Review issue | Fix (file/§) | Test |
-|---|---|---|---|
-| 1 | Actions must include model reassignment | scheduler §4 (Z static/dynamic variants; π domain = R ∪ unexec, DONE-immutable; audited menus) | V5, V6, T3 |
-| 2 | Q_min + deadline + budget constraints; retire OPEN-P3 | reward §3.2 (filter verbatim); predictor §5 (quality gates on whole-DAG q̂) | V1, V2, V3 |
-| 3 | Unified E2E口径 (service + switches, whole remaining DAG) | reward §3.3a; predictor §5 (composition once) | B6, B7 |
-| 4a | L1/L4: same-legal-history, not always-identical traces | VERIFICATION §L (pinned-observable counterfactual worlds; streaming prefix form) | L1, L4, L4b |
-| 4b | C5: no performance threshold in correctness | VERIFICATION §C5 → experimental metrics | V2/C2/C3 remain correctness |
-| 4c | T3: independent production references (batching semantics!) | VERIFICATION §T3 (eval_config/JointEvaluator + stub executors as reference generators; checks model-batched order, cascades, accounting) | T3, V6 |
-| R10 | Full A/B/C scenario + uncertainty variant | VERIFICATION §V1 (two variants with exact arithmetic) | V1 |
-| R9 | README rulings + parameter separation | this file §Rulings, §Parameter separation | V7 |
+| Fix | File(s) |
+|---|---|
+| V1 contradiction resolved: TWO independent golden scenarios — B(p90=18s≤20) chosen; B(p90=21s) excluded → EARLY_STOP fires, zero further calls | VERIFICATION §V1 |
+| OPEN-P3 retired (already in rev D): quality gates feasibility via Q_min on whole-DAG q̂ | predictor §5/§8 |
+| L1/L4 same-legal-history redesign (already in rev D) + F2 rewritten: explicit degradation, no "forced NONE" | VERIFICATION §L, §R-F F2 |
+| C5 performance thresholds removed from correctness (already in rev D) | VERIFICATION §C5 |
+| T3 split: T3a single-task call-semantics + T3b cross-task batching — separate gates, both required; phase-2 FIRST acceptance gate = T3a+T3b under fixed policies | VERIFICATION §T; README §Phase-2 |
+| Statistical assumptions explicit: μ = declared distribution mean (never generic p50); path-p90 = conservative upper bound; z=1.2816 exact only for declared normal family; no real-latency calibration implied; new P4 distribution-integrity test | predictor §5; VERIFICATION §P4 |
+| D10/D11 rulings frozen; EARLY_STOP default; B_remain computed | scheduler §4c/§10; reward §7; predictor §8; VERIFICATION V7/F2 |
 
 ## Document map
 
 | File | Content |
 |---|---|
 | `AUDIT_EXISTING_CODE.md` | Part I search-layer evidence · Part II execution layer (stages, D1–D6, LOCAL table, two FULL semantics, confound ladder, three time quantities, reuse/missing lists, §II.12 runtime-interface checklist, honesty ledger) · corrections (96→48; E1) |
-| `DESIGN_REWARD_FUNCTION.md` | R_task task-level terminal reward; two-stage decision + C_new/settlement separation (§3.2); corrected E1; **E2E composition口径 (§3.3a)**; D3 ruling (§7) |
-| `DESIGN_DYNAMIC_SCHEDULER.md` | Joint action (Z,R,π) with **static/dynamic Z variants (B1)**, π domain restriction, causality constraint (B2), reuse rule, closure consistency, degradation policy, A/B/C example, compensator, confound/ablation, F1–F13 |
-| `DESIGN_PREDICTOR_INTERFACE.md` | Per-joint-action prediction; node-level quality chain; ΔC with reuse; critical-path service time; **E2E composition; quality gating (P3 retired)**; B1/P7 rulings |
-| `VERIFICATION_PLAN.md` | L (redesigned L1/L4/L4b) / A / T (**production-reference T3**) / B / R-F / Z / P / C (performance→metrics) / V (full V1 scenario, V7 hygiene); coverage map |
+| `DESIGN_REWARD_FUNCTION.md` | R_task task-level terminal reward; two-stage decision + C_new/settlement separation; corrected E1; E2E口径 §3.3a; D3/D10/D11 ruled |
+| `DESIGN_DYNAMIC_SCHEDULER.md` | Joint action (Z,R,π): static/dynamic Z variants (B1), π domain restriction, causality (B2), reuse rule, closure consistency, **EARLY_STOP degradation (D10)**, A/B/C example, compensator, confound/ablation, F-matrix |
+| `DESIGN_PREDICTOR_INTERFACE.md` | Per-joint-action prediction; node-level quality chain; ΔC with reuse; critical-path service time; **synthetic-distribution statistical assumptions**; quality gating; B1/P7/D10/D11 ruled |
+| `VERIFICATION_PLAN.md` | L (same-legal-history) / A / T (**T3a+T3b production-reference gates**) / B / R-F (F2=degradation) / Z / P (**P4 distribution integrity**) / C (descriptive metrics) / V (two-scenario V1, V7 hygiene) |
 
 ## Corrections carried (visible)
 
 1. Config count 96 → 48 (evaluator.py:22-26); search space retired as test
    range.
-2. E1 lateness expectation fixed to σ[φ(z)+zΦ(z)], z=(μ−D)/σ (rev A form
-   agreed only at z=0); P3-goldens regenerated; regression tripwire.
+2. E1 lateness expectation fixed to σ[φ(z)+zΦ(z)], z=(μ−D)/σ; P3 goldens;
+   regression tripwire.
+3. rev C V1 contradiction (B selected despite P90=21>D_remain=20) — split
+   into two scenarios (rev E).
 
-## Remaining open decisions (17)
+## Remaining open decisions (15)
 
 D5 (C₀ granularity) · D6 (E1 family) · D8 (q̂ feedback) · D9 (tie-break) ·
-D10 (degradation policy) · D11 (Q_min/ε/B_remain values — stub-test values
-allowed under D3 labeling) · B3 (D_task/token allocation) · B4 (cascade
-granularity) · S5 (stub-only exercise) · C1 (menu widening) · P2
-(cache-aware cost) · P4 (profile granularity) · P6 (pooling, default OFF) ·
-P7-values (stub prior numbers) · P8 (quality-chain correlation) · P9
-(observed-state belief rule) · P10 (switch variance in σ). (P1/P3-RETIRED/
-B1/B2/D3/P7-policy are RULED; values where noted remain open.)
+B3 (D_task/token allocation) · B4 (cascade granularity) · S5 (stub-only
+exercise) · C1 (menu widening) · P2 (cache-aware cost) · P4 (profile
+granularity) · P6 (pooling, default OFF) · P7-values (synthetic prior
+numbers) · P8 (quality-chain correlation) · P9 (observed-state belief
+rule) · P10 (switch variance in σ). All have documented defaults; none
+blocks phase 2.
 
-## Phase-2 minimal scope & admission recommendation
+## Phase-2 minimal scope & admission
 
-Build order fixed by AUDIT II §12 (interfaces 1, 4, 6 missing; 2 partial) —
-**minimal execution closed loop first**:
+**First acceptance gate (operator order):** fixed policies reproduce the
+INDEPENDENT production reference execution semantics — T3a (single-task
+call semantics) AND T3b (cross-task model-batched stage order) — BEFORE any
+joint reallocation, constraint filtering, reward selection, or recovery
+dynamics are exercised.
 
-- **M1** stub engine: per-call event loop, injected clock, per-task real
-  wall, first-class switch records;
-- **M2** SchedulerState observation API;
-- **M3** closure/reuse machinery (CLOSURE constants + cache identity);
-- **M4** recovery execution in-engine (LOCAL recipe; FULL per B1 static
-  baseline semantics first, dynamic FULL behind the same interface);
-- **M5** π application + menus (the new capability);
-- **M6** policy stack: two-stage filter + predictor + compensator +
-  settlement, with the full VERIFICATION_PLAN suite — T3/V6
-  production-reference equivalence as the engine-fidelity gate.
+Build order (AUDIT II §12; interfaces 1, 4, 6 missing, 2 partial):
+**M1** stub engine (per-call loop, injected clock, per-task wall, switch
+records) → **M2** SchedulerState API → **M3** closure/reuse → **M4**
+recovery execution (static variants first) → **M5** π application + menus
+→ **M6** two-stage policy + predictor + compensator + settlement, with the
+full VERIFICATION_PLAN suite.
 
-**Admission recommendation: HOLD stands until rev D review passes.** On
-pass, phase 2 may start on M1–M6 with the remaining OPENs running on
-documented defaults (D10/D11 defaults need operator confirmation since they
-shape the degradation behavior). Phase 4 (real models) unchanged: Formal
-settlement audit + net-benefit gates + independent authorization +
-independently calibrated pre-frozen weights (D3).
+**Admission status: phase-2 architecture ACCEPTED (rev C review); coding
+awaiting the operator's admission confirmation of this rev E errata.**
+Phase-2 completion does NOT authorize production-executor integration or
+real-model experiments — both need separate approval (unchanged).

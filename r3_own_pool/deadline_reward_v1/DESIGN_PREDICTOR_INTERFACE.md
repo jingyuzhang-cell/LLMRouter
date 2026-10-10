@@ -1,8 +1,10 @@
-# DESIGN_PREDICTOR_INTERFACE — deadline_reward_v1 (rev D)
+# DESIGN_PREDICTOR_INTERFACE — deadline_reward_v1 (rev E)
 
-Status: DRAFT v0.5 (rev D) — applies review rulings of 2026-10-10
-(baseline fc201ae + interim 57f2553): OPEN-P3 retired (quality gates
-feasibility via Q_min), E2E composition rule fixed, B1/P7 rulings recorded.
+Status: DRAFT v0.6 (rev E, final errata per review of 57f2553 + rulings):
+statistical assumptions for synthetic time distributions made explicit
+(mean ≠ generic p50; path-p90 = conservative bound; z=1.2816 normal-family
+only), D10/D11 rulings recorded, P7 extended with version+hash. Baselines:
+rev D @09d6b4d (which already retired OPEN-P3 and fixed E2E composition).
 Governs phase-2 `outcome_predictor.py`. Zero model calls, phases 1–3.
 
 ## 1. Role
@@ -79,12 +81,32 @@ under π using the **production critical-path rule as precedent**
 recovery-in-branch), with CLOSURE structure (multidag_dynamic.py:59):
 
 ```
-mu_s    = Σ p50_lat over critical path of (remaining DAG under a)
-w_p90_s = path-conservative p90 aggregation (default: sum of per-node p90
-          on the critical path; per-node p90 per (node, model) from PRIORS)
+mu_service(a)  = Σ node-mean over critical path of (remaining DAG under a)
+w_p90(a)       = CONSERVATIVE UPPER BOUND: Σ node-p90 on the critical path
+                 (≥ true path-p90 under declared independence — see below)
 σ = (w_p90 − μ)/1.2816 ;  P̂(T≤D) = Φ((D−μ)/σ) ;
 Ê[(T−D)₊] = σ[φ(z) + zΦ(z)],  z = (μ−D)/σ          # corrected rev A error
 ```
+
+**Statistical assumptions (rev E, review ruling: no silent equivalences).**
+Stub phases use SYNTHETIC service-time distributions declared per
+(node, model) in PRIORS.json — each entry records family + parameters +
+`synthetic: true` + source note + version + sha256 (ruling P7). Under this
+declaration, and ONLY under it:
+- `node-mean` is the DECLARED DISTRIBUTION MEAN — never a generic "p50".
+  Mean = median holds only for declared symmetric families (normal), and
+  the declaration says so explicitly.
+- Path mean = exact sum of node means under the declared INDEPENDENCE
+  assumption; cross-node correlation is OPEN-P8 and, until resolved, the
+  conservative bound is used wherever correlation could bite.
+- Σ node-p90 ≥ true path-p90 under independence — an explicitly CONSERVATIVE
+  bound for feasibility gating, not a calibrated aggregate quantile.
+- The identity σ=(w_p90−μ)/1.2816 is exact ONLY for the declared normal
+  family; a different declared family must supply its own (μ, p90, σ)
+  consistent triple (test P4 asserts family-appropriate identities).
+- **No claim of real-latency calibration exists or is implied** — these are
+  labeled synthetic stub priors until a phase-4 provenance-gated
+  calibration replaces them.
 
 **E2E composition (rev D, review ruling 3):** the quantity the on-time
 constraint compares is the REMAINING-TO-COMPLETION E2E time of the WHOLE
@@ -132,7 +154,7 @@ monotonicity, E1 goldens, zero-call. Added:
 3. Chain semantics: q̂ strictly increases when a FAILED node's π-model
    upgrades (PRIORS ordering), all else fixed.
 
-## 8. Open decisions & rulings (rev D)
+## 8. Open decisions & rulings (rev E)
 
 **RULED by operator review 2026-10-10 (no longer open):**
 - ~~OPEN-P3~~ **RETIRED** — quality DOES gate feasibility via Q_min on the
@@ -141,15 +163,24 @@ monotonicity, E1 goldens, zero-call. Added:
   semantics; DYNAMIC FULL may carry its own π, and every applied FULL is
   recorded with (scope, model-delta) separated so scope and model effects
   stay attributable.
-- **P7**: PRIORS.json may contain SYNTHETIC stub priors WITH provenance
-  notes; they must never be labeled real-model calibration, and confirmation
-  tests must not write/tune PRIORS (read-only; V7 enforces).
+- **P7**: PRIORS.json may contain SYNTHETIC stub priors; each entry records
+  family + parameters + `synthetic: true` + source note + **version +
+  sha256**; never labeled real-model calibration; confirmation tests never
+  write/tune PRIORS (read-only; V7 enforces).
+- **D11 (predictor side)**: stub golden tests use Q_min=0.80, ε=0.10;
+  formal-experiment thresholds await an independently frozen protocol;
+  **B_remain is always COMPUTED from live budget state (allocation −
+  spent), never a PRIORS constant.**
+- **D10 (predictor side)**: degradation default is EARLY_STOP — the
+  predictor's q̂ is NOT consulted to justify extra spending after the
+  feasible set is empty (BEST_EFFORT_QUALITY exists only as a bound
+  ablation policy).
 
 Still open: P1 (q̂ target semantics — default terminal v2.1), P2
 (cache-aware cost refinement — out of phase-2 scope), P4 (profile
 granularity per-model default), P6 (cross-task pooling — default OFF), P7
-VALUES (stub prior numbers at phase-2 freeze), **P8** node-correctness
+VALUES (synthetic prior numbers at phase-2 freeze), **P8** node-correctness
 correlation model (default independent chain), **P9** observed-state belief
 update rule for reused DONE nodes (default frozen bounded table), **P10**
-(new) switch-variance treatment in σ (default: deterministic switch
-estimates, σ service-only).
+switch-variance treatment in σ (default: deterministic switch estimates, σ
+service-only).

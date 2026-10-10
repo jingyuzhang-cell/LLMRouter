@@ -1,11 +1,12 @@
-# DESIGN_DYNAMIC_SCHEDULER — deadline_reward_v1 (rev D)
+# DESIGN_DYNAMIC_SCHEDULER — deadline_reward_v1 (rev E)
 
-Status: DRAFT v0.5 (rev D) — applies the review rulings of 2026-10-10:
-fixed-model NONE/LOCAL/FULL retained as production-equivalence baselines,
-dynamic versions carry their own π (B1); π's domain restricted to still-
-executable nodes; B2 causality constraint on the dynamic policy; E2E口径
-pointer to reward doc §3.3a. Zero model calls, phases 1–3; no production
-file modified.
+Status: DRAFT v0.6 (rev E, final errata): degradation default changed to
+**EARLY_STOP** (ruling D10; BEST_EFFORT_QUALITY demoted to a hard-bounded
+ablation policy), D11 recorded (stub goldens Q_min=0.80/ε=0.10; B_remain
+always computed from live budget state), F2/F10 aligned. Joint action
+(Z,R,π), static/dynamic Z variants (B1), π domain restriction, causality
+constraint (B2), E2E口径 (reward doc §3.3a) all carried from rev C/D.
+Zero model calls, phases 1–3; no production file modified.
 
 Frozen research objective (operator, verbatim): 面向截止时间约束的反馈驱动
 异构多智能体 DAG 动态调度方法 — after an execution anomaly, jointly optimize
@@ -147,18 +148,24 @@ R_t via CLOSURE. The selective-update precedent ("re-executed set ==
 descendant closure on every event", multidag_dynamic.py:30) is the audit
 pattern; test V5 asserts closure-consistency of every applied action.
 
-### 4c. No-feasible-action rule (degradation; operator directive)
+### 4c. No-feasible-action rule (degradation; RULED D10, 2026-10-10)
 
 If A_feasible(s_t) = ∅ the system MUST NOT force a seemingly feasible
-action. It enters an explicit degraded mode — default policy (OPEN-D10):
-**BEST_EFFORT_QUALITY**: among legal actions, take argmax q̂ subject only to
-the hard safety rule "never START a call that cannot finish before the
-mission wall" (call atomicity); alternatives: EARLY_STOP (settle episode
-now) / FORCED_NONE. Every degradation records the full violation vector
-(constraint, deficit: Q_min−q̂, 1−ε−P̂, ΔC−B_remain) into
-SCHEDULER_STATE.jsonl + REWARDS.jsonl. Direct precedent: budget-gated
-skip+record (multidag_dynamic.py:319,365). Degraded episodes are flagged in
-all downstream analyses (never silently mixed with feasible completions).
+action. **Default degradation = EARLY_STOP** (ruled): settle the episode
+immediately — start NO further model calls. Rationale (operator): with no
+action satisfying the quality/time/budget constraints, spending more calls
+to raise predicted quality is not justified by default. The full violation
+vector (constraint, deficit: Q_min−q̂, 1−ε−P̂, ΔC−B_remain) is recorded in
+SCHEDULER_STATE.jsonl + REWARDS.jsonl, the episode is flagged `degraded`,
+and it settles with its realized R_task from realized (q, C_full, T).
+
+**BEST_EFFORT_QUALITY is DEMOTED to a testable ablation policy** — not the
+default and never presumed correct; when studied, it remains bound by the
+hard constraints: never START a call that cannot finish before the mission
+wall (call atomicity) and never exceed B_remain's hard floor. Direct
+precedent for skip+record: budget-gated escalation (multidag_dynamic.py:
+319,365). Degraded episodes are never silently mixed into feasible-set
+analyses.
 
 ### 4d. Decision granularity
 
@@ -204,7 +211,7 @@ confound audit.
 
 | # | Scenario | Expected |
 |---|---|---|
-| F10 | A_feasible = ∅ | degradation mode entered, violation vector recorded, flag on episode; no forced feasible-looking action |
+| F10 | A_feasible = ∅ | degradation fires per D10 (default EARLY_STOP — zero further calls), violation vector recorded, flag on episode; no forced feasible-looking action; BEST_EFFORT_QUALITY variant (ablation only) still bound by mission-wall atomicity + B_remain hard floor |
 | F11 | π_t proposes model outside node menu | action illegal at construction (V5) |
 | F12 | closure violation (R excludes a node whose input changed) | rejected at construction; engine never executes an inconsistent R |
 | F13 | reuse check wrong (stale output consumed) | V5's closure-consistency assert fails loudly — treated as engine bug, not policy behavior |
@@ -216,7 +223,7 @@ determinism, import graph. Added: V1 golden (2a example), V5 closure/menu
 consistency on every applied action, degradation recording (F10), C_new vs
 settlement separation (V4).
 
-## 10. Open decisions & rulings (rev D)
+## 10. Open decisions & rulings (rev E)
 
 **RULED by operator review 2026-10-10 (recorded verbatim in README §Rulings):**
 - **B1**: FULL — E-arm matched semantics as the STATIC baseline; dynamic
@@ -225,9 +232,14 @@ settlement separation (V4).
 - **B2**: static-equivalence tests keep panel detection order; the dynamic
   policy must not exploit cross-task detection results that have not yet
   occurred. (Implemented §4a causality constraint; test L4b.)
+- **D10**: no-feasible-action default = **EARLY_STOP** (§4c) — do not keep
+  spending on possibly-invalid calls to chase predicted quality;
+  BEST_EFFORT_QUALITY is a testable ablation only, hard-bound by the
+  mission wall and B_remain's floor.
+- **D11**: stub golden tests use Q_min=0.80, ε=0.10; formal-experiment
+  thresholds await an independently frozen protocol; **B_remain is always
+  computed from live budget state (allocation − spent)**, never a constant.
 
 Still open: B3 (D_task/token allocation; default rolling split), B4
 (cascade granularity; default automatic), S5 (stub-only exercise), **C1**
-(menu widening beyond audited paths; default audited menus only), **D10**
-(degradation policy; default BEST_EFFORT_QUALITY), **D11** (Q_min/ε/
-B_remain values — stub-test values allowed under the D3 labeling rule).
+(menu widening beyond audited paths; default audited menus only).
