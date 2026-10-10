@@ -30,9 +30,11 @@
 - 对 scalarized：−4 / −52 / +16（混合）；
 - 对 random：−44 / −20 / +42（混合——random 种子 3 极走运，27 即达）。
 
-**结论（受限）**：在 8 题面板、n=3 种子下，Proposed 的效率优势完全由
-增量成本感知项贡献（相对官方 qNEHVI 平均少 9 个额外请求、三种子方向
-一致），幅度小；状态特征未产生可测收益。不能宣称"全面优于基线"。
+**结论（受限）**：在 8 题面板、n=3 种子下，当前消融结果与"增量成本
+感知项带来搜索效率收益"的解释一致（相对官方 qNEHVI 平均少 9 个额外
+请求，两两配对三种子方向一致），幅度小；状态特征未产生可测收益。这
+是三个种子上的方向一致观察，不构成排他性因果结论，也不能宣称"全面
+优于基线"。
 
 ## 问题二：谁在三种子间更稳定？
 
@@ -47,14 +49,19 @@
 
 ## 问题三：选中部署配置的成本/时延？
 
-各方法最终收敛到 fault30 Q=0.5 的 LOCAL 恢复配置，但**选中的配置不同**：
-- Proposed / wo_state → `medium,large,medium,coder__LOCAL`（部署 C 均值
-  约 2,238–2,543，种子 1 偏贵）；
-- qNEHVI / wo_incr_cost / scalarized → `medium,medium,large,coder__LOCAL`
-  （部署 C 约 2,235–2,271，**更便宜**）。
+各方法最终都找到 fault30 Q=0.5 的 LOCAL 恢复配置，但**逐种子的选择
+并不相同，不能概括为单一收敛配置**：
+- **Proposed / wo_state（逐种子不同）**：种子 20261009 选
+  `medium,large,medium,coder__LOCAL`（C 2,543 / 2,525，最贵）；种子
+  20261010 选 `medium,medium,medium,coder__LOCAL`（C 2,297 / 2,294）；
+  种子 20261011 才选 `medium,medium,large,coder__LOCAL`（C 2,238 / 2,242）。
+- **qNEHVI / wo_incr_cost（三种子全部相同且最便宜）**：
+  `medium,medium,large,coder__LOCAL`（C 2,235–2,242）。
+- scalarized / random：混合（scalarized 种子 2 偏贵 2,271；random 种子
+  3 选到 2,415）。
 
-**结论**：质量相同时，qNEHVI 族找到的部署配置部署成本略低——Proposed
-在部署端没有优势，甚至种子 1 略差。论文中如实报告。
+**结论**：质量相同时，qNEHVI 族的部署选择既稳定又最便宜；Proposed 的
+部署选择随种子漂移且种子 1 明显偏贵——部署端无优势，如实报告。
 
 ## 总量核对（v2 修正：两种口径分列）
 
