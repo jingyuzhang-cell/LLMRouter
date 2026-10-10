@@ -1,10 +1,9 @@
-# VERIFICATION_PLAN — executable test design, phases 2–3 (deadline_reward_v1, rev B)
+# VERIFICATION_PLAN — executable test design, phases 2–3 (deadline_reward_v1, rev C)
 
-Status: DRAFT v0.2 (rev B) — re-targeted to the execution layer. Phase-2
-code is not admissible to phase 3 without these tests. Zero real model
-calls. Run convention unchanged: one JSON evidence file per group, per-test
-PASS/FAIL, `all_pass`, `zero_model_calls: true`, seeded RNG, injected clock
-(`Budget(clock=)` precedent), socket disabled (Z2).
+Status: DRAFT v0.3 (rev C) — adds group V (two-stage decision, degradation,
+cost separation, joint-action consistency). All prior groups carried.
+Phase-2 code is not admissible to phase 3 without these tests. Zero real
+model calls; seeded RNG, injected clock, socket disabled (Z2).
 
 ## L — information-leakage firewall
 
@@ -129,17 +128,48 @@ F9 cascade hits cap mid-LOCAL → stops at cap, state consistent.
   ≥1 scenario (i.e., the feedback channel is live); action distributions
   logged per fault family for the confound audit (scheduler doc §7).
 
-## Coverage map to the rev B instruction (items 1–10 + deliverables)
+## V — two-stage decision, joint actions, degradation (rev C)
+
+- **V1 worked-example golden (operator's A/B/C).** Scripted decision point:
+  D_remain=20 s, Q_min=0.80, ε=0.10; three joint actions with (μ, w_p90, q̂)
+  = A(24,–,0.95), B(17,21,0.85), C(12,–,0.60). PASSES iff A excluded on
+  P̂<0.9 (time), C excluded on q̂<Q_min (quality), B chosen; AND in the
+  variant where B's P90 pushes P̂ below 0.9, the feasible set is EMPTY and
+  the degradation path fires (never a forced B).
+- **V2 filter correctness incl. the uncertainty trap.** Across a scripted
+  grid: no action with mean ≤ D but P̂ < 1−ε is ever admitted; no action
+  with q̂ < Q_min admitted; ΔC > B_remain excluded; boundary equalities
+  (q̂=Q_min, P̂=1−ε) admitted exactly (≥ semantics pinned).
+- **V3 degradation & violation recording.** A_feasible=∅ scenarios: the
+  chosen degraded action, violation vector (Q_min−q̂, 1−ε−P̂, ΔC−B_remain),
+  and episode `degraded` flag all recorded; realized R_task settles from
+  realized quantities; no forced feasible-looking action in any trace
+  (assert over full replays).
+- **V4 cost-record separation.** Every decision record carries C_new
+  (incremental) only; settlement records C_full; schema assert prevents
+  cross-contamination; C_full reconciles with Σ realized increments +
+  pre-decision spend.
+- **V5 joint-action consistency.** For every applied a=(Z,R,π): π within
+  audited node menus (F11); R closure-consistent — every DONE/absent node
+  whose input changed is in R or provably invariant (F12); reused nodes
+  contribute zero ΔC (P-companion); engine never executes an inconsistent R.
+- **V6 policy–static equivalence under the joint space** (extends T3):
+  constant joint policies reproduce Z=NONE / D-arm / E-arm bitwise.
+
+## Coverage map to the rev B/C instructions
 
 | Instruction item | Covered by |
 |---|---|
-| 1 execution-layer audit | AUDIT Part II (all §) |
-| 2 R0 task-level + conditional expectation | reward doc §3; C2–C4 |
-| 3 SchedulerState | scheduler doc §3; T1 |
-| 4 recovery action interface | scheduler doc §4; A1–A3, T3/T4 |
-| 5 OutcomePredictor → action outcomes | predictor doc §3–5; P1–P3 |
-| 6 compensator unified, no double charge | scheduler doc §6; B5–B7 |
-| 7 wall vs serial separation | AUDIT II §6; B7 |
-| 8 verification plan retarget | this file |
-| 9 96→48 + E1 corrections | AUDIT corrections; P3 tripwire |
-| 10 confound + ablation | AUDIT II §5; scheduler doc §7; C5 |
+| execution-layer audit | AUDIT Part II |
+| R_task task-level + conditional expectation | reward doc §3; C2–C3 |
+| SchedulerState | scheduler doc §3; T1 |
+| recovery action interface → **joint (Z,R,π)** | scheduler doc §4; A1–A3, V5, V6 |
+| OutcomePredictor → action outcomes | predictor doc §3–5; P1–P3 |
+| compensator unified, no double charge | scheduler doc §6; B5–B7 |
+| wall vs serial separation | AUDIT II §6; B7 |
+| verification plan retarget | this file |
+| 96→48 + E1 corrections | AUDIT corrections; P3 tripwire |
+| confound + ablation | AUDIT II §5; scheduler doc §7; C5 |
+| **two-stage filter + no-forced-action (rev C)** | reward doc §3.2; V1–V3 |
+| **C_new vs settlement (rev C)** | reward doc §3.2; V4 |
+| **runtime-interface checklist (rev C)** | AUDIT II §12; M1–M6 build order |

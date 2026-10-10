@@ -1,57 +1,75 @@
-# deadline_reward_v1 — feedback-driven DAG dynamic recovery scheduling (rev B)
+# deadline_reward_v1 — deadline-constrained feedback-driven DAG dynamic scheduling (rev C)
 
-**Scope (operator ruling 2026-10-10):** the reward/penalty mechanism targets
-the EXECUTION layer — dynamic recovery-action selection (NONE / LOCAL / FULL)
-inside DAG task execution under quality–cost–latency constraints. The Formal
-six-method configuration search keeps its independent research value and is
-NOT this mechanism's object.
+**Frozen research objective (operator, 2026-10-10, verbatim):**
+
+> 提出一种面向截止时间约束的反馈驱动异构多智能体 DAG 动态调度方法。在执行异常发生后,系统依据 DAG 依赖关系、节点级模型能力、剩余时间及资源预算,联合优化故障恢复范围与后续节点模型分配,通过按时正确完成奖励、新增执行成本惩罚和超时惩罚,实现质量、成本与时延之间的动态权衡。
+
+(EN gloss: a deadline-constrained, feedback-driven scheduling method for
+heterogeneous multi-agent DAG execution; after an anomaly, jointly optimize
+recovery scope and downstream model assignment under DAG dependencies,
+node-level capability, remaining time and budget, via the on-time-correct
+reward with new-cost and timeout penalties — the dynamic Q/C/L tradeoff.
+Proposed as a core algorithm of the paper's "feedback-driven DAG dynamic
+scheduling".)
+
+**Core decision (rev C):** a_t = (Z_t, R_t, π_t) — two-stage choice:
+constraint filter (Q_min, P̂(T≤D_remain)≥1−ε, ΔC≤B_remain) → argmax
+Ê[R_task]; explicit degradation + violation recording when the feasible set
+is empty (never a forced action).
 
 Hard boundaries (phases 1–3): zero real model calls; no modification of
-Formal/net-benefit code, protocols, ledgers, or results; no fabricated
-capabilities (detection = exactly the audited predicates D1–D6); **phase 2
-NOT started — this revision awaits human review.**
+Formal/net-benefit code/protocols/ledgers/results; detection = exactly the
+audited predicates D1–D6; no capability is claimed beyond AUDIT II §12;
+**phase 2 NOT started — awaiting human review of rev C.**
 
-## Document map (rev B; rev A preserved at commit 0d381a8 as review baseline)
+## Document map (rev C; baseline history: rev A @0d381a8, rev B @fc201ae)
 
 | File | Content |
 |---|---|
-| `AUDIT_EXISTING_CODE.md` | Part I search layer (rev A evidence, §2.9 + §3 verbatim) · **Part II execution layer**: stage structure, detection predicates D1–D6, LOCAL event table, two FULL semantics, confound ladder, three time quantities, reuse list vs missing-interface list (§II.10), honesty ledger (§II.11) · corrections log (96→48; E1 formula) |
-| `DESIGN_REWARD_FUNCTION.md` | R0 = task-level terminal reward; gold enters ONLY terminal scoring (§3.1); online score = Ê[R0\|H,a] at detection points (§3.2); corrected E1 (§3.3); time-ownership no-double-charge (§3.3a); R1 stays demoted |
-| `DESIGN_DYNAMIC_SCHEDULER.md` | Architecture (§1), decision loop + policy–static equivalence (§2), SchedulerState full definition (§3), NONE/LOCAL/FULL action interface (§4), transition (§5), compensator unified accounting (§6), confound & ablation design (§7), failure matrix F1–F9 |
-| `DESIGN_PREDICTOR_INTERFACE.md` | Per-action prediction contract (q̂, ΔC, μ/w_p90), corrected E1, action-event tables, PRIORS provenance, phase-2 class inventory |
-| `VERIFICATION_PLAN.md` | Executable tests L/A/T/B/R-F/Z/P/C with coverage map to the instruction's ten items |
+| `AUDIT_EXISTING_CODE.md` | Part I search-layer evidence · Part II execution layer: stages, D1–D6, LOCAL table, two FULL semantics, confound ladder, three time quantities, reuse/missing lists, honesty ledger · **§II.12 runtime-interface checklist (pause/observation/closure/reassignment/recovery/timing — with the CLOSURE table + budget-gated skip+record precedents)** · corrections (96→48; E1) |
+| `DESIGN_REWARD_FUNCTION.md` | R_task task-level terminal reward; gold only at settlement; **two-stage decision + C_new-vs-settlement separation (§3.2)**; corrected E1; time ownership |
+| `DESIGN_DYNAMIC_SCHEDULER.md` | Architecture; **joint action space (Z,R,π) with audited node menus, reuse rule, closure consistency, degradation policy, A/B/C worked example (§2a, §4)**; SchedulerState; transition; compensator (D_remain/B_remain); confound/ablation; F1–F13 |
+| `DESIGN_PREDICTOR_INTERFACE.md` | Per-joint-action prediction: **node-level quality chain under π**, ΔC with reuse, critical-path time aggregation, corrected E1, PRIORS provenance |
+| `VERIFICATION_PLAN.md` | L/A/T/B/R-F/Z/P/C groups + **V group (V1 A/B/C golden, V2 filter incl. P90 trap, V3 degradation, V4 cost separation, V5 joint consistency, V6 equivalence)**; coverage map |
 
-## Corrections carried from rev A (visible, with rationale)
+## Corrections carried (visible)
 
-1. Config count 96 → **48** (2⁴ X × 3 Z, evaluator.py:22-26); the search
-   space is anyway retired as the test range.
-2. Normal lateness expectation: correct form **σ[φ(z)+zΦ(z)]**, z=(μ−D)/σ
-   (rev A had z(1−Φ(z)) — agrees only at z=0). Fixed in both docs; P3
-   includes a regression tripwire asserting the old form fails.
+1. Config count 96 → 48 (evaluator.py:22-26); search space retired as test
+   range anyway.
+2. E1 lateness expectation fixed to σ[φ(z)+zΦ(z)], z=(μ−D)/σ (rev A form
+   agreed only at z=0); P3 regression tripwire asserts the old form fails.
 
-## Consolidated open decisions (16; defaults proposed)
+## Consolidated open decisions (22; defaults proposed)
 
-Reward: D3 (λ, C₀, B, P) · D5 (C₀ granularity) · D6 (E1 family) ·
-D8 (q̂ within-episode feedback) · D9 (tie-break).
-Scheduler: B1 (FULL semantics — default E-arm matched) · B2 (fb memory-rule
-granularity) · B3 (D_task allocation) · B4 (cascade decision granularity) ·
-S5 (stub-only exercise).
-Predictor: P1/P3/P4 (carried defaults) · P6 (cross-task pooling — default
-OFF) · P7 (PRIORS values at phase-2 freeze).
+Reward: D3 (λ,C₀,B,P) · D5 (C₀ granularity) · D6 (E1 family) · D8 (q̂
+feedback) · D9 (tie-break) · **D10 (degradation policy)** · **D11 (Q_min,
+ε, B_remain floors)**.
+Scheduler: B1 (FULL semantics; default E-arm) · B2 (fb memory-rule
+granularity) · B3 (D_task/token allocation) · B4 (cascade granularity) ·
+S5 · **C1 (menu widening; default audited menus only)**.
+Predictor: P1 · P3 · P4 · P6 (pooling OFF) · P7 (PRIORS values) · **P8
+(quality-chain correlation)** · **P9 (observed-state belief rule)**.
 
-## Phase-2 admission recommendation (deliverable)
+## Phase-2 admission recommendation (rev C)
 
-**Recommend: ADMIT phase 2 conditionally**, gated on the operator resolving
-four decision points before coding starts, since they change module
-structure or comparability: **B1** (FULL semantics), **B2** (memory-rule
-granularity), **D3** (weights/C₀), **P7** (prior values + provenance notes
-for PRIORS.json). All other OPENs may proceed on documented defaults and be
-revisited at the phase-3 review.
+**Recommend: ADMIT phase 2 conditionally**, with the build order fixed by
+the interface checklist (AUDIT II §12: items 1, 4, 6 missing, 2 partial) —
+**minimal execution closed loop FIRST**, then the policy:
 
-Phase-2 scope if admitted: `scheduler_state.py`, `outcome_predictor.py`,
-`deadline_compensator.py`, the stub execution engine (inside this package,
-mirroring audited stage semantics), PRIORS.json freeze, and the full
-VERIFICATION_PLAN suite — all zero-call, verified by T3 (policy–static
-equivalence) as the engine-fidelity proof. Phase 4 (real models) remains
-gated on Formal settlement audit + net-benefit gates + independent
-authorization, unchanged.
+- **M1** stub execution engine: per-call event loop on injected clock,
+  per-task real wall, first-class switch records (interfaces 1+6);
+- **M2** node-state observation API = SchedulerState skeleton (interface 2);
+- **M3** closure/reuse machinery from the CLOSURE constants + cache-identity
+  semantics (interface 3, exists — wire it);
+- **M4** recovery execution in the engine (LOCAL recipe semantics, FULL per
+  OPEN-B1) (interface 5, exists — mirror it);
+- **M5** reassignment capability: π application + menus (interface 4 — the
+  new capability);
+- **M6** policy stack: two-stage decision + predictor + compensator +
+  reward settlement, with the full VERIFICATION_PLAN suite (T3/V6
+  equivalence as the engine-fidelity gate).
+
+Operator gates before coding: resolve **B1, B2, D3, P7** (as rev B) plus
+**D10, D11** (degradation policy + threshold values). All others may run on
+documented defaults. Phase 4 (real models) unchanged: Formal settlement
+audit + net-benefit gates + independent authorization.

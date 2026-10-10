@@ -1,10 +1,8 @@
-# DESIGN_REWARD_FUNCTION — deadline_reward_v1 (rev B)
+# DESIGN_REWARD_FUNCTION — deadline_reward_v1 (rev C)
 
-Status: DRAFT v0.3 (rev B) — restructured to the execution layer per the
-operator ruling of 2026-10-10 (feedback-driven DAG dynamic recovery
-scheduling). The R0 formula itself is unchanged from the finalized scheme;
-its instantiation moves from "search reveal" to "task execution episode".
-Zero model calls in phases 1–3.
+Status: DRAFT v0.4 (rev C) — two-stage decision (constraint filter + reward
+argmax) and the C_new/settlement cost separation per the operator directive
+of 2026-10-10; R_task formula unchanged. Zero model calls, phases 1–3.
 
 Buddy docs: `AUDIT_EXISTING_CODE.md` Part II (execution-layer audit, cited as
 II §n), `DESIGN_DYNAMIC_SCHEDULER.md` (state/actions/transition),
@@ -67,27 +65,44 @@ of q̂ inside one episode is impossible by construction — the predictor
 estimates from priors + within-episode observable feedback (e.g., parse
 success after recovery), never from this task's gold.
 
-### 3.2 Online decision score = conditional expectation of the FINAL R0
+### 3.2 Two-stage decision: constraint filter, then expected task reward
 
-At a decision point with legal history H and candidate action a:
+The decision object is the joint action a = (Z, R, π) (scheduler doc §4).
+Stage 1 removes clearly infeasible actions; stage 2 maximizes expected task
+reward over survivors (operator's formulation, adopted verbatim):
 
 ```
-score(a) = Ê[R0 | H, a] = P̂(T≤D | a)·q̂(a) − λ_c·ΔĈ(a)/C₀
-                             − λ_t·Ê[(T−D)₊ | a]/D − λ_f·(1 − P̂(T≤D | a))
-decision rule:  a* = argmax_{a ∈ legal(H)} score(a)
+A_feasible(s_t) = { a ∈ legal(s_t) :  q̂(a|s_t) ≥ Q_min,
+                                     P̂(T_a ≤ D_remain | s_t) ≥ 1−ε,
+                                     ΔC(a) ≤ B_remain }
+a*_t = argmax_{a ∈ A_feasible(s_t)} Ê[R_task | s_t, a]
+
+R_task = 1(T ≤ D)·q − λ_c·C_new/C₀ − λ_t·(T−D)₊/D − λ_f·1(T > D)
 ```
 
-- `q̂(a)` — predicted post-recovery task quality (predictor doc §3): prior
-  success rates by (fault family, action, models) + within-episode observed
-  feedback; never this task's gold.
-- `ΔĈ(a)` — incremental physical token bound of executing a (event
-  enumeration × profiles; predictor doc §4). Note the −λ_c·C/C₀ term in the
-  FINAL R0 charges the whole episode; at decision time the already-spent
-  part is constant across actions, so only ΔC discriminates — the two are
-  consistent by telescoping (spent-so-far is added back identically to every
-  score; assert in test C4).
-- `P̂(T≤D|a)`, `Ê[(T−D)₊|a]` — from the action's completion-time estimate
-  (predictor doc §5) via estimator E1 (§3.3 below).
+**Cost semantics — decision vs settlement, never mixed:**
+- `C_new` in the DECISION-TIME R_task is the incremental cost from this
+  decision onward: re-execution events under R_t plus first executions of
+  unexecuted nodes under π_t (predictor's ΔC(a)). Comparing actions on
+  C_new is exact because already-spent cost is common to all actions
+  (telescoping assert C3); it is also the only part the decision controls.
+- **SETTLEMENT** of a finished episode records the FULL episode cost C_full
+  (all physical tokens incl. failed attempts and recoveries — physical
+  honesty) in REWARDS.jsonl alongside the realized R_task computed with
+  C_full. Both quantities are stored per decision and per episode; no
+  report may use one where the other belongs (test V4).
+
+`Ê[R_task|s_t,a]` expands as in rev B: P̂(T≤D)·q̂ − λ_c·ΔC(a)/C₀ −
+λ_t·Ê[(T−D)₊]/D − λ_f·(1−P̂), with q̂/ΔC/(μ,w_p90) from the predictor and
+P̂/Ê from estimator E1 (§3.3). Thresholds Q_min, ε and B_remain are frozen
+PRIORS constants (OPEN-D11; worked example uses 0.80 / 0.10).
+
+**No-feasible-action rule:** if A_feasible(s_t) = ∅, the policy MUST NOT
+force a seemingly feasible action; it enters the explicit degradation mode
+(scheduler doc §4c), records the violation vector, and the episode settles
+with its REALIZED R_task (computed from realized q, C_full, T as always) —
+degraded episodes are flagged and never silently mixed into feasible-set
+analyses (test F10/V3).
 
 ### 3.3 Estimator E1 (corrected in rev B — see AUDIT corrections §2)
 
@@ -135,25 +150,29 @@ NONE is never "free".
 1. Golden table: R0 exact-match on a scripted (q, C, T, D) grid incl.
    boundary T=D; monotonicity ∂R0/∂T≤0 (T>D), ∂R0/∂q≥0, ∂R0/∂C≤0.
 2. E1 goldens on the corrected closed form (P3), incl. degenerate σ→0.
-3. Telescoping check C4: adding a constant spent-so-far to all actions
-   leaves argmax unchanged, and final R0 − Σ score-components reconcile.
-4. Fault-blindness L1: fault-primed vs fault-free replays (same seeds)
-   produce bitwise-identical decisions; gold-blindness L2: gold injections
-   rejected everywhere in the policy path.
+3. Telescoping check C3: adding a constant spent-so-far to all actions
+   leaves argmax unchanged; settlement reconciles C_full with the sum of
+   realized increments.
+4. Fault-blindness L1 / gold-blindness L2 (carried).
 5. NONE never escapes charging (scripted accept-the-failure episode yields
    R0 < same episode under a successful LOCAL by the q gap — sanity).
-6. `zero_model_calls: true` on every evidence file.
+6. Two-stage filter correctness V2: mean-pass/P90-fail actions are EXCLUDED
+   (the operator's uncertainty trap), quality-floor exclusions exact.
+7. Cost separation V4: decision records carry C_new only; settlement
+   records C_full; no field cross-contamination (assert schema).
+8. Degradation V3/F10: A_feasible=∅ episodes settle with realized R_task +
+   violation vector + degraded flag; no forced feasible-looking action.
+9. `zero_model_calls: true` on every evidence file.
 
 ## 7. Open decisions
 
 - OPEN-D3 (carried): λ_c, λ_t, λ_f, C₀, B, P values + calibration on stub
   replay before any real-data fit.
-- OPEN-D5 (revised by rev B): the reward UNIT is now fixed = one task
-  episode; remaining choice is C₀ granularity (per-task allocation vs
-  mission-wide constant; default per-task allocation).
+- OPEN-D5 (carried): C₀ granularity (default per-task allocation).
 - OPEN-D6 (carried): E1 distribution family (default: corrected normal).
-- OPEN-D8 (new): whether q̂ may condition on WITHIN-episode post-recovery
-  observable feedback (parse success) — default YES (it is legal signal;
-  ablation arm with q̂ feedback-off included).
-- OPEN-D9 (new): tie-breaking rule when scores are equal (default: smallest
-  ΔC, then action order NONE<LOCAL<FULL).
+- OPEN-D8 (carried): q̂ within-episode feedback (default yes; ablation arm).
+- OPEN-D9 (carried): tie-breaking (default: smallest ΔC, then NONE<LOCAL<FULL).
+- OPEN-D10 (new): degradation policy (default BEST_EFFORT_QUALITY with the
+  call-atomicity safety rule; alternatives EARLY_STOP / FORCED_NONE).
+- OPEN-D11 (new): Q_min, ε, B_remain floor values (PRIORS freeze; worked
+  example assumes 0.80 / 0.10).

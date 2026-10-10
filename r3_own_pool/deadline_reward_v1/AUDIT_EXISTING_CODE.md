@@ -214,6 +214,10 @@ the same table for the 4-node DAG.
 | Metered fault injection (corruption after metered call) | evaluator.MeteredExecutor L29-60 |
 | Budget with injectable clock | smoke_runner.Budget L32-81 (`clock=` param) |
 | Stub executor pattern (answers-map + faults + cache) | predictor_v3.V3Executor L124-193 |
+| **Dependency-closure constant table** | static_dag_v0/multidag_dynamic.py:59 `CLOSURE={'e1':['r','v'],'e2':['r','v'],'r':['v'],'v':[]}` |
+| **Selective-update precedent + audit** ("re-executed set == descendant closure on every event") | multidag_dynamic.py:15-32 (pre-registered) |
+| **Budget-gated skip+record precedent** (escalation skipped and RECORDED when B_rem<200) | multidag_dynamic.py:124, 319, 365 |
+| **Frozen adaptation-rule arms (static fallback vs dynamic memory/escalation)** | multidag_dynamic.py:123-124 |
 | Scope/model decomposition ladder | NET_BENEFIT_FREEZE.json arms B/C/D/E |
 | Crash-honest append-only ledger conventions | CampaignQuota, Budget, DISPATCH.jsonl |
 
@@ -232,7 +236,36 @@ anywhere in production):**
 7. Per-switch records inside task execution (stub first).
 8. Task-level terminal reward R0 wiring (scoring exists; reward does not).
 
-## II.11 What rev B must NOT claim (honesty ledger)
+## II.12 Runtime-interface checklist (rev C, per operator instruction §五)
+
+Question: does the codebase already possess the six runtime interfaces the
+joint dynamic scheduler needs? Verdict per interface (grep + source review,
+2026-10-10):
+
+| # | Interface | Status | Evidence |
+|---|---|---|---|
+| 1 | Runtime pause / decision suspension | **MISSING** | no pause/resume/preempt anywhere (grep over static_dag_v0, fault30, collab); execution is straight-line staged scripts. Not needed as OS primitive: a per-call event-driven engine suspends naturally between calls — the phase-2 stub engine's native mode. |
+| 2 | Node-state observation | **PARTIAL** | in-memory `st[uid]` inside eval_config (fault30_run.py:222-229) — never exposed as an interface; simulator emits per-node event records (multidag_dynamic). SchedulerState (phase 2) is the proper interface. |
+| 3 | Post-fault dependency-closure computation | **EXISTS (constant table)** | `CLOSURE` (multidag_dynamic.py:59) + pre-registered selective-update audit. Fixed 4-node DAG ⇒ constants are the honest implementation, not a limitation. |
+| 4 | Remaining-node model reassignment (π_t) | **MISSING as a decision** | substitution RULES exist (fb memory rule; esc→large; static fallback table multidag_dynamic.py:123) but are frozen per event; no joint assignment of unexecuted nodes is optimized anywhere. This is precisely the new capability. |
+| 5 | Recovery execution | **EXISTS** | LOCAL recipe (fault30_run.py:292-422), FULL replay (evaluator.py:118-129, E-arm variant in NET_BENEFIT_FREEZE), simulator fb/esc with closures (multidag_dynamic.py:291-365). |
+| 6 | Real wall-clock timing (per task / per decision) | **MISSING** | per-call latency + unix exist in campaign artifacts (Part I §2.9); per-task E2E absent everywhere; simulator uses service latencies. Phase-2 stub engine obligation (II §6.3). |
+
+Additional precedent found (rev C): budget-gated escalation with skip+record
+(multidag_dynamic.py:319,365 — escalation skipped and RECORDED when
+B_rem<200) is a direct ancestor of the rev C no-feasible-action degradation
+rule. Caveat carried: that experiment's failure detection was IDEAL
+("evaluation answer", multidag_dynamic.py:24) — deployable detection is
+exactly predicates D1–D6 (II §2), which rev C uses instead.
+
+**Conclusion (operator instruction §五):** interfaces 1, 4, 6 are missing
+and 2 is partial ⇒ **phase 2 must build the minimal execution closed loop
+first** (M1–M6 build order in README), not reuse Formal search selectors.
+The joint scheduler (Z_t, R_t, π_t) exists NOWHERE in the codebase —
+frozen-rule simulators (multidag_dynamic) and static-Z recovery
+(fault30/evaluator) are its correct ancestors, not its implementations.
+
+## II.11 What rev B/C must NOT claim (honesty ledger)
 
 - No online recovery interface exists to "plug into" — phase 2 builds a
   stub execution engine INSIDE deadline_reward_v1/ that mirrors eval_config's
