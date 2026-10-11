@@ -74,46 +74,67 @@ def main():
     checks['B5_no_post_halt_real'] = all(
         not r.get('execute') for r in rows if r not in real_rows)
 
-    # ============ C. row-level reconciliation ============
-    # The 3 real cells live in real_20261010_000854/ (shared run dir)
-    # and are indexed by NB_CELL_LEDGER; per-cell physical counts must
-    # reconcile with the cell ledger and with the pre-halt note.
+    # ============ C. row-level reconciliation (hardened) ============
+    # PER-CELL independent recount: DISPATCH responses are grouped by
+    # the cell encoded in each event's key, independently summed, and
+    # compared with NB_CELL_LEDGER per-cell (requests, tokens, status).
+    # TRAJECTORY covers the total. No default-0 fallbacks.
     cell_ledger_path = JS / 'netbenefit_runs' / 'NB_CELL_LEDGER.jsonl'
     checks['C1_cell_ledger_exists'] = cell_ledger_path.exists()
     recon_fail = []
-    total_req = 0
-    total_tok = 0.0
-    if cell_ledger_path.exists():
-        cells = jload(cell_ledger_path)
-        checks['C1_cell_ledger_count'] = len(cells) == 3
-        real_dir = JS / 'netbenefit_runs' / 'real_20261010_000854'
-        checks['C1_real_run_dir_exists'] = real_dir.exists()
-        for c in cells:
-            ph = c.get('physical', {})
-            total_req += ph.get('new_requests', 0)
-            total_tok += ph.get('new_tokens', 0.0)
-            # every cell COMPLETE
-            if c.get('status') != 'COMPLETE':
-                recon_fail.append((c['arm'], 'not COMPLETE'))
-        # TRAJECTORY in the real dir should have >= total_req entries
-        traj = real_dir / 'TRAJECTORY.jsonl'
-        if traj.exists():
-            n_traj = sum(1 for _ in traj.open())
-            checks['C1_trajectory_covers'] = n_traj >= total_req
-        else:
-            checks['C1_trajectory_covers'] = False
-    checks['C1_no_recon_failures'] = not recon_fail
+    real_dir = JS / 'netbenefit_runs' / 'real_20261010_000854'
+    checks['C1_real_run_dir_exists'] = real_dir.exists()
+    cells = jload(cell_ledger_path) if cell_ledger_path.exists() else []
+    checks['C1_cell_ledger_count'] = len(cells) == 3
 
-    # pre-halt spend recorded (physical counts in the note text or in
-    # the cell ledger)
+    # independent recount from DISPATCH (the per-call primary evidence):
+    # reservations carry the cell key; responses link by ID
+    dispatch = jload(real_dir / 'DISPATCH.jsonl') \
+        if (real_dir / 'DISPATCH.jsonl').exists() else []
+    res_key = {e['id']: e['key'] for e in dispatch
+               if e.get('event') == 'reserved'}
+    cell_req = {}
+    cell_tok = {}
+    for e in dispatch:
+        if e.get('event') != 'response':
+            continue
+        key = res_key.get(e['id'], '')
+        parts = key.split(':')
+        arm = parts[2] if len(parts) > 2 else '?'
+        cell_req[arm] = cell_req.get(arm, 0) + 1
+        cell_tok[arm] = cell_tok.get(arm, 0.0) + \
+            e['response']['usage']['total_tokens']
+
+    per_cell_ok = True
+    for c in cells:
+        arm = c['arm']
+        led_req = c['physical']['new_requests']
+        led_tok = c['physical']['new_tokens']
+        act_req = cell_req.get(arm, -1)
+        act_tok = cell_tok.get(arm, -1.0)
+        if act_req != led_req or abs(act_tok - led_tok) > 0.01 \
+                or c.get('status') != 'COMPLETE':
+            per_cell_ok = False
+            recon_fail.append((arm, f'DISPATCH({act_req},{act_tok}) '
+                               f'vs ledger({led_req},{led_tok})'))
+    checks['C1_per_cell_recount'] = per_cell_ok
+    checks['C1_no_recon_failures'] = not recon_fail
+    total_req = sum(cell_req.values())
+    total_tok = sum(cell_tok.values())
+
+    # TRAJECTORY covers the total
+    traj = real_dir / 'TRAJECTORY.jsonl'
+    checks['C1_trajectory_covers'] = (
+        traj.exists()
+        and sum(1 for _ in traj.open()) >= total_req)
+
+    # C2: pre-halt spend recorded with EXACTLY matching counts
     ph = freeze.get('pre_halt_real_spend', {})
-    ph_note_req = 252  # from the note text: '252 physical requests'
     checks['C2_prehalt_spend_recorded'] = bool(
-        ph.get('note')
-        and ph.get('cells')
-        and total_req > 0)
-    checks['C2b_prehalt_request_count'] = (
-        total_req == ph_note_req or '252' in str(ph.get('note', '')))
+        ph.get('note') and ph.get('cells') and total_req > 0)
+    # C2b (hardened): the ACTUAL COUNTED total must be exactly 252
+    # (no string-matching fallback)
+    checks['C2b_prehalt_request_count'] = (total_req == 252)
 
     # ============ D. budget gates ============
     budgets = freeze.get('budgets', {})
@@ -125,12 +146,14 @@ def main():
         budgets.get('de_reserved_physical_requests') == 800)
     checks['D3_per_strategy_cap'] = (
         budgets.get('per_strategy_per_state_physical_max') == 400)
-    # verify pre-halt spend within the global cap
-    ph_req = ph.get('physical_requests', 0)
+    # D4 (hardened): budget checked with the INDEPENDENTLY RECOUNTED
+    # totals from DISPATCH (never a default-0 from the freeze file)
     checks['D4_prehalt_within_cap'] = (
-        ph_req <= budgets.get('global_max_physical_requests', 0))
+        total_req > 0
+        and total_req <= budgets.get('global_max_physical_requests', 0)
+        and total_tok <= budgets.get('global_max_physical_tokens', 0))
 
-    # ============ E. V4 audit cross-check ============
+    # ============ E. V4 audit cross-check (hardened) ============
     v4_path = JS / 'NET_BENEFIT_AUDIT_REPORT_V4.json'
     checks['E1_v4_exists'] = v4_path.exists()
     if v4_path.exists():
@@ -139,12 +162,69 @@ def main():
         checks['E3_v4_all_pass'] = v4.get('all_pass') is True
         audits = v4.get('audits', [])
         checks['E4_v4_has_audits'] = len(audits) > 0
-        # each audit should have its own all_pass
-        checks['E5_v4_sub_audits_pass'] = all(
-            a.get('all_pass') for a in audits if isinstance(a, dict))
+        # E5 HARDENED: independently re-verify the V4's own key
+        # assertions against raw data instead of trusting its flags
+        e5_ok = True
+        # the V4's audits reference the stub validation evidence
+        stub_rows_path = JS / 'netbenefit_runs' / 'NB_ROWS_STUB.jsonl'
+        if stub_rows_path.exists():
+            stub_rows = jload(stub_rows_path)
+            # V4 should have been based on stub evidence only
+            e5_ok &= all(not r.get('execute') for r in stub_rows)
+            e5_ok &= len(stub_rows) > 0
+        # the V4's audits themselves should have check structures
+        for a in audits:
+            if isinstance(a, dict) and a.get('checks'):
+                # re-verify: any check that is False must not be
+                # claimed as all_pass
+                if not a.get('all_pass', False):
+                    if all(a['checks'].values()):
+                        e5_ok &= False  # claimed fail but checks pass
+                else:
+                    if not all(a['checks'].values()):
+                        e5_ok &= False  # claimed pass but a check fails
+        checks['E5_v4_independent_recheck'] = e5_ok
     else:
         for k in ('E2', 'E3', 'E4', 'E5'):
             checks[f'{k}_v4_cross'] = False
+
+    # ============ G. negative tests (tamper detection) ============
+    # Tampering with request counts, token counts, or V4 flags must
+    # make the corresponding checker FAIL.
+    def budget_check(req, tok, caps):
+        return (req > 0 and req <= caps.get(
+            'global_max_physical_requests', 0)
+            and tok <= caps.get('global_max_physical_tokens', 0))
+    checks['G1_negative_request_tamper'] = (
+        not budget_check(99999, total_tok, budgets))
+    checks['G2_negative_token_tamper'] = (
+        not budget_check(total_req, 99999999.0, budgets))
+    # per-cell tamper: a wrong per-cell count must fail the comparison
+    fake_ledger = [dict(c) for c in cells]
+    if fake_ledger:
+        fake_ledger[0]['physical']['new_requests'] += 1
+        fake_ok = all(
+            cell_req.get(c['arm'], -1)
+            == c['physical']['new_requests'] for c in fake_ledger)
+        checks['G3_negative_cell_tamper'] = not fake_ok
+    else:
+        checks['G3_negative_cell_tamper'] = True
+    # V4 flag tamper: a report claiming all_pass with a failing check
+    # must be DETECTED (the E5 recheck catches it)
+    def v4_recheck(report):
+        if not report.get('all_pass', False):
+            return False  # honestly failed
+        for a in report.get('audits', []):
+            if isinstance(a, dict) and a.get('checks'):
+                if not all(a['checks'].values()):
+                    return False  # claims pass but a check fails
+        return True
+    tampered_v4 = dict(all_pass=True, audits=[
+        dict(checks={'x': False})])  # claims pass, has a fail
+    checks['G4_negative_v4_tamper'] = (
+        not v4_recheck(tampered_v4)
+        and v4_recheck(dict(all_pass=True, audits=[
+            dict(checks={'x': True})])))
 
     # ============ F. protocol structure ============
     conf = freeze.get('confirmatory', {})

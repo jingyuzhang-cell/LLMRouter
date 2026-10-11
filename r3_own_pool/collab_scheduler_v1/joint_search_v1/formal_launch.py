@@ -272,6 +272,9 @@ def run_campaign(launch, admission_path, only=None):
                 k in report.get('reason', '') for k in INFRA_FAILURE):
             retry_n += 1
             retry_dir = JS / f"{launch.get('campaign_root', 'formal_campaign')}_retry{retry_n}"
+            while retry_dir.exists():  # skip roots used by earlier driver processes
+                retry_n += 1
+                retry_dir = JS / f"{launch.get('campaign_root', 'formal_campaign')}_retry{retry_n}"
             print(json.dumps(dict(retrying=sid, in_dir=str(retry_dir))), flush=True)
             report = run_cell(sid, retry_dir)
             results.append(report)

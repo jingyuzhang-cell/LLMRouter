@@ -9,15 +9,21 @@ retry1..retry7).
 
 ## Verdict (hardened re-audit)
 
-**23/23 checks PASS — STRICT EQUALITY throughout.** The announced
-settlement figures reproduce EXACTLY from the raw ledgers (no
-tolerances): envelope 4,871 requests / 1,743,814 tokens; COMPLETE-only
-4,542 / 1,620,410; grand-with-prior 5,170 / 1,792,521; exactly the 8
-expected campaign roots; 28 settled sessions; 18 unique COMPLETE
-method×seed sessions. Crash sessions now have a DEDICATED
-reconciliation branch with explicit evidence gaps. F1 attribution is
-per-sid log-evidenced. One finding (F1) remains documented — it does
-not affect any settled number, cap, or completeness result.
+**23/23 checks PASS — STRICT EQUALITY on all RECORDED amounts.** The
+announced settlement figures reproduce EXACTLY from the raw ledgers
+(no tolerances): envelope 4,871 requests / 1,743,814 tokens;
+COMPLETE-only 4,542 / 1,620,410; grand-with-prior 5,170 / 1,792,521;
+exactly the 8 expected campaign roots; 28 settled sessions; 18 unique
+COMPLETE method×seed sessions. Crash sessions have a DEDICATED
+reconciliation branch. F1 is per-sid log-evidenced.
+
+**Carried reservations on the Formal gate (from the conditional PASS):
+(1) random_20261010 has 1 unmatched crashed reservation of 8,192
+reserved tokens NOT included in the 63,914 charge — the 1,743,814
+total is the recorded amount, not proof of full crash-reservation
+liability; (2) STATUS/wall evidence for both crash sessions is absent.
+These reservations do not affect any settled number, cap, or
+completeness result.
 
 ## What was verified (all from raw artifacts, no announcements trusted)
 
@@ -34,11 +40,16 @@ reservation count == DISPATCH response count == STATUS new_requests;
 **B-crash. DEDICATED crash reconciliation for the two no-STATUS
 sessions (never a silent pass):**
 - `random_20261010` (168 requests / 63,914 tokens per journal):
-  DISPATCH survives on disk — **reserves 168 == charge 168, tokens
-  63,914 == charge 63,914 EXACTLY**. Evidence gap (explicit): STATUS
-  absent ⇒ wall time and settle status unverifiable from per-session
-  primary evidence; the journal's settled charge is the surviving
-  authority.
+  DISPATCH survives on disk — **168 RESERVES vs 167 RESPONSES (1
+  unmatched reservation, 8,192 reserved tokens)**; the journal charge
+  equals the ACTUAL-RESPONSE tokens (63,914) exactly, which is the
+  surviving authority for what was delivered. Evidence gaps
+  (explicit, carried as reservations on the Formal gate):
+  (a) the 8,192-token crashed reservation is NOT in the 63,914 charge
+  — the campaign's 1,743,814 total is the RECORDED amount, not proof
+  that all crash-reservation liability is settled;
+  (b) STATUS absent ⇒ wall time and settle status unverifiable from
+  per-session primary evidence.
 - `random_20261009`: neither STATUS nor DISPATCH survives; journal
   charge is exactly 0/0 — consistent (crash pre-Budget); gap noted:
   nothing beyond charge==0 is independently verifiable.

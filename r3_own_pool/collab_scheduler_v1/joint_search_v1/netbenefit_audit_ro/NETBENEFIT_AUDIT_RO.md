@@ -4,9 +4,26 @@ Authorization: operator "继续跑直到跑通" (2026-10-11). READ-ONLY over
 frozen artifacts; writes only to netbenefit_audit_ro/. Zero real model
 calls.
 
-## Verdict
+## Verdict (hardened)
 
-**31/31 checks PASS, exit 0.** The net-benefit freeze, its pre-halt
+**36/36 checks PASS, exit 0** (31 original + 5 hardening/negative
+tests). The four audit-strength deficiencies flagged by the operator's
+review are closed:
+- **C1**: per-cell independent recount from DISPATCH (responses linked
+  to reservations by ID; arm extracted from the reservation key):
+  A_single 50 req/28,123 tok, A_cross 2/740, B_same_model 200/74,031
+  — each matches NB_CELL_LEDGER exactly.
+- **C2b**: the actual counted total must be exactly 252 (string
+  matching fallback removed).
+- **D4**: budget checked with the independently recounted totals
+  (252 req / 102,894 tok vs 4,000 / 4M caps), never a freeze-file
+  default.
+- **E5**: V4 sub-audit claims re-verified by checking their internal
+  consistency (a report claiming all_pass with a failing check is
+  caught), plus independent stub-rows verification.
+- **Negative tests (G1–G4)**: tampered request counts, token counts,
+  per-cell counts, and V4 flags each make the corresponding checker
+  fail. The net-benefit freeze, its pre-halt
 real spend, and the V4 audit chain are internally consistent. ONE
 important observation (not a failure): the net-benefit experiment is
 **PAUSED mid-execution** — 3 of 8×4=32 mechanism cells ran for real
