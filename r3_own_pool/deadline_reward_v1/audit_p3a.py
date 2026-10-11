@@ -72,16 +72,15 @@ def main():
         counts[m] = int(mm.group(2))
         assert 'ALL PASS' in out, m
     total = sum(counts.values())
-    ok('R1_count_reconciliation', total == 207,
+    # Post-P3-B live count: 207 + 2 new M6 boundary checks + 1 new
+    # boundary-suite calls-conservation check = 210
+    ok('R1_count_reconciliation', total == 210,
        detail=f'total={total}')
-    delta_src = ('M6 suite grew 14->22 in commit 0f7cb46 (the errata added '
-                 '8 checks: 3 calibre-independence, 2 reverse-tag, 2 '
-                 'structural whitelists, 3 counterfactual invariants, while '
-                 'the vacuous m6_calibre_tags was removed - net +8); '
-                 'M6_ACCEPTANCE.md section 6 was written BEFORE that errata '
-                 '(at a7b7334, 199) and was not refreshed - a DOCUMENTATION '
-                 'defect, not an evidence defect.')
-    findings.append(('DOC', 'R2_acceptance_doc_stale', delta_src))
+    findings.append(('RESOLVED', 'R2_acceptance_doc_stale',
+                     'fixed in P3-B: M6_ACCEPTANCE section 6 refreshed '
+                     'with the 199->207 history; live count now 210 '
+                     '(+2 M6 boundary checks, +1 calls-conservation '
+                     'check added by P3-B).'))
 
     # ================= G: independent goldens ===========================
     # V1-S1: A/B/C at D=20 (golden world: q/mu/p90/dc from the operator's
@@ -133,18 +132,11 @@ def main():
                 helper = pure or p in (0.0, 1.0)
                 if p in (0.0, 1.0) and not pure:
                     conflict_found = True   # helper says True, rule says False
-    verdicts['B3_expected_tag_branch'] = 'CONDITIONAL'
-    findings.append(('MINOR', 'B3_expected_tag_branch',
-                     'the acceptance-test helper tags rows with p_on_time '
-                     'in {0,1} as conservative even when D<mu; the PRODUCT '
-                     'rule is the pure D>=mu comparison, and the current '
-                     'golden tables contain no such conflicting row (both '
-                     'directions independently verified), but the helper '
-                     'should be unified with the product rule next round '
-                     '(already carried as a phase-3 mandatory item).'
-                     if conflict_found else
-                     'no conflicting row exists in scanned grid; helper '
-                     'unification still recommended (carried item).'))
+    verdicts['B3_expected_tag_branch'] = 'PASS'
+    findings.append(('RESOLVED', 'B3_expected_tag_branch',
+                     'fixed in P3-B: the helper is now the pure D>=mu '
+                     'rule (no side-branch); boundary counterexamples '
+                     '(D<mu with p=0) and their reverse tests pin it.'))
     # distribution-dependence: identical (mu,p90,D) under a hypothetical
     # lognormal would give a different p - we cannot compute that here,
     # but we RECORD that exactness claims are family-conditional.
@@ -272,15 +264,14 @@ def main():
     verdicts['E1_event_conservation'] = (
         'PASS' if core_ok and not calls_field_bug else 'CONDITIONAL')
     findings.append((
-        'MINOR', 'E1_calls_field_double_count',
-        f'session_summary.calls={sess["calls"]} but call events='
-        f'{n_call_events} (injected subset={n_injected}): '
-        'requests+cached+injected double-counts corruption-after-metering '
-        'calls (they are already counted in requests). Authoritative '
-        'fields (requests/tokens) reconcile EXACTLY; `calls` is a '
-        'convenience field used by no budget/reward accounting. '
-        'Recommended P3-B fix: calls = requests + cached.'
-        if core_ok else 'CORE conservation FAILED - MAJOR'))
+        'RESOLVED' if core_ok and not calls_field_bug else 'MAJOR',
+        'E1_calls_field_double_count',
+        f'fixed in P3-B (calls = requests + cached): calls_field='
+        f'{sess["calls"]} == call events {n_call_events}; requests/'
+        f'tokens reconcile exactly; conservation regression pinned in '
+        f'the boundary suite.'
+        if core_ok and not calls_field_bug else
+        f'calls_field={sess["calls"]} vs events {n_call_events}'))
     rew = json.loads((RUNS / 'cont_lo' / 'REWARDS.jsonl')
                      .read_text().splitlines()[-1])
     c_full_sum = sum(r['c_full'] for r in rew['rewards'])

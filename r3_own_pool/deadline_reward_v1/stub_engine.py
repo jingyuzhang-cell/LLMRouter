@@ -392,8 +392,10 @@ class StubEngine:
         # this summary only REFERENCES their indices — never re-sums them.
         self._append(dict(
             event='session_summary', tasks=n_tasks,
-            calls=self.requests_total + self.cached_calls
-            + self.injected_calls,
+            # P3-B fix 1: corruption-after-metering calls are already
+            # inside requests_total (the underlying call is real and
+            # charged) — adding injected_calls would double-count them.
+            calls=self.requests_total + self.cached_calls,
             requests=self.requests_total,
             tokens_total=self.tokens_total,
             cached_calls=self.cached_calls,

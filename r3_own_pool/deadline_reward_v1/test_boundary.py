@@ -340,6 +340,23 @@ def main():
     checks['t4_legal_profiles_accepted'] = legal_ok
     det['t4'] = 'see t4_illegal'
 
+    # P3-B fix 1 regression: session_summary.calls == number of call
+    # EVENTS (injected/corrupted calls are already inside requests)
+    evb = r1['events']
+    sess_b = next(e for e in evb if e['event'] == 'session_summary')
+    n_events_b = sum(1 for e in evb if e['event'] == 'call')
+    n_inj_b = sum(1 for e in evb if e['event'] == 'call' and e.get('injected'))
+    n_cached_b = sum(1 for e in evb if e['event'] == 'call'
+                     and e.get('cached'))
+    checks['p3b_calls_field_conservation'] = (
+        sess_b['calls'] == n_events_b
+        and n_events_b == sess_b['requests'] + n_cached_b
+        and n_inj_b <= sess_b['requests'])
+    det['p3b_calls'] = dict(calls_field=sess_b['calls'],
+                            call_events=n_events_b, injected=n_inj_b,
+                            cached=n_cached_b,
+                            requests=sess_b['requests'])
+
     all_pass = all(checks.values())
     evidence = dict(audit='boundary', checks=checks, all_pass=all_pass,
                     zero_model_calls=True, detail=det)

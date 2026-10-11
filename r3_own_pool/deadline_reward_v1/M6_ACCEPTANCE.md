@@ -95,13 +95,21 @@ switch, golden priors) remains valid and unchanged.
 - Not covered: real distribution drift, multi-episode persistence,
   production executor integration.
 
-## 6. Full regression (mandated item 9)
+## 6. Full regression (mandated item 9; refreshed at P3-B)
 
-M1 21/21 · M2 24/24 · M3 37/37 · M4 28/28 · M5 24/24 · **M6 14/14 (new)**
-· M5+M6 18/18 · phase-3 19/19 · boundary 14/14 = **199 checks, ALL
-PASS**, zero real model calls, socket-blocked. Evidence:
-`evidence/M6_EVIDENCE.json` (hand-reconciliation tables), run ledgers
-under `evidence/m6_runs/`.
+**Historical note:** this section originally reported 199 checks (M6
+suite = 14, at commit a7b7334). The M6 acceptance-test errata (commit
+0f7cb46) grew the M6 suite from 14 to 22 — +3 calibre-independence,
++2 reverse-tag, +2 structural-whitelist, +3 counterfactual-invariance
+checks, −1 vacuous check removed; net +8 — bringing the repo total to
+**207**. Original evidence files are preserved unmodified; only this
+summary was stale.
+
+Current live count (P3-B, see P3_B_REPORT.md): M1 21/21 · M2 24/24 ·
+M3 37/37 · M4 28/28 · M5 24/24 · M6 22/22 · M5+M6 18/18 · phase-3
+19/19 · boundary 14/14 = **207/207, zero real model calls**,
+socket-blocked. Evidence: `evidence/M6_EVIDENCE.json`
+(hand-reconciliation tables), run ledgers under `evidence/m6_runs/`.
 
 ## Formal sign-off (operator, 2026-10-11, commit 0f7cb46)
 

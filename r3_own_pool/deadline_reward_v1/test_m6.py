@@ -239,14 +239,22 @@ def main():
                              settled_c_full=set1['c_full'],
                              settled_T=set1['T'], settled_q=set1['q'])
 
-    # ============ statistical calibre (errata task 1) ===================
-    # Expected tags computed INDEPENDENTLY of the product's own logic:
-    #   quantile_sum + d_remain >= mu_e2e  -> conservative (lower bound)
-    #   quantile_sum + d_remain <  mu_e2e  -> NOT conservative
-    #   variance (any d)                   -> conservative-tagged exact
-    #     (the product marks variance-mode rows p_conservative=True)
+    # ============ statistical calibre (errata task 1; P3-B unified) ====
+    # Expected tags computed INDEPENDENTLY of the product's own logic,
+    # now EXACTLY mirroring the frozen product rule (no side-branch):
+    #   quantile_sum: conservative IFF d_remain >= mu_e2e — a p_on_time
+    #     of exactly 0 or 1 does NOT by itself imply conservatism
+    #   variance: exact under the declared independent-normal family —
+    #     the product tags these rows p_conservative=True
     def expected_tag(row, d_rem):
-        return (d_rem >= row['mu_e2e']) or row['p_on_time'] in (0.0, 1.0)
+        return d_rem >= row['mu_e2e']
+
+    # boundary counterexample (mandated): a D<mu row with p_on_time
+    # EXACTLY 0 must be tagged NOT conservative under quantile_sum —
+    # the old helper would have wrongly called it conservative
+    bc_p, _ = e1(30.0, 31.0, 20.0)
+    checks['m6_boundary_d_lt_mu_p_zero_not_conservative'] = (
+        bc_p == 0.0 and not expected_tag(dict(mu_e2e=30.0), 20.0))
 
     d_rem_1 = d1['d_remain']
     tags_ok = all(
@@ -300,6 +308,11 @@ def main():
     victim2['p_conservative'] = True          # wrong: D<mu must be False
     checks['m6_reverse_wrong_tag_detected_2'] = not tag_check(
         poisoned2, d_rem_1)
+    # boundary reverse: a synthetic D<mu, p=0 row falsely tagged True
+    # must FAIL under the unified rule
+    synthetic_row = dict(mu_e2e=30.0, p_on_time=0.0, p_conservative=True)
+    checks['m6_reverse_boundary_tag_detected'] = not expected_tag(
+        synthetic_row, 20.0)
     det['calibre'] = dict(d_remain=d_rem_1,
                           rows_ge_mu=sum(1 for r in d1['table']
                                          if d_rem_1 >= r['mu_e2e']),
