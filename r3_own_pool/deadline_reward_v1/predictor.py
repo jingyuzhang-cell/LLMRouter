@@ -197,24 +197,38 @@ def e1_on_time(mu: float, p90: float, deadline: float, *,
     omitted — the stub/golden profiles are declared normal);
     'lognormal' uses the Fenton–Wilkinson path approximation over
     `log_params` (per-node (mu_log, sigma_log)) plus the deterministic
-    `shift`; 'empirical' returns the one-sided Cantelli LOWER bound on
-    P(T<=deadline) with the distribution-free sigma lower bound
-    (p90 - mu <= 3*sigma for any distribution), i.e. a conservative
-    on-time probability that assumes NO parametric shape. The mean fed
-    in must be the family-true mean (lognormal mean exp(mu+sig^2/2) or
-    the empirical sample mean) — never p50-by-default."""
+    `shift` — a parametric APPROXIMATION, labeled as such.
+
+    'empirical' (REVISED after the operator's 2026-10-11 counterexample
+    — the previous Cantelli-at-sigma-LB form was INVALID): Cantelli's
+    upper bound on lateness is INCREASING in sigma, so substituting a
+    sigma LOWER bound yields an over-optimistic number, not a lower
+    bound (two-point law {0: .5, 100: .5}: true P(T<=90)=.5, the old
+    formula returned .852). Only distribution-free statements valid for
+    ANY law are used now:
+      * quantile: d >= p90  =>  P(T <= d) >= P(T <= p90) >= 0.90
+        (p90 is the quantile_sum path upper bound under the frozen
+        independence caveat, so this inherits that caveat);
+      * Markov (T >= 0):    P(T > d) <= mu / d   =>  P(T <= d) >= 1-mu/d;
+      the reported p_on is the MAX of the applicable valid bounds, and
+      0 when neither applies (d <= mu).
+    e_late for the empirical family is the valid UPPER bound
+    E[(T-d)+] <= E[T] = mu (T >= 0) — loose, but never an underestimate;
+    mu-d would only be a lower bound and is never reported as an
+    estimate. The mean fed in must be the family-true mean (lognormal
+    mean exp(mu+sig^2/2) or the empirical sample mean) — never
+    p50-by-default."""
     if family == 'lognormal' and log_params:
         return _lognormal_path(log_params, shift, deadline)
     if family == 'empirical':
         d_eff = deadline - shift
-        if d_eff <= mu:
-            return 0.0, max(0.0, mu + shift - deadline)
-        sigma_lb = max(0.0, (p90 - mu) / 3.0)
-        var = sigma_lb * sigma_lb
-        p_late_ub = var / (var + (d_eff - mu) * (d_eff - mu))
-        # e_late: no distribution-free tight bound; report the mean-excess
-        # estimate (flagged by the caller's row as estimator='empirical')
-        return (1.0 - p_late_ub, max(0.0, mu + shift - deadline))
+        bounds = []
+        if d_eff >= p90:
+            bounds.append(0.90)               # quantile definition
+        if d_eff > 0:
+            bounds.append(max(0.0, 1.0 - mu / d_eff))   # Markov, T >= 0
+        p_on = max(bounds) if bounds else 0.0
+        return p_on, mu            # valid upper bound: E[(T-d)+] <= mu
     sigma = (p90 - mu) / 1.2816
     if sigma <= 0:
         on_time = 1.0 if mu <= deadline else 0.0

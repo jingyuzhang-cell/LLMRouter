@@ -228,28 +228,44 @@ def test_v_execution_counts():
         assert not plan_v, 'plan batch must never execute PENDING v'
         out[arm] = dict(v_calls=len(v_calls), logical=metering[
             'logical_calls'])
-    # FULL plan batch: craft a scenario whose chosen plan is FULL — v is
-    # PENDING at decision time, so FULL's replay of v ALSO goes to the V
-    # stage exactly once (apply_decision rule)
+    # FULL plan batch — DETERMINISTIC static-FULL selection (operator
+    # blocking issue 2, 2026-10-11): q_observed_done=0.5 distrusts the
+    # DONE e-nodes so every LOCAL-scope candidate is q-infeasible; menu
+    # quality is tuned so the best FULL_DYNAMIC variant IS exactly the
+    # static-FULL assignment (e1|large, e2|large, r|large, v|coder),
+    # and the ARMS tie-break then deterministically picks arm='FULL'.
     priors = json.loads(json.dumps(PRIV_STUB))
-    for k, v in priors['node_profiles'].items():
-        v['q_success'] = 0.95 if k.split('|')[0] in ('r', 'v') else 0.99
-    # make FULL replays attractive: cheap e nodes, equal quality
-    priors['node_profiles']['e1|large'].update(tokens_p90=10)
-    priors['node_profiles']['e2|large'].update(tokens_p90=10)
+    pol = dict(priors['policy'])
+    pol['q_observed_done'] = 0.5
+    priors['policy'] = pol
+    q = priors['node_profiles']
+    for k in q:
+        node = k.split('|')[0]
+        good = ((node in ('e1', 'e2') and k.endswith('|large'))
+                or (node == 'r' and k == 'r|large')
+                or (node == 'v' and k == 'v|coder'))
+        q[k]['q_success'] = {True: 0.95, False: 0.6}[good]
     engine, state, rows, metering = _episode('DD', TMP / 'g4_full',
                                              priors=priors)
     chosen = rows[0]['decision']['chosen']
+    assert chosen is not None and chosen['arm'] == 'FULL', (
+        f'deterministic FULL not selected: {chosen}')
     events = [json.loads(l) for l in
               (TMP / 'g4_full' / 'TASK_LEDGER.jsonl').read_text()
               .splitlines()]
     v_calls = [e for e in events if e['event'] == 'call' and e['node'] == 'v']
-    if chosen and chosen['arm'].startswith('FULL'):
-        assert len(v_calls) == 1, 'FULL plan: v still exactly once'
-        out['FULL'] = dict(chosen=chosen['arm'], v_calls=1)
-    else:
-        out['FULL'] = dict(chosen=None, note='policy picked non-FULL; '
-                                          'v-once still asserted')
+    assert len(v_calls) == 1, 'FULL plan: v exactly once (V stage)'
+    jobs = rows[0]['retry_jobs']
+    replayed = {j['node']: j for j in jobs}
+    assert set(replayed) == {'e1', 'e2', 'r'}, (
+        f'FULL replay must cover e1/e2/r, got {set(replayed)}')
+    assert all(replayed[n]['no_cache'] for n in replayed), (
+        'FULL replay nodes are never cache-substituted')
+    assert 'v' not in replayed, 'PENDING v never executed in the plan batch'
+    out['FULL'] = dict(chosen=chosen['arm'], pi=chosen['pi'],
+                       v_calls=len(v_calls),
+                       replay_nodes=sorted(replayed),
+                       all_no_cache=True)
     return out
 
 
@@ -303,15 +319,27 @@ def test_family_estimators():
     assert abs(got_p - want_p) < 1e-12
     out['fenton_wilkinson'] = dict(p=round(got_p, 6),
                                    direct=round(want_p, 6))
-    # empirical: Cantelli lower bound, never the normal CDF
-    mu, p90 = 20.0, 26.0
-    sig_lb = (p90 - mu) / 3
-    want = 1 - sig_lb ** 2 / (sig_lb ** 2 + (d - mu) ** 2)
-    got, _ = e1_on_time(mu, p90, d, family='empirical')
-    assert abs(got - want) < 1e-12
-    normal_got, _ = e1_on_time(mu, p90, d)         # default normal
-    assert abs(got - normal_got) > 1e-6, 'empirical != unconditional normal'
-    out['cantelli'] = dict(bound=round(got, 6), normal=round(normal_got, 6))
+    # empirical: ONLY valid distribution-free bounds — quantile (d>=p90
+    # -> p_on >= 0.90) and Markov (T>=0 -> p_on >= 1-mu/d). The operator's
+    # counterexample (two-point law {0: .5, 100: .5}, mu=50, p90=100,
+    # d=90; true P(T<=90)=0.5) MUST yield a bound <= 0.5 — the previous
+    # Cantelli-at-sigma-LB form returned .852 (invalid) and is now gone.
+    mu, p90, d = 50.0, 100.0, 90.0
+    got, e_late = e1_on_time(mu, p90, d, family='empirical')
+    assert abs(got - (1 - 50.0 / 90.0)) < 1e-12    # Markov: 0.4444 <= 0.5
+    assert 0.0 < got <= 0.5, 'bound must not exceed the true probability'
+    assert abs(e_late - mu) < 1e-12, 'e_late upper bound is mu (T>=0)'
+    got_q, _ = e1_on_time(mu, p90, 110.0, family='empirical')
+    assert got_q == 0.90                            # quantile route, d>=p90
+    got_m, _ = e1_on_time(2.0, 5.0, 100.0, family='empirical')
+    assert abs(got_m - 0.98) < 1e-12                # Markov beats quantile
+    got_0, _ = e1_on_time(mu, p90, 40.0, family='empirical')
+    assert got_0 == 0.0                             # d < mu: no bound
+    out['empirical_bounds'] = dict(
+        counterexample=dict(true_on_time=0.5, bound=round(got, 4),
+                            old_invalid_form=0.852),
+        quantile_route=got_q, markov_beats_quantile=round(got_m, 4),
+        d_below_mu=got_0, e_late_upper_bound=mu)
     # predictor composition: all-lognormal path -> lognormal family;
     # any empirical node -> empirical
     priors = dict(

@@ -7,6 +7,10 @@ Repair commits (jingyuzhang-cell/LLMRouter, `main`):
 - `380103f` — preflight re-bound at the repair commit (freeze manifest
   over the final code state), `PREFLIGHT_PASS`
 - evidence-regeneration commit (timestamps only) on top
+- **blocking-review round 2** (operator review of the above): the
+  empirical-estimator Cantelli direction error and the non-covering FULL
+  test — both fixed, see the addendum at the bottom; preflight re-bound
+  at the fix commit.
 
 Real measurement remains HOLD. No `SUPPLEMENTARY_EXECUTE=1`, no
 background real calls, no GPU inference were performed for this round.
@@ -104,3 +108,39 @@ VERIFICATION_GUIDE.md §3 (expected total 150–250 physical requests).
 
 **Status: repairs complete; paused. Real measurement HOLD until the
 operator's explicit GO.**
+
+## Addendum — blocking-review round 2 (two fixes)
+
+**1. Empirical estimator: Cantelli direction error (INVALID form removed).**
+The previous empirical branch computed Cantelli's lateness bound at a
+sigma LOWER bound — but the bound is INCREASING in sigma, so the result
+was an over-optimistic number, not a valid lower bound on P(T<=d). The
+operator's counterexample (two-point law {0 w.p. .5, 100 w.p. .5}: mu=50,
+p90=100, d=90; true on-time 0.5) produced 0.852 — a plan with 50%
+on-time could pass a 90% gate. The revised branch uses ONLY
+distribution-free statements valid for any law:
+- quantile: d >= p90_sum ⇒ P(T<=d) >= 0.90 (inherits the frozen
+  independence caveat of quantile_sum);
+- Markov (T >= 0): P(T>d) <= mu/d ⇒ P(T<=d) >= 1 − mu/d;
+- reported p_on = max of applicable bounds; 0.0 when d <= mu.
+The counterexample now yields 0.4444 ≤ 0.5 (valid). e_late for the
+empirical family is the valid UPPER bound E[(T−d)+] ≤ mu (T >= 0) —
+mu−d is only a lower bound and is never reported as an estimate. The
+counterexample is pinned in test group g6; the empirical estimator is
+now marked bound-valid, not "statistically accepted" — the normal and
+lognormal branches remain labeled parametric estimates/approximations.
+
+**2. FULL test now DETERMINISTICALLY covers the FULL execution branch.**
+The previous g4 "FULL" case silently fell back to a note when the policy
+picked non-FULL (no coverage). Rebuilt with q_observed_done=0.5 (DONE
+e-nodes distrusted ⇒ every LOCAL-scope candidate q-infeasible) and menu
+quality tuned so the best FULL_DYNAMIC variant is exactly the static-FULL
+assignment — the ARMS tie-break then deterministically selects
+arm='FULL'. The test now asserts the execution trace: chosen = FULL with
+pi {e1: large, e2: large, r: large, v: coder}; v executed exactly once
+(V stage); the plan batch replays e1/e2/r with no_cache=True on every
+replay node; PENDING v never enters the plan batch. Evidence in
+ADMISSION_REPAIRS.json g4_v_counts.FULL.
+
+Regression after both fixes: full M-suite + runner smoke + admission
+checks green; g1–g8 all pass. Zero real model calls.
