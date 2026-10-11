@@ -286,19 +286,37 @@ class RealServer:
         idx = self.budget.reserve(f'{node}|{model}|{uid}')
         mod = self.manager._mod()
         resp, err = None, None
-        for _attempt in (1, 2):        # protocol: retry once, then fail
+
+        def _log(attempt_no, why):
+            with (self.ledger_dir / 'ERRORS.jsonl').open('a') as fh:
+                fh.write(json.dumps(dict(id=idx, attempt=attempt_no,
+                                         node=node, model=model, uid=uid,
+                                         error=str(why))) + '\n')
+
+        # protocol: retry once, then fail. call_model signals failures as
+        # RETURNED status='infrastructure_failure'/empty-usage dicts (not
+        # exceptions) — both paths retry, the Budget reservation settles
+        # only on the delivered response.
+        for _attempt in (1, 2):
             t0 = time.monotonic()
             try:
-                resp = mod.call_model(model, prompt)
-                resp['latency_s'] = time.monotonic() - t0
-                break
+                got = mod.call_model(model, prompt)
             except BaseException as exc:
                 err = exc
-                with (self.ledger_dir / 'ERRORS.jsonl').open('a') as fh:
-                    fh.write(json.dumps(dict(id=idx, attempt=_attempt,
-                                             error=repr(exc))) + '\n')
+                _log(_attempt, repr(exc))
+                continue
+            if got.get('status') == 'delivered' and got.get('usage'):
+                resp = dict(got)
+                resp['latency_s'] = time.monotonic() - t0
+                break
+            err = RuntimeError(
+                f"status={got.get('status')} "
+                f"finish={got.get('finish_reason')}")
+            _log(_attempt, str(err))
         if resp is None:
-            raise RuntimeError(f'model dispatch failed twice: {err!r}')
+            raise RuntimeError(
+                f'model dispatch failed twice ({node}|{model}|{uid}): '
+                f'{err!r}')
         self.budget.settle(idx, resp)
         answer = resp.get('answer')
         if not isinstance(answer, str) or not answer:
