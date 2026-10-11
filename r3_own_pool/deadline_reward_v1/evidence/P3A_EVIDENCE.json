@@ -1,0 +1,103 @@
+{
+ "verdicts": {
+  "R1_count_reconciliation": "PASS",
+  "G1_v1s1_hand": "PASS",
+  "G2_v1s2_hand": "PASS",
+  "G3_v8_hand": "PASS",
+  "G4_v9_arithmetic": "PASS",
+  "G5_v10_bound_math": "PASS",
+  "B1_point_mass": "PASS",
+  "B2_D_equals_mu": "PASS",
+  "B3_expected_tag_branch": "CONDITIONAL",
+  "B4_family_conditionality": "CONDITIONAL",
+  "C1_contention_moves_moments": "PASS",
+  "C2_contention_moves_probability": "PASS",
+  "C3_contention_moves_action": "PASS",
+  "C4_direction_monotone": "PASS",
+  "T1_time_calibre": "CONDITIONAL",
+  "E1_event_conservation": "CONDITIONAL",
+  "E2_settlement_conservation": "PASS",
+  "X1_counterfactuals": "PASS",
+  "X2_static_and_closure_suites": "PASS"
+ },
+ "findings": [
+  [
+   "DOC",
+   "R2_acceptance_doc_stale",
+   "M6 suite grew 14->22 in commit 0f7cb46 (the errata added 8 checks: 3 calibre-independence, 2 reverse-tag, 2 structural whitelists, 3 counterfactual invariants, while the vacuous m6_calibre_tags was removed - net +8); M6_ACCEPTANCE.md section 6 was written BEFORE that errata (at a7b7334, 199) and was not refreshed - a DOCUMENTATION defect, not an evidence defect."
+  ],
+  [
+   "MINOR",
+   "B3_expected_tag_branch",
+   "the acceptance-test helper tags rows with p_on_time in {0,1} as conservative even when D<mu; the PRODUCT rule is the pure D>=mu comparison, and the current golden tables contain no such conflicting row (both directions independently verified), but the helper should be unified with the product rule next round (already carried as a phase-3 mandatory item)."
+  ],
+  [
+   "NOTE",
+   "B4_family_conditionality",
+   "exactness of E1 holds only under the declared normal family; synthetic validation is NOT real-model calibration (per the frozen claim discipline)."
+  ],
+  [
+   "NOTE",
+   "T1_time_calibre",
+   "E2E(release->termination)=13.60s = service 1.00 + switch 12.00 + queue/other 0.60; three quantities are recorded separately and reconcile; critical-path and contention are PREDICTION-side calibres only (never mixed into the ledger E2E)."
+  ],
+  [
+   "MINOR",
+   "E1_calls_field_double_count",
+   "session_summary.calls=10 but call events=9 (injected subset=1): requests+cached+injected double-counts corruption-after-metering calls (they are already counted in requests). Authoritative fields (requests/tokens) reconcile EXACTLY; `calls` is a convenience field used by no budget/reward accounting. Recommended P3-B fix: calls = requests + cached."
+  ]
+ ],
+ "counts": {
+  "test_stub_engine": 21,
+  "test_scheduler_state": 24,
+  "test_dag_closure": 37,
+  "test_recovery": 28,
+  "test_m5": 24,
+  "test_m6": 22,
+  "test_policy": 18,
+  "test_phase3": 19,
+  "test_boundary": 14
+ },
+ "total": 207,
+ "contention": {
+  "lo": {
+   "mu": 23.5,
+   "p90": 24.5,
+   "p": 0.9998336942,
+   "feas": true,
+   "chosen": {
+    "arm": "LOCAL",
+    "pi": {
+     "r": "large",
+     "v": "coder"
+    },
+    "score": 0.7370250595
+   },
+   "degraded": false,
+   "contention": 0.0
+  },
+  "hi": {
+   "mu": 29.5,
+   "p90": 30.5,
+   "p": 2.05578e-05,
+   "feas": false,
+   "chosen": null,
+   "degraded": true,
+   "contention": 6.0
+  },
+  "flip": {
+   "mu": 35.5,
+   "p90": 36.5,
+   "p": 0.0,
+   "feas": false,
+   "chosen": null,
+   "degraded": true,
+   "contention": 12.0
+  }
+ },
+ "summary": {
+  "passed": 15,
+  "conditional": 4,
+  "failed": 0
+ }
+}
