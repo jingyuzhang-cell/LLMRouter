@@ -1,10 +1,12 @@
 # REAL_EXPERIMENT_PROTOCOL_V2 — 真实实验准入与对照实验协议(拟冻结,待操作者批准)
 
-Status: V2.2 DRAFT — V2.1 (f916ce1) + final statistical errata: S1 IUT
-combined p = MAX of components; directional sign-flip statistic with
-exact/MC denominators, ties/zeros, seeds; symmetry applicability check
-with preregistered Wilcoxon fallback; Holm partial-pass wording; S1 and
-H1-H4 declared separate inference families. Zero real model calls are made or
+Status: V2.3 DRAFT — V2.2 (c8722d5) + final statistical revision:
+Wilcoxon removed as the asymmetry fallback (it also assumes symmetry and
+would change the tested proposition from the mean difference); the
+preregistered fallback is now the one-sided paired t-test for the MEAN
+difference, with finite-variance/skew/outlier/sample-size applicability
+checks on independent data and studentized-bootstrap sensitivity; H1-H4
+and both S1 components must freeze ONE shared method before unblinding. Zero real model calls are made or
 authorized by this document. Research mainline unchanged
 (MAINLINE_FREEZE). NOT YET FROZEN: freezing requires explicit operator
 approval of this V2 text.
@@ -139,12 +141,26 @@ q/C_full/T/D);**按时正确率为关键次级终点**(McNemar 配对)。
   - **零差与并列**:d_i = 0 的任务保留(计入 n,贡献不改变 T 的
     翻转分布);并列的 T_b = T_obs 计入 #{T_b ≥ T_obs}(保守)。
   - B、种子、随机数生成器在试点前冻结;确认段用同一配置。
-- **适用性假设与替代方法(预注册)**:符号翻转检验对**配对差分布
-  对称**时是精确的。确认前在独立校准/验证数据上执行**对称性检查
-  (偏度检验 + 符号翻转与 Wilcoxon 符号秩、配对 t 的敏感性对比)**
-  并冻结结论:若对称性不满足且方法间结论分歧,预注册的替代主方法
-  为 **Wilcoxon 符号秩检验(单侧,精确/渐近)**,符号翻转降为敏感
-  性分析。**确认数据不得触发方法更换。**
+- **适用性假设与回退方法(V2.3 勘误,冻结)**:符号翻转检验对
+  **配对差分布对称**时是精确的。确认前在**独立校准/验证数据**上
+  执行适用性评估并冻结结论:
+  - 检查项:配对差的**对称性**(偏度检验 + 符号翻转与替代法的
+    敏感性对比)、**有限方差**、**偏态程度与离群值影响**、以及
+    相对样本量的适用性。
+  - **若对称性满足**:符号翻转为主方法(精确)。
+  - **若对称性不满足**(V2.3 修正):回退主方法改为**针对均值差的
+    单侧配对 t 检验**——H1–H4 与 S1 检验的都是平均任务奖励差,
+    配对 t 直接以均值差为目标;在上述适用性评估通过(有限方差、
+    样本量适度、无破坏性离群值,或经离群值影响分析确认稳健)的
+    前提下使用;必要时以**学生化 Bootstrap(≥10⁴)**作敏感性分析
+    一并报告。~~Wilcoxon 符号秩~~ **不作为回退主方法**:它同样
+    依赖对称性才能解释为中心/位置检验,且在非对称下换成 Wilcoxon
+    会改变所检验的科学命题(从均值差变为伪中位数差);仅在敏感性
+    分析中作为参考报告。
+  - **方法选择冻结时点**:H1–H4 与 **S1 的两个分量**的主检验方法
+    (及其全部参数)**必须在确认数据揭盲前统一冻结**,且 H1–H4 与
+    S1 分量使用**同一套事先选定的方法**——不得 H 族用一种、S1 临
+    时用另一种;**确认数据不得触发任何方法更换**。
 - 同时报告 BCa 配对 Bootstrap CI(≥10⁴)作为效应量区间;假设判定
   以上述预注册检验的 p 值为准。
 - **Holm 流程(V2.2 勘误)**:四个单侧 p 值升序 p(1)≤…≤p(4),
