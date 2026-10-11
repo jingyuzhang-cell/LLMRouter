@@ -72,15 +72,16 @@ def main():
         counts[m] = int(mm.group(2))
         assert 'ALL PASS' in out, m
     total = sum(counts.values())
-    # Post-P3-B live count: 207 + 2 new M6 boundary checks + 1 new
-    # boundary-suite calls-conservation check = 210
-    ok('R1_count_reconciliation', total == 210,
+    # Post-P3-B2 live count: 210 + 4 mixed-scenario conservation checks
+    # in the boundary suite = 214 (recount on every run)
+    ok('R1_count_reconciliation', total == 214,
        detail=f'total={total}')
     findings.append(('RESOLVED', 'R2_acceptance_doc_stale',
-                     'fixed in P3-B: M6_ACCEPTANCE section 6 refreshed '
-                     'with the 199->207 history; live count now 210 '
-                     '(+2 M6 boundary checks, +1 calls-conservation '
-                     'check added by P3-B).'))
+                     'fixed across P3-B/P3-B2: M6_ACCEPTANCE section 6 '
+                     'now carries 214/214 as current with 199/207/210 as '
+                     'HISTORICAL stage counts; live count 214 (+2 M6 '
+                     'boundary checks, +1 calls-conservation, +4 '
+                     'mixed-scenario conservation checks).'))
 
     # ================= G: independent goldens ===========================
     # V1-S1: A/B/C at D=20 (golden world: q/mu/p90/dc from the operator's
@@ -250,28 +251,46 @@ def main():
     sess = [e for e in ev_t if e['event'] == 'session_summary'][0]
     disp = [e for e in ev_t if e['event'] == 'call' and e['physical']]
     tok_sum = sum(c['usage']['total_tokens'] for c in disp)
-    n_call_events = len([c for c in ev_t if c['event'] == 'call'])
-    n_injected = len([c for c in ev_t if c['event'] == 'call'
-                      and c.get('injected')])
-    core_ok = (sess['requests'] == len(disp)
-               and sess['tokens_total'] == tok_sum)
-    # GENUINE FINDING (minor): the convenience field `calls` double-counts
-    # corruption-after-metering calls — they are physical requests whose
-    # answer was replaced, so requests+cached+injected overstates the
-    # logical call count by exactly the injected subset.
-    calls_field_bug = (sess['calls'] == n_call_events + n_injected
-                       and n_injected > 0)
+    # P3-B2 strengthened E1: DIRECT identity checks against the ledger
+    # (not merely exclusion of the old double-count pattern):
+    #   calls == call EVENTS; requests == physical EVENTS;
+    #   cached_calls == cached EVENTS; injected subset of physical;
+    #   tokens == sum of physical usage.
+    all_calls_e1 = [c for c in ev_t if c['event'] == 'call']
+    n_events_e1 = len(all_calls_e1)
+    n_phys_e1 = len(disp)
+    n_cached_e1 = len([c for c in all_calls_e1 if c.get('cached')])
+    n_inj_e1 = len([c for c in all_calls_e1 if c.get('injected')])
+    core_ok = (
+        sess['calls'] == n_events_e1
+        and sess['requests'] == n_phys_e1
+        and sess['cached_calls'] == n_cached_e1
+        and sess['injected_calls'] == n_inj_e1
+        and n_inj_e1 <= n_phys_e1
+        and sess['tokens_total'] == tok_sum)
+    # reverse tests: corrupted counters must FAIL this checker — multiple
+    # error modes, not just the historical one
+    def e1_checker(s):
+        return (s['calls'] == n_events_e1 and s['requests'] == n_phys_e1
+                and s['cached_calls'] == n_cached_e1)
+    wrong_calls = dict(sess, calls=n_events_e1 + 1)      # off-by-one
+    wrong_requests = dict(sess, requests=n_phys_e1 + n_inj_e1)  # old bug
+    wrong_cached = dict(sess, cached_calls=n_cached_e1 + n_inj_e1)
+    reverse_ok = (not e1_checker(wrong_calls)
+                  and not e1_checker(wrong_requests)
+                  and not e1_checker(wrong_cached))
     verdicts['E1_event_conservation'] = (
-        'PASS' if core_ok and not calls_field_bug else 'CONDITIONAL')
+        'PASS' if core_ok and reverse_ok else 'FAIL')
     findings.append((
-        'RESOLVED' if core_ok and not calls_field_bug else 'MAJOR',
+        'RESOLVED' if core_ok and reverse_ok else 'MAJOR',
         'E1_calls_field_double_count',
-        f'fixed in P3-B (calls = requests + cached): calls_field='
-        f'{sess["calls"]} == call events {n_call_events}; requests/'
-        f'tokens reconcile exactly; conservation regression pinned in '
-        f'the boundary suite.'
-        if core_ok and not calls_field_bug else
-        f'calls_field={sess["calls"]} vs events {n_call_events}'))
+        f'fixed in P3-B and now audited by DIRECT identity (calls='
+        f'{sess["calls"]}==events {n_events_e1}; requests==physical '
+        f'{n_phys_e1}; cached=={n_cached_e1}; injected {n_inj_e1} '
+        f'⊆ physical; tokens exact). Reverse tests catch off-by-one '
+        f'calls, requests+injected, and cached+injected error modes.'
+        if core_ok and reverse_ok else
+        f'identity failed: {sess} vs events {n_events_e1}'))
     rew = json.loads((RUNS / 'cont_lo' / 'REWARDS.jsonl')
                      .read_text().splitlines()[-1])
     c_full_sum = sum(r['c_full'] for r in rew['rewards'])

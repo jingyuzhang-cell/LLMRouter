@@ -357,6 +357,61 @@ def main():
                             cached=n_cached_b,
                             requests=sess_b['requests'])
 
+    # ---- P3-B2 (final evidence gap): DETERMINISTIC mixed scenario with
+    # physical>0 AND cached>0 AND injected>0 in ONE ledger, with full
+    # per-event conservation (the earlier regression had cached=0 and
+    # proved only the injected non-double-count).
+    from deadline_reward_v1 import reassign as _re
+    tmx = dict(uid='mx0', question='q', derivation='d', answer=4.0,
+               ctx_table='T', ctx_text='P')
+    srv_mx = StubModelServer(dict(ANSWERS), BASE_PRIORS, seed='mx')
+    srv_mx.set_fault('mx0', 'r', 'medium', '###BROKEN###')
+    eng_mx = StubEngine(RUNS_DIR / 'mixed', srv_mx, InjectedClock(),
+                        seed='mx', profile_key='v3_compat')
+    st_mx = SchedulerState(InjectedClock(),
+                           task_deadlines={'mx0': 100.0},
+                           token_allocation=100000.0)
+    st_mx.attach(eng_mx)
+    eng_mx.start_panel([tmx], NODES_MODELS)
+    eng_mx.run_jobs('A', eng_mx.planned_jobs([tmx], NODES_MODELS,
+                                             ('e1', 'e2')))
+    eng_mx.run_jobs('R1', eng_mx.planned_jobs([tmx], NODES_MODELS,
+                                              ('r',)))
+    cands_mx = _re.enumerate_candidates(st_mx, 'mx0', NODES_MODELS)
+    cand_mx = next(c for c in cands_mx if c.arm == 'FULL_DYNAMIC'
+                   and c.pi == dict(e1='large', e2='large', r='large',
+                                    v='coder'))
+    _re.apply_whole_plan(eng_mx, st_mx, tmx, NODES_MODELS, cand_mx)
+    eng_mx.write_task_summaries([tmx])
+    eng_mx.write_session_summary(1)
+    ev_mx, _ = load_ledger(eng_mx.ledger_path)
+    c_mx = [e for e in ev_mx if e['event'] == 'call']
+    phys_mx = [c for c in c_mx if c['physical']]
+    cached_mx = [c for c in c_mx if c['cached']]
+    inj_mx = [c for c in c_mx if c['injected']]
+    sess_mx = next(e for e in ev_mx if e['event'] == 'session_summary')
+    tok_phys = sum(c['usage']['total_tokens'] for c in phys_mx)
+    st_mx_view = st_mx.tasks['mx0']
+    checks['p3b2_mixed_scenario_strictly_positive'] = (
+        len(phys_mx) > 0 and len(cached_mx) > 0 and len(inj_mx) > 0)
+    checks['p3b2_calls_equals_events'] = (
+        sess_mx['calls'] == len(c_mx)
+        and sess_mx['calls'] == sess_mx['requests'] + sess_mx['cached_calls'])
+    checks['p3b2_field_counts_match_events'] = (
+        sess_mx['requests'] == len(phys_mx)
+        and sess_mx['cached_calls'] == len(cached_mx)
+        and sess_mx['injected_calls'] == len(inj_mx)
+        and len(inj_mx) <= len(phys_mx))     # injected subset of physical
+    checks['p3b2_tokens_and_settlement'] = (
+        sess_mx['tokens_total'] == tok_phys
+        and st_mx_view.tokens_physical == tok_phys)
+    det['p3b2_mixed'] = dict(call_events=len(c_mx),
+                             physical=len(phys_mx), cached=len(cached_mx),
+                             injected=len(inj_mx),
+                             calls_field=sess_mx['calls'],
+                             requests=sess_mx['requests'],
+                             tokens=sess_mx['tokens_total'])
+
     all_pass = all(checks.values())
     evidence = dict(audit='boundary', checks=checks, all_pass=all_pass,
                     zero_model_calls=True, detail=det)

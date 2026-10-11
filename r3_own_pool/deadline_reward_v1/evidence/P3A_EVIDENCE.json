@@ -24,7 +24,7 @@
   [
    "RESOLVED",
    "R2_acceptance_doc_stale",
-   "fixed in P3-B: M6_ACCEPTANCE section 6 refreshed with the 199->207 history; live count now 210 (+2 M6 boundary checks, +1 calls-conservation check added by P3-B)."
+   "fixed across P3-B/P3-B2: M6_ACCEPTANCE section 6 now carries 214/214 as current with 199/207/210 as HISTORICAL stage counts; live count 214 (+2 M6 boundary checks, +1 calls-conservation, +4 mixed-scenario conservation checks)."
   ],
   [
    "RESOLVED",
@@ -44,7 +44,7 @@
   [
    "RESOLVED",
    "E1_calls_field_double_count",
-   "fixed in P3-B (calls = requests + cached): calls_field=9 == call events 9; requests/tokens reconcile exactly; conservation regression pinned in the boundary suite."
+   "fixed in P3-B and now audited by DIRECT identity (calls=9==events 9; requests==physical 9; cached==0; injected 1 ⊆ physical; tokens exact). Reverse tests catch off-by-one calls, requests+injected, and cached+injected error modes."
   ]
  ],
  "counts": {
@@ -56,9 +56,9 @@
   "test_m6": 24,
   "test_policy": 18,
   "test_phase3": 19,
-  "test_boundary": 15
+  "test_boundary": 19
  },
- "total": 210,
+ "total": 214,
  "contention": {
   "lo": {
    "mu": 23.5,

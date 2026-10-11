@@ -105,11 +105,14 @@ checks, −1 vacuous check removed; net +8 — bringing the repo total to
 **207**. Original evidence files are preserved unmodified; only this
 summary was stale.
 
-Current live count (P3-B, see P3_B_REPORT.md): M1 21/21 · M2 24/24 ·
-M3 37/37 · M4 28/28 · M5 24/24 · M6 22/22 · M5+M6 18/18 · phase-3
-19/19 · boundary 14/14 = **207/207, zero real model calls**,
-socket-blocked. Evidence: `evidence/M6_EVIDENCE.json`
-(hand-reconciliation tables), run ledgers under `evidence/m6_runs/`.
+Current live count (P3-B2, see P3_B_REPORT.md): M1 21/21 · M2 24/24 ·
+M3 37/37 · M4 28/28 · M5 24/24 · M6 24/24 · M5+M6 18/18 · phase-3
+19/19 · boundary 19/19 = **214/214, zero real model calls**,
+socket-blocked. Historical stage counts: **199** (at a7b7334, M6=14) →
+**207** (at 0f7cb46, M6=22) → **210** (P3-B, M6=24 + boundary 15) →
+**214** (P3-B2: +4 mixed-scenario conservation checks in the boundary
+suite). Evidence: `evidence/M6_EVIDENCE.json` (hand-reconciliation
+tables), run ledgers under `evidence/m6_runs/`.
 
 ## Formal sign-off (operator, 2026-10-11, commit 0f7cb46)
 
