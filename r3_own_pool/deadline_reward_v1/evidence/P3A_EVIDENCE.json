@@ -21,6 +21,7 @@
   "E2_settlement_conservation": "PASS",
   "X1_counterfactuals": "PASS",
   "X2_static_and_closure_suites": "PASS",
+  "R4_subprocess_reversals": "PASS",
   "R3_gate_reversal_tests": "PASS"
  },
  "findings": [
@@ -48,6 +49,11 @@
    "RESOLVED",
    "E1_calls_field_double_count",
    "fixed in P3-B; audited by DIRECT identity AND per-event containment on the mixed ledger (cached>0, injected>0): calls=9==events 9; requests==physical 9; injected events are physical AND non-cached; physical/cached disjoint and covering; tokens exact. Reverse tests catch off-by-one calls, requests+injected, cached+injected, AND injected-but-cached modes."
+  ],
+  [
+   "RESOLVED",
+   "R4_subprocess_reversals",
+   "real-child-process reversals behaved as expected: [{\"name\": \"sim_forced_fail\", \"returncode\": 1, \"expected_nonzero\": true, \"behaved_as_expected\": true}, {\"name\": \"sim_subsuite_exit7\", \"returncode\": 1, \"expected_nonzero\": true, \"behaved_as_expected\": true}, {\"name\": \"sim_count_mismatch\", \"returncode\": 1, \"expected_nonzero\": true, \"behaved_as_expected\": true}]"
   ]
  ],
  "counts": {
@@ -98,10 +104,32 @@
    "contention": 12.0
   }
  },
+ "subprocess_reversals": [
+  {
+   "name": "sim_forced_fail",
+   "returncode": 1,
+   "expected_nonzero": true,
+   "behaved_as_expected": true
+  },
+  {
+   "name": "sim_subsuite_exit7",
+   "returncode": 1,
+   "expected_nonzero": true,
+   "behaved_as_expected": true
+  },
+  {
+   "name": "sim_count_mismatch",
+   "returncode": 1,
+   "expected_nonzero": true,
+   "behaved_as_expected": true
+  }
+ ],
  "summary": {
-  "passed": 19,
+  "passed": 21,
   "conditional": 2,
-  "failed": 0
+  "failed": 0,
+  "total_verdicts": 23,
+  "consistent": true
  },
  "exit_code": 0
 }

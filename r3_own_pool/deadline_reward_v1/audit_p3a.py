@@ -401,27 +401,72 @@ def main():
        and counts['test_dag_closure'] == 37)
 
     # ================= verdicts =========================================
-    order = ['R0', 'R1', 'R3', 'G1', 'G2', 'G3', 'G4', 'G5', 'B1', 'B2',
-             'B3', 'B4', 'C1', 'C2', 'C3', 'C4', 'T1', 'T1b', 'E1', 'E2',
-             'X1', 'X2']
+    order = ['R0', 'R1', 'R3', 'R4', 'G1', 'G2', 'G3', 'G4', 'G5', 'B1',
+             'B2', 'B3', 'B4', 'C1', 'C2', 'C3', 'C4', 'T1', 'T1b', 'E1',
+             'E2', 'X1', 'X2']
     lines = []
+    printed = set()
     for key in order:
         for k, v in verdicts.items():
-            if k.startswith(key):
+            if k not in printed and (
+                    k == key or k.startswith(key + '_')):
                 lines.append(f'  {k}: {v}')
-    n_pass = sum(1 for v in verdicts.values() if v == 'PASS')
-    n_cond = sum(1 for v in verdicts.values() if v == 'CONDITIONAL')
-    n_fail = sum(1 for v in verdicts.values() if v == 'FAIL')
-    # ===== gate reversal tests (sign-off gate fix 4): three failure
-    # modes must each yield a non-zero exit decision =====
+                printed.add(k)
+    for k, v in verdicts.items():
+        if k not in printed:
+            lines.append(f'  {k}: {v}')
+    # ===== gate reversal tests: in-unit + REAL subprocess evidence =====
     def exit_code(verdict_map, gate_ok, count_match):
         if any(v == 'FAIL' for v in verdict_map.values()):
-            return 3                      # simulated audit FAIL
+            return 3
         if not gate_ok:
-            return 4                      # simulated sub-suite nonzero exit
+            return 4
         if not count_match:
-            return 5                      # simulated count mismatch
+            return 5
         return 0
+
+    # REAL child-process reversals (evidence closure): three mutated
+    # copies of THIS audit script run as actual subprocesses; each must
+    # exit NON-zero; actual vs expected recorded; misbehavior => FAIL.
+    import tempfile as _tf
+    audit_src = Path(__file__).read_text()
+    rev_records = []
+    mutations = [
+        ('sim_forced_fail',
+         "    # ===== gate reversal tests: in-unit + REAL subprocess evidence =====",
+         "    ok('SIMULATED_FAIL', False, 'evidence-closure simulation')\n"
+         "    # ===== gate reversal tests: in-unit + REAL subprocess evidence =====", 1),
+        ('sim_subsuite_exit7',
+         "def run_suite(mod):",
+         "def run_suite(mod):\n"
+         "        return __import__('types').SimpleNamespace("
+         "returncode=7, stdout='1/1 checks; ALL PASS'), None", 1),
+        ('sim_count_mismatch',
+         "if int(mm.group(1)) != int(mm.group(2)):", "if True:", 1),
+    ]
+    rev_subprocess_ok = True
+    with _tf.TemporaryDirectory() as _td:
+        for name, old_s, new_s, exp_fail in mutations:
+            mutated = audit_src.replace(old_s, new_s, 1)
+            assert mutated != audit_src, name
+            script = Path(_td) / f'{name}.py'
+            script.write_text(mutated)
+            proc = subprocess.run([sys.executable, str(script)],
+                                  capture_output=True, text=True,
+                                  cwd=str(ROOT))
+            actual_fail = proc.returncode != 0
+            rev_subprocess_ok &= (actual_fail == bool(exp_fail))
+            rev_records.append(dict(
+                name=name, returncode=proc.returncode,
+                expected_nonzero=bool(exp_fail),
+                behaved_as_expected=(actual_fail == bool(exp_fail))))
+    verdicts['R4_subprocess_reversals'] = (
+        'PASS' if rev_subprocess_ok else 'FAIL')
+    findings.append((
+        'RESOLVED' if rev_subprocess_ok else 'MAJOR',
+        'R4_subprocess_reversals',
+        'real-child-process reversals behaved as expected: '
+        + json.dumps(rev_records)))
 
     rev_fail = exit_code(dict(x='FAIL'), True, True) != 0
     rev_suite = exit_code(dict(x='PASS'), False, True) != 0
@@ -431,14 +476,26 @@ def main():
         'PASS' if (rev_fail and rev_suite and rev_count and rev_clean)
         else 'FAIL')
 
+    # summary computed AFTER all verdicts (R3/R4 included) with a
+    # MANDATORY self-consistency assertion (closure items 1+2)
+    n_pass = sum(1 for v in verdicts.values() if v == 'PASS')
+    n_cond = sum(1 for v in verdicts.values() if v == 'CONDITIONAL')
+    n_fail_final = sum(1 for v in verdicts.values() if v == 'FAIL')
+    summary_consistent = (
+        n_pass + n_cond + n_fail_final == len(verdicts))
+
     report = dict(verdicts=verdicts, findings=findings,
                   counts=counts, total=total,
                   contention=dict(lo=lo, hi=hi, flip=flip),
+                  subprocess_reversals=rev_records,
                   summary=dict(passed=n_pass, conditional=n_cond,
-                               failed=n_fail),
-                  exit_code=None)      # filled below
-    n_fail_final = sum(1 for v in verdicts.values() if v == 'FAIL')
+                               failed=n_fail_final,
+                               total_verdicts=len(verdicts),
+                               consistent=summary_consistent),
+                  exit_code=None)
     audit_exit = 0 if (n_fail_final == 0
+                       and summary_consistent
+                       and rev_subprocess_ok
                        and all(v is None for v in gate_failures.values())
                        and rev_fail and rev_suite and rev_count
                        and rev_clean) else 1
