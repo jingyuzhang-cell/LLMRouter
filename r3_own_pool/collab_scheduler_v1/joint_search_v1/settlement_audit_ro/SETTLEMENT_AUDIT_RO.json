@@ -13,10 +13,15 @@
   "C_v2_headroom_rule": true,
   "D_retry_semantic_infra_only": true,
   "D_no_search_logic_failure_retried_or_present": true,
+  "D_resume_log_attribution": true,
   "E_18_unique_complete": true,
+  "E_expected_8_roots": true,
+  "E_28_total_settled": true,
   "E_envelope_requests_4871": true,
-  "E_envelope_tokens_1p74M": true,
+  "E_envelope_tokens_exact": true,
   "E_complete_only_4542": true,
+  "E_complete_only_tokens_exact": true,
+  "E_grand_with_prior_exact": true,
   "E_proposed_ties_wo_state_663": true,
   "E_prior_299_carried": true,
   "F_no_unresolved_incomplete": true
@@ -523,20 +528,82 @@
    "RuntimeError('GPU busy; refusing to interrupt another job')"
   ]
  ],
+ "crash_reconciliation": [
+  {
+   "sid": "random_20261009",
+   "root": "formal_campaign_v2",
+   "dispatch_present": false,
+   "campaign_requests": 0,
+   "campaign_tokens": 0,
+   "reconciled": true,
+   "gap": "neither STATUS nor DISPATCH on disk: only the zero-charge journal entry survives — nothing to reconcile beyond charge==0"
+  },
+  {
+   "sid": "random_20261010",
+   "root": "formal_campaign_v2",
+   "dispatch_present": true,
+   "dispatch_reserved": 168,
+   "dispatch_tokens": 63914,
+   "campaign_requests": 168,
+   "campaign_tokens": 63914,
+   "reconciled": true,
+   "gap": "STATUS.jsonl absent: wall time and settle status unverifiable from primary per-session evidence"
+  }
+ ],
  "findings": [
   {
    "id": "F1-retry-criterion-broader-than-driver-tuple",
-   "detail": "retries for reasons outside the in-process INFRA_FAILURE tuple were orchestrated by the RESUME_DRIVER processes (GPU busy / Model server exited / BlockingIOError / hard-crash-no-STATUS); all are infrastructure-class, every retry settled COMPLETE, no search-logic failure was retried",
-   "sessions": [
+   "detail": "retries for reasons outside the in-process INFRA_FAILURE tuple; all are infrastructure-class (GPU busy / Model server exited / BlockingIOError / FileExists / wall termination / hard crash), every retry settled COMPLETE, no search-logic failure was retried. Attribution: per-sid \"retrying\" log lines in RESUME_DRIVER*.log cover all retried sessions (evidence per session below); sessions without a log line would be downgraded to journal-reason-only.",
+   "retried_sessions": [
+    {
+     "sid": "official_qnehvi_same_state_20261011",
+     "log": "RESUME_DRIVER3.log"
+    },
+    {
+     "sid": "proposed_state_incremental_20261009",
+     "log": "RESUME_DRIVER.log"
+    },
+    {
+     "sid": "proposed_state_incremental_20261011",
+     "log": "RESUME_DRIVER3.log"
+    },
+    {
+     "sid": "proposed_without_incremental_cost_20261010",
+     "log": "RESUME_DRIVER3.log"
+    },
+    {
+     "sid": "proposed_without_incremental_cost_20261011",
+     "log": "RESUME_DRIVER3.log"
+    },
+    {
+     "sid": "proposed_without_state_20261011",
+     "log": "RESUME_DRIVER3.log"
+    },
+    {
+     "sid": "random_20261009",
+     "log": "RESUME_DRIVER.log"
+    },
+    {
+     "sid": "random_20261010",
+     "log": "RESUME_DRIVER.log"
+    },
+    {
+     "sid": "random_20261011",
+     "log": "RESUME_DRIVER3.log"
+    },
+    {
+     "sid": "scalarized_bo_20261011",
+     "log": "RESUME_DRIVER3.log"
+    }
+   ],
+   "outside_literal_tuple": [
     "official_qnehvi_same_state_20261011",
     "proposed_state_incremental_20261011",
     "proposed_without_incremental_cost_20261010",
     "proposed_without_incremental_cost_20261011",
     "proposed_without_state_20261011",
     "random_20261011",
-    "scalarized_bo_20261011",
-    "random_20261009",
-    "random_20261010"
+    "scalarized_bo_20261011"
    ]
   }
  ]

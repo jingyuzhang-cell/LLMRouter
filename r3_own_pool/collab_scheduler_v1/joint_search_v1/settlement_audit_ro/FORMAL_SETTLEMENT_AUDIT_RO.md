@@ -7,13 +7,17 @@ only writes are this report, the script, and the evidence JSON inside
 campaign ledgers under `joint_search_v1/formal_campaign_v2*` (base +
 retry1..retry7).
 
-## Verdict
+## Verdict (hardened re-audit)
 
-**18/18 checks PASS. The announced settlement figures reproduce EXACTLY
-from the raw ledgers.** One finding (F1) documented below — a retry-
-criterion asymmetry that is infra-only in substance but broader than the
-in-process driver's literal tuple; it does not affect any settled
-number, cap, or completeness result.
+**23/23 checks PASS — STRICT EQUALITY throughout.** The announced
+settlement figures reproduce EXACTLY from the raw ledgers (no
+tolerances): envelope 4,871 requests / 1,743,814 tokens; COMPLETE-only
+4,542 / 1,620,410; grand-with-prior 5,170 / 1,792,521; exactly the 8
+expected campaign roots; 28 settled sessions; 18 unique COMPLETE
+method×seed sessions. Crash sessions now have a DEDICATED
+reconciliation branch with explicit evidence gaps. F1 attribution is
+per-sid log-evidenced. One finding (F1) remains documented — it does
+not affect any settled number, cap, or completeness result.
 
 ## What was verified (all from raw artifacts, no announcements trusted)
 
@@ -22,12 +26,22 @@ frozen protocol sha + campaign caps. 28 reservations, 28 settlements;
 no duplicate settlement, no settle-without-reserve, no unknown events,
 no reserved-but-unsettled (crash) sessions.
 
-**B. Three-way reconciliation, every session.** DISPATCH reservation
-count == DISPATCH response count == STATUS new_requests; Σ settled
-usage tokens == STATUS charged_tokens; CAMPAIGN settle charge ==
-STATUS record (requests and tokens); no negative walls. Includes the
-zero-spend hard-crash sessions (no DISPATCH.jsonl — failed before the
-Budget existed; STATUS legitimately records 0).
+**B. Three-way reconciliation, every session WITH STATUS.** DISPATCH
+reservation count == DISPATCH response count == STATUS new_requests;
+Σ settled usage tokens == STATUS charged_tokens; CAMPAIGN settle charge
+== STATUS record (requests and tokens); no negative walls.
+
+**B-crash. DEDICATED crash reconciliation for the two no-STATUS
+sessions (never a silent pass):**
+- `random_20261010` (168 requests / 63,914 tokens per journal):
+  DISPATCH survives on disk — **reserves 168 == charge 168, tokens
+  63,914 == charge 63,914 EXACTLY**. Evidence gap (explicit): STATUS
+  absent ⇒ wall time and settle status unverifiable from per-session
+  primary evidence; the journal's settled charge is the surviving
+  authority.
+- `random_20261009`: neither STATUS nor DISPATCH survives; journal
+  charge is exactly 0/0 — consistent (crash pre-Budget); gap noted:
+  nothing beyond charge==0 is independently verifiable.
 
 **C. Cap compliance.** Every per-session charge within the frozen
 per-session caps (400 requests / 3,276,800 tokens). Campaign totals
@@ -44,14 +58,16 @@ WITH the frozen prior v1 consumption carried in the launch config
   method×seed sessions COMPLETE). Across ALL 30+ INCOMPLETE journal
   entries there is NOT ONE search-logic failure: no search failure was
   ever retried or left unresolved.
-- FINDING F1 (documented, not massaged): the in-process driver's literal
-  `INFRA_FAILURE` tuple ('termination' / 'File exists' / 'interrupted'
-  / 'deadline') does NOT cover 'GPU busy', 'Model server exited',
-  'BlockingIOError', or the no-STATUS hard crashes. Those retries were
-  orchestrated by the RESUME_DRIVER processes (RESUME_DRIVER*.log),
-  which applied a broader but still infra-only criterion. Substantively
-  compliant with the announced policy ("search-logic failures are NOT
-  retried"); literally broader than the frozen tuple. No numbers move.
+- FINDING F1 (documented, per-sid log-evidenced): the in-process
+  driver's literal `INFRA_FAILURE` tuple does NOT cover 'GPU busy',
+  'Model server exited', 'BlockingIOError', or the no-STATUS hard
+  crashes. Attribution is now evidence-based: ALL 10 retried sessions
+  match a `"retrying": "<sid>"` line in RESUME_DRIVER*.log (per-sid
+  list in the evidence JSON; `D_resume_log_attribution` PASS). The
+  resume drivers applied a broader but still infra-only criterion.
+  Substantively compliant with the announced policy ("search-logic
+  failures are NOT retried"); literally broader than the frozen tuple.
+  No numbers move.
 
 **E. Announced figures — all reproduce exactly:**
 

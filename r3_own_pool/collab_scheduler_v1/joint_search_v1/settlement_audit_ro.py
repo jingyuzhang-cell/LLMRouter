@@ -90,15 +90,60 @@ def main():
 
     # ---- B. per-session three-way reconciliation -----------------------
     recon_fail = []
+    crash_recon = []
     for root in roots:
         for d in sorted(p for p in root.iterdir() if p.is_dir()):
             sid = d.name
             if not (d / 'STATUS.jsonl').exists():
-                # hard crash between journal settle and the STATUS write:
-                # the CAMPAIGN charge is authoritative; itemize explicitly
-                # (never silently skipped) and require a COMPLETE retry
+                # Hard crash between journal settle and the STATUS write.
+                # Crash reconciliation (audit hardening): reconcile what
+                # the surviving PRIMARY evidence allows — DISPATCH vs the
+                # CAMPAIGN charge — and record an explicit evidence gap
+                # for whatever cannot be independently verified. Never a
+                # silent pass.
                 camp = next(((r[3]) for r in by_sid.get(sid, [])
                              if r[0] == root.name), None)
+                if (d / 'DISPATCH.jsonl').exists():
+                    disp_c = jload(d / 'DISPATCH.jsonl')
+                    c_res = sum(1 for e in disp_c
+                                if e['event'] == 'reserved')
+                    c_tok = sum(e['response']['usage']['total_tokens']
+                                for e in disp_c
+                                if e['event'] == 'response')
+                    ok = (camp is not None
+                          and c_res == camp['new_request_attempts']
+                          and c_tok == camp['new_total_tokens'])
+                    crash_recon.append(dict(
+                        sid=sid, root=root.name,
+                        dispatch_present=True,
+                        dispatch_reserved=c_res, dispatch_tokens=c_tok,
+                        campaign_requests=(
+                            camp and camp['new_request_attempts']),
+                        campaign_tokens=(camp and camp['new_total_tokens']),
+                        reconciled=ok,
+                        gap='STATUS.jsonl absent: wall time and settle '
+                            'status unverifiable from primary per-session '
+                            'evidence'))
+                    if not ok:
+                        recon_fail.append((sid, 'crash DISPATCH-vs-'
+                                           'CAMPAIGN', c_res, c_tok, camp))
+                else:
+                    zero_ok = (camp is not None
+                               and camp['new_request_attempts'] == 0
+                               and camp['new_total_tokens'] == 0)
+                    crash_recon.append(dict(
+                        sid=sid, root=root.name,
+                        dispatch_present=False,
+                        campaign_requests=(
+                            camp and camp['new_request_attempts']),
+                        campaign_tokens=(camp and camp['new_total_tokens']),
+                        reconciled=zero_ok,
+                        gap='neither STATUS nor DISPATCH on disk: only '
+                            'the zero-charge journal entry survives — '
+                            'nothing to reconcile beyond charge==0'))
+                    if not zero_ok:
+                        recon_fail.append((sid, 'crash no-leadger-but-'
+                                           'charged', camp))
                 rows.append(dict(root=root.name, sid=sid,
                                  status='NO_STATUS_ON_DISK',
                                  reason='hard-crash (journal settled, '
@@ -168,6 +213,21 @@ def main():
         tot_req <= CAPS['new_request_attempts']
         - PRIOR.get('requests', 0))
 
+    # F1 attribution evidence (audit hardening): every retried sid must
+    # match a 'retrying' line in a RESUME_DRIVER log; unmatched sids
+    # downgrade the attribution to journal-reason-only.
+    import re as _re
+    retry_log = {}
+    for lg in sorted((JS / 'formal_campaign_v2'
+                      ).glob('RESUME_DRIVER*.log')):
+        for line in lg.read_text().splitlines():
+            m = _re.search(r'"retrying": "([^"]+)"', line)
+            if m:
+                retry_log[m.group(1)] = lg.name
+    retried_sids = sorted(sid for sid, r in by_sid.items()
+                          if len(r) > 1)
+    unmatched = [sid for sid in retried_sids if sid not in retry_log]
+
     # ---- D. retry legitimacy --------------------------------------------
     # Two levels, reported separately (audit honesty):
     #  (a) SEMANTIC: every retried original is infrastructure-class
@@ -208,17 +268,23 @@ def main():
         not retry_semantic_fail and not non_infra_incomplete)
     checks['D_no_search_logic_failure_retried_or_present'] = (
         not non_infra_incomplete)
+    checks['D_resume_log_attribution'] = (
+        len(retried_sids) == 10 and not unmatched)
     findings = [dict(
         id='F1-retry-criterion-broader-than-driver-tuple',
         detail='retries for reasons outside the in-process '
-               'INFRA_FAILURE tuple were orchestrated by the '
-               'RESUME_DRIVER processes (GPU busy / Model server '
-               'exited / BlockingIOError / hard-crash-no-STATUS); all '
-               'are infrastructure-class, every retry settled '
-               'COMPLETE, no search-logic failure was retried',
-        sessions=sorted({sid for sid, _ in literal_mismatch})
-        + sorted(r['sid'] for r in rows
-                 if r['status'] == 'NO_STATUS_ON_DISK'))]
+               'INFRA_FAILURE tuple; all are infrastructure-class '
+               '(GPU busy / Model server exited / BlockingIOError / '
+               'FileExists / wall termination / hard crash), every '
+               'retry settled COMPLETE, no search-logic failure was '
+               'retried. Attribution: per-sid "retrying" log lines in '
+               'RESUME_DRIVER*.log cover all retried sessions '
+               '(evidence per session below); sessions without a log '
+               'line would be downgraded to journal-reason-only.',
+        retried_sessions=[dict(sid=sid, log=retry_log.get(sid))
+                          for sid in retried_sids],
+        outside_literal_tuple=sorted(sid for sid, _ in
+                                     literal_mismatch))]
 
     # ---- E. announced figures -------------------------------------------
     complete = [r for r in rows if r['status'] == 'COMPLETE']
@@ -239,9 +305,16 @@ def main():
                          if k.rsplit('_', 1)[0] == m)
     checks['E_18_unique_complete'] = (
         len(complete) == 18 and got_complete == expected_sids)
+    checks['E_expected_8_roots'] = (
+        [r.name for r in roots] == ['formal_campaign_v2']
+        + [f'formal_campaign_v2_retry{i}' for i in range(1, 8)])
+    checks['E_28_total_settled'] = len(rows) == 28
     checks['E_envelope_requests_4871'] = tot_req == 4871
-    checks['E_envelope_tokens_1p74M'] = abs(tot_tok - 1_743_814) <= 2000
+    checks['E_envelope_tokens_exact'] = tot_tok == 1_743_814
     checks['E_complete_only_4542'] = comp_req == 4542
+    checks['E_complete_only_tokens_exact'] = comp_tok == 1_620_410
+    checks['E_grand_with_prior_exact'] = (
+        grand_req == 5170 and grand_tok == 1_792_521)
     checks['E_proposed_ties_wo_state_663'] = (
         per_arm.get('proposed_state_incremental') == 663
         and per_arm.get('proposed_without_state') == 663)
@@ -269,6 +342,7 @@ def main():
         cap_failures=cap_fail[:20],
         retry_semantic_failures=retry_semantic_fail[:20],
         literal_mismatch=[list(x) for x in literal_mismatch],
+        crash_reconciliation=crash_recon,
         findings=findings)
     (OUT / 'SETTLEMENT_AUDIT_RO.json').write_text(
         json.dumps(evidence, indent=1, ensure_ascii=False))
