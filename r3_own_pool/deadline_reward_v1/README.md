@@ -94,7 +94,26 @@ numbers) · P8 (quality-chain correlation) · P9 (observed-state belief
 rule) · P10 (switch variance in σ). All have documented defaults; none
 blocks phase 2.
 
-## Phase-2 status: COMPLETE (M1–M6 all green, 123/123, zero real calls)
+## PHASE 1–3 ALL SIGNED OFF (operator, 2026-10-11, through commit b50bbde)
+
+Phase-3 zero-call verification is formally CLOSED (R4 passed):
+independent audit PASS 21 / CONDITIONAL 2 / FAIL 0 with exit-code
+propagation, self-consistent summary, path-corrected mutation children,
+an unmutated control that must exit 0, and per-mutation target-gate
+trigger proof. Nine suites 216/216. The two retained CONDITIONALs are
+the paper's external-validity boundaries: **B4** (declared synthetic
+distribution families — on-time probability is exact/conservative only
+under them; NOT real-model calibration) and **T1** (stub time ledgers
+reconcile; real-deployment latency bounds unverified). The signed-off
+claim: within the declared synthetic assumptions, fault recovery, DAG
+dependency constraints, downstream model reassignment, quality/deadline
+filtering, and reward settlement carry auditable verification evidence —
+NOT superiority over static scheduling. Real-model experiments require
+separate authorization plus confirmed node-level quality/latency
+profiles, deadline settings, cost calibres, paired-experiment protocol,
+and statistical tests.
+
+## Phase-2 status: COMPLETE (M1–M6 all green, superseded counts below)
 
 | Milestone | Status |
 |---|---|
