@@ -182,6 +182,14 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
         pred_family = ('lognormal' if pred.log_params else
                        'empirical' if 'empirical' in pred.families
                        else 'normal')
+        # round 3 fix #6: each family's accuracy claim is INDEPENDENT —
+        # normal/lognormal are parametric estimate / approximation; only
+        # the empirical branch is a (declared-model) lower bound.
+        pred_claim = {
+            'normal': 'declared_normal_parametric_estimate',
+            'lognormal': 'fenton_wilkinson_approximation',
+            'empirical': 'declared_model_lower_bound(staircase+markov)',
+        }[pred_family]
         # OWN switch cost: a PROVABLE per-call bound — on the shared
         # serial executor each of my new calls needs at most one
         # stop+start (cross-task interleaving can force a re-switch before
@@ -209,20 +217,27 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
         # Deterministic addends shift mean AND quantile together
         # (phase-3 fix 2); sigma is unchanged by the shift.
         p90_e2e = pred.w_p90_s + sw + contention
-        # 2026-10-11 admission repair #4: estimator follows the composed
-        # distribution family (normal / lognormal Fenton-Wilkinson /
-        # empirical Cantelli bound) — never unconditional normality.
+        # Round 3 fix #4: SERVICE-side quantities + ONE shift — the
+        # estimator applies the deterministic addends exactly once
+        # (mu_e2e/p90_e2e above remain the audit-row totals).
         p_on, e_late = e1_on_time(
-            mu_e2e, p90_e2e, d_remain, family=pred_family,
-            log_params=pred.log_params, shift=sw + contention)
-        # Conservatism applicability (boundary task 2): quantile_sum gives
-        # a path-p90 UPPER bound; that translates to an on-time-probability
-        # LOWER bound ONLY while D >= mu. Below the mean the inflated sigma
-        # RAISES the computed probability — no guarantee is claimed there.
+            pred.mu_service_s, pred.w_p90_s, d_remain, family=pred_family,
+            log_params=pred.log_params, ladders=pred.ladders,
+            shift=sw + contention)
+        # Conservatism applicability (boundary task 2, revised round 3):
+        # empirical rows carry a declared-model LOWER bound on p_on;
+        # normal quantile_sum rows are conservative only while D >= mu
+        # (below the mean the inflated sigma RAISES the probability);
+        # lognormal rows are an approximation — no bound claimed.
         agg_mode = params['priors'].get('policy', {}).get(
             'p90_aggregation', 'quantile_sum')
-        p_conservative = (agg_mode == 'variance'
-                          or d_remain >= mu_e2e)
+        if pred_family == 'empirical':
+            p_conservative = True
+        elif pred_family == 'lognormal':
+            p_conservative = False
+        else:
+            p_conservative = (agg_mode == 'variance'
+                              or d_remain >= mu_e2e)
         # e_late feasibility uses d_remain; NORMALIZATION uses the frozen
         # task duration D so decisions optimize the settlement objective
         # (phase-3 fix 3).
@@ -251,6 +266,7 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
                         p_on_time=round(p_on, 10), e_late=round(e_late, 10),
                         p_conservative=p_conservative,
                         estimator=pred_family,
+                        estimator_claim=pred_claim,
                         score=round(score, 10), feasible=not deficits,
                         deficits=deficits, kinds=dict(cand.kinds))
         if not deficits:

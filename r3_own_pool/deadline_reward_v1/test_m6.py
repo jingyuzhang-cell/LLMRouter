@@ -326,9 +326,11 @@ def main():
         'arm', 'pi', 'q', 'mu_e2e', 'p90', 'dcost', 'switch', 'switch_seq',
         'contention', 'p_on_time', 'e_late', 'p_conservative', 'score',
         'feasible', 'deficits', 'kinds',
-        # 2026-10-11 admission repair #4: the row records which
-        # distribution-family estimator produced p_on_time/e_late
-        'estimator'}
+        # 2026-10-11 admission repair #4 + round 3: the row records which
+        # distribution-family estimator produced p_on_time/e_late, and
+        # that estimator's INDEPENDENT accuracy claim (parametric
+        # estimate / approximation / declared-model lower bound)
+        'estimator', 'estimator_claim'}
     PI_VAL_OK = {'medium', 'large', 'coder'}
     DEFICIT_KEYS = {'constraint', 'deficit'}
     KINDS_OK = {'plain', 'fb', 'fbd', 'esc'}

@@ -319,27 +319,77 @@ def test_family_estimators():
     assert abs(got_p - want_p) < 1e-12
     out['fenton_wilkinson'] = dict(p=round(got_p, 6),
                                    direct=round(want_p, 6))
-    # empirical: ONLY valid distribution-free bounds — quantile (d>=p90
-    # -> p_on >= 0.90) and Markov (T>=0 -> p_on >= 1-mu/d). The operator's
-    # counterexample (two-point law {0: .5, 100: .5}, mu=50, p90=100,
-    # d=90; true P(T<=90)=0.5) MUST yield a bound <= 0.5 — the previous
-    # Cantelli-at-sigma-LB form returned .852 (invalid) and is now gone.
-    mu, p90, d = 50.0, 100.0, 90.0
-    got, e_late = e1_on_time(mu, p90, d, family='empirical')
-    assert abs(got - (1 - 50.0 / 90.0)) < 1e-12    # Markov: 0.4444 <= 0.5
-    assert 0.0 < got <= 0.5, 'bound must not exceed the true probability'
-    assert abs(e_late - mu) < 1e-12, 'e_late upper bound is mu (T>=0)'
-    got_q, _ = e1_on_time(mu, p90, 110.0, family='empirical')
-    assert got_q == 0.90                            # quantile route, d>=p90
-    got_m, _ = e1_on_time(2.0, 5.0, 100.0, family='empirical')
-    assert abs(got_m - 0.98) < 1e-12                # Markov beats quantile
-    got_0, _ = e1_on_time(mu, p90, 40.0, family='empirical')
-    assert got_0 == 0.0                             # d < mu: no bound
-    out['empirical_bounds'] = dict(
-        counterexample=dict(true_on_time=0.5, bound=round(got, 4),
-                            old_invalid_form=0.852),
-        quantile_route=got_q, markov_beats_quantile=round(got_m, 4),
-        d_below_mu=got_0, e_late_upper_bound=mu)
+    # ---- round 3: quantile-sum claim REMOVED; staircase + Markov only ----
+    # Operator counterexample: two INDEPENDENT nodes, each 0 w.p. .9 /
+    # 100 w.p. .1 (per-node P90 = 0, so p90_sum = 0). Deadline 1 s: true
+    # path on-time = .9*.9 = 0.81. The invalid form reported >= 0.90;
+    # the staircase bound returns exactly 0.81, never 0.90.
+    lad = ((0.0, 0.9), (100.0, 1.0))          # per-node staircase
+    p_on, e_late = e1_on_time(
+        20.0, 200.0, 1.0, family='empirical', ladders=(lad, lad))
+    assert abs(p_on - 0.81) < 1e-12, p_on
+    assert p_on != 0.90
+    assert abs(e_late - 20.0) < 1e-12          # e_late UB = mu_service
+    # four such nodes: 0.9^4 = 0.6561 — the k-node guarantee decays
+    p4, _ = e1_on_time(40.0, 400.0, 1.0, family='empirical',
+                       ladders=(lad,) * 4)
+    assert abs(p4 - 0.6561) < 1e-12
+    # single node at d=0: F(0) = 0.9 — valid for ONE node
+    p1, _ = e1_on_time(10.0, 100.0, 0.0, family='empirical', ladders=(lad,))
+    assert abs(p1 - 0.9) < 1e-12
+    # no ladders: Markov only, never an unfounded 0.90
+    pm, _ = e1_on_time(2.0, 5.0, 100.0, family='empirical')
+    assert abs(pm - 0.98) < 1e-12
+    # ---- round 3 fix #4: shift applied EXACTLY ONCE ----
+    # normal: (mu_s, p90_s, d, shift) == legacy (mu_s+shift, p90_s+shift, d)
+    a = e1_on_time(5.0, 7.0, 20.0, shift=3.0)
+    b = e1_on_time(8.0, 10.0, 20.0)
+    assert abs(a[0] - b[0]) < 1e-12 and abs(a[1] - b[1]) < 1e-12
+    # empirical Markov uses SERVICE mean against d_eff = d - shift
+    m1, _ = e1_on_time(5.0, 7.0, 10.0, family='empirical', shift=3.0)
+    assert abs(m1 - (1 - 5.0 / 7.0)) < 1e-12   # NOT 1 - 8/7 (< 0)
+    # staircase with shift: budget is d_eff, thresholds service-side
+    s1, _ = e1_on_time(20.0, 200.0, 2.0, family='empirical',
+                       ladders=(lad, lad), shift=1.0)
+    assert abs(s1 - 0.81) < 1e-12              # budget 1 -> same optimum
+    # zero remaining budget still admits t=(0,0) — zero-cost thresholds
+    s2, _ = e1_on_time(20.0, 200.0, 1.0, family='empirical',
+                       ladders=(lad, lad), shift=1.0)
+    assert abs(s2 - 0.81) < 1e-12
+    # but a node whose mass starts above the budget can only be covered
+    # by Markov: ladder with no affordable threshold -> staircase 0
+    lad_hi = ((100.0, 1.0),)
+    s3, _ = e1_on_time(20.0, 200.0, 1.0, family='empirical',
+                       ladders=(lad_hi, lad_hi))
+    assert s3 == 0.0                           # staircase infeasible
+    # (p_on would be max(Markov 1-40/1 -> 0, 0) = 0)
+    # ---- round 3 fix #5: e_late upper-bound validity at boundaries ----
+    _, el_pos = e1_on_time(5.0, 7.0, 50.0, family='empirical', shift=1.0)
+    assert abs(el_pos - 5.0) < 1e-12           # d_eff>0: UB = mu_service
+    p_neg, el_neg = e1_on_time(5.0, 7.0, 0.5, family='empirical',
+                               ladders=(lad,), shift=1.0)
+    assert p_neg == 0.0                        # d_eff<0: certain lateness
+    assert abs(el_neg - (5.0 + 0.5)) < 1e-12   # UB = mu - d_eff
+    # lognormal dd <= 0 boundary: exact certain-lateness value
+    lp = ((0.5, 0.8),)
+    tot_m = math.exp(0.5 + 0.8 ** 2 / 2)
+    p_ln, e_ln = e1_on_time(0, 0, 0.5, family='lognormal', log_params=lp,
+                            shift=1.0)
+    assert p_ln == 0.0 and abs(e_ln - (tot_m + 1.0 - 0.5)) < 1e-9
+    # ---- round 3 fix #6: claims are INDEPENDENT and differently scoped
+    src = (HERE / 'policy.py').read_text()
+    assert 'declared_normal_parametric_estimate' in src
+    assert 'fenton_wilkinson_approximation' in src
+    assert 'declared_model_lower_bound(staircase+markov)' in src
+    assert 'estimator_claim=pred_claim' in src
+    out['round3'] = dict(
+        counterexample_2node=dict(true=0.81, bound=round(p_on, 4),
+                                  invalid_old_form=0.90),
+        four_node=round(p4, 4), single_node=round(p1, 4),
+        markov_only=round(pm, 4),
+        shift_once=dict(normal_equiv=True, empirical_markov=round(m1, 6)),
+        e_late_boundaries=dict(d_pos=el_pos, d_neg_certain=el_neg),
+        claims_distinct=True)
     # predictor composition: all-lognormal path -> lognormal family;
     # any empirical node -> empirical
     priors = dict(
@@ -357,7 +407,8 @@ def test_family_estimators():
                                     'e1': 'DONE', 'e2': 'DONE'})
     assert pred.log_params and len(pred.log_params) == 2
     out['composition_lognormal'] = dict(families=pred.families)
-    priors['node_profiles']['v|coder']['family'] = 'empirical'
+    priors['node_profiles']['v|coder'].update(
+        family='empirical', lat_sorted=[0.5, 1.0, 2.0, 5.0])
     pred = OutcomePredictor(priors).predict(
         execute=[('r', True), ('v', True)], pi={'r': 'large', 'v': 'coder'},
         node_model={}, node_status={'r': 'FAILED', 'v': 'PENDING',

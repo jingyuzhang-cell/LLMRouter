@@ -193,6 +193,8 @@ def build_priors(beliefs):
             elif family == 'empirical':
                 lats = audit_cells[clean]['lat_sorted']
                 entry['lat_mean_s'] = round(sum(lats) / len(lats), 4)
+                # the staircase bound's declared empirical CDF (round 3)
+                entry['lat_sorted'] = list(lats)
             else:                     # normal — unused in the real data
                 entry['lat_mean_s'] = src['lat_p50']
             node_profiles[cell] = entry
