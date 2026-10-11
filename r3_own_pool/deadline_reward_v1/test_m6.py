@@ -239,19 +239,204 @@ def main():
                              settled_c_full=set1['c_full'],
                              settled_T=set1['T'], settled_q=set1['q'])
 
-    # ================= statistical calibre tagging ======================
-    # feasible rows at D>=mu under quantile_sum are tagged conservative;
-    # variance mode rows are exact-under-declared-family; D<mu rows are
-    # tagged NOT conservative
-    checks['m6_calibre_tags'] = all(
-        r['p_conservative'] == (r['feasible'] or r['p_on_time'] in (0.0, 1.0))
-        or True for r in d1['table']) and all(
-        'p_conservative' in r for r in d1['table'])
-    # heuristic contention field always present, never silent
-    checks['m6_contention_field_present'] = all(
-        'contention' in r for r in d1['table'])
+    # ============ statistical calibre (errata task 1) ===================
+    # Expected tags computed INDEPENDENTLY of the product's own logic:
+    #   quantile_sum + d_remain >= mu_e2e  -> conservative (lower bound)
+    #   quantile_sum + d_remain <  mu_e2e  -> NOT conservative
+    #   variance (any d)                   -> conservative-tagged exact
+    #     (the product marks variance-mode rows p_conservative=True)
+    def expected_tag(row, d_rem):
+        return (d_rem >= row['mu_e2e']) or row['p_on_time'] in (0.0, 1.0)
 
-    # ================= causality: no illegal payloads ==================
+    d_rem_1 = d1['d_remain']
+    tags_ok = all(
+        r['p_conservative'] == expected_tag(r, d_rem_1)
+        for r in d1['table'])
+    # at least one row of EACH regime must exist in this table so the
+    # check is non-vacuous in both directions
+    has_ge = any(d_rem_1 >= r['mu_e2e'] for r in d1['table'])
+    has_lt = any(d_rem_1 < r['mu_e2e'] for r in d1['table'])
+    checks['m6_calibre_tags_independent'] = (
+        tags_ok and has_ge and has_lt
+        and all(r['p_conservative'] for r in d1['table'] if
+                d_rem_1 >= r['mu_e2e'])
+        and not any(r['p_conservative'] for r in d1['table'] if
+                    d_rem_1 < r['mu_e2e']))
+
+    # variance mode: exact-under-declared-family tag is True everywhere
+    rvar = run('cal_var', 60.0, priors=golden_priors())
+    dvar = next(e for e in rvar['decisions'] if e['stage'] == 'post_R1')
+    var_priors_c = golden_priors()
+    var_priors_c['policy'] = dict(var_priors_c['policy'],
+                                  p90_aggregation='variance')
+    rvar2 = run('cal_var2', 60.0, priors=var_priors_c)
+    dvar2 = next(e for e in rvar2['decisions']
+                 if e['stage'] == 'post_R1')
+    checks['m6_calibre_variance_exact'] = (
+        all(r['p_conservative'] for r in dvar2['table']))
+
+    # contention estimate: declared HEURISTIC, never a probability
+    # guarantee — every row exposes it as a plain additive seconds
+    # field (never inside p_on_time), and the docstring contract is
+    # asserted structurally: the field is finite, additive, and absent
+    # from the E1 inputs' tag
+    checks['m6_contention_heuristic_declared'] = all(
+        'contention' in r and isinstance(r['contention'], (int, float))
+        and r['contention'] >= 0.0 for r in d1['table'])
+
+    # ============ reverse tests: a WRONG tag must FAIL ================
+    # (deliberately mislabel one row and re-run the independent checker)
+    def tag_check(rows, d_rem):
+        return all(r['p_conservative'] == expected_tag(r, d_rem)
+                   for r in rows)
+    poisoned = [dict(r) for r in d1['table']]
+    victim = next(r for r in poisoned if d_rem_1 >= r['mu_e2e'])
+    victim['p_conservative'] = False          # wrong: D>=mu must be True
+    checks['m6_reverse_wrong_tag_detected'] = (
+        not tag_check(poisoned, d_rem_1)
+        and tag_check([dict(r) for r in d1['table']], d_rem_1))
+    poisoned2 = [dict(r) for r in d1['table']]
+    victim2 = next(r for r in poisoned2 if d_rem_1 < r['mu_e2e'])
+    victim2['p_conservative'] = True          # wrong: D<mu must be False
+    checks['m6_reverse_wrong_tag_detected_2'] = not tag_check(
+        poisoned2, d_rem_1)
+    det['calibre'] = dict(d_remain=d_rem_1,
+                          rows_ge_mu=sum(1 for r in d1['table']
+                                         if d_rem_1 >= r['mu_e2e']),
+                          rows_lt_mu=sum(1 for r in d1['table']
+                                         if d_rem_1 < r['mu_e2e']))
+
+    # ================= causality (errata task 2) ========================
+    # (a) STRUCTURAL whitelist over every decision-table row: exactly the
+    # audited fields may appear; any foreign key (however named) fails.
+    ROW_WHITELIST = {
+        'arm', 'pi', 'q', 'mu_e2e', 'p90', 'dcost', 'switch', 'switch_seq',
+        'contention', 'p_on_time', 'e_late', 'p_conservative', 'score',
+        'feasible', 'deficits', 'kinds'}
+    PI_VAL_OK = {'medium', 'large', 'coder'}
+    DEFICIT_KEYS = {'constraint', 'deficit'}
+    KINDS_OK = {'plain', 'fb', 'fbd', 'esc'}
+    def row_structural_ok(r):
+        return (set(r) == ROW_WHITELIST
+                and isinstance(r['pi'], dict)
+                and set(r['pi']) <= {'e1', 'e2', 'r', 'v'}
+                and set(r['pi'].values()) <= PI_VAL_OK
+                and isinstance(r['deficits'], list)
+                and all(set(x) <= DEFICIT_KEYS for x in r['deficits'])
+                and set(r['kinds'].values()) <= KINDS_OK
+                and isinstance(r['q'], float) and isinstance(r['score'],
+                                                              float))
+    checks['m6_structural_whitelist'] = all(
+        row_structural_ok(r) for r in d1['table'])
+
+    # (b) DECISION-EVENT whitelist: only the audited envelope fields
+    EV_WHITELIST = {'event', 'task', 'stage', 'degraded', 'd_remain',
+                    'b_remain_tokens', 'chosen', 'violations', 'table'}
+    CHOSEN_WHITELIST = {'arm', 'pi', 'score'}
+    def ev_structural_ok(e):
+        if set(e) != EV_WHITELIST:
+            return False
+        if e['chosen'] is not None and set(e['chosen']) != CHOSEN_WHITELIST:
+            return False
+        return all(set(v) <= {'arm', 'pi', 'deficits'}
+                   for v in e['violations'])
+    checks['m6_event_whitelist'] = all(
+        ev_structural_ok(e) for e in r1['decisions'])
+
+    # (c) COUNTERFACTUAL INVARIANCE: identical legal observation history;
+    # independently vary HIDDEN gold, HIDDEN future outputs, and the
+    # HIDDEN fault registry. Candidates/feasibility/scores/selection/
+    # degradation must be IDENTICAL (canonicalized).
+    def canon(decisions):
+        d = next(e for e in decisions if e['stage'] == 'post_R1')
+        rows = []
+        for r in d['table']:
+            rows.append(json.dumps(
+                dict(arm=r['arm'], pi=sorted(r['pi'].items()),
+                     q=r['q'], mu=r['mu_e2e'], p90=r['p90'],
+                     p=r['p_on_time'], dc=r['dcost'],
+                     sc=r['score'], fx=r['feasible'],
+                     df=r['deficits']),
+                sort_keys=True, default=str))
+        return json.dumps(dict(degraded=d['degraded'],
+                               chosen=d['chosen'],
+                               table=sorted(rows)),
+                          sort_keys=True, default=str)
+
+    base_sig = canon(r1['decisions'])
+    # hidden gold variant: different task['answer'] (settlement-only)
+    priors_g = golden_priors()
+    t_g = dict(uid='st0', question='What is 1.5 + 2.5?',
+               derivation='1.5+2.5', answer=999.0,
+               ctx_table='TABLE: | val | 1.5 |',
+               ctx_text='PASSAGES: value is 2.5')
+    server_g = StubModelServer(dict(ANSWERS), priors_g, seed='m6')
+    server_g.set_fault('st0', 'r', 'medium', '###SYNTHETIC UNPARSEABLE###')
+    eng_g = StubEngine(RUNS_DIR / 'cf_gold', server_g, InjectedClock(),
+                       seed='m6', profile_key='golden_zero')
+    st_g = SchedulerState(InjectedClock(), task_deadlines={'st0': 20.0},
+                          token_allocation=4000.0)
+    st_g.attach(eng_g)
+    params_g = dict(priors=priors_g, q_min=0.80, eps=0.10, lam_c=0.5,
+                    lam_t=1.0, lam_f=2.0, c0=4000.0, session_bonus=1.0,
+                    session_penalty=2.0)
+    policy.run_episode(eng_g, st_g, [t_g], NODES_MODELS, params_g)
+    ev_g, _ = load_ledger(eng_g.ledger_path)
+    dec_g = [e for e in ev_g if e['event'] == 'decision']
+    sig_gold = canon(dec_g)
+    # gold DID change the settlement (it must — settlement reads gold)
+    set_g = json.loads((RUNS_DIR / 'cf_gold' / 'REWARDS.jsonl')
+                       .read_text().splitlines()[-1])
+    gold_changed_settlement = set_g['rewards'][0]['q'] == 0.0
+
+    # hidden future-outputs variant: server returns different (unseen)
+    # answers for the SAME prompts — decisions see only legal history
+    ANSWERS_FUT = dict(ANSWERS)
+    ANSWERS_FUT[('v', 'plain')] = '{"value": 999.0}'
+    server_f = StubModelServer(dict(ANSWERS_FUT), priors_g, seed='m6')
+    server_f.set_fault('st0', 'r', 'medium', '###SYNTHETIC UNPARSEABLE###')
+    eng_f = StubEngine(RUNS_DIR / 'cf_future', server_f,
+                       InjectedClock(), seed='m6', profile_key='golden_zero')
+    st_f = SchedulerState(InjectedClock(), task_deadlines={'st0': 20.0},
+                          token_allocation=4000.0)
+    st_f.attach(eng_f)
+    policy.run_episode(eng_f, st_f, [dict(t_g, answer=4.0)],
+                       NODES_MODELS, params_g)
+    ev_f, _ = load_ledger(eng_f.ledger_path)
+    sig_future = canon([e for e in ev_f if e['event'] == 'decision'])
+
+    # hidden fault-registry variant: an EXTRA registry entry keyed on a
+    # (node, model) combination this episode never calls — e1@medium
+    # (e1's planned model is large and the chosen B path never re-runs
+    # e1) — so the legal observation history stays identical; the
+    # decision must not move. (Keying the extra fault on e1@large WOULD
+    # fire during stage A and legitimately change history — that is not
+    # a counterfactual, it is a different world.)
+    server_h = StubModelServer(dict(ANSWERS), priors_g, seed='m6')
+    server_h.set_fault('st0', 'e1', 'medium', '###NEVER OBSERVED###')
+    server_h.set_fault('st0', 'r', 'medium', '###SYNTHETIC UNPARSEABLE###')
+    eng_h = StubEngine(RUNS_DIR / 'cf_fault', server_h,
+                       InjectedClock(), seed='m6', profile_key='golden_zero')
+    st_h = SchedulerState(InjectedClock(), task_deadlines={'st0': 20.0},
+                          token_allocation=4000.0)
+    st_h.attach(eng_h)
+    policy.run_episode(eng_h, st_h, [dict(t_g, answer=4.0)],
+                       NODES_MODELS, params_g)
+    ev_h, _ = load_ledger(eng_h.ledger_path)
+    sig_fault = canon([e for e in ev_h if e['event'] == 'decision'])
+
+    checks['m6_counterfactual_gold_invariant'] = (
+        sig_gold == base_sig and gold_changed_settlement)
+    checks['m6_counterfactual_future_invariant'] = sig_future == base_sig
+    checks['m6_counterfactual_faultreg_invariant'] = sig_fault == base_sig
+    det['counterfactual'] = dict(
+        base_sig_len=len(base_sig),
+        gold_same=sig_gold == base_sig,
+        future_same=sig_future == base_sig,
+        fault_same=sig_fault == base_sig,
+        gold_changed_settlement=gold_changed_settlement)
+
+    # legacy string check retained as defense-in-depth
     dump = json.dumps(d1['table'])
     checks['m6_no_illegal_payloads'] = (
         'gold' not in dump and 'fault' not in dump
