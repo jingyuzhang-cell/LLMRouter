@@ -244,6 +244,23 @@ def main():
             calls=len(ref_seq), physical=ref_phys_calls,
             physical_tokens=ref_phys_tokens)
 
+    # ---- T3a literal single-task panels (M4 acceptance round) ----------
+    # One-task panel per arm: the production reference and the engine run
+    # the SAME faulted task alone; sequences and physical accounting must
+    # match bitwise (no batching to lean on).
+    for arm in ('NONE', 'LOCAL', 'FULL'):
+        single = [make_tasks()[1]]  # the e1-faulted task, alone
+        ref1, ref1_phys, ref1_tok = production_reference(arm, single)
+        run1 = run_mine(f'single_{arm}', arm, single)
+        seq1 = mine_seq(run1['events'])
+        sess1 = next(e for e in run1['events']
+                     if e['event'] == 'session_summary')
+        checks[f't3a_single_panel_{arm}'] = (
+            seq1 == ref1
+            and sess1['requests'] == ref1_phys
+            and sess1['tokens_total'] == ref1_tok
+            and len(seq1) == len(ref1))
+
     # ---- boundary tests (operator instruction §四) -----------------------
     # 1. task static context is frozen: mutation mid-episode is an error
     run = run_mine('ctx_freeze', 'NONE', make_tasks(),
