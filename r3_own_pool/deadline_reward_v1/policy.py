@@ -21,10 +21,16 @@ from typing import Dict, List, Optional
 from . import dag_closure as dc
 from . import reward as reward_mod
 from .compensator import DeadlineCompensator
-from .predictor import OutcomePredictor, e1_on_time
+from .predictor import (OutcomePredictor, e1_on_time,
+                        validate_node_profiles)
 
 ARMS = ('NONE', 'LOCAL', 'FULL')
 _FAIL_KIND = {'e1': 'fb', 'e2': 'fb', 'r': 'esc', 'v': 'esc'}
+# baseline remaining-work default for tasks that have not decided yet:
+# the planned V1 stage's service under the planned model (set from the
+# priors at episode start; policy.run_episode overwrites with exact
+# profile values when priors are available)
+BASE_PRIORS_V_SERVICE_DEFAULT = 0.0
 
 
 @dataclass
@@ -45,6 +51,13 @@ class Decision:
     violations: List[dict]
     d_remain: float
     b_remain_tokens: float
+
+
+def _profile_value(priors: dict, node: str, model: str, key: str,
+                   default: float = 0.0) -> float:
+    prof = (priors.get('node_profiles', {}).get(f'{node}|{model}')
+            or priors.get('profiles', {}).get(f'{node}|{model}', {}))
+    return float(prof.get(key, default))
 
 
 def _menu_variants(nodes: List[str]):
@@ -130,8 +143,14 @@ def apply_decision(engine, state, task: dict, node_models: Dict[str, str],
 
 def run_episode(engine, state, tasks: List[dict], node_models: Dict[str, str],
                 params: dict) -> dict:
+    validate_node_profiles(params['priors'])   # boundary task 4
     predictor = OutcomePredictor(params['priors'])
     compensator = DeadlineCompensator(params['priors'])
+    v_default = float(_profile_value(
+        params['priors'], 'v', node_models.get('v', 'coder'),
+        'lat_mean_s', 0.0))
+    global BASE_PRIORS_V_SERVICE_DEFAULT
+    BASE_PRIORS_V_SERVICE_DEFAULT = v_default
     chosen_pi: Dict[str, Dict[str, str]] = {}
     engine.start_panel(tasks, node_models)
     engine.run_jobs('A', engine.planned_jobs(tasks, node_models,
@@ -164,16 +183,31 @@ def run_episode(engine, state, tasks: List[dict], node_models: Dict[str, str],
             if decision.degraded:
                 st.degraded = True
                 st.violations.extend(decision.violations)
+                # this task's plans will not run: release any earlier
+                # reservations and stop contributing contention
+                state.release_reservations(uid)
+                state.remaining_work_est.pop(uid, None)
             else:
                 chosen_pi[uid] = dict(decision.chosen.pi)
-                # Budget commitment (phase-3 fix 5): the chosen candidate's
-                # incremental cost is RESERVED immediately so later tasks'
-                # decisions cannot promise the same tokens twice; physical
-                # calls drain the reservation as they land.
-                state.committed_tokens += decision.chosen.row['dcost']
+                # Budget reservation, OWNED by this task+decision: later
+                # tasks see allocation - spent - reservations; only THIS
+                # task's physical calls drain it; residuals release at
+                # plan end (boundary task 1).
+                state.reserve(uid, decision.chosen.row['dcost'])
+                # Conservative remaining-work estimate for OTHER tasks'
+                # contention bounds (cleared when this task's stages end).
+                state.remaining_work_est[uid] = (
+                    decision.chosen.row['mu_e2e']
+                    - decision.chosen.row['contention'])
                 apply_decision(engine, state, t, node_models,
                                decision.chosen)
 
+    # Baseline remaining work BEFORE any decision so the FIRST decider
+    # already sees other tasks' shared-timeline work (boundary task 3):
+    # each task's not-yet-run V1 stage under its planned model.
+    for t in tasks:
+        state.remaining_work_est.setdefault(
+            t['uid'], BASE_PRIORS_V_SERVICE_DEFAULT)
     decision_round('post_R1')
     v_jobs = []
     for t in tasks:
@@ -185,7 +219,14 @@ def run_episode(engine, state, tasks: List[dict], node_models: Dict[str, str],
         v_jobs.append(dict(task=t, node='v', kind='plain', model=v_model))
     if v_jobs:
         engine.run_jobs('V1', v_jobs)
+    for t in tasks:  # V1 landed: no remaining planned work to contend for
+        state.remaining_work_est.pop(t['uid'], None)
     decision_round('post_V1')
+    # Plan-end settlement of reservations (boundary task 1): every task's
+    # plans have fully executed or degraded — unused residuals return to
+    # the pool BEFORE settlement so C_full accounting sees the truth.
+    for t in tasks:
+        state.release_reservations(t['uid'])
     summaries = engine.write_task_summaries(tasks)
     engine.write_session_summary(len(tasks))
     settlement = reward_mod.settle(
@@ -221,12 +262,29 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
         ordered = [cand.pi.get(n) or st.node_model.get(n)
                    for n, new_call in execute if new_call]
         sw = compensator.switch_overhead(engine_model, ordered)
-        mu_e2e = pred.mu_service_s + sw          # composed ONCE (B6)
+        # Cross-task contention (boundary task 3): a CONSERVATIVE upper
+        # bound on the wall time other in-flight tasks add to this task's
+        # completion (their own remaining planned/recovery work on the
+        # shared serial executor). Shifts mean and p90 together as a
+        # deterministic addend; declared, audited per row — never silently
+        # zero.
+        contention = sum(
+            state.remaining_work_est.get(u, 0.0)
+            for u in state.tasks if u != uid)
+        mu_e2e = pred.mu_service_s + sw + contention  # composed ONCE (B6)
         # Deterministic switch overhead shifts mean AND quantile together
         # (phase-3 fix 2); sigma is unchanged by the shift, but a service-
         # only p90 against a switch-inflated mean would wrongly degenerate.
-        p90_e2e = pred.w_p90_s + sw
+        p90_e2e = pred.w_p90_s + sw + contention
         p_on, e_late = e1_on_time(mu_e2e, p90_e2e, d_remain)
+        # Conservatism applicability (boundary task 2): quantile_sum gives
+        # a path-p90 UPPER bound; that translates to an on-time-probability
+        # LOWER bound ONLY while D >= mu. Below the mean the inflated sigma
+        # RAISES the computed probability — no guarantee is claimed there.
+        agg_mode = params['priors'].get('policy', {}).get(
+            'p90_aggregation', 'quantile_sum')
+        p_conservative = (agg_mode == 'variance'
+                          or d_remain >= mu_e2e)
         # e_late feasibility uses d_remain; NORMALIZATION uses the frozen
         # task duration D so decisions optimize the settlement objective
         # (phase-3 fix 3).
@@ -249,7 +307,9 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
                         q=round(pred.q_mean, 10), mu_e2e=round(mu_e2e, 10),
                         p90=round(p90_e2e, 10),
                         dcost=pred.d_cost_tokens, switch=round(sw, 10),
+                        contention=round(contention, 10),
                         p_on_time=round(p_on, 10), e_late=round(e_late, 10),
+                        p_conservative=p_conservative,
                         score=round(score, 10), feasible=not deficits,
                         deficits=deficits, kinds=dict(cand.kinds))
         if not deficits:

@@ -150,10 +150,16 @@ class SchedulerState:
         self.tasks: Dict[str, _TaskState] = {}
         self.tokens_spent = 0
         self.requests_spent = 0
-        # Budget COMMITTED by chosen-but-not-yet-executed plans (phase-3
-        # fix 5): b_remain = allocation - spent - committed, so sequential
-        # decisions cannot promise the same tokens twice.
-        self.committed_tokens = 0.0
+        # Budget reservations, OWNED per task and per decision (boundary
+        # audit task 1): {uid: [(seq, amount), ...]} in FIFO order. A
+        # physical call drains ONLY its own task's reservations; unused
+        # residuals are explicitly released at plan end / degradation /
+        # settlement. b_remain = allocation - spent - sum(reservations).
+        self.reservations: Dict[str, List[Tuple[int, float]]] = {}
+        self._reservation_seq = 0
+        # Conservative per-task remaining-work estimate (seconds) used as
+        # the cross-task contention bound (boundary audit task 3).
+        self.remaining_work_est: Dict[str, float] = {}
         self.switch_indices: List[int] = []
         self.cold_start_indices: List[int] = []
         self._panel_models: Dict[str, str] = {}
@@ -207,10 +213,12 @@ class SchedulerState:
             self.tokens_spent += ev['usage']['total_tokens']
             self.requests_spent += 1
             st.tokens_physical += ev['usage']['total_tokens']
-            # drain the reservation as the physical spend lands
-            self.committed_tokens = max(
-                0.0, self.committed_tokens
-                - ev['usage']['total_tokens'])
+            # Drain ONLY this task's reservations, FIFO. Another task's
+            # calls must never release this task's reservations, and an
+            # overspend beyond the reservation honestly eats the global
+            # pool (b_remain may go negative — never silently topped up).
+            self._drain_reservations(ev['task'],
+                                     ev['usage']['total_tokens'])
         t = ev['t_end']
         rec_kind = {('e1', 'fb'): 'e_fb', ('e2', 'fb'): 'e_fb',
                     ('r', 'fbd'): 'r_fbd', ('v', 'fbd'): 'v_fbd',
@@ -275,11 +283,11 @@ class SchedulerState:
         return dict(
             tokens_spent=self.tokens_spent,
             requests_spent=self.requests_spent,
-            committed_tokens=self.committed_tokens,
+            committed_tokens=self.committed_total,
             token_allocation=self.token_allocation,
             request_allocation=self.request_allocation,
             b_remain_tokens=(self.token_allocation - self.tokens_spent
-                             - self.committed_tokens),
+                             - self.committed_total),
             b_remain_requests=(None if self.request_allocation is None
                                else self.request_allocation
                                - self.requests_spent))
@@ -351,6 +359,48 @@ class SchedulerState:
             R=R, pi=dict(pi or {}), on_incomplete=on_incomplete,
             uid=uid, current_ctx_sha=st.ctx_sha,
             parent_answers=dict(st.answers))
+
+    # -- budget reservation ledger (boundary audit task 1) ---------------
+    @property
+    def committed_total(self) -> float:
+        return sum(a for _uid, res in self.reservations.items()
+                   for _seq, a in res)
+
+    def reserve(self, uid: str, amount: float) -> int:
+        self._reservation_seq += 1
+        self.reservations.setdefault(uid, []).append(
+            (self._reservation_seq, float(amount)))
+        return self._reservation_seq
+
+    def _drain_reservations(self, uid: str, usage: float) -> None:
+        res = self.reservations.get(uid)
+        if not res:
+            return
+        left = usage
+        while left > 0 and res:
+            seq, amount = res[0]
+            take = min(amount, left)
+            left -= take
+            amount -= take
+            if amount <= 0:
+                res.pop(0)
+            else:
+                res[0] = (seq, amount)
+
+    def release_reservations(self, uid: str) -> float:
+        """Plan ended (completed / degraded / settlement): return the
+        UNUSED reservation to the available pool. Returns the released
+        amount (audit-trail value)."""
+        res = self.reservations.pop(uid, [])
+        return sum(a for _seq, a in res)
+
+    def budget_conservation(self) -> dict:
+        b = self.budget()
+        return dict(spent=b['tokens_spent'], committed=b['committed_tokens'],
+                    available=b['b_remain_tokens'],
+                    invariant=(b['tokens_spent'] + b['committed_tokens']
+                               + b['b_remain_tokens']
+                               == self.token_allocation))
 
     # -- replay/rebuild (no future information by construction) ----------
     @staticmethod

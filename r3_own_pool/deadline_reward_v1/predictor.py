@@ -33,6 +33,28 @@ def _profile(priors: dict, node: str, model: str) -> dict:
     return prof
 
 
+def validate_node_profiles(priors: dict) -> None:
+    """Latency-profile legality (boundary audit task 4).
+
+    A declared NORMAL profile must satisfy p90 >= mean — a quantile below
+    the mean is statistically contradictory and must NOT be silently
+    coerced into the point-mass model for formal feasibility decisions
+    (p90 == mean is the legitimate zero-variance limit). DETERMINISTIC
+    profiles are explicit point masses and always legal. Raises
+    ValueError naming every offending profile."""
+    bad = []
+    for key, prof in priors.get('node_profiles', {}).items():
+        if prof.get('family', 'normal') == 'normal':
+            mean, p90 = float(prof['lat_mean_s']), float(prof['lat_p90_s'])
+            if p90 < mean:
+                bad.append(f'{key}(mean={mean}, p90={p90})')
+    if bad:
+        raise ValueError(
+            'inconsistent normal latency profile(s) — p90 < mean is '
+            'statistically contradictory; use family=deterministic for '
+            'explicit point masses: ' + '; '.join(bad))
+
+
 class OutcomePredictor:
     def __init__(self, priors: dict) -> None:
         self.priors = priors

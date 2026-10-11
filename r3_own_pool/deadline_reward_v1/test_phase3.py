@@ -194,18 +194,30 @@ def main():
     checks['p3_2_p90_shifted_with_switch'] = (
         abs(row2['p90'] - (svc_p90 + row2['switch'])) < 1e-9
         and row2['p90'] >= row2['mu_e2e'])  # no degenerate sigma path
-    # anomaly: a profile with p90 < mean -> point-mass, exact 0/1, no crash
+    # boundary task 4 updated semantics: p90 < mean is an ILLEGAL normal
+    # profile — rejected at episode start with a named error (never a
+    # silent point-mass for formal feasibility). The LEGAL zero-variance
+    # limit (p90 == mean) still yields exact point-mass rows.
     weird = full_wins_priors()
     weird['node_profiles']['v|large'].update(lat_mean_s=10.0,
                                              lat_p90_s=5.0)
-    r2b = run('p90_anomaly', [task(0)], priors=weird, deadline=60.0,
+    try:
+        run('p90_illegal', [task(0)], priors=weird, deadline=60.0,
+            faults=[('pt0', 'r', 'medium', '###BROKEN###')])
+        checks['p3_2_anomaly_point_mass'] = False
+    except ValueError as exc:
+        checks['p3_2_anomaly_point_mass'] = 'v|large' in str(exc)
+    zero_var = full_wins_priors()
+    zero_var['node_profiles']['v|large'].update(lat_mean_s=10.0,
+                                                lat_p90_s=10.0)
+    r2b = run('p90_zero_var', [task(0)], priors=zero_var, deadline=60.0,
               faults=[('pt0', 'r', 'medium', '###BROKEN###')])
     d2b = next(e for e in r2b['decisions'] if e['stage'] == 'post_R1')
-    weird_rows = [r for r in d2b['table'] if r['pi'].get('v') == 'large'
-                  and r['arm'] == 'LOCAL']
-    checks['p3_2_anomaly_point_mass'] = (
-        len(weird_rows) > 0
-        and all(r['p_on_time'] in (0.0, 1.0) for r in weird_rows))
+    zv_rows = [r for r in d2b['table'] if r['pi'].get('v') == 'large'
+               and r['arm'] == 'LOCAL']
+    checks['p3_2_zero_variance_point_mass'] = (
+        len(zv_rows) > 0
+        and all(r['p_on_time'] in (0.0, 1.0) for r in zv_rows))
     # aggregation modes, tested on the predictor directly
     pred = OutcomePredictor(BASE_PRIORS)
     ex = [('r', True), ('v', True)]
@@ -309,20 +321,16 @@ def main():
                 for vv in dec['pt1']['violations'] for v in vv['deficits'])
         and dec['pt1']['b_remain_tokens'] < 900.0)
     rewards4 = {r['task']: r for r in r4['result']['settlement']['rewards']}
-    spent4 = r4['state'].budget()['tokens_spent']
-    # commitment algebra: reserved minus what actually landed after the
-    # reservations began (predictions use node-profile token P90s; the
-    # engine meters 100/call — the reservation is deliberately the
-    # PREDICTED amount, conservative by construction)
-    phys_after = sum(c['usage']['total_tokens'] for c in r4['events']
-                     if c['event'] == 'call' and c['physical']
-                     and c['task'] == 'pt0'
-                     and c['stage'] in ('plan:LOCAL', 'plan:FULL', 'V1'))
+    # boundary task 1 semantics: the residual reservation is RELEASED at
+    # plan end, so at settlement committed == 0 and the conservation
+    # invariant holds exactly; pt0's mid-run reservation existed (its
+    # amount is visible in pt1's decision b_remain above).
+    cons = r4['state'].budget_conservation()
     checks['p3_4_budget_reconciles'] = (
         rewards4['pt0']['q'] == 1.0 and rewards4['pt1']['degraded']
-        and spent4 <= r4['state'].token_allocation
-        and abs(r4['state'].committed_tokens
-                - max(0.0, pt0_dcost - phys_after)) < 1e-9)
+        and cons['spent'] <= r4['state'].token_allocation
+        and r4['state'].budget()['committed_tokens'] == 0.0
+        and cons['invariant'])
     # re-fault: r fault recovered at post_R1, then v faults at V1 ->
     # post_V1 decision fires and recovers v
     # deadline 22, resident models -> B chosen (v=coder) -> the v fault

@@ -1,0 +1,73 @@
+{
+ "audit": "boundary",
+ "checks": {
+  "t1_foreign_call_no_release": true,
+  "t1_own_call_drains_own": true,
+  "t1_conservation_all_snaps": true,
+  "t1_plan_end_release": true,
+  "t1_overspend_honest": true,
+  "t2_d_below_mu_counterexample": true,
+  "t2_annotation_d_ge_mu": true,
+  "t2_annotation_d_lt_mu": true,
+  "t2_variance_mode_annotated_valid": true,
+  "t3_bound_flips_approval": true,
+  "t3_prediction_covers_actual": true,
+  "t3_field_always_present": true,
+  "t4_illegal_profile_rejected": true,
+  "t4_legal_profiles_accepted": true
+ },
+ "all_pass": true,
+ "zero_model_calls": true,
+ "detail": {
+  "t1": {
+   "reserved": 1200.0,
+   "final_budget": {
+    "tokens_spent": 900,
+    "requests_spent": 9,
+    "committed_tokens": 0,
+    "token_allocation": 4000.0,
+    "request_allocation": null,
+    "b_remain_tokens": 3100.0,
+    "b_remain_requests": null
+   },
+   "overspend_b_remain": -50.0
+  },
+  "t2": {
+   "p_sigma2": 0.15865525393145724,
+   "p_sigma3": 0.25249253754692286
+  },
+  "t3": {
+   "b_row": {
+    "arm": "LOCAL",
+    "contention": 7.0,
+    "dcost": 900.0,
+    "deficits": [
+     {
+      "constraint": "on_time",
+      "deficit": 0.9
+     }
+    ],
+    "e_late": 11.2,
+    "feasible": false,
+    "kinds": {
+     "r": "esc",
+     "v": "plain"
+    },
+    "mu_e2e": 30.5,
+    "p90": 31.5,
+    "p_conservative": false,
+    "p_on_time": 0.0,
+    "pi": {
+     "r": "large",
+     "v": "coder"
+    },
+    "q": 0.85,
+    "score": -2.5432692308,
+    "switch": 6.5
+   },
+   "solo_p": 0.9993223376166196,
+   "degraded": true
+  },
+  "t4": "see t4_illegal"
+ }
+}
