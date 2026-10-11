@@ -8,6 +8,33 @@ invocation is a ZERO-CALL preflight; execution requires the operator's
 measurement GO (`SUPPLEMENTARY_EXECUTE=1` + the approved
 SUPPLEMENTARY_PANEL_FREEZE.json SHA-256 + GPU lock + production Budget).
 
+## Operator rulings 2026-10-11 (measurement HOLD) — binding boundaries
+
+1. **q̂ = production-parity parse rate is a PROXY, not task correctness.**
+   r|medium=0.783 says the parse metric is below 0.80 — it does NOT
+   establish that real task quality is below threshold. DS refusing
+   recovery under this proxy is a phenomenon to RECORD and analyze, never
+   to present as algorithm success or failure.
+2. **D=3600 s makes the deadline constraint effectively non-binding.**
+   This run therefore validates recovery + model-assignment QUALITY and
+   COST behavior under real execution ONLY. It CANNOT support any claim
+   about "choosing faster models under time pressure" — that requires the
+   separate strict-deadline experiments (the V2.3 protocol's D-tiers).
+3. **One engine + one shared cache across cells = a shared-cache
+   deployment scenario.** Cost reductions from cache hits MUST be
+   separated from scheduling benefit in any analysis; cell execution
+   order can affect cache state and therefore comparisons. Any future
+   analysis reports per-cell (new_requests vs cache_hits) explicitly and
+   treats cross-cell cost comparisons as cache-scenario results, not
+   scheduler-attributable ones.
+
+## Aborted partial run (quarantined)
+
+run_20261011_223149 was launched before the HOLD arrived and killed on
+receipt: 80/1200 requests, 26,462/800K tokens, 2/10 cells (clean|SS 0.3,
+clean|DS 0.3), mid clean|SD. See its OPERATOR_HOLD_NOTE.md. Diagnostic
+use only; the measurement has NOT run.
+
 ## Two production-parity defects found and fixed while building it
 
 Both were latent in `deadline_reward_v1/detection.py` (the M2 mirror of

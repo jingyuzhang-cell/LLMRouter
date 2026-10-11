@@ -1,0 +1,105 @@
+{
+ "version": "DAG_QUALITY_CALIBRATION_PROTOCOL_v1",
+ "class": "pre_measurement_freeze",
+ "note": "Frozen BEFORE supplementary real calls. v2.1 scoring is the ONLY quality metric. Q_min=0.80 unchanged.",
+ "date_frozen": "2026-10-11",
+ "distribution_finding": {
+  "summary": "REAL Shapiro-Wilk: 0/40 normal, 9/40 lognormal, 31/40 empirical",
+  "implication": "E1 normal estimator NOT supported; use lognormal/empirical per cell",
+  "estimator_rule": "LOGNORM -> lognormal params; EMPIRICAL -> empirical CDF; NORM unused"
+ },
+ "configurations": [
+  {
+   "id": "SS_planned",
+   "X": {
+    "e1": "large",
+    "e2": "large",
+    "r": "medium",
+    "v": "coder"
+   },
+   "Z": "LOCAL",
+   "pi_mode": "planned",
+   "recovery": "static"
+  },
+  {
+   "id": "DS_dynamic_recovery",
+   "X": {
+    "e1": "large",
+    "e2": "large",
+    "r": "medium",
+    "v": "coder"
+   },
+   "Z": "LOCAL",
+   "pi_mode": "planned_only",
+   "recovery": "policy"
+  },
+  {
+   "id": "SD_dynamic_assignment",
+   "X": {
+    "e1": "large",
+    "e2": "large",
+    "r": "medium",
+    "v": "coder"
+   },
+   "Z": "LOCAL",
+   "pi_mode": "menu_free",
+   "recovery": "static"
+  },
+  {
+   "id": "DD_full_dynamic",
+   "X": {
+    "e1": "large",
+    "e2": "large",
+    "r": "medium",
+    "v": "coder"
+   },
+   "Z": "ANY",
+   "pi_mode": "menu_free",
+   "recovery": "policy"
+  },
+  {
+   "id": "NONE_no_recovery",
+   "X": {
+    "e1": "large",
+    "e2": "large",
+    "r": "medium",
+    "v": "coder"
+   },
+   "Z": "NONE",
+   "pi_mode": "planned",
+   "recovery": "none"
+  }
+ ],
+ "conditions": {
+  "clean": {
+   "n_tasks": 20,
+   "fault_rate": 0.0
+  },
+  "fault30_D3": {
+   "n_tasks": 20,
+   "fault_rate": 0.3,
+   "fault_node": "r",
+   "fault_type": "D3_r_unparseable"
+  }
+ },
+ "task_selection": {
+  "source": "frozen200, EXCLUDING evaluation panel uids",
+  "n_tasks_per_config_per_condition": 20,
+  "selection": "Random(42) from disjoint pool; same 20 tasks across configs for pairing"
+ },
+ "call_budget": {
+  "base": "5 configs x 2 conditions x 20 tasks x 4 nodes = 800",
+  "recovery_extra": "fault conditions only; worst case 300, realistic 200",
+  "cap_requests": 1200,
+  "cap_tokens": 800000,
+  "cap_wall_s": 7200
+ },
+ "quality_metric": {
+  "primary": "P(task correct | config, condition) via v2.1 scoring",
+  "secondary": "node format rate (diagnostic only)",
+  "Q_min_usage": "validate 0.80 is reasonable; NEVER adjust Q_min based on results"
+ },
+ "output": "deadline_reward_v1/PRIORS_REAL_V1_quality.json",
+ "termination": "stop on any cap; model failure retry once then skip task",
+ "uncertainty": "20 tasks: 85%=17/20 (CI 64-95%), 60%=12/20 (CI 39-78%); overlapping CIs; initial calibration ONLY"
+}
