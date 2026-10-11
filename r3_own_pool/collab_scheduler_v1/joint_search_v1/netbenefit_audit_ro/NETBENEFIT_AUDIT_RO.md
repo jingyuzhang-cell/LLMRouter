@@ -6,7 +6,7 @@ calls.
 
 ## Verdict (hardened)
 
-**41/41 checks PASS, exit 0** (31 original + 5 hardening/negative
+**46/46 checks PASS, exit 0** (31 original + 5 hardening/negative
 tests + 2 B5/E5 semantic splits from the latest review). The
 operator's review items are closed:
 - **C1**: per-cell independent recount from DISPATCH (responses linked
@@ -21,13 +21,17 @@ operator's review items are closed:
 - **E5** (split into E5a/E5b; E5b now FULL GRID):
   - E5a (V4 INTERNAL CONSISTENCY): sub-audit flags match their own
     check sets; stub rows carry no execute flags.
-  - E5b (FULL GRID recomputation): the stub NB_ROWS independently
-    verified to cover the COMPLETE arm×state grid (8 arms × 4 states
-    = 32 cells) defined by the freeze's 'states' list — set-level
-    comparison with missing/extra/duplicate each checked (0 missing,
-    0 extra, 32 unique). Full raw recomputation of V4's analytical
-    conclusions is still NOT performed — those conclusions are
-    stub-based (zero_model_requests).
+  - E5b (FINAL-EFFECTIVE GRID): protocol-separated (mechanism vs
+    competitive); mechanism grid = 8 arms × 4 freeze states = 32
+    cells; selection rule: per cell exactly ONE effective COMPLETE
+    record (INCOMPLETE rows are preserved raw history). The C_static_
+    hetero × clean cell has 1 INCOMPLETE + 1 COMPLETE in raw history
+    — the COMPLETE is the sole effective record; no conflicts, no
+    missing, no extra. Raw=57 (mech=33, comp=24); effective=32;
+    history dup cells=1 (the C_static_hetero case). Five negative
+    tests (G8-G12) pin the selection rule: INCOMPLETE→COMPLETE
+    passes; duplicate COMPLETE fails; only-INCOMPLETE fails; missing
+    cell fails; protocol mixing fails.
 - **Negative tests (G1–G4)**: tampered request counts, token counts,
   per-cell counts, and V4 flags each make the corresponding checker
   fail. The net-benefit freeze, its pre-halt

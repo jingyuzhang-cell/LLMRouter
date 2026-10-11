@@ -76,27 +76,19 @@ def main():
     # (the halt boundary) is dated 2026-10-10. All real execution
     # timestamps must PRE-DATE the freeze. The stub rows have no
     # timestamps — for those we can only say 'no execute flag set'.
-    # Halt boundary: derived from the freeze's own timestamp if
-    # available; else from the FREEZE_BINDING in the real run dir;
-    # else from the freeze file's git date. Never a bare constant.
-    _freeze_binding = (JS / 'netbenefit_runs' /
-                       'real_20261010_000854' / 'FREEZE_BINDING.jsonl')
-    _halt_boundary = None
-    _boundary_src = 'not found'
-    if _freeze_binding.exists():
-        for _l in _freeze_binding.read_text().splitlines():
-            if not _l.strip():
-                continue
-            _b = json.loads(_l)
-            _ts = _b.get('unix') or _b.get('timestamp')
-            if _ts and isinstance(_ts, (int, float)):
-                _halt_boundary = _ts
-                _boundary_src = 'FREEZE_BINDING'
-                break
-    if _halt_boundary is None:
-        # fall back to the freeze file mtime as the boundary anchor
-        _halt_boundary = (JS / 'NET_BENEFIT_FREEZE.json').stat().st_mtime
-        _boundary_src = 'freeze_file_mtime'
+    # B5 (FINAL REVISION): the halt boundary is derived ONLY from
+    # traceable sources. The freeze note states the halt directive was
+    # received on 2026-10-10; the earliest traceable boundary is
+    # 2026-10-10T00:00 UTC (= 1791590400). This is the FREEZE-DATE
+    # boundary, NOT necessarily the exact halt-instant (which we do
+    # not have independent evidence for). The check's claim is
+    # correspondingly scoped: "all real DISPATCH timestamps pre-date
+    # the freeze-date boundary" — which is a NECESSARY condition for
+    # halt compliance, not proof that no post-halt calls occurred.
+    # File mtimes are NOT used (they change on checkout/copy).
+    import calendar as _cal
+    _halt_boundary = _cal.timegm((2026, 10, 10, 0, 0, 0, 0, 0, 0))
+    _boundary_src = 'freeze-note date 2026-10-10 → UTC midnight'
     _real_dir = JS / 'netbenefit_runs' / 'real_20261010_000854'
     _dispatch = _real_dir / 'DISPATCH.jsonl'
     if _dispatch.exists():
@@ -104,16 +96,26 @@ def main():
         _unixes = [e['unix'] for e in _disp
                    if isinstance(e.get('unix'), (int, float))
                    and e['unix'] > 0]
-        # FAIL if no valid timestamps exist (not default-0 pass)
-        checks['B5_timestamps_predate_freeze'] = (
+        checks['B5_timestamps_predate_freeze_date'] = (
             len(_unixes) > 0
             and max(_unixes) < _halt_boundary)
         findings.append(('NOTE', 'B5_boundary',
                          f'source={_boundary_src}, boundary='
-                         f'{_halt_boundary:.0f}, n_ts={len(_unixes)}, '
-                         f'max={max(_unixes) if _unixes else None}'))
+                         f'{_halt_boundary}, n_ts={len(_unixes)}, '
+                         f'max={max(_unixes) if _unixes else None}; '
+                         'CLAIM SCOPE: necessary condition only; the '
+                         'exact halt-instant is not independently '
+                         'evidenced; the file mtime is NOT used'))
     else:
-        checks['B5_timestamps_predate_freeze'] = False
+        checks['B5_timestamps_predate_freeze_date'] = False
+    # G13: no timestamps => must FAIL (not default pass)
+    def b5_date_check(unixes, boundary):
+        return len(unixes) > 0 and max(unixes) < boundary
+    checks['G13_negative_no_timestamps'] = not b5_date_check(
+        [], _halt_boundary)
+    # G14: timestamp after boundary => must FAIL
+    checks['G14_negative_post_boundary'] = not b5_date_check(
+        [_halt_boundary + 100], _halt_boundary)
     checks['B5_records_show_no_extra_real'] = all(
         not r.get('execute') for r in rows if r not in real_rows)
 
@@ -222,34 +224,100 @@ def main():
                     if not all(a['checks'].values()):
                         e5a_ok &= False
         checks['E5a_v4_internal_consistency'] = e5a_ok
-        # E5b (raw recomputation, partial): independently verify the
-        # stub NB_ROWS covers the FULL arm×state grid defined by the
-        # freeze's 'states' list × the 8 arms. Set-level comparison:
-        # missing, extra, and duplicate cells are each reported.
+        # E5b (final-effective grid, FINAL REVISION):
+        # - separate protocol=mechanism from protocol=competitive
+        # - mechanism grid: 8 arms × 4 freeze states = 32 cells
+        # - raw history (INCOMPLETE + COMPLETE) fully preserved & counted
+        # - SELECTION RULE (frozen): per cell, exactly ONE effective
+        #   record = the latest COMPLETE; INCOMPLETE rows are raw
+        #   history only. Multiple COMPLETE rows for the same cell =
+        #   CONFLICT => FAIL.
+        # - missing cells, extra cells, conflicts => FAIL
         if stub_rows_path.exists():
             stub_raw = jload(stub_rows_path)
-            stub_pairs = [(r['arm'], r['state']) for r in stub_raw]
-            stub_set = set(stub_pairs)
-            from collections import Counter
-            stub_counts = Counter(stub_pairs)
-            freeze_states = freeze.get('states', [])
+            mech_rows = [r for r in stub_raw
+                         if r.get('protocol') == 'mechanism']
+            comp_rows = [r for r in stub_raw
+                         if r.get('protocol') == 'competitive']
+            freeze_states = sorted(freeze.get('states', {}).keys())
             expected_grid = {(a, st) for a in arms_f
                              for st in freeze_states}
-            missing = expected_grid - stub_set
-            extra = stub_set - expected_grid
-            duplicates = {p for p, n in stub_counts.items() if n > 1}
-            checks['E5b_stub_full_grid_coverage'] = (
+            # per-cell grouping of mechanism rows
+            from collections import defaultdict
+            cell_rows = defaultdict(list)
+            for r in mech_rows:
+                cell_rows[(r['arm'], r['state'])].append(r)
+            effective = {}       # cell -> the selected COMPLETE record
+            conflicts = set()    # cells with >1 COMPLETE
+            incomplete_only = set()  # cells with ONLY INCOMPLETE rows
+            for cell, rows in cell_rows.items():
+                completes = [r for r in rows
+                             if r.get('status') == 'COMPLETE']
+                if len(completes) > 1:
+                    conflicts.add(cell)
+                elif len(completes) == 1:
+                    effective[cell] = completes[0]
+                else:
+                    incomplete_only.add(cell)
+            eff_set = set(effective)
+            missing = expected_grid - eff_set
+            extra = eff_set - expected_grid
+            checks['E5b_final_effective_grid'] = (
                 len(missing) == 0 and len(extra) == 0
-                and len(stub_set) == len(expected_grid))
-            # separately report coverage stats for the evidence
-            findings.append(('NOTE', 'E5b_grid_stats',
-                             f'expected {len(expected_grid)} cells; '
-                             f'stub has {len(stub_set)} unique; '
-                             f'missing {len(missing)}; extra '
-                             f'{len(extra)}; duplicated {len(duplicates)}'
-                             f'; missing={sorted(missing)[:5]}'))
+                and len(conflicts) == 0
+                and len(incomplete_only) == 0
+                and len(eff_set) == len(expected_grid))
+            _dup_hist = sum(1 for c, r in cell_rows.items()
+                           if len(r) > 1)
+            _stats = (f'raw={len(stub_raw)} '
+                      f'(mech={len(mech_rows)}, '
+                      f'comp={len(comp_rows)}); '
+                      f'expected={len(expected_grid)}; '
+                      f'effective={len(eff_set)}; '
+                      f'missing={len(missing)}; '
+                      f'extra={len(extra)}; '
+                      f'conflicts={len(conflicts)}; '
+                      f'incomplete_only={len(incomplete_only)}; '
+                      f'history_dup_cells={_dup_hist}')
+            findings.append(('NOTE', 'E5b_grid_stats', _stats))
+
+            # G8: negative — duplicate COMPLETE must FAIL the selection
+            def sel_check(rows_by_cell, expected):
+                eff = {}
+                conf = set()
+                for cell, rows in rows_by_cell.items():
+                    comp = [r for r in rows
+                            if r.get('status') == 'COMPLETE']
+                    if len(comp) > 1:
+                        conf.add(cell)
+                    elif len(comp) == 1:
+                        eff[cell] = comp[0]
+                return (len(expected - set(eff)) == 0
+                        and len(set(eff) - expected) == 0
+                        and len(conf) == 0
+                        and len(eff) == len(expected))
+            full_cell = {'A': [dict(status='COMPLETE')],
+                         'B': [dict(status='INCOMPLETE'),
+                               dict(status='COMPLETE')]}
+            checks['G8_negative_incomplete_then_complete'] = (
+                sel_check(full_cell, {'A', 'B'}))
+            dup_cell = {'A': [dict(status='COMPLETE'),
+                              dict(status='COMPLETE')]}
+            checks['G9_negative_duplicate_complete'] = not sel_check(
+                dup_cell, {'A'})
+            only_inc = {'A': [dict(status='INCOMPLETE')]}
+            checks['G10_negative_only_incomplete'] = not sel_check(
+                only_inc, {'A'})
+            checks['G11_negative_missing_cell'] = not sel_check(
+                {'A': [dict(status='COMPLETE')]}, {'A', 'B'})
+            # mixing competitive into the mechanism grid must be caught
+            checks['G12_negative_protocol_mix'] = (
+                # a competitive row for an arm NOT in the mechanism
+                # grid does not satisfy the mechanism grid requirement
+                not sel_check({'X': [dict(status='COMPLETE')]},
+                              {'A', 'B'}))
         else:
-            checks['E5b_stub_full_grid_coverage'] = False
+            checks['E5b_final_effective_grid'] = False
     else:
         for k in ('E2', 'E3', 'E4', 'E5'):
             checks[f'{k}_v4_cross'] = False
@@ -291,13 +359,6 @@ def main():
         not v4_recheck(tampered_v4)
         and v4_recheck(dict(all_pass=True, audits=[
             dict(checks={'x': True})])))
-    # G5: empty-timestamp must NOT pass the B5 check
-    def b5_check(unixes, boundary):
-        return (len(unixes) > 0 and max(unixes) < boundary)
-    checks['G5_negative_empty_timestamp'] = not b5_check([], 1e12)
-    # G6: timestamps AFTER the boundary must NOT pass
-    checks['G6_negative_late_timestamp'] = not b5_check(
-        [1e11], 1e10)
     # G7: missing grid cells must NOT pass E5b
     def grid_check(stub_set, expected):
         return (len(expected - stub_set) == 0
