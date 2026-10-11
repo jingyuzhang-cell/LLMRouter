@@ -103,9 +103,28 @@ PASS**, zero real model calls, socket-blocked. Evidence:
 `evidence/M6_EVIDENCE.json` (hand-reconciliation tables), run ledgers
 under `evidence/m6_runs/`.
 
-**Status: M6 acceptance submitted. The frozen mainline — fault →
-remaining time/budget → joint (Z,R,π) with quality/on-time/cost
-filtering → argmax Ê[R_task] → execution → settlement — is now formally
-verified end-to-end at zero-call level. Phase-3 formal acceptance,
-production integration, net-benefit, and real-model experiments remain
-HOLD pending separate authorization.**
+## Formal sign-off (operator, 2026-10-11, commit 0f7cb46)
+
+M6 engineering acceptance SIGNED OFF — the phase-2 stub implementation
+(M1–M6) is complete. Two statistical-calibre reservations are carried
+into phase 3 as mandatory items (not defects in this sign-off):
+
+1. `p_conservative` is NOT an unconditional on-time-probability
+   guarantee: variance-mode "exact" and quantile_sum conditional
+   conservatism both rest on the DECLARED distribution/aggregation
+   assumptions; the expected-tag helper's `p_on_time in (0.0, 1.0)`
+   side-branch must be unified with the formal rule next round to
+   remove boundary ambiguity.
+2. Cross-task contention time enters μ_E2E and the p90 and therefore
+   DOES influence p_on_time; the current tests prove only field
+   presence/non-negativity. Phase 3 must independently calibrate and
+   bound its estimation error against the probability guarantee.
+
+**Status: M1–M6 SIGNED OFF (phase-2 engineering complete). The frozen
+mainline — fault → remaining time/budget → joint (Z,R,π) with
+quality/on-time/cost filtering → argmax Ê[R_task] → execution →
+settlement — is verified end-to-end at zero-call level. Phase-3
+independent statistical/correctness acceptance, production
+integration, net-benefit, and real-model experiments remain HOLD
+pending separate authorization. No claim of real-world superiority
+over static scheduling is supported by any of this evidence.**
