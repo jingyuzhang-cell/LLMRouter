@@ -375,6 +375,63 @@ def main():
         and exec_models.get('r') == chosen.pi.get(
             'r', NODES_MODELS['r']))
 
+    # ============ final enum-gap fix: DONE non-FAILED nodes are FREE ====
+    # Reviewer's decisive state: e1 FAILED, e2 DONE, r DONE, v PENDING
+    # (built on a REAL engine run: planned A+R1 clean, then e1 flagged
+    # FAILED at state level — M5 tests reassignment, not corruption).
+    t = task(0)
+    server = StubModelServer(dict(ANSWERS), PRIORS, seed='m5')
+    engine = StubEngine(RUNS_DIR / 'gapfix', server, InjectedClock(),
+                        seed='m5', profile_key='golden_zero')
+    state = SchedulerState(InjectedClock(),
+                           task_deadlines={'qt0': 100.0},
+                           token_allocation=100000.0)
+    state.attach(engine)
+    engine.start_panel([t], NODES_MODELS)
+    engine.run_jobs('A', engine.planned_jobs([t], NODES_MODELS, ('e1', 'e2')))
+    engine.run_jobs('R1', engine.planned_jobs([t], NODES_MODELS, ('r',)))
+    st_g = state.tasks['qt0']
+    st_g.node_status['e1'] = FAILED          # the flagged fault
+    st_g.observations.append(dict(code='D1_e_empty', node='e1', t=0.0))
+    cands = reassign.enumerate_candidates(state, 'qt0', NODES_MODELS)
+    dyn_r = {c.pi['r'] for c in cands if c.arm == 'FULL_DYNAMIC'}
+    stat_r = {c.pi['r'] for c in cands if c.arm == 'FULL'}
+    checks['m5_g1_dynamic_covers_done_nodes'] = (
+        {'medium', 'large'} <= dyn_r and stat_r == {'medium'})
+    # all dynamic candidates still fully menu-legal and judged legal
+    checks['m5_g1_all_legal'] = all(
+        c.judgment.legal
+        and all(m in dc.MENUS[n] for n, m in c.pi.items())
+        for c in cands if c.arm == 'FULL_DYNAMIC')
+    # RUNNING rejection (no silent rebinding): r RUNNING -> every FULL
+    # and FULL_DYNAMIC candidate contains r in R -> judge rejects all;
+    # NONE candidates never carry r in pi
+    st_g.node_status['r'] = RUNNING
+    cands_run = reassign.enumerate_candidates(state, 'qt0', NODES_MODELS)
+    checks['m5_g1_running_rejected_not_rebound'] = (
+        not any(c.arm in ('FULL', 'FULL_DYNAMIC') for c in cands_run)
+        and all('r' not in c.pi for c in cands_run))
+    st_g.node_status['r'] = DONE
+
+    # execute a FULL_DYNAMIC candidate with r switched OFF the planned
+    # model: ledger r model == pi; new calls cost/latency metered
+    # pick a candidate that switches r OFF the planned model; whatever
+    # it does with e1/e2/v, the ledger must match ITS pi on every node
+    alt_r = next(c for c in cands if c.arm == 'FULL_DYNAMIC'
+                 and c.pi['r'] == 'large')
+    dec_idx = engine.n_events
+    reassign.apply_whole_plan(engine, state, t, NODES_MODELS, alt_r)
+    events, _ = load_ledger(engine.ledger_path)
+    post = [e for e in events[dec_idx:] if e['event'] == 'call']
+    r_call = next(c for c in post if c['node'] == 'r')
+    checks['m5_g1_executes_r_reassignment'] = (
+        r_call['model'] == 'large' and r_call['physical']
+        and not r_call['cached']
+        and r_call['usage']['total_tokens'] == 100
+        and r_call['latency_s'] >= 0
+        and {c['node']: c['model'] for c in post}
+        == {n: alt_r.pi[n] for n in ('e1', 'e2', 'r', 'v')})
+
     # ============ zero-call sentinel =====================================
     # sentinel over the FULL ledgers (planned + post-decision): the
     # server is invoked exactly once per physical call, nothing else

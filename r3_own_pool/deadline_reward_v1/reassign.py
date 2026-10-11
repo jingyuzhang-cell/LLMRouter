@@ -83,8 +83,12 @@ def enumerate_candidates(state, uid: str,
     others = {n: node_models[n] for n in dc.TOPO if n not in failed}
     for pi_trig in _menu_variants(failed):
         add('FULL', list(dc.TOPO), {**others, **pi_trig})
-    for pi_all in _menu_variants([n for n in dc.TOPO
-                                  if n in (set(failed) | set(pending))]):
+    # The dynamic arm's model free variables cover the ENTIRE legal
+    # re-execution set R (= the full graph here) — DONE non-FAILED nodes
+    # included, not just FAILED ∪ PENDING (final-enum-gap fix). M3
+    # rejects any variant whose node is RUNNING (R or pi) — such
+    # candidates are dropped, never silently rebound.
+    for pi_all in _menu_variants(list(dc.TOPO)):
         merged = {**others, **pi_all}
         add('FULL_DYNAMIC', list(dc.TOPO), merged)
     return out

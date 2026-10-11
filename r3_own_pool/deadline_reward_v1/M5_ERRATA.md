@@ -80,5 +80,38 @@ alias rather than a forced physical call — both were test-expectation
 errors against correct semantics, recorded here) · M5+M6 18/18 ·
 phase-3 19/19 · boundary 14/14 = **193 checks, zero real calls.**
 
-**Status: M5 targeted fixes complete; paused for final M5 acceptance
-and the M6 admission review.**
+## Addendum — final enumeration-gap fix (operator review of 393b8fb)
+
+Gap: FULL_DYNAMIC's model free variables covered only FAILED ∪ PENDING;
+DONE non-FAILED re-execution nodes (e.g. r) were pinned to planned
+models — contradicting the frozen dynamic target.
+
+Fix: `_menu_variants` over the ENTIRE legal re-execution set R (the
+full graph). Static `FULL` untouched (requirement 2: non-trigger nodes
+still pinned to planned models — M4 T3a/T3b reference semantics
+unchanged, test_recovery 28/28).
+
+New decisive tests (`m5_g1_*`, reviewer's exact state: e1 FAILED,
+e2 DONE, r DONE, v PENDING, built on a real engine run):
+- FULL_DYNAMIC contains legal candidates with r=medium AND r=large;
+  static FULL offers only r=planned(medium).
+- every dynamic candidate menu-legal and judged legal.
+- r RUNNING ⇒ ALL FULL/FULL_DYNAMIC candidates rejected outright
+  (judge: running_in_R / running_node_immutable) — never silently
+  rebound; NONE candidates never touch r.
+- executing a r=large dynamic candidate: ledger r model == 'large',
+  REAL charged call (100 tokens, latency metered), and every post-
+  decision call model equals the chosen π node-for-node.
+
+Downstream (recorded): the phase-3 "FULL wins" scenario now correctly
+elects a FULL_DYNAMIC winner (it can upgrade the planned coder v to
+large; static FULL is pinned to coder q=0.85 vs dynamic 0.95) — the
+scenario's intent (full-graph plan beats every LOCAL due to the
+q_obs=0.70 e2 reuse) is unchanged; its reconciliation now follows the
+CHOSEN arm. M4 static equivalence unaffected.
+
+M5 suite 24/24; full regression 8 suites = 185 checks ALL PASS; zero
+real model calls.
+
+**Status: enumeration gap closed; paused for final M5 acceptance and
+the M6 admission review.**

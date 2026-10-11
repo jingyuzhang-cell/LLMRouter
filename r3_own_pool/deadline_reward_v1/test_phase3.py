@@ -124,13 +124,21 @@ def main():
              deadline=60.0,
              faults=[('pt0', 'e1', 'large', '{"facts": []}')])
     d1 = next(e for e in r1['decisions'] if e['stage'] == 'post_R1')
-    full_row = next(r for r in d1['table'] if r['arm'] == 'FULL'
-                    and r['feasible'])
+    # after the M5 static/dynamic FULL split, the legitimate winner of
+    # this scenario is the DYNAMIC full-graph arm (it may upgrade the
+    # planned coder v to large); the scenario's intent — a full-graph
+    # plan beats every LOCAL because LOCAL reuses e2 at q_obs=0.70 — is
+    # unchanged; the reconciliation follows the CHOSEN arm.
+    chosen_arm = d1['chosen']['arm']
+    assert chosen_arm in ('FULL', 'FULL_DYNAMIC')
+    full_row = next(r for r in d1['table']
+                    if r['arm'] == chosen_arm and r['feasible']
+                    and r['pi'] == d1['chosen']['pi'])
     checks['p3_1_full_wins'] = (
-        d1['chosen']['arm'] == 'FULL'
+        chosen_arm in ('FULL', 'FULL_DYNAMIC')
         and all(r['arm'] != 'LOCAL' or not r['feasible']
                 for r in d1['table'])
-        and full_row['q'] == 0.85)
+        and full_row['q'] == 0.95)
     local_max_dcost = max(r['dcost'] for r in d1['table']
                           if r['arm'] == 'LOCAL')
     # uniform 100-token profiles make dcost a call-count proxy: FULL must
@@ -144,7 +152,9 @@ def main():
     dec_idx = next(i for i, e in enumerate(r1['events'])
                    if e['event'] == 'decision' and e['stage'] == 'post_R1')
     plan_calls = [e for e in r1['events'][dec_idx:]
-                  if e['event'] == 'call' and e['task'] == 'pt0']
+                  if e['event'] == 'call' and e['task'] == 'pt0'
+                  and (str(e.get('stage', '')).startswith('plan:')
+                       or e.get('stage') == 'V1')]
     sw_idx = {c['switch_before'] for c in plan_calls} - {None}
     plan_sw = [e for e in r1['events'] if e['event'] == 'switch'
                and e['idx'] in sw_idx]
@@ -154,7 +164,7 @@ def main():
     service_p90 = sum(
         full_wins_priors()['node_profiles'][
             f"{n}|{d1['chosen']['pi'][n]}"]['lat_p90_s']
-        for n, nc in [('e1', True), ('e2', True), ('r', True), ('v', True)])
+        for n in ('e1', 'e2', 'r', 'v'))
     checks['p3_1_tokens_reconcile'] = (
         full_row['dcost'] == actual_tokens == 400.0
         and all(c['physical'] and not c['cached'] for c in plan_calls))
@@ -176,7 +186,7 @@ def main():
     st1 = r1['result']['settlement']['rewards'][0]
     checks['p3_1_settlement'] = (
         st1['q'] == 1.0 and not st1['degraded']
-        and st1['c_full'] == 700  # 3 planned + 4 replay calls x 100 tok
+        and st1['c_full'] == 700  # 3 planned + 4 full-graph calls x 100
         and r1['result']['settlement']['session_terminal'] == 1.0)
     recon['full_wins'] = dict(predicted=full_row,
                               actual_tokens=actual_tokens,
