@@ -332,6 +332,39 @@ def main():
         and any(r.startswith('closure_completed:e1,r,v')
                 for r in jd_com.reasons))
 
+    # --- M3 final boundary (reviewer re-flag from baseline 4937789;
+    # fix landed at 645258c): judge-level R=[] drift through REAL engine
+    # state — all four nodes DONE, static ctx mutated, R=[] must REJECT
+    # the stale e1 (and cascade r/v), complete-mode must repair ---
+    from deadline_reward_v1.stub_engine import (InjectedClock as IC2,
+                                                StubEngine as SE2,
+                                                StubModelServer as SS2)
+    t12 = dict(uid='jt0', question='q', derivation='d', answer=4.0,
+               ctx_table='TABLE ORIGINAL', ctx_text='P')
+    srv12 = SS2(dict(BASE), PRIORS, seed='jd')
+    eng12 = SE2(RUNS_DIR / 'judge_drift_final', srv12, IC2(), seed='jd',
+                profile_key='v3_compat')
+    st12 = SchedulerState(IC2(), task_deadlines={'jt0': 100.0},
+                          token_allocation=100000.0)
+    st12.attach(eng12)
+    NM12 = {'e1': 'large', 'e2': 'large', 'r': 'medium', 'v': 'coder'}
+    eng12.start_panel([t12], NM12)
+    eng12.run_jobs('A', eng12.planned_jobs([t12], NM12, ('e1', 'e2')))
+    eng12.run_jobs('R1', eng12.planned_jobs([t12], NM12, ('r',)))
+    eng12.run_jobs('V1', eng12.planned_jobs([t12], NM12, ('v',)))
+    st12.tasks['jt0'].ctx_sha = dc.ctx_signatures(
+        dict(t12, ctx_table='TABLE MUTATED'))
+    j12r = st12.judge('jt0', R=[], pi={})
+    j12c = st12.judge('jt0', R=[], pi={}, on_incomplete='complete')
+    checks['f12_judge_level_r_empty_drift_rejected'] = (
+        not j12r.legal and j12r.invalidated == ('e1', 'r', 'v')
+        and 'input_identity_changed:e1' in j12r.reasons
+        and j12r.reuse == ())
+    checks['f13_judge_level_complete_repairs'] = (
+        j12c.legal and j12c.execute == (('e1', True), ('r', True),
+                                        ('v', True))
+        and j12c.reuse == ('e2',))
+
     # --- hardening 1: server override key-existence ------------------------
     st_h, srv_h = run_state('hard_empty', {('m1t1', 'e1', 'plain'): ''})
     obs_empty = [o['code'] for o in st_h.task_view('m1t1')['observations']]

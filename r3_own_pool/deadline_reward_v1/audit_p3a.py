@@ -97,7 +97,7 @@ def main():
        detail=str({k: v for k, v in gate_failures.items() if v}))
     # Post-signoff-hardening live count: 214 + 2 boundary checks
     # (per-event containment reverse + shared-clock sync) = 216
-    ok('R1_count_reconciliation', total == 216,
+    ok('R1_count_reconciliation', total == 218,
        detail=f'total={total}')
     findings.append(('RESOLVED', 'R2_acceptance_doc_stale',
                      'fixed across P3-B/B2/sign-off-hardening: section 6 '
@@ -398,7 +398,7 @@ def main():
        and cf.get('gold_changed_settlement') is True)
     # T3a/T3b + closure + FAILED/RUNNING/cache spot re-runs already green
     ok('X2_static_and_closure_suites', counts['test_recovery'] == 28
-       and counts['test_dag_closure'] == 37)
+       and counts['test_dag_closure'] == 39)
 
     # ================= verdicts =========================================
     order = ['R0', 'R1', 'R3', 'R4', 'G1', 'G2', 'G3', 'G4', 'G5', 'B1',
