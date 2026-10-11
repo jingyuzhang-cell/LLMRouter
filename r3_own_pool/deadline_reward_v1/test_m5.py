@@ -156,6 +156,13 @@ def main():
         loose['chosen'].pi != tight['chosen'].pi
         and loose['chosen'].pi['v'] == 'large'
         and tight['chosen'].pi['v'] == 'coder')
+    # evidence-consistency guard (errata task 3): the e1 models are
+    # TIE-BROKEN by the declared rule (q equal 0.99; coder/medium lat
+    # equal 0.8; pi-tuple ordering) — the WINNER is 'medium' in both
+    # regimes; the acceptance text previously mis-copied 'coder'.
+    checks['m5_v10_pi_matches_rule'] = (
+        loose['chosen'].pi['e1'] == 'medium'
+        and tight['chosen'].pi['e1'] == 'medium')
     # ledger models == chosen pi EXACTLY (c1: pi reaches physical calls)
     def models_of(regime):
         return {c['node']: c['model'] for c in plans[regime]['calls']}
@@ -264,6 +271,109 @@ def main():
     checks['m5_c9_module_isolation'] = imported <= {
         '__future__', 'itertools', 'dataclasses', 'typing',
         'deadline_reward_v1', 'dag_closure'}
+
+    # ============ Task 1: REAL time-state input boundary ================
+    # Same task, same fault, same history/costs; only the DEADLINE
+    # differs -> state.d_remain differs at the decision point. The M5
+    # machinery (enumerate + apply) is deliberately TIME-INVARIANT: it
+    # must return/execute the SAME candidate set under both deadlines —
+    # filtering/selection by d_remain is M6, and this test local rule is
+    # NOT wrapped as a policy (it never reads d_remain).
+    cands_by_d = {}
+    for deadline in (30.0, 200.0):
+        t = task(0)
+        server = StubModelServer(dict(ANSWERS), PRIORS, seed='m5')
+        server.set_fault('qt0', 'e1', 'large', '{"facts": []}')
+        clock = InjectedClock()
+        engine = StubEngine(RUNS_DIR / f'dvar_{deadline}', server, clock,
+                            seed='m5', profile_key='golden_zero')
+        state = SchedulerState(clock,
+                               task_deadlines={'qt0': deadline},
+                               token_allocation=100000.0)
+        state.attach(engine)
+        engine.start_panel([t], NODES_MODELS)
+        engine.run_jobs('A', engine.planned_jobs([t], NODES_MODELS,
+                                                 ('e1', 'e2')))
+        engine.run_jobs('R1', engine.planned_jobs([t], NODES_MODELS,
+                                                  ('r',)))
+        d_rem = state.d_remain('qt0')
+        cands = reassign.enumerate_candidates(state, 'qt0', NODES_MODELS)
+        cands_by_d[deadline] = (d_rem, sorted(
+            (c.arm, tuple(sorted(c.pi.items())),
+             tuple(c.judgment.execute))
+            for c in cands))
+    (d_tight, sig_t) = cands_by_d[30.0]
+    (d_loose, sig_l) = cands_by_d[200.0]
+    rule_reads_time = 'd_remain' in time_rule.__code__.co_names or \
+        'd_remain' in time_rule.__code__.co_varnames
+    checks['m5_t1_deadline_varies_d_remain'] = (
+        d_tight < d_loose and abs(d_loose - d_tight - 170.0) < 1e-9)
+    checks['m5_t1_machinery_time_invariant'] = sig_t == sig_l
+    checks['m5_t1_rule_not_a_policy'] = not rule_reads_time
+    det['t1'] = dict(d_remain_tight=d_tight, d_remain_loose=d_loose,
+                     n_candidates=len(sig_t))
+
+    # ============ Task 2: static vs dynamic FULL ========================
+    engine, state, _ = planned_state('fulldyn', [task(0)],
+                                     fault_uid='qt0')
+    cands = reassign.enumerate_candidates(state, 'qt0', NODES_MODELS)
+    stat = [c for c in cands if c.arm == 'FULL']
+    dyn = [c for c in cands if c.arm == 'FULL_DYNAMIC']
+    # static E-arm: NON-TRIGGER nodes (not in the failed set) pinned to
+    # PLANNED models; trigger nodes (here e1 AND the cascaded-D3 r) take
+    # menu variants exactly as recovery_plans prescribes
+    failed_nodes = {n for n in dc.TOPO
+                    if state.tasks['qt0'].node_status[n] == FAILED}
+    checks['m5_t2_static_full_pins_planned'] = (
+        len(stat) > 0
+        and all(c.pi[n] == NODES_MODELS[n]
+                for c in stat for n in dc.TOPO if n not in failed_nodes)
+        and all(c.pi[n] in dc.MENUS[n]
+                for c in stat for n in failed_nodes))
+    # dynamic FULL: r and v may legally differ from the planned models,
+    # everything still menu-legal and judged legal
+    alt = [c for c in dyn if c.pi.get('r') != NODES_MODELS['r']
+           or c.pi.get('v') != NODES_MODELS['v']]
+    checks['m5_t2_dynamic_full_reassigns_downstream'] = (
+        len(dyn) > 1 and len(alt) > 0
+        and all(c.judgment.legal for c in alt)
+        and all(m in dc.MENUS[n] for c in alt for n, m in c.pi.items()))
+    # execute one dynamic FULL candidate: ledger models == pi on ALL
+    # nodes; changed/fresh nodes are REAL charged calls, while an
+    # identity-UNCHANGED node may legally ALIAS (the cost-saving
+    # distinction vs the static E-arm's forced re-execution)
+    chosen_dyn = alt[0]
+    t = task(0)
+    dec_idx = engine.n_events
+    reassign.apply_whole_plan(engine, state, t, NODES_MODELS, chosen_dyn)
+    events, _ = load_ledger(engine.ledger_path)
+    post_calls = [e for e in events[dec_idx:] if e['event'] == 'call']
+    exec_map = {c['node']: c['model'] for c in post_calls}
+    by_node = {c['node']: c for c in post_calls}
+    checks['m5_t2_dynamic_full_executes_pi'] = (
+        exec_map == {n: chosen_dyn.pi[n] for n in ('e1', 'e2', 'r', 'v')}
+        and by_node['e1']['physical'] and by_node['r']['physical']
+        and by_node['v']['physical']
+        and (by_node['e2']['cached'] or by_node['e2']['physical']))
+
+    # ============ Task 4: unified entry prevents model fallback ========
+    engine, state, _ = planned_state('unified', [task(0)],
+                                     fault_uid='qt0')
+    cands = reassign.enumerate_candidates(state, 'qt0', NODES_MODELS)
+    chosen = time_rule(cands, 'loose', state.tasks['qt0'])
+    t = task(0)
+    dec_idx = engine.n_events
+    used = reassign.apply_whole_plan(engine, state, t, NODES_MODELS,
+                                     chosen)
+    events, _ = load_ledger(engine.ledger_path)
+    post_calls = [e for e in events[dec_idx:] if e['event'] == 'call']
+    exec_models = {c['node']: c['model'] for c in post_calls}
+    checks['m5_t4_no_fallback_to_planned'] = (
+        used['v'] == chosen.pi['v']
+        and exec_models.get('v') == chosen.pi['v']
+        and exec_models.get('v') != NODES_MODELS['v']
+        and exec_models.get('r') == chosen.pi.get(
+            'r', NODES_MODELS['r']))
 
     # ============ zero-call sentinel =====================================
     # sentinel over the FULL ledgers (planned + post-decision): the

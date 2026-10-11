@@ -12,7 +12,7 @@ from typing import Dict, List, Optional
 
 from . import dag_closure as dc
 
-ARMS = ('NONE', 'LOCAL', 'FULL')
+ARMS = ('NONE', 'LOCAL', 'FULL', 'FULL_DYNAMIC')
 _FAIL_KIND = {'e1': 'fb', 'e2': 'fb', 'r': 'esc', 'v': 'esc'}
 
 
@@ -69,11 +69,24 @@ def enumerate_candidates(state, uid: str,
     free = {n for n, _ in j0.execute} | set(pending)
     for pi in _menu_variants(sorted(free)):
         add('LOCAL', base_R, pi)
-    # FULL family: full-graph replay — trigger nodes take menu variants,
-    # every other node re-executes on its PLANNED model (E-arm semantics).
+    # FULL comes in TWO explicitly separated flavors (operator M5
+    # review ruling):
+    #  - FULL_STATIC ('arm'='FULL'): the frozen E-arm-matched semantics —
+    #    trigger nodes take menu variants, every other node re-executes
+    #    on its PLANNED model. This is what M4's T3a/T3b reference
+    #    equivalence is proven against; recovery.py executes it.
+    #  - FULL_DYNAMIC ('arm'='FULL_DYNAMIC'): the dynamic joint-action
+    #    target — EVERY legal re-execution node (the whole replay graph)
+    #    may be reassigned within its frozen menu, non-fault nodes
+    #    included, all still M3-adjudicated (menus, closure, RUNNING,
+    #    cache identity). No M4 equivalence is claimed for this flavor.
     others = {n: node_models[n] for n in dc.TOPO if n not in failed}
     for pi_trig in _menu_variants(failed):
         add('FULL', list(dc.TOPO), {**others, **pi_trig})
+    for pi_all in _menu_variants([n for n in dc.TOPO
+                                  if n in (set(failed) | set(pending))]):
+        merged = {**others, **pi_all}
+        add('FULL_DYNAMIC', list(dc.TOPO), merged)
     return out
 
 
@@ -106,3 +119,37 @@ def apply_decision(engine, state, task: dict, node_models: Dict[str, str],
             engine.run_jobs(f"plan:{chosen.arm}", jobs)
 
 
+
+
+def apply_whole_plan(engine, state, task: dict,
+                     node_models: Dict[str, str],
+                     chosen: Candidate) -> Dict[str, str]:
+    """M5 unified plan-application entry (operator M5 review, task 4).
+
+    Applies the chosen (Z, R, pi) so that BOTH the recovery re-executions
+    AND the subsequent PENDING nodes run under the SAME selected pi —
+    no silent fallback to the originally planned model. Delegates
+    non-PENDING retries to apply_decision (M4 semantics: per-stage
+    batching, corruption-after-metering, no-cache rules) and then runs
+    each PENDING node of the plan's execute set in its planned stage
+    order with the pi-assigned model. Returns the effective per-node
+    models actually used (audit)."""
+    uid = task['uid']
+    st = state.tasks[uid]
+    apply_decision(engine, state, task, node_models, chosen)
+    used = dict(chosen.pi)
+    for group in (('e1', 'e2'), ('r',), ('v',)):
+        jobs = []
+        for node in group:
+            if st.node_status.get(node) != dc.PENDING:
+                continue
+            if not any(n == node and new_call
+                       for n, new_call in chosen.judgment.execute):
+                continue
+            model = chosen.pi.get(node) or node_models[node]
+            jobs.append(dict(task=task, node=node, kind='plain',
+                             model=model))
+            used[node] = model
+        if jobs:
+            engine.run_jobs(f'planpending:{chosen.arm}', jobs)
+    return used

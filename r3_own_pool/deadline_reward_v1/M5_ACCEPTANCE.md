@@ -45,12 +45,17 @@ policy — explicitly out of M5 scope) selects a legal candidate per
 regime from the enumerated set: loose → highest-q models, tight →
 fastest models, per the synthetic priors.
 
-Results: loose π = {e1: coder, r: large, v: **large**}; tight π =
-{e1: coder, r: medium, v: **coder**} — different LEGAL allocations per
-remaining time, both REALLY executed: ledger call models match π
-exactly on every executed node; re-execution set {e1, r, v} matches the
-M3 closure; e2 reused with no new call; post-decision cost exactly
-300 tokens in both regimes (3 new calls × 100).
+Results (aligned to the replayable evidence; see M5_ERRATA.md for the
+correction record): loose π = {e1: medium, r: large, v: **large**};
+tight π = {e1: medium, r: medium, v: **coder**} — different LEGAL
+allocations per remaining-time regime, both REALLY executed: ledger
+call models match π exactly on every executed node; re-execution set
+{e1, r, v} matches the M3 closure; e2 reused with no new call;
+post-decision cost exactly 300 tokens in both regimes (3 new × 100).
+(e1's three menu models tie on q=0.99 and coder/medium tie on latency
+0.8 — the declared test rule's tie-break yields 'medium'; the earlier
+draft of this report mis-copied 'coder' by hand. Guard
+`m5_v10_pi_matches_rule` now pins the rule's actual output.)
 
 **Claim discipline:** this proves M5's time-conditioned
 model-assignment EXECUTION capability. The A/B/C quality/deadline
