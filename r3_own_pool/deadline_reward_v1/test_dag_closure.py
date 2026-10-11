@@ -303,6 +303,35 @@ def main():
     except ValueError:
         checks['f9_on_incomplete_entry_validated'] = True
 
+    # --- M3 errata 2: ctx drift on REUSED (non-executed) DONE nodes -------
+    # Same uid, ctx A->B, R=[]: the stale e1 cache must NOT be reusable.
+    # (The check exists at HEAD; the reviewer's baseline 4937789 predated
+    # it — these tests pin it permanently.)
+    ns_d = {n: DONE for n in dc.NODES}
+    ei_d = {n: (NODES_MODELS[n], dc.input_signature('u', n, ctx_a,
+                                                    base_ans))
+            for n in dc.NODES}
+    jd_rej = dc.evaluate_plan(node_status=ns_d, node_model=dict(NODES_MODELS),
+                              exec_identity=ei_d, R=[], pi={}, uid='u',
+                              current_ctx_sha=ctx_b,
+                              parent_answers=base_ans)
+    checks['f10_ctx_drift_r_empty_rejects_old_cache'] = (
+        not jd_rej.legal
+        and jd_rej.invalidated == ('e1', 'r', 'v')
+        and 'input_identity_changed:e1' in jd_rej.reasons
+        and jd_rej.reuse == ())
+    jd_com = dc.evaluate_plan(node_status=ns_d, node_model=dict(NODES_MODELS),
+                              exec_identity=ei_d, R=[], pi={}, uid='u',
+                              current_ctx_sha=ctx_b,
+                              parent_answers=base_ans,
+                              on_incomplete='complete')
+    checks['f11_ctx_drift_r_empty_complete_repairs'] = (
+        jd_com.legal
+        and jd_com.execute == (('e1', True), ('r', True), ('v', True))
+        and jd_com.reuse == ('e2',)
+        and any(r.startswith('closure_completed:e1,r,v')
+                for r in jd_com.reasons))
+
     # --- hardening 1: server override key-existence ------------------------
     st_h, srv_h = run_state('hard_empty', {('m1t1', 'e1', 'plain'): ''})
     obs_empty = [o['code'] for o in st_h.task_view('m1t1')['observations']]
