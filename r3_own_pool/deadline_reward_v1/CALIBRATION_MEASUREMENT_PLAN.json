@@ -1,0 +1,117 @@
+{
+  "version": "CALIBRATION_MEASUREMENT_PLAN_v1",
+  "class": "pre_calibration_freeze",
+  "note": "Calibration measurement infrastructure. ZERO real calls in this file. Upon Calibration GO, the script calibration_runner.py executes this plan under the authorized budget. Standards frozen in CALIBRATION_FREEZE_PREREQUISITES.json (sha256: 7aeeaddfb7c9ecbadd8a68952b50e7a614efdd6a1a119d49ca53e6c4c4c1344449).",
+  "date_frozen": "2026-10-11",
+  "measurement_cells": {
+    "description": "Each cell = (node, model, condition). Condition is 'clean' or a detection family. Per-cell target: 30 calls minimum.",
+    "nodes": [
+      "e1",
+      "e2",
+      "r",
+      "v"
+    ],
+    "models": {
+      "e1": [
+        "medium",
+        "large",
+        "coder"
+      ],
+      "e2": [
+        "medium",
+        "large",
+        "coder"
+      ],
+      "r": [
+        "medium",
+        "large"
+      ],
+      "v": [
+        "coder",
+        "large"
+      ]
+    },
+    "conditions": [
+      "clean",
+      "D1_e_empty",
+      "D3_r_unparseable",
+      "D5_v_fail"
+    ],
+    "total_cells": 40,
+    "total_min_calls": 1200,
+    "note": "Conditions are applied at the TASK level. 3+3+2+2=10 (node,model) pairs x 4 conditions = 40 cells (not 48: r has 2 models, v has 2 models)."
+  },
+  "budget_envelope": {
+    "max_measurement_requests": 2000,
+    "max_measurement_tokens": 2000000,
+    "max_wall_seconds": 14400,
+    "reservation_per_call_tokens": 8192,
+    "max_output_tokens_per_call": 512,
+    "note": "Caps are ceilings, not completion guarantees. If a ceiling is hit, measurement stops and the PRIORS_REAL_V1.json is written with whatever cells completed. Incomplete cells are marked with their actual count and a 'below_minimum' flag."
+  },
+  "task_panel": {
+    "source": "SAME source as the evaluation task panels (frozen200 / adaptive_benchmark), but DISJOINT task uids",
+    "selection_rule": "From the task source, exclude all uids in the evaluation panels. From the remaining pool, select tasks by frozen-seed random sample. The calibration panel SHA is computed and recorded BEFORE any measurement call.",
+    "exclusion_rule": "Tasks already used in: Formal campaign panels, net-benefit panels, or any prior experiment are excluded.",
+    "minimum_panel_size": 50,
+    "note": "Panel is frozen with SHA before measurement; task-selection code is part of this freeze."
+  },
+  "measurement_protocol": {
+    "per_call": {
+      "prompt": "Standard node prompt (same builders as production: eprompt/sprompt/vprompt)",
+      "record": [
+        "answer_text",
+        "total_tokens",
+        "prompt_tokens",
+        "completion_tokens",
+        "latency_s_start_unix",
+        "latency_s_end_unix"
+      ],
+      "metadata": [
+        "node",
+        "model",
+        "condition",
+        "task_uid",
+        "attempt",
+        "seed"
+      ]
+    },
+    "per_cell": {
+      "quality": "For clean: compare answer to task gold. For fault conditions: compare to the expected repair outcome.",
+      "tokens": "P50, P90, P95 of total_tokens distribution",
+      "latency": "P50, P90, P95 of latency_s distribution",
+      "distribution_tests": "Shapiro-Wilk + D'Agostino K2 at alpha=0.01 (Bonferroni-corrected within cell)"
+    },
+    "switch_measurement": {
+      "description": "Separate from per-call service latency: measure the wall time of model START and model STOP.",
+      "method": "For each ordered model pair (from, to), run 5 start-stop cycles. Record start_wall_s and stop_wall_s.",
+      "pairs": "3 models = 6 ordered pairs \u00d7 5 cycles = 30 switch measurements",
+      "output": "Per-model mean start_s and stop_s for PRIORS_REAL_V1"
+    },
+    "contention_probe": {
+      "description": "2 tasks sharing the executor with known stub profiles; measure the delayed task's wall vs solo wall.",
+      "trials": 20,
+      "method": "For each trial: run task A solo (record wall), run A+B concurrently (record A's wall). contention_ratio = (shared_wall_A - solo_wall_A) / solo_wall_A.",
+      "output": "mean contention_ratio for PRIORS_REAL_V1"
+    }
+  },
+  "output_artifact": {
+    "path": "deadline_reward_v1/PRIORS_REAL_V1.json",
+    "structure": {
+      "version": "PRIORS_REAL_V1",
+      "class": "calibrated",
+      "per_cell": "node|model|condition -> {q_success, tokens_p50, tokens_p90, tokens_p95, lat_p50, lat_p90, lat_p95, distribution_family, family_test_p, n_samples}",
+      "switch_costs": "model -> {start_s, stop_s}",
+      "contention_ratio": "mean contention ratio from probe",
+      "calibration_provenance": "per-entry: source, count, timestamp, SHA of the calibration panel, measurement script SHA",
+      "standards_binding": "SHA of CALIBRATION_FREEZE_PREREQUISITES.json"
+    }
+  },
+  "execution_gates": {
+    "requires_calibration_GO": true,
+    "requires_standards_frozen": true,
+    "requires_panel_frozen": true,
+    "requires_budget_envelope_frozen": true,
+    "all_gates_must_pass_before_first_call": true
+  }
+}

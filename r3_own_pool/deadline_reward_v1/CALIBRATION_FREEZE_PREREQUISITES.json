@@ -1,0 +1,59 @@
+{
+  "version": "CALIBRATION_STANDARDS_FREEZE_v1",
+  "class": "pre_calibration_freeze",
+  "note": "Frozen BEFORE any calibration data is viewed (Protocol V2.3 rev3 Section 5 ordering rule). These standards govern the six-contrast method-choice rule and the distribution-family validation. Changing any value after viewing calibration data is prohibited; any change creates a new version with explicit rationale.",
+  "date_frozen": "2026-10-11",
+  "frozen_by": "codex_session_per_operator_authorization",
+  "data_viewed_before_freeze": false,
+  "data_access_log": [],
+
+  "symmetry_diagnostic": {
+    "metric": "skewness_of_paired_differences",
+    "threshold": 1.0,
+    "rule": "For each of the six contrast sets (H1-H4 + S1 two components), compute the sample skewness of task-level paired R_task differences. |skewness| <= 1.0 on ALL SIX sets => sign-flip is the unified method. Any set exceeding 1.0 triggers the paired-t applicability check below.",
+    "sample_skewness_formula": "g1 = (n * sum((x_i - mean)^3)) / ((n-1)*(n-2)*std^3)",
+    "note": "Threshold 1.0 is a moderate asymmetry threshold: below it, the sign-flip test's exactness claim is reasonable; above it, we check whether paired-t is applicable instead."
+  },
+
+  "paired_t_applicability": {
+    "finite_variance": "Sample variance is finite and > 0 for all six contrast sets (guaranteed by finite R_task values, but asserted).",
+    "sample_size_minimum": 30,
+    "sample_size_rule": "Each contrast set must have >= 30 paired differences. Below 30: stop-confirmatory-admission applies (Protocol V2.3 Section 5 rule iii).",
+    "outlier_criterion": {
+      "metric": "adjusted_boxplot_fence",
+      "rule": "Any |paired difference| > Q3 + 3*IQR or < Q1 - 3*IQR is flagged. Flagged values are RETAINED (never removed). If flagged values constitute > 10% of any contrast set, the set's t-applicability is re-checked via a sensitivity analysis (results with and without flagged values).",
+      "sensitivity_method": "studentized_bootstrap",
+      "sensitivity_B": 10000
+    },
+    "skewness_tolerance": "For paired-t to be applicable under asymmetry, the sample size must be >= 30 AND |skewness| <= 2.0 (beyond this, the t-statistic's sampling distribution is too non-normal for reliable inference at these sample sizes)."
+  },
+
+  "distribution_family_validation": {
+    "per_cell_tests": ["shapiro_wilk (n<5000)", "dagostino_k2 (any n)"],
+    "significance_level": 0.01,
+    "multiple_testing": "Bonferroni within each (node, model) cell (2 tests per cell)",
+    "families_to_test": ["normal", "lognormal"],
+    "selection_rule": "If neither family passes (p >= 0.01 after Bonferroni), the cell uses 'empirical' (no parametric E1; on-time probability from empirical CDF).",
+    "estimator_binding": "The selected family per cell is frozen in PRIORS_REAL_V1.json and cannot be changed after confirmation data is collected."
+  },
+
+  "contention_calibration": {
+    "probe_design": "2 tasks sharing the stub executor with known service profiles; measure wall time of the delayed task vs its solo wall time; repeat >= 20 trials with distinct task pairs.",
+    "output": "contention_ratio = (shared_wall - solo_wall) / solo_wall; the frozen contention multiplier for PRIORS_REAL_V1.",
+    "applicability": "Ratio measured on stub profiles with KNOWN service times; the ratio (not the absolute) transfers to real profiles."
+  },
+
+  "missing_data_rule": {
+    "rule": "Any (task, arm) pair with a missing R_task value (infrastructure failure, crash, budget stop) is EXCLUDED from all six contrast sets for that task. The exclusion count per arm is reported. If > 10% of tasks are excluded from any contrast set, the confirmatory analysis is flagged with a completeness warning.",
+    "no_imputation": "No imputation, no zero-fill, no mean-fill. Missing is missing."
+  },
+
+  "method_choice_procedure": {
+    "step_1": "Compute skewness for all six contrast sets on calibration/validation data.",
+    "step_2": "If ALL SIX |skewness| <= 1.0 => unified sign-flip (MC B=1e5). Done.",
+    "step_3": "Else check paired-t applicability on ALL SIX sets (finite variance, n>=30, |skewness|<=2.0, outlier sensitivity passes).",
+    "step_4": "If ALL SIX pass => unified one-sided paired t. Done.",
+    "step_5": "Else => STOP confirmatory admission. Report the failing sets and reasons. No third method, no mixing.",
+    "binding": "The method chosen and its parameters are frozen BEFORE confirmation unblinding; no method switching on confirmation data."
+  }
+}
