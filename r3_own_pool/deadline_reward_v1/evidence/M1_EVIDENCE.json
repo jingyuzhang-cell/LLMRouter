@@ -1,0 +1,55 @@
+{
+ "milestone": "M1",
+ "checks": {
+  "t3ref_global_order": true,
+  "t3ref_per_task_order": true,
+  "t3ref_no_torn": true,
+  "batching_sorted_model_groups": true,
+  "wall_equals_service_plus_switch": true,
+  "switch_count_and_pairs": true,
+  "cold_start_charged_once": true,
+  "wall_ge_service_interleaved": true,
+  "ledger_call_fields_complete": true,
+  "ledger_meta_first": true,
+  "ledger_replay_latency": true,
+  "determinism_bitwise": true,
+  "seed_changes_stream": true,
+  "torn_line_flagged": true,
+  "z1_sentinel_engine_only": true,
+  "engine_stdlib_only": true,
+  "priors_all_synthetic": true,
+  "priors_versioned_sourced": true,
+  "ledger_refuses_resume": true
+ },
+ "all_pass": true,
+ "zero_model_calls": true,
+ "detail": {
+  "t3ref": {
+   "n_ref": 12,
+   "n_m1": 12,
+   "models": {
+    "e1": "large",
+    "e2": "large",
+    "r": "medium",
+    "v": "coder"
+   }
+  },
+  "engine_imports": [
+   "__future__",
+   "dataclasses",
+   "hashlib",
+   "json",
+   "os",
+   "pathlib",
+   "random",
+   "typing"
+  ]
+ },
+ "priors_sha256": "f2e06903fe792efa20f0e0ad67a1a3a7e4188bae28d89c6e27238fb9beaa55cf",
+ "production_reference": {
+  "source": "collab_scheduler_v1.fault30_run.eval_config + predictor_v3.V3Executor (read-only imports)",
+  "config": "DYNAMICDAG__HETEROGENEOUS__NONE__FRESH",
+  "arm": "Z=NONE planned stages only",
+  "n_calls": 12
+ }
+}

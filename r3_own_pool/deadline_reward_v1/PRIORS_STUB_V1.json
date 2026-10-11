@@ -1,0 +1,27 @@
+{
+  "version": "stub_v0.1",
+  "class": "stub_test_only",
+  "note": "Synthetic constants for the M1 stub engine. Ruling P7/D3: never real-model calibration; confirmation tests open this file read-only; values carry no optimality claim.",
+  "source": "hand-set initial M1 constants, 2026-10-11",
+  "switch": {
+    "family": "deterministic",
+    "stop_s": 0.5,
+    "start_s": {"medium": 2.0, "large": 3.0, "coder": 2.5},
+    "synthetic": true
+  },
+  "v3_compat": {
+    "family": "deterministic",
+    "latency_s": 0.2,
+    "total_tokens": 100,
+    "synthetic": true,
+    "note": "reference-parity profile matching predictor_v3.V3Executor new-call metering (100 tokens / 0.2 s), used only by the T3-lite comparison test"
+  },
+  "profiles": {
+    "e1|large": {"family": "normal", "lat_mean_s": 0.9, "lat_std_s": 0.1, "prompt_tokens": 320, "completion_tokens": 90, "synthetic": true},
+    "e2|large": {"family": "normal", "lat_mean_s": 0.9, "lat_std_s": 0.1, "prompt_tokens": 320, "completion_tokens": 90, "synthetic": true},
+    "r|medium": {"family": "normal", "lat_mean_s": 1.1, "lat_std_s": 0.15, "prompt_tokens": 400, "completion_tokens": 120, "synthetic": true},
+    "r|large": {"family": "normal", "lat_mean_s": 1.6, "lat_std_s": 0.2, "prompt_tokens": 520, "completion_tokens": 160, "synthetic": true},
+    "v|coder": {"family": "normal", "lat_mean_s": 0.7, "lat_std_s": 0.1, "prompt_tokens": 260, "completion_tokens": 60, "synthetic": true},
+    "v|large": {"family": "normal", "lat_mean_s": 1.2, "lat_std_s": 0.15, "prompt_tokens": 380, "completion_tokens": 90, "synthetic": true}
+  }
+}
