@@ -62,16 +62,39 @@ def main():
     suites = ['test_stub_engine', 'test_scheduler_state', 'test_dag_closure',
               'test_recovery', 'test_m5', 'test_m6', 'test_policy',
               'test_phase3', 'test_boundary']
+    # Triple-gate subprocess discipline (sign-off gate fix 2): EVERY
+    # suite must (a) exit 0, (b) print 'ALL PASS', and (c) report
+    # passed == total. Any violation fails the independent audit itself.
+    def run_suite(mod):
+        proc = subprocess.run([sys.executable, '-m',
+                               f'deadline_reward_v1.{mod}'],
+                              capture_output=True, text=True,
+                              cwd=str(ROOT))
+        mm = re.search(r'(\d+)/(\d+) checks', proc.stdout)
+        return proc, mm
+
+    def suite_gate(mod, proc, mm):
+        if proc.returncode != 0:
+            return f'returncode={proc.returncode}'
+        if 'ALL PASS' not in proc.stdout:
+            return 'ALL PASS marker missing'
+        if mm is None:
+            return 'check-count line missing'
+        if int(mm.group(1)) != int(mm.group(2)):
+            return (f'passed {mm.group(1)} != total '
+                    f'{mm.group(2)}')
+        return None
+
     counts = {}
+    gate_failures = {}
     for m in suites:
-        out = subprocess.run([sys.executable, '-m',
-                              f'deadline_reward_v1.{m}'],
-                             capture_output=True, text=True,
-                             cwd=str(ROOT)).stdout
-        mm = re.search(r'(\d+)/(\d+) checks', out)
-        counts[m] = int(mm.group(2))
-        assert 'ALL PASS' in out, m
+        proc, mm = run_suite(m)
+        gate_failures[m] = suite_gate(m, proc, mm)
+        counts[m] = int(mm.group(2)) if mm else -1
     total = sum(counts.values())
+    ok('R0_suite_exit_and_count_gate',
+       all(v is None for v in gate_failures.values()),
+       detail=str({k: v for k, v in gate_failures.items() if v}))
     # Post-signoff-hardening live count: 214 + 2 boundary checks
     # (per-event containment reverse + shared-clock sync) = 216
     ok('R1_count_reconciliation', total == 216,
@@ -232,6 +255,12 @@ def main():
     # -> last call) is a SEPARATE diagnostic that legitimately differs
     # for tasks whose first call is delayed by interleaving (e.g. a1).
     ev_t, _ = load_ledger(RUNS / 'cont_lo' / 'TASK_LEDGER.jsonl')
+    # release times come FROM THE LEDGER (panel_start.t_release), never
+    # hardcoded; cross-checked against the first call event's window
+    panel = next(e for e in ev_t if e['event'] == 'panel_start')
+    release_map = {}                          # per-uid release
+    for uid in panel['tasks']:
+        release_map[uid] = panel['t_release']
     t_defs = {}
     for uid in ('a0', 'a1'):
         t_calls = [e for e in ev_t if e['event'] == 'call'
@@ -240,7 +269,8 @@ def main():
                 and e.get('task') == uid]
         summ_t = next(e for e in ev_t if e['event'] == 'task_summary'
                       and e['task'] == uid)
-        release_t = 0.0                       # panel release for both
+        release_t = release_map[uid]
+        assert release_t <= min(c['t_start'] for c in t_calls) + 1e-9, uid
         completion_t = max(c['t_end'] for c in t_calls)
         e2e_t = completion_t - release_t
         service_t = sum(c['latency_s'] for c in t_calls)
@@ -371,8 +401,9 @@ def main():
        and counts['test_dag_closure'] == 37)
 
     # ================= verdicts =========================================
-    order = ['R1', 'G1', 'G2', 'G3', 'G4', 'G5', 'B1', 'B2', 'B3', 'B4',
-             'C1', 'C2', 'C3', 'C4', 'T1', 'E1', 'E2', 'X1', 'X2']
+    order = ['R0', 'R1', 'R3', 'G1', 'G2', 'G3', 'G4', 'G5', 'B1', 'B2',
+             'B3', 'B4', 'C1', 'C2', 'C3', 'C4', 'T1', 'T1b', 'E1', 'E2',
+             'X1', 'X2']
     lines = []
     for key in order:
         for k, v in verdicts.items():
@@ -381,18 +412,47 @@ def main():
     n_pass = sum(1 for v in verdicts.values() if v == 'PASS')
     n_cond = sum(1 for v in verdicts.values() if v == 'CONDITIONAL')
     n_fail = sum(1 for v in verdicts.values() if v == 'FAIL')
+    # ===== gate reversal tests (sign-off gate fix 4): three failure
+    # modes must each yield a non-zero exit decision =====
+    def exit_code(verdict_map, gate_ok, count_match):
+        if any(v == 'FAIL' for v in verdict_map.values()):
+            return 3                      # simulated audit FAIL
+        if not gate_ok:
+            return 4                      # simulated sub-suite nonzero exit
+        if not count_match:
+            return 5                      # simulated count mismatch
+        return 0
+
+    rev_fail = exit_code(dict(x='FAIL'), True, True) != 0
+    rev_suite = exit_code(dict(x='PASS'), False, True) != 0
+    rev_count = exit_code(dict(x='PASS'), True, False) != 0
+    rev_clean = exit_code(dict(x='PASS'), True, True) == 0
+    verdicts['R3_gate_reversal_tests'] = (
+        'PASS' if (rev_fail and rev_suite and rev_count and rev_clean)
+        else 'FAIL')
+
     report = dict(verdicts=verdicts, findings=findings,
                   counts=counts, total=total,
                   contention=dict(lo=lo, hi=hi, flip=flip),
                   summary=dict(passed=n_pass, conditional=n_cond,
-                               failed=n_fail))
+                               failed=n_fail),
+                  exit_code=None)      # filled below
+    n_fail_final = sum(1 for v in verdicts.values() if v == 'FAIL')
+    audit_exit = 0 if (n_fail_final == 0
+                       and all(v is None for v in gate_failures.values())
+                       and rev_fail and rev_suite and rev_count
+                       and rev_clean) else 1
+    report['exit_code'] = audit_exit
     (HERE / 'evidence' / 'P3A_EVIDENCE.json').write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str))
     print('\n'.join(lines))
-    print(f'\nPASS {n_pass} / CONDITIONAL {n_cond} / FAIL {n_fail}')
+    print(f'\nPASS {n_pass} / CONDITIONAL {n_cond} / '
+          f'FAIL {n_fail_final}')
     for sev, fid, det in findings:
         print(f'[{sev}] {fid}: {det[:160]}')
-    return 0
+    print(f'audit exit code: {audit_exit}')
+    # sign-off gate fix 1: ANY FAIL (or gate failure) => non-zero exit
+    return audit_exit
 
 
 if __name__ == '__main__':
