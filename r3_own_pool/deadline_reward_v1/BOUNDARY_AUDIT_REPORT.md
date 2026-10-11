@@ -31,8 +31,10 @@ invariant
 (spent + committed + available == allocation) holds at EVERY mid-run
 snapshot; residuals released at settlement (committed == 0); the
 overspend counterexample (cheap reservations vs real metering) drives
-`b_remain` to −20 and the post_V1 re-decision degrades with recorded
-budget deficits.
+`b_remain` to **−50** (replayable ledger:
+`evidence/BOUNDARY_EVIDENCE.json::detail.t1.overspend_b_remain`;
+reservation 100 vs 200 real metering on a 450 allocation) and the
+post_V1 re-decision degrades with recorded budget deficits.
 
 ## Task 2 — probability-conservatism applicability: IMPLEMENTED & TESTED
 
@@ -66,18 +68,40 @@ within the estimate. The row records it explicitly; nothing is silent.
 fixed two real estimator gaps.)
 
 Counterexample test (`t3_bound_flips_approval`, real switch costs, two
-tasks sharing the timeline): candidate B at D=26 — SOLO arithmetic
-approves (P_solo = 0.999 ≥ 0.90) but WITH contention (7.0 s of the other
-task's remaining work) it is correctly infeasible on `on_time` — exactly
-the "预计按时、实际因交错超时" failure the reviewer demanded prevented.
+tasks sharing the timeline; numbers ALIGNED to the post-errata evidence,
+commit 83ec860): **D_total = 32.7 s, decision-time d_remain = 26.0 s**
+(read from the decision event — never the initial deadline). At that
+SAME moment, candidate B SOLO (μ=23.5, p90=24.5) has **P = 0.9993 ≥
+0.90** (approvable), while WITH the **10.0 s** contention addend (v mean
+7.0 + full switch allowance 3.0 for the co-task's planned binding,
+frozen priors) it is **P ≈ 4e-9 < 0.90** — correctly infeasible on
+`on_time`, exactly the "预计按时、实际因交错超时" failure the reviewer
+demanded prevented. (The pre-errata text here said D=26 / 7.0 s — it
+mixed the initial deadline with the pre-allowance estimate; the
+replayable values are those above and in
+`evidence/BOUNDARY_EVIDENCE.json::detail.t3`.)
+
 Coverage: across THREE deterministic scripted samples (different fault
 positions, different latency regimes incl. per-node latencies equal to
 the priors' means), every CHOSEN cross-task plan's ACTUAL elapsed time
 (real interleaved clock, with the co-task's calls and switches verified
-inside the window) falls within its predicted p90. This is
-DETERMINISTIC-SAMPLE COVERAGE — explicitly NOT a general P90 probability
-guarantee. Own switch cost uses a PROVABLE per-call bound (each of my
-calls needs at most one stop+start on the shared serial executor).
+inside the window) falls within its predicted p90.
+
+**Three-way claim discipline (binding for the paper):**
+1. **Per-call switch overhead — STRUCTURAL bound**: on the shared serial
+   executor each of my new calls needs at most one stop+start. Provable
+   from the executor model; prior-independent.
+2. **Cross-task contention — HEURISTIC ESTIMATE from synthetic priors**
+   (v mean + full switch allowance, or the co-task's chosen-plan
+   estimate): upper-bounds the co-task's real remaining work only when
+   that work stays within the estimate. Declared per decision row;
+   never presented as a bound.
+3. **On-time probability under REAL distributions — NOT ESTABLISHED**:
+   the 156 passing checks are deterministic-sample coverage plus
+   declared-family arithmetic; they do NOT constitute a probability
+   guarantee for real model latencies. Establishing it requires the
+   separately gated calibration (phase 4) with validated aggregation
+   and calibrated probabilities. No paper text may claim otherwise.
 
 ## Task 4 — latency-profile legality: IMPLEMENTED & TESTED
 
@@ -111,8 +135,9 @@ invariant and the FULL/prediction reconciliation tables are in
   probability-semantics correctness, NOT empirical performance.
 - quantile_sum conservatism is conditional (D ≥ μ) and now labeled as
   such; formal experiments must validate/calibrate the aggregation.
-- The contention bound is a declared conservative convention for the
-  shared serial executor, not a general queueing model.
+- The contention penalty is a DECLARED HEURISTIC ESTIMATE from synthetic
+  priors (see the three-way claim discipline in Task 3), not a general
+  queueing model and not an unconditional bound.
 - Real-model experiments, production integration, Formal/net-benefit
   evidence: untouched, still gated.
 
