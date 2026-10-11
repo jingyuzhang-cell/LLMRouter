@@ -215,9 +215,40 @@ F9 cascade hits cap mid-LOCAL → stops at cap, state consistent.
   calls started** after the degradation decision; NEVER a forced B.
   Both scenarios assert the exact filter arithmetic (means alone must not
   decide — see V2).
-- **V2 filter correctness incl. the uncertainty trap** (carried; now the
-  arithmetic engine behind V1: no mean-pass/P90-fail action admitted;
-  boundary equalities ≥-admitted exactly).
+- **V2 filter correctness incl. the uncertainty trap** (carried; the
+  arithmetic engine behind V1: no mean-pass/P90-fail action admitted; no
+  q̂<Q_min action admitted; ΔC>B_remain excluded; boundary equalities
+  ≥-admitted exactly).
+- **V8 time-rich tradeoff golden (operator acceptance class 1).** Same D3
+  fault state as V1, but D_remain=60 s, Q_min=0.80, ε=0.10, B_remain ample.
+  Two feasible actions: HQ (r→large, v→large: μ=24, p90=26, q̂=0.95,
+  ΔC=1200) and FAST (r→large, v→coder: μ=17, p90=18, q̂=0.85, ΔC=800).
+  Assert the winner follows the Ê[R_task] arithmetic EXACTLY under each of
+  two stub λ_c regimes (λ_c small → HQ wins; λ_c large → FAST wins) — BOTH
+  sub-cases are pinned, proving a genuine quality-vs-cost tradeoff, never a
+  fixed "always highest quality" preference (principle 1).
+- **V9 budget-insufficient golden (operator acceptance class 3).** Same
+  fault. (a) B_remain=200 while every legal recovery action has ΔC≥400 and
+  NONE leaves q̂=0.55 < Q_min → A_feasible=∅ → EARLY_STOP; violation vector
+  includes the budget deficit (ΔC−B_remain) and the quality deficit. (b)
+  B_remain=850: cheapest legal action CHEAP (q̂=0.82 ≥ 0.80, ΔC=800) is
+  feasible; strictly better actions (ΔC≥1200) are excluded on B_remain →
+  CHEAP is chosen (budget-respecting, quality-floor-satisfying).
+- **V10 dynamic-reassignment decisive test (M5 gate — falsifies
+  "recovery-mode-only").** Identical episode prefix and fault (D3 on r; v
+  PENDING). Run 1: D_remain=60 → the chosen π assigns higher-quality models
+  (per stub priors, e.g. v→large). Run 2: D_remain=20 → the chosen π
+  assigns faster models (v→coder, per V1 arithmetic). Assert: both runs
+  feasible under their constraints; the two chosen joint actions differ
+  EXACTLY in π (same Z family, same R closure) — i.e., REMAINING TIME
+  CHANGED THE DOWNSTREAM MODEL ASSIGNMENT, not merely the recovery mode.
+  Per the operator's frozen standard: an implementation that cannot produce
+  different π across these runs has NOT met the research objective,
+  regardless of other test results.
+
+Operator's four acceptance classes ↔ tests: time-rich → V8; time-tight →
+V1 Scenario 1; budget-insufficient → V9; no-feasible → V1 Scenario 2 +
+V3/F2/F10 (EARLY_STOP).
 - **V3 degradation & violation recording.** A_feasible=∅ scenarios: the
   chosen degraded action, violation vector (Q_min−q̂, 1−ε−P̂, ΔC−B_remain),
   and episode `degraded` flag all recorded; realized R_task settles from

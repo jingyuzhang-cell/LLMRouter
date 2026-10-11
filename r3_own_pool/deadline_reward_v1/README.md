@@ -11,10 +11,25 @@ P̂(T≤D_remain)≥1−ε, ΔC≤B_remain) → argmax Ê[R_task]; A_feasible=�
 Version history: rev A @0d381a8 (search-layer draft) → rev B @fc201ae
 (execution-layer pivot) → interim rev C @57f2553 (joint-action; review
 baseline for the final errata) → rev D @09d6b4d (rev-B review rulings:
-P3 retired, E2E口径, L1/L4/C5/T3-references, B1/B2/D3/P7) → **rev E (this,
-final errata): D10/D11 rulings, V1 scenario split, T3a/T3b gates,
-synthetic-distribution statistical assumptions.** Phase 2 remains HOLD
-pending admission confirmation of rev E.
+P3 retired, E2E口径, L1/L4/C5/T3-references, B1/B2/D3/P7) → rev E
+@8c901ab (final errata: D10/D11, V1 split, T3a/T3b, synthetic-dist
+assumptions) → **MAINLINE_FREEZE (2026-10-11): operator's final design
+constraint frozen verbatim — the binding charter for M1–M6, algorithm
+implementation, and paper writing; four acceptance classes + V8/V9/V10
+added to the verification plan.** Phase 2 remains HOLD pending the
+operator's explicit admission confirmation.
+
+## Charter
+
+`MAINLINE_FREEZE.md` holds the operator's final design constraint VERBATIM:
+the mainline (joint (Z,R,π) after fault detection, NOT recovery-mode
+scoring), the fixed decision logic, the three-term reward with C_new/
+settlement separation, the three unchangeable principles (incl.
+EARLY_STOP on empty feasible set), the A/B/C golden standard with the P90
+uncertainty detail, and the M5 mandate: a system that cannot change
+downstream node models by remaining time has NOT met the research
+objective even if all tests pass. Any future doc/code/paper deviation from
+this file requires an explicit operator amendment.
 
 ## Operator rulings (2026-10-10 review; SIX, all frozen)
 
