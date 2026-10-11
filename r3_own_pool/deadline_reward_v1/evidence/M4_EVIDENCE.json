@@ -1,0 +1,52 @@
+{
+ "milestone": "M4",
+ "checks": {
+  "t3a_NONE_per_task": true,
+  "t3b_NONE_global_order": true,
+  "t3b_NONE_physical_requests": true,
+  "t3b_NONE_physical_tokens": true,
+  "t3b_NONE_not_torn": true,
+  "t3a_LOCAL_per_task": true,
+  "t3b_LOCAL_global_order": true,
+  "t3b_LOCAL_physical_requests": true,
+  "t3b_LOCAL_physical_tokens": true,
+  "t3b_LOCAL_not_torn": true,
+  "t3a_FULL_per_task": true,
+  "t3b_FULL_global_order": true,
+  "t3b_FULL_physical_requests": true,
+  "t3b_FULL_physical_tokens": true,
+  "t3b_FULL_not_torn": true,
+  "b1_ctx_mutation_rejected": true,
+  "b1b_r_empty_no_stale_reuse": true,
+  "b2_none_override_raises": true,
+  "b3_failed_same_model_retry": true,
+  "b4_cascade_no_stale_reuse": true,
+  "b5_no_midflight_rewrite": true,
+  "b6_switch_once": true,
+  "b7_e2e_release_to_completion": true,
+  "b8_determinism": true,
+  "b8_z1_sentinel": true
+ },
+ "all_pass": true,
+ "zero_model_calls": true,
+ "detail": {
+  "NONE_reference": {
+   "source": "evaluator._evaluate",
+   "calls": 20,
+   "physical": 20,
+   "physical_tokens": 2000
+  },
+  "LOCAL_reference": {
+   "source": "evaluator._evaluate",
+   "calls": 27,
+   "physical": 26,
+   "physical_tokens": 2600
+  },
+  "FULL_reference": {
+   "source": "evaluator._evaluate + netbenefit_runner.recovery_plans (E-arm)",
+   "calls": 36,
+   "physical": 36,
+   "physical_tokens": 3600
+  }
+ }
+}

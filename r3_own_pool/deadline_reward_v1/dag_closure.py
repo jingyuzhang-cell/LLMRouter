@@ -175,6 +175,17 @@ def evaluate_plan(*, node_status: Dict[str, str],
                 reasons.append('model_change:' + n)
         else:
             changed[n] = parents_changed  # staleness of the cached output
+            if status == DONE and not parents_changed \
+                    and current_ctx_sha is not None \
+                    and exec_identity.get(n) is not None:
+                # R=[]-style plans must not reuse a DONE cache whose CURRENT
+                # input identity (incl. static context) drifted from the
+                # frozen one (operator M4 pre-check).
+                hyp = input_signature(uid, n, current_ctx_sha,
+                                      parent_answers or {})
+                if hyp != exec_identity[n][1]:
+                    changed[n] = True
+                    reasons.append('input_identity_changed:' + n)
             if status == FAILED:
                 # audit note: this plan leaves a failed node unrecovered
                 # (a legal accept-the-failure plan — the policy decides)
@@ -236,16 +247,25 @@ def ctx_signatures(task: dict) -> Dict[str, str]:
     }
 
 
+# Prompt-material dependency (AUDIT II §1 — what each node's PROMPT actually
+# consumes; distinct from the graph edges above): e-nodes read static
+# context; r reads both e outputs; v reads the merged facts AND the r
+# expression (grandparents included — the M4 FULL-arm parity caught this).
+SIG_INPUTS: Dict[str, Tuple[str, ...]] = {
+    'e1': (), 'e2': (), 'r': ('e1', 'e2'), 'v': ('e1', 'e2', 'r')}
+
+
 def input_signature(uid: str, node: str, ctx_sha: Optional[Dict[str, str]],
                     parent_answers: Dict[str, str]) -> str:
     """Frozen input identity of a node's NEXT execution: task uid, node,
-    the node's STATIC-CONTEXT signature (e1/e2), and the parent outputs it
-    would consume (mirror of the audited prompt-dependency structure in
-    fault30_run.eval_config). Same uid does NOT imply same identity — the
-    actual static context is part of the material."""
+    the node's STATIC-CONTEXT signature (e1/e2), and the upstream outputs
+    its PROMPT would consume (SIG_INPUTS — v includes the e-grandparents
+    via the merged facts, mirroring the audited prompt builders). Same uid
+    does NOT imply same identity — the actual static context is part of
+    the material."""
     import hashlib
     import json
     material = [uid, node, (ctx_sha or {}).get(node)] + [
-        (parent_answers or {}).get(p) for p in PARENTS[node]]
+        (parent_answers or {}).get(p) for p in SIG_INPUTS[node]]
     return hashlib.sha256(json.dumps(material, sort_keys=True,
                                      default=str).encode()).hexdigest()

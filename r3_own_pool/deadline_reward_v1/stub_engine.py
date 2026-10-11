@@ -52,7 +52,14 @@ class InjectedClock:
 class StubModelServer:
     """Scripted model server. The ONLY thing the engine ever calls.
 
-    Answers come from an (node, kind) map supplied by the test driver.
+    Layering mirrors the production executors:
+      1. FAULT registry {(uid, node, model) → failing answer} — fires on
+         ANY call kind when the model matches (V3Executor.set_fault
+         semantics); injected responses bypass the cache.
+      2. Per-(uid, node, kind) answer override — KEY-EXISTENCE lookup; an
+         explicit override (incl. '') is honored; an explicit None override
+         is an ERROR, never a silent fallback (M4 hardening).
+      3. Default (node, kind) answer.
     Usage/latency come from declared synthetic PRIORS entries, drawn
     deterministically per (seed, node, kind, model, uid, attempt).
     """
@@ -63,6 +70,14 @@ class StubModelServer:
         self.priors = priors
         self.seed = seed
         self.invocations = 0  # Z1 sentinel: engine is the only caller
+        self.faults: Dict[Tuple[str, str, str], str] = {}
+
+    def set_fault(self, uid: str, node: str, model: str,
+                  failing: str) -> None:
+        self.faults[(uid, node, model)] = failing
+
+    def fault_for(self, uid: str, node: str, model: str):
+        return self.faults.get((uid, node, model))
 
     def profile(self, key: str) -> dict:
         prof = self.priors['profiles'].get(key)
@@ -88,11 +103,16 @@ class StubModelServer:
             total = int(prof['prompt_tokens']) + int(prof['completion_tokens'])
         else:
             raise ValueError('undeclared family: ' + family)
-        # Key-EXISTENCE lookup (M3 hardening, operator ruling): an explicit
-        # override — including the empty string '' — must never fall back
-        # to the default answer ('' is a fault-detection input to test).
-        answer = self.answers.get((uid, node, kind))
-        if answer is None:
+        # Key-EXISTENCE lookup (M3 hardening): an explicit override —
+        # including the empty string '' — must never fall back to the
+        # default answer; an explicit None override is illegal (M4).
+        if (uid, node, kind) in self.answers:
+            answer = self.answers[(uid, node, kind)]
+            if answer is None:
+                raise ValueError(
+                    'explicit None answer override is illegal: '
+                    + repr((uid, node, kind)))
+        else:
             answer = self.answers[(node, kind)]
         usage = dict(prompt_tokens=int(prof.get('prompt_tokens', total)),
                      completion_tokens=int(prof.get('completion_tokens', 0)) or
@@ -113,6 +133,10 @@ class TaskState:
     calls: int = 0
     answers: Dict[str, str] = field(default_factory=dict)
     ctx_sha: Optional[Dict[str, str]] = None  # static-context signatures
+    # ordered per-node call history: (kind, answer) — supports the
+    # production original-vs-final comparison rules
+    node_history: Dict[str, List[Tuple[str, str]]] = field(
+        default_factory=dict)
 
 
 class LedgerCorruptionError(Exception):
@@ -169,6 +193,9 @@ class StubEngine:
         self.observers: List[Callable[[dict], None]] = []
         self.tokens_total = 0
         self.requests_total = 0
+        self.cached_calls = 0
+        self.injected_calls = 0
+        self._cache: Dict[Tuple[str, str], dict] = {}
         self.n_events = 0
         self._switch_indices: List[int] = []
         self._cold_start_indices: List[int] = []
@@ -228,13 +255,18 @@ class StubEngine:
         return self.switch_idx
 
     def _call(self, stage: str, task: dict, node: str, kind: str,
-              model: str) -> dict:
+              model: str, no_cache: bool = False) -> dict:
         uid = task['uid']
         if uid not in self.tasks:
             self.tasks[uid] = TaskState(uid=uid)
         st = self.tasks[uid]
-        if st.ctx_sha is None:
-            st.ctx_sha = dag_closure.ctx_signatures(task)
+        # Task static context is FROZEN within an episode: any mutation is
+        # an engine error, never a silent identity drift (M4 ruling).
+        fresh_ctx = dag_closure.ctx_signatures(task)
+        if st.ctx_sha is not None and st.ctx_sha != fresh_ctx:
+            raise ValueError('task static context mutated mid-episode: '
+                             + uid)
+        st.ctx_sha = fresh_ctx
         key = f'm1:{self.topo}:{self.fam}:{node}:{kind}:{uid}'
         self.attempts[(uid, node, kind)] = \
             self.attempts.get((uid, node, kind), 0) + 1
@@ -249,11 +281,34 @@ class StubEngine:
                           node=node, kind=kind, model=model, task=uid,
                           t_start=t0, switch_before=sw_idx,
                           input_sha=input_sha))
-        resp = self.server.draw(node, kind, model, uid, attempt,
-                                profile_key=self.profile_key)
+        # Production METERED-EXECUTOR semantics (evaluator.py:29-60): the
+        # underlying call is a NORMAL cache-or-server call (charged, cached
+        # by identity); CORRUPTION is applied AFTER metering on a copy —
+        # "faults retain the deployment cost of the response being
+        # corrupted". Faults do NOT bypass the cache.
+        fault = self.server.fault_for(uid, node, model)
+        if not no_cache and (model, input_sha) in self._cache:
+            cached = True
+            resp = self._cache[(model, input_sha)]
+            self.cached_calls += 1
+        else:
+            cached = False
+            resp = self.server.draw(node, kind, model, uid, attempt,
+                                    profile_key=self.profile_key)
+            if not no_cache:
+                self._cache[(model, input_sha)] = resp
         self.clock.advance(resp['latency_s'])
-        self.tokens_total += resp['usage']['total_tokens']
-        self.requests_total += 1
+        physical = not cached
+        if physical:
+            self.tokens_total += resp['usage']['total_tokens']
+            self.requests_total += 1
+        answer_replaced = fault is not None
+        if answer_replaced:
+            resp = dict(resp)
+            resp['answer'] = fault
+            resp['injected_fault'] = True
+            self.injected_calls += 1
+        injected = answer_replaced
         rec = dict(event='call', key=key, stage=stage, node=node, kind=kind,
                    model=model, task=uid, attempt=attempt,
                    answer_sha256=hashlib.sha256(
@@ -261,9 +316,14 @@ class StubEngine:
                    answer=resp['answer'], usage=resp['usage'],
                    latency_s=resp['latency_s'],
                    input_sha=input_sha,
+                   cached=cached, injected=injected, physical=physical,
+                   answer_replaced_after_call=answer_replaced,
+                   no_cache=no_cache,
                    t_start=t0, t_end=self.clock.time(),
                    switch_before=sw_idx)
         self._append(rec)
+        st.answers[node] = resp['answer']
+        st.node_history.setdefault(node, []).append((kind, resp['answer']))
         # Per-task wall starts at the switch attributed to this task's first
         # call (cold start included) — the honest E2E span on the clock.
         if st.t_first is None:
@@ -274,7 +334,6 @@ class StubEngine:
         st.t_last = self.clock.time()
         st.service_sum += resp['latency_s']
         st.calls += 1
-        st.answers[node] = resp['answer']
         return rec
 
     def _run_stage(self, stage: str, jobs: List[dict]) -> None:
@@ -285,10 +344,10 @@ class StubEngine:
             for j in jobs:
                 if j['model'] == model:
                     self._call(stage, j['task'], j['node'], j['kind'],
-                               j['model'])
+                               j['model'], no_cache=bool(j.get('no_cache')))
 
-    def run_panel(self, tasks: List[dict],
-                  node_models: Dict[str, str]) -> List[dict]:
+    def start_panel(self, tasks: List[dict],
+                    node_models: Dict[str, str]) -> None:
         if not tasks or len({t['uid'] for t in tasks}) != len(tasks):
             raise ValueError('nonempty unique-uid task panel required')
         for uid in node_models:
@@ -300,11 +359,19 @@ class StubEngine:
                           node_models=node_models,
                           ctx_sha={t['uid']: dag_closure.ctx_signatures(t)
                                    for t in tasks}))
-        for stage, nodes in STAGES:
-            jobs = [dict(task=t, node=nd, kind='plain', model=node_models[nd])
-                    for t in tasks for nd in nodes
-                    if nd in node_models]
-            self._run_stage(stage, jobs)
+
+    def run_jobs(self, stage: str, jobs: List[dict]) -> None:
+        """Public stage executor for the M4 recovery runner (identical
+        batching semantics to planned stages)."""
+        self._run_stage(stage, jobs)
+
+    def planned_jobs(self, tasks: List[dict], node_models: Dict[str, str],
+                     nodes: Tuple[str, ...]) -> List[dict]:
+        return [dict(task=t, node=nd, kind='plain', model=node_models[nd])
+                for t in tasks for nd in nodes
+                if nd in node_models]
+
+    def write_task_summaries(self, tasks: List[dict]) -> List[dict]:
         summaries = []
         for t in tasks:
             st = self.tasks[t['uid']]
@@ -317,13 +384,29 @@ class StubEngine:
                            switch_count=st.switch_count, calls=st.calls)
             self._append(summary)
             summaries.append(summary)
+        return summaries
+
+    def write_session_summary(self, n_tasks: int) -> None:
         # Session-level record (operator ruling on cold-start billing):
         # switch/cold-start costs are counted ONCE in the switch events;
         # this summary only REFERENCES their indices — never re-sums them.
         self._append(dict(
-            event='session_summary', tasks=len(tasks),
-            calls=self.requests_total, requests=self.requests_total,
+            event='session_summary', tasks=n_tasks,
+            calls=self.requests_total + self.cached_calls
+            + self.injected_calls,
+            requests=self.requests_total,
             tokens_total=self.tokens_total,
+            cached_calls=self.cached_calls,
+            injected_calls=self.injected_calls,
             switch_indices=list(self._switch_indices),
             cold_start_indices=list(self._cold_start_indices)))
+
+    def run_panel(self, tasks: List[dict],
+                  node_models: Dict[str, str]) -> List[dict]:
+        self.start_panel(tasks, node_models)
+        for stage, nodes in STAGES:
+            jobs = self.planned_jobs(tasks, node_models, nodes)
+            self._run_stage(stage, jobs)
+        summaries = self.write_task_summaries(tasks)
+        self.write_session_summary(len(tasks))
         return summaries

@@ -196,9 +196,16 @@ class SchedulerState:
         st.calls += 1
         st.node_model[node] = ev['model']
         st.exec_identity[node] = (ev['model'], ev['input_sha'])
-        self.tokens_spent += ev['usage']['total_tokens']
-        self.requests_spent += 1
+        if ev.get('physical', True):
+            self.tokens_spent += ev['usage']['total_tokens']
+            self.requests_spent += 1
         t = ev['t_end']
+        rec_kind = {('e1', 'fb'): 'e_fb', ('e2', 'fb'): 'e_fb',
+                    ('r', 'fbd'): 'r_fbd', ('v', 'fbd'): 'v_fbd',
+                    ('r', 'esc'): 'r_esc', ('v', 'esc'): 'v_esc'
+                    }.get((node, ev.get('kind')))
+        if rec_kind:
+            st.recovery_counts[rec_kind] += 1
         if node in ('e1', 'e2'):
             st.facts[node] = detection.parse_facts(answer)
             if detection.detect_e(answer):
