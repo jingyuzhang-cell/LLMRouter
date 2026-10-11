@@ -366,9 +366,12 @@ def main():
                ctx_table='T', ctx_text='P')
     srv_mx = StubModelServer(dict(ANSWERS), BASE_PRIORS, seed='mx')
     srv_mx.set_fault('mx0', 'r', 'medium', '###BROKEN###')
-    eng_mx = StubEngine(RUNS_DIR / 'mixed', srv_mx, InjectedClock(),
+    # ONE clock shared by engine AND state (the frozen single time
+    # authority); the previous version used two independent clocks
+    clock_mx = InjectedClock()
+    eng_mx = StubEngine(RUNS_DIR / 'mixed', srv_mx, clock_mx,
                         seed='mx', profile_key='v3_compat')
-    st_mx = SchedulerState(InjectedClock(),
+    st_mx = SchedulerState(clock_mx,
                            task_deadlines={'mx0': 100.0},
                            token_allocation=100000.0)
     st_mx.attach(eng_mx)
@@ -397,14 +400,43 @@ def main():
     checks['p3b2_calls_equals_events'] = (
         sess_mx['calls'] == len(c_mx)
         and sess_mx['calls'] == sess_mx['requests'] + sess_mx['cached_calls'])
+    # per-event SET containment (not just counts): every injected event
+    # IS a physical, non-cached event; physical and cached are mutually
+    # exclusive and together cover ALL call events
+    inj_ids = {id(c) for c in inj_mx}
     checks['p3b2_field_counts_match_events'] = (
         sess_mx['requests'] == len(phys_mx)
         and sess_mx['cached_calls'] == len(cached_mx)
         and sess_mx['injected_calls'] == len(inj_mx)
-        and len(inj_mx) <= len(phys_mx))     # injected subset of physical
+        and all(c['physical'] and not c['cached'] for c in inj_mx)
+        and inj_ids <= {id(c) for c in phys_mx}
+        and not (inj_ids & {id(c) for c in cached_mx})
+        and {id(c) for c in phys_mx}.isdisjoint({id(c) for c in cached_mx})
+        and len(phys_mx) + len(cached_mx) == len(c_mx))
+    # reverse: an injected-but-cached event MUST fail this checker
+    def mixed_ok(calls_list):
+        inj = [c for c in calls_list if c.get('injected')]
+        phys = [c for c in calls_list if c.get('physical')]
+        cached = [c for c in calls_list if c.get('cached')]
+        return (all(c['physical'] and not c['cached'] for c in inj)
+                and phys and cached
+                and {id(c) for c in phys}.isdisjoint(
+                    {id(c) for c in cached}))
+    poisoned_ev = [dict(c) for c in c_mx]
+    # make one cached event falsely injected
+    victim = next(c for c in poisoned_ev if c['cached'])
+    victim['injected'] = True
+    checks['p3b2_reverse_injected_cached_detected'] = not mixed_ok(
+        poisoned_ev)
     checks['p3b2_tokens_and_settlement'] = (
         sess_mx['tokens_total'] == tok_phys
         and st_mx_view.tokens_physical == tok_phys)
+    # clock-sync assertion: engine and state still share the SAME clock
+    # object and agree on the current time after the whole run
+    checks['p3b2_shared_clock_sync'] = (
+        eng_mx.clock is st_mx.clock
+        and eng_mx.clock.time() == st_mx.clock.time()
+        and eng_mx.clock.time() > 0.0)
     det['p3b2_mixed'] = dict(call_events=len(c_mx),
                              physical=len(phys_mx), cached=len(cached_mx),
                              injected=len(inj_mx),

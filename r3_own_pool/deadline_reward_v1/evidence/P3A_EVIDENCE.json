@@ -15,6 +15,7 @@
   "C3_contention_moves_action": "PASS",
   "C4_direction_monotone": "PASS",
   "T1_time_calibre": "CONDITIONAL",
+  "T1b_e2e_definition_cross_task": "PASS",
   "E1_event_conservation": "PASS",
   "E2_settlement_conservation": "PASS",
   "X1_counterfactuals": "PASS",
@@ -24,7 +25,7 @@
   [
    "RESOLVED",
    "R2_acceptance_doc_stale",
-   "fixed across P3-B/P3-B2: M6_ACCEPTANCE section 6 now carries 214/214 as current with 199/207/210 as HISTORICAL stage counts; live count 214 (+2 M6 boundary checks, +1 calls-conservation, +4 mixed-scenario conservation checks)."
+   "fixed across P3-B/B2/sign-off-hardening: section 6 carries the LIVE count as current with prior counts as HISTORICAL stages (216 now: 214 + 2 hardening checks)."
   ],
   [
    "RESOLVED",
@@ -39,12 +40,12 @@
   [
    "NOTE",
    "T1_time_calibre",
-   "E2E(release->termination)=13.60s = service 1.00 + switch 12.00 + queue/other 0.60; three quantities are recorded separately and reconcile; critical-path and contention are PREDICTION-side calibres only (never mixed into the ledger E2E)."
+   "E2E=completion-release per task: a0 13.60s, a1 13.80s (a1 E2E 13.8 > wall_inclusive 10.4 by queue-wait — the two quantities are recorded separately and never mixed); both decompose as E2E >= service+switch with the remainder being queue/other; critical-path and contention remain PREDICTION-side calibres only."
   ],
   [
    "RESOLVED",
    "E1_calls_field_double_count",
-   "fixed in P3-B and now audited by DIRECT identity (calls=9==events 9; requests==physical 9; cached==0; injected 1 ⊆ physical; tokens exact). Reverse tests catch off-by-one calls, requests+injected, and cached+injected error modes."
+   "fixed in P3-B; audited by DIRECT identity AND per-event containment on the mixed ledger (cached>0, injected>0): calls=9==events 9; requests==physical 9; injected events are physical AND non-cached; physical/cached disjoint and covering; tokens exact. Reverse tests catch off-by-one calls, requests+injected, cached+injected, AND injected-but-cached modes."
   ]
  ],
  "counts": {
@@ -56,9 +57,9 @@
   "test_m6": 24,
   "test_policy": 18,
   "test_phase3": 19,
-  "test_boundary": 19
+  "test_boundary": 21
  },
- "total": 214,
+ "total": 216,
  "contention": {
   "lo": {
    "mu": 23.5,
@@ -96,7 +97,7 @@
   }
  },
  "summary": {
-  "passed": 17,
+  "passed": 18,
   "conditional": 2,
   "failed": 0
  }

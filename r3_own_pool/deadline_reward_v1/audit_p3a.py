@@ -72,16 +72,15 @@ def main():
         counts[m] = int(mm.group(2))
         assert 'ALL PASS' in out, m
     total = sum(counts.values())
-    # Post-P3-B2 live count: 210 + 4 mixed-scenario conservation checks
-    # in the boundary suite = 214 (recount on every run)
-    ok('R1_count_reconciliation', total == 214,
+    # Post-signoff-hardening live count: 214 + 2 boundary checks
+    # (per-event containment reverse + shared-clock sync) = 216
+    ok('R1_count_reconciliation', total == 216,
        detail=f'total={total}')
     findings.append(('RESOLVED', 'R2_acceptance_doc_stale',
-                     'fixed across P3-B/P3-B2: M6_ACCEPTANCE section 6 '
-                     'now carries 214/214 as current with 199/207/210 as '
-                     'HISTORICAL stage counts; live count 214 (+2 M6 '
-                     'boundary checks, +1 calls-conservation, +4 '
-                     'mixed-scenario conservation checks).'))
+                     'fixed across P3-B/B2/sign-off-hardening: section 6 '
+                     'carries the LIVE count as current with prior counts '
+                     'as HISTORICAL stages (216 now: 214 + 2 hardening '
+                     'checks).'))
 
     # ================= G: independent goldens ===========================
     # V1-S1: A/B/C at D=20 (golden world: q/mu/p90/dc from the operator's
@@ -228,24 +227,48 @@ def main():
        and flip['p'] <= hi['p'] + 1e-12)
 
     # ================= T: time-calibre ledger audit =====================
-    r_t = episode('tcal', 0.0)
+    # E2E is DEFINED as completion_time - release_time (M2 semantics) and
+    # is checked for EVERY task; wall_inclusive_s (first attributed event
+    # -> last call) is a SEPARATE diagnostic that legitimately differs
+    # for tasks whose first call is delayed by interleaving (e.g. a1).
     ev_t, _ = load_ledger(RUNS / 'cont_lo' / 'TASK_LEDGER.jsonl')
-    a0 = [e for e in ev_t if e.get('task') == 'a0']
-    calls = [e for e in a0 if e['event'] == 'call']
-    sw = [e for e in a0 if e['event'] == 'switch']
-    summ = [e for e in ev_t if e['event'] == 'task_summary'
-            and e['task'] == 'a0'][0]
-    service = sum(c['latency_s'] for c in calls)
-    switch = sum(s['wall_s'] for s in sw)
-    wall = summ['wall_inclusive_s']
+    t_defs = {}
+    for uid in ('a0', 'a1'):
+        t_calls = [e for e in ev_t if e['event'] == 'call'
+                   and e.get('task') == uid]
+        t_sw = [e for e in ev_t if e['event'] == 'switch'
+                and e.get('task') == uid]
+        summ_t = next(e for e in ev_t if e['event'] == 'task_summary'
+                      and e['task'] == uid)
+        release_t = 0.0                       # panel release for both
+        completion_t = max(c['t_end'] for c in t_calls)
+        e2e_t = completion_t - release_t
+        service_t = sum(c['latency_s'] for c in t_calls)
+        switch_t = sum(s['wall_s'] for s in t_sw)
+        t_defs[uid] = dict(
+            release=release_t, completion=completion_t, e2e=e2e_t,
+            wall_inclusive=summ_t['wall_inclusive_s'],
+            service=service_t, switch=switch_t,
+            other=e2e_t - service_t - switch_t,
+            decomposes=(e2e_t >= service_t + switch_t - 1e-9))
+    both_ok = all(v['decomposes'] and v['e2e'] >= v['wall_inclusive']
+                  - 1e-9 for v in t_defs.values())
+    a1_differs = (t_defs['a1']['e2e']
+                  > t_defs['a1']['wall_inclusive'] + 1e-9)
     verdicts['T1_time_calibre'] = 'CONDITIONAL'
     findings.append(('NOTE', 'T1_time_calibre',
-                     f'E2E(release->termination)={wall:.2f}s = service '
-                     f'{service:.2f} + switch {switch:.2f} + queue/other '
-                     f'{wall - service - switch:.2f}; three quantities are '
-                     'recorded separately and reconcile; critical-path and '
-                     'contention are PREDICTION-side calibres only (never '
-                     'mixed into the ledger E2E).'))
+                     f'E2E=completion-release per task: a0 '
+                     f'{t_defs["a0"]["e2e"]:.2f}s, a1 '
+                     f'{t_defs["a1"]["e2e"]:.2f}s (a1 E2E '
+                     f'{t_defs["a1"]["e2e"]:.1f} > wall_inclusive '
+                     f'{t_defs["a1"]["wall_inclusive"]:.1f} by '
+                     'queue-wait — the two quantities are recorded '
+                     'separately and never mixed); both decompose as '
+                     'E2E >= service+switch with the remainder being '
+                     'queue/other; critical-path and contention remain '
+                     'PREDICTION-side calibres only.'))
+    verdicts['T1b_e2e_definition_cross_task'] = (
+        'PASS' if both_ok and a1_differs else 'FAIL')
 
     # ================= E: per-event conservation ========================
     sess = [e for e in ev_t if e['event'] == 'session_summary'][0]
@@ -261,12 +284,26 @@ def main():
     n_phys_e1 = len(disp)
     n_cached_e1 = len([c for c in all_calls_e1 if c.get('cached')])
     n_inj_e1 = len([c for c in all_calls_e1 if c.get('injected')])
+    inj_rows_e1 = [c for c in all_calls_e1 if c.get('injected')]
+    phys_rows_e1 = [c for c in all_calls_e1 if c.get('physical')]
+    cached_rows_e1 = [c for c in all_calls_e1 if c.get('cached')]
+    # per-event SET containment (not merely counts): injected events are
+    # physical AND non-cached; physical/cached disjoint; cover all events
+    def containment_ok():
+        return (all(c['physical'] and not c['cached']
+                    for c in inj_rows_e1)
+                and {id(c) for c in inj_rows_e1} <= {
+                    id(c) for c in phys_rows_e1}
+                and {id(c) for c in phys_rows_e1}.isdisjoint(
+                    {id(c) for c in cached_rows_e1})
+                and len(phys_rows_e1) + len(cached_rows_e1)
+                == n_events_e1)
     core_ok = (
         sess['calls'] == n_events_e1
         and sess['requests'] == n_phys_e1
         and sess['cached_calls'] == n_cached_e1
         and sess['injected_calls'] == n_inj_e1
-        and n_inj_e1 <= n_phys_e1
+        and containment_ok()
         and sess['tokens_total'] == tok_sum)
     # reverse tests: corrupted counters must FAIL this checker — multiple
     # error modes, not just the historical one
@@ -279,16 +316,40 @@ def main():
     reverse_ok = (not e1_checker(wrong_calls)
                   and not e1_checker(wrong_requests)
                   and not e1_checker(wrong_cached))
+    # per-event reverse: use the MIXED ledger (committed evidence with
+    # cached>0 AND injected>0) — an injected-but-CACHED event must fail
+    # the containment checker (counts alone would not catch it)
+    mixed_path = (HERE / 'evidence' / 'b_runs' / 'mixed'
+                  / 'TASK_LEDGER.jsonl')
+    mixed_calls = [json.loads(l) for l in
+                   mixed_path.read_text().splitlines()
+                   if l.strip()]
+    mixed_calls = [c for c in mixed_calls if c.get('event') == 'call']
+    poisoned_rows = [dict(c) for c in mixed_calls]
+    _vic = next(c for c in poisoned_rows if c.get('cached'))
+    _vic['injected'] = True
+
+    def per_event_checker(rows):
+        inj = [c for c in rows if c.get('injected')]
+        return all(c['physical'] and not c['cached'] for c in inj)
+    mixed_containment = (
+        per_event_checker(mixed_calls)
+        and len([c for c in mixed_calls if c.get('cached')]) > 0
+        and len([c for c in mixed_calls if c.get('injected')]) > 0)
+    reverse_ok = reverse_ok and mixed_containment and not (
+        per_event_checker(poisoned_rows))
     verdicts['E1_event_conservation'] = (
         'PASS' if core_ok and reverse_ok else 'FAIL')
     findings.append((
         'RESOLVED' if core_ok and reverse_ok else 'MAJOR',
         'E1_calls_field_double_count',
-        f'fixed in P3-B and now audited by DIRECT identity (calls='
-        f'{sess["calls"]}==events {n_events_e1}; requests==physical '
-        f'{n_phys_e1}; cached=={n_cached_e1}; injected {n_inj_e1} '
-        f'⊆ physical; tokens exact). Reverse tests catch off-by-one '
-        f'calls, requests+injected, and cached+injected error modes.'
+        f'fixed in P3-B; audited by DIRECT identity AND per-event '
+        f'containment on the mixed ledger (cached>0, injected>0): '
+        f'calls={sess["calls"]}==events {n_events_e1}; requests=='
+        f'physical {n_phys_e1}; injected events are physical AND '
+        f'non-cached; physical/cached disjoint and covering; tokens '
+        f'exact. Reverse tests catch off-by-one calls, requests+'
+        f'injected, cached+injected, AND injected-but-cached modes.'
         if core_ok and reverse_ok else
         f'identity failed: {sess} vs events {n_events_e1}'))
     rew = json.loads((RUNS / 'cont_lo' / 'REWARDS.jsonl')
