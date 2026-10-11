@@ -1,4 +1,15 @@
-# deadline_reward_v1 — deadline-constrained feedback-driven DAG dynamic scheduling (rev E)
+# deadline_reward_v1 — deadline-constrained feedback-driven DAG dynamic scheduling
+
+> **PROTOCOL V2.3 rev3 FROZEN at commit 42187e9 (operator, final text
+> freeze PASS).** Frozen scope: five-arm comparison, reward endpoint,
+> deadline tiers, budget constraints, H1–H4 + S1 hypotheses, the unified
+> six-contrast method-choice rule, and the confirmatory stop conditions.
+> NOT included in this freeze: calibration-parameter freezing (symmetry
+> thresholds, outlier criteria, minimum n — must be set BEFORE viewing
+> method-selection data, with data-access logging); Calibration GO and
+> Experiment GO remain HOLD; production integration and real-model calls
+> remain unauthorized. Next authorized steps (zero real calls): Formal
+> settlement-audit hardening and the net-benefit independent audit.
 
 **Frozen research objective (operator, verbatim):**
 
