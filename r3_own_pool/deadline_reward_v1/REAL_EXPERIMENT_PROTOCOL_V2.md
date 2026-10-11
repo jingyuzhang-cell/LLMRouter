@@ -1,12 +1,13 @@
 # REAL_EXPERIMENT_PROTOCOL_V2 — 真实实验准入与对照实验协议(拟冻结,待操作者批准)
 
-Status: V2.3 DRAFT — V2.2 (c8722d5) + final statistical revision:
-Wilcoxon removed as the asymmetry fallback (it also assumes symmetry and
-would change the tested proposition from the mean difference); the
-preregistered fallback is now the one-sided paired t-test for the MEAN
-difference, with finite-variance/skew/outlier/sample-size applicability
-checks on independent data and studentized-bootstrap sensitivity; H1-H4
-and both S1 components must freeze ONE shared method before unblinding. Zero real model calls are made or
+Status: V2.3 DRAFT (rev 2, post-review) — V2.2 (c8722d5) + statistical
+revision + the three execution-ambiguity errata: H3's task statistic
+defined as the four-arm 2x2 interaction contrast (never a two-arm
+comparison); an EXECUTABLE unified method-choice rule over all six
+contrast sets (all-six symmetric -> sign-flip; else all-six t-applicable
+-> paired t; else CONFIRMATORY ADMISSION STOPS - no third method, no
+mixing); Monte-Carlo sign-flip relabeled an APPROXIMATE test with
+mandatory B/seed reporting, exactness reserved to full 2^n enumeration. Zero real model calls are made or
 authorized by this document. Research mainline unchanged
 (MAINLINE_FREEZE). NOT YET FROZEN: freezing requires explicit operator
 approval of this V2 text.
@@ -129,15 +130,27 @@ D 规则:**独立参照分布**(校准阶段的 S/S 推演完成时延分布)的
 **主终点**(操作者裁决 4):任务级 **R_task**(冻结公式,真实
 q/C_full/T/D);**按时正确率为关键次级终点**(McNemar 配对)。
 
-**H1–H4 的 p 值与 Holm 流程(V2.2 勘误,冻结)**:
-- 每个假设 Hk 的统计量为任务级配对差 d_i = R_task^A,i − R_task^B,i
-  (臂 A/B 按假设方向预注册),检验统计量 T = mean(d_i)(**有方向的
-  统计量,不取绝对值**)。
+**H1–H4 的 p 值与 Holm 流程(V2.2 勘误;V2.3 补 H3 统计量)**:
+- **H1/H2/H4 为两臂差**:d_i = R_task^A,i − R_task^B,i(臂 A/B 按
+  假设方向预注册)——H1: A=D/S,B=S/S;H2: A=S/D,B=S/S;
+  H4: A=D/D,B=S/S。
+- **H3 为四臂交互对比(V2.3 勘误,单独定义)**:
+  **d_i^H3 = R_DD,i − R_DS,i − R_SD,i + R_SS,i**,
+  即同一任务在四臂上的 2×2 交互对比;检验统计量仍为
+  T = mean(d_i^H3)(正方向 = 正交互)。**禁止把 H3 实现为任何
+  两臂比较。**
+- 所有情形的检验统计量 T = mean(d_i)(**有方向,不取绝对值**)。
 - **单侧配对符号翻转检验,正方向(μ_A > μ_B)**:
-  - 蒙特卡洛版:随机独立翻转 d_i 的符号 B 次(冻结 B = 10⁵,种子
-    预注册),每次计算 T_b;**p = (1 + #{T_b ≥ T_obs}) / (B + 1)**。
-  - 精确枚举版(仅在 n ≤ 20 的探索性小样本使用):对所有 2^n 个
-    符号组合,**p = #{T_perm ≥ T_obs} / 2^n(分母不加 1)**。
+  - **蒙特卡洛符号翻转检验(确认实验使用;近似检验,非精确)**:
+    随机独立翻转 d_i 的符号 B 次(冻结 B = 10⁵,种子预注册并随
+    冻结文件公布),每次计算 T_b;**p = (1 + #{T_b ≥ T_obs}) /
+    (B + 1)**;报告中必须给出**实际抽样次数 B 与随机种子**。
+    (V2.3 勘误:随机抽样版本是**蒙特卡洛近似**,不得标注为
+    "精确检验"。)
+  - **精确检验 = 完整枚举全部 2^n 个符号组合**(V2.3 勘误明确):
+    **p = #{T_perm ≥ T_obs} / 2^n(分母不加 1)**;仅当 n 小到
+    全枚举可行(预注册上限 n ≤ 20)时作为探索性小样本的精确版
+    使用。
   - **零差与并列**:d_i = 0 的任务保留(计入 n,贡献不改变 T 的
     翻转分布);并列的 T_b = T_obs 计入 #{T_b ≥ T_obs}(保守)。
   - B、种子、随机数生成器在试点前冻结;确认段用同一配置。
@@ -157,10 +170,18 @@ q/C_full/T/D);**按时正确率为关键次级终点**(McNemar 配对)。
     依赖对称性才能解释为中心/位置检验,且在非对称下换成 Wilcoxon
     会改变所检验的科学命题(从均值差变为伪中位数差);仅在敏感性
     分析中作为参考报告。
-  - **方法选择冻结时点**:H1–H4 与 **S1 的两个分量**的主检验方法
-    (及其全部参数)**必须在确认数据揭盲前统一冻结**,且 H1–H4 与
-    S1 分量使用**同一套事先选定的方法**——不得 H 族用一种、S1 临
-    时用另一种;**确认数据不得触发任何方法更换**。
+  - **统一方法选择规则(V2.3 勘误,可执行裁决)**:对 **H1–H4 与
+    S1 两个分量共六组任务级差分**,在独立校准/验证数据上**统一**
+    评估:
+    (i) **六组全部**满足预注册的对称性适用条件 → 六组**统一采用
+    符号翻转**;
+    (ii) 否则,若配对 t 的适用性评估(有限方差/偏态/离群值/样本量,
+    同上)在**六组上全部**通过 → 六组**统一采用单侧配对 t**;
+    (iii) **两者均不满足** → **停止确认性检验准入**(不进入确认
+    实验),并报告原因;**不得在确认数据上临时选择第三种方法**。
+    部分组满足、部分组不满足的混合情形**一律落入 (ii)/(iii) 分支
+    ——绝不混合使用两种方法**。方法及其全部参数在**确认数据揭盲
+    前**冻结;**确认数据不得触发任何方法更换**。
 - 同时报告 BCa 配对 Bootstrap CI(≥10⁴)作为效应量区间;假设判定
   以上述预注册检验的 p 值为准。
 - **Holm 流程(V2.2 勘误)**:四个单侧 p 值升序 p(1)≤…≤p(4),
