@@ -230,7 +230,12 @@ def main():
     invocations = server.invocations + server2.invocations + server3.invocations
     checks['z1_sentinel_engine_only'] = invocations == total_calls
     allowed = {'__future__', 'json', 'random', 'hashlib', 'dataclasses',
-               'pathlib', 'typing', 'os'}
+               'pathlib', 'typing', 'os',
+               # sibling module since the M3 errata: the engine computes the
+               # frozen input identity via dag_closure.input_signature so
+               # engine/judge share ONE formula (no drift). Still no
+               # production/network imports.
+               'dag_closure'}
     tree = ast.parse((HERE / 'stub_engine.py').read_text())
     imported = set()
     for node in ast.walk(tree):

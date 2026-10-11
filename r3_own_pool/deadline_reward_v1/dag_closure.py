@@ -31,6 +31,15 @@ CLOSURE: Dict[str, Tuple[str, ...]] = {
     'e1': ('r', 'v'), 'e2': ('r', 'v'), 'r': ('v',), 'v': ()}
 TOPO: Tuple[str, ...] = ('e1', 'e2', 'r', 'v')  # a valid topological order
 MODELS = frozenset({'medium', 'large', 'coder'})  # audited model universe
+# Frozen per-node model menus (from AUDITED production paths, design doc
+# scheduler §4a): e-nodes have run on coder via fb; r has never run coder;
+# v has never run medium.
+MENUS: Dict[str, frozenset] = {
+    'e1': frozenset({'medium', 'large', 'coder'}),
+    'e2': frozenset({'medium', 'large', 'coder'}),
+    'r': frozenset({'medium', 'large'}),
+    'v': frozenset({'coder', 'large'}),
+}
 
 PENDING, RUNNING, DONE, FAILED = 'PENDING', 'RUNNING', 'DONE', 'FAILED'
 
@@ -60,7 +69,11 @@ def evaluate_plan(*, node_status: Dict[str, str],
                   node_model: Dict[str, Optional[str]],
                   exec_identity: Dict[str, Optional[Tuple[str, str]]],
                   R: Iterable[str], pi: Dict[str, str],
-                  on_incomplete: str = 'reject') -> PlanJudgment:
+                  on_incomplete: str = 'reject',
+                  uid: str = '',
+                  current_ctx_sha: Optional[Dict[str, str]] = None,
+                  parent_answers: Optional[Dict[str, str]] = None,
+                  ) -> PlanJudgment:
     """Adjudicate a candidate (R, π) against one task's current state.
 
     node_status: node → PENDING/RUNNING/DONE/FAILED
@@ -70,9 +83,20 @@ def evaluate_plan(*, node_status: Dict[str, str],
     R: proposed re-execution set. π: proposed model assignment; its domain
     must be R ∪ PENDING (DONE nodes are immutable unless re-executed;
     RUNNING nodes are immutable, period).
+    uid + current_ctx_sha + parent_answers: the CURRENT static-context
+    signatures and cached answers, used to compare against frozen
+    identities — a DONE node whose current input signature (incl. static
+    context) differs from the executed one is a NEW call, never a cache
+    hit ("同 uid 但静态上下文变化 ⇒ 缓存身份变化").
     on_incomplete: 'reject' — a plan whose upstream change invalidates a
     completed downstream node NOT in R is illegal; 'complete' — the closure
-    rule itself completes R (recorded in reasons; never silently)."""
+    rule itself completes R (recorded in reasons; never silently). Any
+    other value is rejected AT ENTRY (before any candidate can slip
+    through with no invalidations)."""
+
+    if on_incomplete not in ('reject', 'complete'):
+        raise ValueError('on_incomplete must be reject|complete, got: '
+                         + repr(on_incomplete))
 
     reasons: list = []
     R = frozenset(R)
@@ -88,6 +112,8 @@ def evaluate_plan(*, node_status: Dict[str, str],
             return _reject('unknown_node:' + n)
         if m not in MODELS:
             return _reject('unknown_model:' + str(m))
+        if m not in MENUS[n]:
+            return _reject(f'model_off_menu:{n}:{m}')
         if node_status.get(n) == RUNNING:
             return _reject('running_node_immutable:' + n)  # rule 6
         if n not in R and node_status.get(n) in (DONE, FAILED):
@@ -116,10 +142,31 @@ def evaluate_plan(*, node_status: Dict[str, str],
                 model_changed = new_model != ident[0]
                 fresh = False
             # identity-unchanged cache hit: same model, same (unchanged)
-            # inputs, previously executed — the frozen (model, sha, task,
-            # node, scope) identity matches; the re-execution is a no-op
-            # cache read.
+            # inputs, previously executed SUCCESSFULLY — the frozen
+            # (model, sha, task, node, scope) identity matches; the
+            # re-execution is a no-op cache read.
             identity_changed = fresh or model_changed or parents_changed
+            if status == FAILED:
+                # operator ruling: a FAILED result is NEVER a successful
+                # cache hit. Same-model/same-input retry = a REAL new
+                # attempt (new request, tokens, time) whose output may
+                # differ, so dependents' cached results are invalidated.
+                identity_changed = True
+                execute[n] = True
+                changed[n] = True
+                if in_R:
+                    reasons.append('failed_retry_new_call:' + n)
+                continue
+            if not identity_changed and current_ctx_sha is not None \
+                    and ident is not None:
+                # static-context drift check: compare the CURRENT input
+                # signature (ctx sha + cached parent answers) against the
+                # frozen one — same uid must not imply same identity.
+                hyp = input_signature(uid, n, current_ctx_sha,
+                                      parent_answers or {})
+                if hyp != ident[1]:
+                    identity_changed = True
+                    reasons.append('input_identity_changed:' + n)
             changed[n] = identity_changed
             execute[n] = identity_changed
             if in_R and not identity_changed:
@@ -128,6 +175,22 @@ def evaluate_plan(*, node_status: Dict[str, str],
                 reasons.append('model_change:' + n)
         else:
             changed[n] = parents_changed  # staleness of the cached output
+            if status == FAILED:
+                # audit note: this plan leaves a failed node unrecovered
+                # (a legal accept-the-failure plan — the policy decides)
+                reasons.append('failed_node_not_recovered:' + n)
+
+    # ---- RUNNING downstream invalidation ⇒ reject the whole plan --------
+    # No cancel/restart machinery is authorized: if an upstream identity
+    # change invalidates a RUNNING node's inputs, the candidate is illegal.
+    running_invalid = tuple(
+        n for n in TOPO if node_status.get(n) == RUNNING
+        and any(changed.get(p, False) for p in PARENTS[n]))
+    if running_invalid:
+        return PlanJudgment(
+            legal=False, execute=(), reuse=(), invalidated=(),
+            reasons=reasons + ['running_downstream_invalidated:'
+                               + ','.join(running_invalid)])
 
     # ---- invalidations among completed nodes -----------------------------
     invalidated = tuple(n for n in TOPO
@@ -140,16 +203,15 @@ def evaluate_plan(*, node_status: Dict[str, str],
                 invalidated=invalidated,
                 reasons=reasons + ['incomplete_closure_missing:'
                                    + ','.join(invalidated)])
-        if on_incomplete != 'complete':
-            raise ValueError('on_incomplete must be reject|complete')
         for n in invalidated:
             execute[n] = True
         reasons.append('closure_completed:' + ','.join(invalidated))
 
     exec_tuple = tuple((n, execute[n]) for n in TOPO if n in execute)
+    # Reuse = successful (DONE) nodes only; FAILED outputs are never
+    # reusable as success (operator ruling).
     reuse = tuple(n for n in TOPO
-                  if node_status.get(n) in (DONE, FAILED)
-                  and n not in execute)
+                  if node_status.get(n) == DONE and n not in execute)
     return PlanJudgment(legal=True, execute=exec_tuple, reuse=reuse,
                         invalidated=invalidated,
                         reasons=tuple(reasons))
@@ -160,13 +222,30 @@ def _reject(reason: str) -> PlanJudgment:
                         reasons=(reason,))
 
 
-def input_signature(uid: str, node: str, parent_answers: Dict[str, str]) -> str:
-    """Stable signature of a node's INPUT identity (mirror of the prompt-
-    dependency structure audited in fault30_run.eval_config): e-nodes
-    depend on static task context; r on both e outputs; v on r's output.
-    Used by SchedulerState to track exec_identity at call time."""
+def ctx_signatures(task: dict) -> Dict[str, str]:
+    """Per-node static-context signatures for one task. e1 consumes the
+    table context, e2 the text context; r/v consume only parent outputs.
+    The ENGINE computes these at call time — the signature never reads
+    anything not yet available."""
+    import hashlib
+    return {
+        'e1': hashlib.sha256(str(task.get('ctx_table', '')).encode())
+        .hexdigest(),
+        'e2': hashlib.sha256(str(task.get('ctx_text', '')).encode())
+        .hexdigest(),
+    }
+
+
+def input_signature(uid: str, node: str, ctx_sha: Optional[Dict[str, str]],
+                    parent_answers: Dict[str, str]) -> str:
+    """Frozen input identity of a node's NEXT execution: task uid, node,
+    the node's STATIC-CONTEXT signature (e1/e2), and the parent outputs it
+    would consume (mirror of the audited prompt-dependency structure in
+    fault30_run.eval_config). Same uid does NOT imply same identity — the
+    actual static context is part of the material."""
     import hashlib
     import json
-    material = [uid, node] + [parent_answers.get(p) for p in PARENTS[node]]
+    material = [uid, node, (ctx_sha or {}).get(node)] + [
+        (parent_answers or {}).get(p) for p in PARENTS[node]]
     return hashlib.sha256(json.dumps(material, sort_keys=True,
                                      default=str).encode()).hexdigest()

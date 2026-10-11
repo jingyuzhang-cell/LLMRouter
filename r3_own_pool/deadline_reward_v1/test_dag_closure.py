@@ -185,6 +185,124 @@ def main():
         node_status={n: DONE for n in dc.NODES},
         node_model=NODES_MODELS, exec_identity={}, R=['e9'], pi={}).legal
 
+    # --- M3 errata (operator review): four boundary fixes + hardening ---
+    def hc(status_over, ident_builder):
+        ns = {'e1': DONE, 'e2': DONE, 'r': DONE, 'v': DONE}
+        ns.update(status_over)
+        ei = ident_builder(ns)
+        return ns, ei
+
+    ctx_a = dc.ctx_signatures({'ctx_table': 'TABLE A', 'ctx_text': 'TXT A'})
+    ctx_b = dc.ctx_signatures({'ctx_table': 'TABLE B', 'ctx_text': 'TXT A'})
+    base_ans = {'e1': BASE[('e1', 'plain')], 'e2': BASE[('e2', 'plain')],
+                'r': BASE[('r', 'plain')], 'v': BASE[('v', 'plain')]}
+
+    def ident_all(uid, ctx, answers):
+        return {n: (NODES_MODELS[n], dc.input_signature(uid, n, ctx,
+                                                        answers))
+                for n in dc.NODES}
+
+    NM = dict(NODES_MODELS)
+
+    # F1: FAILED e1, same model + same inputs requested as recovery —
+    # must NOT be a success cache hit; retry = a real new attempt.
+    ns1, ei1 = hc({'e1': FAILED}, lambda ns: ident_all('u', ctx_a, base_ans))
+    jf1 = dc.evaluate_plan(node_status=ns1, node_model=NM, exec_identity=ei1,
+                           R=['e1'], pi={}, on_incomplete='complete',
+                           uid='u', current_ctx_sha=ctx_a,
+                           parent_answers=base_ans)
+    checks['f1_failed_retry_not_cache_hit'] = (
+        jf1.legal and ('e1', True) in jf1.execute
+        and ('e1', False) not in jf1.execute
+        and 'failed_retry_new_call:e1' in jf1.reasons)
+    jf1d = dc.evaluate_plan(node_status=ns1, node_model=NM, exec_identity=ei1,
+                            R=['e1'], pi={}, uid='u',
+                            current_ctx_sha=ctx_a, parent_answers=base_ans)
+    checks['f1_failed_retry_invalidates_downstream'] = (
+        not jf1d.legal and jf1d.invalidated == ('r', 'v'))
+
+    # F2: FAILED r, same-model retry — never reuse the failed result.
+    ns2, ei2 = hc({'r': FAILED}, lambda ns: ident_all('u', ctx_a, base_ans))
+    jf2 = dc.evaluate_plan(node_status=ns2, node_model=NM, exec_identity=ei2,
+                           R=['r'], pi={}, on_incomplete='complete',
+                           uid='u', current_ctx_sha=ctx_a,
+                           parent_answers=base_ans)
+    checks['f2_failed_r_not_reused'] = (
+        jf2.legal and ('r', True) in jf2.execute
+        and 'failed_retry_new_call:r' in jf2.reasons
+        and 'r' not in jf2.reuse
+        and 'failed_node_not_recovered' not in ','.join(jf2.reasons))
+
+    # F3: r RUNNING while e1 changes model ⇒ whole plan rejected.
+    ns3, ei3 = hc({'r': RUNNING, 'v': PENDING},
+                  lambda ns: ident_all('u', ctx_a, base_ans))
+    jf3 = dc.evaluate_plan(node_status=ns3, node_model=NM, exec_identity=ei3,
+                           R=['e1'], pi={'e1': 'coder'}, uid='u',
+                           current_ctx_sha=ctx_a, parent_answers=base_ans)
+    checks['f3_running_r_invalidated_rejected'] = (
+        not jf3.legal
+        and jf3.reasons[-1] == 'running_downstream_invalidated:r')
+    jf3c = dc.evaluate_plan(node_status=ns3, node_model=NM, exec_identity=ei3,
+                            R=[], pi={'v': 'large'}, uid='u',
+                            current_ctx_sha=ctx_a, parent_answers=base_ans)
+    checks['f3_control_unrelated_plan_legal'] = jf3c.legal
+
+    # F4: v RUNNING while r changes model ⇒ rejected.
+    ns4, ei4 = hc({'v': RUNNING}, lambda ns: ident_all('u', ctx_a, base_ans))
+    jf4 = dc.evaluate_plan(node_status=ns4, node_model=NM, exec_identity=ei4,
+                           R=['r'], pi={'r': 'large'}, uid='u',
+                           current_ctx_sha=ctx_a, parent_answers=base_ans)
+    checks['f4_running_v_invalidated_rejected'] = (
+        not jf4.legal
+        and jf4.reasons[-1] == 'running_downstream_invalidated:v')
+
+    # F5/F6: frozen per-node model menus.
+    ns5, ei5 = hc({}, lambda ns: ident_all('u', ctx_a, base_ans))
+    jf5 = dc.evaluate_plan(node_status=ns5, node_model=NM, exec_identity=ei5,
+                           R=['r'], pi={'r': 'coder'}, uid='u',
+                           current_ctx_sha=ctx_a, parent_answers=base_ans)
+    jf6 = dc.evaluate_plan(node_status=ns5, node_model=NM, exec_identity=ei5,
+                           R=['v'], pi={'v': 'medium'}, uid='u',
+                           current_ctx_sha=ctx_a, parent_answers=base_ans)
+    checks['f5_r_coder_off_menu'] = (
+        not jf5.legal and jf5.reasons == ('model_off_menu:r:coder',))
+    checks['f6_v_medium_off_menu'] = (
+        not jf6.legal and jf6.reasons == ('model_off_menu:v:medium',))
+
+    # F7: same uid, different static context ⇒ identity changes; same
+    # context ⇒ genuine cache hit.
+    jf7b = dc.evaluate_plan(node_status=ns5, node_model=NM, exec_identity=ei5,
+                            R=['e1'], pi={}, uid='u',
+                            current_ctx_sha=ctx_b, parent_answers=base_ans)
+    jf7b_c = dc.evaluate_plan(node_status=ns5, node_model=NM,
+                              exec_identity=ei5, R=['e1'], pi={},
+                              on_incomplete='complete', uid='u',
+                              current_ctx_sha=ctx_b, parent_answers=base_ans)
+    jf7a = dc.evaluate_plan(node_status=ns5, node_model=NM, exec_identity=ei5,
+                            R=['e1'], pi={}, uid='u',
+                            current_ctx_sha=ctx_a, parent_answers=base_ans)
+    checks['f7_ctx_change_breaks_identity'] = (
+        not jf7b.legal and jf7b.invalidated == ('r', 'v')
+        and 'input_identity_changed:e1' in jf7b.reasons
+        and jf7b_c.legal and ('e1', True) in jf7b_c.execute)
+    checks['f7_same_ctx_cache_hit'] = (
+        jf7a.legal and ('e1', False) in jf7a.execute)
+
+    # F8: signature determinism under identical context + history.
+    checks['f8_signature_deterministic'] = (
+        dc.input_signature('u', 'r', ctx_a, base_ans)
+        == dc.input_signature('u', 'r', ctx_a, dict(base_ans)))
+
+    # F9: illegal on_incomplete rejected AT ENTRY (even without any
+    # invalidation to trigger the old late check).
+    try:
+        dc.evaluate_plan(node_status=ns5, node_model=NM, exec_identity=ei5,
+                         R=[], pi={}, on_incomplete='sometimes', uid='u',
+                         current_ctx_sha=ctx_a, parent_answers=base_ans)
+        checks['f9_on_incomplete_entry_validated'] = False
+    except ValueError:
+        checks['f9_on_incomplete_entry_validated'] = True
+
     # --- hardening 1: server override key-existence ------------------------
     st_h, srv_h = run_state('hard_empty', {('m1t1', 'e1', 'plain'): ''})
     obs_empty = [o['code'] for o in st_h.task_view('m1t1')['observations']]

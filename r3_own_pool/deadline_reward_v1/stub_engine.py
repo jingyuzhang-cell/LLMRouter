@@ -25,6 +25,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Tuple
 
+from . import dag_closure
+
 STAGES: Tuple[Tuple[str, Tuple[str, ...]], ...] = (
     ('A', ('e1', 'e2')),
     ('R1', ('r',)),
@@ -110,6 +112,7 @@ class TaskState:
     switch_count: int = 0
     calls: int = 0
     answers: Dict[str, str] = field(default_factory=dict)
+    ctx_sha: Optional[Dict[str, str]] = None  # static-context signatures
 
 
 class LedgerCorruptionError(Exception):
@@ -230,15 +233,22 @@ class StubEngine:
         if uid not in self.tasks:
             self.tasks[uid] = TaskState(uid=uid)
         st = self.tasks[uid]
+        if st.ctx_sha is None:
+            st.ctx_sha = dag_closure.ctx_signatures(task)
         key = f'm1:{self.topo}:{self.fam}:{node}:{kind}:{uid}'
         self.attempts[(uid, node, kind)] = \
             self.attempts.get((uid, node, kind), 0) + 1
         attempt = self.attempts[(uid, node, kind)]
         sw_idx = self._switch(model, uid, key)
         t0 = self.clock.time()
+        # Frozen input identity AT CALL TIME: static context + the parent
+        # outputs this call actually consumes (no future information).
+        input_sha = dag_closure.input_signature(uid, node, st.ctx_sha,
+                                                st.answers)
         self._append(dict(event='call_start', key=key, stage=stage,
                           node=node, kind=kind, model=model, task=uid,
-                          t_start=t0, switch_before=sw_idx))
+                          t_start=t0, switch_before=sw_idx,
+                          input_sha=input_sha))
         resp = self.server.draw(node, kind, model, uid, attempt,
                                 profile_key=self.profile_key)
         self.clock.advance(resp['latency_s'])
@@ -250,6 +260,7 @@ class StubEngine:
                        resp['answer'].encode()).hexdigest(),
                    answer=resp['answer'], usage=resp['usage'],
                    latency_s=resp['latency_s'],
+                   input_sha=input_sha,
                    t_start=t0, t_end=self.clock.time(),
                    switch_before=sw_idx)
         self._append(rec)
@@ -286,7 +297,9 @@ class StubEngine:
         self._append(dict(event='panel_start',
                           tasks=[t['uid'] for t in tasks],
                           t_release=self.clock.time(),
-                          node_models=node_models))
+                          node_models=node_models,
+                          ctx_sha={t['uid']: dag_closure.ctx_signatures(t)
+                                   for t in tasks}))
         for stage, nodes in STAGES:
             jobs = [dict(task=t, node=nd, kind='plain', model=node_models[nd])
                     for t in tasks for nd in nodes

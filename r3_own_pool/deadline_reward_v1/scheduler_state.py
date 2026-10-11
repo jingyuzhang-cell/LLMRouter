@@ -115,9 +115,11 @@ class _TaskState:
         self.node_model: Dict[str, Optional[str]] = {n: None for n in NODES}
         self.answers: Dict[str, str] = {}
         self.facts: Dict[str, List[dict]] = {}
-        # Frozen execution identity per node: (model, input_signature) at
-        # the node's last execution — the reuse/invalidation basis (M3).
+        # Frozen execution identity per node: (model, input_sha) recorded
+        # BY THE ENGINE at call time (single source of truth; replay uses
+        # the same ledger values) — the reuse/invalidation basis (M3).
         self.exec_identity: Dict[str, Optional[tuple]] = {}
+        self.ctx_sha: Optional[Dict[str, str]] = None  # current static ctx
         self.observations: List[dict] = []
         self.recovery_counts: Dict[str, int] = {
             k: 0 for k in ('e_fb', 'r_fbd', 'r_esc', 'v_fbd', 'v_esc',
@@ -159,6 +161,8 @@ class SchedulerState:
             for uid in ev['tasks']:
                 self.tasks.setdefault(uid, _TaskState(uid))
                 self.tasks[uid].release_time = ev['t_release']
+                self.tasks[uid].ctx_sha = dict(ev.get('ctx_sha', {})
+                                               .get(uid, {}))
             self._panel_models = dict(ev['node_models'])
         elif kind == 'call_start':
             st = self.tasks[ev['task']]
@@ -191,9 +195,7 @@ class SchedulerState:
         st.service_sum += ev['latency_s']
         st.calls += 1
         st.node_model[node] = ev['model']
-        st.exec_identity[node] = (
-            ev['model'],
-            dag_closure.input_signature(st.uid, node, st.answers))
+        st.exec_identity[node] = (ev['model'], ev['input_sha'])
         self.tokens_spent += ev['usage']['total_tokens']
         self.requests_spent += 1
         t = ev['t_end']
@@ -319,13 +321,15 @@ class SchedulerState:
               on_incomplete: str = 'reject') -> 'dag_closure.PlanJudgment':
         """Adjudicate a candidate joint plan against this task's CURRENT
         state. Pure function of (statuses, models, frozen execution
-        identities); no execution, no scoring (that is M4/M5/M6)."""
+        identities, current static context); no execution, no scoring."""
         st = self.tasks[uid]
         return dag_closure.evaluate_plan(
             node_status=dict(st.node_status),
             node_model=dict(st.node_model),
             exec_identity=dict(st.exec_identity),
-            R=R, pi=dict(pi or {}), on_incomplete=on_incomplete)
+            R=R, pi=dict(pi or {}), on_incomplete=on_incomplete,
+            uid=uid, current_ctx_sha=st.ctx_sha,
+            parent_answers=dict(st.answers))
 
     # -- replay/rebuild (no future information by construction) ----------
     @staticmethod
