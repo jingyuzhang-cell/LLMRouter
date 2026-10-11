@@ -164,10 +164,15 @@ def main():
         and [c['node'] for c in phys] == ['e1', 'e2', 'r', 'v']
         and [c['model'] for c in phys] == [
             d1['chosen']['pi'][n] for n in ('e1', 'e2', 'r', 'v')])
+    # switch semantics after the boundary errata: the row's switch is a
+    # PROVEN per-call upper bound (interleaving can force a re-switch
+    # before every call), so reconciliation asserts BOUND >= actual and
+    # the internal identity p90 == service_p90 + switch(+contention==0
+    # here: single-task world) — tokens/requests still reconcile exactly.
     checks['p3_1_switch_reconcile'] = (
-        abs(full_row['switch'] - actual_sw) < 1e-9
-        and abs(full_row['p90'] - (service_p90 + full_row['switch']))
-        < 1e-9)
+        full_row['switch'] >= actual_sw
+        and abs(full_row['p90']
+                - (service_p90 + full_row['switch'])) < 1e-9)
     st1 = r1['result']['settlement']['rewards'][0]
     checks['p3_1_settlement'] = (
         st1['q'] == 1.0 and not st1['degraded']

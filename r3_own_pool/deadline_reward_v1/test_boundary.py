@@ -218,58 +218,110 @@ def main():
     det['t2'] = dict(p_sigma2=p_s2, p_sigma3=p_s3)
 
     # ================= T3: cross-task contention ========================
-    # REAL switch costs + real services: pt0 faulted, pt1 clean shares the
-    # timeline. Solo arithmetic would approve B at D=26; the contention
-    # bound (pt1's remaining v work, 7.0s profile) flips it infeasible.
+    # Task 1 (errata): the flip counterexample must compare SOLO vs
+    # CONTENTIOUS predictions AT THE SAME decision-time d_remain (never
+    # the initial deadline). Window: d_remain=26.0 -> solo z=+3.20
+    # (P=0.9993 >= 0.90) but contention z=-5.77 (P ~ 4e-9 < 0.90), with
+    # contention traceable to the co-resident task's priors-derived
+    # remaining-work estimate at decision time.
     real = copy.deepcopy(BASE_PRIORS)
     r3 = run('t3_contention', [task(0), task(1)], priors=real,
-             deadline=26.0,
+             deadline=32.7,
              faults=[('bt0', 'r', 'medium', '###BROKEN###')],
              engine_profile='v3_compat')
     d3 = next(e for e in r3['decisions'] if e['task'] == 'bt0')
+    d_rem = d3['d_remain']
     b_row = next(r for r in d3['table']
                  if r['arm'] == 'LOCAL' and r['pi'].get('r') == 'large'
                  and r['pi'].get('v') == 'coder')
-    solo_p = e1_on_time(b_row['mu_e2e'] - b_row['contention'],
-                        b_row['p90'] - b_row['contention'], 26.0)[0]
+    cont = b_row['contention']
+    solo_p = e1_on_time(b_row['mu_e2e'] - cont,
+                        b_row['p90'] - cont, d_rem)[0]
+    # traceability: contention == the co-resident task's frozen-prior
+    # remaining-work estimate (its planned v mean), set BEFORE the
+    # decision from observable state + priors only
+    v_mean = float(real['node_profiles']['v|coder']['lat_mean_s'])
+    sw_full = (float(real['switch']['stop_s'])
+               + float(real['switch']['start_s']['coder']))
     checks['t3_bound_flips_approval'] = (
-        b_row['contention'] > 0.0
-        and solo_p >= 0.90                 # solo arithmetic WOULD approve
-        and not b_row['feasible']          # with contention it must not
+        abs(d_rem - 26.0) < 0.2            # decision-time remainder used
+        and cont > 0.0 and abs(cont - (v_mean + sw_full)) < 1e-9
+        and solo_p >= 0.90                 # SOLO at d_rem: would approve
+        and b_row['p_on_time'] < 0.90      # WITH contention at the SAME
+        and not b_row['feasible']          # d_rem: must not
         and any(x['constraint'] == 'on_time' for x in b_row['deficits']))
-    # predictions cover ACTUAL interleaved execution: for whatever plan
-    # was chosen anywhere in this episode, actual elapsed from decision
-    # to that task's completion <= predicted p90 (deterministic engine)
-    st3 = r3['state']
-    ok_cover = True
-    for e in r3['decisions']:
-        if e['chosen'] is None:
-            continue
-        u = e['task']
-        dec_clock = e['d_remain']  # deadline - clock -> clock = D - this
-        clock_at_dec = 26.0 - e['d_remain']
-        completion = st3.tasks[u].completion_time
-        actual = completion - clock_at_dec
-        ok_cover &= actual <= e['chosen'].get('p90', actual) + 1e-6 \
-            if 'p90' in e['chosen'] else True
-    # chosen dict carries score/pi only — use the table row instead
-    ok_cover = True
-    for e in r3['decisions']:
-        if e['chosen'] is None:
-            continue
-        u = e['task']
-        row = next(r for r in e['table'] if r['arm'] == e['chosen']['arm']
-                   and r['pi'] == e['chosen']['pi'])
-        clock_at_dec = 26.0 - e['d_remain']
-        actual = st3.tasks[u].completion_time - clock_at_dec
-        ok_cover = ok_cover and actual <= row['p90'] + 1e-6
-    checks['t3_prediction_covers_actual'] = ok_cover
-    # contention is never silent: every candidate row carries the field
-    allrows = next(e for e in r3['decisions'])['table']
-    checks['t3_field_always_present'] = all('contention' in r
-                                            for r in allrows)
-    det['t3'] = dict(b_row=b_row, solo_p=solo_p,
+    # contention never silent
+    checks['t3_field_always_present'] = all(
+        'contention' in r for r in d3['table'])
+    det['t3'] = dict(d_remain=d_rem, b_row=b_row, solo_p=solo_p,
+                     contention_source='v|coder lat_mean + full switch '
+                                      'allowance (frozen priors)',
                      degraded=d3['degraded'])
+
+    # ---- Task 2 (errata): NON-VACUOUS coverage across deterministic
+    # scripted samples: every sample must contain >=1 CHOSEN cross-task
+    # decision whose task REALLY completes; for each, verify decision
+    # clock, predicted mu/p90, actual completion, actual elapsed, and
+    # that other tasks' calls/switches genuinely interleaved inside the
+    # window. This is DETERMINISTIC-SAMPLE COVERAGE — explicitly NOT a
+    # general P90 probability guarantee.
+    def coverage_sample(name, *, fault_task, engine_profile, priors,
+                        deadline=60.0):
+        tasks_c = [task(0), task(1)]
+        rr = run(name, tasks_c, priors=priors, deadline=deadline,
+                 faults=[(f'bt{fault_task}', 'r', 'medium', '###B###')],
+                 engine_profile=engine_profile)
+        st = rr['state']
+        covered = 0
+        interleaved = 0
+        for e in rr['decisions']:
+            if e['chosen'] is None:
+                continue
+            u = e['task']
+            row = next(r for r in e['table']
+                       if r['arm'] == e['chosen']['arm']
+                       and r['pi'] == e['chosen']['pi'])
+            clock_at_dec = deadline - e['d_remain']
+            completion = st.tasks[u].completion_time
+            assert completion is not None
+            actual = completion - clock_at_dec
+            if actual > row['p90'] + 1e-6:
+                return dict(ok=False, why='actual exceeds p90', e=e)
+            covered += 1
+            # other-task work inside the decision->completion window
+            for c in rr['events']:
+                if (c['event'] == 'call' and c['task'] != u
+                        and c['physical']
+                        and clock_at_dec <= c['t_start'] <= completion):
+                    interleaved += 1
+        if covered == 0:
+            return dict(ok=False, why='no chosen decision (vacuous)')
+        if interleaved == 0:
+            return dict(ok=False, why='no real interleaving observed')
+        return dict(ok=True, covered=covered, interleaved=interleaved)
+
+    # sample A: v3_compat latencies, fault on the FIRST task
+    sA = coverage_sample('t3_cov_a', fault_task=0,
+                         engine_profile='v3_compat', priors=real)
+    # sample B: fault on the SECOND task (different interleaving order)
+    sB = coverage_sample('t3_cov_b', fault_task=1,
+                         engine_profile='v3_compat', priors=real)
+    # sample C: per-node deterministic latencies EQUAL to the priors'
+    # means (engine_profile=None -> the server resolves each call by
+    # (node|model)) — the tight case where actual service ~= predicted
+    tight = copy.deepcopy(real)
+    for key, prof in real['node_profiles'].items():
+        tight['profiles'][key] = {
+            'family': 'deterministic',
+            'latency_s': prof['lat_mean_s'], 'total_tokens': 100,
+            'synthetic': True}
+    sC = coverage_sample('t3_cov_c', fault_task=0,
+                         engine_profile=None, priors=tight)
+    checks['t3_cover_nonvacuous'] = all(
+        s.get('ok') for s in (sA, sB, sC))
+    det['t3_coverage'] = dict(A=sA, B=sB, C=sC,
+        claim='deterministic-sample coverage only — NOT a general P90 '
+              'probability guarantee')
 
     # ================= T4: profile legality =============================
     bad = copy.deepcopy(golden)

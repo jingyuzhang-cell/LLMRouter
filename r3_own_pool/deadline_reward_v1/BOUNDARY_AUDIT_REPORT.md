@@ -26,8 +26,8 @@ Fix: a per-task, per-decision FIFO reservation ledger
   decisions see budget deficits.
 
 Tests (`t1_*`): foreign call leaves committed identical across the
-snapshot pair (the old code shows 1100→1000 there); own plan call drains
-own reservation exactly; conservation invariant
+snapshot pair; own plan call drains own reservation exactly; conservation
+invariant
 (spent + committed + available == allocation) holds at EVERY mid-run
 snapshot; residuals released at settlement (committed == 0); the
 overspend counterexample (cheap reservations vs real metering) drives
@@ -54,23 +54,30 @@ method validated for the data, and calibrate predicted probabilities
 
 ## Task 3 — cross-task time contention: IMPLEMENTED & TESTED
 
-The predictor now includes a declared conservative contention bound:
-`contention = Σ_{other tasks} remaining_work_est` — each task's
+The predictor now includes a DECLARED contention penalty:
+`contention = Σ_{other tasks} remaining_work_est` — each co-task's
 remaining planned/recovery work (initialized before any decision from
-the priors' V1 service, replaced by the chosen plan's own estimate at
-decision time, cleared as its stages land). It shifts μ and p90 together
-as a deterministic addend and is recorded in every row (never silent).
+the priors' v mean PLUS a full switch allowance, replaced by that task's
+chosen-plan estimate once it decides, cleared as its stages land). It is
+an ESTIMATE, not an unconditional bound: it upper-bounds the co-task's
+real remaining work only when that work (service + its switches) stays
+within the estimate. The row records it explicitly; nothing is silent.
+(See BOUNDARY_ERRATA.md — the tight deterministic sample exposed and
+fixed two real estimator gaps.)
 
 Counterexample test (`t3_bound_flips_approval`, real switch costs, two
 tasks sharing the timeline): candidate B at D=26 — SOLO arithmetic
 approves (P_solo = 0.999 ≥ 0.90) but WITH contention (7.0 s of the other
 task's remaining work) it is correctly infeasible on `on_time` — exactly
 the "预计按时、实际因交错超时" failure the reviewer demanded prevented.
-`t3_prediction_covers_actual`: for every chosen plan, the ACTUAL elapsed
-time from decision to task completion (real interleaved clock) is within
-the predicted p90. Scope note (not silent): the bound covers tasks in
-the same episode on the shared serial executor; it is an UPPER-bound
-convention, not a queueing-simulation claim.
+Coverage: across THREE deterministic scripted samples (different fault
+positions, different latency regimes incl. per-node latencies equal to
+the priors' means), every CHOSEN cross-task plan's ACTUAL elapsed time
+(real interleaved clock, with the co-task's calls and switches verified
+inside the window) falls within its predicted p90. This is
+DETERMINISTIC-SAMPLE COVERAGE — explicitly NOT a general P90 probability
+guarantee. Own switch cost uses a PROVABLE per-call bound (each of my
+calls needs at most one stop+start on the shared serial executor).
 
 ## Task 4 — latency-profile legality: IMPLEMENTED & TESTED
 

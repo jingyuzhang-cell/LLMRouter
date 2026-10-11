@@ -146,9 +146,17 @@ def run_episode(engine, state, tasks: List[dict], node_models: Dict[str, str],
     validate_node_profiles(params['priors'])   # boundary task 4
     predictor = OutcomePredictor(params['priors'])
     compensator = DeadlineCompensator(params['priors'])
-    v_default = float(_profile_value(
-        params['priors'], 'v', node_models.get('v', 'coder'),
-        'lat_mean_s', 0.0))
+    v_model = node_models.get('v', 'coder')
+    sw = params['priors']['switch']
+    # Co-resident baseline estimate (boundary task 3, errata): the other
+    # task's remaining v work = v mean + a FULL switch allowance
+    # (stop + start) regardless of the resident model at execution time —
+    # observable (priors + planned binding) and conservative vs missing
+    # the co-task's switch entirely, which real interleaved execution
+    # DOES charge (caught by the tight deterministic sample).
+    v_default = (float(_profile_value(params['priors'], 'v', v_model,
+                                      'lat_mean_s', 0.0))
+                 + float(sw['stop_s']) + float(sw['start_s'][v_model]))
     global BASE_PRIORS_V_SERVICE_DEFAULT
     BASE_PRIORS_V_SERVICE_DEFAULT = v_default
     chosen_pi: Dict[str, Dict[str, str]] = {}
@@ -198,7 +206,9 @@ def run_episode(engine, state, tasks: List[dict], node_models: Dict[str, str],
                 # contention bounds (cleared when this task's stages end).
                 state.remaining_work_est[uid] = (
                     decision.chosen.row['mu_e2e']
-                    - decision.chosen.row['contention'])
+                    - decision.chosen.row['contention'])  # own bound incl.
+                    # per-call switch allowance — others' contention est
+                    # must cover my real remaining work incl. re-switches
                 apply_decision(engine, state, t, node_models,
                                decision.chosen)
 
@@ -259,22 +269,32 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
         pred = predictor.predict(execute=execute, pi=cand.pi,
                                  node_model=st.node_model,
                                  node_status=st.node_status)
-        ordered = [cand.pi.get(n) or st.node_model.get(n)
-                   for n, new_call in execute if new_call]
-        sw = compensator.switch_overhead(engine_model, ordered)
-        # Cross-task contention (boundary task 3): a CONSERVATIVE upper
-        # bound on the wall time other in-flight tasks add to this task's
-        # completion (their own remaining planned/recovery work on the
-        # shared serial executor). Shifts mean and p90 together as a
-        # deterministic addend; declared, audited per row — never silently
-        # zero.
+        # OWN switch cost: a PROVABLE per-call bound — on the shared
+        # serial executor each of my new calls needs at most one
+        # stop+start (cross-task interleaving can force a re-switch before
+        # EVERY call, so the sequential estimate is not an upper bound;
+        # the tight deterministic sample caught exactly this).
+        sw = sum(compensator.stop_s
+                 + compensator.start_s.get(
+                     (cand.pi.get(n) or st.node_model.get(n) or ''), 0.0)
+                 for n, new_call in execute if new_call)
+        sw_seq = compensator.switch_overhead(
+            engine_model,
+            [cand.pi.get(n) or st.node_model.get(n)
+             for n, new_call in execute if new_call])
+        # Cross-task contention (boundary task 3): the co-resident tasks'
+        # DECLARED remaining-work estimate (priors-derived v mean plus a
+        # full switch allowance for the co-task; replaced by that task's
+        # own chosen-plan estimate once it decides). It is an ESTIMATE /
+        # heuristic penalty — a provable upper bound only when each
+        # co-task's actual remaining work (service + its switches) stays
+        # within its estimate; never claimed as a general guarantee.
         contention = sum(
             state.remaining_work_est.get(u, 0.0)
             for u in state.tasks if u != uid)
         mu_e2e = pred.mu_service_s + sw + contention  # composed ONCE (B6)
-        # Deterministic switch overhead shifts mean AND quantile together
-        # (phase-3 fix 2); sigma is unchanged by the shift, but a service-
-        # only p90 against a switch-inflated mean would wrongly degenerate.
+        # Deterministic addends shift mean AND quantile together
+        # (phase-3 fix 2); sigma is unchanged by the shift.
         p90_e2e = pred.w_p90_s + sw + contention
         p_on, e_late = e1_on_time(mu_e2e, p90_e2e, d_remain)
         # Conservatism applicability (boundary task 2): quantile_sum gives
@@ -306,7 +326,9 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
         cand.row = dict(arm=cand.arm, pi=dict(cand.pi),
                         q=round(pred.q_mean, 10), mu_e2e=round(mu_e2e, 10),
                         p90=round(p90_e2e, 10),
-                        dcost=pred.d_cost_tokens, switch=round(sw, 10),
+                        dcost=pred.d_cost_tokens,
+                        switch=round(sw, 10),
+                        switch_seq=round(sw_seq, 10),
                         contention=round(contention, 10),
                         p_on_time=round(p_on, 10), e_late=round(e_late, 10),
                         p_conservative=p_conservative,
