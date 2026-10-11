@@ -76,15 +76,42 @@ def main():
     # (the halt boundary) is dated 2026-10-10. All real execution
     # timestamps must PRE-DATE the freeze. The stub rows have no
     # timestamps — for those we can only say 'no execute flag set'.
-    _halt_boundary = 1791600000  # ~2026-10-10T02:40 UTC (freeze v2)
+    # Halt boundary: derived from the freeze's own timestamp if
+    # available; else from the FREEZE_BINDING in the real run dir;
+    # else from the freeze file's git date. Never a bare constant.
+    _freeze_binding = (JS / 'netbenefit_runs' /
+                       'real_20261010_000854' / 'FREEZE_BINDING.jsonl')
+    _halt_boundary = None
+    _boundary_src = 'not found'
+    if _freeze_binding.exists():
+        for _l in _freeze_binding.read_text().splitlines():
+            if not _l.strip():
+                continue
+            _b = json.loads(_l)
+            _ts = _b.get('unix') or _b.get('timestamp')
+            if _ts and isinstance(_ts, (int, float)):
+                _halt_boundary = _ts
+                _boundary_src = 'FREEZE_BINDING'
+                break
+    if _halt_boundary is None:
+        # fall back to the freeze file mtime as the boundary anchor
+        _halt_boundary = (JS / 'NET_BENEFIT_FREEZE.json').stat().st_mtime
+        _boundary_src = 'freeze_file_mtime'
     _real_dir = JS / 'netbenefit_runs' / 'real_20261010_000854'
     _dispatch = _real_dir / 'DISPATCH.jsonl'
     if _dispatch.exists():
         _disp = jload(_dispatch)
-        _max_unix = max((e.get('unix', 0) for e in _disp
-                         if 'unix' in e), default=0)
+        _unixes = [e['unix'] for e in _disp
+                   if isinstance(e.get('unix'), (int, float))
+                   and e['unix'] > 0]
+        # FAIL if no valid timestamps exist (not default-0 pass)
         checks['B5_timestamps_predate_freeze'] = (
-            _max_unix < _halt_boundary)
+            len(_unixes) > 0
+            and max(_unixes) < _halt_boundary)
+        findings.append(('NOTE', 'B5_boundary',
+                         f'source={_boundary_src}, boundary='
+                         f'{_halt_boundary:.0f}, n_ts={len(_unixes)}, '
+                         f'max={max(_unixes) if _unixes else None}'))
     else:
         checks['B5_timestamps_predate_freeze'] = False
     checks['B5_records_show_no_extra_real'] = all(
@@ -195,25 +222,34 @@ def main():
                     if not all(a['checks'].values()):
                         e5a_ok &= False
         checks['E5a_v4_internal_consistency'] = e5a_ok
-        # E5b (raw recomputation, partial): independently recompute
-        # what CAN be recomputed from raw evidence: the V4's audit
-        # was stub-based (zero_model_requests), and the 3 real cells
-        # in NB_ROWS are the ONLY real evidence — independently
-        # verified above in C1. Here we assert the V4's stub basis:
-        # the stub NB_ROWS must cover the full arm×state grid.
+        # E5b (raw recomputation, partial): independently verify the
+        # stub NB_ROWS covers the FULL arm×state grid defined by the
+        # freeze's 'states' list × the 8 arms. Set-level comparison:
+        # missing, extra, and duplicate cells are each reported.
         if stub_rows_path.exists():
-            stub_arms = {(r['arm'], r['state']) for r in
-                         jload(stub_rows_path)}
+            stub_raw = jload(stub_rows_path)
+            stub_pairs = [(r['arm'], r['state']) for r in stub_raw]
+            stub_set = set(stub_pairs)
+            from collections import Counter
+            stub_counts = Counter(stub_pairs)
+            freeze_states = freeze.get('states', [])
             expected_grid = {(a, st) for a in arms_f
-                            for st in ('clean', 'fault30',
-                                       'competitive', 'shift')}
-            # full-grid coverage check: every arm has at least a
-            # clean-state stub row
-            checks['E5b_stub_covers_all_arms'] = all(
-                any(a == sa for sa, _ in stub_arms)
-                for a in arms_f)
+                             for st in freeze_states}
+            missing = expected_grid - stub_set
+            extra = stub_set - expected_grid
+            duplicates = {p for p, n in stub_counts.items() if n > 1}
+            checks['E5b_stub_full_grid_coverage'] = (
+                len(missing) == 0 and len(extra) == 0
+                and len(stub_set) == len(expected_grid))
+            # separately report coverage stats for the evidence
+            findings.append(('NOTE', 'E5b_grid_stats',
+                             f'expected {len(expected_grid)} cells; '
+                             f'stub has {len(stub_set)} unique; '
+                             f'missing {len(missing)}; extra '
+                             f'{len(extra)}; duplicated {len(duplicates)}'
+                             f'; missing={sorted(missing)[:5]}'))
         else:
-            checks['E5b_stub_covers_all_arms'] = False
+            checks['E5b_stub_full_grid_coverage'] = False
     else:
         for k in ('E2', 'E3', 'E4', 'E5'):
             checks[f'{k}_v4_cross'] = False
@@ -250,11 +286,29 @@ def main():
                     return False  # claims pass but a check fails
         return True
     tampered_v4 = dict(all_pass=True, audits=[
-        dict(checks={'x': False})])  # claims pass, has a fail
+        dict(checks={'x': False})])
     checks['G4_negative_v4_tamper'] = (
         not v4_recheck(tampered_v4)
         and v4_recheck(dict(all_pass=True, audits=[
             dict(checks={'x': True})])))
+    # G5: empty-timestamp must NOT pass the B5 check
+    def b5_check(unixes, boundary):
+        return (len(unixes) > 0 and max(unixes) < boundary)
+    checks['G5_negative_empty_timestamp'] = not b5_check([], 1e12)
+    # G6: timestamps AFTER the boundary must NOT pass
+    checks['G6_negative_late_timestamp'] = not b5_check(
+        [1e11], 1e10)
+    # G7: missing grid cells must NOT pass E5b
+    def grid_check(stub_set, expected):
+        return (len(expected - stub_set) == 0
+                and len(stub_set - expected) == 0
+                and len(stub_set) == len(expected))
+    partial = {('A_single', 'clean'), ('B_same_model_dag', 'clean')}
+    full = {('A_single', 'clean'), ('B_same_model_dag', 'clean'),
+            ('C_static_hetero', 'clean')}
+    checks['G7_negative_missing_grid'] = (
+        not grid_check(partial, full)
+        and grid_check(full, full))
 
     # ============ F. protocol structure ============
     conf = freeze.get('confirmatory', {})

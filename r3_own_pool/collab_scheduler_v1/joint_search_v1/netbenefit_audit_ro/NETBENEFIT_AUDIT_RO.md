@@ -6,7 +6,7 @@ calls.
 
 ## Verdict (hardened)
 
-**38/38 checks PASS, exit 0** (31 original + 5 hardening/negative
+**41/41 checks PASS, exit 0** (31 original + 5 hardening/negative
 tests + 2 B5/E5 semantic splits from the latest review). The
 operator's review items are closed:
 - **C1**: per-cell independent recount from DISPATCH (responses linked
@@ -18,13 +18,16 @@ operator's review items are closed:
 - **D4**: budget checked with the independently recounted totals
   (252 req / 102,894 tok vs 4,000 / 4M caps), never a freeze-file
   default.
-- **E5** (split into E5a/E5b for honesty):
+- **E5** (split into E5a/E5b; E5b now FULL GRID):
   - E5a (V4 INTERNAL CONSISTENCY): sub-audit flags match their own
     check sets; stub rows carry no execute flags.
-  - E5b (partial RAW recomputation): the stub NB_ROWS independently
-    verified to cover every arm in the freeze grid. Full raw
-    recomputation of V4's analytical conclusions is NOT performed
-    here — those conclusions are stub-based (zero_model_requests).
+  - E5b (FULL GRID recomputation): the stub NB_ROWS independently
+    verified to cover the COMPLETE arm×state grid (8 arms × 4 states
+    = 32 cells) defined by the freeze's 'states' list — set-level
+    comparison with missing/extra/duplicate each checked (0 missing,
+    0 extra, 32 unique). Full raw recomputation of V4's analytical
+    conclusions is still NOT performed — those conclusions are
+    stub-based (zero_model_requests).
 - **Negative tests (G1–G4)**: tampered request counts, token counts,
   per-cell counts, and V4 flags each make the corresponding checker
   fail. The net-benefit freeze, its pre-halt
@@ -52,7 +55,7 @@ matches the raw evidence.
 cells, all COMPLETE; the real run directory (real_20261010_000854)
 exists with TRAJECTORY covering ≥ the 252 charged requests; per-cell
 physical counts sum correctly (50+2+200=252 requests, 28,123+...=
-~94K tokens total within the 4M global cap).
+~102,894 tokens total within the 4M global cap).
 
 **D. Budget gates (4 PASS)** — global caps (4,000 requests / 4M tokens
 / 21,600s wall) present; DE reservation (800 requests) recorded;
