@@ -53,7 +53,7 @@
   [
    "RESOLVED",
    "R4_subprocess_reversals",
-   "real-child-process reversals behaved as expected: [{\"name\": \"sim_forced_fail\", \"returncode\": 1, \"expected_nonzero\": true, \"behaved_as_expected\": true}, {\"name\": \"sim_subsuite_exit7\", \"returncode\": 1, \"expected_nonzero\": true, \"behaved_as_expected\": true}, {\"name\": \"sim_count_mismatch\", \"returncode\": 1, \"expected_nonzero\": true, \"behaved_as_expected\": true}]"
+   "control exited 0 cleanly; all three mutations exited non-zero WITH target-gate markers, no tracebacks: [{\"name\": \"control_unmutated\", \"returncode\": 0, \"behaved_as_expected\": true}, {\"name\": \"sim_forced_fail\", \"returncode\": 1, \"behaved_as_expected\": true}, {\"name\": \"sim_subsuite_exit7\", \"returncode\": 1, \"behaved_as_expected\": true}, {\"name\": \"sim_count_mismatch\", \"returncode\": 1, \"behaved_as_expected\": true}]"
   ]
  ],
  "counts": {
@@ -106,21 +106,53 @@
  },
  "subprocess_reversals": [
   {
+   "name": "control_unmutated",
+   "target_gate": "none (must exit 0)",
+   "returncode": 0,
+   "expected_nonzero": false,
+   "gate_marker_seen": true,
+   "no_traceback": true,
+   "stdout_tail": "nt: fixed in P3-B; audited by DIRECT identity AND per-event containment on the mixed ledger (cached>0, injected>0): calls=9==events 9; requests==physical 9; injecte\n[NOTE] R4_child_mode: P3A_CHILD=1: reversal children suppressed to prevent recursion; all other gates fully executed\naudit exit code: 0",
+   "stderr_tail": "",
+   "behaved_as_expected": true
+  },
+  {
    "name": "sim_forced_fail",
+   "target_gate": "FAIL-verdict gate",
+   "required_marker": "SIMULATED_FAIL",
    "returncode": 1,
    "expected_nonzero": true,
+   "gate_marker_seen": true,
+   "no_traceback": true,
+   "exit_line_present": true,
+   "stdout_tail": "ND per-event containment on the mixed ledger (cached>0, injected>0): calls=9==events 9; requests==physical 9; injecte\n[evidence-closure simulation] SIMULATED_FAIL: \n[NOTE] R4_child_mode: P3A_CHILD=1: reversal children suppressed to prevent recursion; all other gates fully executed\naudit exit code: 1",
+   "stderr_tail": "",
    "behaved_as_expected": true
   },
   {
    "name": "sim_subsuite_exit7",
+   "target_gate": "R0 sub-suite exit-code gate",
+   "required_marker": "returncode=7",
    "returncode": 1,
    "expected_nonzero": true,
+   "gate_marker_seen": true,
+   "no_traceback": true,
+   "exit_line_present": true,
+   "stdout_tail": "entity AND per-event containment on the mixed ledger (cached>0, injected>0): calls=9==events 9; requests==physical 9; injecte\n[MAJOR] X2_static_and_closure_suites: \n[NOTE] R4_child_mode: P3A_CHILD=1: reversal children suppressed to prevent recursion; all other gates fully executed\naudit exit code: 1",
+   "stderr_tail": "",
    "behaved_as_expected": true
   },
   {
    "name": "sim_count_mismatch",
+   "target_gate": "R0 passed!=total gate",
+   "required_marker": "passed",
    "returncode": 1,
    "expected_nonzero": true,
+   "gate_marker_seen": true,
+   "no_traceback": true,
+   "exit_line_present": true,
+   "stdout_tail": "nt: fixed in P3-B; audited by DIRECT identity AND per-event containment on the mixed ledger (cached>0, injected>0): calls=9==events 9; requests==physical 9; injecte\n[NOTE] R4_child_mode: P3A_CHILD=1: reversal children suppressed to prevent recursion; all other gates fully executed\naudit exit code: 1",
+   "stderr_tail": "",
    "behaved_as_expected": true
   }
  ],

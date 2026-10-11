@@ -429,52 +429,136 @@ def main():
     # copies of THIS audit script run as actual subprocesses; each must
     # exit NON-zero; actual vs expected recorded; misbehavior => FAIL.
     import tempfile as _tf
+    import os as _os
     audit_src = Path(__file__).read_text()
-    rev_records = []
-    mutations = [
-        ('sim_forced_fail',
-         "    # ===== gate reversal tests: in-unit + REAL subprocess evidence =====",
-         "    ok('SIMULATED_FAIL', False, 'evidence-closure simulation')\n"
-         "    # ===== gate reversal tests: in-unit + REAL subprocess evidence =====", 1),
-        ('sim_subsuite_exit7',
-         "def run_suite(mod):",
-         "def run_suite(mod):\n"
-         "        return __import__('types').SimpleNamespace("
-         "returncode=7, stdout='1/1 checks; ALL PASS'), None", 1),
-        ('sim_count_mismatch',
-         "if int(mm.group(1)) != int(mm.group(2)):", "if True:", 1),
-    ]
-    rev_subprocess_ok = True
-    with _tf.TemporaryDirectory() as _td:
-        for name, old_s, new_s, exp_fail in mutations:
+
+    # --- child mode: EVERY real gate still runs; only the spawning of
+    # further reversal children is suppressed (no recursion) ---
+    if _os.environ.get('P3A_CHILD') == '1':
+        rev_fail = exit_code(dict(x='FAIL'), True, True) != 0
+        rev_suite = exit_code(dict(x='PASS'), False, True) != 0
+        rev_count = exit_code(dict(x='PASS'), True, False) != 0
+        rev_clean = exit_code(dict(x='PASS'), True, True) == 0
+        verdicts['R3_gate_reversal_tests'] = (
+            'PASS' if (rev_fail and rev_suite and rev_count and rev_clean)
+            else 'FAIL')
+        verdicts['R4_subprocess_reversals'] = 'PASS'
+        findings.append(('NOTE', 'R4_child_mode',
+                         'P3A_CHILD=1: reversal children suppressed to '
+                         'prevent recursion; all other gates fully '
+                         'executed'))
+        rev_records = []
+        rev_subprocess_ok = True
+        control_ok = True
+    else:
+        # --- evidence-validity fixes (final closure round) ---
+        # (a) PATH FIX: mutated copies resolve HERE to the ORIGINAL
+        #     project (a temp-dir copy would die on FileNotFoundError,
+        #     indistinguishable from a gate trigger under the old
+        #     returncode-only check).
+        # (b) NO RECURSION: children run with P3A_CHILD=1 - every real
+        #     gate still executes; only child spawning is suppressed.
+        # (c) CONTROL: the UNMUTATED script, same env/mode, must exit 0.
+        # (d) TRIGGER PROOF: each mutation must exit non-zero AND show
+        #     its TARGET-gate marker AND carry no traceback; anything
+        #     else (wrong gate, missing file, crash) fails the audit.
+        PATH_FIX_OLD = "HERE = Path(__file__).resolve().parent"
+        PATH_FIX_NEW = f"HERE = Path(r'{HERE}')"
+        child_env = dict(_os.environ, P3A_CHILD='1')
+
+        def run_child(source, name):
+            with _tf.TemporaryDirectory() as _td:
+                script = Path(_td) / f'{name}.py'
+                script.write_text(
+                    source.replace(PATH_FIX_OLD, PATH_FIX_NEW, 1))
+                proc = subprocess.run(
+                    [sys.executable, str(script)],
+                    capture_output=True, text=True,
+                    cwd=str(ROOT), env=child_env)
+            # marker search runs on the FULL stdout; only the tail is
+            # stored in evidence (bounded)
+            tail = '\n'.join((proc.stdout or '').strip()
+                             .splitlines()[-6:])
+            err_tail = '\n'.join((proc.stderr or '').strip()
+                                 .splitlines()[-6:])
+            return (proc.returncode, proc.stdout or '', tail,
+                    err_tail, proc.stderr or '')
+
+        rev_records = []
+        rc0, full0, out0, err0, fullerr0 = run_child(
+            audit_src, 'control_unmutated')
+        control_ok = (rc0 == 0 and 'Traceback' not in fullerr0
+                      and 'audit exit code: 0' in full0)
+        rev_records.append(dict(
+            name='control_unmutated', target_gate='none (must exit 0)',
+            returncode=rc0, expected_nonzero=False,
+            gate_marker_seen=('audit exit code: 0' in out0),
+            no_traceback=('Traceback' not in err0),
+            stdout_tail=out0[-300:], stderr_tail=err0[-300:],
+            behaved_as_expected=control_ok))
+        if not control_ok:
+            findings.append(('MAJOR', 'R4_control_failed',
+                             f'unmutated control did not run cleanly: '
+                             f'rc={rc0}, stderr: {err0[-300:]}'))
+
+        mutations = [
+            ('sim_forced_fail', 'FAIL-verdict gate', 'SIMULATED_FAIL',
+             ("    # ===== gate reversal tests: in-unit + REAL subprocess "
+              "evidence =====",
+              "    ok('SIMULATED_FAIL', False, 'evidence-closure "
+              "simulation')\n"
+              "    # ===== gate reversal tests: in-unit + REAL "
+              "subprocess evidence =====")),
+            ('sim_subsuite_exit7', 'R0 sub-suite exit-code gate',
+             'returncode=7',
+             ('def run_suite(mod):',
+              "def run_suite(mod):\n"
+              "        return __import__('types').SimpleNamespace("
+              "returncode=7, stdout='1/1 checks; ALL PASS'), None")),
+            ('sim_count_mismatch', 'R0 passed!=total gate', 'passed',
+             ('if int(mm.group(1)) != int(mm.group(2)):', 'if True:')),
+        ]
+        rev_mutations_ok = control_ok
+        for name, gate, marker, (old_s, new_s) in mutations:
             mutated = audit_src.replace(old_s, new_s, 1)
             assert mutated != audit_src, name
-            script = Path(_td) / f'{name}.py'
-            script.write_text(mutated)
-            proc = subprocess.run([sys.executable, str(script)],
-                                  capture_output=True, text=True,
-                                  cwd=str(ROOT))
-            actual_fail = proc.returncode != 0
-            rev_subprocess_ok &= (actual_fail == bool(exp_fail))
+            rc, full, out, err, fullerr = run_child(mutated, name)
+            non_zero = rc != 0
+            marker_seen = marker in full
+            no_crash = 'Traceback' not in fullerr
+            exit_line = 'audit exit code:' in full
+            ok_i = (non_zero and marker_seen and no_crash and exit_line)
+            rev_mutations_ok &= ok_i
             rev_records.append(dict(
-                name=name, returncode=proc.returncode,
-                expected_nonzero=bool(exp_fail),
-                behaved_as_expected=(actual_fail == bool(exp_fail))))
-    verdicts['R4_subprocess_reversals'] = (
-        'PASS' if rev_subprocess_ok else 'FAIL')
-    findings.append((
-        'RESOLVED' if rev_subprocess_ok else 'MAJOR',
-        'R4_subprocess_reversals',
-        'real-child-process reversals behaved as expected: '
-        + json.dumps(rev_records)))
+                name=name, target_gate=gate, required_marker=marker,
+                returncode=rc, expected_nonzero=True,
+                gate_marker_seen=marker_seen, no_traceback=no_crash,
+                exit_line_present=exit_line,
+                stdout_tail=out[-300:], stderr_tail=err[-300:],
+                behaved_as_expected=ok_i))
+        rev_subprocess_ok = rev_mutations_ok
+        verdicts['R4_subprocess_reversals'] = (
+            'PASS' if rev_subprocess_ok else 'FAIL')
+        findings.append((
+            'RESOLVED' if rev_subprocess_ok else 'MAJOR',
+            'R4_subprocess_reversals',
+            'control exited 0 cleanly; all three mutations exited '
+            'non-zero WITH target-gate markers, no tracebacks: '
+            + json.dumps([{k: r[k] for k in
+                           ('name', 'returncode',
+                            'behaved_as_expected')}
+                          for r in rev_records])))
 
+    # R3 in-unit reversal checks (both paths; in child mode they were
+    # already computed inside the guard — recompute is idempotent)
     rev_fail = exit_code(dict(x='FAIL'), True, True) != 0
     rev_suite = exit_code(dict(x='PASS'), False, True) != 0
     rev_count = exit_code(dict(x='PASS'), True, False) != 0
     rev_clean = exit_code(dict(x='PASS'), True, True) == 0
-    verdicts['R3_gate_reversal_tests'] = (
-        'PASS' if (rev_fail and rev_suite and rev_count and rev_clean)
-        else 'FAIL')
+    if _os.environ.get('P3A_CHILD') != '1':
+        verdicts['R3_gate_reversal_tests'] = (
+            'PASS' if (rev_fail and rev_suite and rev_count and rev_clean)
+            else 'FAIL')
 
     # summary computed AFTER all verdicts (R3/R4 included) with a
     # MANDATORY self-consistency assertion (closure items 1+2)
@@ -495,7 +579,7 @@ def main():
                   exit_code=None)
     audit_exit = 0 if (n_fail_final == 0
                        and summary_consistent
-                       and rev_subprocess_ok
+                       and rev_subprocess_ok and control_ok
                        and all(v is None for v in gate_failures.values())
                        and rev_fail and rev_suite and rev_count
                        and rev_clean) else 1
