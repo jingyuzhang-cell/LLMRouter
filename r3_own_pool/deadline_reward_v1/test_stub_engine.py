@@ -25,7 +25,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-ROOT = Path('/root/r3_own_pool')
+ROOT = Path(__file__).resolve().parents[1]  # repo checkouts anywhere
 sys.path.insert(0, str(ROOT))
 
 # Production reference modules (read-only imports, sanctioned by the T3
@@ -37,7 +37,8 @@ from collab_scheduler_v1 import fault30_run as fr  # noqa: E402
 from collab_scheduler_v1.predictor_v3 import V3Executor  # noqa: E402
 
 from deadline_reward_v1.stub_engine import (  # noqa: E402
-    InjectedClock, StubEngine, StubModelServer, load_ledger)
+    InjectedClock, LedgerCorruptionError, StubEngine, StubModelServer,
+    load_ledger)
 
 HERE = Path(__file__).resolve().parent
 PRIORS = json.loads((HERE / 'PRIORS_STUB_V1.json').read_text())
@@ -195,7 +196,7 @@ def main():
     checks['seed_changes_stream'] = (
         a != (RUNS_DIR / 't3ref' / 'TASK_LEDGER.jsonl').read_bytes())
 
-    # --- torn-line loader (R-F7-lite) ------------------------------------
+    # --- torn-line loader (R-F7-lite) + M2 hardening regression ---------
     with tempfile.TemporaryDirectory() as td:
         p = Path(td) / 'T.jsonl'
         p.write_text('{"event": "meta"}\n{"event": "call"}\n'
@@ -203,6 +204,23 @@ def main():
         evs, torn_flag = load_ledger(p)
         checks['torn_line_flagged'] = (
             torn_flag is True and len(evs) == 2)
+        # operator ruling: a corrupted MIDDLE line must REJECT the ledger
+        p2 = Path(td) / 'T2.jsonl'
+        p2.write_text('{"event": "meta"}\n{"event": "call" "corrupt}\n'
+                      '{"event": "call"}\n')
+        try:
+            load_ledger(p2)
+            checks['mid_corruption_rejected'] = False
+        except LedgerCorruptionError:
+            checks['mid_corruption_rejected'] = True
+        # corrupt LAST line WITH trailing newline is not a torn write
+        p3 = Path(td) / 'T3.jsonl'
+        p3.write_text('{"event": "meta"}\n{"bad": }\n')
+        try:
+            load_ledger(p3)
+            checks['corrupt_tail_with_newline_rejected'] = False
+        except LedgerCorruptionError:
+            checks['corrupt_tail_with_newline_rejected'] = True
 
     # --- Z1 sentinel + stdlib-only import graph --------------------------
     total_calls = len(calls_of(events)) + len(calls_of(ev2)) + \

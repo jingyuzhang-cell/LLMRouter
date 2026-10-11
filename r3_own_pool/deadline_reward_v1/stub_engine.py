@@ -86,7 +86,9 @@ class StubModelServer:
             total = int(prof['prompt_tokens']) + int(prof['completion_tokens'])
         else:
             raise ValueError('undeclared family: ' + family)
-        answer = self.answers[(node, kind)]
+        answer = (self.answers.get((uid, node, kind))
+                  if hasattr(self.answers, 'get') else None) \
+            or self.answers[(node, kind)]
         usage = dict(prompt_tokens=int(prof.get('prompt_tokens', total)),
                      completion_tokens=int(prof.get('completion_tokens', 0)) or
                      (total - int(prof.get('prompt_tokens', total))),
@@ -107,20 +109,32 @@ class TaskState:
     answers: Dict[str, str] = field(default_factory=dict)
 
 
+class LedgerCorruptionError(Exception):
+    """A corrupted line anywhere except an unfinished TAIL write."""
+
+
 def load_ledger(path: Path) -> Tuple[List[dict], bool]:
-    """Append-only loader. A torn FINAL line (crash mid-append) is reported,
-    never silently parsed as a complete event (R-F7 semantics)."""
+    """Append-only loader (M2 hardening per operator ruling).
+
+    Tolerated: the FINAL line failing to parse when the file lacks a
+    trailing newline — the crash-mid-append signature (R-F7). Rejected
+    (raises LedgerCorruptionError): any parse failure elsewhere — a
+    corrupted middle line means the ledger is damaged, never silently
+    skipped."""
     raw = Path(path).read_text()
+    lines = raw.splitlines()
     events: List[dict] = []
-    torn = False
-    for line in raw.splitlines():
+    for i, line in enumerate(lines):
         if not line.strip():
             continue
         try:
             events.append(json.loads(line))
         except json.JSONDecodeError:
-            torn = True
-    return events, torn
+            if i == len(lines) - 1 and not raw.endswith('\n'):
+                return events, True
+            raise LedgerCorruptionError(
+                f'corrupt ledger line {i + 1} (not a tail-torn write)')
+    return events, False
 
 
 class StubEngine:
@@ -146,6 +160,12 @@ class StubEngine:
         self.switch_idx = 0
         self._last_switch_idx: Optional[int] = None
         self._last_switch_t0: Optional[float] = None
+        self.observers: List[Callable[[dict], None]] = []
+        self.tokens_total = 0
+        self.requests_total = 0
+        self.n_events = 0
+        self._switch_indices: List[int] = []
+        self._cold_start_indices: List[int] = []
         self.attempts: Dict[Tuple[str, str, str], int] = {}
         self.tasks: Dict[str, TaskState] = {}
         self._append(dict(event='meta', seed=seed, topo=topo, fam=fam,
@@ -156,12 +176,21 @@ class StubEngine:
                           profile_key=profile_key,
                           zero_real_calls=True))
 
+    def add_observer(self, fn: Callable[[dict], None]) -> None:
+        """M2 hook: called with every appended event, after the fsync.
+        Observer exceptions propagate — a broken observer is a failure,
+        never silently ignored."""
+        self.observers.append(fn)
+
     def _append(self, obj: dict) -> None:
         with self.ledger_path.open('a') as fh:
             fh.write(json.dumps(obj, sort_keys=True) + '\n')
             fh.flush()
             import os as _os
             _os.fsync(fh.fileno())
+        self.n_events += 1
+        for fn in self.observers:
+            fn(obj)  # observer failures are engine failures — fail loud
 
     def _switch(self, to_model: str, uid: str, key: str) -> Optional[int]:
         if to_model == self.current_model:
@@ -175,12 +204,16 @@ class StubEngine:
             cost = float(sw['stop_s']) + float(sw['start_s'][to_model])
         self.clock.advance(cost)
         self.switch_idx += 1
-        rec = dict(event='switch', idx=self.switch_idx, **{
+        rec = dict(event='switch', idx=self.switch_idx, kind=(
+            'cold_start' if self.current_model is None else 'switch'), **{
             'from': self.current_model, 'to': to_model, 'task': uid,
             'key_ref': key, 't_start': t0, 't_end': self.clock.time(),
             'wall_s': cost})
         self._append(rec)
         self.current_model = to_model
+        self._switch_indices.append(self.switch_idx)
+        if rec['kind'] == 'cold_start':
+            self._cold_start_indices.append(self.switch_idx)
         st = self.tasks[uid]
         st.switch_sum += cost
         st.switch_count += 1
@@ -200,9 +233,14 @@ class StubEngine:
         attempt = self.attempts[(uid, node, kind)]
         sw_idx = self._switch(model, uid, key)
         t0 = self.clock.time()
+        self._append(dict(event='call_start', key=key, stage=stage,
+                          node=node, kind=kind, model=model, task=uid,
+                          t_start=t0, switch_before=sw_idx))
         resp = self.server.draw(node, kind, model, uid, attempt,
                                 profile_key=self.profile_key)
         self.clock.advance(resp['latency_s'])
+        self.tokens_total += resp['usage']['total_tokens']
+        self.requests_total += 1
         rec = dict(event='call', key=key, stage=stage, node=node, kind=kind,
                    model=model, task=uid, attempt=attempt,
                    answer_sha256=hashlib.sha256(
@@ -242,6 +280,10 @@ class StubEngine:
         for uid in node_models:
             if uid not in ('e1', 'e2', 'r', 'v'):
                 raise ValueError('unknown node: ' + uid)
+        self._append(dict(event='panel_start',
+                          tasks=[t['uid'] for t in tasks],
+                          t_release=self.clock.time(),
+                          node_models=node_models))
         for stage, nodes in STAGES:
             jobs = [dict(task=t, node=nd, kind='plain', model=node_models[nd])
                     for t in tasks for nd in nodes
@@ -259,4 +301,13 @@ class StubEngine:
                            switch_count=st.switch_count, calls=st.calls)
             self._append(summary)
             summaries.append(summary)
+        # Session-level record (operator ruling on cold-start billing):
+        # switch/cold-start costs are counted ONCE in the switch events;
+        # this summary only REFERENCES their indices — never re-sums them.
+        self._append(dict(
+            event='session_summary', tasks=len(tasks),
+            calls=self.requests_total, requests=self.requests_total,
+            tokens_total=self.tokens_total,
+            switch_indices=list(self._switch_indices),
+            cold_start_indices=list(self._cold_start_indices)))
         return summaries
