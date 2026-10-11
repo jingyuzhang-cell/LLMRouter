@@ -20,12 +20,11 @@ from typing import Dict, List, Optional
 
 from . import dag_closure as dc
 from . import reward as reward_mod
+from .reassign import ARMS, Candidate, apply_decision, enumerate_candidates
 from .compensator import DeadlineCompensator
 from .predictor import (OutcomePredictor, e1_on_time,
                         validate_node_profiles)
 
-ARMS = ('NONE', 'LOCAL', 'FULL')
-_FAIL_KIND = {'e1': 'fb', 'e2': 'fb', 'r': 'esc', 'v': 'esc'}
 # baseline remaining-work default for tasks that have not decided yet:
 # the planned V1 stage's service under the planned model (set from the
 # priors at episode start; policy.run_episode overwrites with exact
@@ -33,13 +32,12 @@ _FAIL_KIND = {'e1': 'fb', 'e2': 'fb', 'r': 'esc', 'v': 'esc'}
 BASE_PRIORS_V_SERVICE_DEFAULT = 0.0
 
 
-@dataclass
-class Candidate:
-    arm: str
-    pi: Dict[str, str]
-    judgment: object
-    kinds: Dict[str, str] = field(default_factory=dict)
-    row: Optional[dict] = None      # scored table row (audit)
+def _profile_value(priors: dict, node: str, model: str, key: str,
+                   default: float = 0.0) -> float:
+    prof = (priors.get('node_profiles', {}).get(f'{node}|{model}')
+            or priors.get('profiles', {}).get(f'{node}|{model}', {}))
+    return float(prof.get(key, default))
+
 
 
 @dataclass
@@ -51,94 +49,6 @@ class Decision:
     violations: List[dict]
     d_remain: float
     b_remain_tokens: float
-
-
-def _profile_value(priors: dict, node: str, model: str, key: str,
-                   default: float = 0.0) -> float:
-    prof = (priors.get('node_profiles', {}).get(f'{node}|{model}')
-            or priors.get('profiles', {}).get(f'{node}|{model}', {}))
-    return float(prof.get(key, default))
-
-
-def _menu_variants(nodes: List[str]):
-    nodes = sorted(set(nodes))
-    if not nodes:
-        yield {}
-        return
-    menus = [sorted(dc.MENUS[n]) for n in nodes]
-    for combo in itertools.product(*menus):
-        yield dict(zip(nodes, combo))
-
-
-def enumerate_candidates(state, uid: str,
-                         node_models: Dict[str, str]) -> List[Candidate]:
-    st = state.tasks[uid]
-    failed = [n for n in dc.TOPO if st.node_status[n] == dc.FAILED]
-    pending = [n for n in dc.TOPO if st.node_status[n] == dc.PENDING]
-    out: List[Candidate] = []
-
-    def add(arm, R, pi):
-        j = state.judge(uid, R, pi, on_incomplete='complete')
-        if not j.legal:
-            return
-        kinds = {}
-        for node, new_call in j.execute:
-            if node in failed:
-                kinds[node] = _FAIL_KIND[node]
-            elif node in R:
-                kinds[node] = 'fbd'
-            else:
-                kinds[node] = 'plain'
-        out.append(Candidate(arm=arm, pi=dict(pi), judgment=j,
-                             kinds=kinds))
-
-    # NONE family: accept / schedule-only (π over still-pending nodes)
-    for pi in _menu_variants(pending):
-        add('NONE', [], pi)
-    if not failed:
-        return out
-    # LOCAL family: retry the failed nodes; closure completed BY RULE; π
-    # free over the (re)execution set ∪ pending nodes — the M5 capability.
-    base_R = list(failed)
-    j0 = state.judge(uid, base_R, {}, on_incomplete='complete')
-    free = {n for n, _ in j0.execute} | set(pending)
-    for pi in _menu_variants(sorted(free)):
-        add('LOCAL', base_R, pi)
-    # FULL family: full-graph replay — trigger nodes take menu variants,
-    # every other node re-executes on its PLANNED model (E-arm semantics).
-    others = {n: node_models[n] for n in dc.TOPO if n not in failed}
-    for pi_trig in _menu_variants(failed):
-        add('FULL', list(dc.TOPO), {**others, **pi_trig})
-    return out
-
-
-def apply_decision(engine, state, task: dict, node_models: Dict[str, str],
-                   chosen: Candidate) -> None:
-    """Execute the chosen joint plan through the engine: per-stage batching
-    (topo order), kinds by trigger family, no-cache for FAILED retries and
-    FULL replays (M4 semantics)."""
-    uid = task['uid']
-    st = state.tasks[uid]
-    pi, kinds = chosen.pi, chosen.kinds
-    replay = chosen.arm == 'FULL'
-    for group in (('e1', 'e2'), ('r',), ('v',)):
-        jobs = []
-        for node in group:
-            new_call = next((nc for n, nc in chosen.judgment.execute
-                             if n == node), None)
-            if new_call is None:
-                continue
-            if st.node_status.get(node) == dc.PENDING:
-                continue  # first executions run in their planned stage with
-                # the chosen pi (driver schedules) — never duplicated here
-            model = pi.get(node) or st.node_model.get(node) \
-                or node_models[node]
-            failed = st.node_status.get(node) == dc.FAILED
-            jobs.append(dict(task=task, node=node,
-                             kind=kinds.get(node, 'plain'), model=model,
-                             no_cache=replay or failed))
-        if jobs:
-            engine.run_jobs(f"plan:{chosen.arm}", jobs)
 
 
 def run_episode(engine, state, tasks: List[dict], node_models: Dict[str, str],
