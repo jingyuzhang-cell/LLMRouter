@@ -878,16 +878,34 @@ def execute(approved_freeze_sha):
     return 0 if quality['status'] == 'COMPLETE' else 2
 
 
+def wilson_ci(x: int, n: int, z: float = 1.959963984540054):
+    """Wilson score 95% interval for a binomial proportion — matches the
+    protocol's illustrative ranges (17/20 -> [0.64, 0.95]); chosen over
+    Clopper-Pearson for small-n readability, method recorded in output."""
+    if n <= 0:
+        return [None, None]
+    p = x / n
+    z2 = z * z
+    denom = 1 + z2 / n
+    center = (p + z2 / (2 * n)) / denom
+    half = (z * ((p * (1 - p) / n + z2 / (4 * n * n)) ** 0.5)) / denom
+    return [round(max(0.0, center - half), 4), round(min(1.0, center + half),
+                                                      4)]
+
+
 def write_quality_output(cell_records, status, reason, provenance,
                          run_dir, out_dir=None):
     """Admission repair #5: the OFFICIAL PRIORS_REAL_V1_quality.json is
     written ONLY for a COMPLETE run; anything else goes to a distinct
     INCOMPLETE file that can never be mistaken for the calibration
-    output. Neither file may be silently overwritten."""
+    output. Neither file may be silently overwritten. Every cell reports
+    a Wilson 95% CI (operator ruling: 20-task cells MUST report CIs and
+    overlapping intervals carry no superiority information)."""
     out_dir = Path(out_dir) if out_dir else HERE
     out_dir.mkdir(parents=True, exist_ok=True)
     cells_out = {f"{c['condition']}|{c['arm']}": dict(
-        n=c['n'], n_correct=c['n_correct'], P_correct=c['P_correct'])
+        n=c['n'], n_correct=c['n_correct'], P_correct=c['P_correct'],
+        ci95_wilson=wilson_ci(c['n_correct'], c['n']))
         for c in cell_records}
     complete = (status == 'COMPLETE' and len(cell_records)
                 == len(CONDITIONS) * len(ARMS))
@@ -900,6 +918,12 @@ def write_quality_output(cell_records, status, reason, provenance,
         reason=None if complete else reason,
         provenance=provenance,
         cells=cells_out,
+        uncertainty=dict(
+            method='Wilson score 95% interval per cell',
+            note='20 tasks per cell: intervals are wide and overlap by '
+                 'construction (e.g. 17/20 -> [0.64, 0.95]); overlapping '
+                 'CIs carry NO strategy-selection or superiority '
+                 'information (gate-5 scope)'),
         scoring='v2.1 ONLY (score_v21 + contract_v2_gold)',
         scope='INITIAL QUALITY CALIBRATION ONLY — see '
               'ADMISSION_CHECK.json gate5_scope; no strategy selection, '

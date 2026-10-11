@@ -450,8 +450,20 @@ def test_incomplete_protection(tmp_out):
         out_dir=tmp_out / 'ok')
     assert out2.name == 'PRIORS_REAL_V1_quality.json'
     assert q2['status'] == 'COMPLETE'
+    # operator ruling: every cell MUST report a Wilson 95% CI. Values
+    # cross-verified against statsmodels proportion_confint(method='wilson')
+    # and matching the protocol's illustrative [0.64, 0.95] / [0.39, 0.78].
+    assert sr.wilson_ci(17, 20) == [0.6396, 0.9476], sr.wilson_ci(17, 20)
+    assert sr.wilson_ci(12, 20) == [0.3866, 0.7812], sr.wilson_ci(12, 20)
+    assert sr.wilson_ci(0, 20) == [0.0, 0.1611]
+    assert sr.wilson_ci(20, 20) == [0.8389, 1.0]
+    cell = q2['cells']['clean|SS']
+    assert 'ci95_wilson' in cell and len(cell['ci95_wilson']) == 2
+    assert 'uncertainty' in q2 and 'Wilson' in q2['uncertainty']['method']
     return dict(incomplete_marker=True, official_absent=True,
-                overwrite_refused=True, complete_official=True)
+                overwrite_refused=True, complete_official=True,
+                ci_wilson_17_of_20=sr.wilson_ci(17, 20),
+                ci_in_output=True)
 
 
 # ---------------------------------------------------------------- group 8
