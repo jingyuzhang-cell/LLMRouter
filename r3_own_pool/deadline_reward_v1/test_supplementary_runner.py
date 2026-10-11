@@ -54,12 +54,12 @@ def run_arm(arm, out_dir):
     params = dict(priors=PRIORS, q_min=pol['q_min'], eps=pol['eps'],
                   lam_c=pol['lam_c'], lam_t=pol['lam_t'], lam_f=pol['lam_f'],
                   c0=pol['c0'])
-    rows = sr.run_cell(engine, server, state, [TASK], PLANNED, arm,
-                       'fault30_D3', {TASK['uid']}, policy.OutcomePredictor(
-                           PRIORS),
-                       policy.DeadlineCompensator(PRIORS), params, out_dir)
+    rows, metering = sr.run_cell(
+        engine, server, state, [TASK], PLANNED, arm, 'fault30_D3',
+        {TASK['uid']}, policy.OutcomePredictor(PRIORS),
+        policy.DeadlineCompensator(PRIORS), params, out_dir)
     engine.observers.remove(state._on_event)
-    return rows
+    return rows, metering
 
 
 def main():
@@ -76,8 +76,10 @@ def main():
     expect_degraded = dict(SS=False, DS=True, SD=False, DD=False, NONE=False)
     expect_r_final = dict(SS='FAILED', DS='FAILED', SD='DONE', DD='DONE',
                           NONE='FAILED')
+    meterings = {}
     for arm in ('SS', 'DS', 'SD', 'DD', 'NONE'):
-        rows = run_arm(arm, out / arm)
+        rows, metering = run_arm(arm, out / arm)
+        meterings[arm] = metering
         r = rows[0]
         checks[f'{arm}_single_row'] = len(rows) == 1
         checks[f'{arm}_q_world'] = r['Q_v21'] == expect_q[arm]
@@ -89,9 +91,10 @@ def main():
         if arm == 'SS':
             checks['SS_retry_jobs_planned'] = r['retry_jobs'] == [
                 dict(node='r', model='medium', kind='esc', no_cache=True,
-                     pending=False),
-                dict(node='v', model='coder', kind='plain', no_cache=False,
-                     pending=True)]
+                     pending=False)]
+            # v runs ONCE (V stage), never duplicated in the plan batch —
+            # the double-execution bug the metering smoke caught
+            checks['SS_no_duplicate_v'] = (r['logical_calls'] == 5)
         if arm == 'SD':
             checks['SD_retry_jobs_reassigned'] = any(
                 j['node'] == 'r' and j['model'] == 'large'
@@ -104,6 +107,24 @@ def main():
             checks['NONE_no_retry_jobs'] = r['retry_jobs'] == []
             # NONE completes the DAG: e1, e2, r (faulted), v = 4 calls
             checks['NONE_completes_dag'] = (r['logical_calls'] == 4)
+
+    # per-cell metering separation (operator boundary 3). Fresh engine per
+    # arm in this smoke: every call is physical. SS: e1,e2,r,R1-inj,
+    # r-retry-inj, v = 5; DS degrades: 3; SD/DD: 5 (retry un-injected);
+    # NONE: 4.
+    checks['metering_consistent'] = all(
+        m['logical_calls'] == m['new_requests'] + m['cache_hits']
+        for m in meterings.values())
+    checks['SS_metering'] = (meterings['SS']['new_requests'] == 5
+                             and meterings['SS']['cache_hits'] == 0
+                             and meterings['SS']['injected_faults'] == 2)
+    checks['DS_metering_zero_recovery'] = (
+        meterings['DS']['new_requests'] == 3
+        and meterings['DS']['injected_faults'] == 1)
+    checks['NONE_metering'] = (meterings['NONE']['new_requests'] == 4)
+    checks['SD_metering_retry_not_injected'] = (
+        meterings['SD']['new_requests'] == 5
+        and meterings['SD']['injected_faults'] == 1)
 
     all_pass = all(checks.values())
     evidence = dict(milestone='supplementary_runner_smoke', checks=checks,

@@ -38,9 +38,17 @@ def _decode(text) -> str:
 
 def parse_facts(answer: str) -> List[dict]:
     """Mirror of the D1 predicate input: the facts list, [] on any failure.
-    Facts VALIDATION stays looser than production (no 1..12 length /
-    finite-value / evidence checks) — documented divergence biased toward
-    under-detecting D1; empirically counted in the supplementary preflight."""
+    EXACT production validation (2026-10-11 second parity fix, mirrors
+    tool_aware_v1.parse_facts via parse_facts_safe): 0 < len(facts) <= 12,
+    each value type in (int, float) and finite, each evidence a non-empty
+    string. The former lenient mirror accepted string-valued facts —
+    48/122 e-answers in the aborted partial run, and formal-trajectory
+    strict e2 rates of 0.25-0.375 vs lenient 0.75-0.875 — leaving node
+    status DONE while the production prompt builder feeds r EMPTY facts:
+    an internal inconsistency between detection state and cascade
+    reality. Exact parity restored; empirically 0 divergences on every
+    evaluated real record."""
+    import math
     try:
         obj = json.loads(_decode(answer))
     except (json.JSONDecodeError, TypeError):
@@ -48,7 +56,18 @@ def parse_facts(answer: str) -> List[dict]:
     if not isinstance(obj, dict):
         return []
     facts = obj.get('facts')
-    return facts if isinstance(facts, list) else []
+    if not isinstance(facts, list) or not (0 < len(facts) <= 12):
+        return []
+    for f in facts:
+        if not isinstance(f, dict):
+            return []
+        v = f.get('value')
+        if type(v) not in (int, float) or not math.isfinite(v):
+            return []
+        ev = f.get('evidence')
+        if not isinstance(ev, str) or not ev:
+            return []
+    return facts
 
 
 def facts_empty(answer: str) -> bool:

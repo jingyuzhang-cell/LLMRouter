@@ -259,9 +259,10 @@ def main():
                              == 3 * len(calls))
     allowed_mods = {'__future__', 'json', 'hashlib', 'typing', 'pathlib',
                     'deadline_reward_v1', 'detection',
-                    # 2026-10-11 parity fix: the exec_calc mirror needs
-                    # these stdlib modules (still zero production imports)
-                    'ast', 'operator', 're', 'fractions'}
+                    # 2026-10-11 parity fixes: exec_calc mirror + strict
+                    # facts validation need these stdlib modules (still
+                    # zero production imports)
+                    'ast', 'operator', 're', 'fractions', 'math'}
     for mod in ('scheduler_state', 'detection'):
         tree = ast.parse((HERE / f'{mod}.py').read_text())
         imported = set()

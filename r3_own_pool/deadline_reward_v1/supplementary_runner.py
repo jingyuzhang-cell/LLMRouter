@@ -394,13 +394,11 @@ def _apply_plans_batched(engine, state, tasks, planned, chosens, arm):
                 if new_call is None:
                     continue
                 if st.node_status.get(node) == dc.PENDING:
-                    model = pi.get(node) or planned[node]
-                    jobs.append(dict(task=t, node=node, kind='plain',
-                                     model=model))
-                    audit.setdefault(uid, []).append(
-                        dict(node=node, model=model, kind='plain',
-                             no_cache=False, pending=True))
-                    continue
+                    continue   # apply_decision rule: first executions run
+                    # ONCE in their planned stage (the V stage below) with
+                    # the chosen pi — never duplicated inside the plan
+                    # application (double-execution bug caught by the
+                    # metering smoke 2026-10-11)
                 model = (pi.get(node) or st.node_model.get(node)
                          or planned[node])
                 failed = st.node_status.get(node) == dc.FAILED
@@ -422,6 +420,12 @@ def run_cell(engine, server, state, tasks, planned, arm, condition,
     from deadline_reward_v1 import arm_entry, policy
     from deadline_reward_v1 import dag_closure as dc
 
+    # per-cell physical accounting (operator boundary 3: cache-hit savings
+    # must be separable from scheduling benefit in any analysis)
+    before = dict(requests=engine.requests_total,
+                  cached=engine.cached_calls,
+                  injected=engine.injected_calls,
+                  tokens=engine.tokens_total)
     for uid in fault_uids:
         server.set_fault(uid, 'r', planned['r'],
                          server_fault_answer)
@@ -534,7 +538,13 @@ def run_cell(engine, server, state, tasks, planned, arm, condition,
 
     for uid in fault_uids:                # faults never leak across cells
         server.faults.pop((uid, 'r', planned['r']), None)
-    return rows
+    cell_metering = dict(
+        new_requests=engine.requests_total - before['requests'],
+        cache_hits=engine.cached_calls - before['cached'],
+        injected_faults=engine.injected_calls - before['injected'],
+        physical_tokens=engine.tokens_total - before['tokens'],
+        logical_calls=sum(r['logical_calls'] for r in rows))
+    return rows, cell_metering
 
 
 # global set by main() from the freeze (kept module-level for the cell fn)
@@ -695,9 +705,10 @@ def execute(approved_freeze_sha):
                     token_allocation=alloc)
                 engine.add_observer(state._on_event)
                 try:
-                    rows = run_cell(engine, server, state, tasks, PLANNED,
-                                    arm, condition, f_uids, predictor,
-                                    compensator, params, run_dir)
+                    rows, metering = run_cell(
+                        engine, server, state, tasks, PLANNED, arm,
+                        condition, f_uids, predictor, compensator, params,
+                        run_dir)
                 finally:
                     engine.observers.remove(state._on_event)
                 cell = dict(condition=condition, arm=arm,
@@ -706,6 +717,7 @@ def execute(approved_freeze_sha):
                             P_correct=round(
                                 sum(r['Q_v21'] for r in rows)
                                 / max(1, len(rows)), 4),
+                            metering=metering,
                             rows=rows)
                 cell_records.append(cell)
                 with (run_dir / 'CELL_RECORDS.jsonl').open('a') as fh:
