@@ -6,7 +6,11 @@
   "switch": {
     "family": "deterministic",
     "stop_s": 0.5,
-    "start_s": {"medium": 2.0, "large": 3.0, "coder": 2.5},
+    "start_s": {
+      "medium": 2.0,
+      "large": 3.0,
+      "coder": 2.5
+    },
     "synthetic": true
   },
   "v3_compat": {
@@ -17,11 +21,135 @@
     "note": "reference-parity profile matching predictor_v3.V3Executor new-call metering (100 tokens / 0.2 s), used only by the T3-lite comparison test"
   },
   "profiles": {
-    "e1|large": {"family": "normal", "lat_mean_s": 0.9, "lat_std_s": 0.1, "prompt_tokens": 320, "completion_tokens": 90, "synthetic": true},
-    "e2|large": {"family": "normal", "lat_mean_s": 0.9, "lat_std_s": 0.1, "prompt_tokens": 320, "completion_tokens": 90, "synthetic": true},
-    "r|medium": {"family": "normal", "lat_mean_s": 1.1, "lat_std_s": 0.15, "prompt_tokens": 400, "completion_tokens": 120, "synthetic": true},
-    "r|large": {"family": "normal", "lat_mean_s": 1.6, "lat_std_s": 0.2, "prompt_tokens": 520, "completion_tokens": 160, "synthetic": true},
-    "v|coder": {"family": "normal", "lat_mean_s": 0.7, "lat_std_s": 0.1, "prompt_tokens": 260, "completion_tokens": 60, "synthetic": true},
-    "v|large": {"family": "normal", "lat_mean_s": 1.2, "lat_std_s": 0.15, "prompt_tokens": 380, "completion_tokens": 90, "synthetic": true}
+    "e1|large": {
+      "family": "normal",
+      "lat_mean_s": 0.9,
+      "lat_std_s": 0.1,
+      "prompt_tokens": 320,
+      "completion_tokens": 90,
+      "synthetic": true
+    },
+    "e2|large": {
+      "family": "normal",
+      "lat_mean_s": 0.9,
+      "lat_std_s": 0.1,
+      "prompt_tokens": 320,
+      "completion_tokens": 90,
+      "synthetic": true
+    },
+    "r|medium": {
+      "family": "normal",
+      "lat_mean_s": 1.1,
+      "lat_std_s": 0.15,
+      "prompt_tokens": 400,
+      "completion_tokens": 120,
+      "synthetic": true
+    },
+    "r|large": {
+      "family": "normal",
+      "lat_mean_s": 1.6,
+      "lat_std_s": 0.2,
+      "prompt_tokens": 520,
+      "completion_tokens": 160,
+      "synthetic": true
+    },
+    "v|coder": {
+      "family": "normal",
+      "lat_mean_s": 0.7,
+      "lat_std_s": 0.1,
+      "prompt_tokens": 260,
+      "completion_tokens": 60,
+      "synthetic": true
+    },
+    "v|large": {
+      "family": "normal",
+      "lat_mean_s": 1.2,
+      "lat_std_s": 0.15,
+      "prompt_tokens": 380,
+      "completion_tokens": 90,
+      "synthetic": true
+    }
+  },
+  "golden_zero": {
+    "family": "deterministic",
+    "latency_s": 0.0,
+    "total_tokens": 100,
+    "synthetic": true,
+    "note": "decision-golden engine profile: zero service time so the injected clock at the decision point is exactly 0 and d_remain equals the configured deadline; physical tokens still metered. Reference-parity only; not a latency claim."
+  },
+  "node_profiles": {
+    "e1|large": {
+      "q_success": 0.99,
+      "lat_mean_s": 1.0,
+      "lat_p90_s": 1.5,
+      "tokens_p90": 100,
+      "synthetic": true
+    },
+    "e2|large": {
+      "q_success": 0.99,
+      "lat_mean_s": 1.0,
+      "lat_p90_s": 1.5,
+      "tokens_p90": 100,
+      "synthetic": true
+    },
+    "e1|coder": {
+      "q_success": 0.99,
+      "lat_mean_s": 0.8,
+      "lat_p90_s": 1.2,
+      "tokens_p90": 90,
+      "synthetic": true
+    },
+    "e2|medium": {
+      "q_success": 0.99,
+      "lat_mean_s": 0.8,
+      "lat_p90_s": 1.2,
+      "tokens_p90": 90,
+      "synthetic": true
+    },
+    "r|large": {
+      "q_success": 0.95,
+      "lat_mean_s": 10.0,
+      "lat_p90_s": 10.5,
+      "tokens_p90": 500,
+      "synthetic": true
+    },
+    "r|medium": {
+      "q_success": 0.6,
+      "lat_mean_s": 5.0,
+      "lat_p90_s": 5.5,
+      "tokens_p90": 300,
+      "synthetic": true
+    },
+    "v|large": {
+      "q_success": 0.95,
+      "lat_mean_s": 14.0,
+      "lat_p90_s": 14.5,
+      "tokens_p90": 700,
+      "synthetic": true
+    },
+    "v|coder": {
+      "q_success": 0.85,
+      "lat_mean_s": 7.0,
+      "lat_p90_s": 7.5,
+      "tokens_p90": 400,
+      "synthetic": true
+    }
+  },
+  "policy": {
+    "class": "stub_test_only",
+    "q_min": 0.8,
+    "eps": 0.1,
+    "lam_c": 0.5,
+    "lam_t": 1.0,
+    "lam_f": 2.0,
+    "c0": 4000.0,
+    "quality_composition": "min",
+    "q_observed_done": 1.0,
+    "q_failed_unrecovered": 0.0,
+    "safety_margin_s": 0.0,
+    "session_bonus": 1.0,
+    "session_penalty": 2.0,
+    "synthetic": true,
+    "source": "golden-scenario constants for the A/B/C decision tests (MAINLINE_FREEZE); formal weights await independent calibration+freeze (ruling D3)"
   }
 }

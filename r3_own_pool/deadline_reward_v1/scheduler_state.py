@@ -132,6 +132,9 @@ class _TaskState:
         self.switch_sum = 0.0
         self.switch_count = 0
         self.calls = 0
+        self.tokens_physical = 0     # per-task physical spend (settlement)
+        self.degraded = False        # D10 EARLY_STOP marker
+        self.violations: List[dict] = []
 
 
 class SchedulerState:
@@ -199,6 +202,7 @@ class SchedulerState:
         if ev.get('physical', True):
             self.tokens_spent += ev['usage']['total_tokens']
             self.requests_spent += 1
+            st.tokens_physical += ev['usage']['total_tokens']
         t = ev['t_end']
         rec_kind = {('e1', 'fb'): 'e_fb', ('e2', 'fb'): 'e_fb',
                     ('r', 'fbd'): 'r_fbd', ('v', 'fbd'): 'v_fbd',

@@ -94,7 +94,24 @@ numbers) · P8 (quality-chain correlation) · P9 (observed-state belief
 rule) · P10 (switch variance in σ). All have documented defaults; none
 blocks phase 2.
 
-## Phase-2 minimal scope & admission
+## Phase-2 status: COMPLETE (M1–M6 all green, 123/123, zero real calls)
+
+| Milestone | Status |
+|---|---|
+| M1 stub engine | PASS (T3-lite NONE-arm parity) |
+| M2 SchedulerState | PASS |
+| M3 closure & reuse (+ errata) | PASS |
+| M4 recovery + T3a/T3b | PASS — NONE/LOCAL/FULL-E all bitwise vs production references |
+| M5 dynamic reassignment | PASS — V10 decisive test |
+| M6 two-stage reward policy | PASS — V1 (A/B/C both scenarios), V8, V9 |
+
+The frozen mainline loop is executable end-to-end: detection → legal info
+(D_remain/B_remain live) → joint candidates (Z,R,π) → constraint filter →
+argmax Ê[R_task] → execute → feedback → settle; empty feasible set ⇒
+EARLY_STOP + violation recording. See M5_M6_REPORT.md. Next gates: phase-3
+verification review; real-model experiments remain separately gated.
+
+## Phase-2 minimal scope & admission (historical)
 
 **First acceptance gate (operator order):** fixed policies reproduce the
 INDEPENDENT production reference execution semantics — T3a (single-task
