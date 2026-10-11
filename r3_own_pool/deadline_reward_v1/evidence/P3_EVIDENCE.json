@@ -1,0 +1,101 @@
+{
+ "phase": "3-audit",
+ "checks": {
+  "p3_1_full_wins": true,
+  "p3_1_full_not_predicted_as_cache": true,
+  "p3_1_tokens_reconcile": true,
+  "p3_1_requests_reconcile": true,
+  "p3_1_switch_reconcile": true,
+  "p3_1_settlement": true,
+  "p3_2_p90_shifted_with_switch": true,
+  "p3_2_anomaly_point_mass": true,
+  "p3_2_aggregation_modes": true,
+  "p3_3_expected_uses_D_total": true,
+  "p3_3_settlement_cases": true,
+  "p3_3_session_terminal_fixed": true,
+  "p3_4_no_double_promise": true,
+  "p3_4_budget_reconciles": true,
+  "p3_4_refault_redecides": true,
+  "p3_4_e2e_from_release": true,
+  "p3_5_not_torn": true,
+  "p3_5_z1": true
+ },
+ "all_pass": true,
+ "zero_model_calls": true,
+ "reconciliation": {
+  "full_wins": {
+   "predicted": {
+    "arm": "FULL",
+    "dcost": 400.0,
+    "deficits": [],
+    "e_late": 0.0,
+    "feasible": true,
+    "kinds": {
+     "e1": "fb",
+     "e2": "fbd",
+     "r": "esc",
+     "v": "fbd"
+    },
+    "mu_e2e": 28.3,
+    "p90": 30.2,
+    "p_on_time": 1.0,
+    "pi": {
+     "e1": "coder",
+     "e2": "large",
+     "r": "large",
+     "v": "coder"
+    },
+    "q": 0.85,
+    "score": 0.8,
+    "switch": 9.5
+   },
+   "actual_tokens": 400,
+   "actual_requests": 4,
+   "actual_switch": 9.5,
+   "order": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ]
+  }
+ },
+ "settlement_cases": {
+  "ok": {
+   "task": "x",
+   "q": 1.0,
+   "c_full": 500.0,
+   "T": 18.0,
+   "D": 20.0,
+   "degraded": false,
+   "r_task": 0.9375
+  },
+  "wrong": {
+   "task": "x",
+   "q": 0.0,
+   "c_full": 500.0,
+   "T": 18.0,
+   "D": 20.0,
+   "degraded": false,
+   "r_task": -0.0625
+  },
+  "late": {
+   "task": "x",
+   "q": 1.0,
+   "c_full": 500.0,
+   "T": 22.0,
+   "D": 20.0,
+   "degraded": false,
+   "r_task": -2.1625
+  },
+  "stop": {
+   "task": "x",
+   "q": 0.0,
+   "c_full": 500.0,
+   "T": 15.0,
+   "D": 20.0,
+   "degraded": true,
+   "r_task": -0.0625
+  }
+ }
+}

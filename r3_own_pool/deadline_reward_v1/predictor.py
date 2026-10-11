@@ -48,14 +48,21 @@ class OutcomePredictor:
     def predict(self, *, execute: Iterable[Tuple[str, bool]],
                 pi: Dict[str, str], node_model: Dict[str, Optional[str]],
                 node_status: Dict[str, str]) -> ActionPrediction:
+        # p90 aggregation (phase-3 fix 2): 'quantile_sum' (default) sums
+        # per-node p90s — under the DECLARED independence+normal family
+        # this OVERSTATES the true path p90 (sqrt(sum sigma^2) <= sum
+        # sigma), i.e. the on-time probability derived from it is a
+        # conservative LOWER bound — used for the golden scenarios.
+        # 'variance' is the exact independent-normal aggregation.
+        agg = self.priors.get('policy', {}).get('p90_aggregation',
+                                                'quantile_sum')
+        mus, p90s, sigmas = [], [], []
         """execute: the judgment's (node, new_call) list; π resolves the
         model for executing nodes; non-executing DONE nodes reuse their
         cached output (observed-state belief); a FAILED node left out of
         the execute set caps the whole-DAG quality at the failure floor."""
         q_factors = []
         cost = 0.0
-        mu = 0.0
-        p90 = 0.0
         for node, new_call in execute:
             status = node_status.get(node)
             model = pi.get(node) or node_model.get(node)
@@ -70,8 +77,11 @@ class OutcomePredictor:
             prof = _profile(self.priors, node, model)
             q_factors.append(float(prof['q_success']))
             cost += float(prof.get('tokens_p90', 0.0))
-            mu += float(prof['lat_mean_s'])
-            p90 += float(prof['lat_p90_s'])
+            m_i = float(prof['lat_mean_s'])
+            p_i = float(prof['lat_p90_s'])
+            mus.append(m_i)
+            p90s.append(p_i)
+            sigmas.append(max(0.0, (p_i - m_i) / 1.2816))
         for node in ('e1', 'e2', 'r', 'v'):
             # reused DONE nodes outside the execute set
             if node not in dict(execute) and node_status.get(node) == 'DONE':
@@ -85,6 +95,11 @@ class OutcomePredictor:
                 q *= f
         else:  # 'min' — weakest link over the final answer path
             q = min(q_factors) if q_factors else self.q_observed_done
+        mu = sum(mus)
+        if agg == 'variance':
+            p90 = mu + 1.2816 * (sum(s * s for s in sigmas) ** 0.5)
+        else:
+            p90 = sum(p90s)
         return ActionPrediction(q_mean=round(q, 10),
                                  d_cost_tokens=cost,
                                  mu_service_s=round(mu, 10),

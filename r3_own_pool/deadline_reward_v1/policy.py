@@ -166,6 +166,11 @@ def run_episode(engine, state, tasks: List[dict], node_models: Dict[str, str],
                 st.violations.extend(decision.violations)
             else:
                 chosen_pi[uid] = dict(decision.chosen.pi)
+                # Budget commitment (phase-3 fix 5): the chosen candidate's
+                # incremental cost is RESERVED immediately so later tasks'
+                # decisions cannot promise the same tokens twice; physical
+                # calls drain the reservation as they land.
+                state.committed_tokens += decision.chosen.row['dcost']
                 apply_decision(engine, state, t, node_models,
                                decision.chosen)
 
@@ -203,18 +208,31 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
     d_remain = compensator.d_remain(state, uid)
     engine_model = engine_current_model()
     feasible: List[Candidate] = []
+    d_total = state.task_deadlines[uid] - st.release_time  # frozen D
     for cand in cands:
-        pred = predictor.predict(execute=cand.judgment.execute,
-                                 pi=cand.pi, node_model=st.node_model,
+        # M4 semantics: a FULL (E-arm) replay is NEVER cache-substituted —
+        # every replayed node is a charged new call, so the predictor must
+        # see new_call=True for the whole execute set (phase-3 fix 1).
+        execute = ([(n, True) for n, _ in cand.judgment.execute]
+                   if cand.arm == 'FULL' else list(cand.judgment.execute))
+        pred = predictor.predict(execute=execute, pi=cand.pi,
+                                 node_model=st.node_model,
                                  node_status=st.node_status)
         ordered = [cand.pi.get(n) or st.node_model.get(n)
-                   for n, new_call in cand.judgment.execute if new_call]
+                   for n, new_call in execute if new_call]
         sw = compensator.switch_overhead(engine_model, ordered)
         mu_e2e = pred.mu_service_s + sw          # composed ONCE (B6)
-        p_on, e_late = e1_on_time(mu_e2e, pred.w_p90_s, d_remain)
+        # Deterministic switch overhead shifts mean AND quantile together
+        # (phase-3 fix 2); sigma is unchanged by the shift, but a service-
+        # only p90 against a switch-inflated mean would wrongly degenerate.
+        p90_e2e = pred.w_p90_s + sw
+        p_on, e_late = e1_on_time(mu_e2e, p90_e2e, d_remain)
+        # e_late feasibility uses d_remain; NORMALIZATION uses the frozen
+        # task duration D so decisions optimize the settlement objective
+        # (phase-3 fix 3).
         score = reward_mod.expected_rtask(
             q_hat=pred.q_mean, d_cost=pred.d_cost_tokens, p_on_time=p_on,
-            e_late=e_late, d_remain=max(d_remain, 1e-9),
+            e_late=e_late, d_total=max(d_total, 1e-9),
             lam_c=params['lam_c'], lam_t=params['lam_t'],
             lam_f=params['lam_f'], c0=params['c0'])
         deficits = []
@@ -229,7 +247,7 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
                                  deficit=pred.d_cost_tokens - b_remain))
         cand.row = dict(arm=cand.arm, pi=dict(cand.pi),
                         q=round(pred.q_mean, 10), mu_e2e=round(mu_e2e, 10),
-                        p90=round(pred.w_p90_s, 10),
+                        p90=round(p90_e2e, 10),
                         dcost=pred.d_cost_tokens, switch=round(sw, 10),
                         p_on_time=round(p_on, 10), e_late=round(e_late, 10),
                         score=round(score, 10), feasible=not deficits,

@@ -150,6 +150,10 @@ class SchedulerState:
         self.tasks: Dict[str, _TaskState] = {}
         self.tokens_spent = 0
         self.requests_spent = 0
+        # Budget COMMITTED by chosen-but-not-yet-executed plans (phase-3
+        # fix 5): b_remain = allocation - spent - committed, so sequential
+        # decisions cannot promise the same tokens twice.
+        self.committed_tokens = 0.0
         self.switch_indices: List[int] = []
         self.cold_start_indices: List[int] = []
         self._panel_models: Dict[str, str] = {}
@@ -203,6 +207,10 @@ class SchedulerState:
             self.tokens_spent += ev['usage']['total_tokens']
             self.requests_spent += 1
             st.tokens_physical += ev['usage']['total_tokens']
+            # drain the reservation as the physical spend lands
+            self.committed_tokens = max(
+                0.0, self.committed_tokens
+                - ev['usage']['total_tokens'])
         t = ev['t_end']
         rec_kind = {('e1', 'fb'): 'e_fb', ('e2', 'fb'): 'e_fb',
                     ('r', 'fbd'): 'r_fbd', ('v', 'fbd'): 'v_fbd',
@@ -267,9 +275,11 @@ class SchedulerState:
         return dict(
             tokens_spent=self.tokens_spent,
             requests_spent=self.requests_spent,
+            committed_tokens=self.committed_tokens,
             token_allocation=self.token_allocation,
             request_allocation=self.request_allocation,
-            b_remain_tokens=self.token_allocation - self.tokens_spent,
+            b_remain_tokens=(self.token_allocation - self.tokens_spent
+                             - self.committed_tokens),
             b_remain_requests=(None if self.request_allocation is None
                                else self.request_allocation
                                - self.requests_spent))

@@ -28,14 +28,18 @@ def realized_rtask(*, q: float, c_full: float, T: float, D: float,
 
 
 def expected_rtask(*, q_hat: float, d_cost: float, p_on_time: float,
-                   e_late: float, d_remain: float, lam_c: float,
+                   e_late: float, d_total: float, lam_c: float,
                    lam_t: float, lam_f: float, c0: float) -> float:
     """Ê[R_task] with C_new semantics: only the decision-controllable
-    incremental cost enters (spent-so-far is identical across candidates)."""
+    incremental cost enters (spent-so-far is identical across candidates).
+    Lateness is NORMALIZED by the frozen task duration D_total — the same
+    denominator the realized settlement uses — while feasibility itself is
+    judged against d_remain at the caller (phase-3 fix 3)."""
     if c0 <= 0:
         raise ValueError('C0 must be strictly positive')
     return (p_on_time * q_hat - lam_c * d_cost / c0
-            - lam_t * e_late / d_remain - lam_f * (1.0 - p_on_time))
+            - lam_t * e_late / max(d_total, 1e-9)
+            - lam_f * (1.0 - p_on_time))
 
 
 def settle(engine, state, tasks, *, lam_c: float, lam_t: float,
@@ -64,8 +68,12 @@ def settle(engine, state, tasks, *, lam_c: float, lam_t: float,
                 q=q, c_full=st.tokens_physical, T=T, D=D, lam_c=lam_c,
                 lam_t=lam_t, lam_f=lam_f, c0=c0), 10))
         rewards.append(rec)
-    complete = all(not getattr(state.tasks[t['uid']], 'degraded', False)
-                   for t in tasks) and all(r['q'] >= 0 for r in rewards)
+    # Frozen session-success definition (phase-3 fix 4): every task
+    # completed CORRECT, ON TIME, and not degraded. (The previous
+    # q >= 0 condition was vacuous for 0/1 quality.)
+    complete = all(
+        r['q'] == 1.0 and r['T'] <= r['D'] and not r['degraded']
+        for r in rewards)
     terminal = session_bonus if complete else -session_penalty
     record = dict(event='settlement', rewards=rewards,
                   session_terminal=terminal,
