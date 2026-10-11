@@ -101,5 +101,51 @@
   "execution": "one engine + one identity cache for the whole run (M3 reuse across cells is the deployment semantics); stage-batched; metered corruption faults"
  },
  "gate5_scope": "The supplementary measurement (~1000 real model calls) is INITIAL QUALITY CALIBRATION ONLY. It estimates P(task correct | config, condition) under v2.1 scoring for the five frozen configs, to validate that Q_min=0.80 is a reasonable feasibility threshold and to bind per-cell quality priors. It is NOT: (1) strategy selection — the best static arm for the SS contrast is selected on independent data per Protocol V2.3 §3, never on this panel; (2) a policy-superiority claim — no hypothesis test on this panel supports H1-H4/S1; (3) an on-time probability validation — node latency distributions were measured separately and path aggregation needs its own validation. With 20 tasks per cell the binomial CI is wide (17/20 -> 64-95%): overlapping CIs are expected and uninterpretable as superiority. Q_min=0.80, eps=0.10, reward weights and every frozen formula remain UNCHANGED by construction; no result of this measurement may be used to retune them (any change would be a new frozen version with explicit rationale).",
+ "freeze_manifest": {
+  "version": "FREEZE_MANIFEST_v1",
+  "files": {
+   "SUPPLEMENTARY_PANEL_FREEZE.json": "6a43fab7972c8e8fe21f6e36c7f019b1f3580824fe2def63b4bbe8fb815a0a93",
+   "DAG_QUALITY_CALIBRATION_PROTOCOL.json": "a9f282e0543c09ab3a252322d73477a6385886e83816ad86947e76708c53e156",
+   "CALIBRATION_FREEZE_PREREQUISITES.json": "7aeeaddfb7c9ecbadd8a68952b50e7a614efdd6a1a119d49ca53e6c4c1344449",
+   "PRIORS_REAL_V1.json": "f5e5092c731c55ce5ac205acf4fd06e972e2b9965e87853372af577ba8794246",
+   "PRIORS_REAL_V1_families.json": "77486593e361f3dbafb7c6c28a04e96be991c25f5ba8213295bd57a49290d9a9",
+   "arm_entry.py": "d37382e8f1d1186313bcb76732c50b2196698e312b247d389636e4fa386abbb6",
+   "detection.py": "f087315f2bc0fea6d09293073092d6928ed1df933c4b4e36c184400b46f10945",
+   "dag_closure.py": "6b1633a5a1f4b9e2befe80c4df01dc7a7ffd3b620d88202d3af7266fdbc98cae",
+   "scheduler_state.py": "f7bfcf01335aa549329b15309b96ba5037bad138a2034b33239dd1c0e5a08845",
+   "policy.py": "010cd708bb551d2d5a8d9b064617c5f0b994f225616474b8358f9593daa32dd1",
+   "reassign.py": "c80481612eb72218055c0cd65daacb4cbb0c09fc0d89af3e81ca1a5c10920502",
+   "predictor.py": "5489e758cf857ec575561df7cc1825462a0b3cd6b981107cf2ea5e470911dbc4",
+   "compensator.py": "5de44e4c348bbc764adf376de6daa91fa45ad6b81d3c0bf576d5bb93dc49c70e",
+   "reward.py": "4ed073b2064c68ca73bde2e050518c4a42c6b8f72f745224807ad5b2bb11f1ed",
+   "stub_engine.py": "62c30cb63a5dd10e55746421d249e22013cc51f58e00422525df40a79af81cbe",
+   "supplementary_runner.py": "1225a645c6a1b996f2a68c9fd4e6e4620b9ca2d4d83ae1b73d5ba9c417746bc9"
+  },
+  "params": {
+   "q_min": 0.8,
+   "eps": 0.1,
+   "lam_c": 0.5,
+   "lam_t": 1.0,
+   "lam_f": 2.0,
+   "c0": 4000.0
+  },
+  "caps": {
+   "wall_seconds": 7200.0,
+   "new_request_attempts": 1200,
+   "new_total_tokens": 800000,
+   "request_token_reservation": 2048,
+   "max_output_tokens": 4096
+  },
+  "planned": {
+   "e1": "large",
+   "e2": "large",
+   "r": "medium",
+   "v": "coder"
+  },
+  "d_scaffold_s": 3600.0,
+  "beliefs_sha256": "c50c2f89c936ddd087aae5a81746f78d73bbd8e94bb364ca1e81757d3637c36a",
+  "git_commit": "7db5d331d9af66bd2a1b6246ed1e5e7e7c8b3524",
+  "bound_files_dirty": null
+ },
  "status": "PREFLIGHT_PASS"
 }
