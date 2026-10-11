@@ -728,7 +728,7 @@ def preflight(beliefs, diverge, n_files):
 
 
 # ---------------------------------------------------------------- execute
-def execute(approved_freeze_sha):
+def execute(approved_freeze_sha, rehearse=False):
     from collab_scheduler_v1.joint_search_smoke.proposal_v2.smoke_runner \
         import Budget
     from deadline_reward_v1 import arm_entry, policy
@@ -758,6 +758,26 @@ def execute(approved_freeze_sha):
 
     priors = build_priors(beliefs)
     validate_node_profiles(priors)
+
+    if rehearse:
+        # GO-day rehearsal: the ENTIRE entry-point validation chain has
+        # passed (freeze SHA, preflight status, full freeze manifest
+        # re-derivation, beliefs hash, priors validation) with ZERO side
+        # effects — no run dir, no GPU lock, no model server, no calls.
+        manifest = json.loads(
+            (EVID / 'SUPPLEMENTARY_PREFLIGHT.json').read_text()
+        )['freeze_manifest']
+        print(json.dumps(dict(
+            status='REHEARSAL_PASS', model_calls=0,
+            verified=dict(
+                freeze_sha256=freeze_sha,
+                manifest_files=len(manifest['files']),
+                git_commit=manifest['git_commit'],
+                bound_files_clean=(not manifest['bound_files_dirty'])),
+            note='validation chain only; execution still requires the '
+                 'operator measurement GO'), indent=1))
+        return 0
+
     params = dict(priors=priors, **PARAMS)
     predictor = OutcomePredictor(priors)
     compensator = policy.DeadlineCompensator(priors)
@@ -963,6 +983,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--approved-freeze-sha256')
+    parser.add_argument('--rehearse', action='store_true',
+                        help='run the FULL entry-point validation chain '
+                             '(freeze SHA, preflight status, freeze '
+                             'manifest re-derivation, beliefs hash, '
+                             'priors validation) with ZERO side effects; '
+                             'not a measurement, not a GO')
     args = parser.parse_args()
     if not args.execute:
         # production parsers import urllib/ssl at module scope — import
@@ -976,7 +1002,7 @@ def main():
         raise PermissionError(
             'execution requires SUPPLEMENTARY_EXECUTE=1 and the '
             'operator-approved freeze SHA-256 (measurement GO)')
-    return execute(args.approved_freeze_sha256)
+    return execute(args.approved_freeze_sha256, rehearse=args.rehearse)
 
 
 if __name__ == '__main__':
