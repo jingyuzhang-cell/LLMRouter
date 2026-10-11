@@ -1,0 +1,105 @@
+{
+ "preflight": "supplementary_dag_quality",
+ "zero_model_calls": true,
+ "hashes": {
+  "panel_freeze": "6a43fab7972c8e8fe21f6e36c7f019b1f3580824fe2def63b4bbe8fb815a0a93",
+  "protocol": "a9f282e0543c09ab3a252322d73477a6385886e83816ad86947e76708c53e156",
+  "arm_entry": "d37382e8f1d1186313bcb76732c50b2196698e312b247d389636e4fa386abbb6",
+  "detection": "668b5be84496aa92dea98faa4f9669af06b916327dab6b2c6d86058061c1ab21",
+  "priors_real": "f5e5092c731c55ce5ac205acf4fd06e972e2b9965e87853372af577ba8794246",
+  "beliefs": "64167382c4057121bf5064e80012fd59741f6a12cb3bc81920f1e3e0a20f5d5f"
+ },
+ "freeze_ok": {
+  "supplementary_sha_match": true,
+  "n_tasks": 20,
+  "n_faults": 6
+ },
+ "beliefs": {
+  "source": "21 formal-campaign TRAJECTORY files; deduped real delivered non-injected records",
+  "rates": {
+   "e1|coder": {
+    "q_parse": 1.0,
+    "n": 8
+   },
+   "e1|large": {
+    "q_parse": 1.0,
+    "n": 8
+   },
+   "e1|medium": {
+    "q_parse": 1.0,
+    "n": 8
+   },
+   "e2|coder": {
+    "q_parse": 0.75,
+    "n": 8
+   },
+   "e2|large": {
+    "q_parse": 0.875,
+    "n": 8
+   },
+   "e2|medium": {
+    "q_parse": 0.75,
+    "n": 8
+   },
+   "r|coder": {
+    "q_parse": 0.9583,
+    "n": 24
+   },
+   "r|large": {
+    "q_parse": 0.8378,
+    "n": 37
+   },
+   "r|medium": {
+    "q_parse": 0.7826,
+    "n": 23
+   },
+   "v|coder": {
+    "q_parse": 1.0,
+    "n": 65
+   },
+   "v|large": {
+    "q_parse": 0.8125,
+    "n": 64
+   }
+  },
+  "mirror_vs_production_divergences": [],
+  "parity": "detection mirrors production on every evaluated record (fence + exec_calc fixes, 2026-10-11)"
+ },
+ "decision_params": {
+  "q_min": 0.8,
+  "eps": 0.1,
+  "lam_c": 0.5,
+  "lam_t": 1.0,
+  "lam_f": 2.0,
+  "c0": 4000.0
+ },
+ "scaffolding": {
+  "D_scaffold_s": 3600.0,
+  "note": "deadlines inert by design; real switch costs under the frozen per-call bound make smaller D infeasible for every plan; timeliness is OUT of scope (gate 5)"
+ },
+ "caps": {
+  "wall_seconds": 7200.0,
+  "new_request_attempts": 1200,
+  "new_total_tokens": 800000,
+  "request_token_reservation": 2048,
+  "max_output_tokens": 4096
+ },
+ "plan": {
+  "cells": [
+   "clean|SS",
+   "clean|DS",
+   "clean|SD",
+   "clean|DD",
+   "clean|NONE",
+   "fault30_D3|SS",
+   "fault30_D3|DS",
+   "fault30_D3|SD",
+   "fault30_D3|DD",
+   "fault30_D3|NONE"
+  ],
+  "logical_base_calls": 800,
+  "execution": "one engine + one identity cache for the whole run (M3 reuse across cells is the deployment semantics); stage-batched; metered corruption faults"
+ },
+ "gate5_scope": "The supplementary measurement (~1000 real model calls) is INITIAL QUALITY CALIBRATION ONLY. It estimates P(task correct | config, condition) under v2.1 scoring for the five frozen configs, to validate that Q_min=0.80 is a reasonable feasibility threshold and to bind per-cell quality priors. It is NOT: (1) strategy selection — the best static arm for the SS contrast is selected on independent data per Protocol V2.3 §3, never on this panel; (2) a policy-superiority claim — no hypothesis test on this panel supports H1-H4/S1; (3) an on-time probability validation — node latency distributions were measured separately and path aggregation needs its own validation. With 20 tasks per cell the binomial CI is wide (17/20 -> 64-95%): overlapping CIs are expected and uninterpretable as superiority. Q_min=0.80, eps=0.10, reward weights and every frozen formula remain UNCHANGED by construction; no result of this measurement may be used to retune them (any change would be a new frozen version with explicit rationale).",
+ "status": "PREFLIGHT_PASS"
+}
