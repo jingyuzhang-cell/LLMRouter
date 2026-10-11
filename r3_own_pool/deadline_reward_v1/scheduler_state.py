@@ -19,10 +19,11 @@ import json
 from pathlib import Path
 from typing import Callable, Dict, List, Optional
 
-from . import detection
+from . import dag_closure, detection
 
-NODES = ('e1', 'e2', 'r', 'v')
-PENDING, RUNNING, DONE, FAILED = 'PENDING', 'RUNNING', 'DONE', 'FAILED'
+NODES = dag_closure.NODES
+PENDING, RUNNING, DONE, FAILED = (dag_closure.PENDING, dag_closure.RUNNING,
+                                  dag_closure.DONE, dag_closure.FAILED)
 
 # Whitelist of the legal decision view (VERIFICATION_PLAN L2). Anything
 # outside this set — gold, fault registry, future outputs, task labels —
@@ -35,11 +36,75 @@ _VIEW_FIELDS = frozenset({
     'budget', 'session',
 })
 
+# Deep-isolation rules (M3 hardening, operator ruling): forbidden keys are
+# rejected at ANY nesting depth, and structured fields (observations,
+# session, node_status, ...) are validated shape-exactly — hidden payloads
+# cannot ride inside a legal top-level field.
+_FORBIDDEN_KEYS = frozenset({
+    'gold', 'answer', 'answers', 'derivation', 'question', 'faults',
+    'fault', 'fault_panel', 'future_outputs', 'unexecuted', 'states',
+    'row_ok', 'task_labels',
+})
+_SCALAR_TYPES = (bool, int, float, str, type(None))
+_OBS_CODES = frozenset({detection.D1, detection.D3, detection.D5,
+                        detection.D6})  # D2/D4 join when recovery exists
+_SESSION_KEYS = frozenset({'switch_indices', 'cold_start_indices',
+                           'panel_models'})
+
+
+def _deep_check(value, path: str = '') -> None:
+    if isinstance(value, dict):
+        bad = set(value) & _FORBIDDEN_KEYS
+        if bad:
+            raise ValueError('illegal nested key at ' + (path or 'root')
+                             + ': ' + ', '.join(sorted(bad)))
+        for k, v in value.items():
+            _deep_check(v, path + '.' + str(k))
+    elif isinstance(value, (list, tuple)):
+        for i, item in enumerate(value):
+            _deep_check(item, f'{path}[{i}]')
+    elif not isinstance(value, _SCALAR_TYPES):
+        raise ValueError('illegal view type at ' + (path or 'root') + ': '
+                         + type(value).__name__)
+
+
+def _check_structured(fields: Dict) -> None:
+    obs = fields.get('observations')
+    if obs is not None:
+        if not isinstance(obs, (list, tuple)):
+            raise ValueError('observations must be a list')
+        for o in obs:
+            if not isinstance(o, dict) or set(o) - {'code', 'node', 't'}:
+                raise ValueError('observation item keys must be exactly '
+                                 '{code, node, t}')
+            if o.get('code') not in _OBS_CODES:
+                raise ValueError('unknown observation code: '
+                                 + repr(o.get('code')))
+            if o.get('node') is not None and o.get('node') not in NODES:
+                raise ValueError('unknown observation node')
+    sess = fields.get('session')
+    if sess is not None:
+        if not isinstance(sess, dict) or set(sess) - _SESSION_KEYS:
+            raise ValueError('session keys must be within '
+                             + ', '.join(sorted(_SESSION_KEYS)))
+    for fld, allowed_vals in (('node_status', {PENDING, RUNNING, DONE,
+                                               FAILED}),):
+        v = fields.get(fld)
+        if v is not None and (not isinstance(v, dict)
+                              or set(v) - set(NODES)
+                              or set(v.values()) - allowed_vals):
+            raise ValueError(f'{fld} must map nodes to status enums')
+    nm = fields.get('node_model')
+    if nm is not None and (not isinstance(nm, dict) or set(nm) - set(NODES)):
+        raise ValueError('node_model must map exactly the DAG nodes')
+
 
 def make_legal_view(**fields) -> Dict:
     unknown = set(fields) - _VIEW_FIELDS
     if unknown:
         raise ValueError('illegal view field(s): ' + ', '.join(sorted(unknown)))
+    _check_structured(fields)
+    _deep_check(fields)
     return dict(fields)
 
 
@@ -50,6 +115,9 @@ class _TaskState:
         self.node_model: Dict[str, Optional[str]] = {n: None for n in NODES}
         self.answers: Dict[str, str] = {}
         self.facts: Dict[str, List[dict]] = {}
+        # Frozen execution identity per node: (model, input_signature) at
+        # the node's last execution — the reuse/invalidation basis (M3).
+        self.exec_identity: Dict[str, Optional[tuple]] = {}
         self.observations: List[dict] = []
         self.recovery_counts: Dict[str, int] = {
             k: 0 for k in ('e_fb', 'r_fbd', 'r_esc', 'v_fbd', 'v_esc',
@@ -123,6 +191,9 @@ class SchedulerState:
         st.service_sum += ev['latency_s']
         st.calls += 1
         st.node_model[node] = ev['model']
+        st.exec_identity[node] = (
+            ev['model'],
+            dag_closure.input_signature(st.uid, node, st.answers))
         self.tokens_spent += ev['usage']['total_tokens']
         self.requests_spent += 1
         t = ev['t_end']
@@ -242,6 +313,19 @@ class SchedulerState:
                             content_sha256=digest,
                             panel_clock=view['panel_clock']))
         return view
+
+    # -- M3: dependency-legality adjudication for candidate (R, π) -------
+    def judge(self, uid: str, R, pi: Optional[Dict[str, str]] = None,
+              on_incomplete: str = 'reject') -> 'dag_closure.PlanJudgment':
+        """Adjudicate a candidate joint plan against this task's CURRENT
+        state. Pure function of (statuses, models, frozen execution
+        identities); no execution, no scoring (that is M4/M5/M6)."""
+        st = self.tasks[uid]
+        return dag_closure.evaluate_plan(
+            node_status=dict(st.node_status),
+            node_model=dict(st.node_model),
+            exec_identity=dict(st.exec_identity),
+            R=R, pi=dict(pi or {}), on_incomplete=on_incomplete)
 
     # -- replay/rebuild (no future information by construction) ----------
     @staticmethod

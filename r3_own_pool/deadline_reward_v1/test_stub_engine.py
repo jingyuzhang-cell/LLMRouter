@@ -89,6 +89,8 @@ def run_engine(dirname, tasks, node_models, *, seed='m1',
 
 
 def main():
+    import shutil
+    shutil.rmtree(RUNS_DIR, ignore_errors=True)  # idempotent re-runs
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
     checks = {}
     detail = {}

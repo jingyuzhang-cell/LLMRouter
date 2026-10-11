@@ -105,6 +105,8 @@ def run_panel(dirname, *, with_faults=True, snapshot_after=None):
 
 
 def main():
+    import shutil
+    shutil.rmtree(RUNS_DIR, ignore_errors=True)  # idempotent re-runs
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
     checks = {}
     detail = {}

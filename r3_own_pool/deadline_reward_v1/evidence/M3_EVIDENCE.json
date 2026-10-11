@@ -1,0 +1,73 @@
+{
+ "milestone": "M3",
+ "checks": {
+  "closure_parity_production": true,
+  "topo_valid": true,
+  "descendants_transitive": true,
+  "state_all_done": true,
+  "s1_reject_incomplete": true,
+  "s1_complete_closure": true,
+  "s2_identity_unchanged_reuse": true,
+  "s3_v_invalidated": true,
+  "s3_transitive_invalidation": true,
+  "s4_downstream_only_reuse": true,
+  "s5_done_immutable": true,
+  "s6_running_immutable": true,
+  "s7_text_same_not_identity": true,
+  "s8_deterministic": true,
+  "unknown_model_rejected": true,
+  "unknown_node_rejected": true,
+  "override_empty_string_respected": true,
+  "override_malformed_json_d3": true,
+  "override_null_value_d5": true,
+  "deep_injection_rejected": true,
+  "well_formed_view_accepted": true,
+  "real_views_pass_deep_check": true,
+  "z1_counts": true
+ },
+ "all_pass": true,
+ "zero_model_calls": true,
+ "judgment_samples": {
+  "s1_complete": {
+   "legal": true,
+   "execute": [
+    [
+     "e1",
+     true
+    ],
+    [
+     "r",
+     true
+    ],
+    [
+     "v",
+     true
+    ]
+   ],
+   "reuse": [
+    "e2"
+   ],
+   "reasons": [
+    "model_change:e1",
+    "closure_completed:r,v"
+   ]
+  },
+  "s2_cache_hit": {
+   "legal": true,
+   "execute": [
+    [
+     "e1",
+     false
+    ]
+   ],
+   "reuse": [
+    "e2",
+    "r",
+    "v"
+   ],
+   "reasons": [
+    "reexec_identity_unchanged_cache_hit:e1"
+   ]
+  }
+ }
+}

@@ -86,9 +86,12 @@ class StubModelServer:
             total = int(prof['prompt_tokens']) + int(prof['completion_tokens'])
         else:
             raise ValueError('undeclared family: ' + family)
-        answer = (self.answers.get((uid, node, kind))
-                  if hasattr(self.answers, 'get') else None) \
-            or self.answers[(node, kind)]
+        # Key-EXISTENCE lookup (M3 hardening, operator ruling): an explicit
+        # override — including the empty string '' — must never fall back
+        # to the default answer ('' is a fault-detection input to test).
+        answer = self.answers.get((uid, node, kind))
+        if answer is None:
+            answer = self.answers[(node, kind)]
         usage = dict(prompt_tokens=int(prof.get('prompt_tokens', total)),
                      completion_tokens=int(prof.get('completion_tokens', 0)) or
                      (total - int(prof.get('prompt_tokens', total))),
