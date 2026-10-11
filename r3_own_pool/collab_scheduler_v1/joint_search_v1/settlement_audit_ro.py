@@ -96,37 +96,66 @@ def main():
             sid = d.name
             if not (d / 'STATUS.jsonl').exists():
                 # Hard crash between journal settle and the STATUS write.
-                # Crash reconciliation (audit hardening): reconcile what
-                # the surviving PRIMARY evidence allows — DISPATCH vs the
-                # CAMPAIGN charge — and record an explicit evidence gap
-                # for whatever cannot be independently verified. Never a
-                # silent pass.
+                # Hardening A (crash reconciliation): reconcile what the
+                # surviving PRIMARY evidence allows and REPORT explicit
+                # evidence gaps. Never a silent pass.
                 camp = next(((r[3]) for r in by_sid.get(sid, [])
                              if r[0] == root.name), None)
                 if (d / 'DISPATCH.jsonl').exists():
                     disp_c = jload(d / 'DISPATCH.jsonl')
                     c_res = sum(1 for e in disp_c
                                 if e['event'] == 'reserved')
+                    c_resp = sum(1 for e in disp_c
+                                 if e['event'] == 'response')
                     c_tok = sum(e['response']['usage']['total_tokens']
                                 for e in disp_c
                                 if e['event'] == 'response')
+                    c_legal = all(
+                        e.get('event') in ('reserved', 'response')
+                        and (e['event'] != 'response' or isinstance(
+                            e.get('response', {}).get('usage'), dict))
+                        for e in disp_c)
+                    resp_ids = set(e['id'] for e in disp_c
+                                   if e['event'] == 'response')
+                    unmatched = [e for e in disp_c
+                                 if e['event'] == 'reserved'
+                                 and e['id'] not in resp_ids]
+                    c_gap_tok = sum(e.get('tokens', 0) for e in unmatched)
+                    # honest evidence: reserves == campaign requests;
+                    # events legal; response tokens == campaign tokens.
+                    # Unmatched reservations are EXPECTED in a crash and
+                    # are disclosed (Budget semantics say they stay
+                    # charged, so the campaign token charge may
+                    # under-count by that amount).
                     ok = (camp is not None
                           and c_res == camp['new_request_attempts']
+                          and c_legal
                           and c_tok == camp['new_total_tokens'])
+                    gap_txt = ('STATUS.jsonl absent: wall/settle status '
+                               'unverifiable. ' + str(len(unmatched))
+                               + ' unmatched reservation(s) ('
+                               + str(c_gap_tok)
+                               + ' reserved tokens) with no response '
+                               '- charge may under-count the crashed '
+                               'reservation per Budget semantics; '
+                               'disclosed as an evidence gap')
                     crash_recon.append(dict(
                         sid=sid, root=root.name,
                         dispatch_present=True,
-                        dispatch_reserved=c_res, dispatch_tokens=c_tok,
-                        campaign_requests=(
-                            camp and camp['new_request_attempts']),
-                        campaign_tokens=(camp and camp['new_total_tokens']),
-                        reconciled=ok,
-                        gap='STATUS.jsonl absent: wall time and settle '
-                            'status unverifiable from primary per-session '
-                            'evidence'))
+                        dispatch_reserved=c_res,
+                        dispatch_responses=c_resp,
+                        events_legal=c_legal,
+                        dispatch_tokens=c_tok,
+                        unmatched_reservations=len(unmatched),
+                        unmatched_reserved_tokens=c_gap_tok,
+                        campaign_requests=(camp
+                                           and camp['new_request_attempts']),
+                        campaign_tokens=(camp
+                                         and camp['new_total_tokens']),
+                        reconciled=ok, gap=gap_txt))
                     if not ok:
-                        recon_fail.append((sid, 'crash DISPATCH-vs-'
-                                           'CAMPAIGN', c_res, c_tok, camp))
+                        recon_fail.append((sid, 'crash reconcile',
+                                           c_res, c_tok, camp))
                 else:
                     zero_ok = (camp is not None
                                and camp['new_request_attempts'] == 0
@@ -134,16 +163,17 @@ def main():
                     crash_recon.append(dict(
                         sid=sid, root=root.name,
                         dispatch_present=False,
-                        campaign_requests=(
-                            camp and camp['new_request_attempts']),
-                        campaign_tokens=(camp and camp['new_total_tokens']),
+                        campaign_requests=(camp
+                                           and camp['new_request_attempts']),
+                        campaign_tokens=(camp
+                                         and camp['new_total_tokens']),
                         reconciled=zero_ok,
                         gap='neither STATUS nor DISPATCH on disk: only '
-                            'the zero-charge journal entry survives — '
+                            'the zero-charge journal entry survives - '
                             'nothing to reconcile beyond charge==0'))
                     if not zero_ok:
-                        recon_fail.append((sid, 'crash no-leadger-but-'
-                                           'charged', camp))
+                        recon_fail.append((sid, 'crash no-dispatch '
+                                           'but charged', camp))
                 rows.append(dict(root=root.name, sid=sid,
                                  status='NO_STATUS_ON_DISK',
                                  reason='hard-crash (journal settled, '

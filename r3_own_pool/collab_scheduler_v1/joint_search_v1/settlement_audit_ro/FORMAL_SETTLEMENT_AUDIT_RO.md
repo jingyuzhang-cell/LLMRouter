@@ -90,7 +90,7 @@ itemized in the evidence with their journal charges.
 ```
 cd /root/r3_own_pool
 python3 -m collab_scheduler_v1.joint_search_v1.settlement_audit_ro
-# → 18/18 checks PASS; evidence: settlement_audit_ro/SETTLEMENT_AUDIT_RO.json
+# → 23/23 checks PASS (hardened); evidence: settlement_audit_ro/SETTLEMENT_AUDIT_RO.json
 ```
 
 The script reads only CAMPAIGN.jsonl / STATUS.jsonl / DISPATCH.jsonl /
