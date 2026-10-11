@@ -44,6 +44,7 @@ import os
 import shutil
 import signal
 import socket as _socket_mod
+import subprocess
 import sys
 import time
 from collections import defaultdict
@@ -152,28 +153,49 @@ def build_beliefs():
 
 def build_priors(beliefs):
     """Decision priors over the FROZEN per-node menus only: q̂ from
-    trajectory parse rates; latency/tokens from the real calibration
-    (clean cells); REAL switch costs. Off-menu observations in the
-    trajectories (e.g. r|coder) are recorded in beliefs but never
-    assignable by the policy (dag_closure.MENUS governs candidates)."""
+    trajectory parse rates; tokens from the real calibration (clean
+    cells); REAL switch costs; latency FAMILY from the frozen
+    distribution audit (PRIORS_REAL_V1_families.json, 0/40 normal —
+    admission repair #4: family-true means, never p50-by-default:
+    lognormal mean = exp(mu_log + sigma_log^2/2) from the audit's saved
+    params; empirical mean = the audit's saved sample mean)."""
+    import math
     from deadline_reward_v1.dag_closure import MENUS
     real = json.loads((HERE / 'PRIORS_REAL_V1.json').read_text())
+    fam_bind = json.loads(
+        (HERE / 'PRIORS_REAL_V1_families.json').read_text())['families']
+    audit_cells = json.loads(
+        (EVID / 'ADMISSION_CHECK.json').read_text()
+    )['gate1_statistics']['per_cell']
     node_profiles = {}
     for node, models in MENUS.items():
         for model in sorted(models):
             cell = f'{node}|{model}'
+            clean = f'{node}|{model}|clean'
             if cell not in beliefs:
                 raise ValueError(f'no belief for menu cell {cell}')
-            src = real['profiles'].get(f'{node}|{model}|clean')
+            src = real['profiles'].get(clean)
             if src is None:
                 raise ValueError(f'no real latency profile for {cell}')
-            node_profiles[cell] = dict(
+            family = fam_bind[clean]
+            entry = dict(
                 q_success=beliefs[cell]['q_parse'],  # parse proxy, declared
-                lat_mean_s=src['lat_p50'], lat_p90_s=src['lat_p90'],
-                tokens_p90=src['tok_p90'],
-                family='normal', synthetic=False,
+                lat_p90_s=src['lat_p90'], tokens_p90=src['tok_p90'],
+                family=family, synthetic=False,
                 q_source='formal_trajectory_parse_rate',
                 q_n=beliefs[cell]['n'])
+            if family == 'lognormal':
+                lp = audit_cells[clean]['lognormal_params']
+                entry.update(mu_log=lp['mu_log'], sigma_log=lp['sigma_log'],
+                             lat_mean_s=round(
+                                 math.exp(lp['mu_log']
+                                          + lp['sigma_log'] ** 2 / 2), 4))
+            elif family == 'empirical':
+                lats = audit_cells[clean]['lat_sorted']
+                entry['lat_mean_s'] = round(sum(lats) / len(lats), 4)
+            else:                     # normal — unused in the real data
+                entry['lat_mean_s'] = src['lat_p50']
+            node_profiles[cell] = entry
     switch = dict(
         stop_s=max(v['stop_s'] for v in real['switch_costs'].values()),
         start_s={m: v['start_s']
@@ -282,42 +304,48 @@ class RealServer:
 
     def draw(self, node, kind, model, uid, attempt, profile_key=None):
         prompt = self.build_prompt(node, uid)
-        self.budget.check()
-        idx = self.budget.reserve(f'{node}|{model}|{uid}')
         mod = self.manager._mod()
         resp, err = None, None
 
-        def _log(attempt_no, why):
-            with (self.ledger_dir / 'ERRORS.jsonl').open('a') as fh:
-                fh.write(json.dumps(dict(id=idx, attempt=attempt_no,
-                                         node=node, model=model, uid=uid,
-                                         error=str(why))) + '\n')
+        def _record_failed(idx, attempt_no, why, got):
+            # The failed attempt's reservation stays CHARGED (never
+            # settled, never silently released) and is auditable in the
+            # budget's own append-only ledger.
+            with (self.ledger_dir / 'DISPATCH.jsonl').open('a') as fh:
+                fh.write(json.dumps(dict(
+                    event='attempt_failed', id=idx, attempt=attempt_no,
+                    node=node, model=model, uid=uid, error=str(why),
+                    usage=(got or {}).get('usage'),
+                    unix=time.time())) + '\n')
 
-        # protocol: retry once, then fail. call_model signals failures as
-        # RETURNED status='infrastructure_failure'/empty-usage dicts (not
-        # exceptions) — both paths retry, the Budget reservation settles
-        # only on the delivered response.
+        # 2026-10-11 admission repair #1: EVERY real call_model attempt gets
+        # its OWN reservation — one reserve never covers two attempts.
+        # Budget-stop exceptions (reserve/check/settle) propagate
+        # immediately: only dispatch exceptions / returned failures retry
+        # (Exception, not BaseException — StopRun inherits BaseException).
         for _attempt in (1, 2):
+            self.budget.check()
+            idx = self.budget.reserve(f'{node}|{model}|{uid}|try{_attempt}')
             t0 = time.monotonic()
             try:
                 got = mod.call_model(model, prompt)
-            except BaseException as exc:
+            except Exception as exc:            # dispatch failure: retry
                 err = exc
-                _log(_attempt, repr(exc))
+                _record_failed(idx, _attempt, repr(exc), None)
                 continue
             if got.get('status') == 'delivered' and got.get('usage'):
                 resp = dict(got)
                 resp['latency_s'] = time.monotonic() - t0
-                break
+                self.budget.settle(idx, resp)   # invalid usage -> StopRun
+                break                           # propagates, no retry
             err = RuntimeError(
                 f"status={got.get('status')} "
                 f"finish={got.get('finish_reason')}")
-            _log(_attempt, str(err))
+            _record_failed(idx, _attempt, str(err), got)
         if resp is None:
             raise RuntimeError(
                 f'model dispatch failed twice ({node}|{model}|{uid}): '
                 f'{err!r}')
-        self.budget.settle(idx, resp)
         answer = resp.get('answer')
         if not isinstance(answer, str) or not answer:
             raise RuntimeError('empty/malformed answer')
@@ -551,6 +579,72 @@ def run_cell(engine, server, state, tasks, planned, arm, condition,
 server_fault_answer = '###SYNTHETIC UNPARSEABLE r-output###'
 
 
+# ---------------------------------------------------- freeze manifest (#3)
+BOUND_CODE = ('arm_entry.py', 'detection.py', 'dag_closure.py',
+              'scheduler_state.py', 'policy.py', 'reassign.py',
+              'predictor.py', 'compensator.py', 'reward.py',
+              'stub_engine.py', 'supplementary_runner.py')
+BOUND_DOCS = ('SUPPLEMENTARY_PANEL_FREEZE.json',  # via EVID
+              'DAG_QUALITY_CALIBRATION_PROTOCOL.json',
+              'CALIBRATION_FREEZE_PREREQUISITES.json',
+              'PRIORS_REAL_V1.json', 'PRIORS_REAL_V1_families.json')
+
+
+def freeze_manifest(beliefs_sha):
+    """Everything a real execution is bound to (admission repair #3):
+    frozen file hashes, decision parameters, caps, scaffolding. Written
+    by preflight; re-derived and COMPARED by execute — any drift refuses
+    the run. The enforced objects are the BOUND-FILE HASHES and VALUES
+    (they capture every line of behavior-relevant state); the git commit
+    is recorded for provenance. An uncommitted modification to any BOUND
+    file is itself drift (checked live at execute)."""
+    commit = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'],
+                            capture_output=True, text=True).stdout.strip()
+    bound_paths = [str(HERE / n) for n in BOUND_CODE] + [
+        str(EVID / 'SUPPLEMENTARY_PANEL_FREEZE.json')] + [
+        str(HERE / n) for n in BOUND_DOCS
+        if n != 'SUPPLEMENTARY_PANEL_FREEZE.json']
+    dirty = subprocess.run(
+        ['git', '-C', str(ROOT), 'status', '--porcelain', '--',
+         *bound_paths],
+        capture_output=True, text=True).stdout.strip()
+    hashes = {}
+    for name in BOUND_DOCS:
+        p = EVID / name if name.startswith('SUPPLEMENTARY') else HERE / name
+        hashes[name] = sha_file(p)
+    for name in BOUND_CODE:
+        hashes[name] = sha_file(HERE / name)
+    return dict(
+        version='FREEZE_MANIFEST_v1',
+        files=hashes,
+        params=PARAMS, caps=CAPS, planned=PLANNED,
+        d_scaffold_s=D_SCAFFOLD, beliefs_sha256=beliefs_sha,
+        git_commit=commit, bound_files_dirty=dirty or None)
+
+
+def verify_manifest(approved):
+    """Re-derive the manifest and refuse on ANY drift of the bound files
+    or values; also refuse if any bound file is uncommitted-modified at
+    execute time. Returns the fresh manifest on success."""
+    fresh = freeze_manifest(approved['beliefs_sha256'])
+    drift = []
+    for k, v in approved['files'].items():
+        if fresh['files'].get(k) != v:
+            drift.append(f'file:{k}')
+    for k in ('params', 'caps', 'planned', 'd_scaffold_s',
+              'beliefs_sha256'):
+        if fresh.get(k) != approved.get(k):
+            drift.append(f'value:{k}')
+    if fresh.get('bound_files_dirty'):
+        drift.append('uncommitted-modifications:'
+                     + fresh['bound_files_dirty'])
+    if drift:
+        raise PermissionError(
+            'FREEZE MANIFEST DRIFT — real execution refused: '
+            + ', '.join(drift))
+    return fresh
+
+
 # ---------------------------------------------------------------- preflight
 def preflight(beliefs, diverge, n_files):
     freeze = json.loads(FREEZE_PATH.read_text())
@@ -605,10 +699,15 @@ def preflight(beliefs, diverge, n_files):
                       'faults'),
         gate5_scope=(json.loads((EVID / 'ADMISSION_CHECK.json')
                                 .read_text())['gate5_scope']['statement']))
+    # admission repair #3: the COMPLETE freeze manifest — the object the
+    # operator approves and execute() re-verifies byte-for-byte
+    report['freeze_manifest'] = freeze_manifest(beliefs_sha)
     ok = (not diverge
           and report['freeze_ok']['supplementary_sha_match']
           and report['freeze_ok']['n_tasks'] == 20
-          and report['freeze_ok']['n_faults'] == 6)
+          and report['freeze_ok']['n_faults'] == 6
+          and report['freeze_manifest']['git_commit']
+          and not report['freeze_manifest']['bound_files_dirty'])
     report['status'] = 'PREFLIGHT_PASS' if ok else 'PREFLIGHT_FAIL'
     (EVID / 'SUPPLEMENTARY_PREFLIGHT.json').write_text(
         json.dumps(report, indent=1, ensure_ascii=False))
@@ -642,9 +741,17 @@ def execute(approved_freeze_sha):
     beliefs, diverge, _ = build_beliefs()
     if diverge:
         raise RuntimeError('mirror/production divergence — abort')
-    if sha_obj(dict(beliefs=beliefs, diverge=diverge)) != json.loads(
-            (EVID / 'SUPPLEMENTARY_PREFLIGHT.json').read_text()
-    )['hashes']['beliefs']:
+
+    # admission repair #3: the COMPLETE freeze manifest — files, code,
+    # params, caps, git commit — re-derived and compared; any drift
+    # refuses the run before a single model call.
+    preflight = json.loads(
+        (EVID / 'SUPPLEMENTARY_PREFLIGHT.json').read_text())
+    if preflight.get('status') != 'PREFLIGHT_PASS':
+        raise PermissionError('approved preflight is not PREFLIGHT_PASS')
+    verify_manifest(preflight['freeze_manifest'])
+    if sha_obj(dict(beliefs=beliefs, diverge=diverge)) != \
+            preflight['hashes']['beliefs']:
         raise PermissionError('beliefs drifted from approved preflight')
 
     priors = build_priors(beliefs)
@@ -664,7 +771,16 @@ def execute(approved_freeze_sha):
 
     run_id = time.strftime('run_%Y%m%d_%H%M%S')
     run_dir = RUNS / run_id
-    run_dir.mkdir(parents=True, exist_ok=False)
+    # admission repair #6: a real run NEVER reuses another run's cache or
+    # ledgers — fresh run dir only (existing dir refused), the engine and
+    # its identity cache are per-process in-memory, and the Budget refuses
+    # any pre-existing DISPATCH ledger inside the fresh dir.
+    try:
+        run_dir.mkdir(parents=True, exist_ok=False)
+    except FileExistsError:
+        raise PermissionError(
+            f'run dir already exists ({run_dir}) — no reuse of prior run '
+            'state; explicit reconciliation required')
     for name, path in (('SUPPLEMENTARY_PANEL_FREEZE.json', FREEZE_PATH),
                        ('DAG_QUALITY_CALIBRATION_PROTOCOL.json',
                         PROTOCOL_PATH)):
@@ -718,6 +834,15 @@ def execute(approved_freeze_sha):
                                 sum(r['Q_v21'] for r in rows)
                                 / max(1, len(rows)), 4),
                             metering=metering,
+                            execution_order=[f"{c['condition']}|{c['arm']}"
+                                             for c in cell_records] + [
+                                f'{condition}|{arm}'],
+                            cache_order_audit=(
+                                'cells share one in-process identity '
+                                'cache; earlier cells (execution_order) '
+                                'may satisfy later cells\' calls as cache '
+                                'hits — see metering.cache_hits; cost '
+                                'comparisons are cache-scenario results'),
                             rows=rows)
                 cell_records.append(cell)
                 with (run_dir / 'CELL_RECORDS.jsonl').open('a') as fh:
@@ -733,48 +858,79 @@ def execute(approved_freeze_sha):
     except BaseException as exc:
         reason = repr(exc)
     finally:
-        signal.setitimer(signal.ITIMER_REAL, 0)
-        signal.signal(signal.SIGALRM, prev_alarm)
-        try:
-            manager.stop_current()
-        finally:
-            lock.close()
-            with (run_dir / 'STATUS.json').open('w') as fh:
-                fh.write(json.dumps(dict(
-                    status=status, reason=reason,
-                    requests=budget.attempts, tokens=budget.actual_tokens,
-                    charged=budget.charged,
-                    wall_s=round(time.monotonic() - budget.start, 1),
-                    cells_done=len(cell_records)), indent=1))
+        _finish_and_report(run_dir, budget, manager, lock, prev_alarm,
+                           cell_records, status, reason)
 
     # ---- PRIORS_REAL_V1_quality.json (protocol output) ----
+    out_path, quality = write_quality_output(
+        cell_records, status, reason,
+        provenance=dict(
+            requests=budget.attempts, tokens=budget.actual_tokens,
+            charged_incl_reservations=budget.charged,
+            wall_s=round(time.monotonic() - budget.start, 1)),
+        run_dir=run_dir)
+    print(json.dumps(dict(status=quality['status'], reason=reason,
+                          output=out_path.name,
+                          run_dir=str(run_dir), cells=quality['cells']),
+                     indent=1))
+    return 0 if quality['status'] == 'COMPLETE' else 2
+
+
+def write_quality_output(cell_records, status, reason, provenance,
+                         run_dir, out_dir=None):
+    """Admission repair #5: the OFFICIAL PRIORS_REAL_V1_quality.json is
+    written ONLY for a COMPLETE run; anything else goes to a distinct
+    INCOMPLETE file that can never be mistaken for the calibration
+    output. Neither file may be silently overwritten."""
+    out_dir = Path(out_dir) if out_dir else HERE
+    out_dir.mkdir(parents=True, exist_ok=True)
     cells_out = {f"{c['condition']}|{c['arm']}": dict(
         n=c['n'], n_correct=c['n_correct'], P_correct=c['P_correct'])
         for c in cell_records}
+    complete = (status == 'COMPLETE' and len(cell_records)
+                == len(CONDITIONS) * len(ARMS))
     quality = dict(
         version='PRIORS_REAL_V1_quality_v1',
         protocol_sha256=sha_file(PROTOCOL_PATH),
         panel_freeze_sha256=sha_file(FREEZE_PATH),
-        run_dir=str(run_dir), status=status,
-        provenance=dict(requests=budget.attempts,
-                        tokens=budget.actual_tokens,
-                        charged_incl_reservations=budget.charged,
-                        wall_s=round(time.monotonic() - budget.start, 1)),
+        run_dir=str(run_dir),
+        status='COMPLETE' if complete else 'INCOMPLETE',
+        reason=None if complete else reason,
+        provenance=provenance,
         cells=cells_out,
         scoring='v2.1 ONLY (score_v21 + contract_v2_gold)',
         scope='INITIAL QUALITY CALIBRATION ONLY — see '
               'ADMISSION_CHECK.json gate5_scope; no strategy selection, '
               'no superiority claim, no frozen-parameter adjustment',
         natural_failure_note='D1/D3/D5 detections include NATURAL model '
-                             'failures (parse-rate beliefs: e2 0.75-0.875, '
-                             'r 0.78-0.96); faulted tasks are flagged per '
+                             'failures (strict parse-rate beliefs: e2 '
+                             '0.25-1.0); faulted tasks are flagged per '
                              'row (faulted=true/false)')
-    (HERE / 'PRIORS_REAL_V1_quality.json').write_text(
-        json.dumps(quality, indent=1, ensure_ascii=False))
-    print(json.dumps(dict(status=status, reason=reason,
-                          run_dir=str(run_dir), cells=cells_out),
-                     indent=1))
-    return 0 if status == 'COMPLETE' else 2
+    out_path = (out_dir / 'PRIORS_REAL_V1_quality.json' if complete
+                else out_dir / 'PRIORS_REAL_V1_quality_INCOMPLETE.json')
+    if out_path.exists():
+        raise PermissionError(
+            f'{out_path.name} already exists — explicit reconciliation '
+            'required; partial/complete results are never overwritten')
+    out_path.write_text(json.dumps(quality, indent=1, ensure_ascii=False))
+    return out_path, quality
+
+
+def _finish_and_report(run_dir, budget, manager, lock, prev_alarm,
+                       cell_records, status, reason):
+    signal.setitimer(signal.ITIMER_REAL, 0)
+    signal.signal(signal.SIGALRM, prev_alarm)
+    try:
+        manager.stop_current()
+    finally:
+        lock.close()
+        with (run_dir / 'STATUS.json').open('w') as fh:
+            fh.write(json.dumps(dict(
+                status=status, reason=reason,
+                requests=budget.attempts, tokens=budget.actual_tokens,
+                charged=budget.charged,
+                wall_s=round(time.monotonic() - budget.start, 1),
+                cells_done=len(cell_records)), indent=1))
 
 
 def main():

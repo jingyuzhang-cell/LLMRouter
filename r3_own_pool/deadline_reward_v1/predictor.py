@@ -25,6 +25,15 @@ class ActionPrediction:
     d_cost_tokens: float
     mu_service_s: float
     w_p90_s: float
+    # distribution-family audit (2026-10-11 admission repair #4): the
+    # frozen distribution audit found 0/40 normal, 12/40 lognormal,
+    # 28/40 empirical — the on-time estimator must not unconditionally
+    # assume normality. families = per-executing-node declared family;
+    # log_params = (mu_log, sigma_log) for lognormal nodes. The composed
+    # family drives e1_on_time: all-lognormal -> Fenton-Wilkinson path
+    # lognormal; any empirical node -> distribution-free Cantelli bound.
+    families: Tuple[str, ...] = ()
+    log_params: Tuple[Tuple[float, float], ...] = ()
 
 
 def _profile(priors: dict, node: str, model: str) -> dict:
@@ -85,6 +94,8 @@ class OutcomePredictor:
         the execute set caps the whole-DAG quality at the failure floor."""
         q_factors = []
         cost = 0.0
+        families = []
+        log_params = []
         for node, new_call in execute:
             status = node_status.get(node)
             model = pi.get(node) or node_model.get(node)
@@ -104,6 +115,11 @@ class OutcomePredictor:
             mus.append(m_i)
             p90s.append(p_i)
             sigmas.append(max(0.0, (p_i - m_i) / 1.2816))
+            fam = prof.get('family', 'normal')
+            families.append(fam)
+            if fam == 'lognormal':
+                log_params.append((float(prof['mu_log']),
+                                   float(prof['sigma_log'])))
         for node in ('e1', 'e2', 'r', 'v'):
             # reused DONE nodes outside the execute set
             if node not in dict(execute) and node_status.get(node) == 'DONE':
@@ -122,10 +138,21 @@ class OutcomePredictor:
             p90 = mu + 1.2816 * (sum(s * s for s in sigmas) ** 0.5)
         else:
             p90 = sum(p90s)
+        # composed family: pure-lognormal path -> lognormal estimator;
+        # any empirical node -> distribution-free bound; else normal
+        if families and len(log_params) == len(families):
+            composed = 'lognormal'
+        elif 'empirical' in families:
+            composed = 'empirical'
+        else:
+            composed = 'normal'
         return ActionPrediction(q_mean=round(q, 10),
                                  d_cost_tokens=cost,
                                  mu_service_s=round(mu, 10),
-                                 w_p90_s=round(p90, 10))
+                                 w_p90_s=round(p90, 10),
+                                 families=tuple(families),
+                                 log_params=tuple(log_params)
+                                 if composed == 'lognormal' else ())
 
 
 def normal_cdf(x: float) -> float:
@@ -136,9 +163,58 @@ def normal_pdf(x: float) -> float:
     return math.exp(-0.5 * x * x) / math.sqrt(2.0 * math.pi)
 
 
-def e1_on_time(mu: float, p90: float, deadline: float) -> Tuple[float, float]:
+def _lognormal_path(log_params, shift: float, deadline: float
+                    ) -> Tuple[float, float]:
+    """Fenton–Wilkinson: a sum of independent lognormals is approximated
+    by a lognormal matched on the first two moments, shifted by the
+    deterministic addend `shift` (switch overhead + contention)."""
+    m1 = [math.exp(ml + sl * sl / 2) for ml, sl in log_params]
+    v1 = [(math.exp(sl * sl) - 1) * m * m
+          for (_, sl), m in zip(log_params, m1)]
+    tot_m, tot_v = sum(m1), sum(v1)
+    s2 = math.log(1.0 + tot_v / (tot_m * tot_m))
+    ml = math.log(tot_m) - s2 / 2.0
+    sl = math.sqrt(s2)
+    dd = deadline - shift
+    if dd <= 0:
+        return 0.0, tot_m + shift - deadline
+    p = normal_cdf((math.log(dd) - ml) / sl)
+    # E[(X - dd)+], X ~ LogNormal(ml, sl)
+    epos = (math.exp(ml + s2 / 2)
+            * (1 - normal_cdf((math.log(dd) - ml - s2) / sl))
+            - dd * (1 - p))
+    return p, max(0.0, epos)
+
+
+def e1_on_time(mu: float, p90: float, deadline: float, *,
+               family: str = 'normal', log_params: Tuple = (),
+               shift: float = 0.0) -> Tuple[float, float]:
     """Estimator E1 (CORRECTED rev A formula). Returns (P_on_time,
-    E_lateness). Degenerate σ≤0 → point mass at μ."""
+    E_lateness). Degenerate σ≤0 → point mass at μ.
+
+    2026-10-11 admission repair #4 — family consistency: `family`
+    selects the estimator. 'normal' (default; unchanged behavior when
+    omitted — the stub/golden profiles are declared normal);
+    'lognormal' uses the Fenton–Wilkinson path approximation over
+    `log_params` (per-node (mu_log, sigma_log)) plus the deterministic
+    `shift`; 'empirical' returns the one-sided Cantelli LOWER bound on
+    P(T<=deadline) with the distribution-free sigma lower bound
+    (p90 - mu <= 3*sigma for any distribution), i.e. a conservative
+    on-time probability that assumes NO parametric shape. The mean fed
+    in must be the family-true mean (lognormal mean exp(mu+sig^2/2) or
+    the empirical sample mean) — never p50-by-default."""
+    if family == 'lognormal' and log_params:
+        return _lognormal_path(log_params, shift, deadline)
+    if family == 'empirical':
+        d_eff = deadline - shift
+        if d_eff <= mu:
+            return 0.0, max(0.0, mu + shift - deadline)
+        sigma_lb = max(0.0, (p90 - mu) / 3.0)
+        var = sigma_lb * sigma_lb
+        p_late_ub = var / (var + (d_eff - mu) * (d_eff - mu))
+        # e_late: no distribution-free tight bound; report the mean-excess
+        # estimate (flagged by the caller's row as estimator='empirical')
+        return (1.0 - p_late_ub, max(0.0, mu + shift - deadline))
     sigma = (p90 - mu) / 1.2816
     if sigma <= 0:
         on_time = 1.0 if mu <= deadline else 0.0

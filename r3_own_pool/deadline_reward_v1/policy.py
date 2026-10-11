@@ -179,6 +179,9 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
         pred = predictor.predict(execute=execute, pi=cand.pi,
                                  node_model=st.node_model,
                                  node_status=st.node_status)
+        pred_family = ('lognormal' if pred.log_params else
+                       'empirical' if 'empirical' in pred.families
+                       else 'normal')
         # OWN switch cost: a PROVABLE per-call bound — on the shared
         # serial executor each of my new calls needs at most one
         # stop+start (cross-task interleaving can force a re-switch before
@@ -206,7 +209,12 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
         # Deterministic addends shift mean AND quantile together
         # (phase-3 fix 2); sigma is unchanged by the shift.
         p90_e2e = pred.w_p90_s + sw + contention
-        p_on, e_late = e1_on_time(mu_e2e, p90_e2e, d_remain)
+        # 2026-10-11 admission repair #4: estimator follows the composed
+        # distribution family (normal / lognormal Fenton-Wilkinson /
+        # empirical Cantelli bound) — never unconditional normality.
+        p_on, e_late = e1_on_time(
+            mu_e2e, p90_e2e, d_remain, family=pred_family,
+            log_params=pred.log_params, shift=sw + contention)
         # Conservatism applicability (boundary task 2): quantile_sum gives
         # a path-p90 UPPER bound; that translates to an on-time-probability
         # LOWER bound ONLY while D >= mu. Below the mean the inflated sigma
@@ -242,6 +250,7 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
                         contention=round(contention, 10),
                         p_on_time=round(p_on, 10), e_late=round(e_late, 10),
                         p_conservative=p_conservative,
+                        estimator=pred_family,
                         score=round(score, 10), feasible=not deficits,
                         deficits=deficits, kinds=dict(cand.kinds))
         if not deficits:

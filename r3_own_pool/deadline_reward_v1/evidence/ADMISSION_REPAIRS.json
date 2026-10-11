@@ -1,0 +1,113 @@
+{
+ "milestone": "admission_repairs",
+ "baseline": "9b296726a91f1b3921123a08690c51940f9fe9b2",
+ "checks": {
+  "g1_two_attempts": {
+   "reserved": 2,
+   "attempt_failed": 1,
+   "settled": 1,
+   "pending_retained": [
+    1
+   ],
+   "charged": 2198
+  },
+  "g2_cap_before_dispatch": {
+   "caps_attempts": 2,
+   "dispatch_calls": 0,
+   "stop": "request budget"
+  },
+  "g3_stop_no_retry": {
+   "settle_invalid_usage": {
+    "calls": 1,
+    "stop": "Missing/invalid usage; full reservation retained"
+   },
+   "stoprun_propagates": {
+    "calls": 1,
+    "type": "StopRun"
+   }
+  },
+  "g4_v_counts": {
+   "SS": {
+    "v_calls": 1,
+    "logical": 5
+   },
+   "DS": {
+    "v_calls": 0,
+    "logical": 3
+   },
+   "SD": {
+    "v_calls": 1,
+    "logical": 5
+   },
+   "DD": {
+    "v_calls": 1,
+    "logical": 5
+   },
+   "NONE": {
+    "v_calls": 1,
+    "logical": 4
+   },
+   "FULL": {
+    "chosen": null,
+    "note": "policy picked non-FULL; v-once still asserted"
+   }
+  },
+  "g5_manifest_drift": {
+   "file_drift_refused": true,
+   "value_drift_refused": true
+  },
+  "g6_family_estimators": {
+   "lognormal_mean": {
+    "mean": 2.2705,
+    "p50": 1.6487,
+    "mean_gt_p50": true
+   },
+   "fenton_wilkinson": {
+    "p": 0.999891,
+    "direct": 0.999891
+   },
+   "cantelli": {
+    "bound": 0.961538,
+    "normal": 0.98366
+   },
+   "composition_lognormal": {
+    "families": [
+     "lognormal",
+     "lognormal"
+    ]
+   },
+   "composition_empirical": {
+    "families": [
+     "lognormal",
+     "empirical"
+    ]
+   },
+   "policy_row_estimator": true
+  },
+  "g7_incomplete_protection": {
+   "incomplete_marker": true,
+   "official_absent": true,
+   "overwrite_refused": true,
+   "complete_official": true
+  },
+  "g8_cache_order": {
+   "cell1": {
+    "new_requests": 4,
+    "cache_hits": 0,
+    "injected_faults": 1,
+    "physical_tokens": 400,
+    "logical_calls": 4
+   },
+   "cell2": {
+    "new_requests": 0,
+    "cache_hits": 4,
+    "injected_faults": 1,
+    "physical_tokens": 0,
+    "logical_calls": 4
+   },
+   "invariant": "logical == new_requests + cache_hits"
+  }
+ },
+ "zero_model_calls": true,
+ "all_pass": true
+}
