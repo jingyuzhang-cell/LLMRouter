@@ -144,3 +144,54 @@ ADMISSION_REPAIRS.json g4_v_counts.FULL.
 
 Regression after both fixes: full M-suite + runner smoke + admission
 checks green; g1–g8 all pass. Zero real model calls.
+
+## Addendum — round 3 (final math fixes, operator mandate)
+
+**1. Quantile-sum on-time guarantee REMOVED (was invalid).** Per-node
+P90s do not bound the path P90 for general laws. Operator counterexample
+(two independent nodes, each 0 s w.p. .9 / 100 s w.p. .1: per-node
+P90 = 0, so p90_sum = 0; deadline 1 s; true path on-time = .81): the old
+`d >= p90_sum ⇒ p_on >= 0.90` reported an unfounded 0.90. The empirical
+branch now returns
+
+    p_on = max( staircase(ladders, d_eff),  1 − mu_service/d_eff )
+
+where the STAIRCASE bound is max over per-node thresholds t_i of
+Π F_i(t_i) subject to Σt_i ≤ d_eff — strictly valid CONDITIONAL ON the
+declared per-node empirical distributions (saved 30-sample staircases)
+plus independence, because {X_i ≤ t_i ∀i} ⇒ ΣX_i ≤ Σt_i ≤ d_eff; and
+MARKOV (T_service ≥ 0, P(T_service > d_eff) ≤ mu_service/d_eff) is valid
+conditional on the declared mean. No unconditional 0.90 anywhere; with
+insufficient statistics and no ladders, only Markov applies (and 0 when
+it gives nothing). The counterexample now returns exactly **0.81**;
+four such nodes return 0.9⁴ = 0.6561; a single node at its atom returns
+0.9. All pinned in test group g6 (`round3` block in
+ADMISSION_REPAIRS.json).
+
+**2. Unified E2E shift interface (no double-counting).** Policy passes
+SERVICE-side (mu, p90) plus `shift` (switch + contention) exactly once;
+`e1_on_time` applies the deterministic addends internally. The normal
+branch is bit-identical to the legacy totals convention (asserted:
+e1_on_time(5,7,20,shift=3) == e1_on_time(8,10,20)); the empirical Markov
+term uses mu_service against d_eff = d − shift (1−5/7, never the
+double-counted 1−8/7).
+
+**3. e_late upper-bound validity at boundaries.** Empirical:
+E[(T−d)+] ≤ mu_service for d_eff ≥ 0 ((x−d)+ ≤ x on x ≥ 0) and
+= mu_service − d_eff for d_eff < 0 (lateness certain; T ≥ 0 ≥ d_eff);
+d_eff = 0 flows through the ≥0 form. Lognormal: dd ≤ 0 returns the
+exact certain-lateness value tot_m + shift − d. All boundary cases
+tested.
+
+**4. Independent accuracy claims (never approximation-as-bound).** Every
+decision row carries `estimator_claim`:
+- normal → `declared_normal_parametric_estimate`
+- lognormal → `fenton_wilkinson_approximation`
+- empirical → `declared_model_lower_bound(staircase+markov)`
+`p_conservative` is per-family (empirical True; lognormal False; normal
+conditional on D ≥ mu as before).
+
+Regression: full M-suite, runner smoke 42/42, admission repairs 8/8,
+admission check ALL GATES PASS; preflight re-bound (PREFLIGHT_PASS).
+Commits: `e26c856` (fixes) + `1ae5363` (preflight rebind). Zero real
+model calls, zero GPU inference, Formal/net-benefit evidence untouched.
