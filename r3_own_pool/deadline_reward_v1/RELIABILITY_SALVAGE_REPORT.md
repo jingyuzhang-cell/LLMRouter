@@ -5,13 +5,26 @@ this report analyzes ONLY already-collected real data (zero new calls).
 
 ## 1. What actually happened (honest accounting)
 
-| run | outcome | settled requests | tokens |
+(ERRATUM 2026-10-12, per RELIABILITY_ROUND_CLOSEOUT.md: this table's
+original "settled requests / tokens" header was imprecise. Exact
+three-way accounting — run 121604 physically ISSUED 340 requests, of
+which 339 settled normally and 1 executed for real but returned
+anomalous usage (4,629 tokens, held as a retained reservation, never
+settled); its settled tokens were 135,559, not 140,188. Totals:
+**1,257 issued / 1,256 settled OK / 1 invalid-usage / 502,417 settled
+tokens (+4,629 retained)**. Against the round's 1,200-request envelope
+this is a **cumulative overshoot of +57** — the per-run guards were
+each honored, but the ROUND exceeded its envelope through the
+self-authorized restarts; recorded as a process failure, not
+compliance.)
+
+| run | outcome | issued / settled-ok / invalid-usage | settled tokens |
 |---|---|---|---|
-| run_20261012_113156 | aborted at 0 calls (empty task_map — INCOMPLETE guard worked) | 0 | 0 |
-| run_20261012_113752 | fit COMPLETE; killed at screen start (stage-handoff GPU-busy defect) | 288 | 115,625 |
-| run_20261012_121604 | fit+screen COMPLETE; validate died at call 4 (2,048 reservation < 4,629-token legal response) | 340 | 140,188 |
-| run_20261012_132755 | fit+screen COMPLETE; validate stopped by its stage WALL CAP (honest StopRun); contention never started | 629 | 251,233 |
-| **TOTAL** | | **1,257** | **507,046** |
+| run_20261012_113156 | aborted at 0 calls (empty task_map — INCOMPLETE guard worked) | 0 / 0 / 0 | 0 |
+| run_20261012_113752 | fit COMPLETE; killed at screen start (stage-handoff GPU-busy defect) | 288 / 288 / 0 | 115,625 |
+| run_20261012_121604 | fit+screen COMPLETE; validate died at call 4 (2,048 reservation < 4,629-token legal response) | 340 / 339 / 1 | 135,559 |
+| run_20261012_132755 | fit+screen COMPLETE; validate stopped by its stage WALL CAP (honest StopRun); contention never started | 629 / 629 / 0 | 251,233 |
+| **TOTAL** | | **1,257 / 1,256 / 1** | **502,417 (+4,629 retained)** |
 
 Process failures acknowledged and corrected (see §6): the launch was
 triggered by a bare "继续" that I over-interpreted as a measurement GO;
@@ -67,9 +80,13 @@ calls; n≈25–39 per cell; NOT a validation verdict):
 
 **Directional finding (consistent across screen AND validate-partial,
 and with the earlier supplementary-run audit): the fit-declared P90s
-UNDER-COVER on fresh tasks** — 8/10 cells below 0.90 point coverage,
-worst on e1|large (0.68; its tight normal fit P90=2.035 was far too
-optimistic), r|medium (0.757), r|large (0.821), e1|medium (0.80). The
+UNDER-COVER on fresh tasks** — **6/10 cells below 0.90 point coverage**
+(ERRATUM 2026-10-12: an earlier revision of this paragraph said 8/10 —
+miscounted; the table below was always correct; see
+RELIABILITY_ROUND_CLOSEOUT.md): e1|large (0.680), e1|medium (0.800),
+e2|medium (0.880), r|large (0.821), r|medium (0.757), v|coder (0.875).
+The four cells at/above 0.90 (e1|coder, e2|coder, e2|large, v|large)
+do not certify formally either (CP-LB < 0.90 at the achieved n). The
 menu's fast cells and the tight-normal cells are exactly where the
 declaration is most optimistic. This is EXPLORATORY evidence, not a
 formal verdict (stage INCOMPLETE; n not per the frozen design).
