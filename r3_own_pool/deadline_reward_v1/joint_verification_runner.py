@@ -230,13 +230,27 @@ def run_shared_base(engine, tasks, planned, fault_uids, d3_answer):
     return dict(engine._cache)
 
 
-def arm_engine_from_snapshot(directory, server, clock_seed, snapshot,
-                             manager=None):
+def arm_engine_from_snapshot(directory, server, clock, snapshot,
+                             manager=None, real=False):
     """Fresh per-arm engine seeded with a COPY of the shared-base cache:
     symmetric legal initial state for every arm; cross-arm leakage
-    impossible (separate engine objects, separate caches)."""
-    from deadline_reward_v1.stub_engine import StubEngine
-    eng = StubEngine(directory, server, clock_seed, seed='jv_arm')
+    impossible (separate engine objects, separate caches).
+
+    real=True -> the REAL engine (model load/stop/switch through the
+    ModelManager; operator ruling d1353b1: arms must use RealEngine's
+    switch implementation, never a silent StubEngine substitution on
+    the true path). The stub path remains for zero-call tests only.
+    Inherits the manager's running model so a same-model first job
+    needs no switch (stage-handoff fix)."""
+    if real:
+        from deadline_reward_v1.supplementary_runner import RealEngine
+        eng = RealEngine(directory, server, clock, seed='jv_arm',
+                         manager=manager)
+        if manager is not None and manager.state['model'] is not None:
+            eng.current_model = manager.state['model']
+    else:
+        from deadline_reward_v1.stub_engine import StubEngine
+        eng = StubEngine(directory, server, clock, seed='jv_arm')
     eng._cache = dict(snapshot)
     return eng
 
@@ -358,3 +372,144 @@ def frozen_deadline(planned, tier, fit_binding, switch_costs):
     confirmatory panel's realized latencies)."""
     return G3_MULT[tier] * planned_path_work(planned, fit_binding,
                                              switch_costs)
+
+
+# ================= controlled real execution entry (ruling d1353b1) =====
+EXEC_ENV_FLAG = 'JOINT_VERIFY_EXECUTE'   # does NOT exist until a GO adds it
+
+# Metering semantics (operator ruling, frozen):
+#   physical_total      = every settled response in the run's ledgers
+#   base_share_per_arm  = shared-base physical tokens/requests attributed
+#                         EQUALLY to each arm's full-task cost C_full
+#   arm_incremental     = the arm's own physical spend after the snapshot
+#   T (per arm)         = release->completion of the arm's OWN episode,
+#                         base replay included as cache hits (~0 service);
+#   PRIMARY endpoint    = FULL-TASK realized R with C_full = base_share
+#                         + incremental. The recovery-CONDITIONAL contrast
+#                         (incremental-only costs) is reported SEPARATELY
+#                         and never presented as independent end-to-end
+#                         deployment benefit.
+
+
+def execute(approved_p3_sha, run_root, make_server, manager, tasks,
+            gold_map, fit_binding, switch_costs, tiers, fault_uids,
+            d3_answer, planned, params, predictor, compensator,
+            tier_rule=None):
+    """One controlled six-arm execution. `make_server(budget, task_map)`
+    returns a server (real or fake transport). NO flag check here — the
+    caller (the future pilot entry, gated by EXEC_ENV_FLAG + operator
+    GO) decides; tests drive it with a fake transport for the full
+    six-arm closed loop. Fail-stop: any exception -> INCOMPLETE +
+    preserve ledgers; never auto-restart; INCOMPLETE permanently blocks
+    COMPLETE (write_results)."""
+    import os
+    import shutil
+    from deadline_reward_v1.scheduler_state import SchedulerState
+    run_root = Path(run_root)
+    try:
+        run_root.mkdir(parents=True, exist_ok=False)
+    except FileExistsError:
+        raise PermissionError('run dir exists — no silent reuse')
+    from collab_scheduler_v1.joint_search_smoke.proposal_v2.smoke_runner \
+        import Budget
+    caps = dict(wall_seconds=1800.0, new_request_attempts=60,
+                new_total_tokens=25000, request_token_reservation=6144,
+                max_output_tokens=4096)          # micro-pilot worst case
+    (run_root / 'budget').mkdir(parents=True, exist_ok=True)
+    budget = Budget(run_root / 'budget', caps)
+    task_map = {t['uid']: t for t in tasks}
+    server = make_server(budget, task_map)
+    lam = dict(LAM)
+    statuses = {}
+
+    def _d_abs(uid):
+        st_tier = tiers[uid]
+        mult = G3_MULT[st_tier]
+        w = planned_path_work(planned, fit_binding, switch_costs)
+        return mult * w                     # relative anchor; state
+        # deadlines are set relative to each episode's release below
+
+    # ---- shared base (once; faults active) ---------------------------
+    from deadline_reward_v1.supplementary_runner import RealClock
+    base_engine = arm_engine_from_snapshot(
+        run_root / 'base', server, RealClock(), {}, manager=manager,
+        real=True)
+    server.engine = base_engine
+    snapshot = run_shared_base(base_engine, tasks, planned, fault_uids,
+                               d3_answer)
+    base_phys_tokens = base_engine.tokens_total
+    base_phys_reqs = base_engine.requests_total
+    statuses['base'] = 'COMPLETE'
+    n_arms = len(ARMS)
+
+    # ---- per-arm episodes from identical snapshot copies -------------
+    all_rows = {}
+    for arm in ARMS:
+        adir = run_root / arm
+        eng = arm_engine_from_snapshot(adir, server, RealClock(),
+                                       snapshot, manager=manager,
+                                       real=True)
+        server.engine = eng
+        state = SchedulerState(
+            eng.clock,
+            task_deadlines={t['uid']: eng.clock.time()
+                            + _d_abs(t['uid']) for t in tasks},
+            token_allocation=max(0.0, caps['new_total_tokens']
+                                 - budget.charged))
+        state.attach(eng)
+        fset = set(fault_uids) if arm != 'MONO' else set()
+        if arm == 'MONO':
+            d_abs = {t['uid']: eng.clock.time() + _d_abs(t['uid'])
+                     for t in tasks}
+            rows = run_mono_cell(
+                eng, state, tasks, planned['e1'], gold_map, lam, d_abs)
+            for r in rows:
+                r['arm'] = 'MONO'
+                r['metering'] = dict(
+                    arm_incremental_tokens=state.tasks[r['uid']].tokens_physical,
+                    base_share_tokens=base_phys_tokens / n_arms,
+                    C_full_task=base_phys_tokens / n_arms
+                    + state.tasks[r['uid']].tokens_physical,
+                    C_attribution=dict(
+                        base_share=base_phys_tokens / n_arms,
+                        arm_incremental=state.tasks[r['uid']].tokens_physical,
+                        semantics='full-task primary; incremental '
+                                  'reported separately'))
+        else:
+            rows, settled, metering = run_dag_cell(
+                eng, state, tasks, planned, arm, 'fault30_D3', fset,
+                predictor, compensator, params, gold_map, lam,
+                {t['uid']: eng.clock.time() + _d_abs(t['uid'])
+                 for t in tasks})
+            for r, s in zip(rows, settled):
+                r['arm'] = arm
+                # full-task cost attribution (frozen semantics above)
+                s['C_full_task'] = (base_phys_tokens / n_arms
+                                   + state.tasks[r['uid']].tokens_physical)
+                s['C_attribution'] = dict(
+                    base_share=base_phys_tokens / n_arms,
+                    arm_incremental=state.tasks[r['uid']].tokens_physical,
+                    semantics='full-task primary; incremental reported '
+                              'separately as the recovery-CONDITIONAL '
+                              'contrast')
+                r['R_settlement'] = s
+                r['metering'] = metering
+        all_rows[arm] = rows
+        statuses[arm] = 'COMPLETE'
+        budget.check()
+
+    payload = dict(
+        statuses=statuses,
+        physical_total=dict(requests=budget.attempts,
+                            tokens=budget.actual_tokens),
+        shared_base=dict(requests=base_phys_reqs,
+                         tokens=base_phys_tokens,
+                         per_arm_share=base_phys_tokens / n_arms),
+        rows={a: all_rows[a] for a in ARMS},
+        primary_endpoint='FULL-TASK realized R (C_full = base share + '
+                         'arm incremental); recovery-CONDITIONAL '
+                         'incremental contrast reported separately',
+        tiers=tiers)
+    out = run_root.parent / 'JOINT_VERIFY_RESULTS.json'
+    write_results(out, 'COMPLETE', payload)
+    return payload
