@@ -62,13 +62,33 @@ def enumerate_candidates(state, uid: str,
         add('NONE', [], pi)
     if not failed:
         return out
-    # LOCAL family: retry the failed nodes; closure completed BY RULE; π
-    # free over the (re)execution set ∪ pending nodes — the M5 capability.
+    # LOCAL family (P0-A closure fix, operator ruling 2026-10-12): the
+    # dependency closure M3 computes for the failed set is made EXPLICIT
+    # in the recovery set — R_eff = failed ∪ {DONE nodes the change
+    # propagation invalidates and the closure rule re-executes}. π is
+    # enumerated jointly over R_eff ∪ PENDING, so (a) every π-assigned
+    # node lies inside R (no illegal model rebinding of finished nodes
+    # outside the recovery set), (b) closure nodes remain dynamically
+    # reassignable within their menus (no frozen-model workaround), and
+    # (c) PENDING nodes are first executions, never counted as
+    # re-executions. The former construction kept R = failed while π
+    # covered the closure-completed set, so every e-node-failure
+    # candidate hit done_node_model_change_without_reexec and the LOCAL
+    # family came out EMPTY (run_20261012_092146: SS/SD 15/20 clean
+    # no-candidate degradations). Execution semantics unchanged where
+    # the old family was reachable: r-only failures have an empty
+    # closure, so R_eff = failed and candidates/π are identical to the
+    # pre-fix behavior; closure nodes now carry kind 'fbd' (M4 R2
+    # refresh alignment) instead of 'plain'.
     base_R = list(failed)
     j0 = state.judge(uid, base_R, {}, on_incomplete='complete')
-    free = {n for n, _ in j0.execute} | set(pending)
+    closure = [n for n, _nc in j0.execute
+               if n not in failed
+               and st.node_status.get(n) != dc.PENDING]
+    R_eff = sorted(set(base_R) | set(closure))
+    free = set(R_eff) | set(pending)
     for pi in _menu_variants(sorted(free)):
-        add('LOCAL', base_R, pi)
+        add('LOCAL', R_eff, pi)
     # FULL comes in TWO explicitly separated flavors (operator M5
     # review ruling):
     #  - FULL_STATIC ('arm'='FULL'): the frozen E-arm-matched semantics —

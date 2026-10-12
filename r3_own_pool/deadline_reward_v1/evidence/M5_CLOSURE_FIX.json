@@ -1,0 +1,141 @@
+{
+ "milestone": "P0_ABC_verification",
+ "ruling": "operator 2026-10-12 (baseline f0b3e5e)",
+ "checks": {
+  "S1_local_exists": true,
+  "S1_closure_in_execute": true,
+  "S1_v_pending_only": true,
+  "S1_ss_static_pick_exists": true,
+  "S2_local_exists": true,
+  "S2_full_closure": true,
+  "S2_ss_pick": true,
+  "S3_local_exists": true,
+  "S3_kinds": true,
+  "S4_e2_retry": true,
+  "S4_r_refreshed": true,
+  "S4_kinds_fbd": true,
+  "S5_no_local": true,
+  "S5_ss_reason": true,
+  "S6_both_legal": true,
+  "S6_calls_differ": true,
+  "P0C_ss_executes_fixed_recipe": true,
+  "P0C_v_ran_once": true,
+  "P0B_decision_event_exists": true,
+  "P0B_full_row_fields": true,
+  "P0B_context_fields": true,
+  "P0B_before_execution": true,
+  "P0B_no_oracle_fields": true,
+  "REG_r_only_pi_domain": true,
+  "REG_r_only_count": true
+ },
+ "detail": {
+  "S1": {
+   "n_local": 12,
+   "sample_pi": [
+    {
+     "e2": "coder",
+     "r": "large",
+     "v": "coder"
+    },
+    {
+     "e2": "coder",
+     "r": "large",
+     "v": "large"
+    },
+    {
+     "e2": "coder",
+     "r": "medium",
+     "v": "coder"
+    }
+   ]
+  },
+  "S2": {
+   "n_local": 12
+  },
+  "S3": {
+   "n_local": 12
+  },
+  "S4": {
+   "plan_calls": [
+    [
+     "e2",
+     "large",
+     "fb"
+    ],
+    [
+     "r",
+     "medium",
+     "fbd"
+    ],
+    [
+     "v",
+     "coder",
+     "plain"
+    ]
+   ],
+   "new_requests": 2
+  },
+  "S5": {
+   "reason": "STATIC_RECOVERY_UNAVAILABLE"
+  },
+  "S6": {
+   "fixed": [
+    [
+     "e2",
+     "large"
+    ],
+    [
+     "r",
+     "medium"
+    ],
+    [
+     "v",
+     "coder"
+    ]
+   ],
+   "dynamic": [
+    [
+     "e2",
+     "coder"
+    ],
+    [
+     "r",
+     "large"
+    ],
+    [
+     "v",
+     "coder"
+    ]
+   ]
+  },
+  "P0B": {
+   "n_rows": 44,
+   "row0_keys": [
+    "arm",
+    "contention",
+    "dcost",
+    "deficits",
+    "e_late",
+    "estimator",
+    "estimator_claim",
+    "execute",
+    "families",
+    "feasible",
+    "judgment_reasons",
+    "kinds",
+    "mu_e2e",
+    "p90",
+    "p_conservative",
+    "p_on_time",
+    "pi",
+    "q",
+    "reuse",
+    "score",
+    "switch",
+    "switch_seq"
+   ]
+  }
+ },
+ "zero_model_calls": true,
+ "all_pass": true
+}

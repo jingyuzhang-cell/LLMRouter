@@ -330,7 +330,11 @@ def main():
         # distribution-family estimator produced p_on_time/e_late, and
         # that estimator's INDEPENDENT accuracy claim (parametric
         # estimate / approximation / declared-model lower bound)
-        'estimator', 'estimator_claim'}
+        'estimator', 'estimator_claim',
+        # 2026-10-12 P0-B (operator ruling): the joint action's
+        # adjudicated identity frozen into the row at decision time —
+        # execution set, reuse set, judgment reasons, per-node families
+        'execute', 'reuse', 'judgment_reasons', 'families'}
     PI_VAL_OK = {'medium', 'large', 'coder'}
     DEFICIT_KEYS = {'constraint', 'deficit'}
     KINDS_OK = {'plain', 'fb', 'fbd', 'esc'}

@@ -64,26 +64,38 @@ def decide_arm(state, uid: str, cands: List[Candidate], arm: str,
                compensator, engine_current_model) -> dict:
     """One arm's decision at one decision point. Returns an audit record:
     mode (static_recipe / policy / no_recovery), the chosen Candidate (or
-    None), degraded flag, and for policy arms the FULL scored table +
-    violation vector — proof the decision was a real computation."""
+    None), degraded flag, and the FULL scored table (P0-B: complete
+    per-candidate prediction rows — never trimmed) + violation vector.
+
+    P0-C (operator ruling 2026-10-12): SS keeps the frozen semantics
+    'fixed LOCAL recovery + fixed planned models' — NO implicit NONE
+    fallback. When no legal static action exists the record carries
+    reason STATIC_RECOVERY_UNAVAILABLE; with the P0-A closure fix an
+    ordinary legal e-node failure ALWAYS yields the fixed LOCAL recipe,
+    so a no-match can only arise from genuinely illegal states (e.g. a
+    RUNNING downstream node)."""
     if arm == 'NONE':
         return dict(arm=arm, mode='no_recovery', chosen=None,
-                    degraded=False, pool_size=0, table=[], violations=[])
+                    degraded=False, pool_size=0, table=[], violations=[],
+                    reason=None)
     if arm == 'SS':
         pick = static_recipe_pick(cands, planned)
         return dict(arm=arm, mode='static_recipe', chosen=pick,
                     degraded=pick is None, pool_size=1, table=[],
-                    violations=[])
+                    violations=[],
+                    reason=None if pick is not None
+                    else 'STATIC_RECOVERY_UNAVAILABLE')
     pool = select_candidates(cands, arm, planned)
     decision = policy._score_and_pick(
         state, uid, pool, params, predictor, compensator,
         engine_current_model)
     return dict(arm=arm, mode='policy', chosen=decision.chosen,
                 degraded=decision.degraded, pool_size=len(pool),
-                table=[c.row for c in pool if c.row is not None],
+                table=[dict(c.row) for c in pool if c.row is not None],
                 violations=decision.violations,
                 d_remain=decision.d_remain,
-                b_remain_tokens=decision.b_remain_tokens)
+                b_remain_tokens=decision.b_remain_tokens,
+                reason='EARLY_STOP' if decision.degraded else None)
 
 
 def enumerate_for(state, uid: str, planned: Dict[str, str]

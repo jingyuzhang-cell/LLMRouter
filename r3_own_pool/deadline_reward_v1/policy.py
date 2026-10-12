@@ -268,7 +268,18 @@ def _score_and_pick(state, uid, cands, params, predictor, compensator,
                         estimator=pred_family,
                         estimator_claim=pred_claim,
                         score=round(score, 10), feasible=not deficits,
-                        deficits=deficits, kinds=dict(cand.kinds))
+                        deficits=deficits, kinds=dict(cand.kinds),
+                        # P0-B (operator ruling 2026-10-12): the joint
+                        # action's adjudicated identity — execution set
+                        # (node, new_call), reuse set, legality reasons —
+                        # frozen INTO the row at decision time, before
+                        # any execution; no gold, no fault registry, no
+                        # future outputs ever enter here.
+                        execute=[(n, bool(nc))
+                                 for n, nc in cand.judgment.execute],
+                        reuse=list(cand.judgment.reuse),
+                        judgment_reasons=list(cand.judgment.reasons),
+                        families=list(pred.families))
         if not deficits:
             feasible.append(cand)
     if feasible:

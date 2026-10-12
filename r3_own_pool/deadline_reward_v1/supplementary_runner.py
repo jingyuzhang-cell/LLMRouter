@@ -481,23 +481,36 @@ def run_cell(engine, server, state, tasks, planned, arm, condition,
         rec = arm_entry.decide_arm(
             state, uid, cands, arm, planned, params, predictor, compensator,
             lambda: engine.current_model)
+        # P0-B (operator ruling 2026-10-12): the COMPLETE decision-time
+        # prediction snapshot is appended BEFORE any execution of this
+        # task's plan — full per-candidate rows (q̂, ΔĈ, μ̂_E2E, P̂90,
+        # P̂_on, Ê_late, families, estimator + claim, execute/reuse,
+        # violations, Ê[R_task]=score) plus the decision context
+        # (d_remain, b_remain, unix time, stable correlation id). No
+        # gold, no fault registry, no future execution results appear.
         engine._append(dict(
             event='arm_decision', task=uid, arm=arm, condition=condition,
+            decision_id=f'{condition}|{arm}|{uid}',
+            decision_unix=time.time(),
             mode=rec['mode'], degraded=rec['degraded'],
+            reason=rec.get('reason'),
+            d_remain=rec.get('d_remain'),
+            b_remain_tokens=rec.get('b_remain_tokens'),
             pool_size=rec['pool_size'],
             chosen=None if rec['chosen'] is None else dict(
-                arm=rec['chosen'].arm, pi=dict(rec['chosen'].pi)),
-            violations=rec['violations']))
+                arm=rec['chosen'].arm, pi=dict(rec['chosen'].pi),
+                E_R_task=(rec['chosen'].row['score']
+                          if rec['chosen'].row is not None else None)),
+            violations=rec['violations'],
+            table=rec.get('table', [])))
         decisions[uid] = dict(
             mode=rec['mode'], degraded=rec['degraded'],
+            reason=rec.get('reason'),
             pool_size=rec['pool_size'],
             chosen=None if rec['chosen'] is None else dict(
                 arm=rec['chosen'].arm, pi=dict(rec['chosen'].pi)),
             violations=rec['violations'],
-            table=[dict(arm=r['arm'], pi=r['pi'], q=r['q'],
-                        dcost=r['dcost'], score=r['score'],
-                        feasible=r['feasible'])
-                   for r in rec.get('table', [])])
+            table=rec.get('table', []))
         if rec['degraded']:
             st.degraded = True
             state.release_reservations(uid)
