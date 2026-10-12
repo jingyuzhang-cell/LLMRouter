@@ -14,10 +14,13 @@ Pilot log decomposition (per task, per arm):
   every arm (all on-time-correct = 0 except wide-tier cells), i.e. the
   deadline dimension would have measured batching, not scheduling.
 
-**Frozen T convention (now in code + asserted in T12)**: the reward's T
-= **the task's own service time** (sum of its call latencies in the arm
-episode — queue-free, switch-free). The episode wall is preserved as
-`T_wall_reference`. Rationale and consistency: (a) the G3 D-anchor is
+**Frozen T convention (refined by the 4c941fc closeout; code + T12
+assertions)**: the reward's T = **the task's own INCREMENTAL service
+time** — the sum of the arm's OWN physical-call latencies only (cached
+shared-base replay excluded — it is not a recovery action; queue and
+switch walls excluded — environment properties). The episode wall is
+preserved as `T_wall_reference`, and `R_wall_deployment_view`,
+`switch_wall_s`, `switch_count` are reported per task (never hidden). Rationale and consistency: (a) the G3 D-anchor is
 already service-mean × multiplier (switches excluded by design), so T
 and D now share one convention; (b) batching queue and shared switch
 walls are properties of the serial executor environment, reported per
@@ -57,8 +60,12 @@ n=60 underpowering caveat (non-significant ⇒ "not established").
 
 ## 4. GO conditions (operator's call)
 
-1. Approve the frozen T convention (service-time T; wall as reference)
-   and the G3 multipliers (15/25/50) as the confirmatory rule.
+1. Approve the FROZEN primary endpoint as closed out on `a9cd4dd`:
+   R_conditional(q=v2.1 terminal, C=arm incremental physical tokens,
+   T=arm incremental service time, D=multiplier x independent-FIT
+   service mean) — service-latency mechanism comparison, NO end-to-end
+   wall-latency claim; per-arm decision budgets identical (constant
+   allocation); G3 multipliers 15/25/50.
 2. Approve the P3-60 panel as frozen (sha b04ffb29) with the
    tier/fault draws in `JOINT_VERIFY_P3_FREEZE.json`.
 3. Approve the caps in §3.
