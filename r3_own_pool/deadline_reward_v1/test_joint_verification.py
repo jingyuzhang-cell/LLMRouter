@@ -535,12 +535,17 @@ def test_T12_fake_transport_six_arm_loop():
     pt = payload['shared_base']['per_task_tokens']
     assert set(pt) == {t['uid'] for t in tasks} and all(v > 0 for v in pt.values())
     assert sum(pt.values()) == payload['shared_base']['total_tokens']
-    # B1: dual rewards present and CONSISTENT on every DAG row
+    # B1: dual rewards present and CONSISTENT on every DAG row; T is
+    # the frozen SERVICE-time convention with the wall kept as reference
     from deadline_reward_v1.reward import realized_rtask
     for arm in ('SS', 'DS', 'SD', 'DD', 'NONE'):
+        svc = jv._per_task_service(root / 'run1' / arm)
         for r in payload['rows'][arm]:
             s = r['R_settlement']
             assert 'R_conditional' in s and 'R_full_task_cost_view' in s
+            assert 'T_wall_reference' in s
+            assert abs(s['T'] - round(svc[r['uid']], 6)) < 1e-6, \
+                'T must equal the task own service sum'
             a = s['C_attribution']
             want_c = realized_rtask(q=s['Q'], c_full=a['arm_incremental'],
                                     T=s['T'], D=s['D'], **jv.LAM)

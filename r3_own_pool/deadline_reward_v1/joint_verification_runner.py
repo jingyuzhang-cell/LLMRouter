@@ -392,6 +392,21 @@ EXEC_ENV_FLAG = 'JOINT_VERIFY_EXECUTE'   # does NOT exist until a GO adds it
 #                         deployment benefit.
 
 
+def _per_task_service(engine_dir):
+    """Per-TASK own service time (sum of its call latencies, cached or
+    physical) from an arm episode ledger — queue-free and switch-free.
+    Frozen T convention for the confirmatory design (operator ruling:
+    batching queue and shared switch walls are environment properties,
+    reported separately, never inside the reward's T)."""
+    per = {}
+    for line in (Path(engine_dir) / 'TASK_LEDGER.jsonl') \
+            .read_text().splitlines():
+        e = json.loads(line)
+        if e.get('event') == 'call':
+            per[e['task']] = per.get(e['task'], 0.0) + e['latency_s']
+    return per
+
+
 def _per_task_base_tokens(base_engine):
     """B2 fix: per-TASK physical base tokens from the base engine's own
     ledger (never a batch-total division across tasks or arms)."""
@@ -510,8 +525,9 @@ def execute(approved_p3_sha, run_root, make_server, manager, tasks,
                 for r in rows:
                     r['metering'] = metering
 
-            # ---- B1/B2: consistent dual settlement per row -----------
+            # ---- B1/B2 + T convention: consistent dual settlement --
             from deadline_reward_v1.reward import realized_rtask
+            svc_per_task = _per_task_service(adir)
             for r in rows:
                 uid = r['uid']
                 # DAG rows nest the settlement under 'R_settlement';
@@ -519,7 +535,13 @@ def execute(approved_p3_sha, run_root, make_server, manager, tasks,
                 s = r['R_settlement'] if 'R_settlement' in r else r
                 inc = s['C_tokens']              # arm-episode physical
                 base_t = base_per_task.get(uid, 0)
-                T, D, q = s['T'], s['D'], s['Q']
+                T_wall = s['T']                  # episode wall (queue-
+                # inclusive) kept as a REFERENCE only
+                T = svc_per_task.get(uid, 0.0)   # frozen T convention:
+                # the task's OWN service time — queue-free, switch-free
+                D, q = s['D'], s['Q']
+                s['T_wall_reference'] = round(T_wall, 6)
+                s['T'] = round(T, 6)
                 r_cond = realized_rtask(q=q, c_full=inc, T=T, D=D,
                                         **lam)
                 r_full = realized_rtask(q=q, c_full=base_t + inc, T=T,
