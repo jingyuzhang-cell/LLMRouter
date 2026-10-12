@@ -283,13 +283,20 @@ class RealServer:
     def fault_for(self, uid, node, model):
         return self.faults.get((uid, node, model))
 
-    def build_prompt(self, node, uid):
+    def build_prompt(self, node, kind, uid):
         tav, VPROMPT, parse_facts_safe = self._b()
         task = self.task_map[uid]
         answers = self.engine.tasks[uid].answers
         if node in ('e1', 'e2'):
             ctx = task['ctx_table'] if node == 'e1' else task['ctx_text']
             return tav.eprompt(dict(question=task['question'], context=ctx))
+        if node == 'v' and kind == 'mono':
+            # MONO baseline (operator ruling 2026-10-12): the REAL
+            # service must receive the single-model FULL-CONTEXT prompt
+            # — never the verification-node prompt — on the mono path.
+            from deadline_reward_v1.joint_verification_runner import (
+                mono_prompt)
+            return mono_prompt(task)
         f1, _ = parse_facts_safe(answers.get('e1', ''))
         f2, _ = parse_facts_safe(answers.get('e2', ''))
         facts = f1['facts'] + f2['facts']
@@ -305,7 +312,7 @@ class RealServer:
                               expr=expr)
 
     def draw(self, node, kind, model, uid, attempt, profile_key=None):
-        prompt = self.build_prompt(node, uid)
+        prompt = self.build_prompt(node, kind, uid)
         mod = self.manager._mod()
         resp, err = None, None
 

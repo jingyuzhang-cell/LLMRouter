@@ -88,7 +88,7 @@ def _server(tmp, script, caps=None):
     budget = _budget(tmp, caps)
     manager = FakeManager(script)
     server = sr.RealServer({}, manager, budget, {}, tmp)
-    server.build_prompt = lambda node, uid: 'PROMPT'
+    server.build_prompt = lambda node, kind, uid: "PROMPT"
     return server, budget, manager
 
 
