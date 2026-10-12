@@ -70,14 +70,17 @@
      "uid": "jv0",
      "Q": 0,
      "C_tokens": 260,
-     "T": 1.3e-05,
-     "D": 74.999975,
+     "T": 5e-06,
+     "D": 74.999969,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.009749,
+     "T_wall_reference": 0.010147,
+     "switch_wall_s": 0.0,
+     "switch_count": 3,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -86,8 +89,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -146,14 +149,17 @@
      "uid": "jv1",
      "Q": 0,
      "C_tokens": 260,
-     "T": 1e-05,
-     "D": 124.999977,
+     "T": 4e-06,
+     "D": 124.999972,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.010478,
+     "T_wall_reference": 0.01079,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -162,8 +168,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -222,14 +228,17 @@
      "uid": "jv2",
      "Q": 0,
      "C_tokens": 260,
-     "T": 1e-05,
-     "D": 249.99998,
+     "T": 4e-06,
+     "D": 249.999975,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.011223,
+     "T_wall_reference": 0.011376,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -238,8 +247,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -568,14 +577,17 @@
      "uid": "jv0",
      "Q": 0,
      "C_tokens": 0,
-     "T": 8e-06,
-     "D": 74.999964,
+     "T": 0.0,
+     "D": 74.999971,
      "on_time_correct": 0,
      "degraded": true,
      "R_task": 0.0,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.003119,
+     "T_wall_reference": 0.003066,
+     "switch_wall_s": 0.0,
+     "switch_count": 2,
+     "R_wall_deployment_view": 0.0,
      "R_conditional": 0.0,
      "R_full_task_cost_view": -0.04875,
      "C_attribution": {
@@ -584,8 +596,8 @@
       "C_full_task": 390
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -912,14 +924,17 @@
      "uid": "jv1",
      "Q": 0,
      "C_tokens": 0,
-     "T": 6e-06,
-     "D": 124.999966,
+     "T": 0.0,
+     "D": 124.999973,
      "on_time_correct": 0,
      "degraded": true,
      "R_task": 0.0,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.003451,
+     "T_wall_reference": 0.003381,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": 0.0,
      "R_conditional": 0.0,
      "R_full_task_cost_view": -0.04875,
      "C_attribution": {
@@ -928,8 +943,8 @@
       "C_full_task": 390
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -1256,14 +1271,17 @@
      "uid": "jv2",
      "Q": 0,
      "C_tokens": 0,
-     "T": 5e-06,
-     "D": 249.999969,
+     "T": 0.0,
+     "D": 249.999976,
      "on_time_correct": 0,
      "degraded": true,
      "R_task": 0.0,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.003766,
+     "T_wall_reference": 0.003678,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": 0.0,
      "R_conditional": 0.0,
      "R_full_task_cost_view": -0.04875,
      "C_attribution": {
@@ -1272,8 +1290,8 @@
       "C_full_task": 390
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -1533,14 +1551,17 @@
      "uid": "jv0",
      "Q": 0,
      "C_tokens": 260,
-     "T": 1.2e-05,
-     "D": 74.999971,
+     "T": 4e-06,
+     "D": 74.999975,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.009768,
+     "T_wall_reference": 0.009386,
+     "switch_wall_s": 0.0,
+     "switch_count": 3,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -1549,8 +1570,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -1808,14 +1829,17 @@
      "uid": "jv1",
      "Q": 0,
      "C_tokens": 260,
-     "T": 9e-06,
-     "D": 124.999974,
+     "T": 3e-06,
+     "D": 124.999978,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.010342,
+     "T_wall_reference": 0.009964,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -1824,8 +1848,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -2083,14 +2107,17 @@
      "uid": "jv2",
      "Q": 0,
      "C_tokens": 260,
-     "T": 8e-06,
-     "D": 249.999977,
+     "T": 3e-06,
+     "D": 249.99998,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.010938,
+     "T_wall_reference": 0.010548,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -2099,8 +2126,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -4801,14 +4828,17 @@
      "uid": "jv0",
      "Q": 0,
      "C_tokens": 260,
-     "T": 1.2e-05,
-     "D": 74.999976,
+     "T": 4e-06,
+     "D": 74.999974,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.014853,
+     "T_wall_reference": 0.014702,
+     "switch_wall_s": 0.0,
+     "switch_count": 3,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -4817,8 +4847,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -7517,14 +7547,17 @@
      "uid": "jv1",
      "Q": 0,
      "C_tokens": 260,
-     "T": 1e-05,
-     "D": 124.999979,
+     "T": 3e-06,
+     "D": 124.999977,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.015494,
+     "T_wall_reference": 0.015297,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -7533,8 +7566,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -10233,14 +10266,17 @@
      "uid": "jv2",
      "Q": 0,
      "C_tokens": 260,
-     "T": 9e-06,
-     "D": 249.999981,
+     "T": 3e-06,
+     "D": 249.999979,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.0325,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.016277,
+     "T_wall_reference": 0.015828,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": -0.0325,
      "R_conditional": -0.0325,
      "R_full_task_cost_view": -0.08125,
      "C_attribution": {
@@ -10249,8 +10285,8 @@
       "C_full_task": 650
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -10297,14 +10333,17 @@
      "uid": "jv0",
      "Q": 0,
      "C_tokens": 130,
-     "T": 1.1e-05,
-     "D": 74.999976,
+     "T": 3e-06,
+     "D": 74.999974,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.01625,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.00745,
+     "T_wall_reference": 0.007743,
+     "switch_wall_s": 0.0,
+     "switch_count": 3,
+     "R_wall_deployment_view": -0.01625,
      "R_conditional": -0.01625,
      "R_full_task_cost_view": -0.065,
      "C_attribution": {
@@ -10313,8 +10352,8 @@
       "C_full_task": 520
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -10359,14 +10398,17 @@
      "uid": "jv1",
      "Q": 0,
      "C_tokens": 130,
-     "T": 8e-06,
-     "D": 124.999978,
+     "T": 2e-06,
+     "D": 124.999977,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.01625,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.008125,
+     "T_wall_reference": 0.008441,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": -0.01625,
      "R_conditional": -0.01625,
      "R_full_task_cost_view": -0.065,
      "C_attribution": {
@@ -10375,8 +10417,8 @@
       "C_full_task": 520
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -10421,14 +10463,17 @@
      "uid": "jv2",
      "Q": 0,
      "C_tokens": 130,
-     "T": 7e-06,
-     "D": 249.99998,
+     "T": 2e-06,
+     "D": 249.999979,
      "on_time_correct": 0,
      "degraded": false,
      "R_task": -0.01625,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.008734,
+     "T_wall_reference": 0.009082,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": -0.01625,
      "R_conditional": -0.01625,
      "R_full_task_cost_view": -0.065,
      "C_attribution": {
@@ -10437,8 +10482,8 @@
       "C_full_task": 520
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      }
     },
     "metering": {
@@ -10462,7 +10507,10 @@
     "R_task": 0.98375,
     "gold": 1.5,
     "gold_source": "v1_fallback",
-    "T_wall_reference": 0.001129,
+    "T_wall_reference": 0.000968,
+    "switch_wall_s": 0.0,
+    "switch_count": 1,
+    "R_wall_deployment_view": 0.98375,
     "R_conditional": 0.98375,
     "R_full_task_cost_view": 0.935,
     "C_attribution": {
@@ -10471,8 +10519,8 @@
      "C_full_task": 520
     },
     "metric_semantics": {
-     "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-     "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+     "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+     "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
     },
     "arm": "MONO",
     "R_settlement": {
@@ -10486,7 +10534,10 @@
      "R_task": 0.98375,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.001129,
+     "T_wall_reference": 0.000968,
+     "switch_wall_s": 0.0,
+     "switch_count": 1,
+     "R_wall_deployment_view": 0.98375,
      "R_conditional": 0.98375,
      "R_full_task_cost_view": 0.935,
      "C_attribution": {
@@ -10495,8 +10546,8 @@
       "C_full_task": 520
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      },
      "arm": "MONO"
     }
@@ -10506,13 +10557,16 @@
     "Q": 1,
     "C_tokens": 130,
     "T": 2e-06,
-    "D": 124.999989,
+    "D": 124.999988,
     "on_time_correct": 1,
     "degraded": false,
     "R_task": 0.98375,
     "gold": 1.5,
     "gold_source": "v1_fallback",
-    "T_wall_reference": 0.00179,
+    "T_wall_reference": 0.001608,
+    "switch_wall_s": 0.0,
+    "switch_count": 0,
+    "R_wall_deployment_view": 0.98375,
     "R_conditional": 0.98375,
     "R_full_task_cost_view": 0.935,
     "C_attribution": {
@@ -10521,8 +10575,8 @@
      "C_full_task": 520
     },
     "metric_semantics": {
-     "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-     "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+     "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+     "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
     },
     "arm": "MONO",
     "R_settlement": {
@@ -10530,13 +10584,16 @@
      "Q": 1,
      "C_tokens": 130,
      "T": 2e-06,
-     "D": 124.999989,
+     "D": 124.999988,
      "on_time_correct": 1,
      "degraded": false,
      "R_task": 0.98375,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.00179,
+     "T_wall_reference": 0.001608,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": 0.98375,
      "R_conditional": 0.98375,
      "R_full_task_cost_view": 0.935,
      "C_attribution": {
@@ -10545,8 +10602,8 @@
       "C_full_task": 520
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      },
      "arm": "MONO"
     }
@@ -10556,13 +10613,16 @@
     "Q": 1,
     "C_tokens": 130,
     "T": 2e-06,
-    "D": 249.999991,
+    "D": 249.99999,
     "on_time_correct": 1,
     "degraded": false,
     "R_task": 0.98375,
     "gold": 1.5,
     "gold_source": "v1_fallback",
-    "T_wall_reference": 0.002409,
+    "T_wall_reference": 0.002235,
+    "switch_wall_s": 0.0,
+    "switch_count": 0,
+    "R_wall_deployment_view": 0.98375,
     "R_conditional": 0.98375,
     "R_full_task_cost_view": 0.935,
     "C_attribution": {
@@ -10571,8 +10631,8 @@
      "C_full_task": 520
     },
     "metric_semantics": {
-     "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-     "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+     "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+     "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
     },
     "arm": "MONO",
     "R_settlement": {
@@ -10580,13 +10640,16 @@
      "Q": 1,
      "C_tokens": 130,
      "T": 2e-06,
-     "D": 249.999991,
+     "D": 249.99999,
      "on_time_correct": 1,
      "degraded": false,
      "R_task": 0.98375,
      "gold": 1.5,
      "gold_source": "v1_fallback",
-     "T_wall_reference": 0.002409,
+     "T_wall_reference": 0.002235,
+     "switch_wall_s": 0.0,
+     "switch_count": 0,
+     "R_wall_deployment_view": 0.98375,
      "R_conditional": 0.98375,
      "R_full_task_cost_view": 0.935,
      "C_attribution": {
@@ -10595,8 +10658,8 @@
       "C_full_task": 520
      },
      "metric_semantics": {
-      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state (C=incremental, T=arm episode)",
-      "secondary": "R_full_task_cost_view: per-task base + incremental COST view; T remains the arm episode (shared base wall time is not fairly attributable); attribution view, NOT verified independent end-to-end deployment metric"
+      "primary": "R_conditional: recovery-CONDITIONAL net benefit from the identical shared post-fault state. C = arm incremental tokens; T = arm INCREMENTAL service time (physical calls only; cached base replay excluded; queue and switch walls excluded). SERVICE-LATENCY mechanism comparison — no end-to-end wall-latency claim.",
+      "secondary": "R_full_task_cost_view: per-task base + incremental cost view (same T). R_wall_deployment_view: T = episode wall (queue+switches, order-dependent) — deployment-context reference only, NOT a per-arm causal metric; switch walls and counts are reported per task, never hidden."
      },
      "arm": "MONO"
     }

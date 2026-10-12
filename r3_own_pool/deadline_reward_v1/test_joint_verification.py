@@ -539,13 +539,18 @@ def test_T12_fake_transport_six_arm_loop():
     # the frozen SERVICE-time convention with the wall kept as reference
     from deadline_reward_v1.reward import realized_rtask
     for arm in ('SS', 'DS', 'SD', 'DD', 'NONE'):
-        svc = jv._per_task_service(root / 'run1' / arm)
+        svc_inc, sw_wall, sw_n = jv._per_task_incremental_service(
+            root / 'run1' / arm)
         for r in payload['rows'][arm]:
             s = r['R_settlement']
             assert 'R_conditional' in s and 'R_full_task_cost_view' in s
-            assert 'T_wall_reference' in s
-            assert abs(s['T'] - round(svc[r['uid']], 6)) < 1e-6, \
-                'T must equal the task own service sum'
+            assert 'T_wall_reference' in s and 'R_wall_deployment_view' in s
+            assert 'switch_wall_s' in s and 'switch_count' in s
+            # PRIMARY T = incremental service (physical calls ONLY; the
+            # cached base replay must NOT enter the conditional T)
+            assert abs(s['T'] - round(svc_inc.get(r['uid'], 0.0), 6)) < 1e-6, \
+                'T must equal the arm incremental physical service sum'
+            assert s['switch_count'] == sw_n.get(r['uid'], 0)
             a = s['C_attribution']
             want_c = realized_rtask(q=s['Q'], c_full=a['arm_incremental'],
                                     T=s['T'], D=s['D'], **jv.LAM)

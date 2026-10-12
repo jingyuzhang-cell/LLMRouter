@@ -392,12 +392,29 @@ EXEC_ENV_FLAG = 'JOINT_VERIFY_EXECUTE'   # does NOT exist until a GO adds it
 #                         deployment benefit.
 
 
+def _per_task_incremental_service(engine_dir):
+    """Per-TASK INCREMENTAL service time (ruling 4c941fc item 2): the
+    sum of latencies of the arm's OWN calls (PHYSICAL only) in the arm
+    episode. Cached shared-base replays are EXCLUDED — they are not
+    recovery actions; the conditional primary endpoint measures the
+    arm's actual incremental time, independently recomputable from the
+    ledger's physical flags. Switch walls and counts are returned
+    separately (reported, never hidden, never inside this T)."""
+    svc, sw_wall, sw_n = {}, {}, {}
+    for line in (Path(engine_dir) / 'TASK_LEDGER.jsonl') \
+            .read_text().splitlines():
+        e = json.loads(line)
+        if e.get('event') == 'call' and e.get('physical'):
+            svc[e['task']] = svc.get(e['task'], 0.0) + e['latency_s']
+        elif e.get('event') == 'switch':
+            sw_wall[e['task']] = sw_wall.get(e['task'], 0.0) \
+                + float(e.get('wall_s', 0.0))
+            sw_n[e['task']] = sw_n.get(e['task'], 0) + 1
+    return svc, sw_wall, sw_n
+
+
 def _per_task_service(engine_dir):
-    """Per-TASK own service time (sum of its call latencies, cached or
-    physical) from an arm episode ledger — queue-free and switch-free.
-    Frozen T convention for the confirmatory design (operator ruling:
-    batching queue and shared switch walls are environment properties,
-    reported separately, never inside the reward's T)."""
+    """Back-compat wrapper: ALL call latencies (cached included)."""
     per = {}
     for line in (Path(engine_dir) / 'TASK_LEDGER.jsonl') \
             .read_text().splitlines():
@@ -505,12 +522,15 @@ def execute(approved_p3_sha, run_root, make_server, manager, tasks,
                 adir, server, RealClock(), snapshot, manager=manager,
                 real=True)
             server.engine = eng
+            # ruling 4c941fc item 3: every arm sees the IDENTICAL
+            # decision budget (candidate feasibility must not depend on
+            # arm execution order). Physical enforcement remains on the
+            # global Budget; the decision-time allocation is a constant.
             state = SchedulerState(
                 eng.clock,
                 task_deadlines={t['uid']: eng.clock.time()
                                 + _d_abs(t['uid']) for t in tasks},
-                token_allocation=max(0.0, caps['new_total_tokens']
-                                     - budget.charged))
+                token_allocation=float(caps['new_total_tokens']))
             state.attach(eng)
             d_abs = {t['uid']: eng.clock.time() + _d_abs(t['uid'])
                      for t in tasks}
@@ -527,7 +547,7 @@ def execute(approved_p3_sha, run_root, make_server, manager, tasks,
 
             # ---- B1/B2 + T convention: consistent dual settlement --
             from deadline_reward_v1.reward import realized_rtask
-            svc_per_task = _per_task_service(adir)
+            svc_inc, sw_wall, sw_n = _per_task_incremental_service(adir)
             for r in rows:
                 uid = r['uid']
                 # DAG rows nest the settlement under 'R_settlement';
@@ -535,17 +555,23 @@ def execute(approved_p3_sha, run_root, make_server, manager, tasks,
                 s = r['R_settlement'] if 'R_settlement' in r else r
                 inc = s['C_tokens']              # arm-episode physical
                 base_t = base_per_task.get(uid, 0)
-                T_wall = s['T']                  # episode wall (queue-
-                # inclusive) kept as a REFERENCE only
-                T = svc_per_task.get(uid, 0.0)   # frozen T convention:
-                # the task's OWN service time — queue-free, switch-free
+                T_wall = s['T']                  # episode wall (queue +
+                # switches, order-dependent) — reference only
+                T = svc_inc.get(uid, 0.0)        # PRIMARY T: the arm's
+                # OWN incremental service time (physical calls only;
+                # cached base replay excluded; switches reported aside)
                 D, q = s['D'], s['Q']
                 s['T_wall_reference'] = round(T_wall, 6)
                 s['T'] = round(T, 6)
+                s['switch_wall_s'] = round(sw_wall.get(uid, 0.0), 3)
+                s['switch_count'] = sw_n.get(uid, 0)
                 r_cond = realized_rtask(q=q, c_full=inc, T=T, D=D,
                                         **lam)
                 r_full = realized_rtask(q=q, c_full=base_t + inc, T=T,
                                         D=D, **lam)
+                s['R_wall_deployment_view'] = round(
+                    realized_rtask(q=q, c_full=inc, T=T_wall, D=D,
+                                   **lam), 10)
                 s['R_conditional'] = round(r_cond, 10)
                 s['R_full_task_cost_view'] = round(r_full, 10)
                 s['C_attribution'] = dict(
@@ -554,13 +580,20 @@ def execute(approved_p3_sha, run_root, make_server, manager, tasks,
                 s['metric_semantics'] = dict(
                     primary='R_conditional: recovery-CONDITIONAL net '
                             'benefit from the identical shared post-'
-                            'fault state (C=incremental, T=arm episode)',
+                            'fault state. C = arm incremental tokens; '
+                            'T = arm INCREMENTAL service time (physical '
+                            'calls only; cached base replay excluded; '
+                            'queue and switch walls excluded). '
+                            'SERVICE-LATENCY mechanism comparison — no '
+                            'end-to-end wall-latency claim.',
                     secondary='R_full_task_cost_view: per-task base + '
-                              'incremental COST view; T remains the arm '
-                              'episode (shared base wall time is not '
-                              'fairly attributable); attribution view, '
-                              'NOT verified independent end-to-end '
-                              'deployment metric')
+                              'incremental cost view (same T). '
+                              'R_wall_deployment_view: T = episode wall '
+                              '(queue+switches, order-dependent) — '
+                              'deployment-context reference only, NOT a '
+                              'per-arm causal metric; switch walls and '
+                              'counts are reported per task, never '
+                              'hidden.')
                 r['arm'] = arm
                 if s is r:
                     # MONO: nest a COPY (the row itself is the
