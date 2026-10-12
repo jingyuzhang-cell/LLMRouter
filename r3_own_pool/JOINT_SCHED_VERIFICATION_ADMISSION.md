@@ -104,3 +104,56 @@ requires approval; not auto-raised).
 Zero calls, zero GPU. Nothing launched. This document + the G1–G3 fix
 list constitute the step-1 deliverable; steps 2–3 wait for explicit,
 separately-worded authorizations.
+
+---
+
+## v2 REVISIONS (operator ruling 2026-10-12 on 83ea096; zero-call round complete)
+
+1. **SIX arms, not seven** (operator correction): SS, DS, SD, DD, NONE,
+   MONO. All workload/sample/budget arithmetic below is superseded by
+   the six-arm figures in §B.6-rev.
+2. **MONO fault semantics ruled**: MONO has no r node — the D3_r
+   injection is NOT an equivalent fault for MONO. MONO = descriptive
+   baseline OUTSIDE the same-fault causal contrasts (ΔR, I computed
+   over the five DAG arms under identical draws). An optional
+   mono-side corruption condition exists for sensitivity only,
+   labeled non-equivalent.
+3. **Panel**: P3 fresh-frozen tasks = the CONFIRMATORY panel
+   (per the exposure audit: reliability-validate-90 tasks entered
+   reliability executions and DD exploratory episodes and had
+   prediction errors viewed — usable only as exploratory/sensitivity,
+   and only with a per-use independence argument, never by FIT-disjoint
+   alone). P2 demoted accordingly.
+4. **G3 outcome (analysis only, nothing frozen)**: E6 absolute E2E
+   quantiles (P40/60/80 = 142/204/217 s) are batch-saturated — position
+   sensitivity ≈ 0 (first vs last in cell both ~148 s median) — they
+   would measure batch position, not scheduling. A workable rule anchors
+   D on per-task QUEUE-FREE work (service+own-switch: median 46.8 s,
+   P90 377 s) with pre-registered multipliers; freeze deferred to pilot
+   authorization with a discrimination check (evidence
+   G3_FEASIBILITY.json).
+5. **Power redesign on divergent-task fraction**: E6 fault30 has
+   dR(DD−SS)≠0 on only 45% of tasks and I≠0 on 45% — the effective
+   paired denominator is n×0.45. Combined with the earlier paired sd
+   (0.283 / 0.340), nominal panel sizes for 80% power at one-sided
+   α=.05 become approximately: **Δ=0.10 → ~109 tasks; Δ=0.08 → ~171;
+   Δ=0.15 → ~49** for the primary; the interaction needs
+   **~158 / ~249 / ~71** respectively. (E6-derived variance is
+   M5-confounded — treat as resource-planning bounds, re-estimated at
+   pilot.)
+6. **Six-arm budget re-estimate** (per-task physical, from E6 actuals
+   + MONO): base 4 (shared via identity cache across arms) + arm
+   extras (SS ~1.7, DS ~0.6, SD ~1.2, DD ~1.5, NONE ~1.0, MONO ~1.3
+   incl. fallback) ≈ **11.3/task**; n=60 → ~680 requests, ~270K
+   tokens; wall: 6 cells stage-batched ≈ 6×(10–14 switches ×65 s +
+   calls) ≈ **6,000–8,000 s**. Cumulative-context: this experiment
+   line's real spend to date = 0 (global historical lines: calibration
+   1,200; supplementary 124+80 quarantined; reliability 1,257 closed).
+   PROPOSED caps: **800 requests / 350K tokens / 10,800 s** (approval
+   required).
+7. **Zero-call build landed this round**: joint_verification_runner.py
+   (G1 v2.1 settlement + G2 MONO, six arms) with 6/6 tests
+   (JOINT_VERIFY_ZERO_CALL.json) and G3 evidence; see
+   JOINT_SCHED_ZERO_CALL_READINESS.md for blockers B1–B4 and the
+   approvable micro-pilot conditions. Real execution remains
+   UNAUTHORIZED.
