@@ -490,11 +490,17 @@ def execute(approved_sha):
     def _new_engine(stage):
         """One engine + identity cache PER STAGE (its own ledger under
         the stage dir). Within-stage cache reuse — what the fault
-        manifestation and V1 identity repeats need — is preserved."""
+        manifestation and V1 identity repeats need — is preserved. The
+        new engine INHERITS the manager's running model: a stage whose
+        first job uses that model needs no switch, any other model
+        takes the normal stop+start switch (cold-start-on-occupied-GPU
+        handoff defect, caught on run_20261012_113752)."""
         sdir = run_dir / stage
         sdir.mkdir(parents=True, exist_ok=True)
         eng = RealEngine(sdir, server, RealClock(), seed=f'relv_{stage}',
                          manager=manager)
+        if manager.state['model'] is not None:
+            eng.current_model = manager.state['model']
         server.engine = eng
         return eng
 
