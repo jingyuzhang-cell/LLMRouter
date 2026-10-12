@@ -451,48 +451,40 @@ def test_T11_p3_freeze():
 # ===== final closure (ruling d1353b1): fake-transport six-arm loop ======
 
 def test_T12_fake_transport_six_arm_loop():
-    """Full six-arm closed loop through execute() with a FAKE transport:
-    real engine class (model lifecycle stubbed at the manager), real
-    Budget, real ledgers; verifies base sharing, per-arm attribution,
-    fail-stop, and the INCOMPLETE permanence."""
+    """Full six-arm closed loop through execute() with a FAKE transport
+    (ruling 781fd25): verifies the B3 hash gate, the ENTRY-OWNED
+    INCOMPLETE on failure (never written by test code), per-task base
+    attribution (B2), and the consistent dual rewards (B1)."""
+    import hashlib
     import deadline_reward_v1.supplementary_runner as sr
-    from deadline_reward_v1.scheduler_state import SchedulerState  # noqa
     root = HERE / 'evidence' / 'jv_tests' / 't12'
     shutil.rmtree(root, ignore_errors=True)
     root.mkdir(parents=True)
 
-    answers = dict(ANS)
-
     class FakeMod:
         def call_model(self, model, prompt):
             return dict(status='delivered',
-                        answer='{"facts":[{"value":1.5,"evidence":"a"}]}'
-                        if 'facts' not in prompt[:40] else
-                        '{"expression":"v0"}',
+                        answer='{"facts":[{"value":1.5,"evidence":"a"}]}',
                         usage=dict(prompt_tokens=100, completion_tokens=30,
                                    total_tokens=130))
 
     class FakeMgr:
         def __init__(self):
             self.state = dict(proc=None, log=None, model=None)
-            self.switches = []
+            self.stops = 0
 
         def _mod(self):
             return FakeMod()
 
         def start(self, m):
-            self.switches.append(('start', m))
+            pass
 
         def stop_current(self):
-            if self.state['model']:
-                self.switches.append(('stop', self.state['model']))
+            self.stops += 1
             self.state.update(proc=None, log=None, model=None)
 
-    mgr = FakeMgr()
-
-    def make_server(budget, task_map):
-        return sr.RealServer({}, mgr, budget, task_map, root)
-
+    p3_sha = hashlib.sha256(
+        (HERE / 'JOINT_VERIFY_P3_FREEZE.json').read_bytes()).hexdigest()
     PRI = json.loads((HERE / 'PRIORS_STUB_V1.json').read_text())
     pol = PRI['policy']
     params = dict(priors=PRI, q_min=pol['q_min'], eps=pol['eps'],
@@ -514,42 +506,64 @@ def test_T12_fake_transport_six_arm_loop():
              tasks[2]['uid']: 'wide'}
     faults = {tasks[0]['uid']}
 
-    payload = jv.execute(
-        approved_p3_sha='fake', run_root=root / 'run1',
-        make_server=make_server, manager=mgr, tasks=tasks,
-        gold_map=gold_map, fit_binding=fit, switch_costs=sw,
-        tiers=tiers, fault_uids=faults,
-        d3_answer='###SYNTHETIC UNPARSEABLE r-output###',
-        planned=planned, params=params, predictor=pred,
-        compensator=comp)
-    assert set(payload['statuses']) == set(jv.ARMS) | {'base'}
-    assert all(v == 'COMPLETE' for v in payload['statuses'].values())
-    # base share attribution present on every DAG row
-    for arm in ('SS', 'DS', 'SD', 'DD', 'NONE'):
-        for r in payload['rows'][arm]:
-            s = r['R_settlement']
-            assert 'C_full_task' in s and 'C_attribution' in s
-            assert s['C_attribution']['base_share'] > 0
-    # MONO rows carry the same attribution shape
-    for r in payload['rows']['MONO']:
-        assert r['metering']['C_full_task'] > \
-            r['metering']['arm_incremental_tokens']
-    # engine lifecycle: starts/stops actually issued through manager
-    assert len(mgr.switches) >= 2
-    # fail-stop: a second execution into the SAME root is refused
+    def run(run_root, mgr, sha=p3_sha):
+        def make(budget, task_map):
+            return sr.RealServer({}, mgr, budget, task_map, root)
+        return jv.execute(
+            approved_p3_sha=sha, run_root=run_root, make_server=make,
+            manager=mgr, tasks=tasks, gold_map=gold_map,
+            fit_binding=fit, switch_costs=sw, tiers=tiers,
+            fault_uids=faults,
+            d3_answer='###SYNTHETIC UNPARSEABLE r-output###',
+            planned=planned, params=params, predictor=pred,
+            compensator=comp)
+
+    # ---- B3: wrong freeze hash refused before ANY spend --------------
+    mgr = FakeMgr()
     try:
-        jv.execute(approved_p3_sha='fake', run_root=root / 'run1',
-                   make_server=make_server, manager=mgr, tasks=tasks,
-                   gold_map=gold_map, fit_binding=fit, switch_costs=sw,
-                   tiers=tiers, fault_uids=faults,
-                   d3_answer='###X###', planned=planned, params=params,
-                   predictor=pred, compensator=comp)
+        run(root / 'run0', mgr, sha='0' * 64)
         return False
     except PermissionError:
         pass
-    # fail-stop: an exploding transport -> exception propagates, run dir
-    # preserved, INCOMPLETE artifact written by the caller-side guard;
-    # here we assert the propagation and ledger preservation
+    assert not (root / 'run0' / 'budget' / 'DISPATCH.jsonl').exists(), \
+        'hash gate must fire before any reservation'
+
+    # ---- happy path ---------------------------------------------------
+    payload = run(root / 'run1', FakeMgr())
+    assert set(payload['statuses']) == set(jv.ARMS) | {'base'}
+    # B2: per-task base attribution (sum of per-task == base total)
+    pt = payload['shared_base']['per_task_tokens']
+    assert set(pt) == {t['uid'] for t in tasks} and all(v > 0 for v in pt.values())
+    assert sum(pt.values()) == payload['shared_base']['total_tokens']
+    # B1: dual rewards present and CONSISTENT on every DAG row
+    from deadline_reward_v1.reward import realized_rtask
+    for arm in ('SS', 'DS', 'SD', 'DD', 'NONE'):
+        for r in payload['rows'][arm]:
+            s = r['R_settlement']
+            assert 'R_conditional' in s and 'R_full_task_cost_view' in s
+            a = s['C_attribution']
+            want_c = realized_rtask(q=s['Q'], c_full=a['arm_incremental'],
+                                    T=s['T'], D=s['D'], **jv.LAM)
+            want_f = realized_rtask(q=s['Q'],
+                                    c_full=a['C_full_task'],
+                                    T=s['T'], D=s['D'], **jv.LAM)
+            assert abs(s['R_conditional'] - want_c) < 1e-9
+            assert abs(s['R_full_task_cost_view'] - want_f) < 1e-9
+            assert a['C_full_task'] == a['per_task_base'] \
+                + a['arm_incremental']
+    # MONO rows carry the same dual semantics
+    for r in payload['rows']['MONO']:
+        s = r['R_settlement']
+        assert 'R_conditional' in s and 'R_full_task_cost_view' in s
+
+    # ---- B3: same-dir re-execution refused ---------------------------
+    try:
+        run(root / 'run1', FakeMgr())
+        return False
+    except PermissionError:
+        pass
+
+    # ---- B3: ENTRY-OWNED INCOMPLETE on transport explosion -----------
     class Boom(FakeMod):
         def call_model(self, model, prompt):
             raise RuntimeError('transport exploded')
@@ -559,32 +573,29 @@ def test_T12_fake_transport_six_arm_loop():
             return Boom()
 
     bm = BoomMgr()
-
-    def make_boom(budget, task_map):
-        return sr.RealServer({}, bm, budget, task_map, root)
-
     try:
-        jv.execute(approved_p3_sha='fake', run_root=root / 'run2',
-                   make_server=make_boom, manager=bm, tasks=tasks,
-                   gold_map=gold_map, fit_binding=fit, switch_costs=sw,
-                   tiers=tiers, fault_uids=faults,
-                   d3_answer='###X###', planned=planned, params=params,
-                   predictor=pred, compensator=comp)
+        run(root / 'run2', bm)
         return False
     except BaseException as exc:
         assert 'exploded' in str(exc)
-    assert (root / 'run2' / 'base').exists(), 'ledgers preserved'
-    # official results for the failed run must NOT exist
-    assert not (root / 'JOINT_VERIFY_RESULTS.json').exists() or \
-        payload is not None   # run1's official file may exist; run2's
-    # INCOMPLETE marker for run2 via the guard
-    jv.write_results(root / 'RUN2.json', 'INCOMPLETE',
-                     dict(reason='transport exploded'))
+    # the INCOMPLETE artifact was written BY THE ENTRY (we did NOT
+    # write it here); its reason names the failure
+    inc = root / 'JOINT_VERIFY_RESULTS_INCOMPLETE.json'
+    assert inc.exists(), 'entry must auto-write INCOMPLETE'
+    doc = json.loads(inc.read_text())
+    assert doc['status'] == 'INCOMPLETE' and 'exploded' in doc['reason']
+    # the model server was stopped by the entry
+    assert bm.stops >= 1
+    # run2's base ledger preserved
+    assert (root / 'run2' / 'base' / 'TASK_LEDGER.jsonl').exists()
+    # and the twin permanently blocks COMPLETE
     try:
-        jv.write_results(root / 'RUN2.json', 'COMPLETE', dict(x=1))
+        jv.write_results(root / 'JOINT_VERIFY_RESULTS.json', 'COMPLETE',
+                         dict(x=1))
         return False
     except PermissionError:
         return True
+
 
 
 if __name__ == '__main__':

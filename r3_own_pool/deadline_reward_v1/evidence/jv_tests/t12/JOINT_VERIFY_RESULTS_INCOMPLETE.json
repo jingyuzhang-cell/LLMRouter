@@ -1,0 +1,6 @@
+{
+ "status": "INCOMPLETE",
+ "reason": "RuntimeError(\"model dispatch failed twice (e1|large|jv0): RuntimeError('transport exploded')\")",
+ "statuses": {},
+ "traceback": "Traceback (most recent call last):\n  File \"/root/r3_own_pool/deadline_reward_v1/joint_verification_runner.py\", line 480, in execute\n    snapshot = run_shared_base(base_engine, tasks, planned,\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/r3_own_pool/deadline_reward_v1/joint_verification_runner.py\", line 224, in run_shared_base\n    engine.run_jobs('BASE_A', [dict(task=t, node='e1', kind='plain',\n  File \"/root/r3_own_pool/deadline_reward_v1/stub_engine.py\", line 366, in run_jobs\n    self._run_stage(stage, jobs)\n  File \"/root/r3_own_pool/deadline_reward_v1/stub_engine.py\", line 346, in _run_stage\n    self._call(stage, j['task'], j['node'], j['kind'],\n  File \"/root/r3_own_pool/deadline_reward_v1/stub_engine.py\", line 296, in _call\n    resp = self.server.draw(node, kind, model, uid, attempt,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/r3_own_pool/deadline_reward_v1/supplementary_runner.py\", line 370, in draw\n    raise RuntimeError(\nRuntimeError: model dispatch failed twice (e1|large|jv0): RuntimeError('transport exploded')\n"
+}
