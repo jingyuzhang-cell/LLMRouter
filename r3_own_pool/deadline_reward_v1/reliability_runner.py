@@ -503,7 +503,10 @@ def execute(approved_sha):
             RuntimeError('SIGALRM wall deadline')))
         signal.setitimer(signal.ITIMER_REAL, GLOBAL_CAPS['wall_s'])
         budget = Budget(run_dir / 'fit', STAGE_CAPS['fit'])
-        server = RealServer({}, manager, budget, {}, run_dir)
+        task_map = {t['uid']: t for t in json.loads(
+            (ROOT / 'static_dag_v0/frozen200/FROZEN200_POLICY.json')
+            .read_text())['tasks']}
+        server = RealServer({}, manager, budget, task_map, run_dir)
         engine = _new_engine('fit')
         stage_fit(engine, server, budget, freeze, run_dir)
         statuses['fit'] = 'COMPLETE'
