@@ -1,9 +1,0 @@
-# Goal IR操作输入Schema修复
-
-goal_ir_schema原先对非抽取输入使用通用类型集合且没有minItems，允许calculate仅包含expression。编译器会拒绝，但服务Schema未提前表达必要输入约束。
-
-修改：各操作限制可接受输入类型；根据既有合同必需角色数设置minItems；verify_value严格一个输入。calculate/verify_expression至少两个输入。保留输入顺序自由、多根、三/五节点与原编译器。并不保证每个角色必然存在：两个expression仍可能通过Schema，但重复引用、缺少facts等由编译器拒绝。没有使用服务不支持的contains/minContains，也不自动补边。未改运行时合同或评分。
-
-新增4项测试，run03真实失败候选在Schema阶段被拒绝；297/297零调用回归通过。实际vLLM0.11.0/xgrammar0.1.19离线编译通过，零HTTP/模型加载。A遗漏必要表输入属于语义覆盖，未伪装成Schema解决；原生成器coverage_review负责审查实际来源，不保证任务正确。
-
-新源码/Schema导致run03绑定不适用于新调用，旧证据保留。未修改历史候选、冻结实验、固定48配置或评分，未提交推送。下一步重新冻结并测量新PromptToken包络，取得独立授权后诊断；不宣称真实合法率提升。
