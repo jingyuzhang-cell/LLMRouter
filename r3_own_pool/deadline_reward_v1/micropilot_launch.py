@@ -84,15 +84,13 @@ def main():
         raise PermissionError('GPU lock held by another process')
 
     # ---- gate 6: unique run dir ---------------------------------------
+    # NOTE: execute() OWNS directory creation (attempt-0 lesson: a
+    # pre-created dir trips its no-reuse guard before any spend)
     run_root = HERE / 'micropilot_runs' / time.strftime(
         'pilot_%Y%m%d_%H%M%S')
-    try:
-        run_root.mkdir(parents=True, exist_ok=False)
-    except FileExistsError:
+    if run_root.exists():
         lock_fh.close()
         raise PermissionError('run dir exists — no reuse')
-    (run_root / 'JOINT_VERIFY_MICROPILOT_FREEZE.json').write_bytes(
-        mp_path.read_bytes())
 
     # ---- wire the real execution --------------------------------------
     from deadline_reward_v1 import joint_verification_runner as jv
