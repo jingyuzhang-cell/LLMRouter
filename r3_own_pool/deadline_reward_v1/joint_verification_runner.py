@@ -408,7 +408,7 @@ def _per_task_base_tokens(base_engine):
 def execute(approved_p3_sha, run_root, make_server, manager, tasks,
             gold_map, fit_binding, switch_costs, tiers, fault_uids,
             d3_answer, planned, params, predictor, compensator,
-            gpu_lock_path=None):
+            gpu_lock_path=None, caps=None):
     """One controlled six-arm execution (B1/B2/B3 ruling 781fd25).
 
     B3: the P3 freeze hash is VERIFIED; the GPU-exclusive flock is
@@ -457,10 +457,10 @@ def execute(approved_p3_sha, run_root, make_server, manager, tasks,
             fcntl.flock(lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
         from collab_scheduler_v1.joint_search_smoke.proposal_v2 \
             .smoke_runner import Budget
-        caps = dict(wall_seconds=1800.0, new_request_attempts=60,
-                    new_total_tokens=25000,
-                    request_token_reservation=6144,
-                    max_output_tokens=4096)   # PROPOSED pilot caps
+        caps = caps or dict(wall_seconds=1800.0, new_request_attempts=60,
+                            new_total_tokens=25000,
+                            request_token_reservation=6144,
+                            max_output_tokens=4096)  # proposed defaults
         (run_root / 'budget').mkdir(parents=True, exist_ok=True)
         budget = Budget(run_root / 'budget', caps)
         task_map = {t['uid']: t for t in tasks}
