@@ -17,9 +17,14 @@
    "stop": "request budget"
   },
   "g3_stop_no_retry": {
-   "settle_invalid_usage": {
-    "calls": 1,
-    "stop": "Missing/invalid usage; full reservation retained"
+   "settle_retry_once": {
+    "calls": 2,
+    "attempts": 2,
+    "failed_recorded": 1
+   },
+   "settle_double_failure_stops": {
+    "calls": 2,
+    "stop": "model dispatch failed twice (r|medium|u1): StopRun('Missing/invalid usage; full reservation retained')"
    },
    "stoprun_propagates": {
     "calls": 1,

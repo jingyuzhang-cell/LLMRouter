@@ -338,8 +338,23 @@ class RealServer:
             if got.get('status') == 'delivered' and got.get('usage'):
                 resp = dict(got)
                 resp['latency_s'] = time.monotonic() - t0
-                self.budget.settle(idx, resp)   # invalid usage -> StopRun
-                break                           # propagates, no retry
+                try:
+                    self.budget.settle(idx, resp)
+                    break
+                except BaseException as exc:
+                    # 2026-10-12: a delivered response with INVALID usage
+                    # (e.g. total > reservation on long-prompt menu cells)
+                    # is recorded as a failed attempt with its OWN charged
+                    # reservation and retried ONCE with a new reservation;
+                    # a second consecutive failure propagates. Budget-stop
+                    # exceptions other than settle-rejection (wall/request/
+                    # token caps) still propagate immediately.
+                    if 'invalid usage' not in str(exc):
+                        raise
+                    err = exc
+                    _record_failed(idx, _attempt, f'settle: {exc}', got)
+                    resp = None
+                    continue
             err = RuntimeError(
                 f"status={got.get('status')} "
                 f"finish={got.get('finish_reason')}")

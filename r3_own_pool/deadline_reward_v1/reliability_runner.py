@@ -49,18 +49,25 @@ from deadline_reward_v1.supplementary_runner import (
     ModelManager, RealClock, RealEngine, RealServer)
 
 K_REPEATS = 3
+# Reservation 6144 >= worst observed single-call total on the FULL menu
+# (e2|medium on long-context tasks: prompt 4117 + completion 512 = 4629,
+# run_20261012_121604 validate id=4 — the 2048 reservation was sized off
+# the planned-path calibration max 1879 and rejected legal responses).
+# Stage token caps re-derived from the fit stage's measured average
+# (~417/call) plus outlier allowance; the GLOBAL envelope 1200 requests /
+# 600K tokens / 14400 s is UNCHANGED (stage sum 550K <= 600K).
 STAGE_CAPS = dict(
     fit=dict(wall_seconds=3300.0, new_request_attempts=340,
-             new_total_tokens=120000, request_token_reservation=2048,
+             new_total_tokens=200000, request_token_reservation=6144,
              max_output_tokens=4096),
     screen=dict(wall_seconds=1100.0, new_request_attempts=60,
-                new_total_tokens=22000, request_token_reservation=2048,
+                new_total_tokens=40000, request_token_reservation=6144,
                 max_output_tokens=4096),
     validate=dict(wall_seconds=2600.0, new_request_attempts=460,
-                  new_total_tokens=150000, request_token_reservation=2048,
+                  new_total_tokens=250000, request_token_reservation=6144,
                   max_output_tokens=4096),
     contention=dict(wall_seconds=3600.0, new_request_attempts=80,
-                    new_total_tokens=28000, request_token_reservation=2048,
+                    new_total_tokens=60000, request_token_reservation=6144,
                     max_output_tokens=4096))
 GLOBAL_CAPS = dict(requests=1200, tokens=600000, wall_s=14400.0)
 D3_ANSWER = '###SYNTHETIC UNPARSEABLE r-output###'

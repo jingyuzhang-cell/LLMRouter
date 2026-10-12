@@ -144,21 +144,35 @@ def test_cap_rejects_before_dispatch():
 # ---------------------------------------------------------------- group 3
 def test_budget_stop_propagates_no_retry():
     out = {}
-    # (a) settle rejects invalid usage AFTER a delivered response: no retry
+    # (a) 2026-10-12 revision: a delivered response with invalid usage is
+    # a RETRYABLE failed attempt (own reservation, attempt_failed event);
+    # one bad + one good -> success with 2 attempts / 2 reservations
     tmp = TMP / 'g3a'
     bad = dict(status='delivered', answer='x',
                usage=dict(prompt_tokens=100, completion_tokens=99,
                           total_tokens=150))       # 100+99 != 150
-    server, budget, manager = _server(tmp / 'b', [bad])
+    server, budget, manager = _server(tmp / 'b', [bad, DELIVERED])
+    resp = server.draw('r', 'esc', 'medium', 'u1', 1)
+    assert manager.calls == 2 and budget.attempts == 2
+    disp = [json.loads(l) for l in
+            (tmp / 'b' / 'DISPATCH.jsonl').read_text().splitlines()]
+    af = [d for d in disp if d['event'] == 'attempt_failed']
+    assert len(af) == 1 and 'invalid usage' in af[0]['error']
+    out['settle_retry_once'] = dict(calls=manager.calls,
+                                    attempts=budget.attempts,
+                                    failed_recorded=len(af))
+    # (a2) TWO consecutive invalid-usage responses -> StopRun propagates
+    tmp = TMP / 'g3a2'
+    server, budget, manager = _server(tmp / 'b', [bad, dict(bad)])
     try:
         server.draw('r', 'esc', 'medium', 'u1', 1)
         raised = None
     except BaseException as exc:
         raised = exc
     assert 'invalid usage' in str(raised)
-    assert manager.calls == 1, 'no automatic retry on settle rejection'
-    out['settle_invalid_usage'] = dict(calls=manager.calls,
-                                       stop=str(raised))
+    assert manager.calls == 2, 'exactly one retry, then honest stop'
+    out['settle_double_failure_stops'] = dict(calls=manager.calls,
+                                              stop=str(raised))
     # (b) a StopRun-family BaseException from dispatch propagates intact
     tmp = TMP / 'g3b'
     server, budget, manager = _server(
