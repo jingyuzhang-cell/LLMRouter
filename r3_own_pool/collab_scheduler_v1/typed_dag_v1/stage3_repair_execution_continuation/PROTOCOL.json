@@ -1,0 +1,216 @@
+{
+  "caps": {
+    "new_request_attempts": 2,
+    "new_total_tokens": 8192,
+    "request_token_reservation": 4096,
+    "max_output_tokens": 2048,
+    "wall_seconds": 300,
+    "logical_calls_per_task_config_state": 10
+  },
+  "global_attempt_cap": 18,
+  "previous_attempts": 16,
+  "source": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/stage3_repair_real_02",
+  "graph": {
+    "graph_id": "generated-accb86d67204a4ad",
+    "schema_version": "typed-dag.v1",
+    "graph_version": 2,
+    "task_id": "typed-stage3-repair-change",
+    "nodes": [
+      {
+        "node_id": "extraction_1",
+        "node_type": "extraction",
+        "subtask": "facts.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "context",
+            "source": "task",
+            "field": "ctx_table",
+            "node_id": null
+          }
+        ],
+        "output_contract": "facts.v1",
+        "dependencies": [],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "reasoning_1",
+        "node_type": "reasoning",
+        "subtask": "expression.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "facts",
+            "source": "node",
+            "field": "facts",
+            "node_id": "extraction_1"
+          }
+        ],
+        "output_contract": "expression.v1",
+        "dependencies": [
+          "extraction_1"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "transformation_1",
+        "node_type": "transformation",
+        "subtask": "calculate.v1",
+        "inputs": [
+          {
+            "port": "facts",
+            "source": "node",
+            "field": "facts",
+            "node_id": "extraction_1"
+          },
+          {
+            "port": "expression",
+            "source": "node",
+            "field": "expression",
+            "node_id": "reasoning_1"
+          }
+        ],
+        "output_contract": "calculate.v1",
+        "dependencies": [
+          "extraction_1",
+          "reasoning_1"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "verification_1",
+        "node_type": "verification",
+        "subtask": "verify_value.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "value",
+            "source": "node",
+            "field": "value",
+            "node_id": "transformation_1"
+          }
+        ],
+        "output_contract": "verify_value.v1",
+        "dependencies": [
+          "transformation_1"
+        ],
+        "success_contract": "schema.v1"
+      }
+    ],
+    "final_outputs": [
+      {
+        "name": "answer",
+        "node_id": "verification_1",
+        "port": "value"
+      }
+    ],
+    "provenance": {
+      "semantic_plan": {
+        "nodes": [
+          {
+            "id": "extraction_1",
+            "type": "extraction",
+            "subtask": "facts.v1",
+            "dependencies": [],
+            "context_field": "ctx_table"
+          },
+          {
+            "id": "reasoning_1",
+            "type": "reasoning",
+            "subtask": "expression.v1",
+            "dependencies": [
+              "extraction_1"
+            ],
+            "context_field": "ctx_text"
+          },
+          {
+            "id": "transformation_1",
+            "type": "transformation",
+            "subtask": "calculate.v1",
+            "dependencies": [
+              "extraction_1",
+              "reasoning_1"
+            ],
+            "context_field": "ctx_table"
+          },
+          {
+            "id": "verification_1",
+            "type": "verification",
+            "subtask": "verify_value.v1",
+            "dependencies": [
+              "transformation_1"
+            ],
+            "context_field": "ctx_text"
+          }
+        ],
+        "final_outputs": [
+          {
+            "name": "answer",
+            "node_id": "verification_1"
+          }
+        ]
+      },
+      "contract_bindings": {
+        "extraction_1": "facts.v1",
+        "reasoning_1": "expression.v1",
+        "transformation_1": "calculate.v1",
+        "verification_1": "verify_value.v1"
+      },
+      "origin": "llm_semantic_plan_program_assembly",
+      "parent_graph": "b270a8af9de81d76d7a5f796c3274282cd7a37af12be249bedec314cd2c32f8c",
+      "raw_response_sha": "68d54e670d4382565aa8fb1c476a7b78415e5c02bc908065fef2ad2d63ad7489",
+      "public_input_sha": "f0061a3183c061e5f12d1282a785c624381639ffc524dc4ceb3fbd0fe8cd7dea",
+      "deterministic_repairs": [],
+      "stage": "initial_generation",
+      "semantic_guarantee": false,
+      "coverage_review": {
+        "covered": true,
+        "requirements": {
+          "answer": [
+            "transformation_1"
+          ]
+        },
+        "reason": "The graph structure and subtasks are designed to cover the required output 'answer'. The 'extraction_1' node extracts the relevant facts from the context, 'reasoning_1' forms an expression based on the question and extracted facts, 'transformation_1' calculates the difference, and 'verification_1' verifies the value. Each node's outputs are correctly mapped to the required inputs of the subsequent nodes, and the final output 'answer' is derived from 'transformation_1'."
+      }
+    }
+  },
+  "task": {
+    "task_id": "typed-stage3-repair-change",
+    "domain": "financial_arithmetic",
+    "context": {
+      "question": "What is the increase in cash from last year to this year? Return the difference, not a percentage.",
+      "ctx_table": "Last year cash: 6. This year cash: 17.",
+      "ctx_text": "Cash figures use the same unit."
+    },
+    "required_outputs": {
+      "answer": "This year cash minus last year cash, numeric difference"
+    }
+  },
+  "source_sha": {
+    "RESULTS.json": "d0e13cdf58e1d5389472e12c11e164cdb7a2ed10263bc96ae0aeec9563d8fe89",
+    "TRAJECTORY.jsonl": "beb1f2db481923899f67cbe51540968345841d3b35116a4bad9f53062e492999",
+    "PROTOCOL.json": "8f822cb77da720368e3effaded92438c7d5f80b8cd0ea82305103442f76d1b9d"
+  },
+  "code_sha": {
+    "real_generation_continue.py": "ea233fd4a3ca9adcf1435ecab6fb2cdf34987110f7aac02f0e4c089b197841e9",
+    "execution.py": "9621bffc4c557021c72f333ac30cfe6e2c81390f5b6ac732aa72a68eeb7df275",
+    "protocol.py": "443912941567223303f6afb24e5b2cfe551c41479d024157c0c20999411df9f1",
+    "generation_schema.py": "21e60409fe94631142b8287d08f873547cee6bf6dc4006ca6641e604ba62658b"
+  },
+  "purpose": "No regeneration or topology edit; bounded execution continuation"
+}

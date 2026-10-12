@@ -1,0 +1,121 @@
+{
+  "protocol": "declared-goal-chain-audit.v1",
+  "mode": "goal_ir_roles",
+  "errors": [
+    {
+      "error_code": "IR_GOAL_UNCOVERED",
+      "node_ref": null,
+      "related_refs": [],
+      "cycle_path": [],
+      "missing_dependency": null,
+      "expected_constraint": null,
+      "actual_value": "answer",
+      "field": "final_goal.outputs.symbol"
+    },
+    {
+      "error_code": "IR_GOAL_UNCOVERED",
+      "node_ref": null,
+      "related_refs": [],
+      "cycle_path": [],
+      "missing_dependency": null,
+      "expected_constraint": "one exact final producer",
+      "actual_value": "answer",
+      "field": "final_goal.outputs"
+    }
+  ],
+  "producer_definitions": {
+    "facts": [
+      {
+        "node_ref": "extract_1",
+        "operation": "extract",
+        "symbol": "facts",
+        "type": "source_facts",
+        "unit": "%"
+      }
+    ],
+    "expression": [
+      {
+        "node_ref": "form_expression_2",
+        "operation": "form_expression",
+        "symbol": "expression",
+        "type": "expression",
+        "unit": "%"
+      }
+    ],
+    "calculated_value": [
+      {
+        "node_ref": "calculate_3",
+        "operation": "calculate",
+        "symbol": "calculated_value",
+        "type": "calculated_value",
+        "unit": "%"
+      }
+    ],
+    "verified_value": [
+      {
+        "node_ref": "verify_value_4",
+        "operation": "verify_value",
+        "symbol": "verified_value",
+        "type": "verified_value",
+        "unit": "%"
+      }
+    ]
+  },
+  "consumer_bindings": [
+    {
+      "consumer_ref": "form_expression_2",
+      "role": "facts",
+      "reference": "facts",
+      "producer_refs": [
+        "extract_1"
+      ],
+      "status": "UNIQUE"
+    },
+    {
+      "consumer_ref": "calculate_3",
+      "role": "expression",
+      "reference": "expression",
+      "producer_refs": [
+        "form_expression_2"
+      ],
+      "status": "UNIQUE"
+    },
+    {
+      "consumer_ref": "calculate_3",
+      "role": "facts",
+      "reference": "facts",
+      "producer_refs": [
+        "extract_1"
+      ],
+      "status": "UNIQUE"
+    },
+    {
+      "consumer_ref": "verify_value_4",
+      "role": "value",
+      "reference": "calculated_value",
+      "producer_refs": [
+        "calculate_3"
+      ],
+      "status": "UNIQUE"
+    }
+  ],
+  "final_producers": [
+    {
+      "name": "answer",
+      "reference": "answer",
+      "producer_refs": [],
+      "status": "MISSING"
+    }
+  ],
+  "reverse_chain": {},
+  "static_status": "FAIL",
+  "source_coverage": "NOT_ASSESSED",
+  "operation_intent": "REQUIRES_SEMANTIC_REVIEW",
+  "fact_truth": "NOT_ASSESSED",
+  "expression_runtime_references": "NOT_ASSESSED",
+  "invented_edges": 0,
+  "modified_candidate": false,
+  "cycle_paths": [],
+  "llm_replanning_required": true,
+  "admission_status": "REJECT_STATIC"
+}

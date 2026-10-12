@@ -1,0 +1,116 @@
+{
+  "protocol": "declared-goal-chain-audit.v1",
+  "mode": "semantic",
+  "errors": [
+    {
+      "error_code": "PRODUCER_TYPE_MISMATCH",
+      "node_ref": "n3",
+      "related_refs": [
+        "n3"
+      ],
+      "cycle_path": [],
+      "missing_dependency": "facts",
+      "expected_constraint": "facts",
+      "actual_value": [
+        "number"
+      ],
+      "field": "input_producers.facts",
+      "producer_ref": "n3",
+      "producer_output_type": [
+        "number"
+      ],
+      "producer_output_kind": "calculated_result",
+      "consumer_ref": "n3",
+      "expected_input_type": "facts",
+      "accepted_input_kinds": [
+        "source_fact"
+      ],
+      "offending_port": "facts"
+    }
+  ],
+  "producer_definitions": {
+    "n0": [
+      {
+        "node_ref": "n0",
+        "node_type": "extraction"
+      }
+    ],
+    "n1": [
+      {
+        "node_ref": "n1",
+        "node_type": "extraction"
+      }
+    ],
+    "n2": [
+      {
+        "node_ref": "n2",
+        "node_type": "reasoning"
+      }
+    ],
+    "n3": [
+      {
+        "node_ref": "n3",
+        "node_type": "transformation"
+      }
+    ],
+    "n4": [
+      {
+        "node_ref": "n4",
+        "node_type": "verification"
+      }
+    ]
+  },
+  "consumer_bindings": [
+    {
+      "consumer_ref": "n2",
+      "role": "facts",
+      "reference": "n0",
+      "status": "UNIQUE"
+    },
+    {
+      "consumer_ref": "n2",
+      "role": "facts",
+      "reference": "n1",
+      "status": "UNIQUE"
+    },
+    {
+      "consumer_ref": "n3",
+      "role": "expression",
+      "reference": "n2",
+      "status": "UNIQUE"
+    },
+    {
+      "consumer_ref": "n3",
+      "role": "facts",
+      "reference": "n3",
+      "status": "UNIQUE"
+    },
+    {
+      "consumer_ref": "n4",
+      "role": "value",
+      "reference": "n3",
+      "status": "UNIQUE"
+    }
+  ],
+  "final_producers": [
+    {
+      "name": "answer",
+      "reference": "n4",
+      "producer_refs": [
+        "n4"
+      ],
+      "status": "UNIQUE"
+    }
+  ],
+  "reverse_chain": {},
+  "static_status": "FAIL",
+  "source_coverage": "NOT_ASSESSED",
+  "operation_intent": "REQUIRES_SEMANTIC_REVIEW",
+  "fact_truth": "NOT_ASSESSED",
+  "expression_runtime_references": "NOT_ASSESSED",
+  "invented_edges": 0,
+  "modified_candidate": false,
+  "cycle_paths": [],
+  "llm_replanning_required": true,
+  "admission_status": "REJECT_STATIC"
+}

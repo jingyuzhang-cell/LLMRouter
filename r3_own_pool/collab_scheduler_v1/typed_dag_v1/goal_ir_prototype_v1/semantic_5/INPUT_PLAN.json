@@ -1,0 +1,64 @@
+{
+  "nodes": [
+    {
+      "ref": "raw",
+      "name": "Read operands",
+      "type": "extraction",
+      "subtask": "Read table operands",
+      "context_field": "ctx_table",
+      "input_producers": {}
+    },
+    {
+      "ref": "text",
+      "name": "Read operands",
+      "type": "extraction",
+      "subtask": "Read text operands",
+      "context_field": "ctx_text",
+      "input_producers": {}
+    },
+    {
+      "ref": "math",
+      "name": "Calculate sum",
+      "type": "reasoning",
+      "subtask": "Form sum of extracted operands",
+      "input_producers": {
+        "facts": [
+          "raw",
+          "text"
+        ]
+      }
+    },
+    {
+      "ref": "compute",
+      "name": "Evaluate sum",
+      "type": "transformation",
+      "subtask": "Evaluate expression",
+      "input_producers": {
+        "facts": [
+          "raw",
+          "text"
+        ],
+        "expression": [
+          "math"
+        ]
+      }
+    },
+    {
+      "ref": "audit",
+      "name": "Check result",
+      "type": "verification",
+      "subtask": "Check computed result",
+      "input_producers": {
+        "value": [
+          "compute"
+        ]
+      }
+    }
+  ],
+  "final_outputs": [
+    {
+      "name": "answer",
+      "node_ref": "audit"
+    }
+  ]
+}

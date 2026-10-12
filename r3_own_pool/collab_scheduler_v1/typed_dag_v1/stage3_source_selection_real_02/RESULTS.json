@@ -1,0 +1,208 @@
+{
+  "tasks": [
+    {
+      "task_id": "typed-stage3-facts-change",
+      "generation_status": "REUSED_GENERATED",
+      "semantic_status": "MODEL_REVIEW_PASS_NOT_PROOF",
+      "generation_accounting": {
+        "new_requests": 0,
+        "new_tokens": 0,
+        "source": "collab_scheduler_v1/typed_dag_v1/stage3_fact_reference_real_03/RESULTS.json",
+        "source_sha": "4dbbdbdb80fa76ad2f4ae7dbaa4137bce6dd95750ba96919416f9835ce5f2d27",
+        "new_generation": false
+      },
+      "graph": {
+        "graph_id": "generated-accb86d67204a4ad",
+        "schema_version": "typed-dag.v1",
+        "graph_version": 2,
+        "task_id": "typed-stage3-facts-change",
+        "nodes": [
+          {
+            "node_id": "extraction_1",
+            "node_type": "extraction",
+            "subtask": "facts.v1",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "context",
+                "source": "task",
+                "field": "ctx_table",
+                "node_id": null
+              }
+            ],
+            "output_contract": "facts.v1",
+            "dependencies": [],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "reasoning_1",
+            "node_type": "reasoning",
+            "subtask": "expression.v1",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "extraction_1"
+              }
+            ],
+            "output_contract": "expression.v1",
+            "dependencies": [
+              "extraction_1"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "transformation_1",
+            "node_type": "transformation",
+            "subtask": "calculate.v1",
+            "inputs": [
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "extraction_1"
+              },
+              {
+                "port": "expression",
+                "source": "node",
+                "field": "expression",
+                "node_id": "reasoning_1"
+              }
+            ],
+            "output_contract": "calculate.v1",
+            "dependencies": [
+              "extraction_1",
+              "reasoning_1"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "verification_1",
+            "node_type": "verification",
+            "subtask": "verify_value.v1",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "value",
+                "source": "node",
+                "field": "value",
+                "node_id": "transformation_1"
+              }
+            ],
+            "output_contract": "verify_value.v1",
+            "dependencies": [
+              "transformation_1"
+            ],
+            "success_contract": "schema.v1"
+          }
+        ],
+        "final_outputs": [
+          {
+            "name": "answer",
+            "node_id": "verification_1",
+            "port": "value"
+          }
+        ],
+        "provenance": {
+          "semantic_plan": {
+            "nodes": [
+              {
+                "id": "extraction_1",
+                "type": "extraction",
+                "subtask": "facts.v1",
+                "dependencies": [],
+                "context_field": "ctx_table"
+              },
+              {
+                "id": "reasoning_1",
+                "type": "reasoning",
+                "subtask": "expression.v1",
+                "dependencies": [
+                  "extraction_1"
+                ],
+                "context_field": "ctx_text"
+              },
+              {
+                "id": "transformation_1",
+                "type": "transformation",
+                "subtask": "calculate.v1",
+                "dependencies": [
+                  "extraction_1",
+                  "reasoning_1"
+                ],
+                "context_field": "ctx_table"
+              },
+              {
+                "id": "verification_1",
+                "type": "verification",
+                "subtask": "verify_value.v1",
+                "dependencies": [
+                  "transformation_1"
+                ],
+                "context_field": "ctx_text"
+              }
+            ],
+            "final_outputs": [
+              {
+                "name": "answer",
+                "node_id": "verification_1"
+              }
+            ]
+          },
+          "contract_bindings": {
+            "extraction_1": "facts.v1",
+            "reasoning_1": "expression.v1",
+            "transformation_1": "calculate.v1",
+            "verification_1": "verify_value.v1"
+          },
+          "origin": "llm_semantic_plan_program_assembly",
+          "parent_graph": "b270a8af9de81d76d7a5f796c3274282cd7a37af12be249bedec314cd2c32f8c",
+          "raw_response_sha": "68d54e670d4382565aa8fb1c476a7b78415e5c02bc908065fef2ad2d63ad7489",
+          "public_input_sha": "93b13ada8d4c8b6c79e245c5e10d8feafb341b96e50abffbaf42ba8b8117fdbf",
+          "deterministic_repairs": [],
+          "stage": "initial_generation",
+          "semantic_guarantee": false,
+          "coverage_review": {
+            "covered": true,
+            "requirements": {
+              "answer": [
+                "transformation_1"
+              ]
+            },
+            "reason": "The graph structure and subtasks are designed to cover the required output. Each node's inputs and outputs align with the specified contracts and requirements. The `extraction_1` node extracts the necessary facts from the context, `reasoning_1` forms an expression based on the question and extracted facts, `transformation_1` calculates the numeric difference, and `verification_1` verifies the value against the question. The `answer` is correctly derived from the `transformation_1` node."
+          }
+        }
+      },
+      "executions": [],
+      "recoveries": []
+    }
+  ],
+  "success": false,
+  "attempts": 1,
+  "tokens": 0,
+  "pending": {
+    "1": 8192
+  },
+  "charged_tokens": 8192,
+  "model_load_s": 37.09614099934697,
+  "wall_s": 72.26479249820113,
+  "abort": "RuntimeError('Backend HTTP 400: {\"error\":{\"message\":\"The provided JSON schema contains features not supported by xgrammar.\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}}')",
+  "real_diagnostic": true
+}

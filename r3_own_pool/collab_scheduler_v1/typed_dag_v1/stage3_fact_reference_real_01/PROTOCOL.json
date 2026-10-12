@@ -1,0 +1,57 @@
+{
+  "caps": {
+    "new_request_attempts": 24,
+    "new_total_tokens": 65536,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 2048,
+    "wall_seconds": 900,
+    "logical_calls_per_task_config_state": 30
+  },
+  "tasks": [
+    {
+      "task_id": "typed-stage3-facts-change",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the increase in cash from last year to this year? Return the difference, not a percentage.",
+        "ctx_table": "Last year cash: 6. This year cash: 17.",
+        "ctx_text": "Cash figures use the same unit."
+      },
+      "required_outputs": {
+        "answer": "This year cash minus last year cash, numeric difference"
+      }
+    },
+    {
+      "task_id": "typed-stage3-facts-sum",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the total revenue of the two divisions? Return one number.",
+        "ctx_table": "Division A revenue: 13. Division B revenue: 9.",
+        "ctx_text": "Both divisions report revenue in the same unit."
+      },
+      "required_outputs": {
+        "answer": "Total revenue as a number"
+      }
+    }
+  ],
+  "model": {
+    "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "served": "Qwen/Qwen2.5-7B-Instruct"
+  },
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 2048,
+  "max_plan_repairs": 2,
+  "max_execution_attempts_per_node": 2,
+  "code_sha": {
+    "generation.py": "408e585feec6289e2f107f28db73ea34ab6027aef08bae32183c5ccaed3ce2a9",
+    "execution.py": "c7fc4e5ff4457903c940776cfed327657a22c95378b4d1c86479a3028bf24998",
+    "fact_semantics.py": "00ea726e708f74b65b8d79b41e0268490335d25ca8889b0cdb75fde254f3a4ea",
+    "protocol.py": "443912941567223303f6afb24e5b2cfe551c41479d024157c0c20999411df9f1",
+    "generation_schema.py": "6b06018844563ad73d0ebe1fe9f14761041694519fdfc485344ff135600a3178",
+    "assembly.py": "39edf3e7ce4e186fbfe383b3b5117e44c9ae7d4697f46d75ca7b9c09c22ace6b",
+    "real_fact_reference_smoke.py": "5003f63164f194e9743f3ae8bc5e723a547ce71ada412e53761e023baab108a3"
+  },
+  "purpose": "Development mechanics diagnostic, stop on first non-fallback COMPLETE and correct final score; not an efficacy experiment",
+  "no_historical_budget_reuse": true,
+  "created": 1791698080.5003383
+}

@@ -1,0 +1,747 @@
+{
+  "created_utc": "2026-10-11T07:37:32.245049+00:00",
+  "scope": "zero-call stage3 ID stability repair",
+  "real_llm_requests": 0,
+  "real_llm_tokens": 0,
+  "tests": {
+    "original": 110,
+    "new": 22,
+    "total": 132,
+    "passed": 132,
+    "observed_unittest_wall_s": 4.141
+  },
+  "schema_compile": {
+    "system_python": "xgrammar not installed",
+    "production_r3_venv": "PASS",
+    "secondary_llmrouterbench_r2_venv": "PASS",
+    "model_loaded": false
+  },
+  "code_sha256": {
+    "semantic_ids.py": "5afcb58438b922ecb58e897a5ae74f7aac28ca5d4eb2fb9fa18f2012a962dd88",
+    "generation.py": "3aede5f4406273f1440a44e757dd37a0949e6d2d4965ecae0790cb4f89a7f07d",
+    "test_semantic_ids.py": "a785d4f59826eb93701188130bd5cbc4a260431c2b8aaff66e76a842ff602045",
+    "test_source_selection.py": "5508d0d97bfb0535cfa82c35e54f99edcab51e518d33c862b889c7c4a21710f8",
+    "real_fact_reference_smoke.py": "cd74103087253fa7dbae980ba03b285bc7bb439be9a97fe4556e31fef4f02820"
+  },
+  "historical_input_sha256": {
+    "collab_scheduler_v1/typed_dag_v1/SOURCE_SELECTION_REPORT.md": "d514da3bb379666524ccf751c8be6cb726b2006a0dbf8e26f8b14315ec20b784",
+    "collab_scheduler_v1/typed_dag_v1/stage3_source_selection_real_04/TRAJECTORY.jsonl": "c999389d0f677514b9b2363cd0693438d3bc625c91786ce6066ae62162d2b0cf",
+    "collab_scheduler_v1/typed_dag_v1/stage3_source_selection_real_05/RESULTS.json": "3fa54ccaf0379ca42c817dcebc9aa9f471b1d1fbf0e21936fec80e4d22388a24"
+  },
+  "real_acceptance": {
+    "old_graph_continuation_complete_and_correct": "historical PASS, real_05",
+    "current_new_task_first_generation": "NOT_RUN",
+    "current_new_task_generation_and_execution": "NOT_RUN",
+    "current_new_task_final_score": "NOT_RUN",
+    "first_legal_rate": null,
+    "repaired_legal_rate": null,
+    "fallback_rate": null
+  },
+  "examples": [
+    {
+      "evidence_kind": "MOCK_ONLY_NOT_REAL_LLM",
+      "generation_status": "GENERATED",
+      "graph": {
+        "graph_id": "generated-69aee1a6b01dba84",
+        "schema_version": "typed-dag.v1",
+        "graph_version": 1,
+        "task_id": "mock-identity-evidence-3",
+        "nodes": [
+          {
+            "node_id": "node_2c1d704111c469ab6dc13e42",
+            "node_type": "transformation",
+            "subtask": "Evaluate expression",
+            "inputs": [
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "node_44c34f280c287ea1072accb5"
+              },
+              {
+                "port": "expression",
+                "source": "node",
+                "field": "expression",
+                "node_id": "node_0183d62fa1c044eabdbca54f"
+              }
+            ],
+            "output_contract": "calculate.v1",
+            "dependencies": [
+              "node_0183d62fa1c044eabdbca54f",
+              "node_44c34f280c287ea1072accb5"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "node_0183d62fa1c044eabdbca54f",
+            "node_type": "reasoning",
+            "subtask": "Form sum of extracted operands",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "node_44c34f280c287ea1072accb5"
+              }
+            ],
+            "output_contract": "expression.v1",
+            "dependencies": [
+              "node_44c34f280c287ea1072accb5"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "node_44c34f280c287ea1072accb5",
+            "node_type": "extraction",
+            "subtask": "Read table operands",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "context",
+                "source": "task",
+                "field": "ctx_table",
+                "node_id": null
+              }
+            ],
+            "output_contract": "facts.v1",
+            "dependencies": [],
+            "success_contract": "schema.v1"
+          }
+        ],
+        "final_outputs": [
+          {
+            "name": "answer",
+            "node_id": "node_2c1d704111c469ab6dc13e42",
+            "port": "value"
+          }
+        ],
+        "provenance": {
+          "semantic_plan": {
+            "nodes": [
+              {
+                "ref": "raw",
+                "name": "Read operands",
+                "type": "extraction",
+                "subtask": "Read table operands",
+                "context_field": "ctx_table",
+                "dependencies": []
+              },
+              {
+                "ref": "math",
+                "name": "Calculate sum",
+                "type": "reasoning",
+                "subtask": "Form sum of extracted operands",
+                "dependencies": [
+                  "raw"
+                ]
+              },
+              {
+                "ref": "compute",
+                "name": "Evaluate sum",
+                "type": "transformation",
+                "subtask": "Evaluate expression",
+                "dependencies": [
+                  "raw",
+                  "math"
+                ]
+              }
+            ],
+            "final_outputs": [
+              {
+                "name": "answer",
+                "node_ref": "compute"
+              }
+            ]
+          },
+          "contract_bindings": {
+            "node_44c34f280c287ea1072accb5": "facts.v1",
+            "node_0183d62fa1c044eabdbca54f": "expression.v1",
+            "node_2c1d704111c469ab6dc13e42": "calculate.v1"
+          },
+          "normalized_plan": {
+            "nodes": [
+              {
+                "type": "transformation",
+                "subtask": "Evaluate expression",
+                "id": "node_2c1d704111c469ab6dc13e42",
+                "dependencies": [
+                  "node_0183d62fa1c044eabdbca54f",
+                  "node_44c34f280c287ea1072accb5"
+                ]
+              },
+              {
+                "type": "reasoning",
+                "subtask": "Form sum of extracted operands",
+                "id": "node_0183d62fa1c044eabdbca54f",
+                "dependencies": [
+                  "node_44c34f280c287ea1072accb5"
+                ]
+              },
+              {
+                "type": "extraction",
+                "subtask": "Read table operands",
+                "context_field": "ctx_table",
+                "id": "node_44c34f280c287ea1072accb5",
+                "dependencies": []
+              }
+            ],
+            "final_outputs": [
+              {
+                "name": "answer",
+                "node_id": "node_2c1d704111c469ab6dc13e42"
+              }
+            ]
+          },
+          "semantic_ref_map": {
+            "raw": "node_44c34f280c287ea1072accb5",
+            "math": "node_0183d62fa1c044eabdbca54f",
+            "compute": "node_2c1d704111c469ab6dc13e42"
+          },
+          "semantic_labels": {
+            "raw": {
+              "name": "Read operands"
+            },
+            "math": {
+              "name": "Calculate sum"
+            },
+            "compute": {
+              "name": "Evaluate sum"
+            }
+          },
+          "id_policy": "program_owned_task_and_exact_ref_v1",
+          "origin": "llm_semantic_plan_program_assembly",
+          "parent_graph": null,
+          "raw_response_sha": "033848f71944d0fa690caec68a36abc0642100dbe7b22ae3eb56deb6080b9729",
+          "public_input_sha": "8edc80f2aaf83079ca7a5e60f240a57f543f70beffae2a535aa76255537872dc",
+          "deterministic_repairs": [],
+          "stage": "initial_generation",
+          "semantic_guarantee": false,
+          "coverage_review": {
+            "covered": true,
+            "requirements": {
+              "answer": [
+                "node_2c1d704111c469ab6dc13e42"
+              ]
+            },
+            "reason": "Proposed sum is covered; heuristic only"
+          }
+        }
+      },
+      "generation_accounting": {
+        "new_requests": 2,
+        "new_tokens": 60,
+        "logical_calls": 2,
+        "cache_hits": 0,
+        "serial_service_s": 0.0002811439335346222,
+        "wall_s": 0.005122289061546326
+      },
+      "execution": {
+        "graph_hash": "7f17899a84680921687f7e6c039eb3535431d85ff9b362e7426b1450f4f68cea",
+        "graph_version": 1,
+        "status": "COMPLETE",
+        "final_outputs": {
+          "answer": 2.0
+        },
+        "node_status": {
+          "node_44c34f280c287ea1072accb5": "done",
+          "node_2c1d704111c469ab6dc13e42": "done",
+          "node_0183d62fa1c044eabdbca54f": "done"
+        },
+        "errors": {},
+        "search_spend": {
+          "logical_calls": 2,
+          "injected_calls": 0,
+          "cache_hits": 0,
+          "dry_calls": 0,
+          "new_requests": 2,
+          "new_tokens": 60.0,
+          "new_latency_s": 0.00010546669363975525,
+          "answer_replaced_calls": 0
+        },
+        "deployment_tokens": 60,
+        "serial_service_s": 0.00027773529291152954,
+        "observed_execution_wall_s": 0.005475934594869614,
+        "semantic_status": "NOT_ASSESSED",
+        "fact_semantics_policy": "strict",
+        "reference_bindings": {
+          "node_0183d62fa1c044eabdbca54f": {
+            "expression": "f_55ac94c015051e92a70f3221",
+            "references": [
+              "f_55ac94c015051e92a70f3221"
+            ],
+            "snapshot": {
+              "f_55ac94c015051e92a70f3221": "107e073a4799352b1e3f786e78241a3b8cb6ba501ba45a72712b2eb314bfbd0f"
+            },
+            "position_map": {
+              "v0": "f_55ac94c015051e92a70f3221"
+            },
+            "policy": "typed-facts.v1"
+          }
+        },
+        "value_lineage": {
+          "node_2c1d704111c469ab6dc13e42": {
+            "unit_check": "UNDETERMINED",
+            "kind": "derived_value",
+            "value": 2.0,
+            "unit_dimensions": {
+              "unknown": 1
+            },
+            "data_type": "number",
+            "source_fact_ids": [
+              "f_55ac94c015051e92a70f3221"
+            ],
+            "expression": "f_55ac94c015051e92a70f3221",
+            "binding_snapshot": {
+              "f_55ac94c015051e92a70f3221": "107e073a4799352b1e3f786e78241a3b8cb6ba501ba45a72712b2eb314bfbd0f"
+            },
+            "support_status": "COMPUTED_FROM_REGISTERED_INPUTS_NOT_TASK_CORRECTNESS",
+            "producing_node": "node_2c1d704111c469ab6dc13e42"
+          }
+        },
+        "data_errors": {},
+        "extraction_mode": "facts",
+        "source_selections": {},
+        "semantic_check_s": 0.0008801408112049103,
+        "pipeline_accounting": {
+          "new_requests": 4,
+          "new_tokens": 120,
+          "wall_s": 0.012490831315517426,
+          "generation_included": true,
+          "model_prepare_included_in_wall": true
+        }
+      },
+      "expected_mock_value": 2,
+      "mock_answer_matches": true
+    },
+    {
+      "evidence_kind": "MOCK_ONLY_NOT_REAL_LLM",
+      "generation_status": "GENERATED",
+      "graph": {
+        "graph_id": "generated-73027bcee4202983",
+        "schema_version": "typed-dag.v1",
+        "graph_version": 1,
+        "task_id": "mock-identity-evidence-5",
+        "nodes": [
+          {
+            "node_id": "node_c0b571c664e3b6f4ab2f6463",
+            "node_type": "verification",
+            "subtask": "Check computed result",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "value",
+                "source": "node",
+                "field": "value",
+                "node_id": "node_0ec423dc703ced46c5efe9b3"
+              }
+            ],
+            "output_contract": "verify_value.v1",
+            "dependencies": [
+              "node_0ec423dc703ced46c5efe9b3"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "node_0ec423dc703ced46c5efe9b3",
+            "node_type": "transformation",
+            "subtask": "Evaluate expression",
+            "inputs": [
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "node_c66ae00d3c962944f01c450a"
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "node_f57ded31c26e8e22343df372"
+              },
+              {
+                "port": "expression",
+                "source": "node",
+                "field": "expression",
+                "node_id": "node_dd3963f05b480eb34d1e38b6"
+              }
+            ],
+            "output_contract": "calculate.v1",
+            "dependencies": [
+              "node_c66ae00d3c962944f01c450a",
+              "node_dd3963f05b480eb34d1e38b6",
+              "node_f57ded31c26e8e22343df372"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "node_dd3963f05b480eb34d1e38b6",
+            "node_type": "reasoning",
+            "subtask": "Form sum of extracted operands",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "node_c66ae00d3c962944f01c450a"
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "node_f57ded31c26e8e22343df372"
+              }
+            ],
+            "output_contract": "expression.v1",
+            "dependencies": [
+              "node_c66ae00d3c962944f01c450a",
+              "node_f57ded31c26e8e22343df372"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "node_f57ded31c26e8e22343df372",
+            "node_type": "extraction",
+            "subtask": "Read table operands",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "context",
+                "source": "task",
+                "field": "ctx_table",
+                "node_id": null
+              }
+            ],
+            "output_contract": "facts.v1",
+            "dependencies": [],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "node_c66ae00d3c962944f01c450a",
+            "node_type": "extraction",
+            "subtask": "Read text operands",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "context",
+                "source": "task",
+                "field": "ctx_text",
+                "node_id": null
+              }
+            ],
+            "output_contract": "facts.v1",
+            "dependencies": [],
+            "success_contract": "schema.v1"
+          }
+        ],
+        "final_outputs": [
+          {
+            "name": "answer",
+            "node_id": "node_c0b571c664e3b6f4ab2f6463",
+            "port": "value"
+          }
+        ],
+        "provenance": {
+          "semantic_plan": {
+            "nodes": [
+              {
+                "ref": "raw",
+                "name": "Read operands",
+                "type": "extraction",
+                "subtask": "Read table operands",
+                "context_field": "ctx_table",
+                "dependencies": []
+              },
+              {
+                "ref": "text",
+                "name": "Read operands",
+                "type": "extraction",
+                "subtask": "Read text operands",
+                "context_field": "ctx_text",
+                "dependencies": []
+              },
+              {
+                "ref": "math",
+                "name": "Calculate sum",
+                "type": "reasoning",
+                "subtask": "Form sum of extracted operands",
+                "dependencies": [
+                  "raw",
+                  "text"
+                ]
+              },
+              {
+                "ref": "compute",
+                "name": "Evaluate sum",
+                "type": "transformation",
+                "subtask": "Evaluate expression",
+                "dependencies": [
+                  "raw",
+                  "math",
+                  "text"
+                ]
+              },
+              {
+                "ref": "audit",
+                "name": "Check result",
+                "type": "verification",
+                "subtask": "Check computed result",
+                "dependencies": [
+                  "compute"
+                ]
+              }
+            ],
+            "final_outputs": [
+              {
+                "name": "answer",
+                "node_ref": "audit"
+              }
+            ]
+          },
+          "contract_bindings": {
+            "node_c66ae00d3c962944f01c450a": "facts.v1",
+            "node_f57ded31c26e8e22343df372": "facts.v1",
+            "node_dd3963f05b480eb34d1e38b6": "expression.v1",
+            "node_0ec423dc703ced46c5efe9b3": "calculate.v1",
+            "node_c0b571c664e3b6f4ab2f6463": "verify_value.v1"
+          },
+          "normalized_plan": {
+            "nodes": [
+              {
+                "type": "verification",
+                "subtask": "Check computed result",
+                "id": "node_c0b571c664e3b6f4ab2f6463",
+                "dependencies": [
+                  "node_0ec423dc703ced46c5efe9b3"
+                ]
+              },
+              {
+                "type": "transformation",
+                "subtask": "Evaluate expression",
+                "id": "node_0ec423dc703ced46c5efe9b3",
+                "dependencies": [
+                  "node_c66ae00d3c962944f01c450a",
+                  "node_dd3963f05b480eb34d1e38b6",
+                  "node_f57ded31c26e8e22343df372"
+                ]
+              },
+              {
+                "type": "reasoning",
+                "subtask": "Form sum of extracted operands",
+                "id": "node_dd3963f05b480eb34d1e38b6",
+                "dependencies": [
+                  "node_c66ae00d3c962944f01c450a",
+                  "node_f57ded31c26e8e22343df372"
+                ]
+              },
+              {
+                "type": "extraction",
+                "subtask": "Read table operands",
+                "context_field": "ctx_table",
+                "id": "node_f57ded31c26e8e22343df372",
+                "dependencies": []
+              },
+              {
+                "type": "extraction",
+                "subtask": "Read text operands",
+                "context_field": "ctx_text",
+                "id": "node_c66ae00d3c962944f01c450a",
+                "dependencies": []
+              }
+            ],
+            "final_outputs": [
+              {
+                "name": "answer",
+                "node_id": "node_c0b571c664e3b6f4ab2f6463"
+              }
+            ]
+          },
+          "semantic_ref_map": {
+            "raw": "node_f57ded31c26e8e22343df372",
+            "text": "node_c66ae00d3c962944f01c450a",
+            "math": "node_dd3963f05b480eb34d1e38b6",
+            "compute": "node_0ec423dc703ced46c5efe9b3",
+            "audit": "node_c0b571c664e3b6f4ab2f6463"
+          },
+          "semantic_labels": {
+            "raw": {
+              "name": "Read operands"
+            },
+            "text": {
+              "name": "Read operands"
+            },
+            "math": {
+              "name": "Calculate sum"
+            },
+            "compute": {
+              "name": "Evaluate sum"
+            },
+            "audit": {
+              "name": "Check result"
+            }
+          },
+          "id_policy": "program_owned_task_and_exact_ref_v1",
+          "origin": "llm_semantic_plan_program_assembly",
+          "parent_graph": null,
+          "raw_response_sha": "f890b26e5231e701aea4daa65f108feb0b10eb2c281f040577f7dcca76f8ace6",
+          "public_input_sha": "edbf532afc34046551768bf39fef22cb239ce9aa178fa50936e58d532ea0dbb5",
+          "deterministic_repairs": [],
+          "stage": "initial_generation",
+          "semantic_guarantee": false,
+          "coverage_review": {
+            "covered": true,
+            "requirements": {
+              "answer": [
+                "node_c0b571c664e3b6f4ab2f6463"
+              ]
+            },
+            "reason": "Proposed sum is covered; heuristic only"
+          }
+        }
+      },
+      "generation_accounting": {
+        "new_requests": 2,
+        "new_tokens": 60,
+        "logical_calls": 2,
+        "cache_hits": 0,
+        "serial_service_s": 0.0002699904143810272,
+        "wall_s": 0.004992343485355377
+      },
+      "execution": {
+        "graph_hash": "f04c57801e5fc1168ceb479414e11fbe0f02178236e4216fee198c7e37677e7e",
+        "graph_version": 1,
+        "status": "COMPLETE",
+        "final_outputs": {
+          "answer": 5.0
+        },
+        "node_status": {
+          "node_0ec423dc703ced46c5efe9b3": "done",
+          "node_f57ded31c26e8e22343df372": "done",
+          "node_c0b571c664e3b6f4ab2f6463": "done",
+          "node_dd3963f05b480eb34d1e38b6": "done",
+          "node_c66ae00d3c962944f01c450a": "done"
+        },
+        "errors": {},
+        "search_spend": {
+          "logical_calls": 4,
+          "injected_calls": 0,
+          "cache_hits": 0,
+          "dry_calls": 0,
+          "new_requests": 4,
+          "new_tokens": 120.0,
+          "new_latency_s": 0.0001912228763103485,
+          "answer_replaced_calls": 0
+        },
+        "deployment_tokens": 120,
+        "serial_service_s": 0.00044371187686920166,
+        "observed_execution_wall_s": 0.009556286036968231,
+        "semantic_status": "NOT_ASSESSED",
+        "fact_semantics_policy": "strict",
+        "reference_bindings": {
+          "node_dd3963f05b480eb34d1e38b6": {
+            "expression": "f_52eca456da59664970cbc1db + f_1dc963720b0d0cf4bc507414",
+            "references": [
+              "f_1dc963720b0d0cf4bc507414",
+              "f_52eca456da59664970cbc1db"
+            ],
+            "snapshot": {
+              "f_1dc963720b0d0cf4bc507414": "3da8909d5c81387fd3c38dc705c4ee1ba741ee7a2500dc271a0a7414d224e04c",
+              "f_52eca456da59664970cbc1db": "cfbeb8d14dfc3d91bdab2ed15c4a0dd52551755d4b9bda8eaae092b859cb5037"
+            },
+            "position_map": {
+              "v0": "f_52eca456da59664970cbc1db",
+              "v1": "f_1dc963720b0d0cf4bc507414"
+            },
+            "policy": "typed-facts.v1"
+          }
+        },
+        "value_lineage": {
+          "node_0ec423dc703ced46c5efe9b3": {
+            "unit_check": "UNDETERMINED",
+            "kind": "derived_value",
+            "value": 5.0,
+            "unit_dimensions": {
+              "unknown": 1
+            },
+            "data_type": "number",
+            "source_fact_ids": [
+              "f_1dc963720b0d0cf4bc507414",
+              "f_52eca456da59664970cbc1db"
+            ],
+            "expression": "f_52eca456da59664970cbc1db + f_1dc963720b0d0cf4bc507414",
+            "binding_snapshot": {
+              "f_1dc963720b0d0cf4bc507414": "3da8909d5c81387fd3c38dc705c4ee1ba741ee7a2500dc271a0a7414d224e04c",
+              "f_52eca456da59664970cbc1db": "cfbeb8d14dfc3d91bdab2ed15c4a0dd52551755d4b9bda8eaae092b859cb5037"
+            },
+            "support_status": "COMPUTED_FROM_REGISTERED_INPUTS_NOT_TASK_CORRECTNESS",
+            "producing_node": "node_0ec423dc703ced46c5efe9b3"
+          },
+          "node_c0b571c664e3b6f4ab2f6463": {
+            "unit_check": "UNDETERMINED",
+            "kind": "derived_value",
+            "value": 5.0,
+            "unit_dimensions": {
+              "unknown": 1
+            },
+            "data_type": "number",
+            "source_fact_ids": [
+              "f_1dc963720b0d0cf4bc507414",
+              "f_52eca456da59664970cbc1db"
+            ],
+            "expression": "f_52eca456da59664970cbc1db + f_1dc963720b0d0cf4bc507414",
+            "binding_snapshot": {
+              "f_1dc963720b0d0cf4bc507414": "3da8909d5c81387fd3c38dc705c4ee1ba741ee7a2500dc271a0a7414d224e04c",
+              "f_52eca456da59664970cbc1db": "cfbeb8d14dfc3d91bdab2ed15c4a0dd52551755d4b9bda8eaae092b859cb5037"
+            },
+            "support_status": "COMPUTED_FROM_REGISTERED_INPUTS_NOT_TASK_CORRECTNESS",
+            "producing_node": "node_c0b571c664e3b6f4ab2f6463"
+          }
+        },
+        "data_errors": {},
+        "extraction_mode": "facts",
+        "source_selections": {},
+        "semantic_check_s": 0.001008830964565277,
+        "pipeline_accounting": {
+          "new_requests": 6,
+          "new_tokens": 180,
+          "wall_s": 0.017103392630815506,
+          "generation_included": true,
+          "model_prepare_included_in_wall": true
+        }
+      },
+      "expected_mock_value": 5,
+      "mock_answer_matches": true
+    }
+  ]
+}

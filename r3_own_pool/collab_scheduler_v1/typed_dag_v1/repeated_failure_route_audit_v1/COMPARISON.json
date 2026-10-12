@@ -1,0 +1,246 @@
+[
+  {
+    "run": "bounded_ab_water_cleanup_source_v1",
+    "A_candidate": {
+      "final_outputs": [
+        {
+          "name": "answer",
+          "node_ref": "answer_node"
+        }
+      ],
+      "nodes": [
+        {
+          "context_field": "ctx_table",
+          "input_producers": {},
+          "name": "collection",
+          "ref": "collection_node",
+          "subtask": "Extract collection amounts from ctx_table",
+          "type": "extraction"
+        },
+        {
+          "context_field": "ctx_text",
+          "input_producers": {},
+          "name": "usage",
+          "ref": "usage_node",
+          "subtask": "Extract usage amounts from ctx_text",
+          "type": "extraction"
+        },
+        {
+          "input_producers": {
+            "facts": [
+              "collection_node"
+            ]
+          },
+          "name": "total_collection",
+          "ref": "total_collection_node",
+          "subtask": "Sum collection amounts",
+          "type": "reasoning"
+        },
+        {
+          "input_producers": {
+            "facts": [
+              "total_collection_node",
+              "usage_node"
+            ]
+          },
+          "name": "remaining_liters",
+          "ref": "remaining_liters_node",
+          "subtask": "Calculate remaining liters after usage",
+          "type": "reasoning"
+        },
+        {
+          "input_producers": {
+            "expression": [
+              "remaining_liters_node"
+            ],
+            "facts": [
+              "total_collection_node",
+              "usage_node"
+            ]
+          },
+          "name": "answer",
+          "ref": "answer_node",
+          "subtask": "Verify the final result",
+          "type": "transformation"
+        }
+      ]
+    },
+    "A_sha": "baec4c6a19abf609df479859ed8ff75be13e31d2f290e7a29783ad5cb037d454",
+    "B_request_sha": "d951c3a97c73da915acae8822c3a6977efe8b11d274c40cc82a8d87176e1e5c7",
+    "B_prompt_tokens": 3533,
+    "B_max_output": 4096,
+    "B_stream": false,
+    "B_model": "Qwen/Qwen2.5-7B-Instruct",
+    "B_full_schema_sha": "54981abebce08141d78d795937d51c9765580b183cf8c6c5d4aca29ebd6de07c",
+    "B_service_schema_sha": "54981abebce08141d78d795937d51c9765580b183cf8c6c5d4aca29ebd6de07c",
+    "B_trace": [
+      {
+        "request_id": "typed-ab31f46cf3354d699c1e7dd2b7920d20",
+        "stage": "constructed",
+        "monotonic_s": 32450205.60660809,
+        "unix_s": 1791775399.2469585,
+        "phase": "generate"
+      },
+      {
+        "request_id": "typed-ab31f46cf3354d699c1e7dd2b7920d20",
+        "stage": "dispatch",
+        "monotonic_s": 32450205.606865015,
+        "unix_s": 1791775399.2472148,
+        "timeout_s": 60,
+        "server_receive": "UNKNOWN",
+        "schema": "UNKNOWN",
+        "prefill": "UNKNOWN",
+        "decode": "UNKNOWN"
+      },
+      {
+        "request_id": "typed-ab31f46cf3354d699c1e7dd2b7920d20",
+        "stage": "request_error",
+        "monotonic_s": 32450265.607264683,
+        "unix_s": 1791775459.2476149,
+        "exception_type": "StopRun",
+        "exception": "Request wall timeout; unknown usage reservation retained",
+        "elapsed_s": 60.00035234540701,
+        "server_cancel_confirmed": false,
+        "server_may_continue": true
+      }
+    ],
+    "cleanup": {
+      "cleanup_start_monotonic_s": 32450265.61738954,
+      "cleanup_end_monotonic_s": 32450266.83440176,
+      "cleanup_wall_s": 1.217012219130993,
+      "total_wall_s": 209.16607538983226,
+      "finish_unix_s": 1791775460.4747524,
+      "service_stopped": true,
+      "errors": []
+    },
+    "known_tokens": 3462,
+    "pending": [
+      {},
+      {
+        "1": 7629
+      }
+    ]
+  },
+  {
+    "run": "bounded_ab_water_cleanup_source_run02",
+    "A_candidate": {
+      "final_outputs": [
+        {
+          "name": "answer",
+          "node_ref": "answer_node"
+        }
+      ],
+      "nodes": [
+        {
+          "context_field": "ctx_table",
+          "input_producers": {},
+          "name": "collection",
+          "ref": "collection_node",
+          "subtask": "Extract collection amounts from ctx_table",
+          "type": "extraction"
+        },
+        {
+          "context_field": "ctx_text",
+          "input_producers": {},
+          "name": "usage",
+          "ref": "usage_node",
+          "subtask": "Extract usage amounts from ctx_text",
+          "type": "extraction"
+        },
+        {
+          "input_producers": {
+            "facts": [
+              "collection_node"
+            ]
+          },
+          "name": "total_collection",
+          "ref": "total_collection_node",
+          "subtask": "Sum collection amounts",
+          "type": "reasoning"
+        },
+        {
+          "input_producers": {
+            "facts": [
+              "total_collection_node",
+              "usage_node"
+            ]
+          },
+          "name": "remaining_liters",
+          "ref": "remaining_liters_node",
+          "subtask": "Calculate remaining liters after usage",
+          "type": "reasoning"
+        },
+        {
+          "input_producers": {
+            "expression": [
+              "remaining_liters_node"
+            ],
+            "facts": [
+              "total_collection_node",
+              "usage_node"
+            ]
+          },
+          "name": "answer",
+          "ref": "answer_node",
+          "subtask": "Verify the final result",
+          "type": "transformation"
+        }
+      ]
+    },
+    "A_sha": "baec4c6a19abf609df479859ed8ff75be13e31d2f290e7a29783ad5cb037d454",
+    "B_request_sha": "d951c3a97c73da915acae8822c3a6977efe8b11d274c40cc82a8d87176e1e5c7",
+    "B_prompt_tokens": 3533,
+    "B_max_output": 4096,
+    "B_stream": false,
+    "B_model": "Qwen/Qwen2.5-7B-Instruct",
+    "B_full_schema_sha": "54981abebce08141d78d795937d51c9765580b183cf8c6c5d4aca29ebd6de07c",
+    "B_service_schema_sha": "54981abebce08141d78d795937d51c9765580b183cf8c6c5d4aca29ebd6de07c",
+    "B_trace": [
+      {
+        "request_id": "typed-31a23444c4c6421eb9409fde718a145a",
+        "stage": "constructed",
+        "monotonic_s": 32463468.851672143,
+        "unix_s": 1791788662.492022,
+        "phase": "generate"
+      },
+      {
+        "request_id": "typed-31a23444c4c6421eb9409fde718a145a",
+        "stage": "dispatch",
+        "monotonic_s": 32463468.851952046,
+        "unix_s": 1791788662.492302,
+        "timeout_s": 60,
+        "server_receive": "UNKNOWN",
+        "schema": "UNKNOWN",
+        "prefill": "UNKNOWN",
+        "decode": "UNKNOWN"
+      },
+      {
+        "request_id": "typed-31a23444c4c6421eb9409fde718a145a",
+        "stage": "request_error",
+        "monotonic_s": 32463528.852265634,
+        "unix_s": 1791788722.4926157,
+        "exception_type": "StopRun",
+        "exception": "Request wall timeout; unknown usage reservation retained",
+        "elapsed_s": 60.00026872754097,
+        "server_cancel_confirmed": false,
+        "server_may_continue": true
+      }
+    ],
+    "cleanup": {
+      "cleanup_start_monotonic_s": 32463528.863866854,
+      "cleanup_end_monotonic_s": 32463531.03193283,
+      "cleanup_wall_s": 2.1680659763514996,
+      "total_wall_s": 206.49043527245522,
+      "finish_unix_s": 1791788724.6722836,
+      "service_stopped": true,
+      "errors": []
+    },
+    "known_tokens": 3462,
+    "pending": [
+      {},
+      {
+        "1": 7629
+      }
+    ]
+  }
+]

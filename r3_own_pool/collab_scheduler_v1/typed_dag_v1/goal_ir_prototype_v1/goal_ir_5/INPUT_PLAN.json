@@ -1,0 +1,115 @@
+{
+  "final_goal": {
+    "description": "Compute requested generic sum",
+    "outputs": [
+      {
+        "name": "answer",
+        "symbol": "checked_sum",
+        "type": "verified_value",
+        "unit": "unitless"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "ref": "read",
+      "operation": "extract",
+      "description": "Generic operation read",
+      "inputs": [],
+      "outputs": [
+        {
+          "symbol": "table_data",
+          "type": "source_facts",
+          "unit": "unitless"
+        }
+      ],
+      "context_field": "ctx_table"
+    },
+    {
+      "ref": "read_text",
+      "operation": "extract",
+      "description": "Generic operation read_text",
+      "inputs": [],
+      "outputs": [
+        {
+          "symbol": "text_data",
+          "type": "source_facts",
+          "unit": "unitless"
+        }
+      ],
+      "context_field": "ctx_text"
+    },
+    {
+      "ref": "plan",
+      "operation": "form_expression",
+      "description": "Generic operation plan",
+      "inputs": [
+        {
+          "symbol": "table_data",
+          "type": "source_facts",
+          "unit": "unitless"
+        },
+        {
+          "symbol": "text_data",
+          "type": "source_facts",
+          "unit": "unitless"
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "sum_formula",
+          "type": "expression",
+          "unit": "unitless"
+        }
+      ]
+    },
+    {
+      "ref": "eval",
+      "operation": "calculate",
+      "description": "Generic operation eval",
+      "inputs": [
+        {
+          "symbol": "table_data",
+          "type": "source_facts",
+          "unit": "unitless"
+        },
+        {
+          "symbol": "sum_formula",
+          "type": "expression",
+          "unit": "unitless"
+        },
+        {
+          "symbol": "text_data",
+          "type": "source_facts",
+          "unit": "unitless"
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "sum_result",
+          "type": "calculated_value",
+          "unit": "unitless"
+        }
+      ]
+    },
+    {
+      "ref": "check",
+      "operation": "verify_value",
+      "description": "Generic operation check",
+      "inputs": [
+        {
+          "symbol": "sum_result",
+          "type": "calculated_value",
+          "unit": "unitless"
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "checked_sum",
+          "type": "verified_value",
+          "unit": "unitless"
+        }
+      ]
+    }
+  ]
+}

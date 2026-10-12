@@ -1,0 +1,445 @@
+{
+  "role": "Development diagnostic; no independent generalization claim",
+  "rows": [
+    {
+      "run_id": "T1_A",
+      "http": 200,
+      "finish_reason": "stop",
+      "json_complete": true,
+      "full_schema": true,
+      "state": "CONTRACT_REJECTED",
+      "original_runner_state": "CONTRACT_REJECTED",
+      "classifier_note": null,
+      "candidate_nodes": 5,
+      "topology": [
+        {
+          "ref": "n0",
+          "type": "extraction",
+          "declared_inputs": {}
+        },
+        {
+          "ref": "n1",
+          "type": "extraction",
+          "declared_inputs": {}
+        },
+        {
+          "ref": "n2",
+          "type": "reasoning",
+          "declared_inputs": {
+            "facts": [
+              "n0",
+              "n1"
+            ]
+          }
+        },
+        {
+          "ref": "n3",
+          "type": "transformation",
+          "declared_inputs": {
+            "expression": [
+              "n2"
+            ],
+            "facts": [
+              "n3"
+            ]
+          }
+        },
+        {
+          "ref": "n4",
+          "type": "verification",
+          "declared_inputs": {
+            "value": [
+              "n3"
+            ]
+          }
+        }
+      ],
+      "assembled_graph": false,
+      "structure": "FAIL_OR_NOT_ASSESSED",
+      "input_contract": "FAIL",
+      "sources": "NOT_FULLY_ESTABLISHED",
+      "goal_chain": "NOT_FULLY_ESTABLISHED",
+      "review": "NOT_RUN",
+      "accepted_nonfallback": false,
+      "actual_usage_from_http": {
+        "prompt_tokens": 3085,
+        "total_tokens": 3341,
+        "completion_tokens": 256,
+        "prompt_tokens_details": null
+      },
+      "ledger": {
+        "attempts": 1,
+        "known_tokens": 3341,
+        "charged_tokens": 3341,
+        "pending": {}
+      },
+      "errors": [
+        {
+          "error_code": "PRODUCER_TYPE_MISMATCH",
+          "node_id": "n3",
+          "field": "input_producers.facts",
+          "expected_contract": "facts",
+          "actual_contract": [
+            "number"
+          ],
+          "repairable": true,
+          "node_ref": "n3",
+          "related_refs": [
+            "n3"
+          ],
+          "cycle_path": [],
+          "missing_dependency": "facts",
+          "expected_constraint": "facts",
+          "actual_value": [
+            "number"
+          ],
+          "producer_ref": "n3",
+          "producer_output_type": [
+            "number"
+          ],
+          "producer_output_kind": "calculated_result",
+          "consumer_ref": "n3",
+          "expected_input_type": "facts",
+          "accepted_input_kinds": [
+            "source_fact"
+          ],
+          "offending_port": "facts",
+          "errors": [
+            {
+              "error_code": "PRODUCER_TYPE_MISMATCH",
+              "node_ref": "n3",
+              "related_refs": [
+                "n3"
+              ],
+              "cycle_path": [],
+              "missing_dependency": "facts",
+              "expected_constraint": "facts",
+              "actual_value": [
+                "number"
+              ],
+              "field": "input_producers.facts",
+              "producer_ref": "n3",
+              "producer_output_type": [
+                "number"
+              ],
+              "producer_output_kind": "calculated_result",
+              "consumer_ref": "n3",
+              "expected_input_type": "facts",
+              "accepted_input_kinds": [
+                "source_fact"
+              ],
+              "offending_port": "facts"
+            }
+          ],
+          "error_signature": "992d5e259b1e246b6656808c23f9c99f1915fc566a950a3ee60376983c9c7042"
+        }
+      ],
+      "error": null,
+      "time_source": "GENERATION_EVENTS.jsonl response wall_s includes dispatch/processing; global wall includes loading/cleanup",
+      "generation_wall_s": 8.179333295673132
+    },
+    {
+      "run_id": "T1_B",
+      "http": 200,
+      "finish_reason": "length",
+      "json_complete": false,
+      "full_schema": false,
+      "state": "GENERATION_FAILED",
+      "original_runner_state": "GENERATION_FAILED",
+      "classifier_note": null,
+      "candidate_nodes": null,
+      "topology": [],
+      "assembled_graph": false,
+      "structure": "FAIL_OR_NOT_ASSESSED",
+      "input_contract": "NOT_FULLY_ESTABLISHED",
+      "sources": "NOT_FULLY_ESTABLISHED",
+      "goal_chain": "NOT_FULLY_ESTABLISHED",
+      "review": "NOT_RUN",
+      "accepted_nonfallback": false,
+      "actual_usage_from_http": {
+        "prompt_tokens": 3361,
+        "total_tokens": 4129,
+        "completion_tokens": 768,
+        "prompt_tokens_details": null
+      },
+      "ledger": {
+        "attempts": 1,
+        "known_tokens": 0,
+        "charged_tokens": 4129,
+        "pending": {
+          "1": 4129
+        }
+      },
+      "errors": [],
+      "error": "ValueError('Diagnostic response truncated; no review admission')",
+      "time_source": "GENERATION_EVENTS.jsonl response wall_s includes dispatch/processing; global wall includes loading/cleanup",
+      "generation_wall_s": null
+    },
+    {
+      "run_id": "T2_B",
+      "http": 200,
+      "finish_reason": "stop",
+      "json_complete": true,
+      "full_schema": true,
+      "state": "STRUCTURE_REJECTED",
+      "original_runner_state": "CONTRACT_REJECTED",
+      "classifier_note": "IR_GOAL_UNCOVERED is goal-chain/structure failure, not input contract failure",
+      "candidate_nodes": 4,
+      "topology": [
+        {
+          "ref": "extract_1",
+          "type": "extract",
+          "declared_inputs": {}
+        },
+        {
+          "ref": "form_expression_2",
+          "type": "form_expression",
+          "declared_inputs": {
+            "facts": [
+              {
+                "symbol": "facts",
+                "type": "source_facts",
+                "unit": "%"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "calculate_3",
+          "type": "calculate",
+          "declared_inputs": {
+            "expression": [
+              {
+                "symbol": "expression",
+                "type": "expression",
+                "unit": "%"
+              }
+            ],
+            "facts": [
+              {
+                "symbol": "facts",
+                "type": "source_facts",
+                "unit": "%"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "verify_value_4",
+          "type": "verify_value",
+          "declared_inputs": {
+            "value": [
+              {
+                "symbol": "calculated_value",
+                "type": "calculated_value",
+                "unit": "%"
+              }
+            ]
+          }
+        }
+      ],
+      "assembled_graph": false,
+      "structure": "FAIL_OR_NOT_ASSESSED",
+      "input_contract": "NOT_FULLY_ESTABLISHED",
+      "sources": "NOT_FULLY_ESTABLISHED",
+      "goal_chain": "FAIL",
+      "review": "NOT_RUN",
+      "accepted_nonfallback": false,
+      "actual_usage_from_http": {
+        "prompt_tokens": 3348,
+        "total_tokens": 3726,
+        "completion_tokens": 378,
+        "prompt_tokens_details": null
+      },
+      "ledger": {
+        "attempts": 1,
+        "known_tokens": 3726,
+        "charged_tokens": 3726,
+        "pending": {}
+      },
+      "errors": [
+        {
+          "error_code": "IR_GOAL_UNCOVERED",
+          "node_id": null,
+          "field": "final_goal.outputs.symbol",
+          "expected_contract": null,
+          "actual_contract": "answer",
+          "repairable": true,
+          "node_ref": null,
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": null,
+          "actual_value": "answer",
+          "errors": [
+            {
+              "error_code": "IR_GOAL_UNCOVERED",
+              "node_ref": null,
+              "related_refs": [],
+              "cycle_path": [],
+              "missing_dependency": null,
+              "expected_constraint": null,
+              "actual_value": "answer",
+              "field": "final_goal.outputs.symbol"
+            }
+          ],
+          "error_signature": "b14cb4c9febc204bd57477bf1bcabe6a71c47577f6e9d0945e152ab4c97fc9c7"
+        }
+      ],
+      "error": null,
+      "time_source": "GENERATION_EVENTS.jsonl response wall_s includes dispatch/processing; global wall includes loading/cleanup",
+      "generation_wall_s": 6.5218019261956215
+    },
+    {
+      "run_id": "T2_A",
+      "http": 200,
+      "finish_reason": "stop",
+      "json_complete": true,
+      "full_schema": true,
+      "state": "CONTRACT_REJECTED",
+      "original_runner_state": "CONTRACT_REJECTED",
+      "classifier_note": null,
+      "candidate_nodes": 5,
+      "topology": [
+        {
+          "ref": "n0",
+          "type": "extraction",
+          "declared_inputs": {}
+        },
+        {
+          "ref": "n1",
+          "type": "extraction",
+          "declared_inputs": {}
+        },
+        {
+          "ref": "n2",
+          "type": "extraction",
+          "declared_inputs": {}
+        },
+        {
+          "ref": "n3",
+          "type": "extraction",
+          "declared_inputs": {}
+        },
+        {
+          "ref": "n4",
+          "type": "transformation",
+          "declared_inputs": {
+            "expression": [
+              "n4"
+            ],
+            "facts": [
+              "n5"
+            ]
+          }
+        }
+      ],
+      "assembled_graph": false,
+      "structure": "FAIL_OR_NOT_ASSESSED",
+      "input_contract": "FAIL",
+      "sources": "NOT_FULLY_ESTABLISHED",
+      "goal_chain": "NOT_FULLY_ESTABLISHED",
+      "review": "NOT_RUN",
+      "accepted_nonfallback": false,
+      "actual_usage_from_http": {
+        "prompt_tokens": 3072,
+        "total_tokens": 3326,
+        "completion_tokens": 254,
+        "prompt_tokens_details": null
+      },
+      "ledger": {
+        "attempts": 1,
+        "known_tokens": 3326,
+        "charged_tokens": 3326,
+        "pending": {}
+      },
+      "errors": [
+        {
+          "error_code": "PRODUCER_TYPE_MISMATCH",
+          "node_id": "n4",
+          "field": "input_producers.expression",
+          "expected_contract": "expression",
+          "actual_contract": [
+            "number"
+          ],
+          "repairable": true,
+          "node_ref": "n4",
+          "related_refs": [
+            "n4"
+          ],
+          "cycle_path": [],
+          "missing_dependency": "expression",
+          "expected_constraint": "expression",
+          "actual_value": [
+            "number"
+          ],
+          "producer_ref": "n4",
+          "producer_output_type": [
+            "number"
+          ],
+          "producer_output_kind": "calculated_result",
+          "consumer_ref": "n4",
+          "expected_input_type": "expression",
+          "accepted_input_kinds": [
+            "calculation_expression"
+          ],
+          "offending_port": "expression",
+          "errors": [
+            {
+              "error_code": "PRODUCER_TYPE_MISMATCH",
+              "node_ref": "n4",
+              "related_refs": [
+                "n4"
+              ],
+              "cycle_path": [],
+              "missing_dependency": "expression",
+              "expected_constraint": "expression",
+              "actual_value": [
+                "number"
+              ],
+              "field": "input_producers.expression",
+              "producer_ref": "n4",
+              "producer_output_type": [
+                "number"
+              ],
+              "producer_output_kind": "calculated_result",
+              "consumer_ref": "n4",
+              "expected_input_type": "expression",
+              "accepted_input_kinds": [
+                "calculation_expression"
+              ],
+              "offending_port": "expression"
+            }
+          ],
+          "error_signature": "42a23f73bd4ee0ec23708c6da7ae439e158a0252aa646ddbb68be4f71f5fb6cb"
+        }
+      ],
+      "error": null,
+      "time_source": "GENERATION_EVENTS.jsonl response wall_s includes dispatch/processing; global wall includes loading/cleanup",
+      "generation_wall_s": 4.461541637778282
+    }
+  ],
+  "requests": 4,
+  "actual_tokens_from_raw_http": 14522,
+  "ledger_known_tokens": 10393,
+  "ledger_charged_tokens": 14522,
+  "pending": [
+    {},
+    {
+      "1": 4129
+    },
+    {},
+    {}
+  ],
+  "accounting_note": "T1_B truncated response includes provider usage4129; dispatcher raised before MeteredExecutor reconciliation, so ledger conservatively retains full4129 reservation. Do not add HTTP usage and retained reservation twice.",
+  "wall_s": 124.34532400220633,
+  "service_stopped": true,
+  "gpu_compute_processes_after": [],
+  "http_success": "4/4",
+  "full_schema_success": "3/4",
+  "nonfallback_acceptance": "0/4",
+  "semantic_review": "0 attempted; success rate NOT_TESTED",
+  "execution": "NOT_TESTED",
+  "scoring": "NOT_TESTED",
+  "errors_boundary": "First compiler failure is not exhaustive proof of other layers; offline audits are diagnostic only"
+}

@@ -1,0 +1,41 @@
+{
+  "caps": {
+    "new_request_attempts": 6,
+    "new_total_tokens": 24576,
+    "request_token_reservation": 4096,
+    "max_output_tokens": 2048,
+    "wall_seconds": 300,
+    "logical_calls_per_task_config_state": 20
+  },
+  "tasks": [
+    {
+      "task_id": "typed-stage3-repair-change",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the increase in cash from last year to this year? Return the difference, not a percentage.",
+        "ctx_table": "Last year cash: 6. This year cash: 17.",
+        "ctx_text": "Cash figures use the same unit."
+      },
+      "required_outputs": {
+        "answer": "This year cash minus last year cash, numeric difference"
+      }
+    }
+  ],
+  "model": {
+    "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "served": "Qwen/Qwen2.5-7B-Instruct"
+  },
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 2048,
+  "code_sha": {
+    "generation.py": "eaa1b5719c4a3e1e609c869e9f479a8aaedda4776575cc31bf542689cb6f3b86",
+    "execution.py": "d47bca3fab851bf3b2cde5701def544b58c663413f0ffeea56d652d50a8844f7",
+    "protocol.py": "443912941567223303f6afb24e5b2cfe551c41479d024157c0c20999411df9f1",
+    "generation_schema.py": "21e60409fe94631142b8287d08f873547cee6bf6dc4006ca6641e604ba62658b",
+    "assembly.py": "3abae9e6c7166dadb8dc2dd9fd434c80e9394d2b1950ef9789bc4ffd1e5f9cf5",
+    "real_generation_repair_followup.py": "2255d2acf4d6952e7c82f92d39becd0491bb82da9d4e6a09a2de80eb9b2c729d"
+  },
+  "purpose": "Mechanics smoke, not algorithm efficacy",
+  "created": 1791696764.023515
+}

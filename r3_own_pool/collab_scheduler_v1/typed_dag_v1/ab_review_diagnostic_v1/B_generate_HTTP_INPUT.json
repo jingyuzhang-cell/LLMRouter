@@ -1,0 +1,590 @@
+{
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "messages": [
+    {
+      "role": "user",
+      "content": "{\"instruction\":\"Return ONLY the goal-symbol IR JSON. Decompose the actual task into variable steps, with unique refs, descriptive operations and typed data symbols. final_goal states required output symbols, types and units. Each symbol has exactly one producer across ALL steps regardless of type. A verification result must use a new symbol distinct from its calculated input; final_goal must reference the intended final typed output. Each calculate step MUST explicitly consume both source_facts and an expression symbol from form_expression; listing a form_expression step without consuming its output is invalid. Identify all task-required operands across source fields and route their producer outputs into the final computation; do not include irrelevant sources. These instructions do not authorize inventing missing inputs. Inputs reference exact output symbols, not node refs, fact IDs, ports or answers. Forward symbols and multiple roots are allowed. Operations: extract -> source_facts, form_expression(source_facts) -> expression, calculate(source_facts + expression) -> calculated_value, verify_value(calculated_value or verified_value) -> verified_value, verify_expression(source_facts + expression) -> verified_value. Symbols represent whole contract outputs; per-fact selection remains execution responsibility. Units must match exactly across a symbol link; no implicit conversions. Extraction chooses ctx_table or ctx_text with actual needed source content. Do not produce node_id, dependencies, input_producers, contract IDs, values or gold answers. Every declared step must contribute to the final goal. No fixed topology or node count. An expression is syntax, never a number or raw fact. Program resolves unique producers only from these declarations; it will not invent missing sources. Semantic review remains required. Input protocol goal-symbol-roles.v1: inputs is an object keyed by operation roles, never a flat array. extract inputs={}; form_expression inputs={facts:[typed symbols]}; calculate and verify_expression inputs={facts:[typed symbols],expression:[exactly one typed symbol]}; verify_value inputs={value:[exactly one typed symbol]}. Every required role must be explicit and nonempty. Each symbol must exactly name a declared output; do not invent producers or omit necessary sources. No implicit completion by program.\",\"operation\":\"plan_goal_ir\",\"plan_json_schema\":{\"additionalProperties\":false,\"properties\":{\"final_goal\":{\"additionalProperties\":false,\"properties\":{\"description\":{\"minLength\":1,\"type\":\"string\"},\"outputs\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"name\":{\"minLength\":1,\"type\":\"string\"},\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"calculated_value\",\"expression\",\"source_facts\",\"verified_value\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\",\"name\"],\"type\":\"object\"},\"minItems\":1,\"type\":\"array\"}},\"required\":[\"description\",\"outputs\"],\"type\":\"object\"},\"steps\":{\"items\":{\"anyOf\":[{\"additionalProperties\":false,\"properties\":{\"context_field\":{\"enum\":[\"ctx_table\",\"ctx_text\"]},\"description\":{\"minLength\":1,\"type\":\"string\"},\"inputs\":{\"additionalProperties\":false,\"properties\":{},\"required\":[],\"type\":\"object\"},\"operation\":{\"enum\":[\"extract\"]},\"outputs\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"source_facts\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"},\"ref\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"ref\",\"operation\",\"description\",\"inputs\",\"outputs\",\"context_field\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"description\":{\"minLength\":1,\"type\":\"string\"},\"inputs\":{\"additionalProperties\":false,\"properties\":{\"facts\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"source_facts\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":5,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"facts\"],\"type\":\"object\"},\"operation\":{\"enum\":[\"form_expression\"]},\"outputs\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"expression\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"},\"ref\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"ref\",\"operation\",\"description\",\"inputs\",\"outputs\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"description\":{\"minLength\":1,\"type\":\"string\"},\"inputs\":{\"additionalProperties\":false,\"properties\":{\"expression\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"expression\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"},\"facts\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"source_facts\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":5,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"facts\",\"expression\"],\"type\":\"object\"},\"operation\":{\"enum\":[\"calculate\"]},\"outputs\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"calculated_value\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"},\"ref\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"ref\",\"operation\",\"description\",\"inputs\",\"outputs\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"description\":{\"minLength\":1,\"type\":\"string\"},\"inputs\":{\"additionalProperties\":false,\"properties\":{\"value\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"calculated_value\",\"verified_value\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"value\"],\"type\":\"object\"},\"operation\":{\"enum\":[\"verify_value\"]},\"outputs\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"verified_value\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"},\"ref\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"ref\",\"operation\",\"description\",\"inputs\",\"outputs\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"description\":{\"minLength\":1,\"type\":\"string\"},\"inputs\":{\"additionalProperties\":false,\"properties\":{\"expression\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"expression\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"},\"facts\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"source_facts\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":5,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"facts\",\"expression\"],\"type\":\"object\"},\"operation\":{\"enum\":[\"verify_expression\"]},\"outputs\":{\"items\":{\"additionalProperties\":false,\"properties\":{\"symbol\":{\"minLength\":1,\"type\":\"string\"},\"type\":{\"enum\":[\"verified_value\"]},\"unit\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"symbol\",\"type\",\"unit\"],\"type\":\"object\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"},\"ref\":{\"minLength\":1,\"type\":\"string\"}},\"required\":[\"ref\",\"operation\",\"description\",\"inputs\",\"outputs\"],\"type\":\"object\"}]},\"maxItems\":5,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"final_goal\",\"steps\"],\"type\":\"object\"},\"public_task\":{\"context\":{\"ctx_table\":\"The diagnostic workshop has 6 packs containing 7 labels in each pack.\",\"ctx_text\":\"The workshop sets aside 5 labels; there are no other additions or removals.\",\"question\":\"How many labels remain after setting aside the listed labels?\"},\"domain\":\"financial_arithmetic\",\"limits\":{\"max_depth\":5,\"max_llm_calls\":5,\"max_nodes\":5},\"required_outputs\":{\"answer\":\"Remaining label count after the stated reservation\"},\"required_source_data\":[{\"data_id\":\"initial-label-source\",\"evidence\":\"The diagnostic workshop has 6 packs containing 7 labels in each pack.\",\"source_id\":\"ctx_table\"},{\"data_id\":\"reservation-source\",\"evidence\":\"The workshop sets aside 5 labels; there are no other additions or removals.\",\"source_id\":\"ctx_text\"}],\"source_availability\":{\"ctx_table\":{\"note\":\"Lexical heuristic only; not fact correctness\",\"numeric_literal_count\":2},\"ctx_text\":{\"note\":\"Lexical heuristic only; not fact correctness\",\"numeric_literal_count\":1}},\"source_manifest\":{\"content_sha\":\"d9e53ef6fc943abe7137f5315366ac23a0802073b38137fea4afd12143b90d67\",\"protocol\":\"public-source-manifest.v1\",\"semantic_completeness\":\"NOT_ESTABLISHED\",\"sources\":[{\"end\":69,\"field\":\"ctx_table\",\"sha256\":\"c3df7d0a87b765eddfd3cf1cba4b2df0e44e07b2be5dbbcce28613d18a81cf8a\",\"source_id\":\"ctx_table\",\"start\":0,\"text\":\"The diagnostic workshop has 6 packs containing 7 labels in each pack.\"},{\"end\":69,\"field\":\"ctx_table\",\"sha256\":\"c3df7d0a87b765eddfd3cf1cba4b2df0e44e07b2be5dbbcce28613d18a81cf8a\",\"source_id\":\"ctx_table:line:0\",\"start\":0,\"text\":\"The diagnostic workshop has 6 packs containing 7 labels in each pack.\"},{\"end\":75,\"field\":\"ctx_text\",\"sha256\":\"023a5c2b1b886b6aa2e47211c61e8af4c083e6a44b6bc682b0427fe2a751d81c\",\"source_id\":\"ctx_text\",\"start\":0,\"text\":\"The workshop sets aside 5 labels; there are no other additions or removals.\"},{\"end\":75,\"field\":\"ctx_text\",\"sha256\":\"023a5c2b1b886b6aa2e47211c61e8af4c083e6a44b6bc682b0427fe2a751d81c\",\"source_id\":\"ctx_text:line:0\",\"start\":0,\"text\":\"The workshop sets aside 5 labels; there are no other additions or removals.\"}]},\"task_id\":\"stage3-http-only-label-diagnostic-20261011\"}}"
+    }
+  ],
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 768,
+  "stream": false,
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "diagnostic_plan",
+      "strict": true,
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "final_goal": {
+            "additionalProperties": false,
+            "properties": {
+              "description": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "outputs": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "symbol": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "calculated_value",
+                        "expression",
+                        "source_facts",
+                        "verified_value"
+                      ]
+                    },
+                    "unit": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "symbol",
+                    "type",
+                    "unit",
+                    "name"
+                  ],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "description",
+              "outputs"
+            ],
+            "type": "object"
+          },
+          "steps": {
+            "items": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "context_field": {
+                      "enum": [
+                        "ctx_table",
+                        "ctx_text"
+                      ]
+                    },
+                    "description": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "inputs": {
+                      "additionalProperties": false,
+                      "properties": {},
+                      "required": [],
+                      "type": "object"
+                    },
+                    "operation": {
+                      "enum": [
+                        "extract"
+                      ]
+                    },
+                    "outputs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "source_facts"
+                            ]
+                          },
+                          "unit": {
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "ref": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ref",
+                    "operation",
+                    "description",
+                    "inputs",
+                    "outputs",
+                    "context_field"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "inputs": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "facts": {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "symbol": {
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "source_facts"
+                                ]
+                              },
+                              "unit": {
+                                "minLength": 1,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "symbol",
+                              "type",
+                              "unit"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 5,
+                          "minItems": 1,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "facts"
+                      ],
+                      "type": "object"
+                    },
+                    "operation": {
+                      "enum": [
+                        "form_expression"
+                      ]
+                    },
+                    "outputs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "expression"
+                            ]
+                          },
+                          "unit": {
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "ref": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ref",
+                    "operation",
+                    "description",
+                    "inputs",
+                    "outputs"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "inputs": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "expression": {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "symbol": {
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "expression"
+                                ]
+                              },
+                              "unit": {
+                                "minLength": 1,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "symbol",
+                              "type",
+                              "unit"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 1,
+                          "minItems": 1,
+                          "type": "array"
+                        },
+                        "facts": {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "symbol": {
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "source_facts"
+                                ]
+                              },
+                              "unit": {
+                                "minLength": 1,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "symbol",
+                              "type",
+                              "unit"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 5,
+                          "minItems": 1,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "facts",
+                        "expression"
+                      ],
+                      "type": "object"
+                    },
+                    "operation": {
+                      "enum": [
+                        "calculate"
+                      ]
+                    },
+                    "outputs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "calculated_value"
+                            ]
+                          },
+                          "unit": {
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "ref": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ref",
+                    "operation",
+                    "description",
+                    "inputs",
+                    "outputs"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "inputs": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "value": {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "symbol": {
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "calculated_value",
+                                  "verified_value"
+                                ]
+                              },
+                              "unit": {
+                                "minLength": 1,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "symbol",
+                              "type",
+                              "unit"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 1,
+                          "minItems": 1,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "value"
+                      ],
+                      "type": "object"
+                    },
+                    "operation": {
+                      "enum": [
+                        "verify_value"
+                      ]
+                    },
+                    "outputs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "verified_value"
+                            ]
+                          },
+                          "unit": {
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "ref": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ref",
+                    "operation",
+                    "description",
+                    "inputs",
+                    "outputs"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "inputs": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "expression": {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "symbol": {
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "expression"
+                                ]
+                              },
+                              "unit": {
+                                "minLength": 1,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "symbol",
+                              "type",
+                              "unit"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 1,
+                          "minItems": 1,
+                          "type": "array"
+                        },
+                        "facts": {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "symbol": {
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "source_facts"
+                                ]
+                              },
+                              "unit": {
+                                "minLength": 1,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "symbol",
+                              "type",
+                              "unit"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 5,
+                          "minItems": 1,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "facts",
+                        "expression"
+                      ],
+                      "type": "object"
+                    },
+                    "operation": {
+                      "enum": [
+                        "verify_expression"
+                      ]
+                    },
+                    "outputs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "verified_value"
+                            ]
+                          },
+                          "unit": {
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "ref": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ref",
+                    "operation",
+                    "description",
+                    "inputs",
+                    "outputs"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "maxItems": 5,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "final_goal",
+          "steps"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "final_outputs": [
+    {
+      "name": "answer",
+      "node_ref": "answer_node"
+    }
+  ],
+  "nodes": [
+    {
+      "context_field": "ctx_text",
+      "dependencies": [
+        "fixed_discount_node"
+      ],
+      "name": "fixed_discount",
+      "ref": "fixed_discount_node",
+      "subtask": "extraction",
+      "type": "extraction"
+    },
+    {
+      "dependencies": [
+        "invoice_total_node"
+      ],
+      "name": "invoice_total_after_discount",
+      "ref": "invoice_total_after_discount_node",
+      "subtask": "transformation",
+      "type": "transformation"
+    },
+    {
+      "dependencies": [
+        "invoice_total_node",
+        "fixed_discount_node"
+      ],
+      "name": "invoice_total_after_discount_expression",
+      "ref": "invoice_total_after_discount_expression_node",
+      "subtask": "reasoning",
+      "type": "reasoning"
+    },
+    {
+      "dependencies": [
+        "invoice_total_node"
+      ],
+      "name": "invoice_total",
+      "ref": "invoice_total_node",
+      "subtask": "extraction",
+      "type": "transformation"
+    },
+    {
+      "dependencies": [
+        "fixed_discount_node"
+      ],
+      "name": "fixed_discount_value",
+      "ref": "fixed_discount_node",
+      "subtask": "transformation",
+      "type": "transformation"
+    }
+  ]
+}

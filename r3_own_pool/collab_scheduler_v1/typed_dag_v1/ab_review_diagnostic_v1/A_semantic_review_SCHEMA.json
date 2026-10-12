@@ -1,0 +1,108 @@
+{
+  "full_sha256": "c74065a1632a94dabf3b963cb1e0d06a3adb3849c4a7abed9f1166cc97586499",
+  "service_sha256": "c74065a1632a94dabf3b963cb1e0d06a3adb3849c4a7abed9f1166cc97586499",
+  "differences": [],
+  "conversion": "omit uniqueItems from transport ONLY; full validation remains mandatory",
+  "full_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "error_code": {
+        "enum": [
+          "NONE",
+          "SOURCE_MISSING",
+          "SUBTASK_IRRELEVANT",
+          "OUTPUT_UNSUPPORTED",
+          "OTHER"
+        ],
+        "type": "string"
+      },
+      "evidence": {
+        "maxLength": 160,
+        "type": "string"
+      },
+      "node_refs": {
+        "items": {
+          "enum": [
+            "node_c51f444f977ebdbc7dd40afb",
+            "node_f7244d4e1cff16f7df8182ef",
+            "node_c120e8acf8792bec7a968dae",
+            "node_69bdb09962e6f9f76e39ee78",
+            "node_63d42d129553df814aba7cd2"
+          ],
+          "type": "string"
+        },
+        "maxItems": 5,
+        "type": "array"
+      },
+      "replan": {
+        "type": "boolean"
+      },
+      "status": {
+        "enum": [
+          "PASS",
+          "FAIL"
+        ],
+        "type": "string"
+      }
+    },
+    "required": [
+      "status",
+      "error_code",
+      "node_refs",
+      "evidence",
+      "replan"
+    ],
+    "type": "object"
+  },
+  "service_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "error_code": {
+        "enum": [
+          "NONE",
+          "SOURCE_MISSING",
+          "SUBTASK_IRRELEVANT",
+          "OUTPUT_UNSUPPORTED",
+          "OTHER"
+        ],
+        "type": "string"
+      },
+      "evidence": {
+        "maxLength": 160,
+        "type": "string"
+      },
+      "node_refs": {
+        "items": {
+          "enum": [
+            "node_c51f444f977ebdbc7dd40afb",
+            "node_f7244d4e1cff16f7df8182ef",
+            "node_c120e8acf8792bec7a968dae",
+            "node_69bdb09962e6f9f76e39ee78",
+            "node_63d42d129553df814aba7cd2"
+          ],
+          "type": "string"
+        },
+        "maxItems": 5,
+        "type": "array"
+      },
+      "replan": {
+        "type": "boolean"
+      },
+      "status": {
+        "enum": [
+          "PASS",
+          "FAIL"
+        ],
+        "type": "string"
+      }
+    },
+    "required": [
+      "status",
+      "error_code",
+      "node_refs",
+      "evidence",
+      "replan"
+    ],
+    "type": "object"
+  }
+}

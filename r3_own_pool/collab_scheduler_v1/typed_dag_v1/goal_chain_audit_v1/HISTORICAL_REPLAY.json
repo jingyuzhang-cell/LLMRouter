@@ -1,0 +1,1241 @@
+[
+  {
+    "case": "latest_A",
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/ab_review_diagnostic_v1/execution/A/generate_HTTP_RESPONSE.json",
+    "original_sha256": "5c732de89f189ab778304d30dba8850dc5b508c8edc14b573e9eb880100290c3",
+    "original_failure": {
+      "error_code": "FINAL_OUTPUT_CONNECTIVITY",
+      "node_id": null,
+      "field": "final_outputs",
+      "expected_contract": "every declared necessary node contributes along explicit dependencies to a final output",
+      "actual_contract": [
+        "n3",
+        "n5"
+      ],
+      "repairable": true,
+      "node_ref": null,
+      "related_refs": [
+        "n3",
+        "n5"
+      ],
+      "cycle_path": [],
+      "missing_dependency": null,
+      "expected_constraint": "every declared necessary node contributes along explicit dependencies to a final output",
+      "actual_value": [
+        "n3",
+        "n5"
+      ],
+      "final_output_ref": [
+        "n4"
+      ],
+      "unreachable_required_nodes": [
+        "n3",
+        "n5"
+      ],
+      "missing_consumer_or_aggregation": [
+        "n5"
+      ],
+      "disconnected_components": [
+        [
+          "n1",
+          "n2",
+          "n3",
+          "n4",
+          "n5"
+        ]
+      ],
+      "declared_dependencies": {
+        "n1": [],
+        "n2": [
+          "n1"
+        ],
+        "n3": [
+          "n1"
+        ],
+        "n4": [
+          "n1",
+          "n2"
+        ],
+        "n5": [
+          "n1",
+          "n3"
+        ]
+      },
+      "errors": [
+        {
+          "error_code": "FINAL_OUTPUT_CONNECTIVITY",
+          "node_ref": null,
+          "related_refs": [
+            "n3",
+            "n5"
+          ],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "every declared necessary node contributes along explicit dependencies to a final output",
+          "actual_value": [
+            "n3",
+            "n5"
+          ],
+          "field": "final_outputs",
+          "final_output_ref": [
+            "n4"
+          ],
+          "unreachable_required_nodes": [
+            "n3",
+            "n5"
+          ],
+          "missing_consumer_or_aggregation": [
+            "n5"
+          ],
+          "disconnected_components": [
+            [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5"
+            ]
+          ],
+          "declared_dependencies": {
+            "n1": [],
+            "n2": [
+              "n1"
+            ],
+            "n3": [
+              "n1"
+            ],
+            "n4": [
+              "n1",
+              "n2"
+            ],
+            "n5": [
+              "n1",
+              "n3"
+            ]
+          }
+        }
+      ],
+      "error_signature": "66b8344368eeab262508bb411a9a7bff68661237d1eb3e8f42044e49e6cafb0e"
+    },
+    "audit": {
+      "protocol": "declared-goal-chain-audit.v1",
+      "mode": "semantic",
+      "errors": [
+        {
+          "error_code": "FINAL_OUTPUT_CONNECTIVITY",
+          "node_ref": null,
+          "related_refs": [
+            "n3",
+            "n5"
+          ],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "every declared necessary node contributes along explicit dependencies to a final output",
+          "actual_value": [
+            "n3",
+            "n5"
+          ],
+          "field": "final_outputs",
+          "final_output_ref": [
+            "n4"
+          ],
+          "unreachable_required_nodes": [
+            "n3",
+            "n5"
+          ],
+          "missing_consumer_or_aggregation": [
+            "n5"
+          ],
+          "disconnected_components": [
+            [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5"
+            ]
+          ],
+          "declared_dependencies": {
+            "n1": [],
+            "n2": [
+              "n1"
+            ],
+            "n3": [
+              "n1"
+            ],
+            "n4": [
+              "n1",
+              "n2"
+            ],
+            "n5": [
+              "n1",
+              "n3"
+            ]
+          }
+        },
+        {
+          "error_code": "REQUIRED_SOURCE_MISSING",
+          "node_ref": null,
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": null,
+          "actual_value": {
+            "data_id": "reservation-source",
+            "source_id": "ctx_text",
+            "producer_nodes": [],
+            "status": "REQUIRED_SOURCE_MISSING"
+          },
+          "field": "required_source_data"
+        }
+      ],
+      "producer_definitions": {
+        "n1": [
+          {
+            "node_ref": "n1",
+            "node_type": "extraction"
+          }
+        ],
+        "n2": [
+          {
+            "node_ref": "n2",
+            "node_type": "reasoning"
+          }
+        ],
+        "n3": [
+          {
+            "node_ref": "n3",
+            "node_type": "reasoning"
+          }
+        ],
+        "n4": [
+          {
+            "node_ref": "n4",
+            "node_type": "transformation"
+          }
+        ],
+        "n5": [
+          {
+            "node_ref": "n5",
+            "node_type": "verification"
+          }
+        ]
+      },
+      "consumer_bindings": [
+        {
+          "consumer_ref": "n2",
+          "role": "facts",
+          "reference": "n1",
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "n3",
+          "role": "facts",
+          "reference": "n1",
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "n4",
+          "role": "expression",
+          "reference": "n2",
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "n4",
+          "role": "facts",
+          "reference": "n1",
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "n5",
+          "role": "expression",
+          "reference": "n3",
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "n5",
+          "role": "facts",
+          "reference": "n1",
+          "status": "UNIQUE"
+        }
+      ],
+      "final_producers": [
+        {
+          "name": "answer",
+          "reference": "n4",
+          "producer_refs": [
+            "n4"
+          ],
+          "status": "UNIQUE"
+        }
+      ],
+      "reverse_chain": {
+        "answer": [
+          "n1",
+          "n2",
+          "n4"
+        ]
+      },
+      "static_status": "FAIL",
+      "source_coverage": {
+        "protocol": "declared-source-coverage.v1",
+        "bindings": [
+          {
+            "node_id": "n1",
+            "source_id": "ctx_table",
+            "contributes_to_final": true
+          }
+        ],
+        "final_source_lineage": {
+          "answer": [
+            "ctx_table"
+          ]
+        },
+        "required_data": [
+          {
+            "data_id": "initial-label-source",
+            "source_id": "ctx_table",
+            "producer_nodes": [
+              "n1"
+            ],
+            "status": "SOURCE_PATH_PRESENT"
+          },
+          {
+            "data_id": "reservation-source",
+            "source_id": "ctx_text",
+            "producer_nodes": [],
+            "status": "REQUIRED_SOURCE_MISSING"
+          }
+        ],
+        "source_complete": "FAIL",
+        "semantic_review": "REQUIRED_NOT_PROOF",
+        "fact_correctness": "NOT_ESTABLISHED",
+        "errors": [
+          {
+            "error_code": "REQUIRED_SOURCE_MISSING",
+            "node_ref": null,
+            "related_refs": [],
+            "cycle_path": [],
+            "missing_dependency": null,
+            "expected_constraint": null,
+            "actual_value": {
+              "data_id": "reservation-source",
+              "source_id": "ctx_text",
+              "producer_nodes": [],
+              "status": "REQUIRED_SOURCE_MISSING"
+            },
+            "field": "required_source_data"
+          }
+        ]
+      },
+      "operation_intent": "REQUIRES_SEMANTIC_REVIEW",
+      "fact_truth": "NOT_ASSESSED",
+      "expression_runtime_references": "NOT_ASSESSED",
+      "invented_edges": 0,
+      "modified_candidate": false,
+      "cycle_paths": [],
+      "declared_edges_consumer_to_producer": {
+        "n1": [],
+        "n2": [
+          "n1"
+        ],
+        "n3": [
+          "n1"
+        ],
+        "n4": [
+          "n1",
+          "n2"
+        ],
+        "n5": [
+          "n1",
+          "n3"
+        ]
+      },
+      "llm_replanning_required": true,
+      "admission_status": "REJECT_STATIC"
+    }
+  },
+  {
+    "case": "latest_B",
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/ab_review_diagnostic_v1/execution/B/generate_HTTP_RESPONSE.json",
+    "original_sha256": "3790cc05baadbdf6c688e882c481c0092543c7542a534d36ae59475475fd62dc",
+    "original_failure": {
+      "error_code": "IR_AMBIGUOUS_PRODUCER",
+      "node_id": "calculate_remaining_labels",
+      "field": "outputs.symbol",
+      "expected_contract": "one producer per exact symbol",
+      "actual_contract": "expression_remaining_labels",
+      "repairable": true,
+      "node_ref": "calculate_remaining_labels",
+      "related_refs": [],
+      "cycle_path": [],
+      "missing_dependency": null,
+      "expected_constraint": "one producer per exact symbol",
+      "actual_value": "expression_remaining_labels",
+      "errors": [
+        {
+          "error_code": "IR_AMBIGUOUS_PRODUCER",
+          "node_ref": "calculate_remaining_labels",
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one producer per exact symbol",
+          "actual_value": "expression_remaining_labels",
+          "field": "outputs.symbol"
+        }
+      ],
+      "error_signature": "385b473c85176bdebefeb9bbc0b04ada0deb43314e75d749676de23e7f901102"
+    },
+    "audit": {
+      "protocol": "declared-goal-chain-audit.v1",
+      "mode": "goal_ir_roles",
+      "errors": [
+        {
+          "error_code": "IR_AMBIGUOUS_PRODUCER",
+          "node_ref": "calculate_remaining_labels",
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one producer per exact symbol",
+          "actual_value": "expression_remaining_labels",
+          "field": "outputs.symbol"
+        },
+        {
+          "error_code": "IR_AMBIGUOUS_PRODUCER",
+          "node_ref": null,
+          "related_refs": [
+            "calculate_remaining_labels",
+            "form_expression_remaining_labels"
+          ],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one exact producer per symbol",
+          "actual_value": "expression_remaining_labels",
+          "field": "outputs.symbol"
+        },
+        {
+          "error_code": "IR_MISSING_PRODUCER",
+          "node_ref": "verify_remaining_labels",
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one exact typed producer",
+          "actual_value": "remaining_labels",
+          "field": "inputs.symbol"
+        },
+        {
+          "error_code": "IR_GOAL_UNCOVERED",
+          "node_ref": null,
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one exact final producer",
+          "actual_value": "remaining_labels",
+          "field": "final_goal.outputs"
+        }
+      ],
+      "producer_definitions": {
+        "total_labels": [
+          {
+            "node_ref": "extract_total_labels",
+            "operation": "extract",
+            "symbol": "total_labels",
+            "type": "source_facts",
+            "unit": "labels"
+          }
+        ],
+        "labels_set_aside": [
+          {
+            "node_ref": "extract_labels_set_aside",
+            "operation": "extract",
+            "symbol": "labels_set_aside",
+            "type": "source_facts",
+            "unit": "labels"
+          }
+        ],
+        "expression_remaining_labels": [
+          {
+            "node_ref": "form_expression_remaining_labels",
+            "operation": "form_expression",
+            "symbol": "expression_remaining_labels",
+            "type": "expression",
+            "unit": "labels"
+          },
+          {
+            "node_ref": "calculate_remaining_labels",
+            "operation": "form_expression",
+            "symbol": "expression_remaining_labels",
+            "type": "expression",
+            "unit": "labels"
+          }
+        ],
+        "verified_remaining_labels": [
+          {
+            "node_ref": "verify_remaining_labels",
+            "operation": "verify_value",
+            "symbol": "verified_remaining_labels",
+            "type": "verified_value",
+            "unit": "labels"
+          }
+        ]
+      },
+      "consumer_bindings": [
+        {
+          "consumer_ref": "form_expression_remaining_labels",
+          "role": "facts",
+          "reference": "total_labels",
+          "producer_refs": [
+            "extract_total_labels"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "form_expression_remaining_labels",
+          "role": "facts",
+          "reference": "labels_set_aside",
+          "producer_refs": [
+            "extract_labels_set_aside"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "calculate_remaining_labels",
+          "role": "facts",
+          "reference": "total_labels",
+          "producer_refs": [
+            "extract_total_labels"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "verify_remaining_labels",
+          "role": "value",
+          "reference": "remaining_labels",
+          "producer_refs": [],
+          "status": "MISSING"
+        }
+      ],
+      "final_producers": [
+        {
+          "name": "remaining_labels",
+          "reference": "remaining_labels",
+          "producer_refs": [],
+          "status": "MISSING"
+        }
+      ],
+      "reverse_chain": {},
+      "static_status": "FAIL",
+      "source_coverage": "NOT_ASSESSED",
+      "operation_intent": "REQUIRES_SEMANTIC_REVIEW",
+      "fact_truth": "NOT_ASSESSED",
+      "expression_runtime_references": "NOT_ASSESSED",
+      "invented_edges": 0,
+      "modified_candidate": false,
+      "cycle_paths": [],
+      "llm_replanning_required": true,
+      "admission_status": "REJECT_STATIC"
+    }
+  },
+  {
+    "case": "run02_B",
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/http_schema_diagnostic_v1/run02/execution/B/RAW_CANDIDATE.txt",
+    "original_sha256": "f22cb3f251fef7545f621ab137bf3786c275aff7f06971a74e8061cd5a63a19b",
+    "original_failure": [
+      {
+        "error_code": "IR_AMBIGUOUS_PRODUCER",
+        "node_id": "verify_remaining_labels",
+        "field": "outputs.symbol",
+        "expected_contract": "one producer per exact symbol",
+        "actual_contract": "remaining_labels",
+        "repairable": true,
+        "node_ref": "verify_remaining_labels",
+        "related_refs": [],
+        "cycle_path": [],
+        "missing_dependency": null,
+        "expected_constraint": "one producer per exact symbol",
+        "actual_value": "remaining_labels",
+        "errors": [
+          {
+            "error_code": "IR_AMBIGUOUS_PRODUCER",
+            "node_ref": "verify_remaining_labels",
+            "related_refs": [],
+            "cycle_path": [],
+            "missing_dependency": null,
+            "expected_constraint": "one producer per exact symbol",
+            "actual_value": "remaining_labels",
+            "field": "outputs.symbol"
+          }
+        ],
+        "error_signature": "8f3bb6c6655e10d833972994e4e3dbaa5b5ad940788eda716794650e192d7433"
+      }
+    ],
+    "audit": {
+      "protocol": "declared-goal-chain-audit.v1",
+      "mode": "goal_ir",
+      "errors": [
+        {
+          "error_code": "IR_AMBIGUOUS_PRODUCER",
+          "node_ref": "verify_remaining_labels",
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one producer per exact symbol",
+          "actual_value": "remaining_labels",
+          "field": "outputs.symbol"
+        },
+        {
+          "error_code": "IR_AMBIGUOUS_PRODUCER",
+          "node_ref": null,
+          "related_refs": [
+            "calculate_remaining_labels",
+            "verify_remaining_labels"
+          ],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one exact producer per symbol",
+          "actual_value": "remaining_labels",
+          "field": "outputs.symbol"
+        },
+        {
+          "error_code": "IR_AMBIGUOUS_PRODUCER",
+          "node_ref": "verify_remaining_labels",
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one exact typed producer",
+          "actual_value": "remaining_labels",
+          "field": "inputs.symbol"
+        },
+        {
+          "error_code": "IR_AMBIGUOUS_PRODUCER",
+          "node_ref": null,
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one exact final producer",
+          "actual_value": "remaining_labels",
+          "field": "final_goal.outputs"
+        }
+      ],
+      "producer_definitions": {
+        "total_labels": [
+          {
+            "node_ref": "extract_total_labels",
+            "operation": "extract",
+            "symbol": "total_labels",
+            "type": "source_facts",
+            "unit": "labels"
+          }
+        ],
+        "labels_set_aside": [
+          {
+            "node_ref": "extract_labels_set_aside",
+            "operation": "extract",
+            "symbol": "labels_set_aside",
+            "type": "source_facts",
+            "unit": "labels"
+          }
+        ],
+        "remaining_labels_expression": [
+          {
+            "node_ref": "form_remaining_labels_expression",
+            "operation": "form_expression",
+            "symbol": "remaining_labels_expression",
+            "type": "expression",
+            "unit": "labels"
+          }
+        ],
+        "remaining_labels": [
+          {
+            "node_ref": "calculate_remaining_labels",
+            "operation": "calculate",
+            "symbol": "remaining_labels",
+            "type": "calculated_value",
+            "unit": "labels"
+          },
+          {
+            "node_ref": "verify_remaining_labels",
+            "operation": "verify_value",
+            "symbol": "remaining_labels",
+            "type": "verified_value",
+            "unit": "labels"
+          }
+        ]
+      },
+      "consumer_bindings": [
+        {
+          "consumer_ref": "form_remaining_labels_expression",
+          "role": "facts",
+          "reference": "total_labels",
+          "producer_refs": [
+            "extract_total_labels"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "form_remaining_labels_expression",
+          "role": "facts",
+          "reference": "labels_set_aside",
+          "producer_refs": [
+            "extract_labels_set_aside"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "calculate_remaining_labels",
+          "role": "facts",
+          "reference": "total_labels",
+          "producer_refs": [
+            "extract_total_labels"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "calculate_remaining_labels",
+          "role": "facts",
+          "reference": "labels_set_aside",
+          "producer_refs": [
+            "extract_labels_set_aside"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "verify_remaining_labels",
+          "role": "value",
+          "reference": "remaining_labels",
+          "producer_refs": [
+            "calculate_remaining_labels",
+            "verify_remaining_labels"
+          ],
+          "status": "AMBIGUOUS"
+        }
+      ],
+      "final_producers": [
+        {
+          "name": "remaining_labels",
+          "reference": "remaining_labels",
+          "producer_refs": [
+            "calculate_remaining_labels",
+            "verify_remaining_labels"
+          ],
+          "status": "AMBIGUOUS"
+        }
+      ],
+      "reverse_chain": {},
+      "static_status": "FAIL",
+      "source_coverage": "NOT_ASSESSED",
+      "operation_intent": "REQUIRES_SEMANTIC_REVIEW",
+      "fact_truth": "NOT_ASSESSED",
+      "expression_runtime_references": "NOT_ASSESSED",
+      "invented_edges": 0,
+      "modified_candidate": false,
+      "cycle_paths": [],
+      "llm_replanning_required": true,
+      "admission_status": "REJECT_STATIC"
+    }
+  },
+  {
+    "case": "run03_B",
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/http_schema_diagnostic_v1/run03/execution/B/RAW_CANDIDATE.txt",
+    "original_sha256": "bdb3c5805521e828ec0450f5a0b996b796c8c5dc9ada850568c6921d57f9fbad",
+    "original_failure": [
+      {
+        "error_code": "IR_OPERATION_INPUTS",
+        "node_id": "calculate_remaining_labels",
+        "field": "inputs",
+        "expected_contract": [
+          "facts",
+          "expression"
+        ],
+        "actual_contract": [
+          "expression"
+        ],
+        "repairable": true,
+        "node_ref": "calculate_remaining_labels",
+        "related_refs": [],
+        "cycle_path": [],
+        "missing_dependency": null,
+        "expected_constraint": [
+          "facts",
+          "expression"
+        ],
+        "actual_value": [
+          "expression"
+        ],
+        "errors": [
+          {
+            "error_code": "IR_OPERATION_INPUTS",
+            "node_ref": "calculate_remaining_labels",
+            "related_refs": [],
+            "cycle_path": [],
+            "missing_dependency": null,
+            "expected_constraint": [
+              "facts",
+              "expression"
+            ],
+            "actual_value": [
+              "expression"
+            ],
+            "field": "inputs"
+          }
+        ],
+        "error_signature": "1338225b8e9a5ae55118e6ee444d403bae95d3adc1d7be733403c6f4449941aa"
+      }
+    ],
+    "audit": {
+      "protocol": "declared-goal-chain-audit.v1",
+      "mode": "goal_ir",
+      "errors": [
+        {
+          "error_code": "IR_OPERATION_INPUTS",
+          "node_ref": "calculate_remaining_labels",
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": [
+            "facts",
+            "expression"
+          ],
+          "actual_value": [
+            "expression"
+          ],
+          "field": "inputs"
+        }
+      ],
+      "producer_definitions": {
+        "total_labels": [
+          {
+            "node_ref": "extract_total_labels",
+            "operation": "extract",
+            "symbol": "total_labels",
+            "type": "source_facts",
+            "unit": "labels"
+          }
+        ],
+        "labels_set_aside": [
+          {
+            "node_ref": "extract_labels_set_aside",
+            "operation": "extract",
+            "symbol": "labels_set_aside",
+            "type": "source_facts",
+            "unit": "labels"
+          }
+        ],
+        "expression_remaining_labels": [
+          {
+            "node_ref": "form_expression_remaining_labels",
+            "operation": "form_expression",
+            "symbol": "expression_remaining_labels",
+            "type": "expression",
+            "unit": "labels"
+          }
+        ],
+        "remaining_labels": [
+          {
+            "node_ref": "calculate_remaining_labels",
+            "operation": "calculate",
+            "symbol": "remaining_labels",
+            "type": "calculated_value",
+            "unit": "labels"
+          }
+        ],
+        "verified_remaining_labels": [
+          {
+            "node_ref": "verify_remaining_labels",
+            "operation": "verify_value",
+            "symbol": "verified_remaining_labels",
+            "type": "verified_value",
+            "unit": "labels"
+          }
+        ]
+      },
+      "consumer_bindings": [
+        {
+          "consumer_ref": "form_expression_remaining_labels",
+          "role": "facts",
+          "reference": "total_labels",
+          "producer_refs": [
+            "extract_total_labels"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "form_expression_remaining_labels",
+          "role": "facts",
+          "reference": "labels_set_aside",
+          "producer_refs": [
+            "extract_labels_set_aside"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "calculate_remaining_labels",
+          "role": "expression",
+          "reference": "expression_remaining_labels",
+          "producer_refs": [
+            "form_expression_remaining_labels"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "verify_remaining_labels",
+          "role": "value",
+          "reference": "remaining_labels",
+          "producer_refs": [
+            "calculate_remaining_labels"
+          ],
+          "status": "UNIQUE"
+        }
+      ],
+      "final_producers": [
+        {
+          "name": "remaining_labels",
+          "reference": "remaining_labels",
+          "producer_refs": [
+            "calculate_remaining_labels"
+          ],
+          "status": "UNIQUE"
+        }
+      ],
+      "reverse_chain": {},
+      "static_status": "FAIL",
+      "source_coverage": "NOT_ASSESSED",
+      "operation_intent": "REQUIRES_SEMANTIC_REVIEW",
+      "fact_truth": "NOT_ASSESSED",
+      "expression_runtime_references": "NOT_ASSESSED",
+      "invented_edges": 0,
+      "modified_candidate": false,
+      "cycle_paths": [],
+      "llm_replanning_required": true,
+      "admission_status": "REJECT_STATIC"
+    }
+  },
+  {
+    "case": "run04_A",
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/http_schema_diagnostic_v1/run04/execution/A/RAW_CANDIDATE.txt",
+    "original_sha256": "7a155db21adfbac1905e508574047825871a140d99713ba3c99c12fbea0d9b69",
+    "original_failure": [],
+    "audit": {
+      "protocol": "declared-goal-chain-audit.v1",
+      "mode": "semantic",
+      "errors": [
+        {
+          "error_code": "REQUIRED_SOURCE_MISSING",
+          "node_ref": null,
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": null,
+          "actual_value": {
+            "data_id": "initial-label-source",
+            "source_id": "ctx_table",
+            "producer_nodes": [],
+            "status": "REQUIRED_SOURCE_MISSING"
+          },
+          "field": "required_source_data"
+        }
+      ],
+      "producer_definitions": {
+        "n1": [
+          {
+            "node_ref": "n1",
+            "node_type": "extraction"
+          }
+        ],
+        "n2": [
+          {
+            "node_ref": "n2",
+            "node_type": "reasoning"
+          }
+        ],
+        "n3": [
+          {
+            "node_ref": "n3",
+            "node_type": "transformation"
+          }
+        ],
+        "n4": [
+          {
+            "node_ref": "n4",
+            "node_type": "verification"
+          }
+        ]
+      },
+      "consumer_bindings": [
+        {
+          "consumer_ref": "n2",
+          "role": "facts",
+          "reference": "n1",
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "n3",
+          "role": "expression",
+          "reference": "n2",
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "n3",
+          "role": "facts",
+          "reference": "n1",
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "n4",
+          "role": "value",
+          "reference": "n3",
+          "status": "UNIQUE"
+        }
+      ],
+      "final_producers": [
+        {
+          "name": "answer",
+          "reference": "n4",
+          "producer_refs": [
+            "n4"
+          ],
+          "status": "UNIQUE"
+        }
+      ],
+      "reverse_chain": {
+        "answer": [
+          "n1",
+          "n2",
+          "n3",
+          "n4"
+        ]
+      },
+      "static_status": "FAIL",
+      "source_coverage": {
+        "protocol": "declared-source-coverage.v1",
+        "bindings": [
+          {
+            "node_id": "n1",
+            "source_id": "ctx_text",
+            "contributes_to_final": true
+          }
+        ],
+        "final_source_lineage": {
+          "answer": [
+            "ctx_text"
+          ]
+        },
+        "required_data": [
+          {
+            "data_id": "initial-label-source",
+            "source_id": "ctx_table",
+            "producer_nodes": [],
+            "status": "REQUIRED_SOURCE_MISSING"
+          },
+          {
+            "data_id": "reservation-source",
+            "source_id": "ctx_text",
+            "producer_nodes": [
+              "n1"
+            ],
+            "status": "SOURCE_PATH_PRESENT"
+          }
+        ],
+        "source_complete": "FAIL",
+        "semantic_review": "REQUIRED_NOT_PROOF",
+        "fact_correctness": "NOT_ESTABLISHED",
+        "errors": [
+          {
+            "error_code": "REQUIRED_SOURCE_MISSING",
+            "node_ref": null,
+            "related_refs": [],
+            "cycle_path": [],
+            "missing_dependency": null,
+            "expected_constraint": null,
+            "actual_value": {
+              "data_id": "initial-label-source",
+              "source_id": "ctx_table",
+              "producer_nodes": [],
+              "status": "REQUIRED_SOURCE_MISSING"
+            },
+            "field": "required_source_data"
+          }
+        ]
+      },
+      "operation_intent": "REQUIRES_SEMANTIC_REVIEW",
+      "fact_truth": "NOT_ASSESSED",
+      "expression_runtime_references": "NOT_ASSESSED",
+      "invented_edges": 0,
+      "modified_candidate": false,
+      "cycle_paths": [],
+      "declared_edges_consumer_to_producer": {
+        "n1": [],
+        "n2": [
+          "n1"
+        ],
+        "n3": [
+          "n1",
+          "n2"
+        ],
+        "n4": [
+          "n3"
+        ]
+      },
+      "llm_replanning_required": true,
+      "admission_status": "REJECT_STATIC"
+    }
+  },
+  {
+    "case": "run04_B",
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/http_schema_diagnostic_v1/run04/execution/B/RAW_CANDIDATE.txt",
+    "original_sha256": "346f80045838980cf42334a4e415a4468d06f4a796cdb0c6d6a635394556327e",
+    "original_failure": [
+      {
+        "error_code": "IR_OPERATION_INPUTS",
+        "node_id": "calculate_remaining_labels",
+        "field": "inputs",
+        "expected_contract": [
+          "facts",
+          "expression"
+        ],
+        "actual_contract": [
+          "facts"
+        ],
+        "repairable": true,
+        "node_ref": "calculate_remaining_labels",
+        "related_refs": [],
+        "cycle_path": [],
+        "missing_dependency": null,
+        "expected_constraint": [
+          "facts",
+          "expression"
+        ],
+        "actual_value": [
+          "facts"
+        ],
+        "errors": [
+          {
+            "error_code": "IR_OPERATION_INPUTS",
+            "node_ref": "calculate_remaining_labels",
+            "related_refs": [],
+            "cycle_path": [],
+            "missing_dependency": null,
+            "expected_constraint": [
+              "facts",
+              "expression"
+            ],
+            "actual_value": [
+              "facts"
+            ],
+            "field": "inputs"
+          }
+        ],
+        "error_signature": "122fc56fc8975959c1d047c6a14233103952b13c200d77f085dd700a2a3d4599"
+      }
+    ],
+    "audit": {
+      "protocol": "declared-goal-chain-audit.v1",
+      "mode": "goal_ir",
+      "errors": [
+        {
+          "error_code": "IR_OPERATION_INPUTS",
+          "node_ref": "calculate_remaining_labels",
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": [
+            "facts",
+            "expression"
+          ],
+          "actual_value": [
+            "facts"
+          ],
+          "field": "inputs"
+        }
+      ],
+      "producer_definitions": {
+        "total_labels": [
+          {
+            "node_ref": "extract_total_labels",
+            "operation": "extract",
+            "symbol": "total_labels",
+            "type": "source_facts",
+            "unit": "labels"
+          }
+        ],
+        "labels_set_aside": [
+          {
+            "node_ref": "extract_labels_set_aside",
+            "operation": "extract",
+            "symbol": "labels_set_aside",
+            "type": "source_facts",
+            "unit": "labels"
+          }
+        ],
+        "remaining_labels": [
+          {
+            "node_ref": "calculate_remaining_labels",
+            "operation": "calculate",
+            "symbol": "remaining_labels",
+            "type": "calculated_value",
+            "unit": "labels"
+          }
+        ],
+        "verified_remaining_labels": [
+          {
+            "node_ref": "verify_remaining_labels",
+            "operation": "verify_value",
+            "symbol": "verified_remaining_labels",
+            "type": "verified_value",
+            "unit": "labels"
+          }
+        ]
+      },
+      "consumer_bindings": [
+        {
+          "consumer_ref": "calculate_remaining_labels",
+          "role": "facts",
+          "reference": "total_labels",
+          "producer_refs": [
+            "extract_total_labels"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "calculate_remaining_labels",
+          "role": "facts",
+          "reference": "labels_set_aside",
+          "producer_refs": [
+            "extract_labels_set_aside"
+          ],
+          "status": "UNIQUE"
+        },
+        {
+          "consumer_ref": "verify_remaining_labels",
+          "role": "value",
+          "reference": "remaining_labels",
+          "producer_refs": [
+            "calculate_remaining_labels"
+          ],
+          "status": "UNIQUE"
+        }
+      ],
+      "final_producers": [
+        {
+          "name": "remaining_labels",
+          "reference": "remaining_labels",
+          "producer_refs": [
+            "calculate_remaining_labels"
+          ],
+          "status": "UNIQUE"
+        }
+      ],
+      "reverse_chain": {},
+      "static_status": "FAIL",
+      "source_coverage": "NOT_ASSESSED",
+      "operation_intent": "REQUIRES_SEMANTIC_REVIEW",
+      "fact_truth": "NOT_ASSESSED",
+      "expression_runtime_references": "NOT_ASSESSED",
+      "invented_edges": 0,
+      "modified_candidate": false,
+      "cycle_paths": [],
+      "llm_replanning_required": true,
+      "admission_status": "REJECT_STATIC"
+    }
+  }
+]

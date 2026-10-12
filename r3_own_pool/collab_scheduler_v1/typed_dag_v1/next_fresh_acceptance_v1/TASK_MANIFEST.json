@@ -1,0 +1,41 @@
+{
+  "version": "fresh-task-manifest.v1",
+  "role": "PUBLIC INPUTS ONLY; not yet used for generation debugging",
+  "tasks": [
+    {
+      "task_id": "stage3-fresh-stock-20261011-03",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "How many cartons remain in the warehouse after the receipt and shipment? Return one carton count.",
+        "ctx_table": "Warehouse opening stock was 52 cartons. A delivery added 17 cartons.",
+        "ctx_text": "The warehouse then shipped 24 cartons. There were no other stock movements."
+      },
+      "required_outputs": {
+        "answer": "Remaining carton count after receipt and shipment"
+      }
+    },
+    {
+      "task_id": "stage3-fresh-utilization-20261011-04",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What fraction of the maximum production capacity was used over the run? Return a ratio between zero and one, not a percentage.",
+        "ctx_table": "A production line has a rated capacity of 150 items per hour. The run lasted 3 hours.",
+        "ctx_text": "The production line completed 315 items during that run."
+      },
+      "required_outputs": {
+        "answer": "Completed output divided by rated capacity over the whole run, expressed as a fraction"
+      }
+    }
+  ],
+  "content_sha256": {
+    "stage3-fresh-stock-20261011-03": "05111333a6f9f04efda04e2f50faa79f3757ab42f8aa21fabd87724ba2936b16",
+    "stage3-fresh-utilization-20261011-04": "cc7c7261267e47d8d0d536818df903836ff11e0898082d4d94c4521d4c647e55"
+  },
+  "evaluation_only_sha256": "0c1298da4d52bdc70c4082443a2497ae1ac8509331e58c61f64ac69d0201e8c9",
+  "freshness_check": {
+    "scope": "/root/r3_own_pool and /root/e2_1_protocol before packet creation",
+    "exact_source_text_matches": 0,
+    "not_used_in_stub_generation": true,
+    "limitations": "Exact textual exposure check; not a semantic near-duplicate benchmark guarantee"
+  }
+}

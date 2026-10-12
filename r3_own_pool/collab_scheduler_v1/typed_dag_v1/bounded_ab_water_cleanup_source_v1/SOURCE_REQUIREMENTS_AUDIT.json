@@ -1,0 +1,34 @@
+{
+  "version": "source-audit.v1",
+  "reviewer": "code-audit-public-input-review",
+  "context_sha": "9e1f3447593f97c7b8c4d9054e88209b13267c0fe53fbd2645dec6d9459ae3a8",
+  "decisions": {
+    "ctx_table": {
+      "status": "REQUIRED",
+      "kind": "DATA",
+      "evidence": "Reservoir A collected 186 liters; reservoir B collected 249 liters.",
+      "rationale": "Collected amounts feed combined volume"
+    },
+    "ctx_text": {
+      "status": "REQUIRED",
+      "kind": "DATA",
+      "evidence": "Leakage removed 17 liters; cleaning consumed a further 28 liters.",
+      "rationale": "Both stated removals constrain remaining volume"
+    }
+  },
+  "required_source_data": [
+    {
+      "data_id": "ctx_table-requirement",
+      "source_id": "ctx_table",
+      "evidence": "Reservoir A collected 186 liters; reservoir B collected 249 liters."
+    },
+    {
+      "data_id": "ctx_text-requirement",
+      "source_id": "ctx_text",
+      "evidence": "Leakage removed 17 liters; cleaning consumed a further 28 liters."
+    }
+  ],
+  "uncertain_sources": [],
+  "semantic_status": "REVIEWER_DECLARATION_NOT_PROOF",
+  "scope": "Source-path requirement; RULE linkage currently shares extraction-path rule, not a general instruction-dependency proof"
+}

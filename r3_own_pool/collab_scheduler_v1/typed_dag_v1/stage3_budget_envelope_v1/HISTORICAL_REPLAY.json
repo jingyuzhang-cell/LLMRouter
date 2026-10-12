@@ -1,0 +1,184 @@
+[
+  {
+    "source": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/stage3_fresh_acceptance_real_01",
+    "source_hashes": {
+      "DISPATCH.jsonl": "eeb589ea31d73603f32ea2152997075415f696e6a0ebf5361065b6444fc027a0",
+      "REQUEST_PRECHECK.jsonl": "61053a77d4748010c13dbd807692df9c38cc33daefea0db042c93dd36b43234c",
+      "PHASE_BUDGET.jsonl": "53dc78ea76e91d28c06e0969e9d20016174f329c23ab2344835d4e93c2a5fb61",
+      "HTTP_INPUTS.jsonl": "e820269c8cc451d45eb12c673772a5ecda4c7ccb82ed4634d2df97c9d124c508",
+      "RESULTS.json": "037cb20206d6803bd9b4319b7b95356658b5435479cabdc8c39596f7553f6bc3",
+      "PROTOCOL.json": "c00ebd1f90cb018a5d52b79adeb7ea63f417a9c10ebba87fea63ddf16c3839ac"
+    },
+    "source_unchanged": true,
+    "attempts": 4,
+    "known_tokens": 5455,
+    "unknown_retained_tokens": 0,
+    "rows": [
+      {
+        "id": 1,
+        "task": "stage3-fresh-invoice-20261011-01",
+        "phase": "generation",
+        "reservation": 1739,
+        "expected_reservation": 1739,
+        "reservation_correct": true,
+        "known_usage": 1208,
+        "unknown_retained": 0
+      },
+      {
+        "id": 2,
+        "task": "stage3-fresh-invoice-20261011-01",
+        "phase": "generation",
+        "reservation": 2057,
+        "expected_reservation": 2057,
+        "reservation_correct": true,
+        "known_usage": 1527,
+        "unknown_retained": 0
+      },
+      {
+        "id": 3,
+        "task": "stage3-fresh-batches-20261011-02",
+        "phase": "generation",
+        "reservation": 1738,
+        "expected_reservation": 1738,
+        "reservation_correct": true,
+        "known_usage": 1206,
+        "unknown_retained": 0
+      },
+      {
+        "id": 4,
+        "task": "stage3-fresh-batches-20261011-02",
+        "phase": "generation",
+        "reservation": 2046,
+        "expected_reservation": 2046,
+        "reservation_correct": true,
+        "known_usage": 1514,
+        "unknown_retained": 0
+      }
+    ],
+    "blocked_prechecks": [],
+    "default_24000_admission": "Envelope admission: generation_worst_tokens,execution_worst_tokens,global_worst_tokens",
+    "recommended_56000_counterfactual": [
+      {
+        "original_request_index": 1,
+        "original_dispatched": true,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      },
+      {
+        "original_request_index": 2,
+        "original_dispatched": true,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      },
+      {
+        "original_request_index": 3,
+        "original_dispatched": true,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      },
+      {
+        "original_request_index": 4,
+        "original_dispatched": true,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      }
+    ],
+    "generation_did_not_borrow_execution": true,
+    "interpretation": "Larger-envelope admission only; not new execution, quality or model-generation evidence"
+  },
+  {
+    "source": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/stage3_producer_fresh_real_01",
+    "source_hashes": {
+      "DISPATCH.jsonl": "3c851e4dd25cc049b45fd7e6534b0cdcf235c23af7af93d10f6e4ce2c91649cd",
+      "REQUEST_PRECHECK.jsonl": "8d14a73076551b0528826b302b11248a8675ad3a4ce2b89bdfcf785ba7f884de",
+      "PHASE_BUDGET.jsonl": "cbce8ae3b368283bd2ecee7ca84346c889385dd5dab74897dd6d40fd18bd6e0c",
+      "HTTP_INPUTS.jsonl": "2b3229a601b79e07135f5734a0afec11a83fe4b1a5b12917c27bc0da8fbd3e96",
+      "RESULTS.json": "5d4edb950f2ff20e9f77f276a8350243fc2c9e8d03844386c35faa4b117eafda",
+      "PROTOCOL.json": "b0c622ec3a11ea46d38fe43f447f89e9a1d30b9fbbdf8eafe00f12786f227613"
+    },
+    "source_unchanged": true,
+    "attempts": 4,
+    "known_tokens": 7652,
+    "unknown_retained_tokens": 0,
+    "rows": [
+      {
+        "id": 1,
+        "task": "stage3-fresh-stock-20261011-03",
+        "phase": "generation",
+        "reservation": 2083,
+        "expected_reservation": 2083,
+        "reservation_correct": true,
+        "known_usage": 1523,
+        "unknown_retained": 0
+      },
+      {
+        "id": 2,
+        "task": "stage3-fresh-stock-20261011-03",
+        "phase": "generation",
+        "reservation": 2776,
+        "expected_reservation": 2776,
+        "reservation_correct": true,
+        "known_usage": 2216,
+        "unknown_retained": 0
+      },
+      {
+        "id": 3,
+        "task": "stage3-fresh-utilization-20261011-04",
+        "phase": "generation",
+        "reservation": 2096,
+        "expected_reservation": 2096,
+        "reservation_correct": true,
+        "known_usage": 1525,
+        "unknown_retained": 0
+      },
+      {
+        "id": 4,
+        "task": "stage3-fresh-utilization-20261011-04",
+        "phase": "generation",
+        "reservation": 2388,
+        "expected_reservation": 2388,
+        "reservation_correct": true,
+        "known_usage": 2388,
+        "unknown_retained": 0
+      }
+    ],
+    "blocked_prechecks": [
+      {
+        "task": "stage3-fresh-utilization-20261011-04",
+        "phase": "generation",
+        "prompt_sha256": "e0ac85e9d7620048e49209e79aff9ee655b90ee38901a7fc9a168359cadf116b",
+        "input_tokens": 1713,
+        "max_output_tokens": 768,
+        "reservation": 2481,
+        "operation": "repair_semantic_plan",
+        "contract": null
+      }
+    ],
+    "default_24000_admission": "Envelope admission: generation_worst_tokens,execution_worst_tokens,global_worst_tokens",
+    "recommended_56000_counterfactual": [
+      {
+        "original_request_index": 1,
+        "original_dispatched": true,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      },
+      {
+        "original_request_index": 2,
+        "original_dispatched": true,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      },
+      {
+        "original_request_index": 3,
+        "original_dispatched": true,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      },
+      {
+        "original_request_index": 4,
+        "original_dispatched": true,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      },
+      {
+        "original_request_index": 5,
+        "original_dispatched": false,
+        "decision": "WOULD_ALLOW_RESERVATION"
+      }
+    ],
+    "generation_did_not_borrow_execution": true,
+    "interpretation": "Larger-envelope admission only; not new execution, quality or model-generation evidence"
+  }
+]

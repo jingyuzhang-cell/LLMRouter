@@ -1,0 +1,122 @@
+{
+  "extract": {
+    "node_type": "extraction",
+    "required_roles": [],
+    "output_kind": "source_facts",
+    "producer_types": {
+      "facts": [
+        "source_facts"
+      ],
+      "expression": [
+        "expression"
+      ],
+      "value": [
+        "calculated_value",
+        "verified_value"
+      ]
+    },
+    "cardinality": {},
+    "units": "exact symbol-link equality; no implicit conversion; container unit is not proof of per-fact dimensional correctness",
+    "rule": "existing registered contract"
+  },
+  "form_expression": {
+    "node_type": "reasoning",
+    "required_roles": [
+      "facts"
+    ],
+    "output_kind": "expression",
+    "producer_types": {
+      "facts": [
+        "source_facts"
+      ],
+      "expression": [
+        "expression"
+      ],
+      "value": [
+        "calculated_value",
+        "verified_value"
+      ]
+    },
+    "cardinality": {
+      "facts": "1..max_nodes"
+    },
+    "units": "exact symbol-link equality; no implicit conversion; container unit is not proof of per-fact dimensional correctness",
+    "rule": "existing registered contract"
+  },
+  "calculate": {
+    "node_type": "transformation",
+    "required_roles": [
+      "facts",
+      "expression"
+    ],
+    "output_kind": "calculated_value",
+    "producer_types": {
+      "facts": [
+        "source_facts"
+      ],
+      "expression": [
+        "expression"
+      ],
+      "value": [
+        "calculated_value",
+        "verified_value"
+      ]
+    },
+    "cardinality": {
+      "facts": "1..max_nodes",
+      "expression": "exactly 1"
+    },
+    "units": "exact symbol-link equality; no implicit conversion; container unit is not proof of per-fact dimensional correctness",
+    "rule": "generic calculation requires explicit expression; transformation evaluates deterministically, no new LLM rule request"
+  },
+  "verify_value": {
+    "node_type": "verification",
+    "required_roles": [
+      "value"
+    ],
+    "output_kind": "verified_value",
+    "producer_types": {
+      "facts": [
+        "source_facts"
+      ],
+      "expression": [
+        "expression"
+      ],
+      "value": [
+        "calculated_value",
+        "verified_value"
+      ]
+    },
+    "cardinality": {
+      "value": "exactly 1"
+    },
+    "units": "exact symbol-link equality; no implicit conversion; container unit is not proof of per-fact dimensional correctness",
+    "rule": "existing registered contract"
+  },
+  "verify_expression": {
+    "node_type": "verification",
+    "required_roles": [
+      "facts",
+      "expression"
+    ],
+    "output_kind": "verified_value",
+    "producer_types": {
+      "facts": [
+        "source_facts"
+      ],
+      "expression": [
+        "expression"
+      ],
+      "value": [
+        "calculated_value",
+        "verified_value"
+      ]
+    },
+    "cardinality": {
+      "facts": "1..max_nodes",
+      "expression": "exactly 1"
+    },
+    "units": "exact symbol-link equality; no implicit conversion; container unit is not proof of per-fact dimensional correctness",
+    "rule": "existing registered contract"
+  }
+}

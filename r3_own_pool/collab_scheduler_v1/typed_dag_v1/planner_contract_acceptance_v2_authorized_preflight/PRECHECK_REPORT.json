@@ -1,0 +1,117 @@
+{
+  "status": "PRECHECK_FAILED_NO_REAL_REQUESTS",
+  "requests": 0,
+  "tokens": 0,
+  "model_loaded": false,
+  "gpu_compute_processes_at_check": [],
+  "tests": {
+    "typed_log": ".........................................................................................................................................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 329 tests in 2.771s\n\nOK\n",
+    "fixed_log": "..................\n----------------------------------------------------------------------\nRan 18 tests in 3.619s\n\nOK\n"
+  },
+  "freeze_hashes": "PASS",
+  "protocol_sha256": "0a75bfbef5dead7e205539dad6d51323e1c111cd263c3807d1805187895872f5",
+  "blockers": [
+    {
+      "file": "collab_scheduler_v1/typed_dag_v1/ab_review_diagnostic.py",
+      "line": 113,
+      "reason": "run_cell catches HTTP/provider infrastructure errors but outer loop does not inspect INFRASTRUCTURE_ERROR and stop globally"
+    },
+    {
+      "file": "collab_scheduler_v1/typed_dag_v1/ab_review_diagnostic.py",
+      "line": 69,
+      "reason": "deadline reserves cleanup only, not full next request timeout plus cleanup; insufficient-wall dispatch remains possible"
+    }
+  ],
+  "semantic_near_duplicate_review": {
+    "coverage": "Read-only review of seven planning/protocol candidate files from prior keyword scan; not exhaustive semantic equivalence assessment",
+    "findings": [
+      {
+        "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/SOURCE_SELECTION_REPORT.md",
+        "matches": [
+          {
+            "line": 7,
+            "excerpt": "旧 fact_semantics.NUMBER 使用 `(?![\\w.])` 作为右边界，排除了句末 `6.`/`17.` 中的数字。实际任务为 `Last year cash: 6. This year cash: 17.`，因此旧候选位置表为空，来源Schema也没有有效数值候选。此前报告将空事实主要归因于模型事实选择，证据不足；本轮隔离执行原始模型解释为“没有提供原始操作数”，候选列表确实被程序错误扫描为空。"
+          },
+          {
+            "line": 15,
+            "excerpt": "- fact_semantics.source_candidates 扫描公开输入中的全部有限数值出现位置，不按gold筛选；每项含来源SHA、source_id、值、原字面量、位置和上下文窗口。"
+          },
+          {
+            "line": 16,
+            "excerpt": "- LLM只返回 selected_source_ids 和 reason；assemble_source_selection 解析选择、拒绝不存在/重复/过期来源ID，按精确来源装配原 facts.v1。允许有理由的空选择，不凭任务答案替模型补选。候选词法扫描可能包含无关数字，不能作为事实相关性或任务覆盖保证。"
+          },
+          {
+            "line": 46,
+            "excerpt": "| source_selection_real_03 | 1 | 251 | 0 | 旧图延续，旧扫描遗漏句末数值，空选择后阻断 |"
+          },
+          {
+            "line": 57,
+            "excerpt": "最终110/110零调用回归通过，原73项保留，加事实引用/来源选择/句末扫描/来源及ID Schema测试。本地xgrammar选择及最终计划Schema可编译。测试SHA记录在SOURCE_SELECTION_TEST_RESULT.json；真实运行每目录PROTOCOL绑定其实际执行版本，最后仅零调用ID约束修改没有冒充真实证据。"
+          }
+        ]
+      },
+      {
+        "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/NODE_ID_STABILITY_REPORT.md",
+        "matches": [
+          {
+            "line": 68,
+            "excerpt": "按本轮用户明确要求，**先报告，再获得新明确预算**。不能借用之前剩余请求或运行旧任务/旧保存图补证。下一阶段应先绑定全新任务UID及公开内容哈希、扫描既有生成调试任务排除重复内容，把评价答案存放在仅执行后评分可访问的独立区；冻结请求/Token/墙钟、每次预留、最大修复次数、失败与未知费用停止规则及当前代码哈希。"
+          }
+        ]
+      },
+      {
+        "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/PRODUCER_PLAN_READINESS_REPORT.md",
+        "matches": [
+          {
+            "line": 59,
+            "excerpt": "两题与已调试的现金差值、分部收入、发票折扣及批次均价不是相同任务内容。冻结前在r3_own_pool与e2_1_protocol检索两题独特源文本均无匹配；未对这两题运行生成器/Stub，只有公开内容和哈希准备。精确文本扫描不能证明对所有语义近似任务的彻底去重；这仍是两个合成机制任务，不是泛化基准。"
+          }
+        ]
+      },
+      {
+        "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/stage3_producer_fresh_real_01/REPORT.md",
+        "matches": [
+          {
+            "line": 24,
+            "excerpt": "真实4请求、7652 Token，无未结算请求。库存生成1523、修复2216；产能生成1525、语义审查2388；执行、执行恢复、评分模型调用均0。全局墙钟82.907秒（含模型来源扫描、加载、健康检查、实验及清理）；模型加载/健康等待35.098秒。两题生成阶段墙钟分别9.193、6.358秒。服务已停止，GPU检查0 MiB。未发生HTTP 500或HTTP重试。"
+          }
+        ]
+      },
+      {
+        "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/stage3_budget_envelope_v1/REPORT.md",
+        "matches": [
+          {
+            "line": 32,
+            "excerpt": "单HTTP绝对上限30秒，防止socket空闲超时在慢速返回下不断延长；无重试。模型启动300秒、两题最坏20请求×30秒、清理30秒，名义合计930秒<1200。入口墙钟从main开始计时；全局SIGALRM在1170秒触发StopRun并保留30秒清理，包含模型哈希扫描、加载、健康检查、tokenization、实验。绝对请求定时器恢复原全局剩余时间，不重新启动20分钟。"
+          }
+        ]
+      },
+      {
+        "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/ab_preparation_v1/REPORT.md",
+        "matches": [
+          {
+            "line": 44,
+            "excerpt": "具体数值和内容hash见清单，gold仅在EVALUATION_ONLY.json；规划Prompt、调度器和执行器只接收public任务。所有任务和内容在冻结前扫描 /root/r3_own_pool 精确UID/问题/表/文本匹配为0，未用于历史调试或Stub结果验收，非太阳能/行程/库存/产能任务。该扫描不保证跨仓库或语义近重复；任务是人工构造简单算术诊断，不是benchmark独立泛化样本。"
+          }
+        ]
+      },
+      {
+        "path": "/root/phase_c9_0/C9_DEV_TASKS_PRE_REBUILD.jsonl",
+        "matches": [
+          {
+            "line": 103,
+            "excerpt": "{\"task_id\": \"c9_2dce96e0f777a20cc907\", \"source\": \"FinReflectKG\", \"source_id\": \"178\", \"question\": \"Under the SEC's proposed climate-related disclosure rules, which specific segment of MetLife is required to report climate risk information related to its premiums and universal life product fees, and what was the 2023 reported amount for this metric in that segment?\", \"context\": \"| Segment           "
+          },
+          {
+            "line": 504,
+            "excerpt": "{\"task_id\": \"c9_d6321a784722c118200c\", \"source\": \"FinReflectKG\", \"source_id\": \"156\", \"question\": \"What interest rate does Southern Company Gas receive on its fair value hedge arrangements maturing in 2031, and how does this reflect the interplay between IRS regulatory frameworks and Southern Company's consolidated financial reporting oversight?\", \"context\": \"|                                     |"
+          }
+        ]
+      }
+    ],
+    "conclusion": "No demonstrated exact prior prompt-debug task match found in reviewed excerpts; general arithmetic similarity and unreviewed records remain unknown. Development diagnostic only."
+  },
+  "historical_inputs_modified": false,
+  "real_experiment_started": false,
+  "next": "Correct execution control flow without changing tasks/Prompt/Schema; rerun fault/low-wall Stub checks and freeze a corrected code version before real calls."
+}

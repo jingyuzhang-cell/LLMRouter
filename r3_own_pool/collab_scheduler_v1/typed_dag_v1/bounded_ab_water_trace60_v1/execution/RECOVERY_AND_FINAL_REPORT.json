@@ -1,0 +1,226 @@
+{
+  "status": "DIAGNOSTIC_STOPPED_WITH_CLEANUP_CODE_ERROR",
+  "rows": [
+    {
+      "run_id": "T2_A",
+      "state": "ACCEPTED",
+      "calls": [
+        {
+          "phase": "generate",
+          "request_id": "typed-5e3c3e43330d4d4a8a06d51f401b6f30",
+          "http_status": 200,
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 3154,
+            "total_tokens": 3416,
+            "completion_tokens": 262,
+            "prompt_tokens_details": null
+          }
+        },
+        {
+          "phase": "semantic_review",
+          "request_id": "typed-50d42e47e3c7434cbc9c4ccb7fe4a082",
+          "http_status": 200,
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 2660,
+            "total_tokens": 2819,
+            "completion_tokens": 159,
+            "prompt_tokens_details": null
+          }
+        }
+      ],
+      "trace": [
+        {
+          "request_id": "typed-5e3c3e43330d4d4a8a06d51f401b6f30",
+          "stage": "constructed",
+          "monotonic_s": 32447667.28936129,
+          "unix_s": 1791772860.9297113,
+          "phase": "generate"
+        },
+        {
+          "request_id": "typed-5e3c3e43330d4d4a8a06d51f401b6f30",
+          "stage": "dispatch",
+          "monotonic_s": 32447667.289690994,
+          "unix_s": 1791772860.930041,
+          "timeout_s": 60,
+          "server_receive": "UNKNOWN",
+          "schema": "UNKNOWN",
+          "prefill": "UNKNOWN",
+          "decode": "UNKNOWN"
+        },
+        {
+          "request_id": "typed-5e3c3e43330d4d4a8a06d51f401b6f30",
+          "stage": "headers_received",
+          "monotonic_s": 32447722.12383044,
+          "unix_s": 1791772915.7641819,
+          "http_status": 200,
+          "server_request_id": "typed-5e3c3e43330d4d4a8a06d51f401b6f30",
+          "connect_vs_wait": "NOT_SEPARATELY_OBSERVED"
+        },
+        {
+          "request_id": "typed-5e3c3e43330d4d4a8a06d51f401b6f30",
+          "stage": "body_complete",
+          "monotonic_s": 32447722.124295447,
+          "unix_s": 1791772915.7646453,
+          "elapsed_s": 54.834545854479074
+        },
+        {
+          "request_id": "typed-50d42e47e3c7434cbc9c4ccb7fe4a082",
+          "stage": "constructed",
+          "monotonic_s": 32447723.62748085,
+          "unix_s": 1791772917.2678308,
+          "phase": "semantic_review"
+        },
+        {
+          "request_id": "typed-50d42e47e3c7434cbc9c4ccb7fe4a082",
+          "stage": "dispatch",
+          "monotonic_s": 32447723.627630927,
+          "unix_s": 1791772917.2679806,
+          "timeout_s": 60,
+          "server_receive": "UNKNOWN",
+          "schema": "UNKNOWN",
+          "prefill": "UNKNOWN",
+          "decode": "UNKNOWN"
+        },
+        {
+          "request_id": "typed-50d42e47e3c7434cbc9c4ccb7fe4a082",
+          "stage": "headers_received",
+          "monotonic_s": 32447728.659942064,
+          "unix_s": 1791772922.3002932,
+          "http_status": 200,
+          "server_request_id": "typed-50d42e47e3c7434cbc9c4ccb7fe4a082",
+          "connect_vs_wait": "NOT_SEPARATELY_OBSERVED"
+        },
+        {
+          "request_id": "typed-50d42e47e3c7434cbc9c4ccb7fe4a082",
+          "stage": "body_complete",
+          "monotonic_s": 32447728.66035007,
+          "unix_s": 1791772922.3007002,
+          "elapsed_s": 5.032680761069059
+        }
+      ],
+      "request_ids": [
+        "typed-5e3c3e43330d4d4a8a06d51f401b6f30",
+        "typed-50d42e47e3c7434cbc9c4ccb7fe4a082"
+      ],
+      "accounting": {
+        "attempts": 2,
+        "known_tokens": 6235,
+        "charged_tokens": 6235,
+        "pending": {}
+      },
+      "review": "CALLED",
+      "admitted": true
+    },
+    {
+      "run_id": "T2_B",
+      "state": "RESOURCE_STOP",
+      "calls": [
+        {
+          "phase": "generate",
+          "request_id": "typed-b9f621ada8d84b12acc65e0abd4d59db",
+          "http_status": null,
+          "finish_reason": null,
+          "usage": null
+        }
+      ],
+      "trace": [
+        {
+          "request_id": "typed-b9f621ada8d84b12acc65e0abd4d59db",
+          "stage": "constructed",
+          "monotonic_s": 32447728.682557475,
+          "unix_s": 1791772922.3229077,
+          "phase": "generate"
+        },
+        {
+          "request_id": "typed-b9f621ada8d84b12acc65e0abd4d59db",
+          "stage": "dispatch",
+          "monotonic_s": 32447728.68281376,
+          "unix_s": 1791772922.3231635,
+          "timeout_s": 60,
+          "server_receive": "UNKNOWN",
+          "schema": "UNKNOWN",
+          "prefill": "UNKNOWN",
+          "decode": "UNKNOWN"
+        },
+        {
+          "request_id": "typed-b9f621ada8d84b12acc65e0abd4d59db",
+          "stage": "request_error",
+          "monotonic_s": 32447788.68319264,
+          "unix_s": 1791772982.323543,
+          "exception_type": "StopRun",
+          "exception": "Request wall timeout; unknown usage reservation retained",
+          "elapsed_s": 60.00033389404416,
+          "server_cancel_confirmed": false,
+          "server_may_continue": true
+        }
+      ],
+      "request_ids": [
+        "typed-b9f621ada8d84b12acc65e0abd4d59db"
+      ],
+      "accounting": {
+        "attempts": 1,
+        "known_tokens": 0,
+        "charged_tokens": 7592,
+        "pending": {
+          "1": 7592
+        }
+      },
+      "review": "NOT_RUN",
+      "admitted": false
+    }
+  ],
+  "requests": 3,
+  "known_tokens": 6235,
+  "unknown_usage_reservation": 7592,
+  "charged_total": 13827,
+  "historical_7250_preserved": true,
+  "last_normal_snapshot_wall_s": 245.93594312667847,
+  "global_start_and_recovery_end": "Exact full wall not persisted due finally NameError; last snapshot245.936s, subsequent process/resource check separately timestamped",
+  "cleanup": {
+    "normal_path": "FAILED: NameError mark undefined in main finally; import exists only in nested dispatch",
+    "owned_server_pids": [
+      28727,
+      28784
+    ],
+    "observed_pids_alive": false,
+    "gpu_compute_processes_after": [],
+    "lock_held_after": false,
+    "observation_unix": 1791773104.5149567,
+    "note": "Processes no longer existed at recovery inspection; no manual kill needed. Do not claim service.close executed or exact stop time."
+  },
+  "A": {
+    "http": "2/2 requests200",
+    "json_schema": "PASS",
+    "nodes": 5,
+    "types": [
+      "extraction",
+      "reasoning",
+      "transformation",
+      "verification",
+      "verification"
+    ],
+    "topology": "n0 -> n1; n0,n1 -> n2 -> n3 -> n4",
+    "contract": "PASS_BY_FROZEN_VALIDATOR",
+    "declared_source": "PASS_TABLE_ONLY",
+    "goal_chain": "PASS_BY_FROZEN_VALIDATOR",
+    "review": "PASS_MODEL_HEURISTIC",
+    "nonfallback_accepted_by_runner": true,
+    "semantic_caveat": "ctx_text contains leakage17 and cleaning28, but graph extraction onlyctx_table and execution task bindings do not providectx_text elsewhere. Frozen required source list omittedctx_text. Review PASS does not establish actual necessary-source coverage.",
+    "executed": false,
+    "scored": false
+  },
+  "B": {
+    "http": "NO_RESPONSE",
+    "json_schema": "NOT_TESTED",
+    "timeout_s": 60,
+    "request_error": "StopRun Request wall timeout",
+    "graph": null,
+    "review": "NOT_RUN",
+    "accepted": false
+  },
+  "server_stages": "Compilation/prefill/decode timestampsUNKNOWN. Native aggregate log says Running0/Waiting1 around B, not request-specific latency proof.",
+  "tests": "389/389 PASS",
+  "future": "No more real calls; fix cleanup logging scope and source-declaration correctness in new version, not old frozen record"
+}

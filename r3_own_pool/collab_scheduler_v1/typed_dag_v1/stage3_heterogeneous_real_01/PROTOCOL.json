@@ -1,0 +1,136 @@
+{
+  "tasks": [
+    {
+      "task_id": "stage3-fresh-solar-credit-20261011-05",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the net credit in dollars for the exported solar electricity after the account fee?",
+        "ctx_table": "The household exported 61 kilowatt-hours of solar electricity. The export credit rate was 0.24 dollars per kilowatt-hour.",
+        "ctx_text": "A fixed account fee of 1.64 dollars was deducted from the export credit. No other adjustments applied."
+      },
+      "required_outputs": {
+        "answer": "Net dollar credit after deducting the fixed account fee"
+      }
+    },
+    {
+      "task_id": "stage3-fresh-trip-speed-20261011-06",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What was the average speed in kilometers per hour over the complete two-leg trip? Include both legs and all reported travel time.",
+        "ctx_table": "The first trip leg covered 90 kilometers in 1.5 hours.",
+        "ctx_text": "The second leg covered 150 kilometers in 2.5 hours. There was no additional stopping time."
+      },
+      "required_outputs": {
+        "answer": "Total distance divided by total time, in kilometers per hour"
+      }
+    }
+  ],
+  "manifest_sha256": "6db210d826e87289f639f671e477fe9c89e144c093f339b45c319edc4aa244a2",
+  "caps": {
+    "new_request_attempts": 24,
+    "new_total_tokens": 56000,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 768,
+    "wall_seconds": 5400,
+    "logical_calls_per_task_config_state": 30
+  },
+  "resource_envelope": {
+    "stages": {
+      "plan": {
+        "phase": "generation",
+        "calls": 1,
+        "input_tokens": 2048,
+        "output_tokens": 768
+      },
+      "repair": {
+        "phase": "generation",
+        "calls": 1,
+        "input_tokens": 3072,
+        "output_tokens": 768
+      },
+      "review": {
+        "phase": "generation",
+        "calls": 2,
+        "input_tokens": 3072,
+        "output_tokens": 384
+      },
+      "node": {
+        "phase": "execution",
+        "calls": 5,
+        "input_tokens": 2048,
+        "output_tokens": 256
+      },
+      "recovery": {
+        "phase": "execution",
+        "calls": 1,
+        "input_tokens": 2048,
+        "output_tokens": 256
+      }
+    },
+    "task_requests": 12,
+    "task_tokens": 28000,
+    "phase_tokens": {
+      "generation": 14000,
+      "execution": 14000
+    },
+    "request_timeout_s": 30,
+    "cleanup_s": 30,
+    "totals": {
+      "requests": 10,
+      "tokens": 27392,
+      "phase_tokens": {
+        "generation": 13568,
+        "execution": 13824
+      }
+    },
+    "max_nodes": 5,
+    "max_generation_repairs": 1,
+    "max_execution_recoveries": 1,
+    "guarantee": "bounded dispatch resources; no quality, semantic-success or service-completion guarantee"
+  },
+  "task_phase_tokens": {
+    "generation": 14000,
+    "execution": 14000
+  },
+  "max_repairs": 1,
+  "max_execution_recoveries": 1,
+  "max_nodes": 5,
+  "models": {
+    "medium": {
+      "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+      "served": "Qwen/Qwen2.5-7B-Instruct"
+    },
+    "large": {
+      "path": "/root/autodl-tmp/models/Qwen2.5-14B-Instruct-GPTQ-Int8",
+      "served": "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8"
+    },
+    "coder": {
+      "path": "/root/autodl-tmp/models/Qwen2.5-Coder-7B-Instruct",
+      "served": "Qwen/Qwen2.5-Coder-7B-Instruct"
+    }
+  },
+  "allocation_policy": "heterogeneous_type_baseline",
+  "no_http_retries": true,
+  "no_resume": true,
+  "no_historical_budget": true,
+  "code_sha256": {
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/fresh_acceptance.py": "2eea38da449587a81f7d5571fb5df5351a0b3c5d80acceb29e28eeb527dc50e3",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/generation.py": "f6450c10d2138e041a4ee1cd24b0eb84dab823a3c329c835022bcedffdfe9063",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/semantic_ids.py": "ae7aebe78fbae166201cdaa4b4b1d1a627d77f853811e8a3247d163e5f034c2c",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/semantic_validation.py": "59ba03e0b90ab877b6adf5bff236c864da7bdb138a2d97fd40a6371151400102",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/producer_plan.py": "a12de5ac86ace7a0a64b49881a8afd78e97205747bb15679d01e89bb40faf605",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/assembly.py": "0d167ebef332e410f2d6acf45d36c8f1e8b171004d330580300bf191d85c7372",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/execution.py": "d39ef2ffaff8f47032ec4612c6b83133268debc4c6b05896b80bdbc823761e7e",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/fact_semantics.py": "d3bf741c1aa66e055bac67cdbab7fe0324e86a0d291a726b4b4b257590b85bc9",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/protocol.py": "443912941567223303f6afb24e5b2cfe551c41479d024157c0c20999411df9f1",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/generation_schema.py": "e167f26479dd4983e5b2a8de1c90a3cdaecf155cf9cc5e182b1105602826a2b0",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/coverage_review.py": "cea11be7727ab743b2273eb62a26e638604688c160bd5ac07d8bb6414dadeae2",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/resource_envelope.py": "3fb99f48237bf2ac4d4b3526ea23bbd4a8895eebc1a7d0c9585caeb248aff42d",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/heterogeneous_models.py": "da64d6272b3f9b23daa886eb90fd46d979bf7cc83ee41fbdda2e09015cf759e7",
+    "/root/r3_own_pool/static_dag_v0/run.py": "770e3aabfabda2cc1faf476277448050c5e6bc747b848c6861eb227204c96f5b",
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/scoring_contract_final.py": "ac327d16f638937c49e9f77127827b2e43ee4509a88de383ba8089aee73a19ca"
+  },
+  "evaluation_only_sha": "4259257b6bfc8a26455eab60cb5439488b94ea1c83cf8bad36a792c6eabee23a",
+  "approval": "Explicit --execute for externally approved frozen task manifest; no implicit budget authorization",
+  "created_unix": 1791715435.6422372
+}

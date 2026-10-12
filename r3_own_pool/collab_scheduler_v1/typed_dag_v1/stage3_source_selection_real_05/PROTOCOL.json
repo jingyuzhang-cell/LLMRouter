@@ -1,0 +1,54 @@
+{
+  "caps": {
+    "new_request_attempts": 6,
+    "new_total_tokens": 32444,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 2048,
+    "wall_seconds": 288.0916013009846,
+    "logical_calls_per_task_config_state": 30
+  },
+  "tasks": [
+    {
+      "task_id": "typed-stage3-facts-change",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the increase in cash from last year to this year? Return the difference, not a percentage.",
+        "ctx_table": "Last year cash: 6. This year cash: 17.",
+        "ctx_text": "Cash figures use the same unit."
+      },
+      "required_outputs": {
+        "answer": "This year cash minus last year cash, numeric difference"
+      }
+    }
+  ],
+  "model": {
+    "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "served": "Qwen/Qwen2.5-7B-Instruct"
+  },
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 2048,
+  "max_plan_repairs": 2,
+  "max_execution_attempts_per_node": 2,
+  "code_sha": {
+    "generation.py": "d6de0de92fe38186084ba74b02ac8309aad4d16cca63e71ee75e69fb540eb3b2",
+    "execution.py": "d39ef2ffaff8f47032ec4612c6b83133268debc4c6b05896b80bdbc823761e7e",
+    "fact_semantics.py": "d3bf741c1aa66e055bac67cdbab7fe0324e86a0d291a726b4b4b257590b85bc9",
+    "protocol.py": "443912941567223303f6afb24e5b2cfe551c41479d024157c0c20999411df9f1",
+    "generation_schema.py": "e167f26479dd4983e5b2a8de1c90a3cdaecf155cf9cc5e182b1105602826a2b0",
+    "assembly.py": "237a6e858c8a498220b57b441b7ff53638318335f776650c7a2bf1e63af13c8a",
+    "real_fact_reference_smoke.py": "86a33e0d3f4f800917efb4501fb2eb8e9158f35e2580b18e533e67d6c52a6d90"
+  },
+  "resume_generated": "collab_scheduler_v1/typed_dag_v1/stage3_fact_reference_real_03/RESULTS.json",
+  "compact_grammar": true,
+  "extraction_protocol": "source-selection.v1",
+  "parent_budget": {
+    "path": "collab_scheduler_v1/typed_dag_v1/stage3_source_selection_real_04",
+    "attempts": 4,
+    "charged_tokens": 4312,
+    "wall_s": 83.9928141720593
+  },
+  "purpose": "Development mechanics diagnostic, stop on first non-fallback COMPLETE and correct final score; not an efficacy experiment",
+  "no_historical_budget_reuse": true,
+  "created": 1791703244.8154154
+}

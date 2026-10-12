@@ -1,0 +1,89 @@
+{
+  "rows": [
+    {
+      "arm": "A",
+      "mode": "semantic",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "json_complete": true,
+      "full_schema_pass": true,
+      "legal_dag": true,
+      "errors": [],
+      "token_usage": {
+        "prompt_tokens": 1714,
+        "total_tokens": 1920,
+        "completion_tokens": 206,
+        "prompt_tokens_details": null
+      },
+      "request_schema_sha256": "b076c45e8d6d8ceb0e2ab2401ee453a05298271bea5335ea20791256405901b0",
+      "full_schema_sha256": "80e07138c7ed08b9be760fae086303d334c85c327ad99ff3a79b00c211a8cb2e",
+      "response_bytes_sha256": "fdf100db271c0af12522dbb7295778090cfba3eaf6889fbd8ab56a80ee532929",
+      "actual_model": "Qwen/Qwen2.5-7B-Instruct",
+      "nodes": 4,
+      "request_wall_s": 7.150728743523359,
+      "charged_tokens": 1920
+    },
+    {
+      "arm": "B",
+      "mode": "goal_ir",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "json_complete": true,
+      "full_schema_pass": true,
+      "legal_dag": false,
+      "errors": [
+        {
+          "error_code": "IR_AMBIGUOUS_PRODUCER",
+          "node_id": "verify_remaining_labels",
+          "field": "outputs.symbol",
+          "expected_contract": "one producer per exact symbol",
+          "actual_contract": "remaining_labels",
+          "repairable": true,
+          "node_ref": "verify_remaining_labels",
+          "related_refs": [],
+          "cycle_path": [],
+          "missing_dependency": null,
+          "expected_constraint": "one producer per exact symbol",
+          "actual_value": "remaining_labels",
+          "errors": [
+            {
+              "error_code": "IR_AMBIGUOUS_PRODUCER",
+              "node_ref": "verify_remaining_labels",
+              "related_refs": [],
+              "cycle_path": [],
+              "missing_dependency": null,
+              "expected_constraint": "one producer per exact symbol",
+              "actual_value": "remaining_labels",
+              "field": "outputs.symbol"
+            }
+          ],
+          "error_signature": "8f3bb6c6655e10d833972994e4e3dbaa5b5ad940788eda716794650e192d7433"
+        }
+      ],
+      "token_usage": {
+        "prompt_tokens": 1585,
+        "total_tokens": 2048,
+        "completion_tokens": 463,
+        "prompt_tokens_details": null
+      },
+      "request_schema_sha256": "7b6afa8a316e3ac2fb7c2541580070efcca64f929de56bde0e2b540bb499d42e",
+      "full_schema_sha256": "7b6afa8a316e3ac2fb7c2541580070efcca64f929de56bde0e2b540bb499d42e",
+      "response_bytes_sha256": "8f0e97fbc0411f641e096f61cb3102f42e085d1414691d6aa456119d9f3f75c4",
+      "actual_model": "Qwen/Qwen2.5-7B-Instruct",
+      "request_wall_s": 9.726910006254911,
+      "charged_tokens": 2048
+    }
+  ],
+  "abort": null,
+  "wall_s": 104.06908412277699,
+  "attempts": 2,
+  "known_tokens": 3968,
+  "charged_tokens": 3968,
+  "pending_by_arm": {
+    "A": {},
+    "B": {}
+  },
+  "service_stopped": true,
+  "node_execution": false,
+  "scoring": false
+}

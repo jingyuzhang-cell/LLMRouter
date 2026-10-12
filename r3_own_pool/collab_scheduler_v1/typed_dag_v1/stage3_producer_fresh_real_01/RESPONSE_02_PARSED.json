@@ -1,0 +1,52 @@
+{
+  "final_outputs": [
+    {
+      "name": "answer",
+      "node_ref": "n4"
+    }
+  ],
+  "nodes": [
+    {
+      "context_field": "ctx_text",
+      "input_producers": {},
+      "name": "extraction",
+      "ref": "n1",
+      "subtask": "extraction",
+      "type": "extraction"
+    },
+    {
+      "input_producers": {
+        "facts": [
+          "n1_facts_0"
+        ]
+      },
+      "name": "reasoning",
+      "ref": "n2",
+      "subtask": "reasoning",
+      "type": "reasoning"
+    },
+    {
+      "input_producers": {
+        "facts": [
+          "n1_facts_0",
+          "n2_expression_0"
+        ]
+      },
+      "name": "transformation",
+      "ref": "n3",
+      "subtask": "transformation",
+      "type": "reasoning"
+    },
+    {
+      "input_producers": {
+        "value": [
+          "n3_value_0"
+        ]
+      },
+      "name": "verification",
+      "ref": "n4",
+      "subtask": "verification",
+      "type": "verification"
+    }
+  ]
+}

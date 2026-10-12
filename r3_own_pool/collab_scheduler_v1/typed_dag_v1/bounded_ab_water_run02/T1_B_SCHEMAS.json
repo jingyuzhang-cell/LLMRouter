@@ -1,0 +1,1220 @@
+{
+  "full_sha256": "54981abebce08141d78d795937d51c9765580b183cf8c6c5d4aca29ebd6de07c",
+  "service_sha256": "54981abebce08141d78d795937d51c9765580b183cf8c6c5d4aca29ebd6de07c",
+  "differences": [],
+  "conversion": "omit uniqueItems from transport ONLY; full validation remains mandatory",
+  "full_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "final_goal": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "maxLength": 240,
+            "minLength": 1,
+            "type": "string"
+          },
+          "outputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "maxLength": 80,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "symbol": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "calculated_value",
+                    "expression",
+                    "source_facts",
+                    "verified_value"
+                  ]
+                },
+                "unit": {
+                  "maxLength": 24,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "symbol",
+                "type",
+                "unit",
+                "name"
+              ],
+              "type": "object"
+            },
+            "maxItems": 5,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "description",
+          "outputs"
+        ],
+        "type": "object"
+      },
+      "steps": {
+        "items": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "context_field": {
+                  "enum": [
+                    "ctx_table",
+                    "ctx_text"
+                  ]
+                },
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {},
+                  "required": [],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "extract"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "source_facts"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs",
+                "context_field"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "facts": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "source_facts"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 5,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "facts"
+                  ],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "form_expression"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "expression"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "expression": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "expression"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "facts": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "source_facts"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 5,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "facts",
+                    "expression"
+                  ],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "calculate"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "calculated_value"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "calculated_value",
+                              "verified_value"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "verify_value"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "verified_value"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "expression": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "expression"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "facts": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "source_facts"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 5,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "facts",
+                    "expression"
+                  ],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "verify_expression"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "verified_value"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "maxItems": 5,
+        "minItems": 1,
+        "type": "array"
+      }
+    },
+    "required": [
+      "final_goal",
+      "steps"
+    ],
+    "type": "object"
+  },
+  "service_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "final_goal": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "maxLength": 240,
+            "minLength": 1,
+            "type": "string"
+          },
+          "outputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "maxLength": 80,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "symbol": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "calculated_value",
+                    "expression",
+                    "source_facts",
+                    "verified_value"
+                  ]
+                },
+                "unit": {
+                  "maxLength": 24,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "symbol",
+                "type",
+                "unit",
+                "name"
+              ],
+              "type": "object"
+            },
+            "maxItems": 5,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "description",
+          "outputs"
+        ],
+        "type": "object"
+      },
+      "steps": {
+        "items": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "context_field": {
+                  "enum": [
+                    "ctx_table",
+                    "ctx_text"
+                  ]
+                },
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {},
+                  "required": [],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "extract"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "source_facts"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs",
+                "context_field"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "facts": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "source_facts"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 5,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "facts"
+                  ],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "form_expression"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "expression"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "expression": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "expression"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "facts": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "source_facts"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 5,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "facts",
+                    "expression"
+                  ],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "calculate"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "calculated_value"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "calculated_value",
+                              "verified_value"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "verify_value"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "verified_value"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "maxLength": 240,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "inputs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "expression": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "expression"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "facts": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "symbol": {
+                            "maxLength": 48,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "source_facts"
+                            ]
+                          },
+                          "unit": {
+                            "maxLength": 24,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "symbol",
+                          "type",
+                          "unit"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 5,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "facts",
+                    "expression"
+                  ],
+                  "type": "object"
+                },
+                "operation": {
+                  "enum": [
+                    "verify_expression"
+                  ]
+                },
+                "outputs": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {
+                        "maxLength": 48,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "verified_value"
+                        ]
+                      },
+                      "unit": {
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "symbol",
+                      "type",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "ref": {
+                  "maxLength": 48,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "operation",
+                "description",
+                "inputs",
+                "outputs"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "maxItems": 5,
+        "minItems": 1,
+        "type": "array"
+      }
+    },
+    "required": [
+      "final_goal",
+      "steps"
+    ],
+    "type": "object"
+  }
+}

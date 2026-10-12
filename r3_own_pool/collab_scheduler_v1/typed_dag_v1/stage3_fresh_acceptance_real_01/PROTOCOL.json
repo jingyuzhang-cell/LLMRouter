@@ -1,0 +1,63 @@
+{
+  "tasks": [
+    {
+      "task_id": "stage3-fresh-invoice-20261011-01",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the invoice total after subtracting the fixed discount? Return one amount in dollars.",
+        "ctx_table": "An invoice lists 14 units at 8 dollars per unit.",
+        "ctx_text": "The invoice receives a fixed discount of 9 dollars."
+      },
+      "required_outputs": {
+        "answer": "Invoice net amount in dollars, using the quantity, unit price, and fixed discount"
+      }
+    },
+    {
+      "task_id": "stage3-fresh-batches-20261011-02",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the weighted average price per unit across the two batches? Return one amount in dollars per unit.",
+        "ctx_table": "Batch A contains 4 units priced at 21 dollars each.",
+        "ctx_text": "Batch B contains 6 units priced at 16 dollars each."
+      },
+      "required_outputs": {
+        "answer": "Quantity-weighted average unit price over both batches"
+      }
+    }
+  ],
+  "caps": {
+    "new_request_attempts": 24,
+    "new_total_tokens": 24000,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 768,
+    "wall_seconds": 1200,
+    "logical_calls_per_task_config_state": 30
+  },
+  "task_phase_tokens": 6000,
+  "max_repairs": 1,
+  "max_execution_recoveries": 1,
+  "max_nodes": 5,
+  "model": {
+    "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "served": "Qwen/Qwen2.5-7B-Instruct"
+  },
+  "no_http_retries": true,
+  "no_resume": true,
+  "no_historical_budget": true,
+  "code_sha256": {
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/fresh_acceptance.py": "06b972d64e7be73e9c5c5584eaa3c9c2679f8addeca0231cf14207dcd39bff71",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/generation.py": "3aede5f4406273f1440a44e757dd37a0949e6d2d4965ecae0790cb4f89a7f07d",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/semantic_ids.py": "5afcb58438b922ecb58e897a5ae74f7aac28ca5d4eb2fb9fa18f2012a962dd88",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/assembly.py": "0d167ebef332e410f2d6acf45d36c8f1e8b171004d330580300bf191d85c7372",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/execution.py": "d39ef2ffaff8f47032ec4612c6b83133268debc4c6b05896b80bdbc823761e7e",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/fact_semantics.py": "d3bf741c1aa66e055bac67cdbab7fe0324e86a0d291a726b4b4b257590b85bc9",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/protocol.py": "443912941567223303f6afb24e5b2cfe551c41479d024157c0c20999411df9f1",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/generation_schema.py": "e167f26479dd4983e5b2a8de1c90a3cdaecf155cf9cc5e182b1105602826a2b0",
+    "/root/r3_own_pool/static_dag_v0/run.py": "770e3aabfabda2cc1faf476277448050c5e6bc747b848c6861eb227204c96f5b",
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/scoring_contract_final.py": "ac327d16f638937c49e9f77127827b2e43ee4509a88de383ba8089aee73a19ca"
+  },
+  "evaluation_only_sha": "13b4f7d764818847ad53b7ec723a0fa7ebccd8def3d5ee952a625c09c49ca1c7",
+  "approval": "User explicitly approved 24 requests / 24000 tokens / 1200s / two frozen fresh tasks",
+  "created_unix": 1791704672.9180782,
+  "model_provenance_sha": "6af2d60d6204a76100aafa7ee909abbd2322c072c1083fd86287f28004e8c4e0"
+}

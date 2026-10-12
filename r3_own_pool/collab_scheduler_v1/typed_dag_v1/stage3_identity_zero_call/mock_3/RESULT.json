@@ -1,0 +1,286 @@
+{
+  "evidence_kind": "MOCK_ONLY_NOT_REAL_LLM",
+  "generation_status": "GENERATED",
+  "graph": {
+    "graph_id": "generated-69aee1a6b01dba84",
+    "schema_version": "typed-dag.v1",
+    "graph_version": 1,
+    "task_id": "mock-identity-evidence-3",
+    "nodes": [
+      {
+        "node_id": "node_2c1d704111c469ab6dc13e42",
+        "node_type": "transformation",
+        "subtask": "Evaluate expression",
+        "inputs": [
+          {
+            "port": "facts",
+            "source": "node",
+            "field": "facts",
+            "node_id": "node_44c34f280c287ea1072accb5"
+          },
+          {
+            "port": "expression",
+            "source": "node",
+            "field": "expression",
+            "node_id": "node_0183d62fa1c044eabdbca54f"
+          }
+        ],
+        "output_contract": "calculate.v1",
+        "dependencies": [
+          "node_0183d62fa1c044eabdbca54f",
+          "node_44c34f280c287ea1072accb5"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "node_0183d62fa1c044eabdbca54f",
+        "node_type": "reasoning",
+        "subtask": "Form sum of extracted operands",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "facts",
+            "source": "node",
+            "field": "facts",
+            "node_id": "node_44c34f280c287ea1072accb5"
+          }
+        ],
+        "output_contract": "expression.v1",
+        "dependencies": [
+          "node_44c34f280c287ea1072accb5"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "node_44c34f280c287ea1072accb5",
+        "node_type": "extraction",
+        "subtask": "Read table operands",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "context",
+            "source": "task",
+            "field": "ctx_table",
+            "node_id": null
+          }
+        ],
+        "output_contract": "facts.v1",
+        "dependencies": [],
+        "success_contract": "schema.v1"
+      }
+    ],
+    "final_outputs": [
+      {
+        "name": "answer",
+        "node_id": "node_2c1d704111c469ab6dc13e42",
+        "port": "value"
+      }
+    ],
+    "provenance": {
+      "semantic_plan": {
+        "nodes": [
+          {
+            "ref": "raw",
+            "name": "Read operands",
+            "type": "extraction",
+            "subtask": "Read table operands",
+            "context_field": "ctx_table",
+            "dependencies": []
+          },
+          {
+            "ref": "math",
+            "name": "Calculate sum",
+            "type": "reasoning",
+            "subtask": "Form sum of extracted operands",
+            "dependencies": [
+              "raw"
+            ]
+          },
+          {
+            "ref": "compute",
+            "name": "Evaluate sum",
+            "type": "transformation",
+            "subtask": "Evaluate expression",
+            "dependencies": [
+              "raw",
+              "math"
+            ]
+          }
+        ],
+        "final_outputs": [
+          {
+            "name": "answer",
+            "node_ref": "compute"
+          }
+        ]
+      },
+      "contract_bindings": {
+        "node_44c34f280c287ea1072accb5": "facts.v1",
+        "node_0183d62fa1c044eabdbca54f": "expression.v1",
+        "node_2c1d704111c469ab6dc13e42": "calculate.v1"
+      },
+      "normalized_plan": {
+        "nodes": [
+          {
+            "type": "transformation",
+            "subtask": "Evaluate expression",
+            "id": "node_2c1d704111c469ab6dc13e42",
+            "dependencies": [
+              "node_0183d62fa1c044eabdbca54f",
+              "node_44c34f280c287ea1072accb5"
+            ]
+          },
+          {
+            "type": "reasoning",
+            "subtask": "Form sum of extracted operands",
+            "id": "node_0183d62fa1c044eabdbca54f",
+            "dependencies": [
+              "node_44c34f280c287ea1072accb5"
+            ]
+          },
+          {
+            "type": "extraction",
+            "subtask": "Read table operands",
+            "context_field": "ctx_table",
+            "id": "node_44c34f280c287ea1072accb5",
+            "dependencies": []
+          }
+        ],
+        "final_outputs": [
+          {
+            "name": "answer",
+            "node_id": "node_2c1d704111c469ab6dc13e42"
+          }
+        ]
+      },
+      "semantic_ref_map": {
+        "raw": "node_44c34f280c287ea1072accb5",
+        "math": "node_0183d62fa1c044eabdbca54f",
+        "compute": "node_2c1d704111c469ab6dc13e42"
+      },
+      "semantic_labels": {
+        "raw": {
+          "name": "Read operands"
+        },
+        "math": {
+          "name": "Calculate sum"
+        },
+        "compute": {
+          "name": "Evaluate sum"
+        }
+      },
+      "id_policy": "program_owned_task_and_exact_ref_v1",
+      "origin": "llm_semantic_plan_program_assembly",
+      "parent_graph": null,
+      "raw_response_sha": "033848f71944d0fa690caec68a36abc0642100dbe7b22ae3eb56deb6080b9729",
+      "public_input_sha": "8edc80f2aaf83079ca7a5e60f240a57f543f70beffae2a535aa76255537872dc",
+      "deterministic_repairs": [],
+      "stage": "initial_generation",
+      "semantic_guarantee": false,
+      "coverage_review": {
+        "covered": true,
+        "requirements": {
+          "answer": [
+            "node_2c1d704111c469ab6dc13e42"
+          ]
+        },
+        "reason": "Proposed sum is covered; heuristic only"
+      }
+    }
+  },
+  "generation_accounting": {
+    "new_requests": 2,
+    "new_tokens": 60,
+    "logical_calls": 2,
+    "cache_hits": 0,
+    "serial_service_s": 0.0002811439335346222,
+    "wall_s": 0.005122289061546326
+  },
+  "execution": {
+    "graph_hash": "7f17899a84680921687f7e6c039eb3535431d85ff9b362e7426b1450f4f68cea",
+    "graph_version": 1,
+    "status": "COMPLETE",
+    "final_outputs": {
+      "answer": 2.0
+    },
+    "node_status": {
+      "node_44c34f280c287ea1072accb5": "done",
+      "node_2c1d704111c469ab6dc13e42": "done",
+      "node_0183d62fa1c044eabdbca54f": "done"
+    },
+    "errors": {},
+    "search_spend": {
+      "logical_calls": 2,
+      "injected_calls": 0,
+      "cache_hits": 0,
+      "dry_calls": 0,
+      "new_requests": 2,
+      "new_tokens": 60.0,
+      "new_latency_s": 0.00010546669363975525,
+      "answer_replaced_calls": 0
+    },
+    "deployment_tokens": 60,
+    "serial_service_s": 0.00027773529291152954,
+    "observed_execution_wall_s": 0.005475934594869614,
+    "semantic_status": "NOT_ASSESSED",
+    "fact_semantics_policy": "strict",
+    "reference_bindings": {
+      "node_0183d62fa1c044eabdbca54f": {
+        "expression": "f_55ac94c015051e92a70f3221",
+        "references": [
+          "f_55ac94c015051e92a70f3221"
+        ],
+        "snapshot": {
+          "f_55ac94c015051e92a70f3221": "107e073a4799352b1e3f786e78241a3b8cb6ba501ba45a72712b2eb314bfbd0f"
+        },
+        "position_map": {
+          "v0": "f_55ac94c015051e92a70f3221"
+        },
+        "policy": "typed-facts.v1"
+      }
+    },
+    "value_lineage": {
+      "node_2c1d704111c469ab6dc13e42": {
+        "unit_check": "UNDETERMINED",
+        "kind": "derived_value",
+        "value": 2.0,
+        "unit_dimensions": {
+          "unknown": 1
+        },
+        "data_type": "number",
+        "source_fact_ids": [
+          "f_55ac94c015051e92a70f3221"
+        ],
+        "expression": "f_55ac94c015051e92a70f3221",
+        "binding_snapshot": {
+          "f_55ac94c015051e92a70f3221": "107e073a4799352b1e3f786e78241a3b8cb6ba501ba45a72712b2eb314bfbd0f"
+        },
+        "support_status": "COMPUTED_FROM_REGISTERED_INPUTS_NOT_TASK_CORRECTNESS",
+        "producing_node": "node_2c1d704111c469ab6dc13e42"
+      }
+    },
+    "data_errors": {},
+    "extraction_mode": "facts",
+    "source_selections": {},
+    "semantic_check_s": 0.0008801408112049103,
+    "pipeline_accounting": {
+      "new_requests": 4,
+      "new_tokens": 120,
+      "wall_s": 0.012490831315517426,
+      "generation_included": true,
+      "model_prepare_included_in_wall": true
+    }
+  },
+  "expected_mock_value": 2,
+  "mock_answer_matches": true
+}

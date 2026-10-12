@@ -1,0 +1,89 @@
+{
+  "requests": 2,
+  "known_tokens": 3462,
+  "unknown_token_reservation": 7629,
+  "charged_tokens": 11091,
+  "complete_wall_seconds": 209.16610553860664,
+  "cleanup": {
+    "cleanup_start_monotonic_s": 32450265.61738954,
+    "cleanup_end_monotonic_s": 32450266.83440176,
+    "cleanup_wall_s": 1.217012219130993,
+    "total_wall_s": 209.16607538983226,
+    "finish_unix_s": 1791775460.4747524,
+    "service_stopped": true,
+    "errors": []
+  },
+  "end_utc": "2026-10-12T03:24:20.474752+00:00",
+  "A_candidate": {
+    "final_outputs": [
+      {
+        "name": "answer",
+        "node_ref": "answer_node"
+      }
+    ],
+    "nodes": [
+      {
+        "context_field": "ctx_table",
+        "input_producers": {},
+        "name": "collection",
+        "ref": "collection_node",
+        "subtask": "Extract collection amounts from ctx_table",
+        "type": "extraction"
+      },
+      {
+        "context_field": "ctx_text",
+        "input_producers": {},
+        "name": "usage",
+        "ref": "usage_node",
+        "subtask": "Extract usage amounts from ctx_text",
+        "type": "extraction"
+      },
+      {
+        "input_producers": {
+          "facts": [
+            "collection_node"
+          ]
+        },
+        "name": "total_collection",
+        "ref": "total_collection_node",
+        "subtask": "Sum collection amounts",
+        "type": "reasoning"
+      },
+      {
+        "input_producers": {
+          "facts": [
+            "total_collection_node",
+            "usage_node"
+          ]
+        },
+        "name": "remaining_liters",
+        "ref": "remaining_liters_node",
+        "subtask": "Calculate remaining liters after usage",
+        "type": "reasoning"
+      },
+      {
+        "input_producers": {
+          "expression": [
+            "remaining_liters_node"
+          ],
+          "facts": [
+            "total_collection_node",
+            "usage_node"
+          ]
+        },
+        "name": "answer",
+        "ref": "answer_node",
+        "subtask": "Verify the final result",
+        "type": "transformation"
+      }
+    ]
+  },
+  "A": "HTTP/JSON/strict Schema PASS; contract rejected; no assembled DAG or review",
+  "B": "UNKNOWN_TIMEOUT; no response or DAG; usage unknown",
+  "source_status": "NOT_ESTABLISHED for both; do not infer completion from source checks not reached",
+  "gpu_compute_processes_after_run": [],
+  "gpu_lock_nonblocking_acquisition": "PASS",
+  "tests": 399,
+  "real_node_execution": false,
+  "scoring": false
+}

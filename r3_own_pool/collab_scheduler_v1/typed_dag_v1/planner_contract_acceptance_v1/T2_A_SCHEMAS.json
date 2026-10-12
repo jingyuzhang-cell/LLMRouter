@@ -1,0 +1,645 @@
+{
+  "full_sha256": "80e07138c7ed08b9be760fae086303d334c85c327ad99ff3a79b00c211a8cb2e",
+  "service_sha256": "b076c45e8d6d8ceb0e2ab2401ee453a05298271bea5335ea20791256405901b0",
+  "differences": [
+    {
+      "path": "/properties/nodes/items/anyOf/1/properties/input_producers/properties/facts/uniqueItems",
+      "keyword": "uniqueItems",
+      "value": true
+    },
+    {
+      "path": "/properties/nodes/items/anyOf/2/properties/input_producers/properties/expression/uniqueItems",
+      "keyword": "uniqueItems",
+      "value": true
+    },
+    {
+      "path": "/properties/nodes/items/anyOf/2/properties/input_producers/properties/facts/uniqueItems",
+      "keyword": "uniqueItems",
+      "value": true
+    },
+    {
+      "path": "/properties/nodes/items/anyOf/3/properties/input_producers/properties/value/uniqueItems",
+      "keyword": "uniqueItems",
+      "value": true
+    },
+    {
+      "path": "/properties/nodes/items/anyOf/4/properties/input_producers/properties/expression/uniqueItems",
+      "keyword": "uniqueItems",
+      "value": true
+    },
+    {
+      "path": "/properties/nodes/items/anyOf/4/properties/input_producers/properties/facts/uniqueItems",
+      "keyword": "uniqueItems",
+      "value": true
+    }
+  ],
+  "conversion": "omit uniqueItems from transport ONLY; full validation remains mandatory",
+  "full_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "final_outputs": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "node_ref": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "node_ref"
+          ],
+          "type": "object"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "nodes": {
+        "items": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: source_fact. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "context_field": {
+                  "enum": [
+                    "ctx_table",
+                    "ctx_text"
+                  ]
+                },
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {},
+                  "required": [],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "extraction"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "context_field",
+                "input_producers"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: calculation_expression. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "facts": {
+                      "description": "Exact locally defined producer refs; expected wire type facts; accepted semantic kinds source_fact",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "facts"
+                  ],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "reasoning"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "input_producers"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: calculated_result. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "expression": {
+                      "description": "Exact locally defined producer refs; expected wire type expression; accepted semantic kinds calculation_expression",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "facts": {
+                      "description": "Exact locally defined producer refs; expected wire type facts; accepted semantic kinds source_fact",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "facts"
+                  ],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "transformation"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "input_producers"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: verification_result. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "description": "Exact locally defined producer refs; expected wire type number; accepted semantic kinds calculated_result,verification_result",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "verification"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "input_producers"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: verification_result. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "expression": {
+                      "description": "Exact locally defined producer refs; expected wire type expression; accepted semantic kinds calculation_expression",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "facts": {
+                      "description": "Exact locally defined producer refs; expected wire type facts; accepted semantic kinds source_fact",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "facts"
+                  ],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "verification"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "input_producers"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "maxItems": 5,
+        "minItems": 1,
+        "type": "array"
+      }
+    },
+    "required": [
+      "nodes",
+      "final_outputs"
+    ],
+    "type": "object"
+  },
+  "service_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "final_outputs": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "node_ref": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "node_ref"
+          ],
+          "type": "object"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "nodes": {
+        "items": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: source_fact. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "context_field": {
+                  "enum": [
+                    "ctx_table",
+                    "ctx_text"
+                  ]
+                },
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {},
+                  "required": [],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "extraction"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "context_field",
+                "input_producers"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: calculation_expression. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "facts": {
+                      "description": "Exact locally defined producer refs; expected wire type facts; accepted semantic kinds source_fact",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "facts"
+                  ],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "reasoning"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "input_producers"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: calculated_result. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "expression": {
+                      "description": "Exact locally defined producer refs; expected wire type expression; accepted semantic kinds calculation_expression",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "facts": {
+                      "description": "Exact locally defined producer refs; expected wire type facts; accepted semantic kinds source_fact",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "facts"
+                  ],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "transformation"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "input_producers"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: verification_result. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "description": "Exact locally defined producer refs; expected wire type number; accepted semantic kinds calculated_result,verification_result",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "verification"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "input_producers"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Output semantic kind: verification_result. All declared nodes must reach a final output via explicit producer selections.",
+              "properties": {
+                "input_producers": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "expression": {
+                      "description": "Exact locally defined producer refs; expected wire type expression; accepted semantic kinds calculation_expression",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "facts": {
+                      "description": "Exact locally defined producer refs; expected wire type facts; accepted semantic kinds source_fact",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "facts"
+                  ],
+                  "type": "object"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "subtask": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "verification"
+                  ]
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "type",
+                "subtask",
+                "input_producers"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "maxItems": 5,
+        "minItems": 1,
+        "type": "array"
+      }
+    },
+    "required": [
+      "nodes",
+      "final_outputs"
+    ],
+    "type": "object"
+  }
+}

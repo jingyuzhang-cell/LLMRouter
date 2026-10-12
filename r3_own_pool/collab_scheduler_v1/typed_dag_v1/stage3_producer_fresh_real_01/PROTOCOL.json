@@ -1,0 +1,66 @@
+{
+  "tasks": [
+    {
+      "task_id": "stage3-fresh-stock-20261011-03",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "How many cartons remain in the warehouse after the receipt and shipment? Return one carton count.",
+        "ctx_table": "Warehouse opening stock was 52 cartons. A delivery added 17 cartons.",
+        "ctx_text": "The warehouse then shipped 24 cartons. There were no other stock movements."
+      },
+      "required_outputs": {
+        "answer": "Remaining carton count after receipt and shipment"
+      }
+    },
+    {
+      "task_id": "stage3-fresh-utilization-20261011-04",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What fraction of the maximum production capacity was used over the run? Return a ratio between zero and one, not a percentage.",
+        "ctx_table": "A production line has a rated capacity of 150 items per hour. The run lasted 3 hours.",
+        "ctx_text": "The production line completed 315 items during that run."
+      },
+      "required_outputs": {
+        "answer": "Completed output divided by rated capacity over the whole run, expressed as a fraction"
+      }
+    }
+  ],
+  "manifest_sha256": "c7afc67e8153dab752f4669f27fec6a98444e763bba3f694e6c3c45cfdb8e3b9",
+  "caps": {
+    "new_request_attempts": 24,
+    "new_total_tokens": 24000,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 768,
+    "wall_seconds": 1200,
+    "logical_calls_per_task_config_state": 30
+  },
+  "task_phase_tokens": 6000,
+  "max_repairs": 1,
+  "max_execution_recoveries": 1,
+  "max_nodes": 5,
+  "model": {
+    "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "served": "Qwen/Qwen2.5-7B-Instruct"
+  },
+  "no_http_retries": true,
+  "no_resume": true,
+  "no_historical_budget": true,
+  "code_sha256": {
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/fresh_acceptance.py": "bcecf0a3a3ad521e824633a623d9a068a1048768a484e9c02e36e25c2058ab36",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/generation.py": "484987404377551e450a0ae6f1ea0c19a4a228cdecbceae64c00edd59b7b6e02",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/semantic_ids.py": "ae7aebe78fbae166201cdaa4b4b1d1a627d77f853811e8a3247d163e5f034c2c",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/semantic_validation.py": "59ba03e0b90ab877b6adf5bff236c864da7bdb138a2d97fd40a6371151400102",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/producer_plan.py": "a12de5ac86ace7a0a64b49881a8afd78e97205747bb15679d01e89bb40faf605",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/assembly.py": "0d167ebef332e410f2d6acf45d36c8f1e8b171004d330580300bf191d85c7372",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/execution.py": "d39ef2ffaff8f47032ec4612c6b83133268debc4c6b05896b80bdbc823761e7e",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/fact_semantics.py": "d3bf741c1aa66e055bac67cdbab7fe0324e86a0d291a726b4b4b257590b85bc9",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/protocol.py": "443912941567223303f6afb24e5b2cfe551c41479d024157c0c20999411df9f1",
+    "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/generation_schema.py": "e167f26479dd4983e5b2a8de1c90a3cdaecf155cf9cc5e182b1105602826a2b0",
+    "/root/r3_own_pool/static_dag_v0/run.py": "770e3aabfabda2cc1faf476277448050c5e6bc747b848c6861eb227204c96f5b",
+    "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/scoring_contract_final.py": "ac327d16f638937c49e9f77127827b2e43ee4509a88de383ba8089aee73a19ca"
+  },
+  "evaluation_only_sha": "0c1298da4d52bdc70c4082443a2497ae1ac8509331e58c61f64ac69d0201e8c9",
+  "approval": "Explicit --execute for externally approved frozen task manifest; no implicit budget authorization",
+  "created_unix": 1791707703.3658576,
+  "model_provenance_sha": "6af2d60d6204a76100aafa7ee909abbd2322c072c1083fd86287f28004e8c4e0"
+}

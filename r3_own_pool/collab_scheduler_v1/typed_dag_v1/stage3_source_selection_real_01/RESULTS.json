@@ -1,0 +1,349 @@
+{
+  "tasks": [
+    {
+      "task_id": "typed-stage3-facts-change",
+      "generation_status": "FALLBACK",
+      "semantic_status": "DOMAIN_TEMPLATE_NOT_PROOF",
+      "generation_accounting": {
+        "new_requests": 2,
+        "new_tokens": 1924,
+        "logical_calls": 3,
+        "cache_hits": 1,
+        "serial_service_s": 6.880179058760405,
+        "wall_s": 6.886745519936085
+      },
+      "graph": {
+        "graph_id": "fixed-financial",
+        "schema_version": "typed-dag.v1",
+        "graph_version": 4,
+        "task_id": "typed-stage3-facts-change",
+        "nodes": [
+          {
+            "node_id": "e1",
+            "node_type": "extraction",
+            "subtask": "Extract supported table facts",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "context",
+                "source": "task",
+                "field": "ctx_table",
+                "node_id": null
+              }
+            ],
+            "output_contract": "facts.v1",
+            "dependencies": [],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "e2",
+            "node_type": "extraction",
+            "subtask": "Extract supported text facts; empty is permitted",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "context",
+                "source": "task",
+                "field": "ctx_text",
+                "node_id": null
+              }
+            ],
+            "output_contract": "facts.v1",
+            "dependencies": [],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "r",
+            "node_type": "reasoning",
+            "subtask": "Construct arithmetic expression",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "e1"
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "e2"
+              }
+            ],
+            "output_contract": "expression.v1",
+            "dependencies": [
+              "e1",
+              "e2"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "v",
+            "node_type": "verification",
+            "subtask": "Verify expression and return final value",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "e1"
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "e2"
+              },
+              {
+                "port": "expression",
+                "source": "node",
+                "field": "expression",
+                "node_id": "r"
+              }
+            ],
+            "output_contract": "verify_expression.v1",
+            "dependencies": [
+              "e1",
+              "e2",
+              "r"
+            ],
+            "success_contract": "schema.v1"
+          }
+        ],
+        "final_outputs": [
+          {
+            "name": "answer",
+            "node_id": "v",
+            "port": "value"
+          }
+        ],
+        "provenance": {
+          "origin": "domain_fixed_fallback",
+          "dependency_note": "Legacy v receives facts implicitly; explicit data edges added. No claim of byte-identical prompts.",
+          "parent_graph": "00e84c9d9fb75609c2bc491baf22e8981c0e96cdac9dda231e2c11f5f4dff4f2",
+          "stage": "initial_generation",
+          "failure_reason": {
+            "error_code": "CONTRACT_UNBINDABLE",
+            "node_id": "extraction_1",
+            "field": "dependencies",
+            "expected_contract": {
+              "facts.v1": {
+                "type": "extraction",
+                "inputs": {
+                  "question": "text",
+                  "context": "text"
+                }
+              }
+            },
+            "actual_contract": {},
+            "repairable": true
+          },
+          "domain": "financial_arithmetic",
+          "semantic_guarantee": false
+        }
+      },
+      "executions": [],
+      "recoveries": [],
+      "execution_skipped": "not a non-fallback generated graph"
+    },
+    {
+      "task_id": "typed-stage3-facts-sum",
+      "generation_status": "FALLBACK",
+      "semantic_status": "DOMAIN_TEMPLATE_NOT_PROOF",
+      "generation_accounting": {
+        "new_requests": 2,
+        "new_tokens": 2029,
+        "logical_calls": 3,
+        "cache_hits": 1,
+        "serial_service_s": 7.0727133974432945,
+        "wall_s": 7.079288881272078
+      },
+      "graph": {
+        "graph_id": "fixed-financial",
+        "schema_version": "typed-dag.v1",
+        "graph_version": 4,
+        "task_id": "typed-stage3-facts-sum",
+        "nodes": [
+          {
+            "node_id": "e1",
+            "node_type": "extraction",
+            "subtask": "Extract supported table facts",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "context",
+                "source": "task",
+                "field": "ctx_table",
+                "node_id": null
+              }
+            ],
+            "output_contract": "facts.v1",
+            "dependencies": [],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "e2",
+            "node_type": "extraction",
+            "subtask": "Extract supported text facts; empty is permitted",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "context",
+                "source": "task",
+                "field": "ctx_text",
+                "node_id": null
+              }
+            ],
+            "output_contract": "facts.v1",
+            "dependencies": [],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "r",
+            "node_type": "reasoning",
+            "subtask": "Construct arithmetic expression",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "e1"
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "e2"
+              }
+            ],
+            "output_contract": "expression.v1",
+            "dependencies": [
+              "e1",
+              "e2"
+            ],
+            "success_contract": "schema.v1"
+          },
+          {
+            "node_id": "v",
+            "node_type": "verification",
+            "subtask": "Verify expression and return final value",
+            "inputs": [
+              {
+                "port": "question",
+                "source": "task",
+                "field": "question",
+                "node_id": null
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "e1"
+              },
+              {
+                "port": "facts",
+                "source": "node",
+                "field": "facts",
+                "node_id": "e2"
+              },
+              {
+                "port": "expression",
+                "source": "node",
+                "field": "expression",
+                "node_id": "r"
+              }
+            ],
+            "output_contract": "verify_expression.v1",
+            "dependencies": [
+              "e1",
+              "e2",
+              "r"
+            ],
+            "success_contract": "schema.v1"
+          }
+        ],
+        "final_outputs": [
+          {
+            "name": "answer",
+            "node_id": "v",
+            "port": "value"
+          }
+        ],
+        "provenance": {
+          "origin": "domain_fixed_fallback",
+          "dependency_note": "Legacy v receives facts implicitly; explicit data edges added. No claim of byte-identical prompts.",
+          "parent_graph": "48fea87df18fd6c1a9b278bd33aa665a7e6997f378cbd53ed68efc4f6c760f5b",
+          "stage": "initial_generation",
+          "failure_reason": {
+            "error_code": "CONTRACT_UNBINDABLE",
+            "node_id": "extraction_1",
+            "field": "dependencies",
+            "expected_contract": {
+              "facts.v1": {
+                "type": "extraction",
+                "inputs": {
+                  "question": "text",
+                  "context": "text"
+                }
+              }
+            },
+            "actual_contract": {},
+            "repairable": true
+          },
+          "domain": "financial_arithmetic",
+          "semantic_guarantee": false
+        }
+      },
+      "executions": [],
+      "recoveries": [],
+      "execution_skipped": "not a non-fallback generated graph"
+    }
+  ],
+  "success": false,
+  "attempts": 4,
+  "tokens": 3953,
+  "pending": {},
+  "charged_tokens": 3953,
+  "model_load_s": 38.09311271458864,
+  "wall_s": 84.56865298748016,
+  "abort": null,
+  "real_diagnostic": true
+}

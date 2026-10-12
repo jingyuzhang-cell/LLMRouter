@@ -1,0 +1,71 @@
+{
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "messages": [
+    {
+      "role": "user",
+      "content": "{\"graph\":{\"final_outputs\":[{\"name\":\"answer\",\"node_id\":\"node_c2b9a3f6e74d9f235c8fb448\",\"port\":\"value\"}],\"graph_id\":\"generated-c075330b87cbb793\",\"graph_version\":1,\"nodes\":[{\"dependencies\":[\"node_3070de39219f25190a9347ee\"],\"inputs\":[{\"field\":\"question\",\"node_id\":null,\"port\":\"question\",\"source\":\"task\"},{\"field\":\"value\",\"node_id\":\"node_3070de39219f25190a9347ee\",\"port\":\"value\",\"source\":\"node\"}],\"node_id\":\"node_c2b9a3f6e74d9f235c8fb448\",\"node_type\":\"verification\",\"output_contract\":\"verify_value.v1\",\"subtask\":\"Generic operation check\",\"success_contract\":\"schema.v1\"},{\"dependencies\":[\"node_839146bb23734632e54e4438\",\"node_b2ee449a9b49a46e006c3c38\",\"node_ee73b09960dcbc9eca512d59\"],\"inputs\":[{\"field\":\"facts\",\"node_id\":\"node_b2ee449a9b49a46e006c3c38\",\"port\":\"facts\",\"source\":\"node\"},{\"field\":\"facts\",\"node_id\":\"node_ee73b09960dcbc9eca512d59\",\"port\":\"facts\",\"source\":\"node\"},{\"field\":\"expression\",\"node_id\":\"node_839146bb23734632e54e4438\",\"port\":\"expression\",\"source\":\"node\"}],\"node_id\":\"node_3070de39219f25190a9347ee\",\"node_type\":\"transformation\",\"output_contract\":\"calculate.v1\",\"subtask\":\"Generic operation eval\",\"success_contract\":\"schema.v1\"},{\"dependencies\":[\"node_b2ee449a9b49a46e006c3c38\",\"node_ee73b09960dcbc9eca512d59\"],\"inputs\":[{\"field\":\"question\",\"node_id\":null,\"port\":\"question\",\"source\":\"task\"},{\"field\":\"facts\",\"node_id\":\"node_b2ee449a9b49a46e006c3c38\",\"port\":\"facts\",\"source\":\"node\"},{\"field\":\"facts\",\"node_id\":\"node_ee73b09960dcbc9eca512d59\",\"port\":\"facts\",\"source\":\"node\"}],\"node_id\":\"node_839146bb23734632e54e4438\",\"node_type\":\"reasoning\",\"output_contract\":\"expression.v1\",\"subtask\":\"Generic operation plan\",\"success_contract\":\"schema.v1\"},{\"dependencies\":[],\"inputs\":[{\"field\":\"question\",\"node_id\":null,\"port\":\"question\",\"source\":\"task\"},{\"field\":\"ctx_table\",\"node_id\":null,\"port\":\"context\",\"source\":\"task\"}],\"node_id\":\"node_b2ee449a9b49a46e006c3c38\",\"node_type\":\"extraction\",\"output_contract\":\"facts.v1\",\"subtask\":\"Generic operation read\",\"success_contract\":\"schema.v1\"},{\"dependencies\":[],\"inputs\":[{\"field\":\"question\",\"node_id\":null,\"port\":\"question\",\"source\":\"task\"},{\"field\":\"ctx_text\",\"node_id\":null,\"port\":\"context\",\"source\":\"task\"}],\"node_id\":\"node_ee73b09960dcbc9eca512d59\",\"node_type\":\"extraction\",\"output_contract\":\"facts.v1\",\"subtask\":\"Generic operation read_text\",\"success_contract\":\"schema.v1\"}],\"schema_version\":\"typed-dag.v1\",\"task_id\":\"stage3-http-only-label-diagnostic-20261011\"},\"instruction\":\"Audit EVERY required output against subtasks and actual source content. Check extraction source includes all necessary operands, including operands across table and text; types alone are insufficient. Return only compact schema: status PASS/FAIL, error_code, issue node_refs, evidence <=160 characters, replan. Do not retell DAG. PASS requires error_code NONE and replan false. This is heuristic, not correctness proof.\",\"operation\":\"review_coverage\",\"public_task\":{\"context\":{\"ctx_table\":\"The diagnostic workshop has 6 packs containing 7 labels in each pack.\",\"ctx_text\":\"The workshop sets aside 5 labels; there are no other additions or removals.\",\"question\":\"How many labels remain after setting aside the listed labels?\"},\"contracts\":{\"calculate.v1\":{\"node_type\":\"transformation\",\"outputs\":{\"value\":\"number\"},\"required_inputs\":{\"expression\":\"expression\",\"facts\":\"facts\"}},\"expression.v1\":{\"node_type\":\"reasoning\",\"outputs\":{\"expression\":\"expression\"},\"required_inputs\":{\"facts\":\"facts\",\"question\":\"text\"}},\"facts.v1\":{\"node_type\":\"extraction\",\"outputs\":{\"facts\":\"facts\"},\"required_inputs\":{\"context\":\"text\",\"question\":\"text\"}},\"verify_expression.v1\":{\"node_type\":\"verification\",\"outputs\":{\"value\":\"number\"},\"required_inputs\":{\"expression\":\"expression\",\"facts\":\"facts\",\"question\":\"text\"}},\"verify_value.v1\":{\"node_type\":\"verification\",\"outputs\":{\"value\":\"number\"},\"required_inputs\":{\"question\":\"text\",\"value\":\"number\"}}},\"domain\":\"financial_arithmetic\",\"limits\":{\"max_depth\":5,\"max_llm_calls\":5,\"max_nodes\":5},\"required_outputs\":{\"answer\":\"Remaining label count after the stated reservation\"},\"required_source_data\":[{\"data_id\":\"initial-label-source\",\"evidence\":\"The diagnostic workshop has 6 packs containing 7 labels in each pack.\",\"source_id\":\"ctx_table\"},{\"data_id\":\"reservation-source\",\"evidence\":\"The workshop sets aside 5 labels; there are no other additions or removals.\",\"source_id\":\"ctx_text\"}],\"source_availability\":{\"ctx_table\":{\"note\":\"Lexical heuristic only; not fact correctness\",\"numeric_literal_count\":2},\"ctx_text\":{\"note\":\"Lexical heuristic only; not fact correctness\",\"numeric_literal_count\":1}},\"source_manifest\":{\"content_sha\":\"d9e53ef6fc943abe7137f5315366ac23a0802073b38137fea4afd12143b90d67\",\"protocol\":\"public-source-manifest.v1\",\"semantic_completeness\":\"NOT_ESTABLISHED\",\"sources\":[{\"end\":69,\"field\":\"ctx_table\",\"sha256\":\"c3df7d0a87b765eddfd3cf1cba4b2df0e44e07b2be5dbbcce28613d18a81cf8a\",\"source_id\":\"ctx_table\",\"start\":0,\"text\":\"The diagnostic workshop has 6 packs containing 7 labels in each pack.\"},{\"end\":69,\"field\":\"ctx_table\",\"sha256\":\"c3df7d0a87b765eddfd3cf1cba4b2df0e44e07b2be5dbbcce28613d18a81cf8a\",\"source_id\":\"ctx_table:line:0\",\"start\":0,\"text\":\"The diagnostic workshop has 6 packs containing 7 labels in each pack.\"},{\"end\":75,\"field\":\"ctx_text\",\"sha256\":\"023a5c2b1b886b6aa2e47211c61e8af4c083e6a44b6bc682b0427fe2a751d81c\",\"source_id\":\"ctx_text\",\"start\":0,\"text\":\"The workshop sets aside 5 labels; there are no other additions or removals.\"},{\"end\":75,\"field\":\"ctx_text\",\"sha256\":\"023a5c2b1b886b6aa2e47211c61e8af4c083e6a44b6bc682b0427fe2a751d81c\",\"source_id\":\"ctx_text:line:0\",\"start\":0,\"text\":\"The workshop sets aside 5 labels; there are no other additions or removals.\"}]},\"task_id\":\"stage3-http-only-label-diagnostic-20261011\"},\"review_json_schema\":{\"additionalProperties\":false,\"properties\":{\"error_code\":{\"enum\":[\"NONE\",\"SOURCE_MISSING\",\"SUBTASK_IRRELEVANT\",\"OUTPUT_UNSUPPORTED\",\"OTHER\"],\"type\":\"string\"},\"evidence\":{\"maxLength\":160,\"type\":\"string\"},\"node_refs\":{\"items\":{\"enum\":[\"node_c2b9a3f6e74d9f235c8fb448\",\"node_3070de39219f25190a9347ee\",\"node_839146bb23734632e54e4438\",\"node_b2ee449a9b49a46e006c3c38\",\"node_ee73b09960dcbc9eca512d59\"],\"type\":\"string\"},\"maxItems\":5,\"type\":\"array\"},\"replan\":{\"type\":\"boolean\"},\"status\":{\"enum\":[\"PASS\",\"FAIL\"],\"type\":\"string\"}},\"required\":[\"status\",\"error_code\",\"node_refs\",\"evidence\",\"replan\"],\"type\":\"object\"}}"
+    }
+  ],
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 256,
+  "stream": false,
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "diagnostic_plan",
+      "strict": true,
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "error_code": {
+            "enum": [
+              "NONE",
+              "SOURCE_MISSING",
+              "SUBTASK_IRRELEVANT",
+              "OUTPUT_UNSUPPORTED",
+              "OTHER"
+            ],
+            "type": "string"
+          },
+          "evidence": {
+            "maxLength": 160,
+            "type": "string"
+          },
+          "node_refs": {
+            "items": {
+              "enum": [
+                "node_c2b9a3f6e74d9f235c8fb448",
+                "node_3070de39219f25190a9347ee",
+                "node_839146bb23734632e54e4438",
+                "node_b2ee449a9b49a46e006c3c38",
+                "node_ee73b09960dcbc9eca512d59"
+              ],
+              "type": "string"
+            },
+            "maxItems": 5,
+            "type": "array"
+          },
+          "replan": {
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "error_code",
+          "node_refs",
+          "evidence",
+          "replan"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

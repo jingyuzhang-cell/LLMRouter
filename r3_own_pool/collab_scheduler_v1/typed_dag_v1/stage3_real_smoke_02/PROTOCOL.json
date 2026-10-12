@@ -1,0 +1,51 @@
+{
+  "caps": {
+    "new_request_attempts": 16,
+    "new_total_tokens": 65536,
+    "request_token_reservation": 8192,
+    "max_output_tokens": 2048,
+    "wall_seconds": 1800,
+    "logical_calls_per_task_config_state": 20
+  },
+  "tasks": [
+    {
+      "task_id": "typed-stage3-sum",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the total revenue of the two divisions? Return one number.",
+        "ctx_table": "Division A revenue: 12. Division B revenue: 8.",
+        "ctx_text": "Both divisions report revenue in the same unit."
+      },
+      "required_outputs": {
+        "answer": "Total revenue as a number"
+      }
+    },
+    {
+      "task_id": "typed-stage3-change",
+      "domain": "financial_arithmetic",
+      "context": {
+        "question": "What is the increase in cash from last year to this year? Return the difference, not a percentage.",
+        "ctx_table": "Last year cash: 7. This year cash: 11.",
+        "ctx_text": "Cash figures use the same unit."
+      },
+      "required_outputs": {
+        "answer": "This year cash minus last year cash, numeric difference"
+      }
+    }
+  ],
+  "model": {
+    "path": "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "served": "Qwen/Qwen2.5-7B-Instruct"
+  },
+  "temperature": 0,
+  "top_p": 1,
+  "max_tokens": 2048,
+  "code_sha": {
+    "generation.py": "f3b1a517eb05957c6f24af69930e1e83d93307da627aec0c8051711db2174861",
+    "execution.py": "fb9fc113e7895b8850766b0d9ffb8b37d7aabff6001d0b4567270028418b9e66",
+    "protocol.py": "443912941567223303f6afb24e5b2cfe551c41479d024157c0c20999411df9f1",
+    "real_generation_smoke.py": "ad67ff1d8582998701e3d248a7d04db4f24ebf001b67097d90a291d802737480"
+  },
+  "purpose": "Mechanics smoke, not algorithm efficacy",
+  "created": 1791695729.5997767
+}
