@@ -61,6 +61,11 @@ def load(path):
             if l.strip()]
 
 
+def true_note(note):
+    """Truthiness wrapper that carries an explanatory note."""
+    return note
+
+
 def main():
     rows = []  # (name, classified, truth)
 
@@ -150,23 +155,33 @@ def main():
         if not ok:
             legality['ss_tuned_legal'] = False
 
-    # Part 3 — honesty gate over the four-strategy replay
+    # Part 3 — honesty gate over the two-stage replay (v2)
     rep = rs.run_all()
-    unobserved_credit = [r for r in rep['samples']
-                         for k in ('SS-Original', 'SS-Tuned',
-                                   'Fixed-Recovery', 'DD-Enhanced')
-                         if r[k]['outcome'] == 'UNOBSERVED'
-                         and r[k]['quality'] > 0]
+    unobserved_credit = [
+        (stage, r['sample'], k)
+        for stage in ('stage_A', 'stage_B')
+        for r in rep[stage]['samples']
+        for k in ('SS-Original', 'SS-Tuned', 'Fixed-Recovery',
+                  'DD-Oracle', 'DD-Online')
+        if r[k]['outcome'] == 'UNOBSERVED' and r[k]['quality'] > 0]
     ss_orig_all_fail = all(
-        r['SS-Original']['quality'] == 0.0 for r in rep['samples'])
+        r['SS-Original']['quality'] == 0.0
+        for stage in ('stage_A', 'stage_B')
+        for r in rep[stage]['samples'])
+    sb = rep['stage_B']['summaries']
     honesty = dict(
         unobserved_quality_credit_violations=len(unobserved_credit),
         ss_original_replays_real_failures=ss_orig_all_fail,
-        dd_leq_fixed_attempts=rep['summaries']['DD-Enhanced'][
-            'attempts'] <= rep['summaries']['Fixed-Recovery']['attempts'],
-        dd_quality_ge_fixed=(
-            rep['summaries']['DD-Enhanced']['total_quality']
-            >= rep['summaries']['Fixed-Recovery']['total_quality'] - 1e-9))
+        dd_oracle_labeled_diagnostic_only=bool(
+            sb['DD-Oracle']['diagnostic_only']),
+        dd_online_leq_fixed_attempts=(
+            sb['DD-Online']['attempts']
+            <= sb['Fixed-Recovery']['attempts']),
+        no_dd_advantage_claim=true_note(
+            'stage B SS-Tuned %.3f vs DD-Online %.3f — replay cannot '
+            'prove DD advantage; recorded, not asserted'
+            % (sb['SS-Tuned']['total_quality'],
+               sb['DD-Online']['total_quality'])))
 
     # Part 4 — decision scenarios
     menu = rs.MODEL_MENU
@@ -221,7 +236,7 @@ def main():
                      for nm, p, t in mishaps]),
         part2_legality=legality,
         part3_honesty=honesty,
-        part3_replay_summaries=rep['summaries'],
+        part3_replay_summaries=rep['stage_B']['summaries'],
         part4_scenarios=dict(
             S1=dict(expect='F_TRUNCATED -> PARAM_FIX '
                            '(reasoning_effort=low, no thinking key)',
@@ -241,6 +256,8 @@ def main():
             acc == 1.0 and all(legality.values())
             and honesty['unobserved_quality_credit_violations'] == 0
             and honesty['ss_original_replays_real_failures']
+            and honesty['dd_oracle_labeled_diagnostic_only']
+            and honesty['dd_online_leq_fixed_attempts']
             and s1_pass and s2_pass and s3_pass and s4_pass))
 
     (HERE / 'CONTRACT_FAULT_VALIDATION.json').write_text(
@@ -253,7 +270,7 @@ def main():
     print(f'  citation causes: {dict(cit_causes)}')
     print(f'Part2 legality: {legality}')
     print(f'Part3 honesty: {honesty}')
-    for name, s in rep['summaries'].items():
+    for name, s in rep['stage_B']['summaries'].items():
         print(f'  {name:15s} q={s["total_quality"]:.3f} '
               f'attempts={s["attempts"]} tokens={s["tokens"]} '
               f'unobs={s["unobserved_actions"]}')
