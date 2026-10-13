@@ -503,6 +503,116 @@ class RealRunner:
 
 
 # ---- offline chain test (priority-1 data-dependency proof) ----------------
+def chain_test_delayed():
+    """DELAYED-fault path proof (F_JSON): fe's first output is
+    parseable garbage (passes contract) -> tl consumes it -> xc
+    degrades -> delayed detection at the join -> root (fe) repair ->
+    closure {tl, xc} re-executed in TOPOLOGICAL order -> xc consumes
+    the NEW tl; er untouched. Assertion-level, like chain_test."""
+    calls = []
+
+    def fake(model_id, theta, prompt, creds, force_max_tokens=None):
+        calls.append(dict(model=model_id, prompt=prompt))
+        if '## 任务类型：fact_extraction' in prompt:
+            n = sum(1 for c in calls
+                    if '## 任务类型：fact_extraction' in c['prompt'])
+            if n == 1:
+                return dict(answer='[{"fact":"GARBAGE_DELAYED_aa01",'
+                                   '"evidence_doc_id":"?"}]',
+                            finish_reason='stop', tokens_in=100,
+                            tokens_out=60, cash_cny=0.0, latency_s=1.0)
+            return dict(answer='[{"fact":"FE_FIXED_DELAYED_bb02",'
+                               '"evidence_doc_id":"d"}]',
+                        finish_reason='stop', tokens_in=100,
+                        tokens_out=80, cash_cny=0.0, latency_s=1.0)
+        if '## 任务类型：timeline' in prompt:
+            n = sum(1 for c in calls
+                    if '## 任务类型：timeline' in c['prompt'])
+            if '占位' in prompt or 'GARBAGE_DELAYED_aa01' in prompt:
+                return dict(answer='[{"date":"?","event":"on-garbage"'
+                                   ',"evidence":"g"}]',
+                            finish_reason='stop', tokens_in=100,
+                            tokens_out=60, cash_cny=0.0, latency_s=1.0)
+            return dict(answer='[{"date":"2026-05-08","event":'
+                               '"TL_NEW_FROM_FIXED_cc03"}]',
+                        finish_reason='stop', tokens_in=100,
+                        tokens_out=60, cash_cny=0.0, latency_s=1.0)
+        if '## 任务类型：entity_relations' in prompt:
+            return dict(answer='[{"entity":"ER_DELAYED_INDEP_dd04",'
+                               '"role":"r"}]',
+                        finish_reason='stop', tokens_in=100,
+                        tokens_out=60, cash_cny=0.0, latency_s=1.0)
+        # xc: degraded when the garbage is still current upstream
+        if ('占位' in prompt or 'GARBAGE_DELAYED_aa01' in prompt
+                or 'on-garbage' in prompt):
+            return dict(answer='核查失败：来源不可用',
+                        finish_reason='stop', tokens_in=100,
+                        tokens_out=40, cash_cny=0.0, latency_s=1.0)
+        return dict(answer='[{"claim":"ok","verdict":"SUPPORTED"}]',
+                    finish_reason='stop', tokens_in=100,
+                    tokens_out=50, cash_cny=0.0, latency_s=1.0)
+
+    tasks = full_dag_tasks.build_tasks()
+    t = next(x for x in tasks if x['fault_node'] == 'fe'
+             and x['fault_type'] == 'F_JSON')
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        runner = RealRunner('Fixed-Tuned', {}, GlobalBudget(),
+                            Path(td) / 'ct2.jsonl', transport=fake)
+        docs = full_dag_tasks.load_docs()
+        chain, clock = runner.run_task(t, docs[t['doc_slot']]['text'])
+
+    tl_prompts = [c['prompt'] for c in calls
+                  if '## 任务类型：timeline' in c['prompt']]
+    xc_prompts = [c['prompt'] for c in calls
+                  if '## 任务类型：cross_verification' in c['prompt']]
+    # topological proof: the LAST tl call must precede the LAST xc
+    # call (closure rerun order tl -> xc), and first tl precedes
+    # first xc
+    tl_idx = [i for i, c in enumerate(calls)
+              if '## 任务类型：timeline' in c['prompt']]
+    xc_idx = [i for i, c in enumerate(calls)
+              if '## 任务类型：cross_verification' in c['prompt']]
+    order_ok = (len(tl_idx) == 2 and len(xc_idx) == 2
+                and tl_idx[0] < xc_idx[0]
+                and tl_idx[1] < xc_idx[1])
+    checks = dict(
+        fe_two_versions=[v['tag'] for v in
+                         chain.state['fe']['versions']]
+        == ['planned', 'repair'],
+        fe_current_fixed=('FE_FIXED_DELAYED_bb02'
+                          in chain.current('fe')['answer']),
+        tl_two_versions=[v['tag'] for v in
+                         chain.state['tl']['versions']]
+        == ['planned', 'closure-rerun'],
+        tl_rerun_consumes_fixed=('FE_FIXED_DELAYED_bb02'
+                                 in tl_prompts[-1]),
+        tl_first_consumed_garbage=(
+            '占位' in tl_prompts[0]
+            or 'GARBAGE_DELAYED_aa01' in tl_prompts[0]),
+        xc_degraded_then_rerun=[v['tag'] for v in
+                                chain.state['xc']['versions']]
+        == ['planned', 'closure-rerun'],
+        xc_rerun_consumes_new_tl=('TL_NEW_FROM_FIXED_cc03'
+                                  in xc_prompts[-1]),
+        xc_rerun_consumes_er=('ER_DELAYED_INDEP_dd04'
+                              in xc_prompts[-1]),
+        er_untouched=len(chain.state['er']['versions']) == 1,
+        topo_order_tl_before_xc_rerun=order_ok,
+        clock_within_deadline=(clock.t <= clock.D))
+    print(json.dumps(dict(
+        task=t['task_id'], regime='F_JSON delayed',
+        checks=checks,
+        versions={n: [v['tag'] for v in
+                      chain.state[n]['versions']]
+                  for n in ('fe', 'tl', 'er', 'xc')},
+        task_time_s=round(clock.t, 2), deadline_s=clock.D),
+        indent=1, ensure_ascii=False))
+    ok = all(checks.values())
+    print(f'DELAYED CHAIN TEST: {"PASS" if ok else "FAIL"}')
+    return 0 if ok else 2
+
+
 def chain_test():
     """FE truncation -> FE repaired -> TL must consume the REPAIRED
     answer (prompt containment + recorded upstream sha) -> XC must
@@ -656,6 +766,7 @@ def preflight():
 
     checks['dry_run_invariants'] = (full_dag_protocol.dry_run() == 0)
     checks['chain_test_ok'] = (chain_test() == 0)
+    checks['chain_test_delayed_ok'] = (chain_test_delayed() == 0)
 
     all_ok = all(v for v in checks.values() if isinstance(v, bool))
     checks['freeze_issues'] = issues
