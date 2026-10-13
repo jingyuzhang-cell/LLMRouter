@@ -55,7 +55,7 @@ MODELS = {
                      url='https://api.deepseek.com/chat/completions',
                      billing='per_token_cny'),
     'qwen': dict(model_id='qwen-plus', rate_key='qwen_plus',
-                 env='QWEN_API_KEY',
+                 env='DASHSCOPE_API_KEY',
                  url=('https://dashscope.aliyuncs.com/compatible-mode/v1/'
                       'chat/completions'),
                  billing='per_token_cny'),
@@ -91,14 +91,17 @@ def sha_file(p):
 
 
 def load_env_creds():
-    """Credentials from /root/.env or env. Values never logged."""
+    """Credentials from /root/.env.modelpool (the file the historical
+    screening run used; holds the VALID deepseek/dashscope keys), then
+    /root/.env as fallback, then process env. Values never logged."""
     env_vars = {}
-    env_file = Path('/root/.env')
-    if env_file.exists():
-        for line in env_file.read_text().splitlines():
-            if '=' in line and not line.startswith('#'):
-                k, v = line.split('=', 1)
-                env_vars[k.strip()] = v.strip()
+    for path in ('/root/.env', '/root/.env.modelpool'):
+        p = Path(path)
+        if p.exists():
+            for line in p.read_text().splitlines():
+                if '=' in line and not line.startswith('#'):
+                    k, v = line.split('=', 1)
+                    env_vars.setdefault(k.strip(), v.strip())
     return env_vars
 
 
