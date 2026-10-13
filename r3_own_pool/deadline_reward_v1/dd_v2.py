@@ -90,6 +90,18 @@ def load_quality_evidence():
             ok = int(bool(det.parse_facts(ans)))
         elif node == 'v':
             ok = int(json_value(ans) is not None)
+        elif node == 'r':
+            # r evaluability: the expression evaluates against its OWN
+            # episode's e1/e2 context (recoverable from ctx index)
+            a1 = ctx.get((sc, uid, 'e1'))
+            a2 = ctx.get((sc, uid, 'e2'))
+            if a1 is not None and a2 is not None:
+                from static_dag_v0.multidag_dynamic import parse_facts_safe
+                f1, _ = parse_facts_safe(a1)
+                f2, _ = parse_facts_safe(a2)
+                fl = f1['facts'] + f2['facts']
+                _, err = value_of(ans, dict(facts=fl))
+                ok = int(not err)
         if ok is not None:
             rate[(node, model)][0] += ok
             rate[(node, model)][1] += 1
@@ -107,14 +119,35 @@ def wilson(x, n, z=1.959963984540054):
 
 
 class V2QualityPredictor:
-    """Quality belief WITHIN data support: point estimate = Wilson
-    midpoint per (node,model); unsupported conditions fall back to the
-    declared wide interval [0,1] midpoint with an explicit
-    'unsupported' flag — never fabricated precision."""
+    """Quality belief WITHIN data support. NODE-level beliefs are
+    parse/evaluability rates with Wilson intervals — a DECLARED PROXY
+    (node contract satisfaction), never claimed as terminal task
+    correctness. RECOVERY quality (the composed whole-task belief after
+    a recovery action) is estimated from independent development
+    trajectories where the SAME recovery action family ran and the
+    TERMINAL v2.1 outcome was observed; without such evidence the
+    belief keeps the full [0,1] interval (supported=False)."""
 
-    def __init__(self):
+    def __init__(self, recovery_evidence=None):
         self.ev = load_quality_evidence()
+        # recovery_evidence: {(action_family, failed_node): (successes,
+        # n)} built from INDEPENDENT dev trajectories (never P3-60)
+        self.recovery = recovery_evidence or {}
         self.calls = {}
+
+    def recovery_quality(self, failed_node, action_arm):
+        """Terminal-correctness belief for executing `action_arm`
+        after a failure on `failed_node`. Evidence keyed by
+        (family, node); no evidence -> wide interval, supported=False."""
+        key = (action_arm, failed_node)
+        x, n = self.recovery.get(key, (0, 0))
+        if n == 0:
+            return dict(q=0.5, lo=0.0, hi=1.0, n=0, supported=False,
+                        kind='terminal')
+        lo, hi = wilson(x, n)
+        return dict(q=round((lo + hi) / 2, 4), lo=round(lo, 4),
+                    hi=round(hi, 4), n=n, supported=True,
+                    kind='terminal')
 
     def node_quality(self, node, model):
         x, n = self.ev.get((node, model), (0, 0))
@@ -257,22 +290,61 @@ def v2_score_and_pick(state, uid, cands, params, predictor, compensator,
             reuse=list(cand.judgment.reuse))
         scored.append(cand)
 
-    feasible = [c for c in scored if c.row['feasible']]
-    if feasible:
-        best = sorted(feasible, key=lambda c: (-c.row['score'],
-                                               c.row['dcost'],
-                                               ARMS.index(c.arm)))[0]
-        return best, scored, 'feasible'
-    if params['static_fallback']:
-        # V2-4b: static LOCAL/planned fallback if it passes PHYSICAL
-        # budget+legality (its judgment IS the legality check); it may
-        # violate q_min/on_time (declared soft at fallback time) — the
-        # row records the fallback violation honestly
-        fb = next((c for c in scored if c.arm == 'LOCAL'
-                   and all(c.pi.get(n) == v for n, v in
-                           state._panel_models.items() if n in c.pi)),
-                  None)
-        if fb is not None and fb.row['dcost'] <= b_remain:
-            fb.row['fallback'] = True
-            return fb, scored, 'static_fallback'
-    return None, scored, 'degraded'
+    # ---- Fix 1 (ruling b6c7966): eff_score DRIVES the selection ----
+    # HARD gates (never relaxed): DAG legality (the judgment itself),
+    # physical budget. Everything else competes on the risk-adjusted
+    # score; the static SS fallback and NONE are COMPETITORS, not
+    # automatic winners.
+    hard_ok = [c for c in scored
+               if c.row['dcost'] <= b_remain]      # physical budget gate
+    # legality gate is structural: only legal candidates were ever
+    # enumerated (M3); rows carry their judgment for audit.
+    if not hard_ok:
+        return None, scored, 'degraded'
+    best = sorted(hard_ok, key=lambda c: (-c.row['eff_score'],
+                                          c.row['dcost'],
+                                          ARMS.index(c.arm)))[0]
+    if best.row['feasible']:
+        return best, scored, 'joint_selection'
+    # best is a soft-constraint winner: record WHY it beat the static
+    # fallback (its eff_score vs the fallback's), still honest
+    fb = next((c for c in hard_ok if c.arm == 'LOCAL'
+               and all(c.pi.get(n) == v for n, v in
+                       state._panel_models.items() if n in c.pi)), None)
+    if fb is not None:
+        fb.row['fallback_candidate'] = True
+        if best.row['eff_score'] >= fb.row['eff_score']:
+            best.row['selected_over_fallback_margin'] = round(
+                best.row['eff_score'] - fb.row['eff_score'], 8)
+            return best, scored, 'joint_selection_soft'
+        fb.row['fallback'] = True
+        return fb, scored, 'static_fallback'
+    return best, scored, 'joint_selection_soft'
+
+
+# ---- Fix 3 (ruling b6c7966): V2 decision entry (arm_entry contract) --
+def decide_arm_v2(state, uid, cands, planned, params_v2=None, *,
+                  soft=True, fallback=True, engine_current_model=lambda:
+                  None):
+    """Same return contract as arm_entry.decide_arm so the AUDITED
+    run_cell/execute chain drives V2 unchanged. Modes:
+      joint_selection / joint_selection_soft — a dynamic candidate won
+        on (risk-adjusted) score over the static fallback
+      static_fallback — the SS-recipe candidate won the comparison
+      degraded — no candidate passed the physical-budget hard gate
+    DD-V1 (arm_entry.decide_arm) is NOT modified."""
+    from deadline_reward_v1 import policy as P
+    params = params_v2 or make_v2_params(soft_constraints=soft,
+                                         static_fallback=fallback)
+    compensator = P.DeadlineCompensator(params['priors'])
+    chosen, scored, mode = v2_score_and_pick(
+        state, uid, cands, params, None, compensator,
+        engine_current_model)
+    return dict(arm='DD-V2', mode=mode, chosen=chosen,
+                degraded=(chosen is None), pool_size=len(scored),
+                table=[dict(c.row) for c in scored if c.row],
+                violations=[dict(arm=c.row['arm'], pi=c.row['pi'],
+                                 deficits=c.row['deficits'])
+                            for c in scored if c.row['deficits']],
+                reason=None if chosen is not None else
+                'physical_budget_gate')

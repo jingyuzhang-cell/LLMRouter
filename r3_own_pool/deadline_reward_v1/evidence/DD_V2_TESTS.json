@@ -1,43 +1,106 @@
 {
- "milestone": "dd_v2_zero_call",
- "ruling": "operator authorization on 2fbe6f7",
+ "milestone": "dd_v2_zero_call_r2",
+ "ruling": "operator NO-GO fixes (baseline b6c7966)",
  "checks": {
   "A_vcoder_measured": true,
-  "A_tokens_filled": true,
-  "C_supported_interval": true,
-  "C_unsupported_wide": true,
-  "E_locals_exist": true,
-  "B_p_on_not_all_zero": true,
-  "F_joint_selection_reached": true,
-  "E_v1_degrades_v2_does_not": true,
-  "D_mode_valid": true,
-  "D_fallback_is_local_planned": true,
-  "B_decoupled_under_load": true,
-  "D_v1_untouched": true
+  "Fix2_r_supported": true,
+  "Fix2_e2_honest_low": true,
+  "Fix2_recovery_interval": true,
+  "Acc1_dynamic_wins": true,
+  "Acc3_within_budget": true,
+  "Acc4_none_or_fallback_honest": true,
+  "V1_killer_reproduced": true,
+  "Fix1_effscore_ranked": true,
+  "Fix3_contract": true,
+  "DDV1_untouched": true,
+  "Acc2_actions_differ": true,
+  "Acc5_rows_complete": true
  },
  "ablation_ladder": [
   {
-   "rung": "V2-full (measured priors + decoupled + soft + fallback)",
-   "n_candidates": 53,
-   "n_pass_filter": 0,
-   "mode": "static_fallback",
+   "rung": "V2-full",
+   "scenario": "r-fault",
+   "n_candidates": 44,
+   "n_feasible": 2,
+   "mode": "joint_selection",
    "chosen": [
     "LOCAL",
     {
-     "e2": "large",
-     "r": "medium",
+     "r": "large",
      "v": "coder"
     }
-   ],
-   "p_on_max": 1.0
+   ]
   },
   {
-   "rung": "V1 (stub priors + contention)",
+   "rung": "V2-full",
+   "scenario": "e2-fault",
    "n_candidates": 53,
-   "n_pass_filter": 0,
+   "n_feasible": 0,
+   "mode": "joint_selection_soft",
+   "chosen": [
+    "NONE",
+    {
+     "v": "coder"
+    }
+   ]
+  },
+  {
+   "rung": "V1",
+   "scenario": "r-fault+contention",
+   "n_candidates": 44,
+   "n_feasible": 0,
    "mode": "degraded",
-   "chosen": null,
-   "p_on_max": 0.0
+   "chosen": null
+  },
+  {
+   "rung": "A_V1_stub_coupled",
+   "scenario": "r-fault",
+   "n_candidates": 44,
+   "n_feasible": 21,
+   "mode": "joint(V1-policy)",
+   "chosen": [
+    "LOCAL",
+    {
+     "r": "large",
+     "v": "large"
+    }
+   ]
+  },
+  {
+   "rung": "B_V1_fitlat_coupled",
+   "scenario": "r-fault",
+   "n_candidates": 44,
+   "n_feasible": 0,
+   "mode": "degraded",
+   "chosen": null
+  },
+  {
+   "rung": "C_V2_stub_decoupled",
+   "scenario": "r-fault",
+   "n_candidates": 44,
+   "n_feasible": 2,
+   "mode": "joint_selection",
+   "chosen": [
+    "LOCAL",
+    {
+     "r": "large",
+     "v": "coder"
+    }
+   ]
+  },
+  {
+   "rung": "D_V2_fit_decoupled",
+   "scenario": "r-fault",
+   "n_candidates": 44,
+   "n_feasible": 2,
+   "mode": "joint_selection",
+   "chosen": [
+    "LOCAL",
+    {
+     "r": "large",
+     "v": "coder"
+    }
+   ]
   }
  ],
  "zero_model_calls": true,
