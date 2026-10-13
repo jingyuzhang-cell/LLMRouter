@@ -1,0 +1,451 @@
+{
+ "version": "FULL_DAG_PROTOCOL_FREEZE_v1",
+ "status": "NO-GO — prepared only; real execution requires a separate authorization with caps derived from cost_estimate",
+ "arms": {
+  "SS_Tuned": "static tuned theta (GLM low@8192 / DS disabled / qwen default); NO recovery",
+  "Fixed_Tuned": "pre-committed rule; FORBIDDEN: low@2048",
+  "DD_Online": "expected frozen-mainline utility over priors; decision-phase outcome lookups asserted zero"
+ },
+ "fixed_tuned_rule": {
+  "on_truncation_or_content_failure": [
+   {
+    "if_model_family": "GLM",
+    "action": "same-model",
+    "theta": "low@8192 (validated)"
+   },
+   {
+    "if_model_family": "deepseek",
+    "action": "same-model",
+    "theta": "thinking=disabled@2048 (validated)"
+   }
+  ],
+  "second_failure": "switch to qwen-plus default",
+  "forbidden": "low@2048 — REFUTED by Phase-4 cells 3-4"
+ },
+ "utility": {
+  "formula": "U = 1(T<=D)*q - 0.5*C/C0 - 1.0*(T-D)+/D - 2.0*1(T>D)",
+  "params": {
+   "lambda_c": 0.5,
+   "lambda_t": 1.0,
+   "lambda_f": 2.0,
+   "C0_per_task": 60000.0
+  },
+  "note": "replaces ad-hoc weights; q credited only from real observations in the authorized real run"
+ },
+ "fault_regimes": {
+  "F_TRUNCATED": "immediate detection at node; LOCAL repair (10 tasks)",
+  "F_JSON": "parseable garbage upstream, detected at the JOIN node; closure repair root ∪ executed-downstream (5 tasks)"
+ },
+ "shared": {
+  "model_pool": [
+   "GLM-5.3",
+   "GLM-5.3-Flash",
+   "deepseek-flash",
+   "qwen-plus"
+  ],
+  "theta_table": "theta_actions.MODEL_THETA_SUPPORT",
+  "citation_contract": "v2 — doc_id stated in every prompt, satisfiable for all arms",
+  "fault_schedule": "frozen seed 20261014, identical realizations across arms",
+  "planned_pi": {
+   "fe": "GLM-5.3",
+   "tl": "GLM-5.3",
+   "er": "deepseek-flash",
+   "xc": "qwen-plus"
+  },
+  "deadline_tiers": {
+   "tight": 90.0,
+   "medium": 120.0,
+   "loose": 160.0
+  }
+ },
+ "dry_run_results": {
+  "SS-Tuned": {
+   "calls": 60,
+   "tokens": 89490,
+   "cash_cny": 0.1277,
+   "recovery_actions_total": 0,
+   "closures": [
+    {
+     "task": "T01",
+     "node": "fe",
+     "regime": "immediate",
+     "closure": [
+      "fe"
+     ]
+    },
+    {
+     "task": "T02",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T03",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T04",
+     "node": "xc",
+     "regime": "immediate",
+     "closure": [
+      "xc"
+     ]
+    },
+    {
+     "task": "T05",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T06",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T07",
+     "node": "xc",
+     "regime": "immediate",
+     "closure": [
+      "xc"
+     ]
+    },
+    {
+     "task": "T08",
+     "node": "fe",
+     "regime": "immediate",
+     "closure": [
+      "fe"
+     ]
+    },
+    {
+     "task": "T09",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T10",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T12",
+     "node": "tl",
+     "regime": "delayed",
+     "closure": [
+      "tl",
+      "xc"
+     ]
+    },
+    {
+     "task": "T13",
+     "node": "er",
+     "regime": "delayed",
+     "closure": [
+      "er",
+      "xc"
+     ]
+    },
+    {
+     "task": "T15",
+     "node": "fe",
+     "regime": "delayed",
+     "closure": [
+      "er",
+      "fe",
+      "tl",
+      "xc"
+     ]
+    }
+   ]
+  },
+  "Fixed-Tuned": {
+   "calls": 78,
+   "tokens": 110730,
+   "cash_cny": 0.1518,
+   "recovery_actions_total": 18,
+   "closures": [
+    {
+     "task": "T01",
+     "node": "fe",
+     "regime": "immediate",
+     "closure": [
+      "fe"
+     ]
+    },
+    {
+     "task": "T02",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T03",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T04",
+     "node": "xc",
+     "regime": "immediate",
+     "closure": [
+      "xc"
+     ]
+    },
+    {
+     "task": "T05",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T06",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T07",
+     "node": "xc",
+     "regime": "immediate",
+     "closure": [
+      "xc"
+     ]
+    },
+    {
+     "task": "T08",
+     "node": "fe",
+     "regime": "immediate",
+     "closure": [
+      "fe"
+     ]
+    },
+    {
+     "task": "T09",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T10",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T12",
+     "node": "tl",
+     "regime": "delayed",
+     "closure": [
+      "tl",
+      "xc"
+     ]
+    },
+    {
+     "task": "T13",
+     "node": "er",
+     "regime": "delayed",
+     "closure": [
+      "er",
+      "xc"
+     ]
+    },
+    {
+     "task": "T15",
+     "node": "fe",
+     "regime": "delayed",
+     "closure": [
+      "er",
+      "fe",
+      "tl",
+      "xc"
+     ]
+    }
+   ]
+  },
+  "DD-Online": {
+   "calls": 78,
+   "tokens": 110730,
+   "cash_cny": 0.1349,
+   "recovery_actions_total": 18,
+   "closures": [
+    {
+     "task": "T01",
+     "node": "fe",
+     "regime": "immediate",
+     "closure": [
+      "fe"
+     ]
+    },
+    {
+     "task": "T02",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T03",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T04",
+     "node": "xc",
+     "regime": "immediate",
+     "closure": [
+      "xc"
+     ]
+    },
+    {
+     "task": "T05",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T06",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T07",
+     "node": "xc",
+     "regime": "immediate",
+     "closure": [
+      "xc"
+     ]
+    },
+    {
+     "task": "T08",
+     "node": "fe",
+     "regime": "immediate",
+     "closure": [
+      "fe"
+     ]
+    },
+    {
+     "task": "T09",
+     "node": "tl",
+     "regime": "immediate",
+     "closure": [
+      "tl"
+     ]
+    },
+    {
+     "task": "T10",
+     "node": "er",
+     "regime": "immediate",
+     "closure": [
+      "er"
+     ]
+    },
+    {
+     "task": "T12",
+     "node": "tl",
+     "regime": "delayed",
+     "closure": [
+      "tl",
+      "xc"
+     ]
+    },
+    {
+     "task": "T13",
+     "node": "er",
+     "regime": "delayed",
+     "closure": [
+      "er",
+      "xc"
+     ]
+    },
+    {
+     "task": "T15",
+     "node": "fe",
+     "regime": "delayed",
+     "closure": [
+      "er",
+      "fe",
+      "tl",
+      "xc"
+     ]
+    }
+   ]
+  }
+ },
+ "invariants": {
+  "budgets_within_caps": true,
+  "fault_realizations_identical": true,
+  "closures_correct": true,
+  "dd_no_oracle_reads": true,
+  "fixed_tuned_never_low2048": true,
+  "ss_tuned_no_recovery": true
+ },
+ "cost_estimate": {
+  "per_arm": {
+   "SS-Tuned": {
+    "calls": 60,
+    "tokens_worst": 89490,
+    "cash_cny": 0.1277,
+    "wall_s_worst": 1122.0
+   },
+   "Fixed-Tuned": {
+    "calls": 78,
+    "tokens_worst": 110730,
+    "cash_cny": 0.1518,
+    "wall_s_worst": 1511.0
+   },
+   "DD-Online": {
+    "calls": 78,
+    "tokens_worst": 110730,
+    "cash_cny": 0.1349,
+    "wall_s_worst": 1581.0
+   },
+   "total": {
+    "calls": 216,
+    "tokens_worst": 310950,
+    "cash_cny": 0.4144,
+    "wall_s_worst": 4214.0
+   }
+  },
+  "note": "fake-transport worst case; real cash dominated by DS/qwen cells only (GLM subscription); real-run caps to be derived at GO decision"
+ }
+}

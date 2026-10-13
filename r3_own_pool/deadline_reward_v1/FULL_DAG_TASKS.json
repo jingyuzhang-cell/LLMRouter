@@ -1,0 +1,368 @@
+{
+ "version": "FULL_DAG_TASKS_v1",
+ "seed": 20261014,
+ "n_tasks": 15,
+ "dag": {
+  "nodes": [
+   "fe",
+   "tl",
+   "er",
+   "xc"
+  ],
+  "edges": {
+   "fe": [
+    "tl",
+    "er"
+   ],
+   "tl": [
+    "xc"
+   ],
+   "er": [
+    "xc"
+   ],
+   "xc": []
+  }
+ },
+ "unified_contract": "entity_facts.v2 / timeline.v2 / entity_relations.v2 / fact_check.v2 — doc_id EXPLICITLY stated in every prompt (citation requirement satisfiable for all arms)",
+ "closure_semantics": {
+  "fe": "fault -> re-run fe, tl, er, xc",
+  "tl": "fault -> re-run tl, xc",
+  "er": "fault -> re-run er, xc",
+  "xc": "fault -> re-run xc"
+ },
+ "fault_schedule": {
+  "note": "injected identically for every arm; frozen seed",
+  "nodes": [
+   "fe",
+   "tl",
+   "er",
+   "xc",
+   "tl",
+   "er",
+   "xc",
+   "fe",
+   "tl",
+   "er",
+   "xc",
+   "tl",
+   "er",
+   "xc",
+   "fe"
+  ],
+  "types": [
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_TRUNCATED",
+   "F_JSON",
+   "F_JSON",
+   "F_JSON",
+   "F_JSON",
+   "F_JSON"
+  ]
+ },
+ "deadline_tiers": {
+  "tight": 90.0,
+  "medium": 120.0,
+  "loose": 160.0
+ },
+ "planned_pi": {
+  "fe": "GLM-5.3",
+  "tl": "GLM-5.3",
+  "er": "deepseek-flash",
+  "xc": "qwen-plus"
+ },
+ "tasks": [
+  {
+   "task_id": "T01",
+   "event": "*ST卓然",
+   "doc_id": "E04-zhuoran",
+   "doc_slot": "*ST卓然#E04-zhuoran:E04-zhuoran",
+   "fault_node": "fe",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 120.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "58304d9c1c58e41b",
+    "er": "126ea1c57d3a529d"
+   }
+  },
+  {
+   "task_id": "T02",
+   "event": "*ST卓然",
+   "doc_id": "E04-zhuoran_sup1",
+   "doc_slot": "*ST卓然#E04-zhuoran:E04-zhuoran_sup1",
+   "fault_node": "tl",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 90.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "9b6d302113f847a4",
+    "er": "52dcee897ec83ae1"
+   }
+  },
+  {
+   "task_id": "T03",
+   "event": "*ST卓然",
+   "doc_id": "E04-zhuoran_sup2",
+   "doc_slot": "*ST卓然#E04-zhuoran:E04-zhuoran_sup2",
+   "fault_node": "er",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 160.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "a6c8ec18a2d8001b",
+    "er": "70715a12f1defebe"
+   }
+  },
+  {
+   "task_id": "T04",
+   "event": "*ST纳川",
+   "doc_id": "E05-nachuan",
+   "doc_slot": "*ST纳川#E05-nachuan:E05-nachuan",
+   "fault_node": "xc",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 120.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "e6bc0047f4d82545",
+    "er": "532c7c7b9074dc2e"
+   }
+  },
+  {
+   "task_id": "T05",
+   "event": "*ST纳川",
+   "doc_id": "E05-nachuan_sup1",
+   "doc_slot": "*ST纳川#E05-nachuan:E05-nachuan_sup1",
+   "fault_node": "tl",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 90.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "7c20a6b9c6ebfa31",
+    "er": "5329546d9f293f2d"
+   }
+  },
+  {
+   "task_id": "T06",
+   "event": "*ST纳川",
+   "doc_id": "E05-nachuan_sup2",
+   "doc_slot": "*ST纳川#E05-nachuan:E05-nachuan_sup2",
+   "fault_node": "er",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 160.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "083ea4b37438e3dc",
+    "er": "060f8b81669f1c04"
+   }
+  },
+  {
+   "task_id": "T07",
+   "event": "舜天",
+   "doc_id": "csrc_penalty_2024_41",
+   "doc_slot": "jsst#csrc_penalty_2024_41",
+   "fault_node": "xc",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 120.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "a3ac1f18e15059d1",
+    "er": "5a68ce004a129ab4"
+   }
+  },
+  {
+   "task_id": "T08",
+   "event": "舜天",
+   "doc_id": "st_advance_notice_2023",
+   "doc_slot": "jsst#st_advance_notice_2023",
+   "fault_node": "fe",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 90.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "6798aa0c5a34398d",
+    "er": "206637d686a8ec2e"
+   }
+  },
+  {
+   "task_id": "T09",
+   "event": "元道退",
+   "doc_id": "D1_E03-yuandao_2026-05-08",
+   "doc_slot": "ydt#D1_E03-yuandao_2026-05-08",
+   "fault_node": "tl",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 160.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "aaa639d048913911",
+    "er": "69b9d5ed9e974470"
+   }
+  },
+  {
+   "task_id": "T10",
+   "event": "元道退",
+   "doc_id": "D2_E03-yuandao_2026-08-29",
+   "doc_slot": "ydt#D2_E03-yuandao_2026-08-29",
+   "fault_node": "er",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 120.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "cd7fe5d67f47aba7",
+    "er": "2b76178e42da648b"
+   }
+  },
+  {
+   "task_id": "T11",
+   "event": "元道退",
+   "doc_id": "D3_E03-yuandao_2026-08-29",
+   "doc_slot": "ydt#D3_E03-yuandao_2026-08-29",
+   "fault_node": "xc",
+   "fault_type": "F_JSON",
+   "deadline_s": 90.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "150fbd42ea04069a",
+    "er": "2e8b7a3e45b60887"
+   }
+  },
+  {
+   "task_id": "T12",
+   "event": "欢瑞世纪",
+   "doc_id": "E06-huanrui",
+   "doc_slot": "欢瑞世纪#E06-huanrui:E06-huanrui",
+   "fault_node": "tl",
+   "fault_type": "F_JSON",
+   "deadline_s": 160.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "0cb6a4b92f5240bc",
+    "er": "6fe883473f7100e5"
+   }
+  },
+  {
+   "task_id": "T13",
+   "event": "欢瑞世纪",
+   "doc_id": "E06-huanrui_sup1",
+   "doc_slot": "欢瑞世纪#E06-huanrui:E06-huanrui_sup1",
+   "fault_node": "er",
+   "fault_type": "F_JSON",
+   "deadline_s": 120.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "6a3fde2496628125",
+    "er": "e6d61bfcabc5a86c"
+   }
+  },
+  {
+   "task_id": "T14",
+   "event": "欢瑞世纪",
+   "doc_id": "E06-huanrui_sup2",
+   "doc_slot": "欢瑞世纪#E06-huanrui:E06-huanrui_sup2",
+   "fault_node": "xc",
+   "fault_type": "F_JSON",
+   "deadline_s": 90.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "d6c200547b3946ef",
+    "er": "d5c8d363efdbd152"
+   }
+  },
+  {
+   "task_id": "T15",
+   "event": "舜天",
+   "doc_id": "st_announce_2024_020",
+   "doc_slot": "舜天#st_announce_2024_020",
+   "fault_node": "fe",
+   "fault_type": "F_JSON",
+   "deadline_s": 160.0,
+   "planned_pi": {
+    "fe": "GLM-5.3",
+    "tl": "GLM-5.3",
+    "er": "deepseek-flash",
+    "xc": "qwen-plus"
+   },
+   "prompt_sha256": {
+    "fe": "69aeb592fc37733c",
+    "er": "9c7fe9f80df13d79"
+   }
+  }
+ ]
+}
