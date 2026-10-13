@@ -1,0 +1,88 @@
+{
+ "milestone": "offline_toolkit",
+ "ruling": "operator 2026-10-13 GPU-independent prep",
+ "checks": {
+  "G1_unverified_rejected": true,
+  "G1_verified_accepted": true,
+  "G1_subscription_needs_normalized": true,
+  "G2_deterministic": true,
+  "G2_gold_isolated": true,
+  "G3_gates_reject_unverified": true,
+  "G3_80_calls": true,
+  "G3_all_nodes_models": true,
+  "G4_table_has_cells": true,
+  "G4_complementarity": true,
+  "G5_dual_cost": true,
+  "G5_local_nonzero_normalized": true,
+  "G5_never_mixed": true
+ },
+ "detail": {
+  "G2": {
+   "n": 20,
+   "pool": 1654,
+   "sha": "bbf3abcaa81fb113"
+  },
+  "G3": {
+   "calls": 80,
+   "nodes": [
+    "e1",
+    "e2",
+    "r",
+    "v"
+   ],
+   "models": [
+    "deepseek",
+    "glm",
+    "qwen_cloud",
+    "qwen_local"
+   ]
+  },
+  "G4": {
+   "cells": [
+    "r|deepseek",
+    "r|glm"
+   ],
+   "complementarity": [
+    {
+     "pair": "glm+deepseek",
+     "n": 8,
+     "both": 3,
+     "only_m1": 2,
+     "only_m2": 2,
+     "complementarity_rate": 0.5714285714285714,
+     "oracle_gain": 0.5
+    }
+   ]
+  },
+  "G5": {
+   "total_calls": 80,
+   "total_cash_cny": 0.72,
+   "total_normalized": 72.0,
+   "per_model": {
+    "glm": {
+     "calls": 20,
+     "cash_cny": 0.18,
+     "normalized": 18.0
+    },
+    "deepseek": {
+     "calls": 20,
+     "cash_cny": 0.18,
+     "normalized": 18.0
+    },
+    "qwen_cloud": {
+     "calls": 20,
+     "cash_cny": 0.18,
+     "normalized": 18.0
+    },
+    "qwen_local": {
+     "calls": 20,
+     "cash_cny": 0.18,
+     "normalized": 18.0
+    }
+   },
+   "note": "Cash cost is the real spend; normalized cost enables fair cross-model comparison including free-tier and GPU models. Both reported separately, never mixed."
+  }
+ },
+ "zero_model_calls": true,
+ "all_pass": true
+}
