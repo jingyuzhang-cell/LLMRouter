@@ -1,0 +1,36 @@
+{
+ "version": "GLM_REAL_COST_ANALYSIS_v1",
+ "cloud_calls": {
+  "n_calls": 147,
+  "by_model": {
+   "GLM-5.3": {
+    "n": 105,
+    "total_input_tokens": 259106,
+    "total_output_tokens": 49753,
+    "mean_latency_s": 7.78
+   },
+   "GLM-5.3-Flash": {
+    "n": 42,
+    "total_input_tokens": 53294,
+    "total_output_tokens": 18079,
+    "mean_latency_s": 8.36
+   }
+  },
+  "cash_cost": {
+   "status": "UNKNOWN",
+   "reason": "ledgers record tokens/latency but not per-call billing; cannot reverse-engineer rates without per-call cost or billing-mode information",
+   "required_for_inference": "per-call cash cost + billing mode (per-token vs subscription) + official rate table"
+  },
+  "normalized_cost": {
+   "basis": "token_units",
+   "total_tokens": 380232,
+   "note": "subscription-covered ≠ zero cost"
+  }
+ },
+ "local_pilot": {
+  "model": "glm-4-9b-chat-hf (LOCAL, not cloud)",
+  "n_calls": 120,
+  "cash": "zero (local GPU)",
+  "normalized": "non-zero: GPU-call units"
+ }
+}

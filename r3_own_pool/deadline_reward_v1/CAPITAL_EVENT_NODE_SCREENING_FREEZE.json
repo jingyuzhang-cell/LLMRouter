@@ -1,0 +1,1726 @@
+{
+ "version": "CAPITAL_EVENT_NODE_SCREENING_FREEZE_v1",
+ "n_inputs": 20,
+ "inputs_sha256": "f5a363b087337507684508f18cd3e661606147fadada790098a76e033a8498c8",
+ "plan_sha256": "585b33a7d69f513a9e623869553cf5d90c3c1d823a65e7650d4bd6cdfeaf70ff",
+ "inputs": [
+  {
+   "event": "jsst_600287",
+   "node_type": "fact_extraction",
+   "subtask": "整理证据索引：阅读ctx_table中的证据文档清单（doc_id、标题、URL、公开日期、哈希、字符数），按监管文书/公司公告分类，标注每份文档在调查中的角色与公开日期，输出evidence_index。",
+   "output_contract": "evidence_registry.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "doc_id": "st_announce_2024_020"
+    },
+    {
+     "doc_id": "st_announce_2024_021"
+    },
+    {
+     "doc_id": "st_advance_notice_2023"
+    }
+   ],
+   "evidence_summary": "舜天 executed DAG node (real contract and real evidence chain)",
+   "information_cutoff": "2024-07-10",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "facts_silver.json (8/10 verified)",
+   "split": "DEV"
+  },
+  {
+   "event": "jsst_600287",
+   "node_type": "timeline",
+   "subtask": "事件时间线梳理：基于doc_extracts构建调查过程时间线（立案、事先告知、听证、处罚决定、公司公告、停牌与风险警示实施），每项含日期(YYYY-MM-DD)、事件描述、证据doc_id。",
+   "output_contract": "timeline.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "doc_id": "st_announce_2024_020"
+    },
+    {
+     "doc_id": "st_announce_2024_021"
+    },
+    {
+     "doc_id": "st_advance_notice_2023"
+    }
+   ],
+   "evidence_summary": "舜天 executed DAG node (real contract and real evidence chain)",
+   "information_cutoff": "2024-07-10",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "facts_silver.json (8/10 verified)",
+   "split": "DEV"
+  },
+  {
+   "event": "jsst_600287",
+   "node_type": "cross_verification",
+   "subtask": "交叉核查：将timeline与entity_facts逐条对照doc_extracts中的引文核查（日期、金额、主体名称），输出verified_facts：每条含事实、核查结论(SUPPORTED/UNSUPPORTED)、证据doc_id；无法确认的明确标注UNRESOLVED。",
+   "output_contract": "fact_check.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "doc_id": "st_announce_2024_020"
+    },
+    {
+     "doc_id": "st_announce_2024_021"
+    },
+    {
+     "doc_id": "st_advance_notice_2023"
+    }
+   ],
+   "evidence_summary": "舜天 executed DAG node (real contract and real evidence chain)",
+   "information_cutoff": "2024-07-10",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "facts_silver.json (8/10 verified)",
+   "split": "DEV"
+  },
+  {
+   "event": "jsst_600287",
+   "node_type": "entity_relations",
+   "subtask": "主体与处罚事实抽取：基于doc_extracts抽取涉及主体（公司、责任人员、业务对手方）、处罚决定（罚款金额、警告、市场禁入）与虚增金额等原子事实，每条含事实陈述、数值/日期、证据doc_id。",
+   "output_contract": "entity_facts.v1",
+   "evidence_docs": [],
+   "evidence_summary": "舜天 entity_facts node",
+   "information_cutoff": "2024-07-10",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "facts_silver.json",
+   "split": "DEV"
+  },
+  {
+   "event": "元道退",
+   "node_type": "fact_extraction",
+   "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+   "output_contract": "entity_facts.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《行政处罚决定书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-08-29/1225533920.PDF",
+     "sha256": "f789177f381dc341570fe8e5756bbea804d00fe7e2aa3e569fb0d1bc93aee18f",
+     "public_date": "2026-08-29"
+    },
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《事先告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-08-29/1225533922.PDF",
+     "sha256": "fe19b0b38275472844d2a8acafc947954fb1c0904ff8c134be83658820f55f4f",
+     "public_date": "2026-08-29"
+    },
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《行政处罚事先告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-05-08/1225286839.PDF",
+     "sha256": "51e7d4496865b2ee9aebfc1c0fdf2cd4e1e5f8777086a96869ce60f13b56c0f0",
+     "public_date": "2026-05-08"
+    }
+   ],
+   "evidence_summary": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "VAL_GOLD_ANNOTATION_PACKAGE (40 candidates, NOT yet human-verified)",
+   "split": "VAL"
+  },
+  {
+   "event": "元道退",
+   "node_type": "timeline",
+   "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+   "output_contract": "timeline.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《行政处罚决定书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-08-29/1225533920.PDF",
+     "sha256": "f789177f381dc341570fe8e5756bbea804d00fe7e2aa3e569fb0d1bc93aee18f",
+     "public_date": "2026-08-29"
+    },
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《事先告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-08-29/1225533922.PDF",
+     "sha256": "fe19b0b38275472844d2a8acafc947954fb1c0904ff8c134be83658820f55f4f",
+     "public_date": "2026-08-29"
+    },
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《行政处罚事先告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-05-08/1225286839.PDF",
+     "sha256": "51e7d4496865b2ee9aebfc1c0fdf2cd4e1e5f8777086a96869ce60f13b56c0f0",
+     "public_date": "2026-05-08"
+    }
+   ],
+   "evidence_summary": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "VAL_GOLD_ANNOTATION_PACKAGE (40 candidates, NOT yet human-verified)",
+   "split": "VAL"
+  },
+  {
+   "event": "元道退",
+   "node_type": "entity_relations",
+   "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+   "output_contract": "entity_relations.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《行政处罚决定书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-08-29/1225533920.PDF",
+     "sha256": "f789177f381dc341570fe8e5756bbea804d00fe7e2aa3e569fb0d1bc93aee18f",
+     "public_date": "2026-08-29"
+    },
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《事先告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-08-29/1225533922.PDF",
+     "sha256": "fe19b0b38275472844d2a8acafc947954fb1c0904ff8c134be83658820f55f4f",
+     "public_date": "2026-08-29"
+    },
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《行政处罚事先告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-05-08/1225286839.PDF",
+     "sha256": "51e7d4496865b2ee9aebfc1c0fdf2cd4e1e5f8777086a96869ce60f13b56c0f0",
+     "public_date": "2026-05-08"
+    }
+   ],
+   "evidence_summary": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "VAL_GOLD_ANNOTATION_PACKAGE (40 candidates, NOT yet human-verified)",
+   "split": "VAL"
+  },
+  {
+   "event": "元道退",
+   "node_type": "cross_verification",
+   "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+   "output_contract": "fact_check.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《行政处罚决定书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-08-29/1225533920.PDF",
+     "sha256": "f789177f381dc341570fe8e5756bbea804d00fe7e2aa3e569fb0d1bc93aee18f",
+     "public_date": "2026-08-29"
+    },
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《事先告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-08-29/1225533922.PDF",
+     "sha256": "fe19b0b38275472844d2a8acafc947954fb1c0904ff8c134be83658820f55f4f",
+     "public_date": "2026-08-29"
+    },
+    {
+     "doc_id": "E03-yuandao",
+     "title": "关于收到《行政处罚事先告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-05-08/1225286839.PDF",
+     "sha256": "51e7d4496865b2ee9aebfc1c0fdf2cd4e1e5f8777086a96869ce60f13b56c0f0",
+     "public_date": "2026-05-08"
+    }
+   ],
+   "evidence_summary": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "VAL_GOLD_ANNOTATION_PACKAGE (40 candidates, NOT yet human-verified)",
+   "split": "VAL"
+  },
+  {
+   "event": "*ST卓然",
+   "node_type": "fact_extraction",
+   "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+   "output_contract": "entity_facts.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司立案调查进展暨退市风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-10/1225556103.PDF",
+     "sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "public_date": "2026-09-10"
+    },
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-13/1225601152.PDF",
+     "sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "public_date": "2026-10-13"
+    },
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225597707.PDF",
+     "sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "public_date": "2026-10-09"
+    }
+   ],
+   "evidence_summary": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "*ST卓然",
+   "node_type": "timeline",
+   "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+   "output_contract": "timeline.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司立案调查进展暨退市风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-10/1225556103.PDF",
+     "sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "public_date": "2026-09-10"
+    },
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-13/1225601152.PDF",
+     "sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "public_date": "2026-10-13"
+    },
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225597707.PDF",
+     "sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "public_date": "2026-10-09"
+    }
+   ],
+   "evidence_summary": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "*ST卓然",
+   "node_type": "entity_relations",
+   "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+   "output_contract": "entity_relations.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司立案调查进展暨退市风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-10/1225556103.PDF",
+     "sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "public_date": "2026-09-10"
+    },
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-13/1225601152.PDF",
+     "sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "public_date": "2026-10-13"
+    },
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225597707.PDF",
+     "sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "public_date": "2026-10-09"
+    }
+   ],
+   "evidence_summary": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "*ST卓然",
+   "node_type": "cross_verification",
+   "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+   "output_contract": "fact_check.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司立案调查进展暨退市风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-10/1225556103.PDF",
+     "sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "public_date": "2026-09-10"
+    },
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-13/1225601152.PDF",
+     "sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "public_date": "2026-10-13"
+    },
+    {
+     "doc_id": "E04-zhuoran",
+     "title": "关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225597707.PDF",
+     "sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "public_date": "2026-10-09"
+    }
+   ],
+   "evidence_summary": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "*ST纳川",
+   "node_type": "fact_extraction",
+   "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+   "output_contract": "entity_facts.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于收到中国证监会立案告知书的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225599408.PDF",
+     "sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+     "public_date": "2026-10-09"
+    },
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于公司股票可能被终止上市的第六次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225599409.PDF",
+     "sha256": "d0e09e0c86b33d247e7c62450e8ed8b708b57646bf079f7f962b8199fb3a8acf",
+     "public_date": "2026-10-09"
+    },
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于公司股票可能被终止上市的第五次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-04/1225548901.PDF",
+     "sha256": "a8243edacba79fb6e2a5cecc47ca93c546cdefb5d246b6ce55ea625320458479",
+     "public_date": "2026-09-04"
+    }
+   ],
+   "evidence_summary": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "*ST纳川",
+   "node_type": "timeline",
+   "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+   "output_contract": "timeline.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于收到中国证监会立案告知书的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225599408.PDF",
+     "sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+     "public_date": "2026-10-09"
+    },
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于公司股票可能被终止上市的第六次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225599409.PDF",
+     "sha256": "d0e09e0c86b33d247e7c62450e8ed8b708b57646bf079f7f962b8199fb3a8acf",
+     "public_date": "2026-10-09"
+    },
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于公司股票可能被终止上市的第五次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-04/1225548901.PDF",
+     "sha256": "a8243edacba79fb6e2a5cecc47ca93c546cdefb5d246b6ce55ea625320458479",
+     "public_date": "2026-09-04"
+    }
+   ],
+   "evidence_summary": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "*ST纳川",
+   "node_type": "entity_relations",
+   "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+   "output_contract": "entity_relations.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于收到中国证监会立案告知书的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225599408.PDF",
+     "sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+     "public_date": "2026-10-09"
+    },
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于公司股票可能被终止上市的第六次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225599409.PDF",
+     "sha256": "d0e09e0c86b33d247e7c62450e8ed8b708b57646bf079f7f962b8199fb3a8acf",
+     "public_date": "2026-10-09"
+    },
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于公司股票可能被终止上市的第五次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-04/1225548901.PDF",
+     "sha256": "a8243edacba79fb6e2a5cecc47ca93c546cdefb5d246b6ce55ea625320458479",
+     "public_date": "2026-09-04"
+    }
+   ],
+   "evidence_summary": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "*ST纳川",
+   "node_type": "cross_verification",
+   "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+   "output_contract": "fact_check.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于收到中国证监会立案告知书的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225599408.PDF",
+     "sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+     "public_date": "2026-10-09"
+    },
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于公司股票可能被终止上市的第六次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-10-09/1225599409.PDF",
+     "sha256": "d0e09e0c86b33d247e7c62450e8ed8b708b57646bf079f7f962b8199fb3a8acf",
+     "public_date": "2026-10-09"
+    },
+    {
+     "doc_id": "E05-nachuan",
+     "title": "关于公司股票可能被终止上市的第五次风险提示公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-04/1225548901.PDF",
+     "sha256": "a8243edacba79fb6e2a5cecc47ca93c546cdefb5d246b6ce55ea625320458479",
+     "public_date": "2026-09-04"
+    }
+   ],
+   "evidence_summary": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "欢瑞世纪",
+   "node_type": "fact_extraction",
+   "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+   "output_contract": "entity_facts.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E06-huanrui",
+     "title": "关于收到中国证监会《立案告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-04-23/1225152137.PDF",
+     "sha256": "6653261eaba59efb38d1c8317212c687985ebf39f1a61457e11f8e5363dee795",
+     "public_date": "2026-04-23"
+    },
+    {
+     "doc_id": "E06-huanrui",
+     "title": "关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-19/1225572294.PDF",
+     "sha256": "adf1666f79033d35c0df61053dc418c41cd456cb704cdbd21c2eaa08a8f36298",
+     "public_date": "2026-09-19"
+    },
+    {
+     "doc_id": "E06-huanrui",
+     "title": "2026年半年度业绩预告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-07-15/1225425204.PDF",
+     "sha256": "54ad071638b31181b5474c038b1155ae74d7b77030dea6d189bdb7e021ecae7c",
+     "public_date": "2026-07-15"
+    }
+   ],
+   "evidence_summary": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "欢瑞世纪",
+   "node_type": "timeline",
+   "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+   "output_contract": "timeline.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E06-huanrui",
+     "title": "关于收到中国证监会《立案告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-04-23/1225152137.PDF",
+     "sha256": "6653261eaba59efb38d1c8317212c687985ebf39f1a61457e11f8e5363dee795",
+     "public_date": "2026-04-23"
+    },
+    {
+     "doc_id": "E06-huanrui",
+     "title": "关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-19/1225572294.PDF",
+     "sha256": "adf1666f79033d35c0df61053dc418c41cd456cb704cdbd21c2eaa08a8f36298",
+     "public_date": "2026-09-19"
+    },
+    {
+     "doc_id": "E06-huanrui",
+     "title": "2026年半年度业绩预告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-07-15/1225425204.PDF",
+     "sha256": "54ad071638b31181b5474c038b1155ae74d7b77030dea6d189bdb7e021ecae7c",
+     "public_date": "2026-07-15"
+    }
+   ],
+   "evidence_summary": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "欢瑞世纪",
+   "node_type": "entity_relations",
+   "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+   "output_contract": "entity_relations.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E06-huanrui",
+     "title": "关于收到中国证监会《立案告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-04-23/1225152137.PDF",
+     "sha256": "6653261eaba59efb38d1c8317212c687985ebf39f1a61457e11f8e5363dee795",
+     "public_date": "2026-04-23"
+    },
+    {
+     "doc_id": "E06-huanrui",
+     "title": "关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-19/1225572294.PDF",
+     "sha256": "adf1666f79033d35c0df61053dc418c41cd456cb704cdbd21c2eaa08a8f36298",
+     "public_date": "2026-09-19"
+    },
+    {
+     "doc_id": "E06-huanrui",
+     "title": "2026年半年度业绩预告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-07-15/1225425204.PDF",
+     "sha256": "54ad071638b31181b5474c038b1155ae74d7b77030dea6d189bdb7e021ecae7c",
+     "public_date": "2026-07-15"
+    }
+   ],
+   "evidence_summary": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  },
+  {
+   "event": "欢瑞世纪",
+   "node_type": "cross_verification",
+   "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+   "output_contract": "fact_check.v1",
+   "evidence_docs": [
+    {
+     "doc_id": "E06-huanrui",
+     "title": "关于收到中国证监会《立案告知书》的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-04-23/1225152137.PDF",
+     "sha256": "6653261eaba59efb38d1c8317212c687985ebf39f1a61457e11f8e5363dee795",
+     "public_date": "2026-04-23"
+    },
+    {
+     "doc_id": "E06-huanrui",
+     "title": "关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-09-19/1225572294.PDF",
+     "sha256": "adf1666f79033d35c0df61053dc418c41cd456cb704cdbd21c2eaa08a8f36298",
+     "public_date": "2026-09-19"
+    },
+    {
+     "doc_id": "E06-huanrui",
+     "title": "2026年半年度业绩预告",
+     "url": "https://static.cninfo.com.cn/finalpage/2026-07-15/1225425204.PDF",
+     "sha256": "54ad071638b31181b5474c038b1155ae74d7b77030dea6d189bdb7e021ecae7c",
+     "public_date": "2026-07-15"
+    }
+   ],
+   "evidence_summary": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+   "information_cutoff": "2026-08-29",
+   "gold_status": "SILVER_AUTO_VERIFIED",
+   "gold_package": "none",
+   "split": "DEV"
+  }
+ ],
+ "plan": {
+  "version": "CAPITAL_EVENT_SCREENING_PLAN_v1",
+  "total_calls": 80,
+  "assignments": {
+   "M1_glm53|jsst_600287_fact_extraction": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "fact_extraction",
+    "event": "jsst_600287",
+    "subtask": "整理证据索引：阅读ctx_table中的证据文档清单（doc_id、标题、URL、公开日期、哈希、字符数），按监管文书/公司公告分类，标注每份文档在调查中的角色与公开日期，输出evidence_index。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "jsst_600287_fact_extraction"
+   },
+   "M2_glm53flash|jsst_600287_fact_extraction": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "fact_extraction",
+    "event": "jsst_600287",
+    "subtask": "整理证据索引：阅读ctx_table中的证据文档清单（doc_id、标题、URL、公开日期、哈希、字符数），按监管文书/公司公告分类，标注每份文档在调查中的角色与公开日期，输出evidence_index。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "jsst_600287_fact_extraction"
+   },
+   "M3_deepseek|jsst_600287_fact_extraction": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "jsst_600287",
+    "subtask": "整理证据索引：阅读ctx_table中的证据文档清单（doc_id、标题、URL、公开日期、哈希、字符数），按监管文书/公司公告分类，标注每份文档在调查中的角色与公开日期，输出evidence_index。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "jsst_600287_fact_extraction"
+   },
+   "M4_qwen_cloud|jsst_600287_fact_extraction": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "jsst_600287",
+    "subtask": "整理证据索引：阅读ctx_table中的证据文档清单（doc_id、标题、URL、公开日期、哈希、字符数），按监管文书/公司公告分类，标注每份文档在调查中的角色与公开日期，输出evidence_index。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "jsst_600287_fact_extraction"
+   },
+   "M1_glm53|jsst_600287_timeline": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "timeline",
+    "event": "jsst_600287",
+    "subtask": "事件时间线梳理：基于doc_extracts构建调查过程时间线（立案、事先告知、听证、处罚决定、公司公告、停牌与风险警示实施），每项含日期(YYYY-MM-DD)、事件描述、证据doc_id。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "jsst_600287_timeline"
+   },
+   "M2_glm53flash|jsst_600287_timeline": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "timeline",
+    "event": "jsst_600287",
+    "subtask": "事件时间线梳理：基于doc_extracts构建调查过程时间线（立案、事先告知、听证、处罚决定、公司公告、停牌与风险警示实施），每项含日期(YYYY-MM-DD)、事件描述、证据doc_id。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "jsst_600287_timeline"
+   },
+   "M3_deepseek|jsst_600287_timeline": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "jsst_600287",
+    "subtask": "事件时间线梳理：基于doc_extracts构建调查过程时间线（立案、事先告知、听证、处罚决定、公司公告、停牌与风险警示实施），每项含日期(YYYY-MM-DD)、事件描述、证据doc_id。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "jsst_600287_timeline"
+   },
+   "M4_qwen_cloud|jsst_600287_timeline": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "jsst_600287",
+    "subtask": "事件时间线梳理：基于doc_extracts构建调查过程时间线（立案、事先告知、听证、处罚决定、公司公告、停牌与风险警示实施），每项含日期(YYYY-MM-DD)、事件描述、证据doc_id。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "jsst_600287_timeline"
+   },
+   "M1_glm53|jsst_600287_cross_verification": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "cross_verification",
+    "event": "jsst_600287",
+    "subtask": "交叉核查：将timeline与entity_facts逐条对照doc_extracts中的引文核查（日期、金额、主体名称），输出verified_facts：每条含事实、核查结论(SUPPORTED/UNSUPPORTED)、证据doc_id；无法确认的明确标注UNRESOLVED。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "jsst_600287_cross_verification"
+   },
+   "M2_glm53flash|jsst_600287_cross_verification": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "cross_verification",
+    "event": "jsst_600287",
+    "subtask": "交叉核查：将timeline与entity_facts逐条对照doc_extracts中的引文核查（日期、金额、主体名称），输出verified_facts：每条含事实、核查结论(SUPPORTED/UNSUPPORTED)、证据doc_id；无法确认的明确标注UNRESOLVED。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "jsst_600287_cross_verification"
+   },
+   "M3_deepseek|jsst_600287_cross_verification": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "jsst_600287",
+    "subtask": "交叉核查：将timeline与entity_facts逐条对照doc_extracts中的引文核查（日期、金额、主体名称），输出verified_facts：每条含事实、核查结论(SUPPORTED/UNSUPPORTED)、证据doc_id；无法确认的明确标注UNRESOLVED。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "jsst_600287_cross_verification"
+   },
+   "M4_qwen_cloud|jsst_600287_cross_verification": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "jsst_600287",
+    "subtask": "交叉核查：将timeline与entity_facts逐条对照doc_extracts中的引文核查（日期、金额、主体名称），输出verified_facts：每条含事实、核查结论(SUPPORTED/UNSUPPORTED)、证据doc_id；无法确认的明确标注UNRESOLVED。",
+    "evidence": "舜天 executed DAG node (real contract and real evidence chain)",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "jsst_600287_cross_verification"
+   },
+   "M1_glm53|jsst_600287_entity_relations": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "entity_relations",
+    "event": "jsst_600287",
+    "subtask": "主体与处罚事实抽取：基于doc_extracts抽取涉及主体（公司、责任人员、业务对手方）、处罚决定（罚款金额、警告、市场禁入）与虚增金额等原子事实，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "舜天 entity_facts node",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "jsst_600287_entity_relations"
+   },
+   "M2_glm53flash|jsst_600287_entity_relations": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "entity_relations",
+    "event": "jsst_600287",
+    "subtask": "主体与处罚事实抽取：基于doc_extracts抽取涉及主体（公司、责任人员、业务对手方）、处罚决定（罚款金额、警告、市场禁入）与虚增金额等原子事实，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "舜天 entity_facts node",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "jsst_600287_entity_relations"
+   },
+   "M3_deepseek|jsst_600287_entity_relations": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "jsst_600287",
+    "subtask": "主体与处罚事实抽取：基于doc_extracts抽取涉及主体（公司、责任人员、业务对手方）、处罚决定（罚款金额、警告、市场禁入）与虚增金额等原子事实，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "舜天 entity_facts node",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "jsst_600287_entity_relations"
+   },
+   "M4_qwen_cloud|jsst_600287_entity_relations": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "jsst_600287",
+    "subtask": "主体与处罚事实抽取：基于doc_extracts抽取涉及主体（公司、责任人员、业务对手方）、处罚决定（罚款金额、警告、市场禁入）与虚增金额等原子事实，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "舜天 entity_facts node",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "jsst_600287_entity_relations"
+   },
+   "M1_glm53|元道退_fact_extraction": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "fact_extraction",
+    "event": "元道退",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "元道退_fact_extraction"
+   },
+   "M2_glm53flash|元道退_fact_extraction": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "fact_extraction",
+    "event": "元道退",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "元道退_fact_extraction"
+   },
+   "M3_deepseek|元道退_fact_extraction": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "元道退",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "元道退_fact_extraction"
+   },
+   "M4_qwen_cloud|元道退_fact_extraction": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "元道退",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "元道退_fact_extraction"
+   },
+   "M1_glm53|元道退_timeline": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "timeline",
+    "event": "元道退",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "元道退_timeline"
+   },
+   "M2_glm53flash|元道退_timeline": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "timeline",
+    "event": "元道退",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "元道退_timeline"
+   },
+   "M3_deepseek|元道退_timeline": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "元道退",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "元道退_timeline"
+   },
+   "M4_qwen_cloud|元道退_timeline": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "元道退",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "元道退_timeline"
+   },
+   "M1_glm53|元道退_entity_relations": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "entity_relations",
+    "event": "元道退",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "元道退_entity_relations"
+   },
+   "M2_glm53flash|元道退_entity_relations": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "entity_relations",
+    "event": "元道退",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "元道退_entity_relations"
+   },
+   "M3_deepseek|元道退_entity_relations": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "元道退",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "元道退_entity_relations"
+   },
+   "M4_qwen_cloud|元道退_entity_relations": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "元道退",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "元道退_entity_relations"
+   },
+   "M1_glm53|元道退_cross_verification": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "cross_verification",
+    "event": "元道退",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "元道退_cross_verification"
+   },
+   "M2_glm53flash|元道退_cross_verification": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "cross_verification",
+    "event": "元道退",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "元道退_cross_verification"
+   },
+   "M3_deepseek|元道退_cross_verification": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "元道退",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "元道退_cross_verification"
+   },
+   "M4_qwen_cloud|元道退_cross_verification": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "元道退",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E03-yuandao] 关于收到《行政处罚决定书》的公告\n[E03-yuandao] 关于收到《事先告知书》的公告\n[E03-yuandao] 关于收到《行政处罚事先告知书》的公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "元道退_cross_verification"
+   },
+   "M1_glm53|*ST卓然_fact_extraction": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "fact_extraction",
+    "event": "*ST卓然",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST卓然_fact_extraction"
+   },
+   "M2_glm53flash|*ST卓然_fact_extraction": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "fact_extraction",
+    "event": "*ST卓然",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST卓然_fact_extraction"
+   },
+   "M3_deepseek|*ST卓然_fact_extraction": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "*ST卓然",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST卓然_fact_extraction"
+   },
+   "M4_qwen_cloud|*ST卓然_fact_extraction": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "*ST卓然",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST卓然_fact_extraction"
+   },
+   "M1_glm53|*ST卓然_timeline": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "timeline",
+    "event": "*ST卓然",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST卓然_timeline"
+   },
+   "M2_glm53flash|*ST卓然_timeline": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "timeline",
+    "event": "*ST卓然",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST卓然_timeline"
+   },
+   "M3_deepseek|*ST卓然_timeline": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "*ST卓然",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST卓然_timeline"
+   },
+   "M4_qwen_cloud|*ST卓然_timeline": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "*ST卓然",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST卓然_timeline"
+   },
+   "M1_glm53|*ST卓然_entity_relations": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "entity_relations",
+    "event": "*ST卓然",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST卓然_entity_relations"
+   },
+   "M2_glm53flash|*ST卓然_entity_relations": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "entity_relations",
+    "event": "*ST卓然",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST卓然_entity_relations"
+   },
+   "M3_deepseek|*ST卓然_entity_relations": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "*ST卓然",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST卓然_entity_relations"
+   },
+   "M4_qwen_cloud|*ST卓然_entity_relations": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "*ST卓然",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST卓然_entity_relations"
+   },
+   "M1_glm53|*ST卓然_cross_verification": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "cross_verification",
+    "event": "*ST卓然",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST卓然_cross_verification"
+   },
+   "M2_glm53flash|*ST卓然_cross_verification": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "cross_verification",
+    "event": "*ST卓然",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST卓然_cross_verification"
+   },
+   "M3_deepseek|*ST卓然_cross_verification": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "*ST卓然",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST卓然_cross_verification"
+   },
+   "M4_qwen_cloud|*ST卓然_cross_verification": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "*ST卓然",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E04-zhuoran] 关于公司立案调查进展暨退市风险提示公告\n[E04-zhuoran] 关于公司股票可能存在因股价低于1元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告\n[E04-zhuoran] 关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST卓然_cross_verification"
+   },
+   "M1_glm53|*ST纳川_fact_extraction": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "fact_extraction",
+    "event": "*ST纳川",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST纳川_fact_extraction"
+   },
+   "M2_glm53flash|*ST纳川_fact_extraction": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "fact_extraction",
+    "event": "*ST纳川",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST纳川_fact_extraction"
+   },
+   "M3_deepseek|*ST纳川_fact_extraction": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "*ST纳川",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST纳川_fact_extraction"
+   },
+   "M4_qwen_cloud|*ST纳川_fact_extraction": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "*ST纳川",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST纳川_fact_extraction"
+   },
+   "M1_glm53|*ST纳川_timeline": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "timeline",
+    "event": "*ST纳川",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST纳川_timeline"
+   },
+   "M2_glm53flash|*ST纳川_timeline": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "timeline",
+    "event": "*ST纳川",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST纳川_timeline"
+   },
+   "M3_deepseek|*ST纳川_timeline": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "*ST纳川",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST纳川_timeline"
+   },
+   "M4_qwen_cloud|*ST纳川_timeline": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "*ST纳川",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST纳川_timeline"
+   },
+   "M1_glm53|*ST纳川_entity_relations": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "entity_relations",
+    "event": "*ST纳川",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST纳川_entity_relations"
+   },
+   "M2_glm53flash|*ST纳川_entity_relations": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "entity_relations",
+    "event": "*ST纳川",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST纳川_entity_relations"
+   },
+   "M3_deepseek|*ST纳川_entity_relations": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "*ST纳川",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST纳川_entity_relations"
+   },
+   "M4_qwen_cloud|*ST纳川_entity_relations": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "*ST纳川",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST纳川_entity_relations"
+   },
+   "M1_glm53|*ST纳川_cross_verification": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "cross_verification",
+    "event": "*ST纳川",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST纳川_cross_verification"
+   },
+   "M2_glm53flash|*ST纳川_cross_verification": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "cross_verification",
+    "event": "*ST纳川",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "*ST纳川_cross_verification"
+   },
+   "M3_deepseek|*ST纳川_cross_verification": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "*ST纳川",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST纳川_cross_verification"
+   },
+   "M4_qwen_cloud|*ST纳川_cross_verification": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "*ST纳川",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E05-nachuan] 关于收到中国证监会立案告知书的公告\n[E05-nachuan] 关于公司股票可能被终止上市的第六次风险提示公告\n[E05-nachuan] 关于公司股票可能被终止上市的第五次风险提示公告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "*ST纳川_cross_verification"
+   },
+   "M1_glm53|欢瑞世纪_fact_extraction": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "fact_extraction",
+    "event": "欢瑞世纪",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "欢瑞世纪_fact_extraction"
+   },
+   "M2_glm53flash|欢瑞世纪_fact_extraction": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "fact_extraction",
+    "event": "欢瑞世纪",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "欢瑞世纪_fact_extraction"
+   },
+   "M3_deepseek|欢瑞世纪_fact_extraction": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "欢瑞世纪",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "欢瑞世纪_fact_extraction"
+   },
+   "M4_qwen_cloud|欢瑞世纪_fact_extraction": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "fact_extraction",
+    "event": "欢瑞世纪",
+    "subtask": "从证据文档中抽取原子事实：涉及主体、处罚决定（罚款金额、警告、市场禁入）、虚增金额，每条含事实陈述、数值/日期、证据doc_id。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "欢瑞世纪_fact_extraction"
+   },
+   "M1_glm53|欢瑞世纪_timeline": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "timeline",
+    "event": "欢瑞世纪",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "欢瑞世纪_timeline"
+   },
+   "M2_glm53flash|欢瑞世纪_timeline": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "timeline",
+    "event": "欢瑞世纪",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "欢瑞世纪_timeline"
+   },
+   "M3_deepseek|欢瑞世纪_timeline": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "欢瑞世纪",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "欢瑞世纪_timeline"
+   },
+   "M4_qwen_cloud|欢瑞世纪_timeline": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "timeline",
+    "event": "欢瑞世纪",
+    "subtask": "基于证据文档构建事件时间线（立案、告知、听证、处罚决定、公司公告），每项含日期、描述、证据。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "欢瑞世纪_timeline"
+   },
+   "M1_glm53|欢瑞世纪_entity_relations": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "entity_relations",
+    "event": "欢瑞世纪",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "欢瑞世纪_entity_relations"
+   },
+   "M2_glm53flash|欢瑞世纪_entity_relations": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "entity_relations",
+    "event": "欢瑞世纪",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "欢瑞世纪_entity_relations"
+   },
+   "M3_deepseek|欢瑞世纪_entity_relations": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "欢瑞世纪",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "欢瑞世纪_entity_relations"
+   },
+   "M4_qwen_cloud|欢瑞世纪_entity_relations": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "entity_relations",
+    "event": "欢瑞世纪",
+    "subtask": "识别涉事主体（公司、责任人、业务对手方）及其关系（处罚对象、连带责任），每条含主体名称、角色、证据doc_id。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "欢瑞世纪_entity_relations"
+   },
+   "M1_glm53|欢瑞世纪_cross_verification": {
+    "model_key": "M1_glm53",
+    "model_id": "GLM-5.3",
+    "node_type": "cross_verification",
+    "event": "欢瑞世纪",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "欢瑞世纪_cross_verification"
+   },
+   "M2_glm53flash|欢瑞世纪_cross_verification": {
+    "model_key": "M2_glm53flash",
+    "model_id": "GLM-5.3-Flash",
+    "node_type": "cross_verification",
+    "event": "欢瑞世纪",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": false,
+    "pairing_id": "欢瑞世纪_cross_verification"
+   },
+   "M3_deepseek|欢瑞世纪_cross_verification": {
+    "model_key": "M3_deepseek",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "欢瑞世纪",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "欢瑞世纪_cross_verification"
+   },
+   "M4_qwen_cloud|欢瑞世纪_cross_verification": {
+    "model_key": "M4_qwen_cloud",
+    "model_id": "TBD",
+    "node_type": "cross_verification",
+    "event": "欢瑞世纪",
+    "subtask": "将抽取的事实与时间线逐条对照多个证据文档核查（日期、金额、主体名称），输出核查结论(SUPPORTED/UNSUPPORTED)。",
+    "evidence": "[E06-huanrui] 关于收到中国证监会《立案告知书》的公告\n[E06-huanrui] 关于参加重庆辖区上市公司2026年投资者网上集体接待日暨半年度业绩说明会活动的公告\n[E06-huanrui] 2026年半年度业绩预告",
+    "max_output_tokens": 700,
+    "gold_status": "SILVER_AUTO_VERIFIED",
+    "status": "PENDING",
+    "blocked": true,
+    "pairing_id": "欢瑞世纪_cross_verification"
+   }
+  },
+  "models": {
+   "M1_glm53": {
+    "family": "GLM",
+    "model_id": "GLM-5.3",
+    "provider": "zhipu",
+    "verified_calls": 15,
+    "source": "capital_opinion_pilot ledgers"
+   },
+   "M2_glm53flash": {
+    "family": "GLM",
+    "model_id": "GLM-5.3-Flash",
+    "provider": "zhipu",
+    "verified_calls": 15,
+    "source": "capital_opinion_pilot ledgers"
+   },
+   "M3_deepseek": {
+    "family": "DeepSeek",
+    "model_id": "TBD",
+    "provider": "deepseek",
+    "verified_calls": 0,
+    "blocked_reason": "model_id + pricing unverified"
+   },
+   "M4_qwen_cloud": {
+    "family": "Qwen",
+    "model_id": "TBD",
+    "provider": "alibaba_cloud",
+    "verified_calls": 0,
+    "blocked_reason": "model_id + pricing unverified"
+   }
+  },
+  "note": "20 inputs x 4 models = 80 calls. M3/M4 blocked until verified. Gold: ALL SILVER (auto-verified). 元道退 has annotation package but no human gold yet."
+ },
+ "gold_summary": {
+  "silver_auto_verified": 20,
+  "human_gold": 0,
+  "annotation_package": "元道退 VAL_GOLD_ANNOTATION_PACKAGE (40 candidates, dual-annotator not yet executed)"
+ },
+ "data_boundary": {
+  "tatqa_panel": "PRESERVED (sha a1acf9db, NOT overwritten)",
+  "capital_event": "NEW (real benchmark_v1 documents + VAL gold annotation package)",
+  "node_types": "fact_extraction/timeline/entity_relations/cross_verification — DISTINCT from TAT-QA e1/e2/r/v; no automatic equivalence assumed"
+ }
+}
