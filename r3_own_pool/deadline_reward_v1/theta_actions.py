@@ -115,29 +115,32 @@ def enumerate_legal_thetas(model_id: str) -> List[dict]:
                                    reasoning_effort='low'),
                         repair='reasoning_effort=low',
                         capability_preserving=True,
-                        observed=False,
-                        observed_where=None))
+                        observed=True, refuted=True,
+                        observed_where='param_recovery FE3/FE4: REFUTED '
+                                        '(still max_tokens cut at 2048)'))
         out.append(dict(theta=dict(DEFAULT_THETA,
                                    reasoning_effort='low',
                                    max_tokens=8192),
                         repair='reasoning_effort=low + max_tokens=8192',
                         capability_preserving=True,
-                        observed=False,
-                        observed_where=None))
+                        observed=True, refuted=False,
+                        observed_where='param_recovery FE3/FE4: 2/2 '
+                                        'end_turn, strict JSON, recall '
+                                        'beats frozen bounds'))
     if MODEL_THETA_SUPPORT.get(model_id, {}).get('thinking_disable'):
         # deepseek family (and qwen, though it needs no repair)
         out.append(dict(theta=dict(DEFAULT_THETA, thinking='disabled'),
                         repair='thinking=disabled',
                         capability_preserving=False,
-                        observed=(model_id == 'deepseek-flash'),
-                        observed_where=('screening_full80_ledger '
-                                        '(17/17 json_valid; different '
-                                        'prompts — PRIOR only)')))
+                        observed=True, refuted=False,
+                        observed_where='screening_full80 17/17 (other '
+                                        'prompts, PRIOR) + param_recovery '
+                                        'FE3/FE4 2/2 functional'))
         out.append(dict(theta=dict(DEFAULT_THETA, thinking='disabled',
                                    max_tokens=8192),
                         repair='thinking=disabled + max_tokens=8192',
                         capability_preserving=False,
-                        observed=False,
+                        observed=False, refuted=False,
                         observed_where=None))
     for a in out:  # hard legality gate
         ok, why = theta_legal(model_id, a['theta'])
@@ -185,4 +188,27 @@ REAL_OUTCOME_ANCHORS: Dict[str, dict] = {
         caveat='different prompts + response_format=json_object; '
                'PRIOR ONLY — not an FE-contract observation',
         source='screening_full80_ledger + frozen registry'),
+    # ---- Phase-4 observed (FE3/FE4, same prompts, param_recovery run) ----
+    'GLM-5.3|low@2048': dict(
+        strict_json=0, n=2, completion_at_cap=2, finish='max_tokens',
+        verdict='REFUTED: low effort alone does NOT fit the 2048 cap '
+                '(the budget itself is the binding constraint)',
+        source='param_recovery FE3/FE4 cells 3-4'),
+    'GLM-5.3|low@8192': dict(
+        strict_json=2, n=2, finish='end_turn', outputs=(2961, 2624),
+        recall=dict(FE3=8 / 17, FE4=3 / 4), semantic=True,
+        verdict='FUNCTIONAL+SEMANTIC (both beats frozen diagnostic '
+                'bounds 7/17, 2/4)',
+        source='param_recovery FE3/FE4 cells 5-6'),
+    'GLM-5.3-Flash|low@8192': dict(
+        strict_json=2, n=2, finish='end_turn', outputs=(2617, 1862),
+        recall=dict(FE3=9 / 17, FE4=3 / 4), semantic=True,
+        verdict='FUNCTIONAL+SEMANTIC',
+        source='param_recovery FE3/FE4 cells 7-8'),
+    'deepseek-flash|disabled@2048(FE)': dict(
+        strict_json=2, n=2, finish='stop', outputs=(1888, 1612),
+        recall=dict(FE3=7 / 17, FE4=3 / 4),
+        verdict='FUNCTIONAL both; SEMANTIC on FE4 only (FE3 7/17 '
+                'equals the diagnostic bound, not above)',
+        source='param_recovery FE3/FE4 cells 1-2'),
 }

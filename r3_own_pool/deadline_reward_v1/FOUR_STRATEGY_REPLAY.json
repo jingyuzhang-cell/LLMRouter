@@ -1,5 +1,5 @@
 {
- "version": "FOUR_STRATEGY_REPLAY_v1",
+ "version": "FOUR_STRATEGY_REPLAY_v2",
  "zero_model_calls": true,
  "fairness": {
   "shared_pool": [
@@ -43,255 +43,648 @@
   },
   "planned_model": "GLM-5.3"
  },
- "samples": [
-  {
-   "sample": "FE1",
-   "SS-Original": {
-    "quality": 0.0,
-    "credit": "observed format=0.0 recall=None",
-    "outcome": "OBSERVED",
-    "action": [
-     "GLM-5.3",
-     "default"
-    ],
-    "rule": ""
+ "information_boundary": {
+  "dd_oracle": "ORACLE/DIAGNOSTIC — reads same-sample candidate outcomes pre-choice; NOT admissible as DD-vs-Fixed evidence",
+  "dd_online": "LOO cross-sample priors only; settlement post-choice",
+  "stages": {
+   "A": "pre-Phase-4 knowledge",
+   "B": "post-Phase-4 knowledge (cross-sample LOO only; FE4 cells inform FE3 and vice versa)"
+  }
+ },
+ "stage_A": {
+  "stage": "A",
+  "knowledge_pool": "original FE paired runs",
+  "samples": [
+   {
+    "sample": "FE1",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=0.07447"
+    },
+    "DD-Online": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.618) src=LOO cross-sample n=4 util=0.614239"
+    }
    },
-   "SS-Tuned": {
-    "quality": 0.0,
-    "credit": "none/unobserved-proposal",
-    "outcome": "UNOBSERVED",
-    "action": [
-     "GLM-5.3",
-     "SS_TUNED"
-    ],
-    "rule": ""
+   {
+    "sample": "FE2",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=0.08436"
+    },
+    "DD-Online": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.618) src=LOO cross-sample n=4 util=0.614707"
+    }
    },
-   "Fixed-Recovery": {
-    "quality": 0.0,
-    "credit": "observed format=1.0 recall=None",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "FIXED:fallback"
-    ],
-    "rule": "pre-committed rule #2"
+   {
+    "sample": "FE3",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 0.3529,
+     "credit": "observed fmt=1.0 recall=0.35294117647058826",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 0.3529,
+     "credit": "observed fmt=1.0 recall=0.35294117647058826",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=0.4073"
+    },
+    "DD-Online": {
+     "quality": 0.3529,
+     "credit": "observed fmt=1.0 recall=0.35294117647058826",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.75) src=LOO cross-sample n=4 util=0.745153"
+    }
    },
-   "DD-Enhanced": {
-    "quality": 0.0,
-    "credit": "observed format=1.0 recall=None",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
-    ],
-    "rule": "fault=F_TRUNCATED; argmax util=0.07447"
+   {
+    "sample": "FE4",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 0.5,
+     "credit": "observed fmt=1.0 recall=0.5",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 0.5,
+     "credit": "observed fmt=1.0 recall=0.5",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=0.51704"
+    },
+    "DD-Online": {
+     "quality": 0.5,
+     "credit": "observed fmt=1.0 recall=0.5",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.676) src=LOO cross-sample n=4 util=0.669646"
+    }
+   },
+   {
+    "sample": "FE5",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 1.0,
+     "credit": "observed fmt=1.0 recall=1.0",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 1.0,
+     "credit": "observed fmt=1.0 recall=1.0",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=1.04709"
+    },
+    "DD-Online": {
+     "quality": 1.0,
+     "credit": "observed fmt=1.0 recall=1.0",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.426) src=LOO cross-sample n=4 util=0.421224"
+    }
    }
-  },
-  {
-   "sample": "FE2",
+  ],
+  "summaries": {
    "SS-Original": {
-    "quality": 0.0,
-    "credit": "observed format=0.0 recall=None",
-    "outcome": "OBSERVED",
-    "action": [
-     "GLM-5.3",
-     "default"
-    ],
-    "rule": ""
+    "total_quality": 0.0,
+    "attempts": 5,
+    "tokens": 26821,
+    "cash_cny": 0.0,
+    "unobserved_actions": 0,
+    "label": "baseline (replay of real failures)",
+    "diagnostic_only": false
    },
    "SS-Tuned": {
-    "quality": 0.0,
-    "credit": "none/unobserved-proposal",
-    "outcome": "UNOBSERVED",
-    "action": [
-     "GLM-5.3",
-     "SS_TUNED"
-    ],
-    "rule": ""
+    "total_quality": 0.0,
+    "attempts": 5,
+    "tokens": 53987,
+    "cash_cny": 0.0,
+    "unobserved_actions": 5,
+    "label": "fair tuned-static baseline",
+    "diagnostic_only": false
    },
    "Fixed-Recovery": {
-    "quality": 0.0,
-    "credit": "observed format=1.0 recall=None",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "FIXED:fallback"
-    ],
-    "rule": "pre-committed rule #2"
+    "total_quality": 1.8529,
+    "attempts": 15,
+    "tokens": 72352,
+    "cash_cny": 0.022538,
+    "unobserved_actions": 5,
+    "label": "pre-committed rule",
+    "diagnostic_only": false
    },
-   "DD-Enhanced": {
-    "quality": 0.0,
-    "credit": "observed format=1.0 recall=None",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
-    ],
-    "rule": "fault=F_TRUNCATED; argmax util=0.08436"
-   }
-  },
-  {
-   "sample": "FE3",
-   "SS-Original": {
-    "quality": 0.0,
-    "credit": "observed format=0.0 recall=0.4117647058823529",
-    "outcome": "OBSERVED",
-    "action": [
-     "GLM-5.3",
-     "default"
-    ],
-    "rule": ""
+   "DD-Oracle": {
+    "total_quality": 1.8529,
+    "attempts": 10,
+    "tokens": 49085,
+    "cash_cny": 0.022538,
+    "unobserved_actions": 0,
+    "label": "DIAGNOSTIC ONLY (oracle leak, labeled)",
+    "diagnostic_only": true
    },
-   "SS-Tuned": {
-    "quality": 0.0,
-    "credit": "none/unobserved-proposal",
-    "outcome": "UNOBSERVED",
-    "action": [
-     "GLM-5.3",
-     "SS_TUNED"
-    ],
-    "rule": ""
-   },
-   "Fixed-Recovery": {
-    "quality": 0.3529,
-    "credit": "observed format=1.0 recall=0.35294117647058826",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "FIXED:fallback"
-    ],
-    "rule": "pre-committed rule #2"
-   },
-   "DD-Enhanced": {
-    "quality": 0.3529,
-    "credit": "observed format=1.0 recall=0.35294117647058826",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
-    ],
-    "rule": "fault=F_TRUNCATED; argmax util=0.4073"
-   }
-  },
-  {
-   "sample": "FE4",
-   "SS-Original": {
-    "quality": 0.0,
-    "credit": "observed format=0.0 recall=0.5",
-    "outcome": "OBSERVED",
-    "action": [
-     "GLM-5.3",
-     "default"
-    ],
-    "rule": ""
-   },
-   "SS-Tuned": {
-    "quality": 0.0,
-    "credit": "none/unobserved-proposal",
-    "outcome": "UNOBSERVED",
-    "action": [
-     "GLM-5.3",
-     "SS_TUNED"
-    ],
-    "rule": ""
-   },
-   "Fixed-Recovery": {
-    "quality": 0.5,
-    "credit": "observed format=1.0 recall=0.5",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "FIXED:fallback"
-    ],
-    "rule": "pre-committed rule #2"
-   },
-   "DD-Enhanced": {
-    "quality": 0.5,
-    "credit": "observed format=1.0 recall=0.5",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
-    ],
-    "rule": "fault=F_TRUNCATED; argmax util=0.51704"
-   }
-  },
-  {
-   "sample": "FE5",
-   "SS-Original": {
-    "quality": 0.0,
-    "credit": "observed format=0.0 recall=1.0",
-    "outcome": "OBSERVED",
-    "action": [
-     "GLM-5.3",
-     "default"
-    ],
-    "rule": ""
-   },
-   "SS-Tuned": {
-    "quality": 0.0,
-    "credit": "none/unobserved-proposal",
-    "outcome": "UNOBSERVED",
-    "action": [
-     "GLM-5.3",
-     "SS_TUNED"
-    ],
-    "rule": ""
-   },
-   "Fixed-Recovery": {
-    "quality": 1.0,
-    "credit": "observed format=1.0 recall=1.0",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "FIXED:fallback"
-    ],
-    "rule": "pre-committed rule #2"
-   },
-   "DD-Enhanced": {
-    "quality": 1.0,
-    "credit": "observed format=1.0 recall=1.0",
-    "outcome": "OBSERVED",
-    "action": [
-     "qwen-plus",
-     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
-    ],
-    "rule": "fault=F_TRUNCATED; argmax util=1.04709"
+   "DD-Online": {
+    "total_quality": 1.8529,
+    "attempts": 10,
+    "tokens": 49085,
+    "cash_cny": 0.022538,
+    "unobserved_actions": 0,
+    "label": "honest online DD (LOO priors)",
+    "diagnostic_only": false
    }
   }
- ],
- "summaries": {
-  "SS-Original": {
-   "total_quality": 0.0,
-   "attempts": 5,
-   "tokens": 26821,
-   "cash_cny": 0.0,
-   "unobserved_actions": 0,
-   "audit_entries": 5
-  },
-  "SS-Tuned": {
-   "total_quality": 0.0,
-   "attempts": 5,
-   "tokens": 53987,
-   "cash_cny": 0.0,
-   "unobserved_actions": 5,
-   "audit_entries": 5
-  },
-  "Fixed-Recovery": {
-   "total_quality": 1.8529,
-   "attempts": 15,
-   "tokens": 72352,
-   "cash_cny": 0.022538,
-   "unobserved_actions": 5,
-   "audit_entries": 15
-  },
-  "DD-Enhanced": {
-   "total_quality": 1.8529,
-   "attempts": 10,
-   "tokens": 49085,
-   "cash_cny": 0.022538,
-   "unobserved_actions": 0,
-   "audit_entries": 60
+ },
+ "stage_B": {
+  "stage": "B",
+  "knowledge_pool": "original FE + Phase-4 parameter-recovery cells (FE3/FE4)",
+  "samples": [
+   {
+    "sample": "FE1",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=0.07447"
+    },
+    "DD-Online": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3-Flash",
+      "{\"max_tokens\": 8192, \"reasoning_effort\": \"low\", \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.64) src=LOO cross-sample n=2 util=0.680154"
+    }
+   },
+   {
+    "sample": "FE2",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 0.0,
+     "credit": "observed fmt=1.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=0.08436"
+    },
+    "DD-Online": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3-Flash",
+      "{\"max_tokens\": 8192, \"reasoning_effort\": \"low\", \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.64) src=LOO cross-sample n=2 util=0.680622"
+    }
+   },
+   {
+    "sample": "FE3",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.4706,
+     "credit": "observed fmt=1.0 recall=0.47058823529411764",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 0.3529,
+     "credit": "observed fmt=1.0 recall=0.35294117647058826",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 0.5294,
+     "credit": "observed fmt=1.0 recall=0.5294117647058824",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3-Flash",
+      "{\"max_tokens\": 8192, \"reasoning_effort\": \"low\", \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=0.56841"
+    },
+    "DD-Online": {
+     "quality": 0.4118,
+     "credit": "observed fmt=1.0 recall=0.4117647058823529",
+     "outcome": "OBSERVED",
+     "action": [
+      "deepseek-flash",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": \"disabled\"}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.75) src=LOO cross-sample n=1 util=0.795153"
+    }
+   },
+   {
+    "sample": "FE4",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.75,
+     "credit": "observed fmt=1.0 recall=0.75",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 0.5,
+     "credit": "observed fmt=1.0 recall=0.5",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 0.75,
+     "credit": "observed fmt=1.0 recall=0.75",
+     "outcome": "OBSERVED",
+     "action": [
+      "deepseek-flash",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": \"disabled\"}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=0.7726"
+    },
+    "DD-Online": {
+     "quality": 0.5,
+     "credit": "observed fmt=1.0 recall=0.5",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.676) src=LOO cross-sample n=4 util=0.669646"
+    }
+   },
+   {
+    "sample": "FE5",
+    "SS-Original": {
+     "quality": 0.0,
+     "credit": "observed fmt=0.0 recall=None",
+     "outcome": "OBSERVED",
+     "action": [
+      "GLM-5.3",
+      "default"
+     ],
+     "rule": ""
+    },
+    "SS-Tuned": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3",
+      "SS_TUNED"
+     ],
+     "rule": ""
+    },
+    "Fixed-Recovery": {
+     "quality": 1.0,
+     "credit": "observed fmt=1.0 recall=1.0",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "FIXED:fallback"
+     ],
+     "rule": "pre-committed rule #2"
+    },
+    "DD-Oracle": {
+     "quality": 1.0,
+     "credit": "observed fmt=1.0 recall=1.0",
+     "outcome": "OBSERVED",
+     "action": [
+      "qwen-plus",
+      "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ORACLE fault=F_TRUNCATED util=1.04709"
+    },
+    "DD-Online": {
+     "quality": 0.0,
+     "credit": "none/unobserved-proposal",
+     "outcome": "UNOBSERVED",
+     "action": [
+      "GLM-5.3-Flash",
+      "{\"max_tokens\": 8192, \"reasoning_effort\": \"low\", \"response_format\": null, \"thinking\": null}"
+     ],
+     "rule": "ONLINE fault=F_TRUNCATED prior=(1.0, 0.64) src=LOO cross-sample n=2 util=0.678315"
+    }
+   }
+  ],
+  "summaries": {
+   "SS-Original": {
+    "total_quality": 0.0,
+    "attempts": 5,
+    "tokens": 26821,
+    "cash_cny": 0.0,
+    "unobserved_actions": 0,
+    "label": "baseline (replay of real failures)",
+    "diagnostic_only": false
+   },
+   "SS-Tuned": {
+    "total_quality": 1.2206,
+    "attempts": 5,
+    "tokens": 45416,
+    "cash_cny": 0.0,
+    "unobserved_actions": 3,
+    "label": "fair tuned-static baseline",
+    "diagnostic_only": false
+   },
+   "Fixed-Recovery": {
+    "total_quality": 1.8529,
+    "attempts": 15,
+    "tokens": 74580,
+    "cash_cny": 0.022538,
+    "unobserved_actions": 3,
+    "label": "pre-committed rule",
+    "diagnostic_only": false
+   },
+   "DD-Oracle": {
+    "total_quality": 2.2794,
+    "attempts": 10,
+    "tokens": 50068,
+    "cash_cny": 0.036488,
+    "unobserved_actions": 0,
+    "label": "DIAGNOSTIC ONLY (oracle leak, labeled)",
+    "diagnostic_only": true
+   },
+   "DD-Online": {
+    "total_quality": 0.9118,
+    "attempts": 10,
+    "tokens": 70469,
+    "cash_cny": 0.031704,
+    "unobserved_actions": 3,
+    "label": "honest online DD (LOO priors)",
+    "diagnostic_only": false
+   }
   }
  }
 }
