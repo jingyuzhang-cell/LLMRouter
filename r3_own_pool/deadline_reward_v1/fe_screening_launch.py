@@ -116,9 +116,17 @@ def check_pairing(prompts):
 def check_credentials():
     """Check that all model credential env vars are set."""
     issues = []
+    env_file = Path('/root/.env')
+    env_vars = {}
+    if env_file.exists():
+        for line in env_file.read_text().splitlines():
+            if '=' in line and not line.startswith('#'):
+                k, v = line.split('=', 1)
+                env_vars[k.strip()] = v.strip()
     for mk, cfg in MODELS.items():
-        if not os.environ.get(cfg['env']):
-            issues.append(f'{mk}: env {cfg["env"]} not set')
+        key = env_vars.get(cfg['env']) or os.environ.get(cfg['env'])
+        if not key:
+            issues.append(f'{mk}: {cfg["env"]} not in /root/.env or env')
     return issues
 
 
@@ -190,12 +198,22 @@ def _direct_api_call(cfg, prompt):
     model_id = cfg['model_id']
     key = os.environ.get(cfg['env'], '')
 
+    # Read credential from /root/.env or environment
+    env_file = Path('/root/.env')
+    env_vars = {}
+    if env_file.exists():
+        for line in env_file.read_text().splitlines():
+            if '=' in line and not line.startswith('#'):
+                k, v = line.split('=', 1)
+                env_vars[k.strip()] = v.strip()
+    key = env_vars.get(cfg['env']) or key
+
     if 'deepseek' in model_id.lower():
-        url = 'https://api.deepseek.com/v1/chat/completions'
+        url = 'https://api.deepseek.com/chat/completions'
         headers = {'Authorization': f'Bearer {key}',
                    'Content-Type': 'application/json'}
-        body = dict(model=model_id, messages=[dict(role='user',
-                                                    content=prompt)],
+        body = dict(model='deepseek-chat', messages=[dict(role='user',
+                                                          content=prompt)],
                     max_tokens=MAX_OUTPUT_TOKENS, temperature=0.0)
     elif 'qwen' in model_id.lower():
         url = ('https://dashscope.aliyuncs.com/compatible-mode/v1/'
@@ -205,13 +223,14 @@ def _direct_api_call(cfg, prompt):
         body = dict(model=model_id, messages=[dict(role='user',
                                                     content=prompt)],
                     max_tokens=MAX_OUTPUT_TOKENS, temperature=0.0)
-    else:  # GLM
-        url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
-        headers = {'Authorization': f'Bearer {key}',
+    else:  # GLM via Anthropic-compatible endpoint
+        url = 'https://open.bigmodel.cn/api/anthropic/v1/messages'
+        headers = {'x-api-key': key,
+                   'anthropic-version': '2023-06-01',
                    'Content-Type': 'application/json'}
-        body = dict(model=model_id, messages=[dict(role='user',
-                                                    content=prompt)],
-                    max_tokens=MAX_OUTPUT_TOKENS, temperature=0.0)
+        body = dict(model=model_id, max_tokens=MAX_OUTPUT_TOKENS,
+                    messages=[dict(role='user', content=prompt)],
+                    temperature=0.0)
 
     t0 = time.monotonic()
     resp = requests.post(url, headers=headers, json=body, timeout=120)
@@ -221,9 +240,15 @@ def _direct_api_call(cfg, prompt):
     answer = ''
     if 'choices' in data and data['choices']:
         answer = data['choices'][0].get('message', {}).get('content', '')
+    elif 'content' in data and isinstance(data.get('content'), list):
+        # Anthropic format
+        for block in data['content']:
+            if isinstance(block, dict) and block.get('type') == 'text':
+                answer = block.get('text', '')
+                break
     usage = data.get('usage', {})
-    tokens_in = usage.get('prompt_tokens', 0)
-    tokens_out = usage.get('completion_tokens', 0)
+    tokens_in = usage.get('prompt_tokens', usage.get('input_tokens', 0))
+    tokens_out = usage.get('completion_tokens', usage.get('output_tokens', 0))
 
     # Cost in CNY
     if cfg['billing'] == 'per_token_cny':
