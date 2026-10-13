@@ -214,6 +214,7 @@ def execute(approved, rehearse=False):
 
         all_rows = {}
         for arm in ARMS:
+            run_arm = 'DD' if arm == 'DD-V1' else arm
             adir = run_root / arm.replace('+', '_')
             eng = jv.arm_engine_from_snapshot(
                 adir, server, RealClock(), snapshot,
@@ -235,8 +236,9 @@ def execute(approved, rehearse=False):
             rows, metering = __import__(
                 'deadline_reward_v1.supplementary_runner',
                 fromlist=['run_cell']).run_cell(
-                eng, server, state, tasks, PLANNED, arm, 'dev_fault30',
-                fault_uids, pred, comp, params_v1, adir)
+                eng, server, state, tasks, PLANNED, run_arm,
+                'dev_fault30', fault_uids, pred, comp, params_v1,
+                adir)
             # dual settlement
             from deadline_reward_v1 import detection as det
             from deadline_reward_v1.reward import realized_rtask

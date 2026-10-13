@@ -500,7 +500,7 @@ def run_cell(engine, server, state, tasks, planned, arm, condition,
         if not any(st.node_status[n] == dc.FAILED for n in dc.TOPO):
             continue                      # no failure -> no decision point
         cands = arm_entry.enumerate_for(state, uid, planned)
-        if arm.startswith('DD-V2') or arm in ('DD-Cal', 'DD-Cal+FB'):
+        if arm in ('DD-V2', 'DD-Cal', 'DD-Cal+FB', 'DD-V1'):
             # V2 arms (ruling eeed184): route through the REAL V2
             # decision entry; DD-V1 arms keep arm_entry untouched
             from deadline_reward_v1 import dd_v2
