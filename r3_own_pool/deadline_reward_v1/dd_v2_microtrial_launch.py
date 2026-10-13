@@ -245,9 +245,9 @@ def execute(approved, rehearse=False):
             for r in rows:
                 uid = r['uid']
                 val = det.json_value(state.tasks[uid].answers.get('v', ''))
+                task_here = next(t for t in tasks if t['uid'] == uid)
                 q = jv.terminal_q(val, gold_map[uid].get(
-                    'gold', dict((t for t in tasks
-                                  if t['uid'] == uid)).get('answer')))
+                    'gold', task_here.get('answer')))
                 st = state.tasks[uid]
                 if st.completion_time is None:
                     continue
