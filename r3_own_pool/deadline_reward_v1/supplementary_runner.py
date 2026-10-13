@@ -500,9 +500,19 @@ def run_cell(engine, server, state, tasks, planned, arm, condition,
         if not any(st.node_status[n] == dc.FAILED for n in dc.TOPO):
             continue                      # no failure -> no decision point
         cands = arm_entry.enumerate_for(state, uid, planned)
-        rec = arm_entry.decide_arm(
-            state, uid, cands, arm, planned, params, predictor, compensator,
-            lambda: engine.current_model)
+        if arm.startswith('DD-V2') or arm in ('DD-Cal', 'DD-Cal+FB'):
+            # V2 arms (ruling eeed184): route through the REAL V2
+            # decision entry; DD-V1 arms keep arm_entry untouched
+            from deadline_reward_v1 import dd_v2
+            soft = arm == 'DD-V2'
+            fb = arm in ('DD-Cal+FB', 'DD-V2')
+            rec = dd_v2.decide_arm_v2(
+                state, uid, cands, planned, soft=soft, fallback=fb,
+                engine_current_model=lambda: engine.current_model)
+        else:
+            rec = arm_entry.decide_arm(
+                state, uid, cands, arm, planned, params, predictor,
+                compensator, lambda: engine.current_model)
         # P0-B (operator ruling 2026-10-12): the COMPLETE decision-time
         # prediction snapshot is appended BEFORE any execution of this
         # task's plan — full per-candidate rows (q̂, ΔĈ, μ̂_E2E, P̂90,
@@ -538,7 +548,9 @@ def run_cell(engine, server, state, tasks, planned, arm, condition,
             state.release_reservations(uid)
             state.remaining_work_est.pop(uid, None)
         elif rec['chosen'] is not None:
-            if rec['mode'] == 'policy':
+            if rec['mode'] in ('policy', 'joint_selection',
+                               'joint_selection_soft',
+                               'static_fallback'):
                 state.reserve(uid, rec['chosen'].row['dcost'])
                 state.remaining_work_est[uid] = (
                     rec['chosen'].row['mu_e2e']

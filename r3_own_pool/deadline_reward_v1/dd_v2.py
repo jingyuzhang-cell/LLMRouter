@@ -279,7 +279,11 @@ def v2_score_and_pick(state, uid, cands, params, predictor, compensator,
             arm=cand.arm, pi=dict(cand.pi), q=comp['q'],
             q_lo=comp['lo'], q_hi=comp['hi'],
             unsupported=comp['unsupported'],
-            mu_own=round(mu + sw, 6), p_on_time=round(p_on, 6),
+            mu_own=round(mu + sw, 6),
+            mu_e2e=round(mu + sw, 6),   # alias for run_cell's
+            # remaining-work convention (decoupled = own-service E2E)
+            contention=0.0,
+            p_on_time=round(p_on, 6),
             dcost=cost, score=round(score, 8),
             soft_penalty=round(penalty, 8),
             eff_score=round(eff_score, 8),
@@ -304,21 +308,27 @@ def v2_score_and_pick(state, uid, cands, params, predictor, compensator,
     best = sorted(hard_ok, key=lambda c: (-c.row['eff_score'],
                                           c.row['dcost'],
                                           ARMS.index(c.arm)))[0]
-    if best.row['feasible']:
-        return best, scored, 'joint_selection'
-    # best is a soft-constraint winner: record WHY it beat the static
-    # fallback (its eff_score vs the fallback's), still honest
+    # identify the static SS-recipe candidate IN the pool (same
+    # legality/budget hard gates apply to it)
     fb = next((c for c in hard_ok if c.arm == 'LOCAL'
                and all(c.pi.get(n) == v for n, v in
                        state._panel_models.items() if n in c.pi)), None)
     if fb is not None:
         fb.row['fallback_candidate'] = True
-        if best.row['eff_score'] >= fb.row['eff_score']:
-            best.row['selected_over_fallback_margin'] = round(
-                best.row['eff_score'] - fb.row['eff_score'], 8)
-            return best, scored, 'joint_selection_soft'
+    # if the WINNER IS the static candidate itself -> static_fallback
+    # (the competition was uniform; the static recipe won on score)
+    if fb is not None and best is fb:
         fb.row['fallback'] = True
         return fb, scored, 'static_fallback'
+    if best.row['feasible']:
+        if fb is not None:
+            best.row['selected_over_fallback_margin'] = round(
+                best.row['eff_score'] - fb.row['eff_score'], 8)
+        return best, scored, 'joint_selection'
+    # soft-constraint winner distinct from the static candidate
+    if fb is not None:
+        best.row['selected_over_fallback_margin'] = round(
+            best.row['eff_score'] - fb.row['eff_score'], 8)
     return best, scored, 'joint_selection_soft'
 
 
