@@ -95,7 +95,7 @@ def load_env_creds():
     screening run used; holds the VALID deepseek/dashscope keys), then
     /root/.env as fallback, then process env. Values never logged."""
     env_vars = {}
-    for path in ('/root/.env', '/root/.env.modelpool'):
+    for path in ('/root/.env.modelpool', '/root/.env'):
         p = Path(path)
         if p.exists():
             for line in p.read_text().splitlines():
