@@ -1,0 +1,44 @@
+{
+ "version": "CONTRACT_FAULT_VALIDATION_v1",
+ "zero_model_calls": true,
+ "part1_classifier": {
+  "n_real_calls": 88,
+  "ground_truth": {
+   "D_CONTRACT": 15,
+   "D_CONTENT": 2,
+   "OK": 71
+  },
+  "confusion": {
+   "D_CONTRACT->D_CONTRACT": 15,
+   "D_CONTENT->D_CONTENT": 2,
+   "OK->OK": 71
+  },
+  "accuracy": 1.0,
+  "mishaps": []
+ },
+ "part2_scenarios": {
+  "S1_glm_ceiling_pin": {
+   "classified": "D_CONTRACT",
+   "decision": "PARAM_FIX",
+   "target": "GLM-5.3",
+   "pass_": true,
+   "expect": "D_CONTRACT -> PARAM_FIX on GLM-5.3 (not a switch that re-buys the failure)"
+  },
+  "S2_qwen_content": {
+   "classified": "D_CONTENT",
+   "decision": "MODEL_SWITCH",
+   "target": "GLM-5.3",
+   "pass_": true,
+   "expect": "D_CONTENT -> MODEL_SWITCH"
+  },
+  "S3_deepseek_empty": {
+   "classified": "D_CONTRACT",
+   "decision": "PARAM_FIX",
+   "param_fix_with_thinking_off": true,
+   "pass_": true,
+   "expect": "D_CONTRACT -> PARAM_FIX; thinking=disabled repair available"
+  },
+  "blind_switch_trap_visible": true
+ },
+ "all_pass": true
+}
