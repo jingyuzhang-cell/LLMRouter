@@ -1,0 +1,69 @@
+{
+ "version": "CAPITAL_EVENT_QUALITY_SCORED_v1",
+ "method": "silver_gold_fact_recall: parsed response text vs 10 auto-verified facts (date/amount/text substring matching)",
+ "note": "recall against SILVER gold (auto-verified, NOT human gold); a missing fact may mean the model failed to extract it OR the sample input did not contain that evidence document",
+ "matrix": {
+  "deepseek-flash|entity_relations": {
+   "recall": 0.06,
+   "found": 3,
+   "missed": 47
+  },
+  "deepseek-flash|timeline": {
+   "recall": 0.075,
+   "found": 3,
+   "missed": 37
+  },
+  "glm-5.3|crosssource_check": {
+   "recall": 0.1,
+   "found": 1,
+   "missed": 9
+  },
+  "glm-5.3|entity_relations": {
+   "recall": 0.1,
+   "found": 5,
+   "missed": 45
+  },
+  "glm-5.3|timeline": {
+   "recall": 0.08,
+   "found": 4,
+   "missed": 46
+  },
+  "glm-5.3-flash|entity_relations": {
+   "recall": 0.08,
+   "found": 4,
+   "missed": 46
+  },
+  "glm-5.3-flash|timeline": {
+   "recall": 0.08,
+   "found": 4,
+   "missed": 46
+  },
+  "qwen-plus|timeline": {
+   "recall": 0.075,
+   "found": 3,
+   "missed": 37
+  }
+ },
+ "model_recall": {
+  "glm-5.3": {
+   "found": 10,
+   "total": 110,
+   "recall": 0.0909
+  },
+  "glm-5.3-flash": {
+   "found": 8,
+   "total": 100,
+   "recall": 0.08
+  },
+  "deepseek-flash": {
+   "found": 6,
+   "total": 90,
+   "recall": 0.0667
+  },
+  "qwen-plus": {
+   "found": 3,
+   "total": 40,
+   "recall": 0.075
+  }
+ }
+}
