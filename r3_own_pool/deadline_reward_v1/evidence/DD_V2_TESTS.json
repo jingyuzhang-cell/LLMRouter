@@ -1,0 +1,45 @@
+{
+ "milestone": "dd_v2_zero_call",
+ "ruling": "operator authorization on 2fbe6f7",
+ "checks": {
+  "A_vcoder_measured": true,
+  "A_tokens_filled": true,
+  "C_supported_interval": true,
+  "C_unsupported_wide": true,
+  "E_locals_exist": true,
+  "B_p_on_not_all_zero": true,
+  "F_joint_selection_reached": true,
+  "E_v1_degrades_v2_does_not": true,
+  "D_mode_valid": true,
+  "D_fallback_is_local_planned": true,
+  "B_decoupled_under_load": true,
+  "D_v1_untouched": true
+ },
+ "ablation_ladder": [
+  {
+   "rung": "V2-full (measured priors + decoupled + soft + fallback)",
+   "n_candidates": 53,
+   "n_pass_filter": 0,
+   "mode": "static_fallback",
+   "chosen": [
+    "LOCAL",
+    {
+     "e2": "large",
+     "r": "medium",
+     "v": "coder"
+    }
+   ],
+   "p_on_max": 1.0
+  },
+  {
+   "rung": "V1 (stub priors + contention)",
+   "n_candidates": 53,
+   "n_pass_filter": 0,
+   "mode": "degraded",
+   "chosen": null,
+   "p_on_max": 0.0
+  }
+ ],
+ "zero_model_calls": true,
+ "all_pass": true
+}
