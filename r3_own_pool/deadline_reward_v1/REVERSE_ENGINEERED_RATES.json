@@ -1,0 +1,36 @@
+{
+ "version": "REVERSE_ENGINEERED_RATES_v1",
+ "source": "screening_full80_ledger.jsonl (68 real cloud calls)",
+ "rates": {
+  "deepseek-flash": {
+   "input_usd_per_mtok": 2.13,
+   "output_usd_per_mtok": 8.52,
+   "input_cny_per_mtok_approx": 15.3,
+   "output_cny_per_mtok_approx": 61.3,
+   "r_squared": 1.0,
+   "n_calls": 17,
+   "method": "least-squares from per-call tokens + cost_cash"
+  },
+  "qwen-plus": {
+   "input_usd_per_mtok": 0.8,
+   "output_usd_per_mtok": 2.0,
+   "input_cny_per_mtok_approx": 5.8,
+   "output_cny_per_mtok_approx": 14.4,
+   "r_squared": 1.0,
+   "n_calls": 17,
+   "method": "least-squares from per-call tokens + cost_cash"
+  },
+  "glm-5.3": {
+   "billing": "subscription_covered",
+   "cash_per_call": 0.0,
+   "note": "zero incremental cash != zero cost; normalized units required"
+  },
+  "glm-5.3-flash": {
+   "billing": "subscription_covered",
+   "cash_per_call": 0.0,
+   "note": "zero incremental cash != zero cost; normalized units required"
+  }
+ },
+ "usd_cny_rate_assumed": 7.2,
+ "note": "R2=1.0000 for both priced models \u2014 rates are EXACT (the cost field was computed from these rates). The inferred rates ARE the platform billing rates."
+}
