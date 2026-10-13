@@ -72,3 +72,14 @@
 3. 计费读 JSON 文件（修复 `import rates` 错误）；
 4. fail-stop：首个意外错误立即停止并写 INCOMPLETE，不再续跑；
 5. model_id 修正：`deepseek-flash`（历史台账实证，费率反推绑定），弃用 `deepseek-chat`。
+
+---
+
+## 更正（2026-10-13 裁决追加）：D 节"思考 token 耗尽"表述收紧
+
+DeepSeek 官方文档确认 deepseek-flash 默认启用 thinking 且可关闭——DS 侧证据较强。
+GLM-5.3/Flash 侧：本分析只能证明"思考+输出合计撞满 2048 预算"（3 条空响应 + 7 条
+中途截断 + 延迟特征），**不能证明 GLM 的思考量不可调**——GLM 合法通道是
+reasoning_effort（low/high/max），其降低后的修复效果未观测（阶段四细胞 1-6 检验）。
+准确结论：三组配置一致的预算耗尽指向参数配置这一共同原因；修复有效性待同模型
+参数对照。

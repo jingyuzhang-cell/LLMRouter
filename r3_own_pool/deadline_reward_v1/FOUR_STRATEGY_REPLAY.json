@@ -1,0 +1,297 @@
+{
+ "version": "FOUR_STRATEGY_REPLAY_v1",
+ "zero_model_calls": true,
+ "fairness": {
+  "shared_pool": [
+   "GLM-5.3",
+   "GLM-5.3-Flash",
+   "deepseek-flash",
+   "qwen-plus"
+  ],
+  "shared_theta_table": "theta_actions.MODEL_THETA_SUPPORT",
+  "shared_budget": true,
+  "shared_scorer": true,
+  "fixed_rule": {
+   "retry_theta": "first_legal_repair",
+   "fallback_switch": "qwen-plus"
+  },
+  "ss_tuned_theta": {
+   "GLM-5.3": {
+    "reasoning_effort": "low",
+    "thinking": null,
+    "max_tokens": 8192,
+    "response_format": null
+   },
+   "GLM-5.3-Flash": {
+    "reasoning_effort": "low",
+    "thinking": null,
+    "max_tokens": 8192,
+    "response_format": null
+   },
+   "deepseek-flash": {
+    "reasoning_effort": null,
+    "thinking": "disabled",
+    "max_tokens": 2048,
+    "response_format": null
+   },
+   "qwen-plus": {
+    "reasoning_effort": null,
+    "thinking": null,
+    "max_tokens": 2048,
+    "response_format": null
+   }
+  },
+  "planned_model": "GLM-5.3"
+ },
+ "samples": [
+  {
+   "sample": "FE1",
+   "SS-Original": {
+    "quality": 0.0,
+    "credit": "observed format=0.0 recall=None",
+    "outcome": "OBSERVED",
+    "action": [
+     "GLM-5.3",
+     "default"
+    ],
+    "rule": ""
+   },
+   "SS-Tuned": {
+    "quality": 0.0,
+    "credit": "none/unobserved-proposal",
+    "outcome": "UNOBSERVED",
+    "action": [
+     "GLM-5.3",
+     "SS_TUNED"
+    ],
+    "rule": ""
+   },
+   "Fixed-Recovery": {
+    "quality": 0.0,
+    "credit": "observed format=1.0 recall=None",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "FIXED:fallback"
+    ],
+    "rule": "pre-committed rule #2"
+   },
+   "DD-Enhanced": {
+    "quality": 0.0,
+    "credit": "observed format=1.0 recall=None",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+    ],
+    "rule": "fault=F_TRUNCATED; argmax util=0.07447"
+   }
+  },
+  {
+   "sample": "FE2",
+   "SS-Original": {
+    "quality": 0.0,
+    "credit": "observed format=0.0 recall=None",
+    "outcome": "OBSERVED",
+    "action": [
+     "GLM-5.3",
+     "default"
+    ],
+    "rule": ""
+   },
+   "SS-Tuned": {
+    "quality": 0.0,
+    "credit": "none/unobserved-proposal",
+    "outcome": "UNOBSERVED",
+    "action": [
+     "GLM-5.3",
+     "SS_TUNED"
+    ],
+    "rule": ""
+   },
+   "Fixed-Recovery": {
+    "quality": 0.0,
+    "credit": "observed format=1.0 recall=None",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "FIXED:fallback"
+    ],
+    "rule": "pre-committed rule #2"
+   },
+   "DD-Enhanced": {
+    "quality": 0.0,
+    "credit": "observed format=1.0 recall=None",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+    ],
+    "rule": "fault=F_TRUNCATED; argmax util=0.08436"
+   }
+  },
+  {
+   "sample": "FE3",
+   "SS-Original": {
+    "quality": 0.0,
+    "credit": "observed format=0.0 recall=0.4117647058823529",
+    "outcome": "OBSERVED",
+    "action": [
+     "GLM-5.3",
+     "default"
+    ],
+    "rule": ""
+   },
+   "SS-Tuned": {
+    "quality": 0.0,
+    "credit": "none/unobserved-proposal",
+    "outcome": "UNOBSERVED",
+    "action": [
+     "GLM-5.3",
+     "SS_TUNED"
+    ],
+    "rule": ""
+   },
+   "Fixed-Recovery": {
+    "quality": 0.3529,
+    "credit": "observed format=1.0 recall=0.35294117647058826",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "FIXED:fallback"
+    ],
+    "rule": "pre-committed rule #2"
+   },
+   "DD-Enhanced": {
+    "quality": 0.3529,
+    "credit": "observed format=1.0 recall=0.35294117647058826",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+    ],
+    "rule": "fault=F_TRUNCATED; argmax util=0.4073"
+   }
+  },
+  {
+   "sample": "FE4",
+   "SS-Original": {
+    "quality": 0.0,
+    "credit": "observed format=0.0 recall=0.5",
+    "outcome": "OBSERVED",
+    "action": [
+     "GLM-5.3",
+     "default"
+    ],
+    "rule": ""
+   },
+   "SS-Tuned": {
+    "quality": 0.0,
+    "credit": "none/unobserved-proposal",
+    "outcome": "UNOBSERVED",
+    "action": [
+     "GLM-5.3",
+     "SS_TUNED"
+    ],
+    "rule": ""
+   },
+   "Fixed-Recovery": {
+    "quality": 0.5,
+    "credit": "observed format=1.0 recall=0.5",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "FIXED:fallback"
+    ],
+    "rule": "pre-committed rule #2"
+   },
+   "DD-Enhanced": {
+    "quality": 0.5,
+    "credit": "observed format=1.0 recall=0.5",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+    ],
+    "rule": "fault=F_TRUNCATED; argmax util=0.51704"
+   }
+  },
+  {
+   "sample": "FE5",
+   "SS-Original": {
+    "quality": 0.0,
+    "credit": "observed format=0.0 recall=1.0",
+    "outcome": "OBSERVED",
+    "action": [
+     "GLM-5.3",
+     "default"
+    ],
+    "rule": ""
+   },
+   "SS-Tuned": {
+    "quality": 0.0,
+    "credit": "none/unobserved-proposal",
+    "outcome": "UNOBSERVED",
+    "action": [
+     "GLM-5.3",
+     "SS_TUNED"
+    ],
+    "rule": ""
+   },
+   "Fixed-Recovery": {
+    "quality": 1.0,
+    "credit": "observed format=1.0 recall=1.0",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "FIXED:fallback"
+    ],
+    "rule": "pre-committed rule #2"
+   },
+   "DD-Enhanced": {
+    "quality": 1.0,
+    "credit": "observed format=1.0 recall=1.0",
+    "outcome": "OBSERVED",
+    "action": [
+     "qwen-plus",
+     "{\"max_tokens\": 2048, \"reasoning_effort\": null, \"response_format\": null, \"thinking\": null}"
+    ],
+    "rule": "fault=F_TRUNCATED; argmax util=1.04709"
+   }
+  }
+ ],
+ "summaries": {
+  "SS-Original": {
+   "total_quality": 0.0,
+   "attempts": 5,
+   "tokens": 26821,
+   "cash_cny": 0.0,
+   "unobserved_actions": 0,
+   "audit_entries": 5
+  },
+  "SS-Tuned": {
+   "total_quality": 0.0,
+   "attempts": 5,
+   "tokens": 53987,
+   "cash_cny": 0.0,
+   "unobserved_actions": 5,
+   "audit_entries": 5
+  },
+  "Fixed-Recovery": {
+   "total_quality": 1.8529,
+   "attempts": 15,
+   "tokens": 72352,
+   "cash_cny": 0.022538,
+   "unobserved_actions": 5,
+   "audit_entries": 15
+  },
+  "DD-Enhanced": {
+   "total_quality": 1.8529,
+   "attempts": 10,
+   "tokens": 49085,
+   "cash_cny": 0.022538,
+   "unobserved_actions": 0,
+   "audit_entries": 60
+  }
+ }
+}

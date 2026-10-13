@@ -1,0 +1,85 @@
+{
+ "version": "PARAM_RECOVERY_FREEZE_v1",
+ "status": "NO_GO awaiting operator paid authorization",
+ "samples": [
+  "FE3",
+  "FE4"
+ ],
+ "rationale": "FE3/FE4 have evaluable Silver sets (17/4); extreme budget pressure",
+ "cells": [
+  {
+   "model": "GLM-5.3",
+   "theta": {
+    "reasoning_effort": "low",
+    "max_tokens": 2048
+   },
+   "samples": [
+    "FE3",
+    "FE4"
+   ],
+   "hypothesis": "intensity alone"
+  },
+  {
+   "model": "GLM-5.3",
+   "theta": {
+    "reasoning_effort": "low",
+    "max_tokens": 8192
+   },
+   "samples": [
+    "FE3",
+    "FE4"
+   ],
+   "hypothesis": "intensity+budget"
+  },
+  {
+   "model": "GLM-5.3-Flash",
+   "theta": {
+    "reasoning_effort": "low",
+    "max_tokens": 8192
+   },
+   "samples": [
+    "FE3",
+    "FE4"
+   ],
+   "hypothesis": "family replication"
+  },
+  {
+   "model": "deepseek-flash",
+   "theta": {
+    "thinking": "disabled",
+    "max_tokens": 2048
+   },
+   "samples": [
+    "FE3",
+    "FE4"
+   ],
+   "hypothesis": "thinking channel"
+  }
+ ],
+ "n_calls": 8,
+ "caps": {
+  "attempts": 8,
+  "tokens": 120000,
+  "cash_cny": 0.5,
+  "wall_s": 900
+ },
+ "worst_case": {
+  "tokens_in": 39216,
+  "tokens_out_reserved": 53248,
+  "cash_cny": 0.056
+ },
+ "success_criteria": {
+  "format": "strict JSON + non-empty + (stop | completion<0.98*cap)",
+  "quality": "Silver recall must EXCEED truncated-text diagnostic lower bounds (GLM53: FE3 41.2%/FE4 50.0%); format-only pass without recall gain = NO quality credit",
+  "refuted": "cell still ceiling-pinned or invalid -> theta repair REFUTED, negative result enters mechanism registry"
+ },
+ "pairing": "prompt SHA256 asserted equal to original FE ledger per sample",
+ "executor_requirements": [
+  "fail-stop first error",
+  ".env.modelpool credentials first",
+  "full per-cell audit",
+  "reasoning_effort param acceptance verified as part of cell 1"
+ ],
+ "post_analysis": "feed observations into ReplayWorld -> four-strategy re-replay (zero calls)",
+ "optional_phase4b": "citation-contract repair: qwen x FE3/FE4 with doc_id in prompt (separate authorization)"
+}

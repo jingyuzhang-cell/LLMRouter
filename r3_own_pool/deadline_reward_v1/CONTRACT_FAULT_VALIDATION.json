@@ -1,44 +1,120 @@
 {
- "version": "CONTRACT_FAULT_VALIDATION_v1",
+ "version": "CONTRACT_FAULT_VALIDATION_v2",
  "zero_model_calls": true,
- "part1_classifier": {
-  "n_real_calls": 88,
-  "ground_truth": {
-   "D_CONTRACT": 15,
-   "D_CONTENT": 2,
-   "OK": 71
-  },
-  "confusion": {
-   "D_CONTRACT->D_CONTRACT": 15,
-   "D_CONTENT->D_CONTENT": 2,
-   "OK->OK": 71
-  },
+ "part1_classification": {
+  "n_real_records": 100,
   "accuracy": 1.0,
+  "truth_counts": {
+   "F_PRE_DISPATCH": 12,
+   "F_TRUNCATED": 15,
+   "F_EVIDENCE_CITATION": 5,
+   "OK": 66,
+   "F_JSON_INVALID": 2
+  },
+  "citation_causes": {
+   "contract_unverifiable": 5
+  },
   "mishaps": []
  },
- "part2_scenarios": {
-  "S1_glm_ceiling_pin": {
-   "classified": "D_CONTRACT",
-   "decision": "PARAM_FIX",
-   "target": "GLM-5.3",
-   "pass_": true,
-   "expect": "D_CONTRACT -> PARAM_FIX on GLM-5.3 (not a switch that re-buys the failure)"
+ "part2_legality": {
+  "glm_never_thinking_disabled": true,
+  "all_enumerated_legal": true,
+  "ss_tuned_legal": true,
+  "repairs_model_appropriate": true
+ },
+ "part3_honesty": {
+  "unobserved_quality_credit_violations": 0,
+  "ss_original_replays_real_failures": true,
+  "dd_leq_fixed_attempts": true,
+  "dd_quality_ge_fixed": true
+ },
+ "part3_replay_summaries": {
+  "SS-Original": {
+   "total_quality": 0.0,
+   "attempts": 5,
+   "tokens": 26821,
+   "cash_cny": 0.0,
+   "unobserved_actions": 0,
+   "audit_entries": 5
   },
-  "S2_qwen_content": {
-   "classified": "D_CONTENT",
+  "SS-Tuned": {
+   "total_quality": 0.0,
+   "attempts": 5,
+   "tokens": 53987,
+   "cash_cny": 0.0,
+   "unobserved_actions": 5,
+   "audit_entries": 5
+  },
+  "Fixed-Recovery": {
+   "total_quality": 1.8529,
+   "attempts": 15,
+   "tokens": 72352,
+   "cash_cny": 0.022538,
+   "unobserved_actions": 5,
+   "audit_entries": 15
+  },
+  "DD-Enhanced": {
+   "total_quality": 1.8529,
+   "attempts": 10,
+   "tokens": 49085,
+   "cash_cny": 0.022538,
+   "unobserved_actions": 0,
+   "audit_entries": 60
+  }
+ },
+ "part4_scenarios": {
+  "S1": {
+   "expect": "F_TRUNCATED -> PARAM_FIX (reasoning_effort=low, no thinking key)",
+   "classified": "F_TRUNCATED",
+   "decision": {
+    "action": "PARAM_FIX",
+    "model_id": "GLM-5.3",
+    "theta": {
+     "reasoning_effort": "low",
+     "thinking": null,
+     "max_tokens": 2048,
+     "response_format": null
+    },
+    "rationale": "reasoning_effort=low",
+    "observed": false,
+    "changes_capability": false
+   },
+   "pass_": true
+  },
+  "S2": {
+   "expect": "F_JSON_INVALID -> MODEL_SWITCH",
+   "classified": "F_JSON_INVALID",
    "decision": "MODEL_SWITCH",
-   "target": "GLM-5.3",
-   "pass_": true,
-   "expect": "D_CONTENT -> MODEL_SWITCH"
+   "pass_": true
   },
-  "S3_deepseek_empty": {
-   "classified": "D_CONTRACT",
-   "decision": "PARAM_FIX",
-   "param_fix_with_thinking_off": true,
-   "pass_": true,
-   "expect": "D_CONTRACT -> PARAM_FIX; thinking=disabled repair available"
+  "S3": {
+   "expect": "F_TRUNCATED -> PARAM_FIX thinking=disabled",
+   "classified": "F_TRUNCATED",
+   "decision": {
+    "action": "PARAM_FIX",
+    "model_id": "deepseek-flash",
+    "theta": {
+     "reasoning_effort": null,
+     "thinking": "disabled",
+     "max_tokens": 2048,
+     "response_format": null
+    },
+    "rationale": "thinking=disabled",
+    "observed": true,
+    "changes_capability": true
+   },
+   "pass_": true
   },
-  "blind_switch_trap_visible": true
+  "S4": {
+   "expect": "F_CITATION contract_unverifiable -> PROMPT_CONTRACT_REPAIR (not a model action)",
+   "classified": "F_EVIDENCE_CITATION",
+   "cause": "contract_unverifiable",
+   "decision": {
+    "action": "PROMPT_CONTRACT_REPAIR",
+    "rationale": "citation fault: fix the prompt/contract (state the doc_id), not the model"
+   },
+   "pass_": true
+  }
  },
  "all_pass": true
 }

@@ -1,41 +1,59 @@
-"""Zero-call validation of the D-contract fault module.
+"""Zero-call validation v2 of the fault-aware recovery package.
 
-Part 1 — classifier accuracy over 88 REAL calls:
-  - FE original run (10 GLM: ground truth D_CONTRACT x10, via the
-    ceiling-pin signature — finish_reason was not recorded there)
-  - FE recovery run (5 deepseek-flash length-cut + empty: D_CONTRACT x5;
-    5 qwen-plus stop + valid JSON: OK x5)
-  - historical screening_full80_ledger (68 calls, all natural stop,
-    truncated=False: OK x66, D_CONTENT x2 — the two json_valid=false
-    with low completion are content faults, NOT contract faults)
+V1 validated the family classifier over 88 delivered calls. V2 adds
+the operator's 2026-10-13 ruling requirements:
 
-Part 2 — decision-rule stub scenarios (no transport, no calls):
-  S1: GLM-5.3 call under a 2048 JSON contract fails with completion
-      2048/2048 -> classifier says D_CONTRACT -> choose_recovery must
-      pick PARAM_FIX on GLM-5.3 (NOT a switch to deepseek-flash).
-  S2: qwen-plus call returns natural-stop garbage -> D_CONTENT ->
-      must pick MODEL_SWITCH (param repair must not lead).
-  S3: deepseek-flash length-cut empty -> D_CONTRACT -> PARAM_FIX with
-      thinking=disabled available (historical compatibility evidence).
+  Part 1 — six-type classification over 100 REAL records:
+    FE original (10 GLM delivered + 10 DS/Qwen ERROR pre-dispatch)
+    FE recovery (5 deepseek length-cut + 5 qwen citation faults)
+    two 401 fail-stop aborts (pre-dispatch credential)
+    historical screening (66 OK + 2 F_JSON_INVALID)
+    Ground truth from the paired analyses and audit trail.
+
+  Part 2 — theta-legality gate: for every menu model, every emitted
+    action is legal; GLM models NEVER receive thinking=disabled;
+    SS-Tuned theta is legal; repairs are model-appropriate.
+
+  Part 3 — honesty gate: every UNOBSERVED outcome carries zero
+    quality credit in the four-strategy replay; observed recalls are
+    only from real measurements; SS-Original replays real failures.
+
+  Part 4 — decision scenarios (v1 rule, now over fine types):
+    S1 GLM ceiling-pin -> F_TRUNCATED -> PARAM_FIX (legal theta)
+    S2 qwen natural-stop garbage -> F_JSON_INVALID -> MODEL_SWITCH
+    S3 deepseek empty length-cut -> F_TRUNCATED -> PARAM_FIX
+       (thinking=disabled legal for DS)
+    S4 qwen valid JSON, citations outside set, ids absent from prompt
+       -> F_CITATION cause=contract_unverifiable -> PROMPT repair,
+       NOT a model action.
 
 Run: python3 -m deadline_reward_v1.contract_fault_validation
 """
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
 from deadline_reward_v1.contract_fault import (
-    D_CONTRACT, D_CONTENT, OK, classify_call, choose_recovery,
-    parse_strict_json, enumerate_recovery_actions)
+    D_CONTRACT, D_CONTENT, F_CITATION, F_EMPTY, F_JSON,
+    F_PRE_DISPATCH, F_TRUNCATED, F_UNAVAILABLE, OK, classify_entry,
+    choose_recovery, enumerate_recovery_actions)
+from deadline_reward_v1.theta_actions import (
+    MODEL_THETA_SUPPORT, enumerate_legal_thetas, theta_legal)
+from deadline_reward_v1 import recovery_strategies as rs
 
 HERE = Path(__file__).resolve().parent
-PILOT = Path('/root/capital_opinion_pilot')
-
 FE_ORIG = HERE / 'fe_screening_runs' / 'fe_20261013_211741' / 'FE_LEDGER.jsonl'
 FE_REC = sorted((HERE / 'fe_screening_runs').glob(
     'fe_recovery_*/FE_LEDGER.jsonl'))[-1]
-HIST = PILOT / 'screening_full80_ledger.jsonl'
+HIST = Path('/root/capital_opinion_pilot/screening_full80_ledger.jsonl')
+ABORTS = sorted((HERE / 'fe_screening_runs').glob(
+    'fe_recovery_*/FE_INCOMPLETE.json'))
+SAMPLES = {s['sample_id']: s
+           for s in json.loads(
+               (HERE / 'FACT_EXTRACTION_SAMPLES_V2.json').read_text())
+           ['samples']}
 
 
 def load(path):
@@ -44,146 +62,203 @@ def load(path):
 
 
 def main():
-    # ---- Part 1: classifier vs real-call ground truth ----
-    rows = []
-    gt = []
+    rows = []  # (name, classified, truth)
 
+    # --- FE original: 10 GLM delivered (truth F_TRUNCATED),
+    #     10 DS/Qwen ERROR (truth F_PRE_DISPATCH: ModuleNotFoundError)
     for e in load(FE_ORIG):
-        if e['status'] != 'delivered':
-            continue
-        c = classify_call(
-            answer=e['answer'], finish_reason=None,
-            completion_tokens=e['usage']['completion_tokens'],
-            max_output_tokens=e['max_output_tokens'])
-        rows.append((f"FE/{e['sample_id']}/{e['model_id']}", c, D_CONTRACT))
-        gt.append(D_CONTRACT)
+        if e['status'] == 'delivered':
+            truth = F_TRUNCATED
+            c = classify_entry(e)
+        else:
+            truth = F_PRE_DISPATCH
+            c = classify_entry(e)
+        rows.append((f"FE/{e['sample_id']}/{e['model_key']}", c, truth))
 
-    rec = load(FE_REC)
-    for e in rec:
-        c = classify_call(
-            answer=e['answer'], finish_reason=e['finish_reason'],
-            completion_tokens=e['usage']['completion_tokens'],
-            max_output_tokens=e['max_output_tokens'])
-        truth = D_CONTRACT if e['model_key'] == 'deepseek' else OK
-        rows.append((f"REC/{e['sample_id']}/{e['model_id']}", c, truth))
-        gt.append(truth)
+    # --- FE recovery: deepseek -> F_TRUNCATED; qwen -> F_CITATION
+    #     (contract_unverifiable: ledger doc ids never in prompt)
+    for e in load(FE_REC):
+        s = SAMPLES[e['sample_id']]
+        truth = F_TRUNCATED if e['model_key'] == 'deepseek' \
+            else F_CITATION
+        c = classify_entry(
+            e, expected_doc_ids=[s['evidence_doc_id']],
+            prompt_text=s['evidence_full_text'])
+        rows.append((f"REC/{e['sample_id']}/{e['model_key']}", c, truth))
 
+    # --- 401 fail-stop aborts (pre-dispatch credential)
+    for path in ABORTS:
+        d = json.loads(path.read_text())
+        entry = dict(status='ERROR', error=d.get('reason', ''))
+        rows.append((f"ABORT/{path.parent.name}",
+                     classify_entry(entry), F_PRE_DISPATCH))
+
+    # --- historical: 66 OK + 2 F_JSON_INVALID (format-level;
+    #     citation not evaluable — no answer text stored)
     for e in load(HIST):
-        c = classify_call(
-            parse_ok=bool(e['json_valid']),
-            finish_reason=e['stop_reason'],
-            completion_tokens=e['completion_tokens'],
-            max_output_tokens=2048)  # execute_screening_80 output_cap
-        truth = D_CONTENT if not e['json_valid'] else OK
+        truth = OK if e['json_valid'] else F_JSON
+        c = classify_entry(
+            dict(status='delivered', answer=None,
+                 finish_reason=e['stop_reason'],
+                 usage=dict(completion_tokens=e['completion_tokens']),
+                 max_output_tokens=2048),
+            parse_ok=bool(e['json_valid']))
         rows.append((f"HIST/{e['sample_id']}/{e['model_id']}", c, truth))
-        gt.append(truth)
 
-    confusion = {(a, b): 0 for a in (D_CONTRACT, D_CONTENT, OK)
-                 for b in (D_CONTRACT, D_CONTENT, OK)}
-    for name, c, truth in rows:
-        confusion[(truth, c['fault'])] += 1
-    acc = sum(confusion[(t, t)] for t in (D_CONTRACT, D_CONTENT, OK)) \
-        / len(rows)
-    mishaps = [(n, c['fault'], t) for n, c, t in rows
-               if c['fault'] != t]
+    # Part 1 report
+    n = len(rows)
+    mishaps = [(nm, c['fault'], t) for nm, c, t in rows if c['fault'] != t]
+    acc = 1 - len(mishaps) / n
+    counts = Counter(t for _, _, t in rows)
+    cit_causes = Counter(
+        c['citation']['cause'] for _, c, _ in rows
+        if c['fault'] == F_CITATION and c['citation'])
 
-    # ---- Part 2: decision-rule scenarios ----
-    menu = ['GLM-5.3', 'GLM-5.3-Flash', 'deepseek-flash', 'qwen-plus']
+    # Part 2 — legality gate
+    legality = dict(
+        glm_never_thinking_disabled=True,
+        all_enumerated_legal=True,
+        ss_tuned_legal=True,
+        repairs_model_appropriate=True)
+    for model in rs.MODEL_MENU:
+        for a in enumerate_legal_thetas(model):
+            ok, why = theta_legal(model, a['theta'])
+            if not ok:
+                legality['all_enumerated_legal'] = False
+            if model.startswith('GLM') and (
+                    a['theta'].get('thinking') == 'disabled'):
+                legality['glm_never_thinking_disabled'] = False
+        # strategy-level action space (includes switches)
+        for act in enumerate_recovery_actions(model, rs.MODEL_MENU):
+            ok, why = theta_legal(act['model_id'], act['theta'])
+            if not ok:
+                legality['all_enumerated_legal'] = False
+            if act['model_id'].startswith('GLM') and act['theta'].get(
+                    'thinking') == 'disabled':
+                legality['glm_never_thinking_disabled'] = False
+        # deepseek repair must include thinking=disabled (its legal
+        # intensity control); GLM repair must use reasoning_effort
+        reps = [a['repair'] for a in enumerate_legal_thetas(model)]
+        if model == 'deepseek-flash' and not any(
+                'thinking=disabled' in r for r in reps):
+            legality['repairs_model_appropriate'] = False
+        if model.startswith('GLM') and not any(
+                'reasoning_effort' in r for r in reps):
+            legality['repairs_model_appropriate'] = False
+    for model, th in rs.SS_TUNED_THETA.items():
+        ok, _ = theta_legal(model, th)
+        if not ok:
+            legality['ss_tuned_legal'] = False
 
-    # S1: GLM ceiling-pinned parse failure (exact FE observation shape)
-    s1_obs = dict(answer='{"facts": [{"fact": "2026年5月8日',  # truncated
-                  finish_reason=None, completion_tokens=2048,
-                  max_output_tokens=2048)
-    s1_cls = classify_call(**s1_obs)
-    s1_dec = choose_recovery(s1_cls['fault'], 'GLM-5.3', menu)
-    s1_pass = (s1_cls['fault'] == D_CONTRACT
-               and s1_dec['action']['action'] == 'PARAM_FIX'
-               and s1_dec['action']['model_id'] == 'GLM-5.3')
+    # Part 3 — honesty gate over the four-strategy replay
+    rep = rs.run_all()
+    unobserved_credit = [r for r in rep['samples']
+                         for k in ('SS-Original', 'SS-Tuned',
+                                   'Fixed-Recovery', 'DD-Enhanced')
+                         if r[k]['outcome'] == 'UNOBSERVED'
+                         and r[k]['quality'] > 0]
+    ss_orig_all_fail = all(
+        r['SS-Original']['quality'] == 0.0 for r in rep['samples'])
+    honesty = dict(
+        unobserved_quality_credit_violations=len(unobserved_credit),
+        ss_original_replays_real_failures=ss_orig_all_fail,
+        dd_leq_fixed_attempts=rep['summaries']['DD-Enhanced'][
+            'attempts'] <= rep['summaries']['Fixed-Recovery']['attempts'],
+        dd_quality_ge_fixed=(
+            rep['summaries']['DD-Enhanced']['total_quality']
+            >= rep['summaries']['Fixed-Recovery']['total_quality'] - 1e-9))
 
-    # S2: qwen natural-stop garbage (TL5 historical shape)
-    s2_obs = dict(answer='抱歉，我无法完成该任务。',
-                  finish_reason='stop', completion_tokens=118,
-                  max_output_tokens=2048)
-    s2_cls = classify_call(**s2_obs)
-    s2_dec = choose_recovery(s2_cls['fault'], 'qwen-plus', menu)
-    s2_pass = (s2_cls['fault'] == D_CONTENT
-               and s2_dec['action']['action'] == 'MODEL_SWITCH')
+    # Part 4 — decision scenarios
+    menu = rs.MODEL_MENU
+    s1 = classify_entry(dict(
+        status='delivered', answer='{"facts": [{"fact": "x',
+        finish_reason=None,
+        usage=dict(completion_tokens=2048),
+        max_output_tokens=2048))
+    s1d = choose_recovery(s1['fault'], 'GLM-5.3', menu)
+    s1_pass = (s1['fault'] == F_TRUNCATED
+               and s1d['action']['action'] == 'PARAM_FIX'
+               and s1d['action']['theta'].get('reasoning_effort') == 'low'
+               and s1d['action']['theta'].get('thinking') is None)
 
-    # S3: deepseek length-cut empty (exact FE recovery observation)
-    s3_obs = dict(answer='', finish_reason='length',
-                  completion_tokens=2048, max_output_tokens=2048)
-    s3_cls = classify_call(**s3_obs)
-    s3_dec = choose_recovery(s3_cls['fault'], 'deepseek-flash', menu)
-    s3_actions = enumerate_recovery_actions('deepseek-flash', menu)
-    s3_has_thinking_off = any(
-        a['thinking'] == 'disabled' for a in s3_actions
-        if a['action'] == 'PARAM_FIX')
-    s3_pass = (s3_cls['fault'] == D_CONTRACT
-               and s3_dec['action']['action'] == 'PARAM_FIX'
-               and s3_has_thinking_off)
+    s2 = classify_entry(dict(
+        status='delivered', answer='抱歉，无法完成。',
+        finish_reason='stop', usage=dict(completion_tokens=118),
+        max_output_tokens=2048))
+    s2d = choose_recovery(s2['fault'], 'qwen-plus', menu)
+    s2_pass = (s2['fault'] == F_JSON
+               and s2d['action']['action'] == 'MODEL_SWITCH')
 
-    # structural: blind-switch trap is visible in the action list
-    # (switching GLM->deepseek-flash offers ONLY a combined repair,
-    # because the target is thinking-default)
-    glm_switch = [a for a in enumerate_recovery_actions('GLM-5.3', menu)
-                  if a['model_id'] == 'deepseek-flash']
-    trap_visible = (len(glm_switch) == 2
-                    and glm_switch[0]['action'] == 'MODEL_SWITCH'
-                    and glm_switch[0].get('contract_pass_prior') == 0.0
-                    and glm_switch[1]['action'] == 'MODEL_SWITCH_PARAMS')
+    s3 = classify_entry(dict(
+        status='delivered', answer='', finish_reason='length',
+        usage=dict(completion_tokens=2048),
+        max_output_tokens=2048))
+    s3d = choose_recovery(s3['fault'], 'deepseek-flash', menu)
+    s3_pass = (s3['fault'] == F_TRUNCATED
+               and s3d['action']['action'] == 'PARAM_FIX'
+               and s3d['action']['theta'].get('thinking') == 'disabled')
+
+    s4 = classify_entry(
+        dict(status='delivered',
+             answer=json.dumps([dict(fact='x', evidence_doc_id='2026-088')]),
+             finish_reason='stop', usage=dict(completion_tokens=300),
+             max_output_tokens=2048),
+        expected_doc_ids=['D3_E03-yuandao_2026-08-29'],
+        prompt_text='证券代码：301139 公告编号：2026-088 ...')
+    s4d = choose_recovery(s4['fault'], 'qwen-plus', menu)
+    s4_pass = (s4['fault'] == F_CITATION
+               and s4['citation']['cause'] == 'contract_unverifiable'
+               and s4d['action']['action'] == 'PROMPT_CONTRACT_REPAIR')
 
     report = dict(
-        version='CONTRACT_FAULT_VALIDATION_v1',
+        version='CONTRACT_FAULT_VALIDATION_v2',
         zero_model_calls=True,
-        part1_classifier=dict(
-            n_real_calls=len(rows),
-            ground_truth={D_CONTRACT: gt.count(D_CONTRACT),
-                          D_CONTENT: gt.count(D_CONTENT),
-                          OK: gt.count(OK)},
-            confusion={f'{t}->{p}': n for (t, p), n in confusion.items()
-                       if n},
-            accuracy=round(acc, 4),
-            mishaps=[dict(call=n, predicted=p, truth=t)
-                     for n, p, t in mishaps]),
-        part2_scenarios=dict(
-            S1_glm_ceiling_pin=dict(
-                classified=s1_cls['fault'],
-                decision=s1_dec['action']['action'],
-                target=s1_dec['action']['model_id'],
-                pass_=s1_pass,
-                expect='D_CONTRACT -> PARAM_FIX on GLM-5.3 (not a '
-                       'switch that re-buys the failure)'),
-            S2_qwen_content=dict(
-                classified=s2_cls['fault'],
-                decision=s2_dec['action']['action'],
-                target=s2_dec['action']['model_id'],
-                pass_=s2_pass,
-                expect='D_CONTENT -> MODEL_SWITCH'),
-            S3_deepseek_empty=dict(
-                classified=s3_cls['fault'],
-                decision=s3_dec['action']['action'],
-                param_fix_with_thinking_off=s3_has_thinking_off,
-                pass_=s3_pass,
-                expect='D_CONTRACT -> PARAM_FIX; thinking=disabled '
-                       'repair available'),
-            blind_switch_trap_visible=trap_visible),
-        all_pass=bool(acc == 1.0 and s1_pass and s2_pass and s3_pass
-                      and trap_visible))
+        part1_classification=dict(
+            n_real_records=n, accuracy=round(acc, 4),
+            truth_counts=dict(counts),
+            citation_causes=dict(cit_causes),
+            mishaps=[dict(call=nm, predicted=p, truth=t)
+                     for nm, p, t in mishaps]),
+        part2_legality=legality,
+        part3_honesty=honesty,
+        part3_replay_summaries=rep['summaries'],
+        part4_scenarios=dict(
+            S1=dict(expect='F_TRUNCATED -> PARAM_FIX '
+                           '(reasoning_effort=low, no thinking key)',
+                    classified=s1['fault'], decision=s1d['action'],
+                    pass_=s1_pass),
+            S2=dict(expect='F_JSON_INVALID -> MODEL_SWITCH',
+                    classified=s2['fault'],
+                    decision=s2d['action']['action'], pass_=s2_pass),
+            S3=dict(expect='F_TRUNCATED -> PARAM_FIX thinking=disabled',
+                    classified=s3['fault'],
+                    decision=s3d['action'], pass_=s3_pass),
+            S4=dict(expect='F_CITATION contract_unverifiable -> '
+                           'PROMPT_CONTRACT_REPAIR (not a model action)',
+                    classified=s4['fault'], cause=s4['citation']['cause'],
+                    decision=s4d['action'], pass_=s4_pass)),
+        all_pass=bool(
+            acc == 1.0 and all(legality.values())
+            and honesty['unobserved_quality_credit_violations'] == 0
+            and honesty['ss_original_replays_real_failures']
+            and s1_pass and s2_pass and s3_pass and s4_pass))
 
-    out = HERE / 'CONTRACT_FAULT_VALIDATION.json'
-    out.write_text(json.dumps(report, indent=1, ensure_ascii=False))
+    (HERE / 'CONTRACT_FAULT_VALIDATION.json').write_text(
+        json.dumps(report, indent=1, ensure_ascii=False, default=str))
 
-    print(f"classifier over {len(rows)} real calls: "
-          f"accuracy {acc:.1%}, mishaps {len(mishaps)}")
-    for n, p, t in mishaps:
-        print(f'  MISHAP {n}: predicted {p}, truth {t}')
-    print(f"ground truth: D_CONTRACT={gt.count(D_CONTRACT)}, "
-          f"D_CONTENT={gt.count(D_CONTENT)}, OK={gt.count(OK)}")
-    print(f"S1 glm->PARAM_FIX:        {s1_pass}")
-    print(f"S2 qwen->MODEL_SWITCH:    {s2_pass}")
-    print(f"S3 ds->PARAM_FIX+thinkOff:{s3_pass}")
-    print(f"blind-switch trap visible:{trap_visible}")
-    print(f"ALL PASS: {report['all_pass']}")
+    print(f'Part1 six-type classification over {n} real records: '
+          f'accuracy {acc:.1%} ({counts})')
+    for nm, p, t in mishaps:
+        print(f'  MISHAP {nm}: predicted {p}, truth {t}')
+    print(f'  citation causes: {dict(cit_causes)}')
+    print(f'Part2 legality: {legality}')
+    print(f'Part3 honesty: {honesty}')
+    for name, s in rep['summaries'].items():
+        print(f'  {name:15s} q={s["total_quality"]:.3f} '
+              f'attempts={s["attempts"]} tokens={s["tokens"]} '
+              f'unobs={s["unobserved_actions"]}')
+    print(f'Part4: S1={s1_pass} S2={s2_pass} S3={s3_pass} S4={s4_pass}')
+    print(f'ALL PASS: {report["all_pass"]}')
     return 0 if report['all_pass'] else 2
 
 
