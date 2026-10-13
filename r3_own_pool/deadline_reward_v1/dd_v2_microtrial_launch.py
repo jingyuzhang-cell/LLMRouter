@@ -179,14 +179,13 @@ def execute(approved, rehearse=False):
                         '###SYNTHETIC UNPARSEABLE r-output###')
 
         # ---- shared base (once; faults active) ------------------------
+        base_server = make_server(budget, {t['uid']: t for t in tasks})
         base_engine = jv.arm_engine_from_snapshot(
-            run_root / 'base', make_server(budget,
-                                           {t['uid']: t for t in tasks}),
-            RealClock(), {}, manager=manager
-            if manager else _FakeServerFactory(budget, {}, run_root).mgr,
+            run_root / 'base', base_server, RealClock(), {},
+            manager=(manager if manager else base_server.manager),
             real=True)
-        server = base_engine.server
-        server.engine = base_engine
+        base_server.engine = base_engine
+        server = base_server
         snapshot = jv.run_shared_base(base_engine, tasks, PLANNED,
                                       fault_uids, d3)
         base_pt = jv._per_task_base_tokens(base_engine)
@@ -211,7 +210,8 @@ def execute(approved, rehearse=False):
             adir = run_root / arm.replace('+', '_')
             eng = jv.arm_engine_from_snapshot(
                 adir, server, RealClock(), snapshot,
-                manager=manager if manager else server.manager,
+                manager=(manager if manager
+                         else server.manager),
                 real=True)
             server.engine = eng
             state = SchedulerState(
