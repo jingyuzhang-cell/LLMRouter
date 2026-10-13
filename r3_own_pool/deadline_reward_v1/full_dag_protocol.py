@@ -35,7 +35,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from deadline_reward_v1 import full_dag_tasks
+from deadline_reward_v1 import full_dag_tasks, theta_actions
 from deadline_reward_v1.theta_actions import (
     DEFAULT_THETA, budget_reservation, enumerate_legal_thetas,
     theta_legal)
@@ -186,7 +186,9 @@ class DagRunner:
             if model == 'deepseek-flash':
                 return model, TUNED_THETA['deepseek-flash']
             return 'qwen-plus', dict(DEFAULT_THETA)
-        # DD-Online: expected mainline utility, priors only
+        # DD-Online: expected mainline utility over DEV-set priors
+        # (theta_actions.PRIORS — real observations from OTHER tasks;
+        # decision-phase same-task outcome reads asserted zero)
         assert self.decision_lookups == 0
         cands = []
         for m in MODEL_MENU:
@@ -198,7 +200,8 @@ class DagRunner:
                 ok, _ = theta_legal(m, th)
                 if not ok:
                     continue
-                pr, mr = 0.5, 0.35  # uninformed priors in dry run
+                p = theta_actions.prior_for(m, th)
+                pr, mr = p['pass_rate'], p['mean_recall']
                 res = budget_reservation(m, th, 2000)
                 tokens = res['tokens_in'] + res['tokens_out_reserved']
                 T = self.budget.wall + res['latency_s_reserved']
@@ -206,7 +209,8 @@ class DagRunner:
                                   task['deadline_s']) \
                     + (1 - pr) * utility(pr * mr, tokens, T + 60.0,
                                          task['deadline_s'])
-                cands.append(dict(model=m, theta=th, eU=eU))
+                cands.append(dict(model=m, theta=th, eU=eU,
+                                  prior_src=p['provenance']))
         cands.sort(key=lambda c: -c['eU'])
         return cands[0]['model'], cands[0]['theta']
 

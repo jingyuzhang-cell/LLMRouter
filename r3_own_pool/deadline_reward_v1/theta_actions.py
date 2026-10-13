@@ -167,6 +167,49 @@ def budget_reservation(model_id: str, theta: dict,
                 provenance='conservative reservation (full new cap)')
 
 
+# ---- DEV-set priors for online decisions (derived from anchors) ----------
+# (model, theta-bucket) -> (pass_rate_prior, mean_recall_prior, provenance).
+# All observations come from DEV tasks (FE runs, Phase-4 cells,
+# historical screening) — DIFFERENT tasks from the 15 full-DAG tasks,
+# so using them as decision priors carries no same-task leakage.
+PRIORS: Dict[str, dict] = {
+    'GLM-5.3|low@8192': dict(
+        pass_rate=1.0, mean_recall=(8 / 17 + 3 / 4) / 2,
+        provenance='Phase-4 cells 5-6 (2/2, recall 8/17, 3/4)'),
+    'GLM-5.3-Flash|low@8192': dict(
+        pass_rate=1.0, mean_recall=(9 / 17 + 3 / 4) / 2,
+        provenance='Phase-4 cells 7-8 (2/2, recall 9/17, 3/4)'),
+    'GLM-5.3|low@2048': dict(
+        pass_rate=0.0, mean_recall=0.0,
+        provenance='Phase-4 cells 3-4 REFUTED (still max_tokens cut)'),
+    'deepseek-flash|thinking=disabled': dict(
+        # FE 2/2 (same-contract) blended with historical 17/17
+        # (different prompts, discounted 0.5)
+        pass_rate=(1.0 + 0.5 * 1.0) / 2,
+        mean_recall=(7 / 17 + 3 / 4) / 2,
+        provenance='Phase-4 cells 1-2 + historical 17/17 discounted'),
+    'qwen-plus|default': dict(
+        pass_rate=1.0, mean_recall=(6 / 17 + 2 / 4 + 1.0) / 3,
+        provenance='FE recovery 5/5, recall 6/17, 2/4, 1/1'),
+}
+UNINFORMED_PRIOR = dict(pass_rate=0.5, mean_recall=0.35,
+                        provenance='uninformed')
+
+
+def prior_for(model_id: str, theta: dict) -> dict:
+    re_ = theta.get('reasoning_effort')
+    mt = theta.get('max_tokens')
+    key = None
+    if model_id.startswith('GLM') and re_ == 'low':
+        key = f'{model_id}|low@{mt}'
+    elif model_id == 'deepseek-flash' and theta.get('thinking') == \
+            'disabled' and mt in (None, 2048):
+        key = 'deepseek-flash|thinking=disabled'
+    elif model_id == 'qwen-plus' and theta == dict(DEFAULT_THETA):
+        key = 'qwen-plus|default'
+    return PRIORS.get(key, UNINFORMED_PRIOR)
+
+
 # ---- real per-(model, theta) outcome anchors (read-only evidence) --------
 REAL_OUTCOME_ANCHORS: Dict[str, dict] = {
     'GLM-5.3|default': dict(
