@@ -386,7 +386,8 @@ class RealRunner:
         self.records = []
 
     # ---- arm repair decisions --------------------------------------------
-    def _repair_candidate(self, task, clock, node, model):
+    def _repair_candidate(self, task, clock, node, model,
+                          stale_closure=frozenset()):
         if self.arm == 'SS-Tuned':
             return None
         if self.arm == 'Fixed-Tuned':
@@ -395,7 +396,18 @@ class RealRunner:
             if model == 'deepseek-flash':
                 return model, TUNED_THETA['deepseek-flash']
             return 'qwen-plus', dict(DEFAULT_THETA)
-        return self._dd_candidate(clock, node, model)
+        from deadline_reward_v1 import dd_decision
+        from deadline_reward_v1.full_dag_protocol import (
+            MODEL_MENU, utility)
+        dec = dd_decision.choose(
+            planned_pi=task['planned_pi'], clock=clock,
+            faulted_node=node, faulted_model=model,
+            stale_closure=set(stale_closure),
+            global_budget_tokens=self.budget.tokens,
+            caps_tokens=CAPS['tokens'], model_menu=MODEL_MENU,
+            utility_fn=utility)
+        self.last_dd_decision = dec
+        return dec['model'], dec['theta']
 
     def _dd_candidate(self, clock, node, model):
         """DD-Online: two-branch expected utility under the frozen
@@ -475,7 +487,11 @@ class RealRunner:
 
     def _recover(self, chain, clock, task, node):
         model = task['planned_pi'][node]
-        cand = self._repair_candidate(task, clock, node, model)
+        # stale downstream = already-executed nodes that must re-run
+        # after this repair (closure pricing enters the DD decision)
+        stale = chain.stale_downstream(node)
+        cand = self._repair_candidate(task, clock, node, model,
+                                      stale_closure=stale)
         if cand is None:
             return False
         r_model, r_theta = cand

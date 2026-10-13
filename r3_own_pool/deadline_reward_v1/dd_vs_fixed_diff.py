@@ -93,48 +93,63 @@ def _util(q, tokens, T, D):
 
 
 def main():
+    from deadline_reward_v1 import dd_decision
+    from deadline_reward_v1.full_dag_protocol import (
+        MODEL_MENU, utility)
     tasks = full_dag_tasks.build_tasks()
     t_fe = next(x for x in tasks if x['fault_node'] == 'fe')
     t_er = next(x for x in tasks if x['fault_node'] == 'er')
     t_xc = next(x for x in tasks if x['fault_node'] == 'xc')
 
-    def state(name, task, node, model, clock, budget):
-        runner = RealRunner('DD-Online', {}, budget,
-                            Path('/tmp/dd_diff_ledger.jsonl'))
-        runner.task_id = task['task_id']
-        cands = dd_full(runner, clock, node, model, budget)
+    def state(name, task, node, model, clock, budget, stale=()):
         fx_desc, fx_model, fx_theta = fixed_action(model)
-        fx_res = budget_reservation(
-            fx_model, fx_theta, 4000)
+        fx_res = budget_reservation(fx_model, fx_theta, 4000)
+        clo_tok = 0
+        clo_lat = 0.0
+        from deadline_reward_v1.full_dag_protocol import TUNED_THETA
+        for d in stale:
+            m = task['planned_pi'][d]
+            r = budget_reservation(m, TUNED_THETA[m], 4000)
+            clo_tok += r['tokens_in'] + r['tokens_out_reserved']
+            clo_lat += dd_decision.lat_of(d, m)
         fx_legal = (budget.tokens + fx_res['tokens_in']
-                    + fx_res['tokens_out_reserved']
+                    + fx_res['tokens_out_reserved'] + clo_tok
                     <= CAPS['tokens'])
-        top = cands[0]
-        same = (top['model'] == fx_model
-                and {k: v for k, v in top['theta'].items() if v}
-                == {k: v for k, v in fx_theta.items() if v})
-        # what drives the difference
+        dec = dd_decision.choose(
+            planned_pi=task['planned_pi'], clock=clock,
+            faulted_node=node, faulted_model=model,
+            stale_closure=set(stale),
+            global_budget_tokens=budget.tokens,
+            caps_tokens=CAPS['tokens'], model_menu=MODEL_MENU,
+            utility_fn=utility)
+        top = dec['chosen']
+        dd_th = {k: v for k, v in dec['theta'].items() if v}
+        dd_th_str = json.dumps(dd_th, ensure_ascii=False)
+        fx_th = {k: v for k, v in fx_theta.items() if v}
+        same = (dec['model'] == fx_model and dd_th == fx_th)
         if same:
-            driver = 'identical: DD\'s argmax coincides with the ' \
-                     'pre-committed rule'
+            driver = ("identical: DD argmax coincides with the "
+                      "pre-committed rule")
         else:
-            better = next((c for c in cands
+            rule_c = next((c for c in dec['candidates']
                            if c['model'] == fx_model
                            and {k: v for k, v in c['theta'].items()
-                                if v}
-                           == {k: v for k, v in fx_theta.items()
-                               if v}), None)
-            d = round(top['eU'] - better['eU'], 6) if better else None
-            driver = (f"DD prefers {top['model']} "
-                      f"{top['theta']} (eU={top['eU']}, pr={top['pr']},"
-                      f" mr={top['mr']}) over rule's {fx_desc} "
-                      f"(eU={better['eU'] if better else 'n/a'}); "
-                      f"eU gap={d}; driven by DEV priors"
-                      f" (pass/recall) + latency reservation under "
-                      f"T={round(clock.t,1)}/D={clock.D}"
-                      if not same else '')
+                                if v} == fx_th), None)
+            gap = (round(top['eU'] - rule_c['eU'], 6)
+                   if rule_c else None)
+            driver = (f"DD prefers {dec['model']} {dd_th} "
+                      f"eU={top['eU']} vs rule {fx_desc} "
+                      f"eU={rule_c['eU'] if rule_c else 'n/a'} "
+                      f"(gap={gap}); q_task_succ="
+                      f"{top['q_task_succ']}, closure="
+                      f"{round(clo_lat,1)}s/{clo_tok}tok priced in "
+                      f"both branches; T={round(clock.t,1)}/"
+                      f"D={clock.D}")
         return dict(
             state=name, node=node, faulted_model=model,
+            stale_closure=sorted(stale),
+            closure_price=dict(tokens=clo_tok,
+                               lat_s=round(clo_lat, 3)),
             clock=dict(t_s=clock.t, D_s=clock.D,
                        remaining_s=round(clock.remaining(), 1)),
             budget=dict(tokens_spent=budget.tokens,
@@ -144,76 +159,89 @@ def main():
                     note='terminal q takes the contract failure as '
                          'semantic 0 on this node'),
             fixed=dict(action=fx_desc, legal=fx_legal),
-            dd=dict(action=f"{top['model']} {top['theta']}",
-                    legal=top['legal'], eU=top['eU'],
-                    U_succ=top['U_succ'], U_fail=top['U_fail']),
+            dd=dict(action=f"{dec['model']} {dd_th_str}",
+                    legal=True, eU=top['eU'],
+                    U_succ=top['U_succ'], U_fail=top['U_fail'],
+                    q_task_succ=top['q_task_succ'],
+                    q_task_fail=top['q_task_fail']),
             same_choice=same, driver=driver,
-            top3=[dict(action=f"{c['model']} {c['theta']}",
-                       eU=c['eU'], legal=c['legal'])
-                  for c in cands[:3]])
+            top3=[dict(
+                action=f"{c['model']} "
+                       f"{ {k: v for k, v in c['theta'].items() if v} }",
+                eU=c['eU'])
+                for c in dec['candidates'][:3]])
 
     rich = GlobalBudget()
     poor = GlobalBudget()
-    poor.tokens = CAPS['tokens'] - 12000   # only cheap candidates fit
+    poor.tokens = CAPS['tokens'] - 12000
     clock_rich = TaskClock(120.0)
     clock_rich.t = 20.0
-    clock_poor_budget = TaskClock(120.0)
-    clock_poor_budget.t = 20.0
     clock_tight = TaskClock(120.0)
-    clock_tight.t = 105.0                  # 15s left
+    clock_tight.t = 105.0
     clock_s4 = TaskClock(160.0)
     clock_s4.t = 40.0
+    clock_s5 = TaskClock(120.0)
+    clock_s5.t = 55.0
 
     rows = [
         state('S1 rich/rich (fe, GLM)', t_fe, 'fe', 'GLM-5.3',
               clock_rich, rich),
         state('S2 budget-poor (fe, GLM)', t_fe, 'fe', 'GLM-5.3',
-              clock_poor_budget, poor),
+              clock_rich, poor),
         state('S3 deadline-tight (fe, GLM)', t_fe, 'fe', 'GLM-5.3',
               clock_tight, rich),
-        state('S4 fe fault + stale downstream', t_fe, 'fe', 'GLM-5.3',
-              clock_s4, rich),
-        state('S5 er fault (DS, partial closure)', t_er, 'er',
-              'deepseek-flash', clock_rich, rich),
+        state('S4 fe fault + stale {tl,xc}', t_fe, 'fe', 'GLM-5.3',
+              clock_s4, rich, stale=('tl', 'xc')),
+        state('S5 er fault (DS) + stale {xc}', t_er, 'er',
+              'deepseek-flash', clock_s5, rich, stale=('xc',)),
         state('S6 xc fault (qwen, local)', t_xc, 'xc', 'qwen-plus',
               clock_rich, rich),
     ]
 
     n_same = sum(1 for r in rows if r['same_choice'])
     n_diff = len(rows) - n_same
+    s4_like_s1 = (rows[0]['dd']['action']
+                  == rows[3]['dd']['action'])
     conclusion = dict(
-        n_states=len(rows), n_same=n_same,
-        n_diff=n_diff,
-        verdict=('DD decision rule DOES exhibit state-conditioned '
-                 'differentiation' if n_diff >= 2 else
-                 '当前DD决策规则尚未体现足够的状态条件化判别能力'
-                 ' (DD decision rule does NOT yet exhibit sufficient '
-                 'state-conditioned discrimination)'),
-        known_gaps=[
-            'closure re-execution cost/latency NOT yet inside eU '
-            '(S4/S5 downstream re-runs are un-priced in the decision)',
-            'priors rest on tiny DEV samples (FE3/FE4 n=2 per cell); '
-            'Flash-vs-GLM recall gap 9/17 vs 8/17 is n=1 noise-prone',
-            'no per-node-type quality prior (fe/tl/er/xc share one '
-            'recall prior per model)',
-            'no downstream quality-propagation model (repaired fe '
-            'quality -> tl/xc terminal impact is unmodeled)',
-            'sequential clock only; no critical-path/parallel model'])
+        n_states=len(rows), n_same=n_same, n_diff=n_diff,
+        verdict=('DD decision rule exhibits state-conditioned '
+                 'differentiation (v2: closure priced, node-type '
+                 'latencies, task-level quality propagation)'
+                 if n_diff >= 2 else
+                 '当前DD决策规则尚未体现足够的状态条件化判别能力'),
+        closure_state_conditioning=dict(
+            S4_vs_S1_same_action=s4_like_s1,
+            S1_eU=rows[0]['dd']['eU'], S4_eU=rows[3]['dd']['eU'],
+            note='S1 and S4 are the same fault at different clocks; '
+                 'v2 prices S4\'s closure in both branches — eU '
+                 'difference reflects the priced downstream re-run'),
+        remaining_gaps=[
+            'recall prior shared across node types (no per-node-type '
+            'silver exists); node-type signal enters via latency '
+            'only',
+            'priors rest on tiny DEV samples (n=2 per theta cell); '
+            'Flash-vs-GLM recall gap 9/17 vs 8/17 is n=1 noise',
+            'sequential clock; no parallel/critical-path execution '
+            'model (not claimed)'])
 
-    report = dict(version='DD_VS_FIXED_DIFF_v1', zero_model_calls=True,
-                  states=rows, conclusion=conclusion,
-                  notes='DD sees only node/model/finish/clock/budget '
-                        '(observable); injected fault labels never '
-                        'passed to the decision')
+    report = dict(
+        version='DD_VS_FIXED_DIFF_v2', zero_model_calls=True,
+        decision_method='dd_decision.choose v2 (closure pricing + '
+                        'task-quality propagation + node-type '
+                        'latency priors from 68 real historical '
+                        'calls)',
+        states=rows, conclusion=conclusion,
+        notes='DD sees only node/model/finish/clock/budget/closure '
+              '(observable); injected fault labels never passed to '
+              'the decision')
     (HERE / 'DD_VS_FIXED_DIFF.json').write_text(
         json.dumps(report, indent=1, ensure_ascii=False))
     for r in rows:
         print(f"{r['state']:34s} same={r['same_choice']} "
-              f"fixed={r['fixed']['action'][:28]:28s} "
+              f"fixed={r['fixed']['action'][:26]:26s} "
               f"legal={r['fixed']['legal']} | "
-              f"dd={r['dd']['action'][:34]:34s} "
-              f"eU={r['dd']['eU']}")
-        print(f"   driver: {r['driver'][:160]}")
+              f"dd={r['dd']['action'][:36]:36s} eU={r['dd']['eU']}")
+        print(f"   driver: {r['driver'][:150]}")
     print(json.dumps(conclusion, indent=1, ensure_ascii=False))
     return 0
 
