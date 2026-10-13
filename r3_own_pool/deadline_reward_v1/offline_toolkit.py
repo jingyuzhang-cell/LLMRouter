@@ -142,14 +142,23 @@ SCREENING_SEED = 20261013
 SCREENING_N = 20
 
 
+DEFAULT_EXCLUDES = [
+    ROOT / 'static_dag_v0/frozen200/FROZEN200_POLICY.json',
+    ROOT / 'deadline_reward_v1/JOINT_VERIFY_P3_FREEZE.json',
+    ROOT / 'deadline_reward_v1/JOINT_VERIFY_MICROPILOT_FREEZE.json',
+    ROOT / 'deadline_reward_v1/DD_V2_DEV_MICROTRIAL_FREEZE.json',
+    ROOT / 'deadline_reward_v1/evidence/SUPPLEMENTARY_PANEL_FREEZE.json',
+    ROOT / 'collab_scheduler_v1/joint_search_v1/review/TASK_PANEL_V1.json',
+]
+
+
 def freeze_screening_panel(exclude_files: List[Path] = None) -> dict:
     """Freeze 20 screening tasks from TAT-QA train, excluding ALL
     previously used UIDs (frozen200, P3-60, micropilot, dev micro-trial,
     reliability panels, evaluation panel). Gold status tracked
     separately from task inclusion (isolation requirement)."""
-    import glob
     exclude = set()
-    for f in (exclude_files or []):
+    for f in (exclude_files or DEFAULT_EXCLUDES):
         if f.exists():
             data = json.loads(f.read_text())
             if 'uids' in data:
