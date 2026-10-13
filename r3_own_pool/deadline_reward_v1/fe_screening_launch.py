@@ -36,13 +36,13 @@ GO_FLAG = 'FE_V2_GO'
 GPU_LOCK = ROOT / 'collect/logs/local_gpu.lock'
 SAMPLES_V2 = HERE / 'FACT_EXTRACTION_SAMPLES_V2.json'
 MODELS = {
-    'glm53': dict(model_id='glm-5.3', env='FE_GLM53_KEY',
+    'glm53': dict(model_id='GLM-5.3', env='ZHIPU_API_KEY',
                   billing='subscription'),
-    'glm53flash': dict(model_id='glm-5.3-flash', env='FE_GLM53_KEY',
+    'glm53flash': dict(model_id='GLM-5.3-Flash', env='ZHIPU_API_KEY',
                        billing='subscription'),
-    'deepseek': dict(model_id='deepseek-flash', env='FE_DEEPSEEK_KEY',
+    'deepseek': dict(model_id='deepseek-chat', env='DEEPSEEK_API_KEY',
                      billing='per_token_cny'),
-    'qwen': dict(model_id='qwen-plus', env='FE_QWEN_KEY',
+    'qwen': dict(model_id='qwen-plus', env='QWEN_API_KEY',
                  billing='per_token_cny'),
 }
 MAX_OUTPUT_TOKENS = 2048
