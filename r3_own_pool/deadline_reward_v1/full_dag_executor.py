@@ -314,12 +314,13 @@ def _truncated(o) -> bool:
 
 class RealRunner:
     def __init__(self, arm, creds, budget, ledger_path,
-                 transport=None):
+                 transport=None, prior_store=None):
         self.arm = arm
         self.creds = creds
         self.budget = budget
         self.ledger_path = Path(ledger_path)
         self.transport = transport or real_call
+        self.prior_store = prior_store   # DD within-run learning
         self.records = []
         self.task_id = None
 
@@ -360,12 +361,15 @@ class RealRunner:
                      task_t_s=round(clock.t, 3), deadline_s=clock.D,
                      timestamp=time.strftime('%Y-%m-%dT%H:%M:%S'))
         self._log(entry)
-        self.records.append(dict(node=node, tag=tag,
+        self.records.append(dict(node=node, tag=tag, model=model,
+                                 theta=dict(theta),
                                  tokens=o['tokens_in']
                                  + o['tokens_out'],
                                  cash=o['cash_cny'],
                                  latency=o['latency_s'],
-                                 service_lat=o['latency_s']))
+                                 service_lat=o['latency_s'],
+                                 answer=o['answer'],
+                                 finish=o['finish_reason']))
         chain.set_output(node, o, tag)
         return o
 
@@ -405,7 +409,7 @@ class RealRunner:
             stale_closure=set(stale_closure),
             global_budget_tokens=self.budget.tokens,
             caps_tokens=CAPS['tokens'], model_menu=MODEL_MENU,
-            utility_fn=utility)
+            utility_fn=utility, prior_store=self.prior_store)
         self.last_dd_decision = dec
         return dec['model'], dec['theta']
 
@@ -483,7 +487,38 @@ class RealRunner:
                         m = task['planned_pi'][n]
                         self._exec(chain, clock, n, m, TUNED_THETA[m],
                                    'closure-rerun')
+        if self.prior_store is not None and self.arm == 'DD-Online':
+            self._update_store(task, chain)
         return chain, clock
+
+    def _update_store(self, task, chain):
+        """Post-task prior update from COMPLETED-task outcomes only
+        (this task's decisions were made before this call). pass =
+        contract ok; recall counts from doc-atom coverage for
+        atom-evaluable nodes."""
+        from deadline_reward_v1 import theta_actions as ta
+        from deadline_reward_v1.full_dag_scoring import _coverage
+        silver = {s['task_id']: s for s in json.loads(
+            (HERE / 'FULL_DAG_SILVER_V1.json').read_text())['tasks']}
+        st = silver.get(task['task_id'])
+        atoms = []
+        if st:
+            atoms = (st['fe']['atom_dates']
+                     + st['fe']['atom_amounts']
+                     + st['fe']['atom_penalties'])
+        for r in self.records:
+            key = ta.prior_key(r['model'], r['theta'])
+            if key is None:
+                continue
+            passed = _ok(dict(answer=r['answer'],
+                              finish_reason=r['finish']))
+            rec_k = rec_n = 0
+            if atoms and r['node'] != 'xc':
+                cov = _coverage(atoms, r['answer'])
+                if cov is not None:
+                    rec_n = len(atoms)
+                    rec_k = round(cov * rec_n)
+            self.prior_store.update(key, passed, rec_k, rec_n)
 
     def _recover(self, chain, clock, task, node):
         model = task['planned_pi'][node]

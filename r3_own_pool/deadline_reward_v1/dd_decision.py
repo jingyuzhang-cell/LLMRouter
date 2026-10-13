@@ -36,6 +36,8 @@ from deadline_reward_v1.theta_actions import (
     DEFAULT_THETA, PRIORS, UNINFORMED_PRIOR, budget_reservation,
     enumerate_legal_thetas, prior_for, theta_legal)
 
+DEFAULT_THETA_BASE = dict(DEFAULT_THETA)
+
 HERE = Path(__file__).resolve().parent
 
 _NODE_PRIORS: Optional[dict] = None
@@ -86,43 +88,107 @@ def _node_quality_ratio(node_type: str, model_id: str) -> float:
     return round(1.0 + 0.5 * (ratio - 1.0), 4)   # 50% shrink
 
 
-def q_node(node_type: str, model_id: str, theta: dict) -> float:
+def q_node(node_type: str, model_id: str, theta: dict,
+            store=None) -> float:
     """Pessimistic (Wilson-LB) pass x pooled-recall prior for one
     node slot, with the weak node-type quality ratio applied."""
-    p = prior_for(model_id, theta)
+    if store is not None:
+        key = theta_actions.prior_key(model_id, theta)
+        p = (store.prior(key) if key is not None
+             and key in store.counts else prior_for(model_id, theta))
+    else:
+        p = prior_for(model_id, theta)
     base = p['pass_rate_lb'] * p['pooled_recall_lb']
     return round(base * _node_quality_ratio(node_type, model_id), 6)
+
+
+def downstream(node: str) -> set:
+    """Downstream of a node over the REAL edges (fe->tl->xc; er->xc;
+    no fe->er)."""
+    import deadline_reward_v1.full_dag_tasks as fdt
+    seen, stack = set(), [node]
+    while stack:
+        n = stack.pop()
+        for m in fdt.EDGES.get(n, []):
+            if m not in seen:
+                seen.add(m)
+                stack.append(m)
+    return seen
 
 
 def expected_task_quality(planned_pi: Dict[str, str],
                           faulted: str,
                           candidate: Tuple[str, dict],
-                          fallback: Tuple[str, dict]) -> dict:
-    """E[terminal q] for both branches. Healthy and stale-re-run
-    nodes use their planned (tuned) prior; the faulted slot uses the
-    candidate (success) or the fallback (failure)."""
-    node_of = {'fe': 'fe', 'tl': 'tl', 'er': 'er', 'xc': 'xc'}
-    q_succ, q_fail = [], []
-    for n in ('fe', 'tl', 'er', 'xc'):
-        tuned = theta_actions.DEFAULT_THETA
-        from deadline_reward_v1.full_dag_protocol import TUNED_THETA
-        tuned = TUNED_THETA[planned_pi[n]]
-        if n == faulted:
-            q_succ.append(q_node(n, candidate[0], candidate[1]))
-            q_fail.append(q_node(n, fallback[0], fallback[1]))
-        else:
-            q_succ.append(q_node(n, planned_pi[n], tuned))
-            q_fail.append(q_node(n, planned_pi[n], tuned))
-    return dict(
-        success=round(sum(q_succ) / 4, 6),
-        failure=round(sum(q_fail) / 4, 6))
+                          fallback: Tuple[str, dict],
+                          store=None,
+                          candidate_prior=None,
+                          fallback_prior=None) -> dict:
+    """E[terminal q] for both branches with MULTIPLICATIVE downstream
+    propagation: a node downstream of the faulted one inherits the
+    repaired slot's quality as a multiplier (garbage upstream caps
+    what downstream can deliver). Without this, the plain 4-node
+    mean dilutes a single slot's quality difference x1/4 — too weak
+    against the cost term (simulation finding 2026-10-14: DD could
+    never discover a better repair)."""
+    from deadline_reward_v1.full_dag_protocol import TUNED_THETA
+    down = downstream(faulted)
+
+    def q_mean(n):
+        """Healthy slots at posterior MEAN (their uncertainty is
+        common to every candidate and largely cancels in the
+        comparison; pessimism belongs on the DECIDED slot only —
+        LB-everywhere was found to squash propagation gains below
+        the linear cost term)."""
+        if store is not None:
+            key = theta_actions.prior_key(planned_pi[n],
+                                          TUNED_THETA[planned_pi[n]])
+            if key is not None and key in store.counts:
+                pr = store.prior(key)
+                return pr['pass_rate'] * pr['pooled_recall']
+        pr = theta_actions.prior_for(planned_pi[n],
+                                     TUNED_THETA[planned_pi[n]])
+        return pr['pass_rate'] * pr['pooled_recall']
+
+    def q_task(slot_q):
+        total = 0.0
+        for n in ('fe', 'tl', 'er', 'xc'):
+            if n == faulted:
+                total += slot_q
+            elif n in down:
+                total += q_mean(n) * slot_q
+            else:
+                total += q_mean(n)
+        return round(total / 4, 6)
+
+    # the DECIDED slot uses the decision-time prior — the Thompson
+    # sample when sampling (exploration), the LB otherwise
+    if candidate_prior is not None:
+        q_succ = candidate_prior['pass_rate'] \
+            * candidate_prior['pooled_recall']
+        q_succ = round(q_succ * _node_quality_ratio(
+            faulted, candidate[0]), 6)
+    else:
+        q_succ = q_node(faulted, candidate[0], candidate[1], store)
+    if fallback_prior is not None:
+        q_fail = fallback_prior['pass_rate'] \
+            * fallback_prior['pooled_recall']
+        q_fail = round(q_fail * _node_quality_ratio(
+            faulted, fallback[0]), 6)
+    else:
+        q_fail = q_node(faulted, fallback[0], fallback[1], store)
+    return dict(success=q_task(q_succ), failure=q_task(q_fail))
 
 
 def choose(planned_pi, clock, faulted_node, faulted_model,
            stale_closure: set, global_budget_tokens: int,
            caps_tokens: int, model_menu: List[str],
-           utility_fn) -> dict:
+           utility_fn, prior_store=None,
+           mode='lb', rng=None) -> dict:
     """Two-branch argmax with closure pricing and task-level quality.
+    prior_store: optional PriorStore — priors then come from DEV
+    counts + all COMPLETED tasks' outcomes (within-run learning; the
+    store is updated only after a task ends, so task k's outcome can
+    never inform task k's decision).
     Returns the chosen (model, theta) plus full diagnostics."""
     fallback = ('qwen-plus', dict(DEFAULT_THETA))
     fb_res = budget_reservation('qwen-plus', dict(DEFAULT_THETA), 4000)
@@ -137,6 +203,15 @@ def choose(planned_pi, clock, faulted_node, faulted_model,
         res = budget_reservation(m, TUNED_THETA[m], 4000)
         clo_tok += res['tokens_in'] + res['tokens_out_reserved']
         clo_lat += lat_of(d, m)
+
+    def _prior(m, th):
+        if prior_store is not None:
+            key = theta_actions.prior_key(m, th)
+            if key is not None and key in prior_store.counts:
+                if mode == 'thompson' and rng is not None:
+                    return prior_store.sample(key, rng)
+                return prior_store.prior(key)
+        return prior_for(m, th)
 
     cands = []
     for m in model_menu:
@@ -153,13 +228,18 @@ def choose(planned_pi, clock, faulted_node, faulted_model,
             if (global_budget_tokens + tok_cand + clo_tok
                     > caps_tokens):
                 continue  # budget-illegal (incl. closure price)
-            p = prior_for(m, th)
+            p = _prior(m, th)
             pr = p['pass_rate_lb']
             mr = p['pooled_recall_lb'] * _node_quality_ratio(
                 faulted_node, m)
             cand_lat = lat_of(faulted_node, m)
-            eq = expected_task_quality(planned_pi, faulted_node,
-                                       (m, th), fallback)
+            eq = expected_task_quality(
+                planned_pi, faulted_node, (m, th), fallback,
+                store=prior_store,
+                candidate_prior=p,
+                fallback_prior=(
+                    _prior('qwen-plus', dict(DEFAULT_THETA_BASE))
+                    if m != 'qwen-plus' else p))
             # SUCCESS branch: candidate quality, candidate time/cost
             U_succ = utility_fn(
                 eq['success'], tok_cand + clo_tok,

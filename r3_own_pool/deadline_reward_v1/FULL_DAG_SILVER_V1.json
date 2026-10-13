@@ -1,5 +1,5 @@
 {
- "version": "FULL_DAG_SILVER_V1",
+ "version": "FULL_DAG_SILVER_V1_1",
  "n_tasks": 15,
  "method": "doc atoms (dates/amounts/penalties/entities) extracted independently of model outputs; curated FE V2 silver reused for matching docs; SILVER grade, not human gold",
  "tasks": [
@@ -483,7 +483,38 @@
     "penalties": 7,
     "entities": 2
    },
-   "grade": "SILVER(doc-derived atoms + curated where available)"
+   "grade": "SILVER(doc-derived atoms + curated where available)",
+   "verified_facts": [
+    {
+     "fact_id": "F3",
+     "answer": "2024-04-24",
+     "answer_type": "date",
+     "question": "证监会行政处罚决定书〔2024〕41号的落款（签发）日期是哪一天？",
+     "quote": "中国证监会2024年4月24日"
+    },
+    {
+     "fact_id": "F4",
+     "answer": "1,000万元",
+     "answer_type": "amount",
+     "question": "处罚决定书对江苏舜天股份有限公司处以的罚款金额是多少？",
+     "quote": "对江苏舜天股份有限公司责令改正,给予警告,并处以1,000万元罚款"
+    },
+    {
+     "fact_id": "F5",
+     "answer": "10,333,448,392.98元",
+     "answer_type": "amount",
+     "question": "2009年至2021年年度报告共计虚增营业收入的金额是多少？",
+     "quote": "2009年至2021年年度报告共计虚增营业收入10,333,448,392.98元"
+    },
+    {
+     "fact_id": "F6",
+     "answer": "隋某力主导的专网通信虚假自循环业务，无商业实质",
+     "answer_type": "text",
+     "question": "江苏舜天参与的专网通信业务被认定为何种性质的违法业务？",
+     "quote": "实质是合同、资金、票据流转构成闭环的虚假自循环业务,无商业实质"
+    }
+   ],
+   "verified_facts_grade": "silver_auto_verified (deterministic grounding + cross-model AI check, facts_silver.json 8/10)"
   },
   {
    "task_id": "T08",
@@ -583,7 +614,17 @@
     "penalties": 8,
     "entities": 3
    },
-   "grade": "SILVER(doc-derived atoms + curated where available)"
+   "grade": "SILVER(doc-derived atoms + curated where available)",
+   "verified_facts": [
+    {
+     "fact_id": "F2",
+     "answer": "2023-06-30",
+     "answer_type": "date",
+     "question": "公司收到《行政处罚及市场禁入事先告知书》（处罚字〔2023〕37号）的日期是哪一天？",
+     "quote": "2023年6月30日，公司收到中国证券监督管理委员会出具的《行政处罚及市场禁入事先告知书》"
+    }
+   ],
+   "verified_facts_grade": "silver_auto_verified (deterministic grounding + cross-model AI check, facts_silver.json 8/10)"
   },
   {
    "task_id": "T09",
@@ -1068,7 +1109,18 @@
     "penalties": 8,
     "entities": 3
    },
-   "grade": "SILVER(doc-derived atoms + curated where available)"
+   "grade": "SILVER(doc-derived atoms + curated where available)",
+   "verified_facts": [
+    {
+     "fact_id": "F1",
+     "answer": "2022-11-04",
+     "answer_type": "date",
+     "question": "公司收到证监会《立案告知书》的日期是哪一天？",
+     "quote": "于2022年11月4日收到中国证券监督管理委员会下发的《立案告知书》"
+    }
+   ],
+   "verified_facts_grade": "silver_auto_verified (deterministic grounding + cross-model AI check, facts_silver.json 8/10)"
   }
- ]
+ ],
+ "verified_facts_note": "6 verified facts attached to matching 舜天 tasks; recorded as a SEPARATE settlement metric (verified_fact_coverage) — the frozen q basis (doc atoms) is unchanged"
 }

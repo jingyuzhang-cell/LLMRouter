@@ -1,0 +1,151 @@
+{
+ "version": "DD_LEARNING_SIM_v1",
+ "zero_model_calls": true,
+ "true_quality_table": {
+  "qwen-plus|default": {
+   "pass_": 0.9,
+   "rec": 0.3
+  },
+  "GLM-5.3|low@8192": {
+   "pass_": 0.9,
+   "rec": 0.45
+  },
+  "GLM-5.3-Flash|low@8192": {
+   "pass_": 0.9,
+   "rec": 0.75
+  },
+  "deepseek-flash|thinking=disabled": {
+   "pass_": 0.8,
+   "rec": 0.35
+  }
+ },
+ "trace": [
+  {
+   "task": "T01",
+   "trial": 1,
+   "action": "deepseek-flash|{'thinking': 'disabled', 'max_tokens': 2048}",
+   "true_rec": 0.35,
+   "passed": true,
+   "realized_cov": 0.333
+  },
+  {
+   "task": "T02",
+   "trial": 2,
+   "action": "GLM-5.3-Flash|{'reasoning_effort': 'low', 'max_tokens': 8192}",
+   "true_rec": 0.75,
+   "passed": true,
+   "realized_cov": 0.778
+  },
+  {
+   "task": "T03",
+   "trial": 3,
+   "action": "GLM-5.3|{'reasoning_effort': 'low', 'max_tokens': 8192}",
+   "true_rec": 0.45,
+   "passed": true,
+   "realized_cov": 0.458
+  },
+  {
+   "task": "T04",
+   "trial": 4,
+   "action": "GLM-5.3-Flash|{'reasoning_effort': 'low', 'max_tokens': 8192}",
+   "true_rec": 0.75,
+   "passed": true,
+   "realized_cov": 0.8
+  },
+  {
+   "task": "T05",
+   "trial": 5,
+   "action": "deepseek-flash|{'thinking': 'disabled', 'max_tokens': 2048}",
+   "true_rec": 0.35,
+   "passed": false,
+   "realized_cov": 0.333
+  },
+  {
+   "task": "T06",
+   "trial": 6,
+   "action": "qwen-plus|{'max_tokens': 2048}",
+   "true_rec": 0.3,
+   "passed": true,
+   "realized_cov": 0.3
+  },
+  {
+   "task": "T07",
+   "trial": 7,
+   "action": "deepseek-flash|{'thinking': 'disabled', 'max_tokens': 2048}",
+   "true_rec": 0.35,
+   "passed": true,
+   "realized_cov": 0.353
+  },
+  {
+   "task": "T08",
+   "trial": 8,
+   "action": "qwen-plus|{'max_tokens': 2048}",
+   "true_rec": 0.3,
+   "passed": true,
+   "realized_cov": 0.308
+  },
+  {
+   "task": "T09",
+   "trial": 9,
+   "action": "GLM-5.3-Flash|{'reasoning_effort': 'low', 'max_tokens': 8192}",
+   "true_rec": 0.75,
+   "passed": true,
+   "realized_cov": 0.733
+  },
+  {
+   "task": "T10",
+   "trial": 10,
+   "action": "GLM-5.3-Flash|{'reasoning_effort': 'low', 'max_tokens': 8192}",
+   "true_rec": 0.75,
+   "passed": true,
+   "realized_cov": 0.714
+  }
+ ],
+ "first_flash_trial": 2,
+ "final_store": {
+  "GLM-5.3|low@8192": {
+   "pass_k": 3,
+   "pass_n": 3,
+   "rec_k": 22,
+   "rec_n": 45
+  },
+  "GLM-5.3-Flash|low@8192": {
+   "pass_k": 6,
+   "pass_n": 6,
+   "rec_k": 57,
+   "rec_n": 81
+  },
+  "GLM-5.3|low@2048": {
+   "pass_k": 0,
+   "pass_n": 2,
+   "rec_k": 0,
+   "rec_n": 0
+  },
+  "deepseek-flash|thinking=disabled": {
+   "pass_k": 10,
+   "pass_n": 12,
+   "rec_k": 37,
+   "rec_n": 99
+  },
+  "qwen-plus|default": {
+   "pass_k": 7,
+   "pass_n": 7,
+   "rec_k": 31,
+   "rec_n": 94
+  }
+ },
+ "flip_rate": {
+  "start": {
+   "flips": 18,
+   "trials": 18,
+   "rate": 1.0
+  },
+  "end": {
+   "flips": 0,
+   "trials": 18,
+   "rate": 0.0
+  }
+ },
+ "legality": "store updated only AFTER each task; task k outcome cannot inform task k decision (ordering guarantee)",
+ "note": "SIMULATION with assumed true qualities — mechanism demonstration, not evidence"
+}

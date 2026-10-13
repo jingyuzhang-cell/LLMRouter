@@ -231,6 +231,91 @@ def prior_for(model_id: str, theta: dict) -> dict:
     return PRIORS.get(key, UNINFORMED_PRIOR)
 
 
+def prior_key(model_id: str, theta: dict):
+    """Canonical bucket key for the store."""
+    re_ = theta.get('reasoning_effort')
+    mt = theta.get('max_tokens')
+    if model_id.startswith('GLM') and re_ == 'low':
+        return f'{model_id}|low@{mt}'
+    if model_id == 'deepseek-flash' and theta.get('thinking') == \
+            'disabled' and mt in (None, 2048):
+        return 'deepseek-flash|thinking=disabled'
+    if model_id == 'qwen-plus' and theta == dict(DEFAULT_THETA):
+        return 'qwen-plus|default'
+    return None
+
+
+class PriorStore:
+    """Within-run prior learning for DD-Online. Pooled counts start
+    from the DEV prior counts; each COMPLETED task's executed actions
+    update the store (pass from the node's contract outcome, recall
+    from silver-matched counts when evaluable). Wilson-LB priors are
+    recomputed on every read, so uncertainty shrinks as n grows.
+
+    Legality: updates happen only AFTER a task finishes (its decision
+    was already made); task k's outcome can never inform task k's
+    decision. No same-task lookahead by construction.
+    """
+
+    def __init__(self):
+        self.counts = {}
+        for k, v in PRIORS.items():
+            if v.get('pass_n'):
+                self.counts[k] = dict(
+                    pass_k=round(v['pass_rate'] * v['pass_n']),
+                    pass_n=v['pass_n'],
+                    rec_k=round(v['pooled_recall'] * v['recall_n']),
+                    rec_n=v['recall_n'])
+
+    def update(self, key: str, passed: bool,
+               rec_k: int = 0, rec_n: int = 0):
+        c = self.counts.setdefault(key, dict(pass_k=0, pass_n=0,
+                                             rec_k=0, rec_n=0))
+        c['pass_k'] += int(bool(passed))
+        c['pass_n'] += 1
+        if rec_n > 0:
+            c['rec_k'] += max(0, min(rec_k, rec_n))
+            c['rec_n'] += rec_n
+
+    def prior(self, key: str) -> dict:
+        c = self.counts.get(key)
+        if not c or not c['pass_n']:
+            return UNINFORMED_PRIOR
+        return dict(
+            pass_rate=round(c['pass_k'] / c['pass_n'], 4),
+            pass_rate_lb=wilson_lb(c['pass_k'], c['pass_n']),
+            pooled_recall=(round(c['rec_k'] / c['rec_n'], 4)
+                           if c['rec_n'] else 0.0),
+            pooled_recall_lb=(wilson_lb(c['rec_k'], c['rec_n'])
+                              if c['rec_n'] else 0.0),
+            recall_n=c['rec_n'], pass_n=c['pass_n'],
+            provenance=f'PriorStore(n={c["pass_n"]})')
+
+    def sample(self, key: str, rng) -> dict:
+        """Thompson sample: Beta posteriors on pass and recall. Gives
+        untried/under-tried candidates natural exploration while
+        converging to the true best — fixes the pessimistic-LB
+        lock-in (never exploring a mis-prioried candidate)."""
+        c = self.counts.get(key)
+        if not c or not c['pass_n']:
+            return dict(pass_rate=0.5, pass_rate_lb=0.5,
+                        pooled_recall=0.35, pooled_recall_lb=0.35,
+                        recall_n=0, pass_n=0,
+                        provenance='uninformed-sample')
+        pr = rng.betavariate(c['pass_k'] + 1,
+                             c['pass_n'] - c['pass_k'] + 1)
+        if c['rec_n']:
+            rc = rng.betavariate(c['rec_k'] + 1,
+                                 c['rec_n'] - c['rec_k'] + 1)
+        else:
+            rc = 0.35
+        return dict(pass_rate=round(pr, 4), pass_rate_lb=round(pr, 4),
+                    pooled_recall=round(rc, 4),
+                    pooled_recall_lb=round(rc, 4),
+                    recall_n=c['rec_n'], pass_n=c['pass_n'],
+                    provenance=f'Thompson(n={c["pass_n"]})')
+
+
 # ---- real per-(model, theta) outcome anchors (read-only evidence) --------
 REAL_OUTCOME_ANCHORS: Dict[str, dict] = {
     'GLM-5.3|default': dict(
