@@ -1,5 +1,6 @@
 {
- "version": "FULL_DAG_TASKS_v1",
+ "version": "FULL_DAG_TASKS_v1_1",
+ "correction": "v1.1: removed the VIRTUAL fe->er edge (er reads the raw document independently). Task identities, fault assignment, planned pi, deadlines UNCHANGED from v1. xc is an INTRA-document cross-check (tl and er both derive from the same document), not cross-document verification.",
  "seed": 20261014,
  "n_tasks": 15,
  "dag": {
@@ -11,8 +12,7 @@
   ],
   "edges": {
    "fe": [
-    "tl",
-    "er"
+    "tl"
    ],
    "tl": [
     "xc"
@@ -21,11 +21,12 @@
     "xc"
    ],
    "xc": []
-  }
+  },
+  "xcheck_nature": "intra-document (single source doc)"
  },
- "unified_contract": "entity_facts.v2 / timeline.v2 / entity_relations.v2 / fact_check.v2 — doc_id EXPLICITLY stated in every prompt (citation requirement satisfiable for all arms)",
+ "unified_contract": "entity_facts.v2 / timeline.v2 / entity_relations.v2 / fact_check.v2 — doc_id EXPLICITLY stated in every prompt (citation requirement satisfifiable for all arms)",
  "closure_semantics": {
-  "fe": "fault -> re-run fe, tl, er, xc",
+  "fe": "fault -> re-run fe, tl, xc (er UNAFFECTED: independent branch)",
   "tl": "fault -> re-run tl, xc",
   "er": "fault -> re-run er, xc",
   "xc": "fault -> re-run xc"
@@ -93,6 +94,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "58304d9c1c58e41b",
     "er": "126ea1c57d3a529d"
@@ -112,6 +114,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "9b6d302113f847a4",
     "er": "52dcee897ec83ae1"
@@ -131,6 +134,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "a6c8ec18a2d8001b",
     "er": "70715a12f1defebe"
@@ -150,6 +154,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "e6bc0047f4d82545",
     "er": "532c7c7b9074dc2e"
@@ -169,6 +174,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "7c20a6b9c6ebfa31",
     "er": "5329546d9f293f2d"
@@ -188,6 +194,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "083ea4b37438e3dc",
     "er": "060f8b81669f1c04"
@@ -207,6 +214,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "a3ac1f18e15059d1",
     "er": "5a68ce004a129ab4"
@@ -226,6 +234,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "6798aa0c5a34398d",
     "er": "206637d686a8ec2e"
@@ -245,6 +254,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "aaa639d048913911",
     "er": "69b9d5ed9e974470"
@@ -264,6 +274,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "cd7fe5d67f47aba7",
     "er": "2b76178e42da648b"
@@ -283,6 +294,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "150fbd42ea04069a",
     "er": "2e8b7a3e45b60887"
@@ -302,6 +314,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "0cb6a4b92f5240bc",
     "er": "6fe883473f7100e5"
@@ -321,6 +334,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "6a3fde2496628125",
     "er": "e6d61bfcabc5a86c"
@@ -340,6 +354,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "d6c200547b3946ef",
     "er": "d5c8d363efdbd152"
@@ -359,6 +374,7 @@
     "er": "deepseek-flash",
     "xc": "qwen-plus"
    },
+   "xcheck_nature": "intra-document",
    "prompt_sha256": {
     "fe": "69aeb592fc37733c",
     "er": "9c7fe9f80df13d79"

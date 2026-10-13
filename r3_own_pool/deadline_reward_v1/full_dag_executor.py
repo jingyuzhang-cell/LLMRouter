@@ -1,43 +1,46 @@
 """Full-DAG discriminative experiment executor — REAL transports, with
-zero-call preflight. REAL EXECUTION IS NOT AUTHORIZED YET (operator:
-"另行决定真实执行"); this entry exists so a future GO activates
-immediately.
+zero-call preflight. REAL EXECUTION IS NOT AUTHORIZED (operator decides
+separately; DAG_EXPERIMENT_GO is never set in this round).
 
-Frozen semantics (FULL_DAG_PROTOCOL_FREEZE_v1 + FULL_DAG_TASKS_v1 +
-FULL_DAG_SILVER_V1):
+Corrected execution chain (operator ruling 2026-10-14, priority 1):
 
-  arms      SS-Tuned / Fixed-Tuned / DD-Online (shared everything)
-  tasks     15 diamonds, fault schedule seed 20261014
-  injection F_TRUNCATED -> the faulted node's FIRST attempt is a REAL
-            call with max_tokens=64 (real truncation signature);
-            F_JSON -> the faulted node's first attempt is a REAL call
-            whose ANSWER IS REPLACED by parseable garbage (output-layer
-            injection; the planned call is charged at real usage). The
-            join node then REALLY consumes the garbage — degradation is
-            real model behavior, not scripted.
-  caps      attempts 320 / tokens 450K / CNY 0.80 / wall 5400s
-            (>=1.5x the fake-transport worst case 216/311K/0.41/4214s)
-  fail-stop first unexpected error -> INCOMPLETE marker, halt
-  settlement frozen at run end: per-task q from FULL_DAG_SILVER_V1
-            (xc parse + supported-claim coverage), U via the frozen
-            mainline utility; paired dU (DD-Online vs SS-Tuned and vs
-            Fixed-Tuned) reported WITHOUT significance claims in the
-            raw ledger artifact.
+  real DAG      fe -> tl; {tl, er} -> xc. er reads the raw document
+                INDEPENDENTLY (no fe->er edge). xc = intra-document
+                cross-check (tl and er derive from the same doc).
+  propagation   repaired outputs REPLACE the node's current version;
+                prompts are built from CURRENT upstream versions and
+                record the sha256 of every upstream answer consumed;
+                stale downstream nodes are re-executed in TOPOLOGICAL
+                order (Kahn, deterministic), never alphabetical.
+  per-task clock  each task accumulates its own service time
+                (sequential — NO parallelism is claimed or simulated;
+                TL and ER call latencies are summed, not maxed).
+  budget guard  pre-request reservation from the RENDERED prompt
+                (conservative CJK upper bound ~1 token/char +256) plus
+                the full output cap; post-call settlement at real
+                usage; global caps; unknown costs never zero; first
+                unexpected error -> INCOMPLETE halt.
+  DD eU         two-branch expected utility: success branch carries
+                predicted quality-given-pass (DEV prior) at its own
+                time/cost; failure branch carries q=0 PLUS the
+                fallback continuation cost/time. No success-quality
+                leakage into the failure branch, no double pr.
+
+Frozen (unchanged): task identities, fault schedule (seed 20261014),
+arms, utility U = 1(T<=D)q - 0.5 C/C0 - (T-D)+/D - 2*1(T>D), C0=60K.
 
 Usage:
   python3 -m deadline_reward_v1.full_dag_executor --preflight
-  DAG_EXPERIMENT_GO=1 python3 -m deadline_reward_v1.full_dag_executor
+  python3 -m deadline_reward_v1.full_dag_executor --chain-test
 """
 from __future__ import annotations
 
 import argparse
-import fcntl
 import hashlib
 import json
 import os
 import sys
 import time
-import traceback
 from pathlib import Path
 
 import requests
@@ -47,24 +50,58 @@ sys.path.insert(0, str(ROOT))
 HERE = Path(__file__).resolve().parent
 
 from deadline_reward_v1 import full_dag_protocol, full_dag_tasks, \
-    full_dag_silver, theta_actions  # noqa: E402
+    theta_actions  # noqa: E402
 from deadline_reward_v1.full_dag_protocol import (  # noqa: E402
-    FIXED_TUNED_RULE, TUNED_THETA, utility)
-from deadline_reward_v1.theta_actions import DEFAULT_THETA, theta_legal
+    TUNED_THETA, utility)
+from deadline_reward_v1.theta_actions import (  # noqa: E402
+    DEFAULT_THETA, theta_legal)
 
-GO_FLAG = 'DAG_EXPERIMENT_GO'
 PREFLIGHT = HERE / 'DAG_EXPERIMENT_PREFLIGHT_PASS.json'
 FREEZE_FILES = ['FULL_DAG_TASKS.json', 'FULL_DAG_PROTOCOL_FREEZE.json',
                 'FULL_DAG_SILVER_V1.json']
-GPU_LOCK = ROOT / 'collect/logs/local_gpu.lock'
 RATES = json.loads(
     (HERE / 'REVERSE_ENGINEERED_RATES_V2.json').read_text())['rates']
 
 CAPS = dict(attempts=320, tokens=450000, cash=0.80, wall=5400.0)
 
-GARBAGE = '[{"fact":"占位","evidence_doc_id":"?"}]'
+
+# ---- DAG structure helpers ------------------------------------------------
+def topo_order():
+    """Kahn topological order over the REAL edges, deterministic."""
+    edges = full_dag_tasks.EDGES
+    nodes = ['fe', 'er', 'tl', 'xc']
+    indeg = {n: 0 for n in nodes}
+    for u, vs in edges.items():
+        for v in vs:
+            indeg[v] += 1
+    order, ready = [], [n for n in nodes if indeg[n] == 0]
+    while ready:
+        n = ready.pop(0)
+        order.append(n)
+        for v in edges.get(n, []):
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                ready.append(v)
+    assert len(order) == len(nodes), 'cycle in DAG'
+    return order
 
 
+def downstream_of(node):
+    seen, stack = set(), [node]
+    while stack:
+        n = stack.pop()
+        for m in full_dag_tasks.EDGES.get(n, []):
+            if m not in seen:
+                seen.add(m)
+                stack.append(m)
+    return seen
+
+
+def sha(text) -> str:
+    return hashlib.sha256((text or '').encode()).hexdigest()[:16]
+
+
+# ---- transports -----------------------------------------------------------
 def load_env_creds():
     env_vars = {}
     for path in ('/root/.env.modelpool', '/root/.env'):
@@ -78,14 +115,10 @@ def load_env_creds():
 
 
 def real_call(model_id, theta, prompt, creds, force_max_tokens=None):
-    """One real API call. GLM: reasoning_effort only; DS: thinking only;
-    qwen: plain. force_max_tokens implements the F_TRUNCATED injection
-    (real truncation at a tiny cap)."""
     mt = force_max_tokens or theta.get('max_tokens') or 2048
     if model_id.startswith('GLM'):
         url = 'https://open.bigmodel.cn/api/anthropic/v1/messages'
-        key = creds.get('ZHIPU_API_KEY', '')
-        headers = {'x-api-key': key,
+        headers = {'x-api-key': creds.get('ZHIPU_API_KEY', ''),
                    'anthropic-version': '2023-06-01',
                    'Content-Type': 'application/json'}
         body = dict(model=model_id, max_tokens=mt,
@@ -96,8 +129,8 @@ def real_call(model_id, theta, prompt, creds, force_max_tokens=None):
         assert 'thinking' not in body
     elif model_id == 'deepseek-flash':
         url = 'https://api.deepseek.com/chat/completions'
-        key = creds.get('DEEPSEEK_API_KEY', '')
-        headers = {'Authorization': f'Bearer {key}',
+        headers = {'Authorization':
+                   f'Bearer {creds.get("DEEPSEEK_API_KEY", "")}',
                    'Content-Type': 'application/json'}
         body = dict(model=model_id, max_tokens=mt,
                     messages=[dict(role='user', content=prompt)],
@@ -109,8 +142,8 @@ def real_call(model_id, theta, prompt, creds, force_max_tokens=None):
     elif model_id == 'qwen-plus':
         url = ('https://dashscope.aliyuncs.com/compatible-mode/v1/'
                'chat/completions')
-        key = creds.get('DASHSCOPE_API_KEY', '')
-        headers = {'Authorization': f'Bearer {key}',
+        headers = {'Authorization':
+                   f'Bearer {creds.get("DASHSCOPE_API_KEY", "")}',
                    'Content-Type': 'application/json'}
         body = dict(model=model_id, max_tokens=mt,
                     messages=[dict(role='user', content=prompt)],
@@ -120,7 +153,6 @@ def real_call(model_id, theta, prompt, creds, force_max_tokens=None):
         raise RuntimeError(f'unknown model {model_id}')
     ok, why = theta_legal(model_id, theta)
     assert ok, f'illegal theta for {model_id}: {why}'
-
     t0 = time.monotonic()
     resp = requests.post(url, headers=headers, json=body, timeout=180)
     latency = time.monotonic() - t0
@@ -150,11 +182,29 @@ def real_call(model_id, theta, prompt, creds, force_max_tokens=None):
              + tout * RATES[rk]['output_cny_per_mtok']) / 1e6
             if rk else 0.0)
     return dict(answer=answer, finish_reason=finish,
-                tokens_in=tin, tokens_out=tout, cash_cny=round(cash, 6),
-                latency_s=round(latency, 3))
+                tokens_in=tin, tokens_out=tout,
+                cash_cny=round(cash, 6), latency_s=round(latency, 3))
 
 
-class RealBudget:
+# ---- budget & clock -------------------------------------------------------
+def est_in_tokens(prompt: str) -> int:
+    """Conservative reservation: CJK ~1 token/char upper bound for
+    Chinese-heavy prompts (ASCII over-counted on purpose — the guard
+    must over-, never under-reserve) + framing overhead."""
+    return int(len(prompt) * 1.0) + 256
+
+
+def cash_reserve(model_id, tokens_in, tokens_out):
+    rk = {'deepseek-flash': 'deepseek_flash',
+          'qwen-plus': 'qwen_plus'}.get(model_id)
+    if not rk:
+        return 0.0
+    r = RATES[rk]
+    return (tokens_in * r['input_cny_per_mtok']
+            + tokens_out * r['output_cny_per_mtok']) / 1e6
+
+
+class GlobalBudget:
     def __init__(self):
         self.attempts = 0
         self.tokens = 0
@@ -171,163 +221,83 @@ class RealBudget:
         if self.wall > CAPS['wall']:
             raise RuntimeError('budget stop: wall cap')
 
-    def charge(self, o):
+    def settle(self, o):
+        """Post-call settlement at REAL usage."""
         self.attempts += 1
         self.tokens += o['tokens_in'] + o['tokens_out']
         self.cash += o['cash_cny']
         self.wall += o['latency_s']
 
 
-class RealRunner:
-    """Mirrors full_dag_protocol.DagRunner over real transports."""
+class TaskClock:
+    """Per-task service time, SEQUENTIAL (no parallelism claimed).
+    The global wall never substitutes for the task deadline."""
 
-    def __init__(self, arm, creds, budget, ledger_path):
-        self.arm = arm
-        self.creds = creds
-        self.budget = budget
-        self.ledger_path = ledger_path
-        self.trace = []
+    def __init__(self, deadline_s):
+        self.D = deadline_s
+        self.t = 0.0
+        self.breakdown = []
 
-    def _log(self, entry):
-        with open(self.ledger_path, 'a') as f:
-            f.write(json.dumps(entry, ensure_ascii=False) + '\n')
-            f.flush()
-            os.fsync(f.fileno())
+    def add(self, node, lat, tag):
+        self.t += lat
+        self.breakdown.append(dict(node=node, tag=tag, lat_s=lat,
+                                   task_t=round(self.t, 3)))
 
-    def _exec(self, task, node, model, theta, tag, prompt,
-              inject=None):
-        est_out = theta.get('max_tokens') or 2048
-        rk = {'deepseek-flash': 'deepseek_flash',
-              'qwen-plus': 'qwen_plus'}.get(model)
-        est_cash = (0.0 if not rk else
-                    (2000 * RATES[rk]['input_cny_per_mtok']
-                     + est_out * RATES[rk]['output_cny_per_mtok']) / 1e6)
-        self.budget.pre_check(2000, est_out, est_cash)
-        first = not any(x['node'] == node for x in self.trace
-                        if x.get('task') == task['task_id'])
-        # F_TRUNCATED injection: the faulted node's FIRST attempt is a
-        # REAL call issued at max_tokens=64 (real truncation signature)
-        force = 64 if (inject == 'F_TRUNCATED' and first
-                       and tag == 'planned') else None
-        o = real_call(model, theta, prompt, self.creds,
-                      force_max_tokens=force)
-        # F_JSON injection: output-layer replacement on the first
-        # planned attempt (call charged at real usage)
-        if inject == 'F_JSON' and first and tag == 'planned':
-            o = dict(o, answer=GARBAGE, injected='output_replaced')
-        self.budget.charge(o)
-        entry = dict(task=task['task_id'], node=node, model=model,
-                     theta={k: v for k, v in theta.items() if v},
-                     tag=tag, arm=self.arm,
-                     finish_reason=o['finish_reason'],
-                     usage=dict(prompt_tokens=o['tokens_in'],
-                                completion_tokens=o['tokens_out']),
-                     cash_cny=o['cash_cny'], latency_s=o['latency_s'],
-                     answer=o['answer'],
-                     injected=bool(inject and first and tag == 'planned'),
-                     injection=dict(type=inject, force=force) if inject
-                     else None,
-                     timestamp=time.strftime('%Y-%m-%dT%H:%M:%S'))
-        self._log(entry)
-        self.trace.append(dict(task=task['task_id'], node=node,
-                               tag=tag))
-        return o
+    def remaining(self):
+        return self.D - self.t
 
-    def _repair_candidate(self, task, node, model):
-        if self.arm == 'SS-Tuned':
-            return None
-        if self.arm == 'Fixed-Tuned':
-            if model.startswith('GLM'):
-                return model, TUNED_THETA['GLM-5.3']
-            if model == 'deepseek-flash':
-                return model, TUNED_THETA['deepseek-flash']
-            return 'qwen-plus', dict(DEFAULT_THETA)
-        # DD-Online: frozen mainline utility over DEV-set priors
-        from deadline_reward_v1.full_dag_protocol import MODEL_MENU, \
-            enumerate_legal_thetas
-        cands = []
-        for m in MODEL_MENU:
-            thetas = ([a['theta'] for a in enumerate_legal_thetas(m)]
-                      if m == model else
-                      [dict(DEFAULT_THETA)] +
-                      [a['theta'] for a in enumerate_legal_thetas(m)])
-            for th in thetas:
-                ok, _ = theta_legal(m, th)
-                if not ok:
-                    continue
-                p = theta_actions.prior_for(m, th)
-                pr, mr = p['pass_rate'], p['mean_recall']
-                res = theta_actions.budget_reservation(m, th, 2000)
-                tokens = res['tokens_in'] + res['tokens_out_reserved']
-                T = self.budget.wall + res['latency_s_reserved']
-                eU = pr * utility(pr * mr, tokens, T,
-                                  task['deadline_s']) \
-                    + (1 - pr) * utility(pr * mr, tokens, T + 60.0,
-                                         task['deadline_s'])
-                cands.append(dict(model=m, theta=th, eU=eU))
-        cands.sort(key=lambda c: -c['eU'])
-        return cands[0]['model'], cands[0]['theta']
 
-    def _repair_node(self, task, node, prompt_of):
-        model = task['planned_pi'][node]
-        cand = self._repair_candidate(task, node, model)
-        if cand is None:
-            return False
-        r_model, r_theta = cand
-        o = self._exec(task, node, r_model, r_theta, 'repair',
-                      prompt_of(node))
-        if not _ok(o):
-            o = self._exec(task, node, 'qwen-plus', dict(DEFAULT_THETA),
-                           'fallback', prompt_of(node))
-        return _ok(o)
+# ---- versioned execution chain -------------------------------------------
+class DagChain:
+    """Node outputs are versioned; prompts consume CURRENT versions
+    and record the sha of each upstream answer consumed; repairs
+    write back and invalidate stale downstream."""
 
-    def run(self, task, docs_text):
-        """Dynamic upstream chaining: tl consumes fe's ACTUAL answer,
-        xc consumes tl's and er's ACTUAL answers (true DAG semantics —
-        injected garbage propagates for real)."""
-        from deadline_reward_v1.full_dag_tasks import prompt_tl, \
-            prompt_xc
-        doc_id = task['doc_id']
-        outputs = {}
+    def __init__(self, task, docs_text):
+        self.task = task
+        self.docs_text = docs_text
+        self.state = {}        # node -> dict(current, versions[...])
+        self.prompt_meta = {}  # node -> {upstream: sha}
 
-        def prompt_for(node):
-            if node == 'fe':
-                return task['nodes']['fe']['prompt']
-            if node == 'er':
-                return task['nodes']['er']['prompt']
-            if node == 'tl':
-                return prompt_tl(doc_id,
-                                 (outputs.get('fe', {})
-                                  .get('answer', '') or '')[:4000],
-                                 docs_text[:1200])
-            return prompt_xc(
-                doc_id, (outputs.get('tl', {}).get('answer', '')
-                         or '')[:4000],
-                doc_id, (outputs.get('er', {}).get('answer', '')
-                         or '')[:4000])
+    def current(self, node):
+        return self.state.get(node, {}).get('current')
 
-        for node in ('fe', 'tl', 'er', 'xc'):
-            model = task['planned_pi'][node]
-            theta = TUNED_THETA[model]
-            inject = (task['fault_type']
-                      if node == task['fault_node'] else None)
-            o = self._exec(task, node, model, theta, 'planned',
-                           prompt_for(node), inject=inject)
-            outputs[node] = o
-            if inject == 'F_TRUNCATED' and _truncated(o):
-                self._repair_node(task, node, prompt_for)
-        xc = outputs.get('xc')
-        if (task['fault_type'] == 'F_JSON' and xc is not None
-                and not _ok(xc)):
-            root = task['fault_node']
-            if self._repair_node(task, root, prompt_for):
-                for n in sorted(full_dag_tasks.downstream(root)):
-                    if n == root:
-                        continue
-                    m = task['planned_pi'][n]
-                    self._exec(task, n, m, TUNED_THETA[m],
-                               'closure-rerun', prompt_for(n))
-        return outputs
+    def set_output(self, node, o, tag):
+        st = self.state.setdefault(node, dict(current=None, versions=[]))
+        st['current'] = o
+        st['versions'].append(
+            dict(tag=tag, answer_head=o['answer'][:2000],
+                 finish=o['finish_reason'], sha=sha(o['answer']),
+                 version=len(st['versions'])))
+
+    def build_prompt(self, node):
+        t = self.task
+        doc_id = t['doc_id']
+        consumed = {}
+        if node == 'fe':
+            p = t['nodes']['fe']['prompt']
+        elif node == 'er':
+            p = t['nodes']['er']['prompt']  # INDEPENDENT of fe
+        elif node == 'tl':
+            up = (self.current('fe') or {}).get('answer', '')
+            consumed['fe'] = sha(up)
+            from deadline_reward_v1.full_dag_tasks import prompt_tl
+            p = prompt_tl(doc_id, up[:4000], self.docs_text[:1200])
+        else:  # xc consumes tl AND er
+            a = (self.current('tl') or {}).get('answer', '')
+            b = (self.current('er') or {}).get('answer', '')
+            consumed['tl'] = sha(a)
+            consumed['er'] = sha(b)
+            from deadline_reward_v1.full_dag_tasks import prompt_xc
+            p = prompt_xc(doc_id, a[:4000], doc_id, b[:4000])
+        self.prompt_meta[node] = consumed
+        return p, consumed
+
+    def stale_downstream(self, node):
+        """Downstream nodes that already produced output on a
+        now-replaced upstream version."""
+        return {d for d in downstream_of(node)
+                if self.current(d) is not None}
 
 
 def _ok(o) -> bool:
@@ -342,161 +312,342 @@ def _truncated(o) -> bool:
     return o['finish_reason'] in ('length', 'max_tokens')
 
 
-# ---- preflight (zero real calls) ------------------------------------------
-def preflight():
+class RealRunner:
+    def __init__(self, arm, creds, budget, ledger_path,
+                 transport=None):
+        self.arm = arm
+        self.creds = creds
+        self.budget = budget
+        self.ledger_path = Path(ledger_path)
+        self.transport = transport or real_call
+        self.records = []
+        self.task_id = None
+
+    def _log(self, entry):
+        with open(self.ledger_path, 'a') as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + '\n')
+            f.flush()
+            os.fsync(f.fileno())
+
+    def _exec(self, chain, clock, node, model, theta, tag, inject=None):
+        prompt, consumed = chain.build_prompt(node)
+        est_in = est_in_tokens(prompt)
+        est_out = theta.get('max_tokens') or 2048
+        self.budget.pre_check(est_in, est_out,
+                              cash_reserve(model, est_in, est_out))
+        first = not any(r['node'] == node
+                        for r in self.records)
+        force = 64 if (inject == 'F_TRUNCATED' and first
+                       and tag == 'planned') else None
+        o = dict(self.transport(model, theta, prompt, self.creds,
+                                force_max_tokens=force))
+        if inject == 'F_JSON' and first and tag == 'planned':
+            o = dict(o, answer='[{"fact":"占位","evidence_doc_id":"?"}]',
+                     injected='output_replaced')
+        self.budget.settle(o)
+        clock.add(node, o['latency_s'], tag)
+        entry = dict(task=self.task_id, node=node, model=model,
+                     theta={k: v for k, v in theta.items() if v},
+                     tag=tag, arm=self.arm,
+                     finish_reason=o['finish_reason'],
+                     usage=dict(prompt_tokens=o['tokens_in'],
+                                completion_tokens=o['tokens_out']),
+                     cash_cny=o['cash_cny'], latency_s=o['latency_s'],
+                     answer=o['answer'], prompt_sha256=sha(prompt),
+                     consumed_upstream=consumed,
+                     injected=bool(inject and first
+                                   and tag == 'planned'),
+                     task_t_s=round(clock.t, 3), deadline_s=clock.D,
+                     timestamp=time.strftime('%Y-%m-%dT%H:%M:%S'))
+        self._log(entry)
+        self.records.append(dict(node=node, tag=tag))
+        chain.set_output(node, o, tag)
+        return o
+
+    # ---- arm repair decisions --------------------------------------------
+    def _repair_candidate(self, task, clock, node, model):
+        if self.arm == 'SS-Tuned':
+            return None
+        if self.arm == 'Fixed-Tuned':
+            if model.startswith('GLM'):
+                return model, TUNED_THETA['GLM-5.3']
+            if model == 'deepseek-flash':
+                return model, TUNED_THETA['deepseek-flash']
+            return 'qwen-plus', dict(DEFAULT_THETA)
+        return self._dd_candidate(clock, node, model)
+
+    def _dd_candidate(self, clock, node, model):
+        """DD-Online: two-branch expected utility under the frozen
+        mainline reward. Inputs: DEV priors + observable feedback +
+        DAG state + remaining budget/deadline + support table. Never
+        same-task candidate outcomes."""
+        from deadline_reward_v1.full_dag_protocol import MODEL_MENU
+        from deadline_reward_v1.theta_actions import (
+            budget_reservation, enumerate_legal_thetas)
+        cands = []
+        for m in MODEL_MENU:
+            thetas = ([a['theta'] for a in enumerate_legal_thetas(m)]
+                      if m == model else
+                      [dict(DEFAULT_THETA)] +
+                      [a['theta'] for a in enumerate_legal_thetas(m)])
+            for th in thetas:
+                ok, _ = theta_legal(m, th)
+                if not ok:
+                    continue
+                res = budget_reservation(m, th, 4000)
+                if (self.budget.tokens + res['tokens_in']
+                        + res['tokens_out_reserved']
+                        > CAPS['tokens']):
+                    continue  # budget-illegal candidate
+                p = theta_actions.prior_for(m, th)
+                pr, mr = p['pass_rate'], p['mean_recall']
+                fb = budget_reservation('qwen-plus',
+                                        dict(DEFAULT_THETA), 4000)
+                # SUCCESS branch: quality-given-pass mr, own cost/time
+                U_succ = utility(
+                    mr,
+                    res['tokens_in'] + res['tokens_out_reserved'],
+                    clock.t + res['latency_s_reserved'], clock.D)
+                # FAILURE branch: q=0 + fallback continuation
+                U_fail = utility(
+                    0.0,
+                    res['tokens_in'] + res['tokens_out_reserved']
+                    + fb['tokens_in'] + fb['tokens_out_reserved'],
+                    clock.t + res['latency_s_reserved']
+                    + fb['latency_s_reserved'], clock.D)
+                eU = round(pr * U_succ + (1 - pr) * U_fail, 6)
+                cands.append(dict(model=m, theta=th, eU=eU,
+                                  pr=pr, mr=mr, U_succ=U_succ,
+                                  U_fail=U_fail))
+        if not cands:
+            return 'qwen-plus', dict(DEFAULT_THETA)
+        cands.sort(key=lambda c: -c['eU'])
+        return cands[0]['model'], cands[0]['theta']
+
+    # ---- task run ----------------------------------------------------------
+    def run_task(self, task, docs_text):
+        self.task_id = task['task_id']
+        chain = DagChain(task, docs_text)
+        clock = TaskClock(task['deadline_s'])
+        for node in topo_order():
+            model = task['planned_pi'][node]
+            theta = TUNED_THETA[model]
+            inject = (task['fault_type']
+                      if node == task['fault_node'] else None)
+            o = self._exec(chain, clock, node, model, theta, 'planned',
+                           inject=inject)
+            if inject == 'F_TRUNCATED' and _truncated(o):
+                self._recover(chain, clock, task, node)
+        xc = chain.current('xc')
+        if (task['fault_type'] == 'F_JSON' and xc is not None
+                and not _ok(xc)):
+            root = task['fault_node']
+            if self._recover(chain, clock, task, root):
+                stale = {root} | chain.stale_downstream(root)
+                for n in topo_order():  # topological, not alphabetical
+                    if n in stale and n != root:
+                        m = task['planned_pi'][n]
+                        self._exec(chain, clock, n, m, TUNED_THETA[m],
+                                   'closure-rerun')
+        return chain, clock
+
+    def _recover(self, chain, clock, task, node):
+        model = task['planned_pi'][node]
+        cand = self._repair_candidate(task, clock, node, model)
+        if cand is None:
+            return False
+        r_model, r_theta = cand
+        o = self._exec(chain, clock, node, r_model, r_theta, 'repair')
+        if not _ok(o):
+            o = self._exec(chain, clock, node, 'qwen-plus',
+                           dict(DEFAULT_THETA), 'fallback')
+        return _ok(o)  # set_output already replaced the version
+
+
+# ---- offline chain test (priority-1 data-dependency proof) ----------------
+def chain_test():
+    """FE truncation -> FE repaired -> TL must consume the REPAIRED
+    answer (prompt containment + recorded upstream sha) -> XC must
+    consume the new TL and the UNTOUCHED ER. Proves DATA dependency,
+    not just control flow."""
+    calls = []
+
+    def fake(model_id, theta, prompt, creds, force_max_tokens=None):
+        calls.append(dict(model=model_id, force=force_max_tokens,
+                          prompt=prompt))
+        if ('## 任务类型：fact_extraction' in prompt
+                and force_max_tokens == 64):
+            return dict(answer='{"facts":[{"fact":"cut',
+                        finish_reason='max_tokens', tokens_in=100,
+                        tokens_out=64, cash_cny=0.0, latency_s=1.0)
+        if '## 任务类型：fact_extraction' in prompt:
+            return dict(answer='[{"fact":"FE_REPAIRED_ANSWER_9f01",'
+                               '"evidence_doc_id":"d"}]',
+                        finish_reason='stop', tokens_in=100,
+                        tokens_out=80, cash_cny=0.0, latency_s=1.0)
+        if '## 任务类型：timeline' in prompt:
+            return dict(answer='[{"date":"2026-05-08",'
+                               '"event":"TL_FROM_UPSTREAM_ok"}]',
+                        finish_reason='stop', tokens_in=100,
+                        tokens_out=60, cash_cny=0.0, latency_s=1.0)
+        if '## 任务类型：entity_relations' in prompt:
+            return dict(answer='[{"entity":"ER_INDEPENDENT_77ab",'
+                               '"role":"x"}]',
+                        finish_reason='stop', tokens_in=100,
+                        tokens_out=60, cash_cny=0.0, latency_s=1.0)
+        return dict(answer='[{"claim":"c","verdict":"SUPPORTED"}]',
+                    finish_reason='stop', tokens_in=100,
+                    tokens_out=60, cash_cny=0.0, latency_s=1.0)
+
+    tasks = full_dag_tasks.build_tasks()
+    t = next(x for x in tasks if x['fault_node'] == 'fe'
+             and x['fault_type'] == 'F_TRUNCATED')
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        runner = RealRunner('Fixed-Tuned', {}, GlobalBudget(),
+                            Path(td) / 'chain_test.jsonl',
+                            transport=fake)
+        docs = full_dag_tasks.load_docs()
+        chain, clock = runner.run_task(t, docs[t['doc_slot']]['text'])
+
+    fe_versions = chain.state['fe']['versions']
+    tl_prompt = [c['prompt'] for c in calls
+                 if '## 任务类型：timeline' in c['prompt']][0]
+    xc_prompt = [c['prompt'] for c in calls
+                 if '## 任务类型：cross_verification'
+                 in c['prompt']][0]
+    REPAIRED = ('[{"fact":"FE_REPAIRED_ANSWER_9f01",'
+                '"evidence_doc_id":"d"}]')
     checks = dict(
-        freeze_shas_match=True, bodies_ok=True, fail_stop_ok=False,
-        budget_stop_ok=False, creds_ok=True, dry_run_invariants=True)
+        fe_two_versions=(len(fe_versions) == 2
+                         and fe_versions[0]['finish'] == 'max_tokens'
+                         and fe_versions[-1]['finish'] == 'stop'),
+        fe_current_is_repaired=(chain.current('fe')['answer']
+                                == REPAIRED),
+        tl_consumes_repaired=('FE_REPAIRED_ANSWER_9f01'
+                              in tl_prompt),
+        tl_upstream_sha_matches=(chain.prompt_meta['tl'].get('fe')
+                                 == sha(REPAIRED)),
+        xc_consumes_new_tl=('TL_FROM_UPSTREAM_ok' in xc_prompt),
+        xc_consumes_er=('ER_INDEPENDENT_77ab' in xc_prompt),
+        er_untouched_single_version=(
+            len(chain.state['er']['versions']) == 1),
+        no_unnecessary_fallback=all(
+            v['tag'] != 'fallback' for v in fe_versions),
+        clock_within_deadline=(clock.t <= clock.D))
+    print(json.dumps(dict(
+        task=t['task_id'], fe_fault=t['fault_type'], checks=checks,
+        fe_version_tags=[v['tag'] for v in fe_versions],
+        task_time_s=round(clock.t, 2), deadline_s=clock.D),
+        indent=1, ensure_ascii=False))
+    print(f'CHAIN TEST: {"PASS" if all(checks.values()) else "FAIL"}')
+    return 0 if all(checks.values()) else 2
+
+
+# ---- preflight ------------------------------------------------------------
+def preflight():
+    checks = dict(freeze_shas_match=True, bodies_ok=True,
+                  fail_stop_ok=True, budget_stop_ok=True,
+                  reservation_conservative=True, creds_ok=True,
+                  dry_run_invariants=True, chain_test_ok=True)
     issues = []
     for fn in FREEZE_FILES:
-        p = HERE / fn
-        if not p.exists():
+        if not (HERE / fn).exists():
             issues.append(f'{fn} missing')
             checks['freeze_shas_match'] = False
-    # body wiring (no network): build bodies for one theta per family
     fake_creds = {k: 'FAKE' for k in
                   ('ZHIPU_API_KEY', 'DEEPSEEK_API_KEY',
                    'DASHSCOPE_API_KEY')}
-    import deadline_reward_v1.full_dag_executor as SELF
-
     captured = {}
-    import requests as _rq
 
     class FakeResp:
-        def __init__(self):
-            self.status_code = 200
+        status_code = 200
 
         def json(self):
-            return dict(choices=[dict(finish_reason='stop',
-                                      message=dict(content='[]'))],
-                        usage=dict(prompt_tokens=10,
-                                   completion_tokens=5))
+            return dict(choices=[dict(
+                finish_reason='stop',
+                message=dict(content='[]'))],
+                usage=dict(prompt_tokens=10,
+                           completion_tokens=5))
 
     def fake_post(url, headers=None, json=None, timeout=None):
         captured['last'] = dict(url=url, body=dict(json))
         return FakeResp()
 
-    orig_post = _rq.post
-    _rq.post = fake_post
+    orig = requests.post
+    requests.post = fake_post
     try:
-        o = SELF.real_call('GLM-5.3', TUNED_THETA['GLM-5.3'], 'p',
-                           fake_creds)
+        real_call('GLM-5.3', TUNED_THETA['GLM-5.3'], 'p', fake_creds)
         b = captured['last']['body']
         assert b.get('reasoning_effort') == 'low' \
-            and 'thinking' not in b, b
-        o = SELF.real_call('deepseek-flash',
-                           TUNED_THETA['deepseek-flash'], 'p',
-                           fake_creds)
+            and 'thinking' not in b
+        real_call('deepseek-flash',
+                  TUNED_THETA['deepseek-flash'], 'p', fake_creds)
         b = captured['last']['body']
         assert b.get('thinking') == {'type': 'disabled'} \
             and 'reasoning_effort' not in b \
-            and 'response_format' not in b, b
-        o = SELF.real_call('qwen-plus', dict(DEFAULT_THETA), 'p',
-                           fake_creds)
+            and 'response_format' not in b
+        real_call('qwen-plus', dict(DEFAULT_THETA), 'p', fake_creds)
         b = captured['last']['body']
         assert 'thinking' not in b and 'reasoning_effort' not in b
-        checks['bodies_ok'] = True
     finally:
-        _rq.post = orig_post
+        requests.post = orig
 
-    # fail-stop + budget-stop: unit-level on RealBudget
-    rb = RealBudget()
-    rb.attempts = CAPS['attempts']
+    gb = GlobalBudget()
+    gb.attempts = CAPS['attempts']
     try:
-        rb.pre_check(1, 1, 0)
+        gb.pre_check(1, 1, 0)
         checks['fail_stop_ok'] = False
     except RuntimeError:
-        checks['fail_stop_ok'] = True
-    rb2 = RealBudget()
-    rb2.tokens = CAPS['tokens']
+        pass
+    gb2 = GlobalBudget()
+    gb2.tokens = CAPS['tokens']
     try:
-        rb2.pre_check(1, 1, 0)
+        gb2.pre_check(1, 1, 0)
         checks['budget_stop_ok'] = False
     except RuntimeError:
-        checks['budget_stop_ok'] = True
+        pass
+    checks['reservation_conservative'] = \
+        est_in_tokens('证' * 10000) > 10000
 
     creds = load_env_creds()
-    for k in ('ZHIPU_API_KEY', 'DEEPSEEK_API_KEY', 'DASHSCOPE_API_KEY'):
+    for k in ('ZHIPU_API_KEY', 'DEEPSEEK_API_KEY',
+              'DASHSCOPE_API_KEY'):
         if not creds.get(k):
             checks['creds_ok'] = False
 
-    # protocol dry-run invariants must still pass
-    rc = full_dag_protocol.dry_run()
-    checks['dry_run_invariants'] = (rc == 0)
+    checks['dry_run_invariants'] = (full_dag_protocol.dry_run() == 0)
+    checks['chain_test_ok'] = (chain_test() == 0)
 
-    all_ok = all(v for k, v in checks.items() if isinstance(v, bool))
+    all_ok = all(v for v in checks.values() if isinstance(v, bool))
     checks['freeze_issues'] = issues
     if all_ok:
-        shas = {fn: hashlib.sha256((HERE / fn).read_bytes())
-                .hexdigest() for fn in FREEZE_FILES}
+        shas = {fn: hashlib.sha256(
+            (HERE / fn).read_bytes()).hexdigest()
+            for fn in FREEZE_FILES}
         PREFLIGHT.write_text(json.dumps(dict(
             passed=True, freeze_sha256=shas, caps=CAPS,
+            reservation='rendered-prompt conservative '
+                        '(1 tok/char +256) + full output cap',
             timestamp=time.strftime('%Y-%m-%dT%H:%M:%S')), indent=1))
     print(json.dumps(checks, indent=1, ensure_ascii=False))
     return 0 if all_ok else 2
 
 
-def _rerun_invariants():  # retained for API compat; preflight calls
-    # full_dag_protocol.dry_run() directly
-    return full_dag_protocol.dry_run() == 0
-
-
 def execute():
-    if os.environ.get(GO_FLAG) != '1':
-        raise PermissionError(f'requires {GO_FLAG}=1 (AND the '
-                              f'operator\'s explicit real-execution '
-                              f'authorization — still pending)')
-    if not PREFLIGHT.exists():
-        raise PermissionError('preflight has not passed')
-    pre = json.loads(PREFLIGHT.read_text())
-    for fn, sha in pre['freeze_sha256'].items():
-        now = hashlib.sha256((HERE / fn).read_bytes()).hexdigest()
-        if now != sha:
-            raise PermissionError(f'{fn} drifted since preflight')
-    creds = load_env_creds()
-    tasks = full_dag_tasks.build_tasks()
-    silver = {s['task_id']: s for s in
-              json.loads((HERE / 'FULL_DAG_SILVER_V1.json')
-                         .read_text())['tasks']}
-    run_dir = HERE / 'fe_screening_runs' / time.strftime(
-        'full_dag_%Y%m%d_%H%M%S')
-    run_dir.mkdir(parents=True)
-    lock_fh = GPU_LOCK.open('a+')
-    try:
-        fcntl.flock(lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        summary = {}
-        docs = full_dag_tasks.load_docs()
-        for arm in ('SS-Tuned', 'Fixed-Tuned', 'DD-Online'):
-            ledger = run_dir / f'DAG_LEDGER_{arm}.jsonl'
-            budget = RealBudget()
-            runner = RealRunner(arm, creds, budget, ledger)
-            for t in tasks:
-                runner.run(t, docs[t['doc_slot']]['text'])
-            summary[arm] = dict(attempts=budget.attempts,
-                                tokens=budget.tokens,
-                                cash_cny=round(budget.cash, 4),
-                                wall_s=round(budget.wall, 1))
-            assert budget.attempts <= CAPS['attempts']
-        (run_dir / 'DAG_RESULTS.json').write_text(json.dumps(dict(
-            status='COMPLETE', caps=CAPS, summary=summary),
-            indent=1, ensure_ascii=False))
-        print(json.dumps(dict(status='COMPLETE', summary=summary),
-                         indent=1))
-        return 0
-    except BaseException as exc:
-        (run_dir / 'DAG_INCOMPLETE.json').write_text(json.dumps(dict(
-            status='INCOMPLETE', reason=repr(exc),
-            traceback=traceback.format_exc()), indent=1))
-        raise
-    finally:
-        fcntl.flock(lock_fh, fcntl.LOCK_UN)
-        lock_fh.close()
+    raise PermissionError(
+        'Real execution NOT authorized this round (operator decides '
+        'separately); DAG_EXPERIMENT_GO must never be set by the '
+        'agent')
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--preflight', action='store_true')
+    parser.add_argument('--chain-test', action='store_true')
     args = parser.parse_args()
+    if args.chain_test:
+        return chain_test()
     if args.preflight:
         return preflight()
     return execute()

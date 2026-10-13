@@ -1,0 +1,284 @@
+{
+ "version": "DD_VS_FIXED_DIFF_v1",
+ "zero_model_calls": true,
+ "states": [
+  {
+   "state": "S1 rich/rich (fe, GLM)",
+   "node": "fe",
+   "faulted_model": "GLM-5.3",
+   "clock": {
+    "t_s": 20.0,
+    "D_s": 120.0,
+    "remaining_s": 100.0
+   },
+   "budget": {
+    "tokens_spent": 0,
+    "tokens_cap": 450000
+   },
+   "fixed": {
+    "action": "GLM low@8192 (same model)",
+    "legal": true
+   },
+   "dd": {
+    "action": "qwen-plus {'max_tokens': 2048}",
+    "legal": true,
+    "eU": 0.567247,
+    "U_succ": 0.567247,
+    "U_fail": -0.1008
+   },
+   "same_choice": false,
+   "driver": "DD prefers qwen-plus {'max_tokens': 2048} (eU=0.567247, pr=1.0, mr=0.6176470588235294) over rule's GLM low@8192 (same model) (eU=0.508694); eU gap=0.058553; driven by DEV priors (pass/recall) + latency reservation under T=20.0/D=120.0",
+   "top3": [
+    {
+     "action": "qwen-plus {'max_tokens': 2048}",
+     "eU": 0.567247,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3-Flash {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.538106,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3 {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.508694,
+     "legal": true
+    }
+   ]
+  },
+  {
+   "state": "S2 budget-poor (fe, GLM)",
+   "node": "fe",
+   "faulted_model": "GLM-5.3",
+   "clock": {
+    "t_s": 20.0,
+    "D_s": 120.0,
+    "remaining_s": 100.0
+   },
+   "budget": {
+    "tokens_spent": 438000,
+    "tokens_cap": 450000
+   },
+   "fixed": {
+    "action": "GLM low@8192 (same model)",
+    "legal": false
+   },
+   "dd": {
+    "action": "qwen-plus {'max_tokens': 2048}",
+    "legal": true,
+    "eU": 0.567247,
+    "U_succ": 0.567247,
+    "U_fail": -0.1008
+   },
+   "same_choice": false,
+   "driver": "DD prefers qwen-plus {'max_tokens': 2048} (eU=0.567247, pr=1.0, mr=0.6176470588235294) over rule's GLM low@8192 (same model) (eU=0.508694); eU gap=0.058553; driven by DEV priors (pass/recall) + latency reservation under T=20.0/D=120.0",
+   "top3": [
+    {
+     "action": "qwen-plus {'max_tokens': 2048}",
+     "eU": 0.567247,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3-Flash {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.538106,
+     "legal": false
+    },
+    {
+     "action": "GLM-5.3 {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.508694,
+     "legal": false
+    }
+   ]
+  },
+  {
+   "state": "S3 deadline-tight (fe, GLM)",
+   "node": "fe",
+   "faulted_model": "GLM-5.3",
+   "clock": {
+    "t_s": 105.0,
+    "D_s": 120.0,
+    "remaining_s": 15.0
+   },
+   "budget": {
+    "tokens_spent": 0,
+    "tokens_cap": 450000
+   },
+   "fixed": {
+    "action": "GLM low@8192 (same model)",
+    "legal": true
+   },
+   "dd": {
+    "action": "qwen-plus {'max_tokens': 2048}",
+    "legal": true,
+    "eU": -2.217067,
+    "U_succ": -2.217067,
+    "U_fail": -2.559133
+   },
+   "same_choice": false,
+   "driver": "DD prefers qwen-plus {'max_tokens': 2048} (eU=-2.217067, pr=1.0, mr=0.6176470588235294) over rule's GLM low@8192 (same model) (eU=-2.268267); eU gap=0.0512; driven by DEV priors (pass/recall) + latency reservation under T=105.0/D=120.0",
+   "top3": [
+    {
+     "action": "qwen-plus {'max_tokens': 2048}",
+     "eU": -2.217067,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3 {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": -2.268267,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3-Flash {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": -2.268267,
+     "legal": true
+    }
+   ]
+  },
+  {
+   "state": "S4 fe fault + stale downstream",
+   "node": "fe",
+   "faulted_model": "GLM-5.3",
+   "clock": {
+    "t_s": 40.0,
+    "D_s": 160.0,
+    "remaining_s": 120.0
+   },
+   "budget": {
+    "tokens_spent": 0,
+    "tokens_cap": 450000
+   },
+   "fixed": {
+    "action": "GLM low@8192 (same model)",
+    "legal": true
+   },
+   "dd": {
+    "action": "qwen-plus {'max_tokens': 2048}",
+    "legal": true,
+    "eU": 0.567247,
+    "U_succ": 0.567247,
+    "U_fail": -0.1008
+   },
+   "same_choice": false,
+   "driver": "DD prefers qwen-plus {'max_tokens': 2048} (eU=0.567247, pr=1.0, mr=0.6176470588235294) over rule's GLM low@8192 (same model) (eU=0.508694); eU gap=0.058553; driven by DEV priors (pass/recall) + latency reservation under T=40.0/D=160.0",
+   "top3": [
+    {
+     "action": "qwen-plus {'max_tokens': 2048}",
+     "eU": 0.567247,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3-Flash {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.538106,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3 {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.508694,
+     "legal": true
+    }
+   ]
+  },
+  {
+   "state": "S5 er fault (DS, partial closure)",
+   "node": "er",
+   "faulted_model": "deepseek-flash",
+   "clock": {
+    "t_s": 20.0,
+    "D_s": 120.0,
+    "remaining_s": 100.0
+   },
+   "budget": {
+    "tokens_spent": 0,
+    "tokens_cap": 450000
+   },
+   "fixed": {
+    "action": "DS thinking=disabled (same model)",
+    "legal": true
+   },
+   "dd": {
+    "action": "qwen-plus {'max_tokens': 2048}",
+    "legal": true,
+    "eU": 0.567247,
+    "U_succ": 0.567247,
+    "U_fail": -0.1008
+   },
+   "same_choice": false,
+   "driver": "DD prefers qwen-plus {'max_tokens': 2048} (eU=0.567247, pr=1.0, mr=0.6176470588235294) over rule's DS thinking=disabled (same model) (eU=0.372661); eU gap=0.194586; driven by DEV priors (pass/recall) + latency reservation under T=20.0/D=120.0",
+   "top3": [
+    {
+     "action": "qwen-plus {'max_tokens': 2048}",
+     "eU": 0.567247,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3-Flash {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.538106,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3 {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.508694,
+     "legal": true
+    }
+   ]
+  },
+  {
+   "state": "S6 xc fault (qwen, local)",
+   "node": "xc",
+   "faulted_model": "qwen-plus",
+   "clock": {
+    "t_s": 20.0,
+    "D_s": 120.0,
+    "remaining_s": 100.0
+   },
+   "budget": {
+    "tokens_spent": 0,
+    "tokens_cap": 450000
+   },
+   "fixed": {
+    "action": "qwen switch",
+    "legal": true
+   },
+   "dd": {
+    "action": "GLM-5.3-Flash {'reasoning_effort': 'low', 'max_tokens': 8192}",
+    "legal": true,
+    "eU": 0.538106,
+    "U_succ": 0.538106,
+    "U_fail": -0.152
+   },
+   "same_choice": false,
+   "driver": "DD prefers GLM-5.3-Flash {'reasoning_effort': 'low', 'max_tokens': 8192} (eU=0.538106, pr=1.0, mr=0.6397058823529411) over rule's qwen switch (eU=n/a); eU gap=None; driven by DEV priors (pass/recall) + latency reservation under T=20.0/D=120.0",
+   "top3": [
+    {
+     "action": "GLM-5.3-Flash {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.538106,
+     "legal": true
+    },
+    {
+     "action": "GLM-5.3 {'reasoning_effort': 'low', 'max_tokens': 8192}",
+     "eU": 0.508694,
+     "legal": true
+    },
+    {
+     "action": "deepseek-flash {'thinking': 'disabled', 'max_tokens': 2048}",
+     "eU": 0.372661,
+     "legal": true
+    }
+   ]
+  }
+ ],
+ "conclusion": {
+  "n_states": 6,
+  "n_same": 0,
+  "n_diff": 6,
+  "verdict": "DD decision rule DOES exhibit state-conditioned differentiation",
+  "known_gaps": [
+   "closure re-execution cost/latency NOT yet inside eU (S4/S5 downstream re-runs are un-priced in the decision)",
+   "priors rest on tiny DEV samples (FE3/FE4 n=2 per cell); Flash-vs-GLM recall gap 9/17 vs 8/17 is n=1 noise-prone",
+   "no per-node-type quality prior (fe/tl/er/xc share one recall prior per model)",
+   "no downstream quality-propagation model (repaired fe quality -> tl/xc terminal impact is unmodeled)",
+   "sequential clock only; no critical-path/parallel model"
+  ]
+ },
+ "notes": "DD sees only node/model/finish/clock/budget (observable); injected fault labels never passed to the decision"
+}

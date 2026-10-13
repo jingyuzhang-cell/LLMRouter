@@ -40,7 +40,13 @@ BENCH = PILOT / 'benchmark_v1'
 
 SEED = 20261014
 NODES = ('fe', 'tl', 'er', 'xc')
-EDGES = {'fe': ['tl', 'er'], 'tl': ['xc'], 'er': ['xc'], 'xc': []}
+# REAL structure (corrected 2026-10-14 per operator ruling): er reads
+# the raw document INDEPENDENTLY — there is NO fe->er edge. Branch:
+# fe and er start in parallel; join: xc consumes tl AND er outputs.
+EDGES = {'fe': ['tl'], 'tl': ['xc'], 'er': ['xc'], 'xc': []}
+# NOTE xc cross-check nature: tl and er BOTH derive from the SAME
+# document -> intra-document cross-check (single-source), NOT
+# cross-document verification. Recorded per task in xcheck_nature.
 
 # planned heterogeneous assignment — SAME for all arms (frozen)
 PLANNED_PI = {'fe': 'GLM-5.3', 'tl': 'GLM-5.3',
@@ -236,15 +242,24 @@ def build_tasks():
 def freeze():
     tasks = build_tasks()
     doc = dict(
-        version='FULL_DAG_TASKS_v1', seed=SEED, n_tasks=len(tasks),
-        dag=dict(nodes=list(NODES), edges=EDGES),
+        version='FULL_DAG_TASKS_v1_1',
+        correction='v1.1: removed the VIRTUAL fe->er edge (er reads '
+                   'the raw document independently). Task identities, '
+                   'fault assignment, planned pi, deadlines UNCHANGED '
+                   'from v1. xc is an INTRA-document cross-check '
+                   '(tl and er both derive from the same document), '
+                   'not cross-document verification.',
+        seed=SEED, n_tasks=len(tasks),
+        dag=dict(nodes=list(NODES), edges=EDGES,
+                 xcheck_nature='intra-document (single source doc)'),
         unified_contract='entity_facts.v2 / timeline.v2 / '
                          'entity_relations.v2 / fact_check.v2 — '
                          'doc_id EXPLICITLY stated in every prompt '
-                         '(citation requirement satisfiable for all '
+                         '(citation requirement satisfifiable for all '
                          'arms)',
         closure_semantics=dict(
-            fe='fault -> re-run fe, tl, er, xc',
+            fe='fault -> re-run fe, tl, xc (er UNAFFECTED: '
+               'independent branch)',
             tl='fault -> re-run tl, xc',
             er='fault -> re-run er, xc',
             xc='fault -> re-run xc'),
@@ -257,6 +272,7 @@ def freeze():
             doc_slot=t['doc_slot'], fault_node=t['fault_node'],
             fault_type=t['fault_type'], deadline_s=t['deadline_s'],
             planned_pi=t['planned_pi'],
+            xcheck_nature='intra-document',
             prompt_sha256=dict(
                 fe=hashlib.sha256(t['nodes']['fe']['prompt']
                                   .encode()).hexdigest()[:16],
