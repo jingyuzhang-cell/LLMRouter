@@ -1,5 +1,5 @@
 {
- "version": "FULL_DAG_NODE_PRIORS_v1",
+ "version": "FULL_DAG_NODE_PRIORS_v2",
  "source": "screening_full80_ledger (TL/ER/XC, 68 real calls) + FE runs for the fe node type",
  "fe_node_type": {
   "note": "fe priors come from theta_actions.PRIORS (FE paired runs + Phase-4 cells, same-contract observations)"
@@ -102,5 +102,56 @@
    "caveat": "historical screening (short-prompt contract, thinking=disabled DS / default GLM/qwen of that era); PRIOR ONLY — pass≈1 reflects that contract, latency is the transferable signal"
   }
  },
- "zero_model_calls": true
+ "zero_model_calls": true,
+ "node_quality": {
+  "er|deepseek-flash": {
+   "recall": 0.06,
+   "found": 3,
+   "n": 50,
+   "caveat": "silver auto-verified recall over pooled samples; a miss may mean the input doc lacked that fact (denominator overcounts) — RELATIVE signal only"
+  },
+  "tl|deepseek-flash": {
+   "recall": 0.075,
+   "found": 3,
+   "n": 40,
+   "caveat": "silver auto-verified recall over pooled samples; a miss may mean the input doc lacked that fact (denominator overcounts) — RELATIVE signal only"
+  },
+  "xc|glm-5.3": {
+   "recall": 0.1,
+   "found": 1,
+   "n": 10,
+   "caveat": "silver auto-verified recall over pooled samples; a miss may mean the input doc lacked that fact (denominator overcounts) — RELATIVE signal only"
+  },
+  "er|glm-5.3": {
+   "recall": 0.1,
+   "found": 5,
+   "n": 50,
+   "caveat": "silver auto-verified recall over pooled samples; a miss may mean the input doc lacked that fact (denominator overcounts) — RELATIVE signal only"
+  },
+  "tl|glm-5.3": {
+   "recall": 0.08,
+   "found": 4,
+   "n": 50,
+   "caveat": "silver auto-verified recall over pooled samples; a miss may mean the input doc lacked that fact (denominator overcounts) — RELATIVE signal only"
+  },
+  "er|glm-5.3-flash": {
+   "recall": 0.08,
+   "found": 4,
+   "n": 50,
+   "caveat": "silver auto-verified recall over pooled samples; a miss may mean the input doc lacked that fact (denominator overcounts) — RELATIVE signal only"
+  },
+  "tl|glm-5.3-flash": {
+   "recall": 0.08,
+   "found": 4,
+   "n": 50,
+   "caveat": "silver auto-verified recall over pooled samples; a miss may mean the input doc lacked that fact (denominator overcounts) — RELATIVE signal only"
+  },
+  "tl|qwen-plus": {
+   "recall": 0.075,
+   "found": 3,
+   "n": 40,
+   "caveat": "silver auto-verified recall over pooled samples; a miss may mean the input doc lacked that fact (denominator overcounts) — RELATIVE signal only"
+  }
+ },
+ "node_quality_source": "capital_event_quality_scored.json (68 real calls, zero-call rescore)"
 }

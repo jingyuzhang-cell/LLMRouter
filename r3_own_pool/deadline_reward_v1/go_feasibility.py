@@ -142,21 +142,29 @@ def sensitivity():
         model_menu=MODEL_MENU, utility_fn=utility)
     base_action = (base['model'],
                    tuple(sorted(base['theta'].items())))
-    # Wilson-ish ranges for tiny n: qwen recall mean over 3 (range of
-    # component values ±), GLM n=2
-    for qwen_mr in (0.35, 0.49, 0.62):
-        for glm_mr in (0.44, 0.57, 0.71):
-            for qwen_pr in (0.6, 1.0):
-                for glm_pr in (0.6, 1.0):
+    # perturb AROUND the Wilson-LB values the decision actually uses
+    # (qwen LB ~0.226, GLM53 low@8192 LB ~0.316, DS LB ~0.286 pooled)
+    for qwen_mr in (0.15, 0.23, 0.34):
+        for glm_mr in (0.25, 0.32, 0.45):
+            for ds_mr in (0.20, 0.29, 0.40):
+                for pr in (0.55, 0.95):
                     import deadline_reward_v1.theta_actions as ta
                     orig = dict(ta.PRIORS)
                     ta.PRIORS = dict(orig)
                     ta.PRIORS['qwen-plus|default'] = dict(
-                        pass_rate=qwen_pr, mean_recall=qwen_mr,
+                        pass_rate=pr, pass_rate_lb=pr,
+                        pooled_recall=qwen_mr,
+                        pooled_recall_lb=qwen_mr,
                         provenance='sensitivity-trial')
                     ta.PRIORS['GLM-5.3|low@8192'] = dict(
-                        pass_rate=glm_pr, mean_recall=glm_mr,
+                        pass_rate=pr, pass_rate_lb=pr,
+                        pooled_recall=glm_mr,
+                        pooled_recall_lb=glm_mr,
                         provenance='sensitivity-trial')
+                    ta.PRIORS['deepseek-flash|thinking=disabled'] =                         dict(pass_rate=pr, pass_rate_lb=pr,
+                             pooled_recall=ds_mr,
+                             pooled_recall_lb=ds_mr,
+                             provenance='sensitivity-trial')
                     try:
                         dec = dd_decision.choose(
                             planned_pi=t['planned_pi'], clock=clock,
@@ -181,8 +189,8 @@ def sensitivity():
         trials=trials, flips=flips,
         flip_rate=round(flips / trials, 3),
         action_distribution=dict(Counter(outcomes)),
-        grid='qwen_mr {0.35..0.62} x glm_mr {0.44..0.71} x '
-             'pass {0.6,1.0}',
+        grid='qwen/glm/ds pooled-recall LB± x pass {0.55,0.95} '
+             '(108 trials, perturbed around Wilson LBs)',
         note='flip rate = fraction of prior-uncertainty trials in '
              'which DD abandons its baseline action')
 

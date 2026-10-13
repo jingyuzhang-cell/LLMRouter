@@ -403,16 +403,17 @@
   }
  },
  "dd_prior_sensitivity": {
-  "base_action": "qwen-plus",
-  "trials": 36,
-  "flips": 25,
-  "flip_rate": 0.694,
+  "base_action": "deepseek-flash",
+  "trials": 54,
+  "flips": 22,
+  "flip_rate": 0.407,
   "action_distribution": {
-   "GLM-5.3-Flash": 20,
-   "GLM-5.3": 5,
-   "qwen-plus": 11
+   "GLM-5.3-Flash": 6,
+   "deepseek-flash": 32,
+   "GLM-5.3": 1,
+   "qwen-plus": 15
   },
-  "grid": "qwen_mr {0.35..0.62} x glm_mr {0.44..0.71} x pass {0.6,1.0}",
+  "grid": "qwen/glm/ds pooled-recall LB± x pass {0.55,0.95} (108 trials, perturbed around Wilson LBs)",
   "note": "flip rate = fraction of prior-uncertainty trials in which DD abandons its baseline action"
  },
  "reading": {

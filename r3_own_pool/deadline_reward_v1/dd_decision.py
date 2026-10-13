@@ -39,14 +39,19 @@ from deadline_reward_v1.theta_actions import (
 HERE = Path(__file__).resolve().parent
 
 _NODE_PRIORS: Optional[dict] = None
+NODE_QUALITY: Optional[dict] = None
 
 
 def node_priors() -> dict:
-    global _NODE_PRIORS
+    global _NODE_PRIORS, NODE_QUALITY
     if _NODE_PRIORS is None:
         p = HERE / 'FULL_DAG_NODE_PRIORS.json'
-        _NODE_PRIORS = (json.loads(p.read_text())['node_priors']
-                        if p.exists() else {})
+        if p.exists():
+            d = json.loads(p.read_text())
+            _NODE_PRIORS = d.get('node_priors', {})
+            NODE_QUALITY = d.get('node_quality', {})
+        else:
+            _NODE_PRIORS, NODE_QUALITY = {}, {}
     return _NODE_PRIORS
 
 
@@ -60,10 +65,33 @@ def lat_of(node_type: str, model_id: str) -> float:
                               0)['latency_s_reserved']
 
 
+def _node_quality_ratio(node_type: str, model_id: str) -> float:
+    """Relative recall ratio for (node_type, model) from the 68
+    scored historical calls, vs the model's own cross-node mean.
+    Only cells with n>=30 enter; shrunk 50% toward 1.0 (weak signal,
+    denominator caveat documented in FULL_DAG_NODE_PRIORS)."""
+    qs = NODE_QUALITY.get(f'{node_type}|{model_id}')
+    if not qs or qs['n'] < 30:
+        return 1.0
+    cells = [v for k, v in NODE_QUALITY.items()
+             if k.split('|')[0] in ('tl', 'er', 'xc')
+             and k.endswith(f'|{model_id}') and v['n'] >= 30]
+    if len(cells) < 2:
+        return 1.0
+    mean_r = sum(v['recall'] * v['n'] for v in cells) / sum(
+        v['n'] for v in cells)
+    if mean_r <= 0:
+        return 1.0
+    ratio = qs['recall'] / mean_r
+    return round(1.0 + 0.5 * (ratio - 1.0), 4)   # 50% shrink
+
+
 def q_node(node_type: str, model_id: str, theta: dict) -> float:
-    """pass x recall prior for one node slot."""
+    """Pessimistic (Wilson-LB) pass x pooled-recall prior for one
+    node slot, with the weak node-type quality ratio applied."""
     p = prior_for(model_id, theta)
-    return round(p['pass_rate'] * p['mean_recall'], 6)
+    base = p['pass_rate_lb'] * p['pooled_recall_lb']
+    return round(base * _node_quality_ratio(node_type, model_id), 6)
 
 
 def expected_task_quality(planned_pi: Dict[str, str],
@@ -126,7 +154,9 @@ def choose(planned_pi, clock, faulted_node, faulted_model,
                     > caps_tokens):
                 continue  # budget-illegal (incl. closure price)
             p = prior_for(m, th)
-            pr, mr = p['pass_rate'], p['mean_recall']
+            pr = p['pass_rate_lb']
+            mr = p['pooled_recall_lb'] * _node_quality_ratio(
+                faulted_node, m)
             cand_lat = lat_of(faulted_node, m)
             eq = expected_task_quality(planned_pi, faulted_node,
                                        (m, th), fallback)

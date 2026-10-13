@@ -63,7 +63,7 @@ def dd_full(arm_runner, clock, node, model, budget):
             legal = (budget.tokens + res['tokens_in']
                      + res['tokens_out_reserved'] <= CAPS['tokens'])
             p = prior_for(m, th)
-            pr, mr = p['pass_rate'], p['mean_recall']
+            pr, mr = p['pass_rate_lb'], p['pooled_recall_lb']
             fb = budget_reservation('qwen-plus', dict(DEFAULT_THETA),
                                     4000)
             U_succ = _util(mr, res['tokens_in']

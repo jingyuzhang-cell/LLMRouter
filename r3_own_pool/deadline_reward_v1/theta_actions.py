@@ -168,32 +168,53 @@ def budget_reservation(model_id: str, theta: dict,
 
 
 # ---- DEV-set priors for online decisions (derived from anchors) ----------
-# (model, theta-bucket) -> (pass_rate_prior, mean_recall_prior, provenance).
-# All observations come from DEV tasks (FE runs, Phase-4 cells,
-# historical screening) — DIFFERENT tasks from the 15 full-DAG tasks,
-# so using them as decision priors carries no same-task leakage.
+def wilson_lb(k: int, n: int, z: float = 1.96) -> float:
+    """Wilson 95% lower bound — the pessimistic small-n stance."""
+    if n == 0:
+        return 0.0
+    p = k / n
+    d = 1 + z * z / n
+    centre = p + z * z / (2 * n)
+    rad = z * ((p * (1 - p) + z * z / (4 * n)) / n) ** 0.5
+    return round(max(0.0, (centre - rad) / d), 4)
+
+
+def _mk(pass_k, pass_n, rec_k, rec_n, provenance):
+    return dict(
+        pass_rate=round(pass_k / pass_n, 4) if pass_n else 0.0,
+        pass_rate_lb=wilson_lb(pass_k, pass_n),
+        pooled_recall=(round(rec_k / rec_n, 4) if rec_n else 0.0),
+        pooled_recall_lb=wilson_lb(rec_k, rec_n),
+        recall_n=rec_n, pass_n=pass_n,
+        provenance=provenance)
+
+
+# Pooled counts (honest small-n handling: pooled recall, not the mean
+# of per-task recalls; pass at Wilson lower bounds).
 PRIORS: Dict[str, dict] = {
-    'GLM-5.3|low@8192': dict(
-        pass_rate=1.0, mean_recall=(8 / 17 + 3 / 4) / 2,
-        provenance='Phase-4 cells 5-6 (2/2, recall 8/17, 3/4)'),
-    'GLM-5.3-Flash|low@8192': dict(
-        pass_rate=1.0, mean_recall=(9 / 17 + 3 / 4) / 2,
-        provenance='Phase-4 cells 7-8 (2/2, recall 9/17, 3/4)'),
-    'GLM-5.3|low@2048': dict(
-        pass_rate=0.0, mean_recall=0.0,
-        provenance='Phase-4 cells 3-4 REFUTED (still max_tokens cut)'),
-    'deepseek-flash|thinking=disabled': dict(
-        # FE 2/2 (same-contract) blended with historical 17/17
-        # (different prompts, discounted 0.5)
-        pass_rate=(1.0 + 0.5 * 1.0) / 2,
-        mean_recall=(7 / 17 + 3 / 4) / 2,
-        provenance='Phase-4 cells 1-2 + historical 17/17 discounted'),
-    'qwen-plus|default': dict(
-        pass_rate=1.0, mean_recall=(6 / 17 + 2 / 4 + 1.0) / 3,
-        provenance='FE recovery 5/5, recall 6/17, 2/4, 1/1'),
+    'GLM-5.3|low@8192': _mk(
+        2, 2, 8 + 3, 17 + 4,
+        'Phase-4 cells 5-6: 2/2 pass, pooled recall 11/21'),
+    'GLM-5.3-Flash|low@8192': _mk(
+        2, 2, 9 + 3, 17 + 4,
+        'Phase-4 cells 7-8: 2/2 pass, pooled recall 12/21'),
+    'GLM-5.3|low@2048': _mk(
+        0, 2, 0, 0,
+        'Phase-4 cells 3-4 REFUTED (still max_tokens cut)'),
+    'deepseek-flash|thinking=disabled': _mk(
+        # pass: FE 2/2 same-contract blended with historical 17/17
+        # different-prompt discounted x0.5 -> effective 8.5/9
+        8, 9, 7 + 3, 17 + 4,
+        'Phase-4 cells 1-2 + historical 17/17 (discounted); pooled '
+        'recall 10/21'),
+    'qwen-plus|default': _mk(
+        5, 5, 6 + 2 + 1, 17 + 4 + 1,
+        'FE recovery 5/5 pass, pooled recall 9/22'),
 }
-UNINFORMED_PRIOR = dict(pass_rate=0.5, mean_recall=0.35,
-                        provenance='uninformed')
+UNINFORMED_PRIOR = dict(
+    pass_rate=0.5, pass_rate_lb=0.5,
+    pooled_recall=0.35, pooled_recall_lb=0.35,
+    recall_n=0, pass_n=0, provenance='uninformed')
 
 
 def prior_for(model_id: str, theta: dict) -> dict:

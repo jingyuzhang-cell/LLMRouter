@@ -201,7 +201,8 @@ class DagRunner:
                 if not ok:
                     continue
                 p = theta_actions.prior_for(m, th)
-                pr, mr = p['pass_rate'], p['mean_recall']
+                pr = p['pass_rate_lb']
+                mr = p['pooled_recall_lb']
                 res = budget_reservation(m, th, 2000)
                 tokens = res['tokens_in'] + res['tokens_out_reserved']
                 T = self.budget.wall + res['latency_s_reserved']
