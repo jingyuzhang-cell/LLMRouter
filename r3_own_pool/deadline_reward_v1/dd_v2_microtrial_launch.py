@@ -159,6 +159,9 @@ def execute(approved, rehearse=False):
         def __getattr__(self, name):
             return getattr(self._srv, name)
 
+        def set_engine(self, eng):
+            self._srv.engine = eng
+
     if not rehearse:
         from deadline_reward_v1.supplementary_runner import ModelManager
         manager = ModelManager()
@@ -184,8 +187,12 @@ def execute(approved, rehearse=False):
             run_root / 'base', base_server, RealClock(), {},
             manager=(manager if manager else base_server.manager),
             real=True)
-        base_server.engine = base_engine
-        server = base_server
+        if hasattr(base_server, 'set_engine'):
+            base_server.set_engine(base_engine)
+        else:
+            base_server.engine = base_engine
+        server = (base_server._srv if hasattr(base_server, '_srv')
+                  else base_server)
         snapshot = jv.run_shared_base(base_engine, tasks, PLANNED,
                                       fault_uids, d3)
         base_pt = jv._per_task_base_tokens(base_engine)
@@ -213,7 +220,10 @@ def execute(approved, rehearse=False):
                 manager=(manager if manager
                          else server.manager),
                 real=True)
-            server.engine = eng
+            if hasattr(server, 'set_engine'):
+                server.set_engine(eng)
+            else:
+                server.engine = eng
             state = SchedulerState(
                 eng.clock,
                 task_deadlines={t['uid']: eng.clock.time()
