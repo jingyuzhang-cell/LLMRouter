@@ -1,0 +1,41 @@
+{
+ "version": "REVERSE_ENGINEERED_RATES_V2",
+ "correction": "cost_cash is in CNY. v1 incorrectly labeled as USD/Mtok.",
+ "rates": {
+  "deepseek_flash": {
+   "input_cny_per_mtok": 2.13,
+   "output_cny_per_mtok": 8.52,
+   "r_squared": 1.0,
+   "n_calls": 17,
+   "cross_check": "input~2.13 output~8.52 vs deepseek-chat peak 2/8 CNY: CLOSE"
+  },
+  "qwen_plus": {
+   "input_cny_per_mtok": 0.8,
+   "output_cny_per_mtok": 2.01,
+   "r_squared": 1.0,
+   "n_calls": 17,
+   "cross_check": "input~0.80 matches public qwen-plus ~0.8; output~2.00 differs from ~8 (different tier/mode)"
+  },
+  "glm_53": {
+   "billing": "subscription",
+   "cash_cny_per_call": 0
+  },
+  "glm_53_flash": {
+   "billing": "subscription",
+   "cash_cny_per_call": 0
+  }
+ },
+ "total_costs_cny": {
+  "deepseek": 0.0571,
+  "qwen": 0.0142,
+  "glm": 0.0,
+  "all": 0.0712
+ },
+ "incremental_budget_cny": {
+  "description": "20 fact_extraction calls",
+  "deepseek_est": 0.05,
+  "qwen_est": 0.02,
+  "glm": 0.0,
+  "total_est_cny": 0.07
+ }
+}
