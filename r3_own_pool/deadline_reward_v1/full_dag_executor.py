@@ -360,9 +360,30 @@ class RealRunner:
                      task_t_s=round(clock.t, 3), deadline_s=clock.D,
                      timestamp=time.strftime('%Y-%m-%dT%H:%M:%S'))
         self._log(entry)
-        self.records.append(dict(node=node, tag=tag))
+        self.records.append(dict(node=node, tag=tag,
+                                 tokens=o['tokens_in']
+                                 + o['tokens_out'],
+                                 cash=o['cash_cny'],
+                                 latency=o['latency_s'],
+                                 service_lat=o['latency_s']))
         chain.set_output(node, o, tag)
         return o
+
+    def task_totals(self):
+        """REAL per-task spend across ALL attempts (planned + repair
+        + fallback + closure-rerun) — failed/replaced attempts are
+        real cost and are never dropped from settlement."""
+        toks = sum(r['tokens'] for r in self.records)
+        cash = sum(r['cash'] for r in self.records)
+        return dict(tokens=toks, cash_cny=round(cash, 6),
+                    calls=len(self.records),
+                    recovery_calls=sum(1 for r in self.records
+                                       if r['tag'] != 'planned'),
+                    per_task_remaining_vs_C0=round(
+                        60000 - toks, 1))
+
+    def reset_task(self):
+        self.records = []
 
     # ---- arm repair decisions --------------------------------------------
     def _repair_candidate(self, task, clock, node, model):
@@ -427,6 +448,7 @@ class RealRunner:
     # ---- task run ----------------------------------------------------------
     def run_task(self, task, docs_text):
         self.task_id = task['task_id']
+        self.reset_task()   # per-task budget/cost tracking window
         chain = DagChain(task, docs_text)
         clock = TaskClock(task['deadline_s'])
         for node in topo_order():

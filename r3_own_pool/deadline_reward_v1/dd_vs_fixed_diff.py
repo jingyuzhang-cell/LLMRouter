@@ -139,6 +139,10 @@ def main():
                        remaining_s=round(clock.remaining(), 1)),
             budget=dict(tokens_spent=budget.tokens,
                         tokens_cap=CAPS['tokens']),
+            ss=dict(action='accept fault (no recovery — static '
+                           'arm)', legal=True,
+                    note='terminal q takes the contract failure as '
+                         'semantic 0 on this node'),
             fixed=dict(action=fx_desc, legal=fx_legal),
             dd=dict(action=f"{top['model']} {top['theta']}",
                     legal=top['legal'], eU=top['eU'],

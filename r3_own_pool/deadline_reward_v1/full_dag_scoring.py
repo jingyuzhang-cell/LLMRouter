@@ -173,7 +173,10 @@ def score_node(node, answer, finish, silver_task, sources=None):
                 note='verdict-consistency vs actual tl/er content')
 
 
-def settle_task(task, chain, clock, silver_map, usage_sum, cash_sum):
+def settle_task(task, chain, clock, silver_map, task_totals):
+    """Settlement from the COMPLETED chain only (never feeds DD
+    decisions). task_totals = runner.task_totals(): REAL spend over
+    all attempts including failed/replaced ones."""
     silver_task = silver_map[task['task_id']]
     sources = dict(
         tl=(chain.current('tl') or {}).get('answer', ''),
@@ -189,22 +192,87 @@ def settle_task(task, chain, clock, silver_map, usage_sum, cash_sum):
     q = round(sum(sems) / len(sems), 4) if sems else None
     T = clock.t
     D = clock.D
-    tokens = usage_sum
+    tokens = task_totals['tokens']
     U = (utility(q if q is not None else 0.0, tokens, T, D)
          if q is not None else None)
+    # per-node service latency + recovery latency breakdown
+    lat = {b['node'] + ':' + b['tag']: b['lat_s']
+           for b in clock.breakdown}
     return dict(
         task_id=task['task_id'], event=task['event'],
         deadline_s=D, nodes=nodes,
         terminal_q=q, q_available=(q is not None),
-        total_tokens=tokens, incremental_cash_cny=round(cash_sum, 6),
+        total_tokens=tokens,
+        incremental_cash_cny=task_totals['cash_cny'],
         normalized_cost=round(tokens / C0_PER_TASK, 4),
+        per_task_budget=dict(
+            C0_reference=60000,
+            spent=tokens,
+            remaining=task_totals['per_task_remaining_vs_C0'],
+            recovery_calls=task_totals['recovery_calls']),
         task_time_s=round(T, 3), sequential=True,
+        latency_breakdown=lat,
         deadline_met=(T <= D),
         utility_U=U,
         U_with_q_none_note=('q not evaluable for this task; U '
                             'reported as None and excluded from '
                             'paired stats') if q is None else '',
         grade='SILVER-candidate (doc-derived atoms, not gold)')
+
+
+def paired_analysis(results):
+    """Per-task PAIRED comparisons on the frozen U (and components).
+    Exact two-sided sign-flip permutation p-values (10k draws,
+    frozen seed). Only tasks with q available in BOTH arms enter."""
+    import random as _rnd
+    pairs = [('DD-Online', 'SS-Tuned'),
+             ('DD-Online', 'Fixed-Tuned'),
+             ('Fixed-Tuned', 'SS-Tuned')]
+    out = {}
+    for a, b in pairs:
+        rows = []
+        for ra in results[a]:
+            rb = next(x for x in results[b]
+                      if x['task_id'] == ra['task_id'])
+            if ra['utility_U'] is None or rb['utility_U'] is None:
+                continue
+            rows.append(dict(
+                task_id=ra['task_id'],
+                dU=round(ra['utility_U'] - rb['utility_U'], 6),
+                dq=round((ra['terminal_q'] or 0)
+                         - (rb['terminal_q'] or 0), 4),
+                d_tokens=ra['total_tokens'] - rb['total_tokens'],
+                d_cash_cny=round(ra['incremental_cash_cny']
+                                 - rb['incremental_cash_cny'], 6),
+                dT=round(ra['task_time_s'] - rb['task_time_s'], 3)))
+        dUs = [r['dU'] for r in rows]
+        mean = round(sum(dUs) / len(dUs), 6) if dUs else None
+        # exact sign-flip permutation test (two-sided)
+        if dUs:
+            obs = abs(sum(dUs))
+            rng = _rnd.Random(20261014)
+            cnt = 0
+            B = 10000
+            for _ in range(B):
+                perm = sum(d * rng.choice((1, -1)) for d in dUs)
+                if abs(perm) >= obs - 1e-12:
+                    cnt += 1
+            p = round((1 + cnt) / (B + 1), 5)
+        else:
+            p = None
+        out[f'{a}_vs_{b}'] = dict(
+            n_paired=len(rows), mean_dU=mean,
+            pos=sum(1 for d in dUs if d > 0),
+            zero=sum(1 for d in dUs if d == 0),
+            neg=sum(1 for d in dUs if d < 0),
+            perm_p_two_sided=p,
+            mean_dq=round(sum(r['dq'] for r in rows) / len(rows), 4)
+            if rows else None,
+            mean_dT=round(sum(r['dT'] for r in rows) / len(rows), 3)
+            if rows else None,
+            note='demo values from FAKE responses — mechanism '
+                 'demonstration only, never evidence')
+    return out
 
 
 # ---- fake-response demonstration over 15 x 3 ------------------------------
@@ -293,20 +361,13 @@ def run_fake_scoring():
             for t in tasks:
                 chain, clock = runner.run_task(
                     t, docs[t['doc_slot']]['text'])
-                usage = sum(r.get('tokens', 0) for r in [])
-                # recompute usage/cash from chain versions (current)
-                usage = sum(
-                    (chain.current(n) or {}).get('tokens_in', 0)
-                    + (chain.current(n) or {}).get('tokens_out', 0)
-                    for n in ('fe', 'tl', 'er', 'xc'))
-                cash = sum(
-                    (chain.current(n) or {}).get('cash_cny', 0.0)
-                    for n in ('fe', 'tl', 'er', 'xc'))
                 rows.append(settle_task(t, chain, clock, silver_map,
-                                        usage, cash))
+                                        runner.task_totals()))
             results[arm] = rows
-    report = dict(version='FULL_DAG_FAKE_SCORING_DEMO_v1',
+    paired = paired_analysis(results)
+    report = dict(version='FULL_DAG_FAKE_SCORING_DEMO_v2',
                   zero_model_calls=True, arms=results,
+                  paired=paired,
                   note='mechanics demonstration: fake answers carry '
                        'no real atoms; scores are structurally valid '
                        'but NOT evidence')
@@ -314,11 +375,20 @@ def run_fake_scoring():
         json.dumps(report, indent=1, ensure_ascii=False))
     for arm, rows in results.items():
         q = [r['terminal_q'] for r in rows if r['q_available']]
-        U = [r['utility_U'] for r in rows if r['utility_U'] is not None]
-        print(f'{arm:14s} q_available={len(q)}/{len(rows)} '
+        U = [r['utility_U'] for r in rows
+             if r['utility_U'] is not None]
+        rec = sum(r['per_task_budget']['recovery_calls']
+                  for r in rows)
+        print(f'{arm:14s} q_avail={len(q)}/{len(rows)} '
               f'mean_q={sum(q)/len(q) if q else float("nan"):.3f} '
               f'mean_U={sum(U)/len(U) if U else float("nan"):.3f} '
+              f'recovery_calls={rec} '
               f'deadline_met={sum(1 for r in rows if r["deadline_met"])}')
+    print('paired (demo only):')
+    for k, v in paired.items():
+        print(f'  {k:32s} n={v["n_paired"]} mean_dU={v["mean_dU"]} '
+              f'+/-/0={v["pos"]}/{v["neg"]}/{v["zero"]} '
+              f'p={v["perm_p_two_sided"]}')
     return 0
 
 
