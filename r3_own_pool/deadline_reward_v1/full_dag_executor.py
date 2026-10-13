@@ -323,6 +323,9 @@ class RealRunner:
         self.prior_store = prior_store   # DD within-run learning
         self.records = []
         self.task_id = None
+        self._task_seq = 0
+        self.last_dd_decision = None
+        self.last_dd_seed = None
 
     def _log(self, entry):
         with open(self.ledger_path, 'a') as f:
@@ -403,14 +406,27 @@ class RealRunner:
         from deadline_reward_v1 import dd_decision
         from deadline_reward_v1.full_dag_protocol import (
             MODEL_MENU, utility)
+        # DD run mode: Thompson on the decided slot with a frozen,
+        # reproducible seed stream (learning-sim finding: LB argmax
+        # deterministically locks onto mis-prioried candidates and
+        # never explores; Thompson discovers within ~2 tasks)
+        import random as _rnd
+        seed = (20261014 * 100000
+                + (self._task_seq or 0) * 100
+                + len(self.records))
         dec = dd_decision.choose(
             planned_pi=task['planned_pi'], clock=clock,
             faulted_node=node, faulted_model=model,
             stale_closure=set(stale_closure),
             global_budget_tokens=self.budget.tokens,
             caps_tokens=CAPS['tokens'], model_menu=MODEL_MENU,
-            utility_fn=utility, prior_store=self.prior_store)
+            utility_fn=utility, prior_store=self.prior_store,
+            mode='thompson' if self.prior_store is not None
+            else 'lb',
+            rng=_rnd.Random(seed) if self.prior_store is not None
+            else None)
         self.last_dd_decision = dec
+        self.last_dd_seed = seed
         return dec['model'], dec['theta']
 
     def _dd_candidate(self, clock, node, model):
@@ -465,6 +481,9 @@ class RealRunner:
     def run_task(self, task, docs_text):
         self.task_id = task['task_id']
         self.reset_task()   # per-task budget/cost tracking window
+        self._task_seq += 1
+        self.last_dd_decision = None   # stale decision must not
+        self.last_dd_seed = None       # leak into the next task
         chain = DagChain(task, docs_text)
         clock = TaskClock(task['deadline_s'])
         for node in topo_order():

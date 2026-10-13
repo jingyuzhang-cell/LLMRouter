@@ -18,10 +18,12 @@ DAG_EXPERIMENT_GO=1 python3 -m deadline_reward_v1.full_dag_executor
 
 - 15 任务 × 3 臂（SS-Tuned → Fixed-Tuned → DD-Online），逐臂逐任务顺序执行；
 - 每任务钻石 DAG 按拓扑序（fe, er, tl, xc），tl/xc 提示词动态消费上游当前版本；
-- 故障注入按冻结表（seed 20261014）三臂完全一致：F_TRUNCATED=故障节点首试
+- 故障注入按冻结表（seed 20261014）三臂完全一致；DD 种子流可复现：F_TRUNCATED=故障节点首试
   真实 max_tokens=64；F_JSON=首试输出层替换（计划调用照常计费）；
-- 恢复：SS 不恢复；Fixed 预冻结规则（low@2048 禁用）；DD-Online v2.1
-  （Wilson-LB 悲观先验 + 闭包计价 + 任务级质量传播 + 分节点时延）；
+- 恢复：SS 不恢复；Fixed 预冻结规则（low@2048 禁用）；DD-Online v3
+  （运行内 PriorStore 学习：Thompson 采样于被决策槽+冻结种子流
+  20261014×10^5+task×100+decision、健康槽后验均值、乘性下游传播、
+  闭包计价、分节点时延；任务后更新，无同任务泄漏）；
 - fail-stop：首个意外错误写 DAG_INCOMPLETE.json 并停止（401 教训已两次验证）。
 
 ## 三、硬上限（四项，预检不累积预留）

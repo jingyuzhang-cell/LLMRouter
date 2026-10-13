@@ -351,22 +351,34 @@ def run_fake_scoring():
     docs = full_dag_tasks.load_docs()
     import tempfile
     results = {}
+    from deadline_reward_v1.theta_actions import PriorStore
+    dd_actions = []
     for arm in ('SS-Tuned', 'Fixed-Tuned', 'DD-Online'):
+        store = PriorStore() if arm == 'DD-Online' else None
         with tempfile.TemporaryDirectory() as td:
             runner = RealRunner(arm, {}, GlobalBudget(),
                                 Path(td) / 'led.jsonl',
                                 transport=_fake_transport_factory(
-                                    silver_map))
+                                    silver_map),
+                                prior_store=store)
             rows = []
             for t in tasks:
                 chain, clock = runner.run_task(
                     t, docs[t['doc_slot']]['text'])
+                if arm == 'DD-Online':
+                    dd_actions.append(dict(
+                        task=t['task_id'],
+                        action=(runner.last_dd_decision['model']
+                                if runner.last_dd_decision
+                                else None),
+                        seed=runner.last_dd_seed))
                 rows.append(settle_task(t, chain, clock, silver_map,
                                         runner.task_totals()))
             results[arm] = rows
     paired = paired_analysis(results)
-    report = dict(version='FULL_DAG_FAKE_SCORING_DEMO_v2',
+    report = dict(version='FULL_DAG_FAKE_SCORING_DEMO_v3',
                   zero_model_calls=True, arms=results,
+                  dd_action_sequence=dd_actions,
                   paired=paired,
                   note='mechanics demonstration: fake answers carry '
                        'no real atoms; scores are structurally valid '
