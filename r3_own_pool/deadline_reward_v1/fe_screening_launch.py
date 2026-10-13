@@ -343,7 +343,7 @@ def execute(args):
 
 
 def main():
-    parser = _ap.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--approved-samples-sha256', required=True)
     parser.add_argument('--rehearse', action='store_true')
     args = parser.parse_args()
