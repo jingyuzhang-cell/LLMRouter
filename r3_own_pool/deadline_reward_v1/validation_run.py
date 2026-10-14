@@ -100,6 +100,7 @@ def replay_arm(task, docs_text, arm, recorded, transport, creds,
     runner = ArmRunner(arm, creds, budget, ledger_path,
                        transport=transport, store=store)
     runner.task_id = task['task_id']
+    runner.terminated = False   # replay path bypasses run_task init
     runner.reset_task()
     runner._task_seq += 1
 

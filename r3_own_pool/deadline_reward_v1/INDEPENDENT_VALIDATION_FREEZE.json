@@ -1,30 +1,12 @@
 {
  "version": "INDEPENDENT_VALIDATION_FREEZE_v1",
- "status": "NO-GO — awaiting operator authorization",
+ "status": "GO \u2014 V03/V04 authorized by operator",
  "purpose": "validate D-vs-C resource/deadline benefits on FRESH events with randomness controls; E learning studied separately behind precondition gates",
  "tasks": [
   {
-   "task_id": "V01",
-   "event": "ST西王",
-   "doc_slot": "ST西王#E07-xiwang:E07-xiwang",
-   "doc_id": "E07-xiwang",
-   "fault_node": "fe",
-   "fault_type": "F_TRUNCATED",
-   "deadline_s": 120.0
-  },
-  {
-   "task_id": "V02",
-   "event": "中铁装配",
-   "doc_slot": "中铁装配#E08-zhongtie:E08-zhongtie",
-   "doc_id": "E08-zhongtie",
-   "fault_node": "tl",
-   "fault_type": "F_TRUNCATED",
-   "deadline_s": 90.0
-  },
-  {
    "task_id": "V03",
-   "event": "交建股份",
-   "doc_slot": "交建股份#E10b-jiaojian:E10b-jiaojian",
+   "event": "\u4ea4\u5efa\u80a1\u4efd",
+   "doc_slot": "\u4ea4\u5efa\u80a1\u4efd#E10b-jiaojian:E10b-jiaojian",
    "doc_id": "E10b-jiaojian",
    "fault_node": "er",
    "fault_type": "F_JSON",
@@ -32,8 +14,8 @@
   },
   {
    "task_id": "V04",
-   "event": "祥源文旅",
-   "doc_slot": "祥源文旅#E10-xiangyuan:E10-xiangyuan",
+   "event": "\u7965\u6e90\u6587\u65c5",
+   "doc_slot": "\u7965\u6e90\u6587\u65c5#E10-xiangyuan:E10-xiangyuan",
    "doc_id": "E10-xiangyuan",
    "fault_node": "xc",
    "fault_type": "F_JSON",
@@ -41,10 +23,10 @@
   }
  ],
  "fresh_events": [
-  "中铁装配",
-  "交建股份",
-  "祥源文旅",
-  "ST西王"
+  "\u4e2d\u94c1\u88c5\u914d",
+  "\u4ea4\u5efa\u80a1\u4efd",
+  "\u7965\u6e90\u6587\u65c5",
+  "ST\u897f\u738b"
  ],
  "arms": [
   "B-Fixed-Norm",
@@ -61,7 +43,7 @@
   "reporting": "E results reported ONLY where both gates hold; otherwise labeled learning-not-tested"
  },
  "randomness_controls": {
-  "shared_first_attempts": "within a repetition the planned calls run ONCE physically and replay identically to every arm — arms diverge only at recovery decisions",
+  "shared_first_attempts": "within a repetition the planned calls run ONCE physically and replay identically to every arm \u2014 arms diverge only at recovery decisions",
   "reps": 3,
   "rep_semantics": "planned re-run per rep (across-rep variance), held within rep",
   "analysis": "per-task mean dU(D-C) over reps; sign test on means; B reference"
@@ -75,7 +57,7 @@
  "caps_derivation": "physical spend = shared planned (4/task/rep) + arm recoveries (~1.5 avg): 4 tasks x 3 reps x (4 + 3x1.5) ~= 102 calls; +E single pass ~20; 25% margin",
  "scoring": "same frozen terminal U/coefficients/silver basis for ALL arms; silver atoms built at run time from the fresh docs (doc-atom builder); anchor diagnostics separate",
  "freeze_shas": {
-  "validation_run.py": "d30bdcad6c65513893b9c35aeca0ab5da603522421cd1a7583bedb471c9ad1b7",
+  "validation_run.py": "e354712b9f469a8279e0ed3af44543ac43a0a7bb4ae23d7944ed819c56d3c74c",
   "four_arm_v2.py": "913ab8c5bb1027fceae8ff0215ca8f3e3a06bf3c1962147c11f6fe1e23913eb5",
   "recovery_gate.py": "35011239314f88e8145fe3e18604d051d146021ddeb88f0e118450a17623ceb9",
   "full_dag_executor.py": "a62259d170a32a3eba471f38de2e10100cd78d5d39318bd6dfc56e1443cfcee1"
