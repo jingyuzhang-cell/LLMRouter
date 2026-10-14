@@ -231,6 +231,9 @@ def paired_analysis(results):
              ('DD-Online', 'DD-Online-NoLearn')]   # learning ablation
     out = {}
     for a, b in pairs:
+        if a not in results or b not in results:
+            continue   # pair skipped when an arm is absent (3-arm
+                       # demos); the restricted 4-arm run settles it
         rows = []
         for ra in results[a]:
             rb = next(x for x in results[b]
