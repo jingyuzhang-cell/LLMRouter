@@ -1,0 +1,66 @@
+{
+ "stage2": {
+  "upstream_reaches_downstream": true,
+  "both_parents_in_join": true,
+  "repair_propagates": true,
+  "cache_unaffected": true,
+  "R0_means_no_repair": true,
+  "R1_repairs_faulted": true,
+  "R8_includes_all": true,
+  "shared_initial_by_construction": true,
+  "contract_fail_detected": true,
+  "no_post_terminate": true
+ },
+ "stage3": {
+  "distinguishes_correct_vs_wrong": true,
+  "distinguishes_correct_vs_empty": true,
+  "distinguishes_correct_vs_truncated": true,
+  "contract_detects_empty": true,
+  "contract_detects_truncated": true,
+  "partial_lower_than_correct": true,
+  "LIMITATION_wrong_attribution": "coverage may score wrong_attribution similarly to correct because dates/amounts overlap — correctness layer uses precision proxy which may not catch entity misattribution",
+  "LIMITATION_meaning": "evaluator cannot determine if conclusions are semantically correct even when facts are covered — answer correctness remains UNVERIFIED"
+ },
+ "evaluator_cases": {
+  "correct": {
+   "contract": 1.0,
+   "coverage": 0.5,
+   "correctness": 1.0
+  },
+  "wrong_fact": {
+   "contract": 1.0,
+   "coverage": 0.1667,
+   "correctness": 1.0
+  },
+  "partial": {
+   "contract": 1.0,
+   "coverage": 0.3333,
+   "correctness": 0.5
+  },
+  "wrong_attribution": {
+   "contract": 1.0,
+   "coverage": 0.5,
+   "correctness": 1.0
+  },
+  "right_num_wrong_meaning": {
+   "contract": 1.0,
+   "coverage": 0.3333,
+   "correctness": 1.0
+  },
+  "covers_all_concl_wrong": {
+   "contract": 1.0,
+   "coverage": 1.0,
+   "correctness": 1.0
+  },
+  "empty": {
+   "contract": 0.0,
+   "coverage": 0.0,
+   "correctness": 0.0
+  },
+  "truncated": {
+   "contract": 0.0,
+   "coverage": 0.1667,
+   "correctness": 1.0
+  }
+ }
+}
