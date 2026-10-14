@@ -247,7 +247,8 @@ def q_prior(model):
 
 
 def gate(node, fault, answer, node_type, original_model, clock_t,
-         deadline, tokens_spent, expected_doc_ids, downstream_q=0.12):
+         deadline, tokens_spent, expected_doc_ids, downstream_q=0.12,
+         rate_overrides=None):
     remaining = deadline - clock_t
     d_time, d_detail = downstream_time(node)
     d_nodes = len(_downstream(node))
@@ -307,6 +308,12 @@ def gate(node, fault, answer, node_type, original_model, clock_t,
                 note='verified fence fix; q=original model prior; '
                      'advantage = zero cost/time only')
 
+    # ACCEPT baseline is computed BEFORE the loop; the failure
+    # branch of a model action falls back to ACCEPT-quality
+    acc_eU = acts['ACCEPT']['eU']
+    econ = json.loads((HERE / 'RECOVERY_ECONOMETRICS.json')
+                      .read_text())['action_outcomes'] \
+        if (HERE / 'RECOVERY_ECONOMETRICS.json').exists() else {}
     for model, tag in (('deepseek-flash', 'repair'),
                        ('GLM-5.3', 'repair'),
                        ('GLM-5.3-Flash', 'repair'),
@@ -318,18 +325,32 @@ def gate(node, fault, answer, node_type, original_model, clock_t,
         p = p_on_time(model, tag, max(0.0, remaining - d_time))
         if p <= 0.05:
             continue
+        # action SUCCESS RATE: E-arm store override > frozen
+        # econometric Laplace rate — this is the learning channel
+        if rate_overrides and (model, tag) in rate_overrides:
+            rate = rate_overrides[(model, tag)]
+            rate_src = 'store-updated'
+        else:
+            e = econ.get(f'{model}|{tag}')
+            # standard Laplace shrinkage on the econometric counts:
+            # (ok+1)/(n+2) — always within [0,1]
+            rate = ((e['ok'] + 1) / (e['n'] + 2)
+                    if e and e.get('n') else 0.5)
+            rate_src = 'frozen-econometric'
         toks = sorted(TOK[(model, tag)])[len(s) // 2]
         q_fix = q_task(q_prior(model))
+        e_succ = (p * utility(q_fix, tokens_spent + toks,
+                              clock_t + med + d_time, deadline)
+                  + (1 - p) * utility(
+                      q_fix * 0.6, tokens_spent + toks,
+                      clock_t + med + d_time + 30.0, deadline))
         acts[f'{tag.upper()}:{model}'] = dict(
-            eU=(p * utility(q_fix, tokens_spent + toks,
-                            clock_t + med + d_time, deadline)
-                + (1 - p) * utility(
-                    q_fix * 0.6, tokens_spent + toks,
-                    clock_t + med + d_time + 30.0, deadline)),
+            eU=round(rate * e_succ + (1 - rate) * acc_eU, 6),
             cost_tok=toks, time_s=med + d_time,
-            on_time_p=p, n_samples=len(s),
-            note=f'empirical p={p} over n={len(s)} real samples '
-                 f'(Laplace-shrunk)')
+            on_time_p=p, action_rate=round(rate, 3),
+            rate_source=rate_src, n_samples=len(s),
+            note=f'p_on_time={p} (shrinkage), action_rate={rate} '
+                 f'({rate_src})')
 
     best = max((k for k in acts if not k.startswith('_')),
                key=lambda k: acts[k]['eU'])

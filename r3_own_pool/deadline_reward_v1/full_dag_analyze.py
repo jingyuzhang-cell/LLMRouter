@@ -160,13 +160,68 @@ def demo():
     return 0 if ok else 2
 
 
+FOUR_ARMS_V2 = ('B-Fixed-Norm', 'C-Fixed-Gate', 'D-DD-Gate',
+                 'E-DD-Gate-Learn')
+
+
+def analyze_four_arm(run_dir: Path):
+    """B/C/D/E ledgers -> settled table + the three v2 contrasts.
+    TERMINATE tasks are settled by the REAL evaluator: nodes that
+    never ran are contract-failed -> semantic 0 (frozen settlement
+    semantics; gate predictions are never used as scores)."""
+    silver_map = {s['task_id']: s for s in json.loads(
+        (HERE / 'FULL_DAG_SILVER_V1.json').read_text())['tasks']}
+    results = {}
+    for arm in FOUR_ARMS_V2:
+        led = run_dir / f'DAG_LEDGER_{arm}.jsonl'
+        if not led.exists():
+            continue
+        results[arm] = settle_from_ledger(load_ledger(led),
+                                          silver_map)
+    pairs = [('D-DD-Gate', 'C-Fixed-Gate'),
+             ('E-DD-Gate-Learn', 'D-DD-Gate'),
+             ('C-Fixed-Gate', 'B-Fixed-Norm')]
+    paired = {}
+    for a, b in pairs:
+        if a not in results or b not in results:
+            continue
+        rows = []
+        for ra in results[a]:
+            rb = next((x for x in results[b]
+                       if x['task_id'] == ra['task_id']), None)
+            if rb is None or ra['utility_U'] is None                     or rb['utility_U'] is None:
+                continue
+            rows.append(dict(task_id=ra['task_id'],
+                             dU=round(ra['utility_U']
+                                      - rb['utility_U'], 6)))
+        dUs = [r['dU'] for r in rows]
+        paired[f'{a.split("-")[0]}_vs_{b.split("-")[0]}'] = dict(
+            n=len(rows),
+            mean_dU=round(sum(dUs) / len(dUs), 6) if dUs else None,
+            pos=sum(1 for d in dUs if d > 0),
+            neg=sum(1 for d in dUs if d < 0),
+            per_task=rows)
+    return dict(results=results, paired=paired)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--demo', action='store_true')
     parser.add_argument('--run-dir')
+    parser.add_argument('--four-arm', action='store_true')
     args = parser.parse_args()
     if args.demo:
         return demo()
+    if args.run_dir and args.four_arm:
+        out = analyze_four_arm(Path(args.run_dir))
+        dest = Path(args.run_dir) / 'PILOT_ANALYSIS.json'
+        dest.write_text(json.dumps(out, indent=1,
+                                   ensure_ascii=False))
+        print(f'written {dest}')
+        for k, v in out['paired'].items():
+            print(f'  {k:12s} n={v["n"]} mean_dU={v["mean_dU"]} '
+                  f'+/-={v["pos"]}/{v["neg"]}')
+        return 0
     if args.run_dir:
         out = analyze_run(Path(args.run_dir))
         dest = Path(args.run_dir) / 'DAG_ANALYSIS.json'

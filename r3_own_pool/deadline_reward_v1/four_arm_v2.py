@@ -121,6 +121,18 @@ class ArmRunner(RealRunner):
                                 fault, d_time)
         return g
 
+    def _rate_overrides(self):
+        """E-arm: updated (model,tag) success rates from the store
+        (observable contract outcomes of EXECUTED actions only —
+        never silver labels, never same-task unexecuted actions).
+        D-arm: None -> gate uses frozen econometrics."""
+        if self.store is None or not self.learn_enabled:
+            return None
+        return {tuple(k.split('|')): (c['pass_k'] + 1)
+                / (c['pass_n'] + 2)
+                for k, c in self.store.counts.items()
+                if c.get('pass_n')}
+
     def _gate_decision(self, task, clock, node, model, o, fault,
                        d_time):
         dec = gate(node=node, fault=fault,
@@ -128,7 +140,9 @@ class ArmRunner(RealRunner):
                    node_type=node, original_model=model,
                    clock_t=clock.t, deadline=clock.D,
                    tokens_spent=self.budget.tokens,
-                   expected_doc_ids={task['doc_id']})
+                   expected_doc_ids={task['doc_id']},
+                   rate_overrides=self._rate_overrides())
+        self.last_gate = dec
         act = dec['decision']
         if act == 'TERMINATE':
             return ('TERMINATE', None, None)
@@ -162,10 +176,9 @@ class ArmRunner(RealRunner):
             o = self._exec(chain, clock, node, model, theta,
                            'planned', inject=inject)
             if not _ok(o):
-                if (node != 'xc'
-                        and self._try_local_repair(
-                            chain, clock, task, node, o)):
-                    continue
+                if self._try_local_repair(chain, clock, task,
+                                          node, o):
+                    continue   # verified zero-call fix (any node)
                 if node == 'xc':
                     # observable upstream diagnosis first (P0-2 path)
                     from deadline_reward_v1.full_dag_executor import \
@@ -197,9 +210,24 @@ class ArmRunner(RealRunner):
     def _gate_recover_root(self, task, chain, clock, root):
         model = task['planned_pi'][root]
         o = chain.current(root) or {}
-        act, m, th = self._choose_recovery(
-            task, clock, root, model, o, set())
-        self._execute_action(task, chain, clock, root, act, m, th)
+        if self._try_local_repair(chain, clock, task, root, o):
+            stale = {root} | chain.stale_downstream(root)
+        else:
+            act, m, th = self._choose_recovery(
+                task, clock, root, model, o, set())
+            self._execute_action(task, chain, clock, root,
+                                 act, m, th)
+            stale = {root} | chain.stale_downstream(root)
+        # ALL stale downstream re-executed in TOPOLOGICAL order,
+        # consuming the repaired versions; every call charged
+        for n in topo_order():
+            if n in stale and n != root:
+                m2 = task['planned_pi'][n]
+                o2 = self._exec(chain, clock, n, m2,
+                                TUNED_THETA[m2], 'closure-rerun')
+                if not _ok(o2):
+                    self._try_local_repair(chain, clock, task,
+                                           n, o2)
 
     def _execute_action(self, task, chain, clock, node, act,
                         model, theta):
@@ -363,3 +391,120 @@ def drill():
 
 if __name__ == '__main__':
     raise SystemExit(drill())
+
+
+# ---- REAL pilot entry (gated; agent never sets the GO env) -------
+PILOT_FREEZE = HERE / 'PILOT_V2_FREEZE.json'
+PILOT_GO_FLAG = 'PILOT_V2_GO'
+
+
+def run_real_pilot():
+    """Restricted real pilot: T05/T06/T08/T14 x B,C,D,E in GROUP
+    order (each task's four arms run back-to-back). Gates: explicit
+    authorization env (never set by the agent), freeze SHA match,
+    credentials, per-group reservation, hard caps, real wall clock,
+    fail-stop."""
+    import hashlib
+    import os
+    import fcntl
+    if os.environ.get(PILOT_GO_FLAG) != '1':
+        raise PermissionError(
+            f'requires {PILOT_GO_FLAG}=1 (operator authorization)')
+    fz = json.loads(PILOT_FREEZE.read_text())
+    for f, sha in fz['freeze_shas'].items():
+        now = hashlib.sha256((HERE / f).read_bytes()).hexdigest()
+        if now != sha:
+            raise PermissionError(f'{f} drifted vs pilot freeze')
+    from deadline_reward_v1.full_dag_executor import load_env_creds
+    creds = load_env_creds()
+    for k in ('ZHIPU_API_KEY', 'DEEPSEEK_API_KEY',
+              'DASHSCOPE_API_KEY'):
+        if not creds.get(k):
+            raise PermissionError(f'credential {k} missing')
+    from deadline_reward_v1.full_dag_executor import (
+        CAPS as _C, GlobalBudget, real_call)
+    import deadline_reward_v1.full_dag_executor as ex
+    ex.CAPS = dict(attempts=fz['caps']['attempts'],
+                   tokens=fz['caps']['tokens'],
+                   cash=fz['caps']['cash_cny'],
+                   wall=fz['caps']['wall_s'])
+    budget = GlobalBudget()
+    tasks_all = full_dag_tasks.build_tasks()
+    docs = full_dag_tasks.load_docs()
+    order = [t['task'] for t in fz['tasks']]
+    tasks = {t['task_id']: t for t in tasks_all}
+    run_dir = HERE / 'fe_screening_runs' / time.strftime(
+        'pilot_v2_%Y%m%d_%H%M%S')
+    run_dir.mkdir(parents=True)
+    lock = (HERE.parent.parent.parent.parent
+            / 'collect/logs/local_gpu.lock')
+    lock_fh = lock.open('a+') if lock.parent.exists() else None
+    resv = fz['per_group_reservation']['tokens']
+    summary = {}
+    try:
+        if lock_fh:
+            fcntl.flock(lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        for tid in order:
+            # per-group reservation: insufficient -> STOP (no
+            # partial groups)
+            if budget.tokens + resv > ex.CAPS['tokens']:
+                raise RuntimeError(
+                    f'group reservation stop before {tid}: '
+                    f'{budget.tokens}+{resv} > {ex.CAPS["tokens"]}')
+            for arm in ARMS:
+                from deadline_reward_v1.theta_actions import \
+                    PriorStore
+                store = PriorStore() if arm[0] == 'E' else None
+                runner = ArmRunner(
+                    arm, creds, budget,
+                    run_dir / f'DAG_LEDGER_{arm}.jsonl',
+                    transport=real_call, store=store)
+                runner.run_task(tasks[tid],
+                                docs[tasks[tid]['doc_slot']]
+                                ['text'])
+                summary.setdefault(tid, {})[arm] = dict(
+                    attempts=budget.attempts,
+                    tokens=budget.tokens,
+                    cash=round(budget.cash, 4),
+                    wall=round(budget.wall, 1))
+                print(json.dumps(dict(group=tid, arm=arm,
+                                      tokens=budget.tokens,
+                                      cash=round(budget.cash, 4))),
+                      flush=True)
+        (run_dir / 'PILOT_RESULTS.json').write_text(json.dumps(
+            dict(status='COMPLETE', order=order, arms=ARMS,
+                 summary=summary,
+                 totals=dict(attempts=budget.attempts,
+                             tokens=budget.tokens,
+                             cash=round(budget.cash, 4),
+                             wall=round(budget.wall, 1))),
+            indent=1, ensure_ascii=False))
+        print(json.dumps(dict(status='COMPLETE',
+                              totals=summary), indent=1))
+        return 0
+    except BaseException as exc:
+        import traceback as _tb
+        (run_dir / 'PILOT_INCOMPLETE.json').write_text(json.dumps(
+            dict(status='INCOMPLETE', reason=repr(exc),
+                 partial=summary,
+                 traceback=_tb.format_exc()), indent=1))
+        raise
+    finally:
+        if lock_fh:
+            fcntl.flock(lock_fh, fcntl.LOCK_UN)
+            lock_fh.close()
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--drill', action='store_true')
+    parser.add_argument('--run-real', action='store_true')
+    args = parser.parse_args()
+    if args.run_real:
+        return run_real_pilot()
+    return drill()
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
