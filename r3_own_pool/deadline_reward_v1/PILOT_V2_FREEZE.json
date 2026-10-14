@@ -1,0 +1,77 @@
+{
+ "version": "PILOT_V2_FREEZE_v1",
+ "status": "NO-GO — final wiring verified; real pilot awaiting operator authorization",
+ "scope": "DEVELOPMENT PILOT (task pool shares events with earlier phases; formal validation requires held-out events/docs)",
+ "arms": {
+  "B_Fixed_Norm": "Fixed rule + verified unified local normalization (LOCAL_REPAIR pre-step)",
+  "C_Fixed_Gate": "B + pre-frozen strong deadline gate: cheapest-fitting action among {DS-repair, qwen-switch, same-model-retry} by REAL median latencies; none fits -> ACCEPT",
+  "D_DD_Gate": "state-conditioned {ACCEPT, TERMINATE, LOCAL_REPAIR, RETRY, SWITCH} via recovery_gate v1.1; frozen econometric rates; NO learning",
+  "E_DD_Gate_Learn": "IDENTICAL to D (same action space, rules, seed stream, defaults, budgets) + ONLY difference: legal within-run store updating repair/fallback success rates from observable contract outcomes"
+ },
+ "primary_contrasts": [
+  "dU_dynamic = U(D) - U(C)",
+  "dU_learning = U(E) - U(D)"
+ ],
+ "tasks": [
+  {
+   "task": "T05",
+   "event": "*ST纳川",
+   "doc": "E05-nachuan_sup1",
+   "fault_node": "tl",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 90.0,
+   "doc_fresh_vs_econometrics": true
+  },
+  {
+   "task": "T06",
+   "event": "*ST纳川",
+   "doc": "E05-nachuan_sup2",
+   "fault_node": "er",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 160.0,
+   "doc_fresh_vs_econometrics": true
+  },
+  {
+   "task": "T08",
+   "event": "舜天",
+   "doc": "st_advance_notice_2023",
+   "fault_node": "fe",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 90.0,
+   "doc_fresh_vs_econometrics": true
+  },
+  {
+   "task": "T14",
+   "event": "欢瑞世纪",
+   "doc": "E06-huanrui_sup2",
+   "fault_node": "xc",
+   "fault_type": "F_JSON",
+   "deadline_s": 90.0,
+   "doc_fresh_vs_econometrics": true
+  }
+ ],
+ "group_execution": "one task x four arms back-to-back before the next task; E can never be starved by arm order",
+ "seeds": "shared stream 20261014 for D/E; identical defaults",
+ "caps": {
+  "attempts": 200,
+  "tokens": 440000,
+  "cash_cny": 0.7,
+  "wall_s": 4800.0
+ },
+ "per_group_reservation": {
+  "tokens": 110000,
+  "rule": "before opening a group, reserve 110K globally; if remaining < reservation -> STOP (group not started, no partial group)"
+ },
+ "budget_derivation": "real stats with normalization: per arm/task 4 planned (~2.7K avg from SS arm) + <=2 recoveries (~5.6K avg from Fixed arm) ~ 22K; x4 arms = 88K/group; x4 groups = 352K + 25% margin = 440K; cash only DS/qwen cells",
+ "scoring": "same frozen terminal U, coefficients, and silver basis for ALL arms; T11-style sensitivity not needed (fresh docs); anchor diagnostics separate",
+ "interpretive_guards": [
+  "dU below noise -> undetectable-at-this-n, not no-effect",
+  "E-vs-D at n=4 tasks cannot establish learning (needs cross-task accumulation) — pilot only checks direction",
+  "counterfactual predictions are never settled as real outcomes"
+ ],
+ "freeze_shas": {
+  "recovery_gate.py": "8d7995e3db73f9170026d29ca0bff86c40c4968de2258681cc6b409f07b599fa",
+  "four_arm_v2.py": "876d684c691102b81f5acf1819109d015dcc841da9aef3933fe70659d7565b46",
+  "full_dag_executor.py": "a62259d170a32a3eba471f38de2e10100cd78d5d39318bd6dfc56e1443cfcee1"
+ }
+}

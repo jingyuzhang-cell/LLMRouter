@@ -80,41 +80,89 @@ def contract_items(parsed):
     return items if isinstance(items, list) else []
 
 
-def verify_local_repair(answer, node_type, expected_doc_ids):
+VERDICTS = ('SUPPORTED', 'UNSUPPORTED', 'CONFLICT')
+
+
+def _src_ref(v, expected_doc_ids):
+    """A valid source reference: a string id in the stated set, OR a
+    dict carrying evidence_doc_id in the set (xc nested sources).
+    A bare date/event is NOT a valid evidence identity."""
+    if isinstance(v, str):
+        return v in expected_doc_ids if expected_doc_ids else bool(v)
+    if isinstance(v, dict):
+        ref = v.get('evidence_doc_id')
+        return (isinstance(ref, str)
+                and (ref in expected_doc_ids if expected_doc_ids
+                     else bool(ref)))
+    return False
+
+
+def _valid_item(it, node_type, expected_doc_ids):
+    """Full per-node schema check: required fields, types, citation
+    identity, verdict enum (xc)."""
+    if not isinstance(it, dict):
+        return False
+    if node_type == 'fe':
+        if not isinstance(it.get('fact'), str) or not it['fact']:
+            return False
+        return _src_ref(it.get('evidence_doc_id'), expected_doc_ids)
+    if node_type == 'tl':
+        if not isinstance(it.get('event'), str) or not it['event']:
+            return False
+        d = it.get('date')
+        if d is not None and not isinstance(d, str):
+            return False
+        return _src_ref(it.get('evidence'), expected_doc_ids)
+    if node_type == 'er':
+        if not isinstance(it.get('entity'), str) or not it['entity']:
+            return False
+        return _src_ref(it.get('evidence_doc_id'), expected_doc_ids)
+    if node_type == 'xc':
+        if not isinstance(it.get('claim'), str) or not it['claim']:
+            return False
+        if it.get('verdict') not in VERDICTS:
+            return False
+        return (_src_ref(it.get('source_a'), expected_doc_ids)
+                and _src_ref(it.get('source_b'), expected_doc_ids))
+    return False
+
+
+def verify_local_repair(answer, node_type, expected_doc_ids,
+                        finish_reason=None):
     """Deterministic verification of the fence-stripped output
-    against the FULL node contract. (ok, repaired_text, checks).
-    Semantic correctness is NOT claimed - only contract compliance
-    of unchanged content."""
+    against the FULL node contract (schema + types + citation
+    identity + verdict enum). Fence normalization removes EXTERNAL
+    FORMAT ONLY - the content is byte-identical after stripping.
+
+    A response whose finish_reason is a CUT marker (max_tokens /
+    length) is REFUSED: a truncated response keeps its true
+    completion status and is never locally re-labeled as naturally
+    finished (operator task 1)."""
+    checks = dict(finish_reason=finish_reason)
+    if finish_reason in ('max_tokens', 'length'):
+        checks['refused'] = ('truncated responses are not locally '
+                             'repairable')
+        return False, None, checks
     layer, parsed = parse_layers(answer)
-    checks = dict(parse_layer=layer)
+    checks['parse_layer'] = layer
     if parsed is None:
         return False, None, checks
     items = contract_items(parsed)
     checks['nonempty'] = bool(items)
     if not items:
         return False, None, checks
-    ok_cite = True
-    for it in items:
-        if not isinstance(it, dict):
-            ok_cite = False
-            break
-        for f in CITATION_FIELDS.get(node_type,
-                                     ('evidence_doc_id',)):
-            v = it.get(f)
-            if isinstance(v, dict):
-                v = (v.get('evidence_doc_id') or v.get('date')
-                     or v.get('event') or '')
-            if not isinstance(v, str) or not v:
-                ok_cite = False
-                break
-            if (f in ('evidence_doc_id', 'evidence') and
-                    expected_doc_ids and v not in expected_doc_ids):
-                ok_cite = False
-                break
-    checks['citations_ok'] = ok_cite
-    ok = checks['nonempty'] and ok_cite
-    return ok, (strip_fence(answer) if layer == 'FENCE'
-                else (answer or '').strip()), checks
+    schema_ok = all(_valid_item(it, node_type, expected_doc_ids)
+                    for it in items)
+    checks['schema_ok'] = schema_ok
+    if not schema_ok:
+        return False, None, checks
+    repaired = (strip_fence(answer) if layer == 'FENCE'
+                else (answer or '').strip())
+    # semantic preservation is structural: the repaired text is the
+    # original with ONLY the fence markers removed
+    checks['content_preserved'] = (repaired.replace('\n', '')
+                                   in answer.replace('\n', ''))
+    return checks['content_preserved'], repaired, checks
 
 
 def load_samples():
@@ -155,6 +203,24 @@ def lat_med(model, tag):
     return s[len(s) // 2]
 
 
+def _dag_on_time(nodes, budget_s):
+    """DAG-level on-time estimate: product of per-call Laplace-
+    shrunk estimates over the remaining chain. This is a shrinkage
+    approximation, NOT a validated joint-probability calibration
+    (operator task 3)."""
+    p = 1.0
+    for n in nodes:
+        s = NODE_LAT.get((n, 'planned'))
+        if not s:
+            continue
+        med = sorted(s)[len(s) // 2]
+        # remaining budget minus this call's median
+        budget_s = budget_s - med
+        p *= p_on_time('qwen-plus' if n == 'xc' else 'GLM-5.3',
+                       'planned', budget_s)
+    return round(max(0.0, p), 3)
+
+
 def downstream_time(node):
     total, detail = 0.0, {}
     for d in sorted(_downstream(node)):
@@ -192,19 +258,25 @@ def gate(node, fault, answer, node_type, original_model, clock_t,
         return (slot_q + d_nodes * downstream_q * slot_q
                 + unaffected * downstream_q) / 4
 
-    # TERMINATE: end the task now with the partial result
-    q_partial = (unaffected + 1) * downstream_q / 4
+    # TERMINATE: end the task now. Quality follows the FROZEN
+    # settlement semantics: nodes that never ran count as semantic 0
+    # (they are NOT averaged away) - identical to how the terminal
+    # scorer treats missing/contract-failed nodes.
+    q_partial = (q_prior(original_model) + unaffected * downstream_q
+                 + d_nodes * 0.0) / 4
     acts['TERMINATE'] = dict(
         eU=utility(q_partial, tokens_spent, clock_t, deadline),
         cost_tok=0, time_s=0.0,
-        note='end task now with partial result')
+        note='end task now; missing nodes count 0 (frozen '
+             'settlement semantics)')
 
     # ACCEPT: keep the current output, run downstream
     acc_slot = q_prior(original_model) if fault == 'OK' else 0.02
     acc_q = q_task(acc_slot)
     acc_tok = 3000
-    acc_p = p_on_time('qwen-plus', 'planned',
-                      max(0.0, remaining - d_time))
+    acc_p = _dag_on_time(['xc'] if node in ('tl', 'er')
+                         else (['tl', 'xc'] if node == 'fe' else []),
+                         remaining)
     acts['ACCEPT'] = dict(
         eU=(acc_p * utility(acc_q, tokens_spent + acc_tok,
                             clock_t + d_time, deadline)
@@ -222,8 +294,9 @@ def gate(node, fault, answer, node_type, original_model, clock_t,
         acts['_local_verify'] = dict(ok=ok, checks=checks)
         if ok:
             q_loc = q_task(q_prior(original_model))
-            p_loc = p_on_time('qwen-plus', 'planned',
-                              max(0.0, remaining - d_time))
+            p_loc = _dag_on_time(['xc'] if node in ('tl', 'er')
+                                 else (['tl', 'xc'] if node == 'fe'
+                                       else []), remaining)
             acts['LOCAL_REPAIR'] = dict(
                 eU=(p_loc * utility(q_loc, tokens_spent,
                                     clock_t + d_time, deadline)
