@@ -146,7 +146,7 @@ def replay_arm(task, docs_text, arm, recorded, transport, creds,
             injected=(node == task['fault_node']),
             task_t_s=round(clock.t, 3), deadline_s=clock.D,
             timestamp=time.strftime('%Y-%m-%dT%H:%M:%S')))
-        budget.settle(o)
+        # physical budget charged ONCE per rep in run_real, NOT here
         clock.add(node, o['latency_s'], 'planned')
         chain.set_output(node, o, 'planned')
         if not _ok(o):

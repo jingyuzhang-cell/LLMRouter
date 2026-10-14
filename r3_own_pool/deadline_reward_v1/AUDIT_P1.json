@@ -1,0 +1,165 @@
+{
+ "FE screening": {
+  "ledgers": 1,
+  "entries": 20,
+  "tokens": 53642,
+  "cash_cny": 0.0,
+  "incomplete": []
+ },
+ "FE recovery": {
+  "ledgers": 1,
+  "entries": 10,
+  "tokens": 48816,
+  "cash_cny": 0.1445,
+  "incomplete": []
+ },
+ "Param recovery": {
+  "ledgers": 1,
+  "entries": 8,
+  "tokens": 56637,
+  "cash_cny": 0.0502,
+  "incomplete": []
+ },
+ "4-arm pilot": {
+  "ledgers": 3,
+  "entries": 119,
+  "tokens": 390172,
+  "cash_cny": 0.2543,
+  "incomplete": [
+   "DAG_INCOMPLETE.json"
+  ]
+ },
+ "Validation V01/02": {
+  "ledgers": 12,
+  "entries": 181,
+  "tokens": 190333,
+  "cash_cny": 0.3075,
+  "incomplete": [
+   "VALIDATION_INCOMPLETE.json"
+  ]
+ },
+ "Validation V03/04": {
+  "ledgers": 12,
+  "entries": 180,
+  "tokens": 181243,
+  "cash_cny": 0.1255,
+  "incomplete": []
+ },
+ "defect_fixes": {
+  "terminate_then_rerun": true,
+  "repair_to_accept": true,
+  "budget_double_charge": false,
+  "terminated_init": true,
+  "e_store_cross_task": true
+ },
+ "joint_action": {
+  "Z_scope_choices": [
+   "NONE (no scope choice: always repair the faulted node or terminate)"
+  ],
+  "R_closure_choices": [
+   "STRUCTURAL ONLY (always re-execute all stale downstream; no choice between partial/full closure)"
+  ],
+  "pi_model_choices": [
+   "PER-NODE ONLY (gate picks model for the faulted node; no joint assignment across remaining nodes)"
+  ],
+  "verdict": "NOT IMPLEMENTED: the current system makes three SEPARATE decisions (repair this node with model X → re-execute all stale downstream with planned models), not a JOINT optimization over (Z, R, π). This is the fundamental gap: on the current 4-node diamond, there is typically only ONE legal closure (faulted node + all downstream), so the joint action space collapses to per-node model selection."
+ },
+ "dc_action_overlap": {
+  "total_decision_points": 18,
+  "same_action": 9,
+  "different_action": 9,
+  "overlap_rate": 0.5,
+  "detail": [
+   {
+    "task": "V03",
+    "node": "fe",
+    "c": "local-repair",
+    "d": "local-repair",
+    "c_model": "(local-repair)",
+    "d_model": "(local-repair)",
+    "same": true
+   },
+   {
+    "task": "V03",
+    "node": "tl",
+    "c": "local-repair",
+    "d": "local-repair",
+    "c_model": "(local-repair)",
+    "d_model": "(local-repair)",
+    "same": true
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c": "repair",
+    "d": "terminate",
+    "c_model": "deepseek-flash",
+    "d_model": "(terminate)",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c": "fallback",
+    "d": "local-repair",
+    "c_model": "qwen-plus",
+    "d_model": "(local-repair)",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "xc",
+    "c": "closure-rerun",
+    "d": "local-repair",
+    "c_model": "qwen-plus",
+    "d_model": "(local-repair)",
+    "same": false
+   },
+   {
+    "task": "V04",
+    "node": "fe",
+    "c": "local-repair",
+    "d": "local-repair",
+    "c_model": "(local-repair)",
+    "d_model": "(local-repair)",
+    "same": true
+   },
+   {
+    "task": "V03",
+    "node": "fe",
+    "c": "local-repair",
+    "d": "local-repair",
+    "c_model": "(local-repair)",
+    "d_model": "(local-repair)",
+    "same": true
+   },
+   {
+    "task": "V03",
+    "node": "tl",
+    "c": "local-repair",
+    "d": "local-repair",
+    "c_model": "(local-repair)",
+    "d_model": "(local-repair)",
+    "same": true
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c": "repair",
+    "d": "terminate",
+    "c_model": "deepseek-flash",
+    "d_model": "(terminate)",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c": "fallback",
+    "d": "local-repair",
+    "c_model": "qwen-plus",
+    "d_model": "(local-repair)",
+    "same": false
+   }
+  ]
+ }
+}

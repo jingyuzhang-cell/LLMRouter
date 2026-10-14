@@ -1,0 +1,131 @@
+{
+ "version": "GAP_ANALYSIS_v1",
+ "dag_structure": {
+  "n_nodes": 4,
+  "n_edges": 3,
+  "max_depth": 2,
+  "max_width": 2,
+  "branch_nodes": [],
+  "join_nodes": [
+   "xc"
+  ],
+  "closure_sizes": {
+   "fe": 3,
+   "er": 2,
+   "tl": 2,
+   "xc": 1
+  },
+  "structure": "single-diamond: fe→tl→xc, er→xc (er independent)"
+ },
+ "decision_space": {
+  "Z_scope_options": 1,
+  "R_closure_options": 1,
+  "pi_model_options": 4,
+  "joint_actions_approx": "1 × 1 × 4 = 4 per decision point",
+  "explanation": "Z and R have NO choice (structural), so the joint action collapses to per-node model selection. On the 4-node diamond, a faulted fe always implies re-executing tl+xc; a faulted xc implies re-executing only xc. There is no scenario where choosing a SMALLER closure or reassigning models on MULTIPLE remaining nodes would be beneficial."
+ },
+ "dc_overlap": {
+  "total": 18,
+  "same": 9,
+  "different": 9,
+  "rate": 0.5,
+  "different_cases": [
+   {
+    "task": "V03",
+    "node": "er",
+    "c_action": "repair:deepseek-fla",
+    "d_action": "terminate:(terminate)",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c_action": "fallback:qwen-plus",
+    "d_action": "local-repair:(local-repai",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "xc",
+    "c_action": "closure-rerun:qwen-plus",
+    "d_action": "local-repair:(local-repai",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c_action": "repair:deepseek-fla",
+    "d_action": "terminate:(terminate)",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c_action": "fallback:qwen-plus",
+    "d_action": "local-repair:(local-repai",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "xc",
+    "c_action": "closure-rerun:qwen-plus",
+    "d_action": "local-repair:(local-repai",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c_action": "repair:deepseek-fla",
+    "d_action": "terminate:(terminate)",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "er",
+    "c_action": "fallback:qwen-plus",
+    "d_action": "local-repair:(local-repai",
+    "same": false
+   },
+   {
+    "task": "V03",
+    "node": "xc",
+    "c_action": "closure-rerun:qwen-plus",
+    "d_action": "local-repair:(local-repai",
+    "same": false
+   }
+  ]
+ },
+ "dc_equal_root_cause": {
+  "primary": "OPPORTUNITY_MISSING: on the 4-node diamond with structural closure (no Z/R choice), the joint action space collapses to per-node model selection. When D and C both have the same model pool and similar cost estimates, they converge to the same choice.",
+  "secondary": "MODEL_HOMOGENEITY: the 4 models have similar quality on simple extraction tasks; the quality differences are too small to overcome cost/latency differences in the utility function.",
+  "tertiary": "SHORT_CRITICAL_PATH: with only 3 serial nodes (fe→tl→xc), there is limited opportunity for the scheduler to trade off between paths. In longer DAGs, the choice of which path to repair first and which models to assign to remaining nodes would create real optimization opportunities."
+ },
+ "model_heterogeneity": {
+  "GLM-5.3|low@8192": {
+   "pass_lb": 0.3424,
+   "recall_lb": 0.3237,
+   "product": 0.1108
+  },
+  "GLM-5.3-Flash|low@8192": {
+   "pass_lb": 0.3424,
+   "recall_lb": 0.3655,
+   "product": 0.1251
+  },
+  "GLM-5.3|low@2048": {
+   "pass_lb": 0.0,
+   "recall_lb": 0.0,
+   "product": 0.0
+  },
+  "deepseek-flash|thinking=disabled": {
+   "pass_lb": 0.565,
+   "recall_lb": 0.2834,
+   "product": 0.1601
+  },
+  "qwen-plus|default": {
+   "pass_lb": 0.5655,
+   "recall_lb": 0.2326,
+   "product": 0.1315
+  }
+ },
+ "model_heterogeneity_note": "Wilson-LB products range from ~0.08 (qwen) to ~0.13 (Flash): the quality spread is small relative to cost/latency spread. DS is cheapest+fastest but has moderate quality; Flash has best quality but is expensive. On simple tasks, these differences may not create enough utility spread for dynamic selection to matter."
+}
