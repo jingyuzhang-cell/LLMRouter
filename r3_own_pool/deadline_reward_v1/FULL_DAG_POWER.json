@@ -1,0 +1,46 @@
+{
+ "version": "FULL_DAG_POWER_v1",
+ "zero_model_calls": true,
+ "test": "two-sided sign-flip permutation, 10k draws, alpha=0.05",
+ "design": {
+  "n_tasks": 15,
+  "n_decision_tasks": 10,
+  "n_tie_tasks": 5,
+  "note": "F_JSON tasks are terminal-evaluation regime; ties uninformative for the sign test — effective n = non-zero pairs"
+ },
+ "power_curve": {
+  "d=0.00": 0.045,
+  "d=0.02": 0.204,
+  "d=0.04": 0.621,
+  "d=0.06": 0.916,
+  "d=0.08": 0.993,
+  "d=0.10": 1.0,
+  "d=0.12": 1.0,
+  "d=0.16": 1.0,
+  "d=0.20": 1.0
+ },
+ "min_detectable_dU_at_80pct": 0.052,
+ "anchor": {
+  "source": "fake-demo DD-vs-SS (mechanism anchor, not evidence)",
+  "mean_dU": 0.162965,
+  "pos_neg_zero": [
+   10,
+   0,
+   5
+  ],
+  "power_at_anchor": 1.0
+ },
+ "demo_ranking_current_silver": {
+  "SS-Tuned": 0.4761,
+  "Fixed-Tuned": 0.644,
+  "DD-Online": 0.644
+ },
+ "silver_robustness": {
+  "mandatory_post_run": "recompute arm ranking under dates-only and dates+amounts atom subsets; a ranking flip means the conclusion is silver-sensitive",
+  "status": "designed, post-run mandatory"
+ },
+ "reading": {
+  "below_mde": "true mean dU below 0.052 is likely undetectable at n=15 — report as inconclusive, NOT as no-effect",
+  "above_mde": "delta >= 0.052 detectable with ~80% power"
+ }
+}

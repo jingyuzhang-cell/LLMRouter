@@ -344,10 +344,12 @@ def _fake_transport_factory(silver_map):
     return fake
 
 
-def run_fake_scoring():
+def run_fake_scoring(silver_override=None, quiet=False):
     tasks = full_dag_tasks.build_tasks()
-    silver_map = {s['task_id']: s for s in json.loads(
-        (HERE / 'FULL_DAG_SILVER_V1.json').read_text())['tasks']}
+    silver_map = silver_override or {s['task_id']: s for s in
+                                     json.loads(
+                                         (HERE / 'FULL_DAG_SILVER_V1.json')
+                                         .read_text())['tasks']}
     docs = full_dag_tasks.load_docs()
     import tempfile
     results = {}
@@ -396,6 +398,8 @@ def run_fake_scoring():
               f'mean_U={sum(U)/len(U) if U else float("nan"):.3f} '
               f'recovery_calls={rec} '
               f'deadline_met={sum(1 for r in rows if r["deadline_met"])}')
+    if quiet:
+        return results, paired
     print('paired (demo only):')
     for k, v in paired.items():
         print(f'  {k:32s} n={v["n_paired"]} mean_dU={v["mean_dU"]} '
