@@ -301,10 +301,24 @@ class DagChain:
 
 
 
-def citation_ok(answer, expected_doc_ids):
-    """Deployment-observable citation validity: every parsed item
-    must cite an evidence_doc_id from the prompt-stated id set
-    (contract v2 makes this checkable WITHOUT evaluation labels)."""
+# frozen output contracts: which citation field(s) each node type
+# MUST carry per item
+CONTRACT_CITATION_FIELDS = {
+    'fe': ('evidence_doc_id',),
+    'tl': ('evidence',),
+    'er': ('evidence_doc_id',),
+    'xc': ('source_a', 'source_b'),   # join node cites BOTH sources
+}
+
+
+def citation_ok(answer, expected_doc_ids, node_type=None):
+    """Deployment-observable citation VALIDITY per the node's frozen
+    output contract: every item must carry ALL required citation
+    fields, and each value must belong to the prompt-stated id set.
+    A MISSING required field FAILS (previous version silently passed
+    on missing fields). This checks ID legality ONLY — whether the
+    cited evidence truly supports the claim is semantic truth,
+    recorded separately and NEVER implied by this check."""
     try:
         obj = json.loads((answer or '').strip())
     except (ValueError, TypeError):
@@ -315,11 +329,17 @@ def citation_ok(answer, expected_doc_ids):
         if isinstance(obj, dict) else [])
     if not isinstance(items, list) or not items:
         return False   # parseable but empty = degenerate output
+    fields = CONTRACT_CITATION_FIELDS.get(node_type,
+                                          ('evidence_doc_id',))
     for it in items:
-        if isinstance(it, dict):
-            cited = it.get('evidence_doc_id', it.get('evidence'))
-            if isinstance(cited, str) and cited not in expected_doc_ids:
-                return False
+        if not isinstance(it, dict):
+            return False
+        for f in fields:
+            cited = it.get(f)
+            if not isinstance(cited, str) or not cited:
+                return False          # missing required field FAILS
+            if cited not in expected_doc_ids:
+                return False          # id outside the stated set
     return True
 
 
@@ -424,6 +444,8 @@ class RealRunner:
                      timestamp=time.strftime('%Y-%m-%dT%H:%M:%S'))
         self._log(entry)
         self.records.append(dict(node=node, tag=tag, model=model,
+                                 injected=bool(inject and first
+                                               and tag == 'planned'),
                                  theta=dict(theta),
                                  tokens=o['tokens_in']
                                  + o['tokens_out'],
@@ -552,7 +574,19 @@ class RealRunner:
                       if node == task['fault_node'] else None)
             o = self._exec(chain, clock, node, model, theta, 'planned',
                            inject=inject)
-            if inject == 'F_TRUNCATED' and _truncated(o):
+            # immediate detection: OBSERVABLE ONLY — finish_reason,
+            # visible text vs the output contract. The inject variable
+            # never gates detection (fix 3): truncation shows up as
+            # finish in {length, max_tokens} or an unparseable cut.
+            # A parseable, citation-valid but WRONG output is
+            # honestly UNDETECTED at runtime (never backfilled from
+            # settlement scores).
+            if not _ok(o) and node != 'xc':
+                # branch-node contract failure = its own fault
+                # (upstreams already validated in topo order); the
+                # JOIN node's failure goes through upstream
+                # diagnosis below — its own fault only if the
+                # upstreams are observably clean
                 self._recover(chain, clock, task, node)
         # delayed detection: OBSERVABLE only (xc failed; no
         # fault-schedule reads). Root cause DIAGNOSED from
@@ -589,12 +623,19 @@ class RealRunner:
         ends; task k's outcome cannot inform task k's decisions."""
         from deadline_reward_v1 import theta_actions as ta
         for r in self.records:
+            if r.get('injected'):
+                # artificially-injected fault artifacts are NOT model
+                # capability evidence — excluded from prior updates
+                # (fix 5; the injector marks its own synthetic
+                # outcomes, which is not evaluation-label access)
+                continue
             key = ta.prior_key(r['model'], r['theta'])
             if key is None:
                 continue
             contract_ok = _ok(dict(answer=r['answer'],
                                    finish_reason=r['finish']))
-            cites_ok = citation_ok(r['answer'], {task['doc_id']})
+            cites_ok = citation_ok(r['answer'], {task['doc_id']},
+                                   node_type=r['node'])
             self.prior_store.update(
                 key, passed=bool(contract_ok and cites_ok),
                 rec_k=0, rec_n=0)   # no label-based recall online
@@ -820,6 +861,7 @@ def chain_test():
 def preflight():
     checks = dict(freeze_shas_match=True, bodies_ok=True,
                   fail_stop_ok=True, budget_stop_ok=True,
+                  restricted_caps_load=True,
                   reservation_conservative=True, creds_ok=True,
                   dry_run_invariants=True, chain_test_ok=True)
     issues = []
@@ -865,6 +907,17 @@ def preflight():
     finally:
         requests.post = orig
 
+    # restricted caps actually load and bind (fix 1)
+    try:
+        rz = json.loads(RESTRICTED_FREEZE.read_text())
+        rc = rz['caps']
+        checks['restricted_caps_load'] = (
+            rc['attempts'] == 240 and rc['tokens'] == 400000
+            and rc.get('cash_cny', rc.get('cash')) == 0.80
+            and rc.get('wall_s', rc.get('wall')) == 4800.0)
+    except Exception:
+        checks['restricted_caps_load'] = False
+    # first-request budget check stops over-limit (cash key included)
     gb = GlobalBudget()
     gb.attempts = CAPS['attempts']
     try:
@@ -872,13 +925,17 @@ def preflight():
         checks['fail_stop_ok'] = False
     except RuntimeError:
         pass
-    gb2 = GlobalBudget()
-    gb2.tokens = CAPS['tokens']
-    try:
-        gb2.pre_check(1, 1, 0)
-        checks['budget_stop_ok'] = False
-    except RuntimeError:
-        pass
+    for attr, key, val in (
+            ('tokens', 'tokens', CAPS['tokens']),
+            ('cash', 'cash', CAPS['cash']),
+            ('wall', 'wall', CAPS['wall'] + 1.0)):
+        gbx = GlobalBudget()
+        setattr(gbx, attr, val)
+        try:
+            gbx.pre_check(1, 1, 0.01 if attr == 'cash' else 0)
+            checks['budget_stop_ok'] = False
+        except RuntimeError:
+            pass
     checks['reservation_conservative'] = \
         est_in_tokens('证' * 10000) > 10000
 
@@ -931,7 +988,14 @@ def execute():
         if now != sha:
             raise PermissionError(f'{fn} drifted vs restricted freeze')
     global CAPS
-    CAPS = dict(rz['caps'])
+    rc = dict(rz['caps'])
+    # normalize freeze keys (attempts/tokens/cash_cny/wall_s) to the
+    # executor's CAPS keys (attempts/tokens/cash/wall)
+    CAPS = dict(attempts=rc['attempts'], tokens=rc['tokens'],
+                cash=rc.get('cash', rc.get('cash_cny')),
+                wall=rc.get('wall', rc.get('wall_s')))
+    assert CAPS['cash'] == 0.80 and CAPS['attempts'] == 240 \
+        and CAPS['tokens'] == 400000 and CAPS['wall'] == 4800.0, CAPS
     creds = load_env_creds()
     tasks = full_dag_tasks.build_tasks()
     tasks = [t for t in tasks if t['task_id'] in rz['tasks']]

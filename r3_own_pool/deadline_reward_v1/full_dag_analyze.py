@@ -30,7 +30,8 @@ from deadline_reward_v1.full_dag_scoring import (
     _fake_transport_factory, paired_analysis, score_node)
 
 HERE = Path(__file__).resolve().parent
-ARMS = ('SS-Tuned', 'Fixed-Tuned', 'DD-Online')
+ARMS = ('SS-Tuned', 'Fixed-Tuned', 'DD-Online',
+        'DD-Online-NoLearn')
 
 
 def load_ledger(path: Path):
@@ -98,10 +99,18 @@ def analyze_run(run_dir: Path):
     return dict(results=results, paired=paired)
 
 
+RESTRICTED_TASKS = ['T01', 'T02', 'T03', 'T04',
+                    'T11', 'T12', 'T13', 'T15']
+
+
 def demo():
-    """Equivalence: direct settlement vs ledger reconstruction."""
+    """Equivalence on the RESTRICTED 8-task x 4-arm drill: direct
+    settlement vs ledger reconstruction (fix 4)."""
     import tempfile
-    tasks = full_dag_tasks.build_tasks()
+    from deadline_reward_v1.theta_actions import PriorStore
+    tasks = [t for t in full_dag_tasks.build_tasks()
+             if t['task_id'] in RESTRICTED_TASKS]
+    assert len(tasks) == 8
     silver_map = {s['task_id']: s for s in json.loads(
         (HERE / 'FULL_DAG_SILVER_V1.json').read_text())['tasks']}
     docs = full_dag_tasks.load_docs()
@@ -109,9 +118,12 @@ def demo():
         direct = {}
         for arm in ARMS:
             led = Path(td) / f'DAG_LEDGER_{arm}.jsonl'
-            runner = RealRunner(arm, {}, GlobalBudget(), led,
-                                transport=_fake_transport_factory(
-                                    silver_map))
+            store = PriorStore() if arm.startswith('DD') else None
+            runner = RealRunner(
+                arm, {}, GlobalBudget(), led,
+                transport=_fake_transport_factory(silver_map),
+                prior_store=store,
+                learn_enabled=(arm == 'DD-Online'))
             from deadline_reward_v1.full_dag_scoring import settle_task
             rows = []
             for t in tasks:
@@ -121,6 +133,9 @@ def demo():
                                         runner.task_totals()))
             direct[arm] = rows
         rebuilt = analyze_run(Path(td))
+    # ensure the ablation pair is present and settled
+    assert 'DD-Online_vs_DD-Online-NoLearn' in rebuilt['paired'], \
+        rebuilt['paired'].keys()
     mismatches = []
     for arm in ARMS:
         for a, b in zip(direct[arm], rebuilt['results'][arm]):
@@ -132,6 +147,7 @@ def demo():
     ok = not mismatches
     print(json.dumps(dict(
         equivalence='PASS' if ok else 'FAIL',
+        drill='restricted 8 tasks x 4 arms',
         n_rows_compared=sum(len(direct[a]) for a in ARMS),
         mismatches=mismatches[:5],
         paired_demo={k: v['mean_dU'] for k, v in

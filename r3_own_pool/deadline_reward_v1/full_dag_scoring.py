@@ -227,7 +227,8 @@ def paired_analysis(results):
     import random as _rnd
     pairs = [('DD-Online', 'SS-Tuned'),
              ('DD-Online', 'Fixed-Tuned'),
-             ('Fixed-Tuned', 'SS-Tuned')]
+             ('Fixed-Tuned', 'SS-Tuned'),
+             ('DD-Online', 'DD-Online-NoLearn')]   # learning ablation
     out = {}
     for a, b in pairs:
         rows = []
