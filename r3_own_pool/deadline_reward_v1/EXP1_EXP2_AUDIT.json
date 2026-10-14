@@ -1,0 +1,50 @@
+{
+ "dag": {
+  "exp1": "diamond_8",
+  "exp2": "diamond_8",
+  "match": true
+ },
+ "fault_node": {
+  "exp1": "n0",
+  "exp2": "n0",
+  "match": true
+ },
+ "deadline": {
+  "exp1": 200.0,
+  "exp2": 200.0,
+  "match": true
+ },
+ "clock_t": {
+  "exp1": 80.0,
+  "exp2": 80.0,
+  "match": true
+ },
+ "tokens_spent": {
+  "exp1": 30000,
+  "exp2": 30000,
+  "match": true
+ },
+ "C_quality": {
+  "exp1": "hardcoded q=0.3 in arm_c_simple",
+  "exp2": "hardcoded q=0.05 in arm_c_simple",
+  "match": false,
+  "impact": "C eU differs: -0.117 vs -0.367; NOT comparable"
+ },
+ "Oracle_quality": {
+  "exp1": "q_prior(per-model) + N(0, 0.1) noise per node",
+  "exp2": "q_D2 (DAG propagation) + N(0, 0.02) noise",
+  "match": false,
+  "impact": "Oracle selects DIFFERENT actions: exp1 picks 2n GLM+DS, exp2 picks 1n DS"
+ },
+ "D0_action_ranking": {
+  "exp1": "D evaluates LOCAL_REPAIR with q_prior(DS)=0.175, finds R=1n",
+  "exp2": "D0 evaluates LOCAL_REPAIR with q_D0(faulted)\u22480.109, finds R=0n",
+  "match": false,
+  "impact": "Different quality \u2192 different ranking \u2192 different action"
+ },
+ "circular_validation": {
+  "confirmed": true,
+  "detail": "exp2 Oracle uses q_D2 + noise; D2 uses q_D2; Gap(D2)=0 is TAUTOLOGICAL \u2014 any method evaluated by an Oracle sharing its own quality function will have zero gap",
+  "impact": "Gap(D2)=0 is NOT evidence of real improvement"
+ }
+}
