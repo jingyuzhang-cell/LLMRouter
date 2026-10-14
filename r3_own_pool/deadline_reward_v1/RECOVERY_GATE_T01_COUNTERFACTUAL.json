@@ -1,0 +1,78 @@
+{
+ "version": "RECOVERY_GATE_v1",
+ "zero_model_calls": true,
+ "econ_source": "restricted_dag_20261014_093559 (119 real calls)",
+ "key_econometrics": {
+  "fence_share_of_failures": 0.775,
+  "repair_success": {
+   "GLM-5.3|repair": {
+    "rate": 0.875,
+    "lat_med": 39.2,
+    "lat_p90": 103.2
+   },
+   "qwen-plus|fallback": {
+    "rate": 0.96,
+    "lat_med": 4.1,
+    "lat_p90": 25.4
+   },
+   "deepseek-flash|repair": {
+    "rate": 1.0,
+    "lat_med": 1.7,
+    "lat_p90": 3.3
+   },
+   "qwen-plus|repair": {
+    "rate": 0.5,
+    "lat_med": 45.5,
+    "lat_p90": 45.5
+   },
+   "GLM-5.3-Flash|repair": {
+    "rate": 1.0,
+    "lat_med": 49.3,
+    "lat_p90": 49.3
+   }
+  }
+ },
+ "t01_counterfactual": [
+  {
+   "node": "fe",
+   "fault": "TRUNCATED",
+   "real_action": "planned→(next call)",
+   "gate_decision": "RETRY:deepseek-flash",
+   "gate_dEU": 0.175217,
+   "gate_actions": {
+    "ACCEPT": 0.0,
+    "RETRY:deepseek-flash": 0.1752,
+    "RETRY:GLM-5.3": 0.124,
+    "RETRY:GLM-5.3-Flash": 0.1572,
+    "SWITCH:qwen-plus": 0.1367
+   }
+  },
+  {
+   "node": "er",
+   "fault": "FENCE_ONLY",
+   "real_action": "planned→(next call)",
+   "gate_decision": "LOCAL_REPAIR",
+   "gate_dEU": 0.197917,
+   "gate_actions": {
+    "ACCEPT": 0.0,
+    "LOCAL_REPAIR": 0.1979,
+    "RETRY:deepseek-flash": 0.1752,
+    "RETRY:GLM-5.3": -0.8035,
+    "RETRY:GLM-5.3-Flash": -0.0724,
+    "SWITCH:qwen-plus": 0.1367
+   }
+  },
+  {
+   "node": "tl",
+   "fault": "FENCE_ONLY",
+   "real_action": "planned→(next call)",
+   "gate_decision": "LOCAL_REPAIR",
+   "gate_dEU": 2.468894,
+   "gate_actions": {
+    "ACCEPT": 0.0,
+    "LOCAL_REPAIR": 2.4689
+   }
+  }
+ ],
+ "note": "COUNTERFACTUAL — diagnostic only; the confirmed run result (DD T01 missed D=120 by 2.1s) stands unchanged"
+}
