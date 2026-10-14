@@ -300,6 +300,62 @@ class DagChain:
                 if self.current(d) is not None}
 
 
+
+def citation_ok(answer, expected_doc_ids):
+    """Deployment-observable citation validity: every parsed item
+    must cite an evidence_doc_id from the prompt-stated id set
+    (contract v2 makes this checkable WITHOUT evaluation labels)."""
+    try:
+        obj = json.loads((answer or '').strip())
+    except (ValueError, TypeError):
+        return True   # parse failures are the contract layer's signal
+    items = obj if isinstance(obj, list) else (
+        (obj.get('facts') or obj.get('timeline')
+         or obj.get('relations') or obj.get('claims') or [])
+        if isinstance(obj, dict) else [])
+    if not isinstance(items, list) or not items:
+        return False   # parseable but empty = degenerate output
+    for it in items:
+        if isinstance(it, dict):
+            cited = it.get('evidence_doc_id', it.get('evidence'))
+            if isinstance(cited, str) and cited not in expected_doc_ids:
+                return False
+    return True
+
+
+def diagnose_root(chain, expected_doc_ids):
+    """Root-cause ranking from OBSERVABLE signals only (operator
+    P0-2): contract failures first, then citation-invalid outputs;
+    ties by topological distance (farthest upstream first — an
+    fe-vs-tl ambiguity still repairs correctly because the closure
+    re-executes the intermediate node). Returns (root|None,
+    evidence, confidence); None = UNKNOWN -> the join node is
+    repaired locally and the uncertainty is recorded. NEVER reads
+    the injected fault schedule."""
+    cands = []
+    for n in ('fe', 'tl', 'er'):
+        o = chain.current(n)
+        if o is None:
+            continue
+        cands.append(dict(
+            node=n,
+            contract_ok=_ok(o),
+            cites_ok=citation_ok(o.get('answer', ''),
+                                 expected_doc_ids),
+            depth=len(downstream_of(n))))
+    faulty = [c for c in cands
+              if not c['contract_ok'] or not c['cites_ok']]
+    if not faulty:
+        return None, dict(signals=cands), 'UNKNOWN'
+    faulty.sort(key=lambda c: (c['contract_ok'] is False,
+                               c['depth']), reverse=True)
+    best = faulty[0]
+    others = [c['node'] for c in faulty[1:]]
+    conf = 'HIGH' if best['contract_ok'] is False or not others         else 'PARTIAL'
+    return best['node'], dict(signals=cands,
+                              ambiguous_with=others), conf
+
+
 def _ok(o) -> bool:
     try:
         json.loads((o['answer'] or '').strip())
@@ -314,13 +370,16 @@ def _truncated(o) -> bool:
 
 class RealRunner:
     def __init__(self, arm, creds, budget, ledger_path,
-                 transport=None, prior_store=None):
+                 transport=None, prior_store=None,
+                 learn_enabled=True):
         self.arm = arm
         self.creds = creds
         self.budget = budget
         self.ledger_path = Path(ledger_path)
         self.transport = transport or real_call
         self.prior_store = prior_store   # DD within-run learning
+        self.learn_enabled = learn_enabled   # False = NoLearn arm
+        self.last_diagnosis = None
         self.records = []
         self.task_id = None
         self._task_seq = 0
@@ -495,49 +554,50 @@ class RealRunner:
                            inject=inject)
             if inject == 'F_TRUNCATED' and _truncated(o):
                 self._recover(chain, clock, task, node)
+        # delayed detection: OBSERVABLE only (xc failed; no
+        # fault-schedule reads). Root cause DIAGNOSED from
+        # contract/citation signals; UNKNOWN -> local repair of the
+        # join node itself.
         xc = chain.current('xc')
-        if (task['fault_type'] == 'F_JSON' and xc is not None
-                and not _ok(xc)):
-            root = task['fault_node']
-            if self._recover(chain, clock, task, root):
+        if xc is not None and not _ok(xc):
+            root, evidence, confidence = diagnose_root(
+                chain, {task['doc_id']})
+            self.last_diagnosis = dict(root=root,
+                                       confidence=confidence,
+                                       evidence=evidence)
+            target = root if root is not None else 'xc'
+            if self._recover(chain, clock, task, target):
                 stale = {root} | chain.stale_downstream(root)
                 for n in topo_order():  # topological, not alphabetical
                     if n in stale and n != root:
                         m = task['planned_pi'][n]
                         self._exec(chain, clock, n, m, TUNED_THETA[m],
                                    'closure-rerun')
-        if self.prior_store is not None and self.arm == 'DD-Online':
+        if (self.prior_store is not None and self.learn_enabled
+                and self.arm == 'DD-Online'):
             self._update_store(task, chain)
         return chain, clock
 
     def _update_store(self, task, chain):
-        """Post-task prior update from COMPLETED-task outcomes only
-        (this task's decisions were made before this call). pass =
-        contract ok; recall counts from doc-atom coverage for
-        atom-evaluable nodes."""
+        """P0-1 (operator review 2026-10-14): online updates use
+        ONLY deployment-observable feedback — contract pass AND
+        citation validity (contract v2 states the doc_id, so the
+        citation check needs NO evaluation labels). Silver recall
+        NEVER enters the online store: the scheduler may not read
+        post-task evaluation answers. Cross-node atom pollution is
+        thereby removed as well. Updates run only after the task
+        ends; task k's outcome cannot inform task k's decisions."""
         from deadline_reward_v1 import theta_actions as ta
-        from deadline_reward_v1.full_dag_scoring import _coverage
-        silver = {s['task_id']: s for s in json.loads(
-            (HERE / 'FULL_DAG_SILVER_V1.json').read_text())['tasks']}
-        st = silver.get(task['task_id'])
-        atoms = []
-        if st:
-            atoms = (st['fe']['atom_dates']
-                     + st['fe']['atom_amounts']
-                     + st['fe']['atom_penalties'])
         for r in self.records:
             key = ta.prior_key(r['model'], r['theta'])
             if key is None:
                 continue
-            passed = _ok(dict(answer=r['answer'],
-                              finish_reason=r['finish']))
-            rec_k = rec_n = 0
-            if atoms and r['node'] != 'xc':
-                cov = _coverage(atoms, r['answer'])
-                if cov is not None:
-                    rec_n = len(atoms)
-                    rec_k = round(cov * rec_n)
-            self.prior_store.update(key, passed, rec_k, rec_n)
+            contract_ok = _ok(dict(answer=r['answer'],
+                                   finish_reason=r['finish']))
+            cites_ok = citation_ok(r['answer'], {task['doc_id']})
+            self.prior_store.update(
+                key, passed=bool(contract_ok and cites_ok),
+                rec_k=0, rec_n=0)   # no label-based recall online
 
     def _recover(self, chain, clock, task, node):
         model = task['planned_pi'][node]
@@ -662,9 +722,19 @@ def chain_test_delayed():
                   for n in ('fe', 'tl', 'er', 'xc')},
         task_time_s=round(clock.t, 2), deadline_s=clock.D),
         indent=1, ensure_ascii=False))
+    checks['diagnosis_root_is_fe_observably'] = (
+        runner.last_diagnosis is not None
+        and runner.last_diagnosis['root'] == 'fe'
+        and runner.last_diagnosis['confidence'] in ('HIGH',
+                                                    'PARTIAL'))
+    checks['diagnosis_used_no_schedule'] = (
+        'fault_node' not in json.dumps(
+            runner.last_diagnosis or {}))
     ok = all(checks.values())
+    print(json.dumps(dict(diagnosis=runner.last_diagnosis),
+                     ensure_ascii=False)[:400])
     print(f'DELAYED CHAIN TEST: {"PASS" if ok else "FAIL"}')
-    return 0 if ok else 2
+    return 0 if checks.values() and ok else 2
 
 
 def chain_test():
@@ -837,11 +907,84 @@ def preflight():
     return 0 if all_ok else 2
 
 
+RESTRICTED_FREEZE = HERE / 'RESTRICTED_DAG_FREEZE.json'
+
+
 def execute():
-    raise PermissionError(
-        'Real execution NOT authorized this round (operator decides '
-        'separately); DAG_EXPERIMENT_GO must never be set by the '
-        'agent')
+    """Restricted 8-task x 4-arm experiment (operator design
+    2026-10-14). Gates: DAG_EXPERIMENT_GO=1 (NEVER set by the agent)
+    + preflight artifact + freeze SHA match. Fail-stop on first
+    unexpected error."""
+    if os.environ.get('DAG_EXPERIMENT_GO') != '1':
+        raise PermissionError(
+            'requires DAG_EXPERIMENT_GO=1 (operator authorization)')
+    if not PREFLIGHT.exists():
+        raise PermissionError('preflight has not passed')
+    pre = json.loads(PREFLIGHT.read_text())
+    for fn, sha in pre['freeze_sha256'].items():
+        now = hashlib.sha256((HERE / fn).read_bytes()).hexdigest()
+        if now != sha:
+            raise PermissionError(f'{fn} drifted since preflight')
+    rz = json.loads(RESTRICTED_FREEZE.read_text())
+    for fn, sha in rz['freeze_shas'].items():
+        now = hashlib.sha256((HERE / fn).read_bytes()).hexdigest()
+        if now != sha:
+            raise PermissionError(f'{fn} drifted vs restricted freeze')
+    global CAPS
+    CAPS = dict(rz['caps'])
+    creds = load_env_creds()
+    tasks = full_dag_tasks.build_tasks()
+    tasks = [t for t in tasks if t['task_id'] in rz['tasks']]
+    assert len(tasks) == len(rz['tasks'])
+    docs = full_dag_tasks.load_docs()
+    run_dir = HERE / 'fe_screening_runs' / time.strftime(
+        'restricted_dag_%Y%m%d_%H%M%S')
+    run_dir.mkdir(parents=True)
+    import fcntl
+    lock_fh = (ROOT / 'collect/logs/local_gpu.lock').open('a+')
+    summary = {}
+    try:
+        fcntl.flock(lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        budget = GlobalBudget()
+        for arm in rz['arms']:
+            ledger = run_dir / f'DAG_LEDGER_{arm}.jsonl'
+            store = None
+            learn = True
+            if arm == 'DD-Online':
+                from deadline_reward_v1.theta_actions import PriorStore
+                store = PriorStore()
+            elif arm == 'DD-Online-NoLearn':
+                from deadline_reward_v1.theta_actions import PriorStore
+                store = PriorStore()
+                learn = False
+            runner = RealRunner(arm, creds, budget, ledger,
+                                prior_store=store,
+                                learn_enabled=learn)
+            for t in tasks:
+                runner.run_task(t, docs[t['doc_slot']]['text'])
+            summary[arm] = dict(attempts=budget.attempts,
+                                tokens=budget.tokens,
+                                cash_cny=round(budget.cash, 4),
+                                wall_s=round(budget.wall, 1))
+            print(json.dumps(dict(arm=arm, **summary[arm])),
+                  flush=True)
+        (run_dir / 'DAG_RESULTS.json').write_text(json.dumps(dict(
+            status='COMPLETE', restricted_tasks=rz['tasks'],
+            arms=rz['arms'], summary=summary), indent=1,
+            ensure_ascii=False))
+        print(json.dumps(dict(status='COMPLETE', summary=summary),
+                         indent=1))
+        return 0
+    except BaseException as exc:
+        import traceback as _tb
+        (run_dir / 'DAG_INCOMPLETE.json').write_text(json.dumps(dict(
+            status='INCOMPLETE', reason=repr(exc),
+            partial=summary,
+            traceback=_tb.format_exc()), indent=1))
+        raise
+    finally:
+        fcntl.flock(lock_fh, fcntl.LOCK_UN)
+        lock_fh.close()
 
 
 def main():
