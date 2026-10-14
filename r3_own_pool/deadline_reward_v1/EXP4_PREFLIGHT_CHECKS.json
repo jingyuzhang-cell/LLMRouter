@@ -1,0 +1,21 @@
+{
+ "go_nogo_separation": {
+  "old_rule": "if pilot shows \u0394U(D2-D0) > 0 on \u22654/6 tasks with no execution defects",
+  "problem": "old rule conflates system readiness with benefit signal",
+  "new_rules": {
+   "A_system_ready": "all preflight checks pass; executor, evaluator, budget guards, fail-stop verified",
+   "B_benefit_signal": "pilot shows \u0394U(D2-D0) direction consistent across \u22653/4 independent events; report effect size and range, NOT significance",
+   "go_for_formal": "A AND B",
+   "note": "\u22654/6 tasks positive is EXPLORATORY only \u2014 6 tasks from 4 events; proper statistical inference requires \u226510 independent events"
+  }
+ },
+ "preflight": {
+  "shared_first_attempts": true,
+  "terminate_then_stop": true,
+  "no_budget_double_charge": true,
+  "evaluator_decoupled": true,
+  "fail_stop": true,
+  "all_failures_kept": true,
+  "caveat": "evaluator in drill mode still uses NODE_TYPE_QUALITY as a proxy for output content \u2014 real mode uses actual text vs doc-atom matching"
+ }
+}

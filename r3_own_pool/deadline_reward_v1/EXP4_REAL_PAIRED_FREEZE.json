@@ -282,17 +282,15 @@
   "derivation": "6 tasks × 2 reps × (4 planned shared + ~2 recovery × 3 arms) ≈ 288 worst case; realistic with LOCAL_REPAIR dominance ≈ 120-180; + 60% margin for GLM token-heavy repairs"
  },
  "go_nogo": {
-  "conditions": [
-   "shared first attempts verified identical across arms",
-   "all joint actions legal (closure upward-closed)",
-   "per-arm cost/latency/utility independently recomputable",
-   "no post-terminate execution",
-   "no budget double-charging",
-   "independent evaluator does NOT use D0/D2 predictions",
-   "all failures kept in results"
-  ],
-  "primary_readout": "ΔU(D2-D0) per task; report mean, sign consistency, and range",
-  "go_for_formal": "if pilot shows ΔU(D2-D0) > 0 on ≥4/6 tasks with no execution defects",
-  "no_go": "if ΔU(D2-D0) ≈ 0 or negative on most tasks, or execution defects found"
+  "A_system_ready": "all preflight checks pass",
+  "B_benefit_signal": "ΔU(D2-D0) direction consistent across ≥3/4 independent events; exploratory only",
+  "go_for_formal": "A AND B",
+  "statistical_note": "6 tasks from 4 events; proper inference requires ≥10 independent events"
+ },
+ "task_independence": {
+  "n_tasks": 6,
+  "n_independent_events": 4,
+  "clustering": "ST西王×2, 中铁装配×2, 交建×1, 祥源×1",
+  "statistical_unit": "event, not task"
  }
 }
