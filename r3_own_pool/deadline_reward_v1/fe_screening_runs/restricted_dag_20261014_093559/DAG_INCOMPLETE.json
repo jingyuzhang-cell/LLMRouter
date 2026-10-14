@@ -1,0 +1,19 @@
+{
+ "status": "INCOMPLETE",
+ "reason": "RuntimeError('budget stop: token cap')",
+ "partial": {
+  "SS-Tuned": {
+   "attempts": 32,
+   "tokens": 113641,
+   "cash_cny": 0.0808,
+   "wall_s": 827.7
+  },
+  "Fixed-Tuned": {
+   "attempts": 109,
+   "tokens": 377617,
+   "cash_cny": 0.244,
+   "wall_s": 2736.7
+  }
+ },
+ "traceback": "Traceback (most recent call last):\n  File \"/root/r3_own_pool/deadline_reward_v1/full_dag_executor.py\", line 1083, in execute\n    runner.run_task(t, docs[t['doc_slot']]['text'])\n  File \"/root/r3_own_pool/deadline_reward_v1/full_dag_executor.py\", line 581, in run_task\n    o = self._exec(chain, clock, node, model, theta, 'planned',\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/r3_own_pool/deadline_reward_v1/full_dag_executor.py\", line 425, in _exec\n    self.budget.pre_check(est_in, est_out,\n  File \"/root/r3_own_pool/deadline_reward_v1/full_dag_executor.py\", line 221, in pre_check\n    raise RuntimeError('budget stop: token cap')\nRuntimeError: budget stop: token cap\n"
+}

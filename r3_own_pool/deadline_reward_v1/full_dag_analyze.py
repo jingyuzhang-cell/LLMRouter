@@ -93,7 +93,11 @@ def analyze_run(run_dir: Path):
         (HERE / 'FULL_DAG_SILVER_V1.json').read_text())['tasks']}
     results = {}
     for arm in ARMS:
-        entries = load_ledger(run_dir / f'DAG_LEDGER_{arm}.jsonl')
+        led = run_dir / f'DAG_LEDGER_{arm}.jsonl'
+        if not led.exists():
+            continue   # arm never started (fail-stop) — absent arms
+            # are skipped; present-but-partial arms settle partially
+        entries = load_ledger(led)
         results[arm] = settle_from_ledger(entries, silver_map)
     paired = paired_analysis(results)
     return dict(results=results, paired=paired)
@@ -166,9 +170,13 @@ def main():
     if args.run_dir:
         out = analyze_run(Path(args.run_dir))
         dest = Path(args.run_dir) / 'DAG_ANALYSIS.json'
+        out['run_status'] = ('INCOMPLETE (fail-stop: token cap '
+                             'during DD-Online; NoLearn never ran)'
+                             if 'DD-Online-NoLearn'
+                             not in out['results'] else 'COMPLETE')
         dest.write_text(json.dumps(out, indent=1,
                                    ensure_ascii=False))
-        print(f'written {dest}')
+        print(f'written {dest} [{out["run_status"]}]')
         for arm, rows in out['results'].items():
             U = [r['utility_U'] for r in rows
                  if r['utility_U'] is not None]
