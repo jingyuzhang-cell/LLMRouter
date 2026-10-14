@@ -308,8 +308,9 @@ def gate(node, fault, answer, node_type, original_model, clock_t,
                 note='verified fence fix; q=original model prior; '
                      'advantage = zero cost/time only')
 
-    # ACCEPT baseline is computed BEFORE the loop; the failure
-    # branch of a model action falls back to ACCEPT-quality
+    # ACCEPT baseline (for reporting dEU), NOT the failure branch:
+    # a FAILED action has already burned its tokens/time and then
+    # continues from the degraded state (operator fix 2)
     acc_eU = acts['ACCEPT']['eU']
     econ = json.loads((HERE / 'RECOVERY_ECONOMETRICS.json')
                       .read_text())['action_outcomes'] \
@@ -339,13 +340,23 @@ def gate(node, fault, answer, node_type, original_model, clock_t,
             rate_src = 'frozen-econometric'
         toks = sorted(TOK[(model, tag)])[len(s) // 2]
         q_fix = q_task(q_prior(model))
+        # SUCCESS: the call lands; downstream proceeds on the fix
         e_succ = (p * utility(q_fix, tokens_spent + toks,
                               clock_t + med + d_time, deadline)
                   + (1 - p) * utility(
                       q_fix * 0.6, tokens_spent + toks,
                       clock_t + med + d_time + 30.0, deadline))
+        # FAILURE: the call's tokens AND time are already spent;
+        # the task continues from the degraded output (ACCEPT
+        # semantics), not from the pre-call state
+        q_deg = q_task(0.02)
+        e_fail = (p * utility(q_deg, tokens_spent + toks,
+                              clock_t + med + d_time, deadline)
+                  + (1 - p) * utility(
+                      q_deg, tokens_spent + toks,
+                      clock_t + med + d_time + 30.0, deadline))
         acts[f'{tag.upper()}:{model}'] = dict(
-            eU=round(rate * e_succ + (1 - rate) * acc_eU, 6),
+            eU=round(rate * e_succ + (1 - rate) * e_fail, 6),
             cost_tok=toks, time_s=med + d_time,
             on_time_p=p, action_rate=round(rate, 3),
             rate_source=rate_src, n_samples=len(s),

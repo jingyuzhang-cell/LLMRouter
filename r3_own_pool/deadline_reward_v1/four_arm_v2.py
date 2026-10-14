@@ -135,11 +135,15 @@ class ArmRunner(RealRunner):
 
     def _gate_decision(self, task, clock, node, model, o, fault,
                        d_time):
+        # TASK-scoped tokens for U (frozen settlement basis);
+        # the global budget is for hard caps only (operator fix 3)
+        task_tokens = sum(r.get('tokens', 0)
+                          for r in self.records)
         dec = gate(node=node, fault=fault,
                    answer=o.get('answer', ''),
                    node_type=node, original_model=model,
                    clock_t=clock.t, deadline=clock.D,
-                   tokens_spent=self.budget.tokens,
+                   tokens_spent=task_tokens,
                    expected_doc_ids={task['doc_id']},
                    rate_overrides=self._rate_overrides())
         self.last_gate = dec
@@ -389,8 +393,6 @@ def drill():
     return 0
 
 
-if __name__ == '__main__':
-    raise SystemExit(drill())
 
 
 # ---- REAL pilot entry (gated; agent never sets the GO env) -------
@@ -444,6 +446,11 @@ def run_real_pilot():
     try:
         if lock_fh:
             fcntl.flock(lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        # E's store is created ONCE for the whole pilot: feedback
+        # from task k informs task k+1..n (operator fix 1). D stays
+        # store-free (frozen econometrics).
+        from deadline_reward_v1.theta_actions import PriorStore
+        e_store = PriorStore()
         for tid in order:
             # per-group reservation: insufficient -> STOP (no
             # partial groups)
@@ -452,9 +459,7 @@ def run_real_pilot():
                     f'group reservation stop before {tid}: '
                     f'{budget.tokens}+{resv} > {ex.CAPS["tokens"]}')
             for arm in ARMS:
-                from deadline_reward_v1.theta_actions import \
-                    PriorStore
-                store = PriorStore() if arm[0] == 'E' else None
+                store = e_store if arm[0] == 'E' else None
                 runner = ArmRunner(
                     arm, creds, budget,
                     run_dir / f'DAG_LEDGER_{arm}.jsonl',

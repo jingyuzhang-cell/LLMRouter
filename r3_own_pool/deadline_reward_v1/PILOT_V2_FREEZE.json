@@ -70,14 +70,18 @@
   "counterfactual predictions are never settled as real outcomes"
  ],
  "freeze_shas": {
-  "recovery_gate.py": "7e6524fbf85e5d53f68429bb63524e9dcf83ddc9e4346f637be0116082417b42",
-  "four_arm_v2.py": "0f85db6aa7c837a5c4d3468bafab0801d007737a743cb8244a20bdfaa07dc7b7",
+  "recovery_gate.py": "35011239314f88e8145fe3e18604d051d146021ddeb88f0e118450a17623ceb9",
+  "four_arm_v2.py": "2f88a035e462c995b4c93893eed19f2c519aff134c31e853c7ed940dc1f3a529",
   "full_dag_executor.py": "a62259d170a32a3eba471f38de2e10100cd78d5d39318bd6dfc56e1443cfcee1"
  },
  "fix_log": [
   {
    "version": "final-admission-fix-1",
    "changes": "E learning channel wired into gate via rate_overrides (store posteriors change decisions; proven offline: 0/4 history -> qwen fallback, 4/4 -> DS repair, D frozen); closure re-execution topological after root recovery incl local-repair path; XC verified LOCAL_REPAIR; rate formula fixed to Laplace (was >1 bug); real pilot entry (--run-real, group order, per-group reservation, hard caps, GO env gate, fail-stop); four-arm analyzer + 4x4 equivalence PASS"
+  },
+  {
+   "version": "final-admission-fix-2 (operator three-bug round)",
+   "changes": "E store persists across the four tasks (created once per pilot); gate failure branch pays the action tokens+time then continues degraded (no reset to pre-call ACCEPT); gate reads TASK-scoped tokens for U (global budget only for hard caps); duplicate early __main__ entry removed (it silently ran drill instead of the pilot — zero spend discovered in forensics)"
   }
  ]
 }
