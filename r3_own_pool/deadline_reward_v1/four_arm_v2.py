@@ -152,7 +152,11 @@ class ArmRunner(RealRunner):
             return ('TERMINATE', None, None)
         if act == 'ACCEPT':
             return ('ACCEPT', None, None)
-        if act.startswith('RETRY:'):
+        # gate action keys are '<TAG>:<model>' with TAG in
+        # {REPAIR, FALLBACK} (from tag.upper()); BOTH map to real
+        # executions — the pilot's silent REPAIR->ACCEPT mismatch
+        # (found in the operator audit's wake) is fixed here
+        if act.startswith('REPAIR:') or act.startswith('RETRY:'):
             m = act.split(':', 1)[1]
             return ('RETRY', m, TUNED_THETA.get(m,
                                                 dict(DEFAULT_THETA)))
@@ -221,11 +225,18 @@ class ArmRunner(RealRunner):
                 task, clock, root, model, o, set())
             self._execute_action(task, chain, clock, root,
                                  act, m, th)
+            if self.terminated:
+                # TERMINATE means TERMINATE: no closure re-execution,
+                # no further tokens/time (operator audit fix — the
+                # pilot's T08 kept running after terminating)
+                return
             stale = {root} | chain.stale_downstream(root)
         # ALL stale downstream re-executed in TOPOLOGICAL order,
         # consuming the repaired versions; every call charged
         for n in topo_order():
             if n in stale and n != root:
+                if self.terminated:
+                    return
                 m2 = task['planned_pi'][n]
                 o2 = self._exec(chain, clock, n, m2,
                                 TUNED_THETA[m2], 'closure-rerun')
