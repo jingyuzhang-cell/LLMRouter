@@ -1,0 +1,298 @@
+{
+ "version": "EXP4_REAL_PAIRED_FREEZE_v1",
+ "status": "NO-GO — protocol frozen, zero-call drill pending",
+ "purpose": "real paired validation: D2 quality propagation vs D0 no-propagation vs C simple gate, on independent tasks",
+ "primary_endpoints": [
+  "dU(D2-D0): real terminal utility difference per task",
+  "dU(D2-C): real terminal utility difference per task"
+ ],
+ "secondary_endpoints": [
+  "terminal quality q",
+  "tokens",
+  "cash",
+  "latency",
+  "deadline_met",
+  "recovery_success_rate"
+ ],
+ "arms": {
+  "C": "simple gate: full closure + cheapest fitting model",
+  "D0": "joint action enumeration with UNIFORM quality (no propagation) — frozen baseline",
+  "D2": "joint action enumeration with DAG-aware multiplicative quality propagation"
+ },
+ "controls": {
+  "shared_first_attempts": "identical planned outputs across arms per task",
+  "fault_injection": "frozen schedule, identical across arms",
+  "scoring": "independent evaluator (doc-atom coverage from the task document; NEVER uses D0/D2 internal quality predictions as labels)"
+ },
+ "tasks": [
+  {
+   "task_id": "E4T01",
+   "event": "ST西王",
+   "doc_slot": "ST西王#E07-xiwang",
+   "doc_id": "E07-xiwang",
+   "structure": "diamond",
+   "size": 8,
+   "edges": {
+    "n0": [
+     "b0",
+     "b1",
+     "b2",
+     "b3"
+    ],
+    "b0": [
+     "x0"
+    ],
+    "b1": [
+     "x1"
+    ],
+    "b2": [
+     "sink"
+    ],
+    "b3": [
+     "sink"
+    ],
+    "x0": [
+     "sink"
+    ],
+    "x1": [
+     "sink"
+    ],
+    "sink": []
+   },
+   "fault_node": "n0",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 200.0,
+   "n_closures": 37,
+   "n_actions": 723
+  },
+  {
+   "task_id": "E4T02",
+   "event": "中铁装配",
+   "doc_slot": "中铁装配#E08-zhongtie",
+   "doc_id": "E08-zhongtie",
+   "structure": "multipath",
+   "size": 8,
+   "edges": {
+    "src": [
+     "m1",
+     "m4"
+    ],
+    "m1": [
+     "m2"
+    ],
+    "m2": [
+     "m3"
+    ],
+    "m4": [
+     "m5"
+    ],
+    "m5": [
+     "m6"
+    ],
+    "snk": [],
+    "m3": [
+     "snk"
+    ],
+    "m6": [
+     "snk"
+    ]
+   },
+   "fault_node": "src",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 180.0,
+   "n_closures": 17,
+   "n_actions": 323
+  },
+  {
+   "task_id": "E4T03",
+   "event": "交建股份",
+   "doc_slot": "交建股份#E10b-jiaojian",
+   "doc_id": "E10b-jiaojian",
+   "structure": "chain",
+   "size": 8,
+   "edges": {
+    "n0": [
+     "n1"
+    ],
+    "n1": [
+     "n2"
+    ],
+    "n2": [
+     "n3"
+    ],
+    "n3": [
+     "n4"
+    ],
+    "n4": [
+     "n5"
+    ],
+    "n5": [
+     "n6"
+    ],
+    "n6": [
+     "n7"
+    ]
+   },
+   "fault_node": "n0",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 160.0,
+   "n_closures": 8,
+   "n_actions": 143
+  },
+  {
+   "task_id": "E4T04",
+   "event": "祥源文旅",
+   "doc_slot": "祥源文旅#E10-xiangyuan",
+   "doc_id": "E10-xiangyuan",
+   "structure": "diamond",
+   "size": 8,
+   "edges": {
+    "n0": [
+     "b0",
+     "b1",
+     "b2",
+     "b3"
+    ],
+    "b0": [
+     "x0"
+    ],
+    "b1": [
+     "x1"
+    ],
+    "b2": [
+     "sink"
+    ],
+    "b3": [
+     "sink"
+    ],
+    "x0": [
+     "sink"
+    ],
+    "x1": [
+     "sink"
+    ],
+    "sink": []
+   },
+   "fault_node": "n0",
+   "fault_type": "F_JSON",
+   "deadline_s": 200.0,
+   "n_closures": 37,
+   "n_actions": 723
+  },
+  {
+   "task_id": "E4T05",
+   "event": "ST西王",
+   "doc_slot": "ST西王#E07-xiwang_sup1",
+   "doc_id": "E07-xiwang_sup1",
+   "structure": "multipath",
+   "size": 8,
+   "edges": {
+    "src": [
+     "m1",
+     "m4"
+    ],
+    "m1": [
+     "m2"
+    ],
+    "m2": [
+     "m3"
+    ],
+    "m4": [
+     "m5"
+    ],
+    "m5": [
+     "m6"
+    ],
+    "snk": [],
+    "m3": [
+     "snk"
+    ],
+    "m6": [
+     "snk"
+    ]
+   },
+   "fault_node": "src",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 180.0,
+   "n_closures": 17,
+   "n_actions": 323
+  },
+  {
+   "task_id": "E4T06",
+   "event": "中铁装配",
+   "doc_slot": "中铁装配#E08-zhongtie_sup1",
+   "doc_id": "E08-zhongtie_sup1",
+   "structure": "chain",
+   "size": 8,
+   "edges": {
+    "n0": [
+     "n1"
+    ],
+    "n1": [
+     "n2"
+    ],
+    "n2": [
+     "n3"
+    ],
+    "n3": [
+     "n4"
+    ],
+    "n4": [
+     "n5"
+    ],
+    "n5": [
+     "n6"
+    ],
+    "n6": [
+     "n7"
+    ]
+   },
+   "fault_node": "n0",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 160.0,
+   "n_closures": 8,
+   "n_actions": 143
+  }
+ ],
+ "reps": 2,
+ "exclusion": "none (all failures kept in results)",
+ "freeze_shas": {
+  "exp4_real_paired.py": "f5a934bdaedaecef50cf1259adb9c136aa0ac9303de45b8a002f6b0200c73001",
+  "quality_models.py": "35d57d4f313405eb9c8e7498f6c381502cc5175004480676ebcd71dab2cda228",
+  "complex_dag.py": "1c7e36c74039c8da1b7467f6e7a878f545959e944725a81934163d35edf291b2",
+  "independent_eval.py": "24622ef995ea9ff074bf807e7f9ac335fb6978f19aded7cb8998d0e75cf496fe"
+ },
+ "budget": {
+  "pilot": {
+   "tasks": 6,
+   "arms": 3,
+   "reps": 2,
+   "calls_per_task_rep": "4 shared planned + ~2 recovery per arm × 3 arms ≈ 10",
+   "total_calls": 240,
+   "tokens": 960000,
+   "cash_cny": 0.35,
+   "wall_s": 3600.0
+  },
+  "caps": {
+   "attempts": 300,
+   "tokens": 500000,
+   "cash_cny": 0.5,
+   "wall_s": 4800.0
+  },
+  "derivation": "6 tasks × 2 reps × (4 planned shared + ~2 recovery × 3 arms) ≈ 288 worst case; realistic with LOCAL_REPAIR dominance ≈ 120-180; + 60% margin for GLM token-heavy repairs"
+ },
+ "go_nogo": {
+  "conditions": [
+   "shared first attempts verified identical across arms",
+   "all joint actions legal (closure upward-closed)",
+   "per-arm cost/latency/utility independently recomputable",
+   "no post-terminate execution",
+   "no budget double-charging",
+   "independent evaluator does NOT use D0/D2 predictions",
+   "all failures kept in results"
+  ],
+  "primary_readout": "ΔU(D2-D0) per task; report mean, sign consistency, and range",
+  "go_for_formal": "if pilot shows ΔU(D2-D0) > 0 on ≥4/6 tasks with no execution defects",
+  "no_go": "if ΔU(D2-D0) ≈ 0 or negative on most tasks, or execution defects found"
+ }
+}
