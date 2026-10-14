@@ -210,6 +210,9 @@ class GlobalBudget:
         self.tokens = 0
         self.cash = 0.0
         self.wall = 0.0
+        self.wall_t0 = time.monotonic()   # REAL clock, independent
+        # of accumulated API service latencies (pauses/retries/
+        # process overhead count toward the experiment wall)
 
     def pre_check(self, est_in, est_out, est_cash):
         if self.attempts + 1 > CAPS['attempts']:
@@ -218,8 +221,10 @@ class GlobalBudget:
             raise RuntimeError('budget stop: token cap')
         if self.cash + est_cash > CAPS['cash']:
             raise RuntimeError('budget stop: cash cap')
-        if self.wall > CAPS['wall']:
-            raise RuntimeError('budget stop: wall cap')
+        if (self.wall > CAPS['wall']
+                or time.monotonic() - self.wall_t0
+                > CAPS['wall']):
+            raise RuntimeError('budget stop: wall cap (real clock)')
 
     def settle(self, o):
         """Post-call settlement at REAL usage."""
@@ -361,7 +366,8 @@ def diagnose_root(chain, expected_doc_ids):
             node=n,
             contract_ok=_ok(o),
             cites_ok=citation_ok(o.get('answer', ''),
-                                 expected_doc_ids),
+                                 expected_doc_ids,
+                                 node_type=n),
             depth=len(downstream_of(n))))
     faulty = [c for c in cands
               if not c['contract_ok'] or not c['cites_ok']]
@@ -858,6 +864,53 @@ def chain_test():
 
 
 # ---- preflight ------------------------------------------------------------
+def diagnosis_counterexample_test():
+    """Operator-mandated counterexample (restricted-GO step 1):
+    TL's answer carries the LEGAL per-contract 'evidence' field; ER's
+    cites an invalid id. The diagnosis must pick ER — NOT misjudge
+    the contract-compliant TL as the root cause."""
+    tasks = full_dag_tasks.build_tasks()
+    t = next(x for x in tasks if x['fault_node'] == 'er'
+             and x['fault_type'] == 'F_JSON')
+
+    class FakeChain:
+        def __init__(self):
+            self.state = {}
+            self.task = t
+
+        def current(self, n):
+            return self.state.get(n)
+
+    fc = FakeChain()
+    doc = t['doc_id']
+    # TL: legal per timeline contract -> field 'evidence', value = doc
+    fc.state['fe'] = dict(answer='[{"fact":"ok",'
+                               '"evidence_doc_id":"%s"}]' % doc,
+                          finish_reason='stop')
+    fc.state['tl'] = dict(answer='[{"date":"2024-01-01",'
+                                  '"event":"e","evidence":"%s"}]' % doc,
+                          finish_reason='stop')
+    # ER: contract-compliant shape but cites an INVALID id
+    fc.state['er'] = dict(answer='[{"entity":"x","role":"r",'
+                                  '"relation":"y",'
+                                  '"evidence_doc_id":"WRONG_ID"}]',
+                          finish_reason='stop')
+    root, evidence, conf = diagnose_root(fc, {doc})
+    checks = dict(
+        root_is_er=(root == 'er'),
+        tl_not_flagged=all(s['cites_ok'] for s in
+                           evidence['signals']
+                           if s['node'] == 'tl'),
+        er_flagged=any(not s['cites_ok'] for s in evidence['signals']
+                       if s['node'] == 'er'),
+        confidence_ok=(conf in ('HIGH', 'PARTIAL')))
+    print(json.dumps(dict(checks=checks, root=root,
+                          conf=conf), ensure_ascii=False))
+    ok = all(checks.values())
+    print(f'COUNTEREXAMPLE TEST: {"PASS" if ok else "FAIL"}')
+    return 0 if ok else 2
+
+
 def preflight():
     checks = dict(freeze_shas_match=True, bodies_ok=True,
                   fail_stop_ok=True, budget_stop_ok=True,
@@ -948,6 +1001,8 @@ def preflight():
     checks['dry_run_invariants'] = (full_dag_protocol.dry_run() == 0)
     checks['chain_test_ok'] = (chain_test() == 0)
     checks['chain_test_delayed_ok'] = (chain_test_delayed() == 0)
+    checks['diagnosis_counterexample_ok'] = (
+        diagnosis_counterexample_test() == 0)
 
     all_ok = all(v for v in checks.values() if isinstance(v, bool))
     checks['freeze_issues'] = issues
