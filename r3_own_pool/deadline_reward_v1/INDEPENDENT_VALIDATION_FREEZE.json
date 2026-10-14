@@ -1,0 +1,83 @@
+{
+ "version": "INDEPENDENT_VALIDATION_FREEZE_v1",
+ "status": "NO-GO — awaiting operator authorization",
+ "purpose": "validate D-vs-C resource/deadline benefits on FRESH events with randomness controls; E learning studied separately behind precondition gates",
+ "tasks": [
+  {
+   "task_id": "V01",
+   "event": "ST西王",
+   "doc_slot": "ST西王#E07-xiwang:E07-xiwang",
+   "doc_id": "E07-xiwang",
+   "fault_node": "fe",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 120.0
+  },
+  {
+   "task_id": "V02",
+   "event": "中铁装配",
+   "doc_slot": "中铁装配#E08-zhongtie:E08-zhongtie",
+   "doc_id": "E08-zhongtie",
+   "fault_node": "tl",
+   "fault_type": "F_TRUNCATED",
+   "deadline_s": 90.0
+  },
+  {
+   "task_id": "V03",
+   "event": "交建股份",
+   "doc_slot": "交建股份#E10b-jiaojian:E10b-jiaojian",
+   "doc_id": "E10b-jiaojian",
+   "fault_node": "er",
+   "fault_type": "F_JSON",
+   "deadline_s": 160.0
+  },
+  {
+   "task_id": "V04",
+   "event": "祥源文旅",
+   "doc_slot": "祥源文旅#E10-xiangyuan:E10-xiangyuan",
+   "doc_id": "E10-xiangyuan",
+   "fault_node": "xc",
+   "fault_type": "F_JSON",
+   "deadline_s": 120.0
+  }
+ ],
+ "fresh_events": [
+  "中铁装配",
+  "交建股份",
+  "祥源文旅",
+  "ST西王"
+ ],
+ "arms": [
+  "B-Fixed-Norm",
+  "C-Fixed-Gate",
+  "D-DD-Gate"
+ ],
+ "e_arm_separate": {
+  "arm": "E-DD-Gate-Learn",
+  "mode": "single pass AFTER primary block, shared e_store across tasks",
+  "precondition_gates": [
+   "gate L1: legal learning samples existed (>=1 repair/fallback executed)",
+   "gate L2: store posteriors actually changed a later decision (instrumented)"
+  ],
+  "reporting": "E results reported ONLY where both gates hold; otherwise labeled learning-not-tested"
+ },
+ "randomness_controls": {
+  "shared_first_attempts": "within a repetition the planned calls run ONCE physically and replay identically to every arm — arms diverge only at recovery decisions",
+  "reps": 3,
+  "rep_semantics": "planned re-run per rep (across-rep variance), held within rep",
+  "analysis": "per-task mean dU(D-C) over reps; sign test on means; B reference"
+ },
+ "caps": {
+  "attempts": 140,
+  "tokens": 350000,
+  "cash_cny": 0.6,
+  "wall_s": 5400.0
+ },
+ "caps_derivation": "physical spend = shared planned (4/task/rep) + arm recoveries (~1.5 avg): 4 tasks x 3 reps x (4 + 3x1.5) ~= 102 calls; +E single pass ~20; 25% margin",
+ "scoring": "same frozen terminal U/coefficients/silver basis for ALL arms; silver atoms built at run time from the fresh docs (doc-atom builder); anchor diagnostics separate",
+ "freeze_shas": {
+  "validation_run.py": "4551cb5f4e1a8fc7ada85dc3b2d67acca05109fd4a4bfc80a85c9180afb47bb3",
+  "four_arm_v2.py": "913ab8c5bb1027fceae8ff0215ca8f3e3a06bf3c1962147c11f6fe1e23913eb5",
+  "recovery_gate.py": "35011239314f88e8145fe3e18604d051d146021ddeb88f0e118450a17623ceb9",
+  "full_dag_executor.py": "a62259d170a32a3eba471f38de2e10100cd78d5d39318bd6dfc56e1443cfcee1"
+ }
+}
