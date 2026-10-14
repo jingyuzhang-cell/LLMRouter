@@ -281,6 +281,9 @@ def run_real():
             for rep in range(reps):
                 rec = run_planned_once(task, text, real_call,
                                        creds, rep)
+                # physical budget: shared planned calls charged ONCE
+                for node_out in rec.values():
+                    budget.settle(node_out)
                 for arm in fz['arms']:
                     replay_arm(task, text, arm, rec, real_call,
                                creds, budget,
