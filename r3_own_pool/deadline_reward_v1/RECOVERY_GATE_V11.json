@@ -1,0 +1,68 @@
+{
+ "version": "RECOVERY_GATE_v1_1",
+ "zero_model_calls": true,
+ "fixes": [
+  "verification-based LOCAL_REPAIR (no semantic boost; advantage = zero cost only)",
+  "node-aware downstream at real per-(node,model) planned latencies",
+  "empirical Laplace-shrunk on-time probability (deepseek n=7 conservative)",
+  "TERMINATE implemented alongside ACCEPT"
+ ],
+ "t01_resimulation": {
+  "deadline_s": 120.0,
+  "doc_id": "E04-zhuoran",
+  "deterministic_facts": [
+   {
+    "node": "fe",
+    "fault": "TRUNCATED",
+    "local_verifiable": false,
+    "checks": {
+     "parse_layer": "FAIL"
+    }
+   },
+   {
+    "node": "er",
+    "fault": "FENCE_ONLY",
+    "local_verifiable": true,
+    "checks": {
+     "parse_layer": "FENCE",
+     "nonempty": true,
+     "citations_ok": true
+    }
+   },
+   {
+    "node": "tl",
+    "fault": "FENCE_ONLY",
+    "local_verifiable": true,
+    "checks": {
+     "parse_layer": "FENCE",
+     "nonempty": true,
+     "citations_ok": true
+    }
+   },
+   {
+    "node": "xc",
+    "fault": "OK",
+    "local_verifiable": false,
+    "checks": {
+     "parse_layer": "STRICT",
+     "nonempty": true,
+     "citations_ok": true
+    }
+   }
+  ],
+  "prediction": {
+   "fe_model_replacement": {
+    "ds_repair_lat_range": [
+     1.374,
+     3.265
+    ],
+    "glm_repair_lat_range": [
+     49.336,
+     49.336
+    ],
+    "note": "model-substitution outcomes are PREDICTION INTERVALS over real samples, not verified counterfactuals"
+   },
+   "note": "only local-repair savings are deterministic; the ~20-30s completion claim from v1 is WITHDRAWN as unverified"
+  }
+ }
+}

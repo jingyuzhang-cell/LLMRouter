@@ -397,7 +397,7 @@ def _truncated(o) -> bool:
 class RealRunner:
     def __init__(self, arm, creds, budget, ledger_path,
                  transport=None, prior_store=None,
-                 learn_enabled=True):
+                 learn_enabled=True, local_repair=False):
         self.arm = arm
         self.creds = creds
         self.budget = budget
@@ -405,6 +405,9 @@ class RealRunner:
         self.transport = transport or real_call
         self.prior_store = prior_store   # DD within-run learning
         self.learn_enabled = learn_enabled   # False = NoLearn arm
+        # v1.1: zero-call LOCAL_REPAIR pre-step (new-protocol arms
+        # B/C/D/E only; the frozen A arms keep the original path)
+        self.local_repair_enabled = local_repair
         self.last_diagnosis = None
         self.records = []
         self.task_id = None
@@ -588,12 +591,18 @@ class RealRunner:
             # honestly UNDETECTED at runtime (never backfilled from
             # settlement scores).
             if not _ok(o) and node != 'xc':
-                # branch-node contract failure = its own fault
-                # (upstreams already validated in topo order); the
-                # JOIN node's failure goes through upstream
-                # diagnosis below — its own fault only if the
-                # upstreams are observably clean
-                self._recover(chain, clock, task, node)
+                # v1.1 zero-call LOCAL_REPAIR first (verified fence
+                # fix; no semantic boost, advantage = zero cost)
+                if self.local_repair_enabled and \
+                        self._try_local_repair(chain, clock, task,
+                                               node, o):
+                    pass   # locally fixed; no model call needed
+                else:
+                    # branch-node contract failure = its own fault
+                    # (upstreams already validated in topo order);
+                    # the JOIN node's failure goes through upstream
+                    # diagnosis below
+                    self._recover(chain, clock, task, node)
         # delayed detection: OBSERVABLE only (xc failed; no
         # fault-schedule reads). Root cause DIAGNOSED from
         # contract/citation signals; UNKNOWN -> local repair of the
@@ -645,6 +654,48 @@ class RealRunner:
             self.prior_store.update(
                 key, passed=bool(contract_ok and cites_ok),
                 rec_k=0, rec_n=0)   # no label-based recall online
+
+    def _try_local_repair(self, chain, clock, task, node, o):
+        """Deterministic fence repair VERIFIED against the full node
+        contract (recovery_gate v1.1). On success: write the repaired
+        version at ZERO cost (no model call, no budget charge), keep
+        the content unchanged. Returns True iff verified."""
+        from deadline_reward_v1.recovery_gate import (
+            verify_local_repair)
+        ok, repaired, checks = verify_local_repair(
+            o.get('answer', ''), node, {task['doc_id']})
+        self.last_local_repair = dict(node=node, ok=ok, checks=checks)
+        if not ok:
+            return False
+        fixed = dict(o)
+        fixed['answer'] = repaired
+        fixed['finish_reason'] = o.get('finish_reason') \
+            if o.get('finish_reason') in ('stop', 'end_turn') \
+            else 'stop'
+        chain.set_output(node, fixed, 'local-repair')
+        entry = dict(task=task['task_id'], node=node,
+                     model='(local-repair)',
+                     theta=dict(zero_call=True), tag='local-repair',
+                     arm=self.arm,
+                     finish_reason=fixed['finish_reason'],
+                     usage=dict(prompt_tokens=0,
+                                completion_tokens=0),
+                     cash_cny=0.0, latency_s=0.0,
+                     answer=repaired, prompt_sha256=None,
+                     consumed_upstream=chain.prompt_meta.get(
+                         node, {}), injected=False,
+                     task_t_s=round(clock.t, 3),
+                     deadline_s=clock.D,
+                     timestamp=time.strftime('%Y-%m-%dT%H:%M:%S'))
+        self._log(entry)
+        self.records.append(dict(node=node, tag='local-repair',
+                                 model='(local)', theta={},
+                                 tokens=0, cash=0.0, latency=0.0,
+                                 service_lat=0.0,
+                                 answer=repaired,
+                                 finish=fixed['finish_reason'],
+                                 injected=False))
+        return True
 
     def _recover(self, chain, clock, task, node):
         model = task['planned_pi'][node]
