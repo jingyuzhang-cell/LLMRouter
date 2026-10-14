@@ -75,9 +75,15 @@
  "caps_derivation": "physical spend = shared planned (4/task/rep) + arm recoveries (~1.5 avg): 4 tasks x 3 reps x (4 + 3x1.5) ~= 102 calls; +E single pass ~20; 25% margin",
  "scoring": "same frozen terminal U/coefficients/silver basis for ALL arms; silver atoms built at run time from the fresh docs (doc-atom builder); anchor diagnostics separate",
  "freeze_shas": {
-  "validation_run.py": "4551cb5f4e1a8fc7ada85dc3b2d67acca05109fd4a4bfc80a85c9180afb47bb3",
+  "validation_run.py": "19737a502b02195cf486b8dbc60b0f8f6503d6bcb8c3df7f564d2f4b81638ba1",
   "four_arm_v2.py": "913ab8c5bb1027fceae8ff0215ca8f3e3a06bf3c1962147c11f6fe1e23913eb5",
   "recovery_gate.py": "35011239314f88e8145fe3e18604d051d146021ddeb88f0e118450a17623ceb9",
   "full_dag_executor.py": "a62259d170a32a3eba471f38de2e10100cd78d5d39318bd6dfc56e1443cfcee1"
- }
+ },
+ "fix_log": [
+  {
+   "version": "fix-reps-key",
+   "changes": "reps read from randomness_controls (top-level KeyError, zero spend); E-arm separate pass wired per task (same shared planned outputs)"
+  }
+ ]
 }

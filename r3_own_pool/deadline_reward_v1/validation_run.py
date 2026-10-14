@@ -277,15 +277,23 @@ def run_real():
                                       er='deepseek-flash',
                                       xc='qwen-plus')
             text = docs[task['doc_slot']]['text']
-            for rep in range(fz['reps']):
+            reps = fz['randomness_controls']['reps']
+            for rep in range(reps):
                 rec = run_planned_once(task, text, real_call,
                                        creds, rep)
                 for arm in fz['arms']:
-                    store = e_store if arm[0] == 'E' else None
                     replay_arm(task, text, arm, rec, real_call,
                                creds, budget,
                                run_dir / f'DAG_LEDGER_{arm}_rep{rep}'
-                                         '.jsonl', store=store)
+                                         '.jsonl')
+                # E separate pass (same shared planned outputs, the
+                # cross-task e_store, L1/L2 gates evaluated at
+                # analysis)
+                e_arm = fz['e_arm_separate']['arm']
+                replay_arm(task, text, e_arm, rec, real_call,
+                           creds, budget,
+                           run_dir / f'DAG_LEDGER_{e_arm}_rep{rep}'
+                                     '.jsonl', store=e_store)
                 summary[f"{task['task_id']}:rep{rep}"] = dict(
                     attempts=budget.attempts,
                     tokens=budget.tokens,
