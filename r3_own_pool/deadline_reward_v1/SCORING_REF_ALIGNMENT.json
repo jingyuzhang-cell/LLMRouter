@@ -1,0 +1,944 @@
+{
+ "version": "ALIGNMENT_ANALYSIS_v1",
+ "method": "fact-ID normalization (dates/amounts/penalties extracted and canonicalized) → key-based matching → verdict comparison → categorized as AGREED/EXPRESSION_DIFF/REAL_DIVERGENCE/DS_ONLY/QWEN_ONLY",
+ "per_task": {
+  "CT01": {
+   "ds_items": 17,
+   "qw_items": 13,
+   "aligned_total": 26,
+   "QWEN_ONLY": 9,
+   "DS_ONLY": 13,
+   "REAL_DIVERGENCE": 3,
+   "AGREED": 1
+  },
+  "CT03": {
+   "ds_items": 20,
+   "qw_items": 20,
+   "aligned_total": 23,
+   "QWEN_ONLY": 3,
+   "AGREED": 16,
+   "EXPRESSION_DIFF": 1,
+   "DS_ONLY": 3
+  },
+  "CT04": {
+   "ds_items": 21,
+   "qw_items": 10,
+   "aligned_total": 24,
+   "DS_ONLY": 14,
+   "QWEN_ONLY": 7,
+   "AGREED": 3
+  },
+  "CT05": {
+   "ds_items": 11,
+   "qw_items": 8,
+   "aligned_total": 15,
+   "DS_ONLY": 8,
+   "QWEN_ONLY": 4,
+   "AGREED": 2,
+   "REAL_DIVERGENCE": 1
+  },
+  "CT06": {
+   "ds_items": 16,
+   "qw_items": 17,
+   "aligned_total": 19,
+   "AGREED": 13,
+   "QWEN_ONLY": 3,
+   "DS_ONLY": 3
+  }
+ },
+ "overall": {
+  "total": 107,
+  "agreed": 35,
+  "expression_diff": 1,
+  "real_divergence": 4,
+  "ds_only": 41,
+  "qw_only": 26,
+  "agreement_rate": 0.327
+ },
+ "aligned_results": {
+  "CT01": [
+   {
+    "key": "p:虚假",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "公告中使用'虚假'一词指代财务信息问题",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:20251220|p:告知书|p:立案",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2025年12月20日披露《关于公司及实际控制人收到立案告知书的公告》（公告编号：2025-053）",
+    "ds_verdict": null
+   },
+   {
+    "key": "文档中存在'据报道''媒体报道'等模糊来源表述",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "REJECTED",
+    "qw_item": "文档中存在'据报道''媒体报道'等模糊来源表述",
+    "ds_verdict": null
+   },
+   {
+    "key": "a:0.96元",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "金额：0.96元",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:0.96元|a:2.24亿元|d:20261012",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年10月12日收盘价0.96元/股，总市值2.24亿元",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:2026911",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年9月11日",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026911|p:告知书|p:处罚",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年9月11日收到上海证监局《行政处罚事先告知书》（沪证监处罚字[2026]11号）",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:20261012",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年10月12日",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026910",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年9月10日",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026912",
+    "category": "REAL_DIVERGENCE",
+    "ds_verdict": "REJECTED",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现2026年9月12日相关记载",
+    "qw_evidence": "文档未出现2026年9月12日日期",
+    "ds_item": "日期：2026年9月12日",
+    "qw_item": "2026年9月12日为相关公告披露日或法律文书送达日"
+   },
+   {
+    "key": "不可核验主张：模糊来源",
+    "category": "DS_ONLY",
+    "ds_verdict": "UNCERTAIN",
+    "ds_item": "不可核验主张：模糊来源",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:1.16元|a:2.71亿元|d:2026923",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年9月23日收盘价1.16元/股，总市值2.71亿元",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:20251219",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2025年12月19日",
+    "qw_verdict": null
+   },
+   {
+    "key": "p:处罚|p:虚假",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "处罚关键词：虚假",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:20251219|p:告知书|p:立案",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2025年12月19日收到中国证监会《立案告知书》（证监立案字0032025031号、0032025",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:20261013",
+    "category": "REAL_DIVERGENCE",
+    "ds_verdict": "REJECTED",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现2026年10月13日相关记载",
+    "qw_evidence": "文档未提及2026年10月13日任何事件",
+    "ds_item": "日期：2026年10月13日",
+    "qw_item": "2026年10月13日为停牌起始日或公告日"
+   },
+   {
+    "key": "p:告知书",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "公告中使用'告知书'作为正式法律文书名称",
+    "ds_verdict": null
+   },
+   {
+    "key": "p:告知书|p:处罚",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "处罚关键词：告知书",
+    "qw_verdict": null
+   },
+   {
+    "key": "p:处罚|p:立案",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "处罚关键词：立案",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026910|p:立案|p:退市",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年9月10日发布《关于公司立案调查进展暨退市风险提示公告》（公告编号：2026-080）",
+    "ds_verdict": null
+   },
+   {
+    "key": "p:处罚",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "公司尚未收到就上述立案调查事项的正式处罚决定",
+    "qw_evidence": "尚未收到就上述立案调查事项的正式处罚决定",
+    "ds_item": "处罚关键词：处罚",
+    "qw_item": "公告中使用'处罚'一词指代尚未作出的正式决定"
+   },
+   {
+    "key": "d:2026109",
+    "category": "REAL_DIVERGENCE",
+    "ds_verdict": "REJECTED",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现2026年10月9日相关记载",
+    "qw_evidence": "文档未出现2026年10月9日日期",
+    "ds_item": "日期：2026年10月9日",
+    "qw_item": "2026年10月9日为相关公告披露日或股价数据日"
+   },
+   {
+    "key": "a:1.16元",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "金额：1.16元",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:2.71亿元",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "金额：2.71亿元",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:2.24亿元",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "金额：2.24亿元",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:20251220",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2025年12月20日",
+    "qw_verdict": null
+   }
+  ],
+  "CT03": [
+   {
+    "key": "识别不可核验主张（含‘据报道’‘媒体报道’等模糊来源）",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "识别不可核验主张（含‘据报道’‘媒体报道’等模糊来源）",
+    "ds_verdict": null
+   },
+   {
+    "key": "a:274749679.09元",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该金额",
+    "qw_evidence": "文档中未出现该金额",
+    "ds_item": "金额：274,749,679.09元",
+    "qw_item": "274,749,679.09元"
+   },
+   {
+    "key": "d:2026130",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该日期",
+    "qw_evidence": "文档中未出现该日期",
+    "ds_item": "日期：2026年1月30日",
+    "qw_item": "2026年1月30日"
+   },
+   {
+    "key": "a:264503773.76元",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该金额",
+    "qw_evidence": "文档中未出现该金额",
+    "ds_item": "金额：264,503,773.76元",
+    "qw_item": "264,503,773.76元"
+   },
+   {
+    "key": "p:处罚|p:虚假",
+    "category": "EXPRESSION_DIFF",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "没有虚假记载、误导性陈述或重大遗漏",
+    "qw_evidence": "文档使用‘涉嫌信息披露违法违规’，未使用‘虚假’一词",
+    "ds_item": "处罚关键词：虚假",
+    "qw_item": "处罚关键词：虚假"
+   },
+   {
+    "key": "d:202629",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该日期",
+    "qw_evidence": "文档中未出现该日期",
+    "ds_item": "日期：2026年2月9日",
+    "qw_item": "2026年2月9日"
+   },
+   {
+    "key": "d:2026428",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年4月28日",
+    "qw_verdict": null
+   },
+   {
+    "key": "p:处罚|p:立案",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "中国证监会决定对公司立案",
+    "qw_evidence": "中国证监会决定对公司立案",
+    "ds_item": "处罚关键词：立案",
+    "qw_item": "处罚关键词：立案"
+   },
+   {
+    "key": "p:处罚",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现“处罚”字样",
+    "qw_evidence": "文档仅提及‘立案’，未出现‘处罚’一词或任何行政处罚决定",
+    "ds_item": "处罚关键词：处罚",
+    "qw_item": "处罚关键词：处罚"
+   },
+   {
+    "key": "d:2026109",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年10月9日",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026210",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该日期",
+    "qw_evidence": "文档中未出现该日期",
+    "ds_item": "日期：2026年2月10日",
+    "qw_item": "2026年2月10日"
+   },
+   {
+    "key": "d:2026109|p:告知书|p:立案",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年10月9日收到中国证监会立案告知书",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:2025731",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该日期",
+    "qw_evidence": "文档中未出现该日期",
+    "ds_item": "日期：2025年7月31日",
+    "qw_item": "2025年7月31日"
+   },
+   {
+    "key": "a:307178200.95元",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该金额",
+    "qw_evidence": "文档中未出现该金额",
+    "ds_item": "金额：307,178,200.95元",
+    "qw_item": "307,178,200.95元"
+   },
+   {
+    "key": "a:512932838.85元",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该金额",
+    "qw_evidence": "文档中未出现该金额",
+    "ds_item": "金额：512,932,838.85元",
+    "qw_item": "512,932,838.85元"
+   },
+   {
+    "key": "p:告知书|p:处罚",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "收到中国证券监督管理委员会……下发的《……立案告知书》",
+    "qw_evidence": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）",
+    "ds_item": "处罚关键词：告知书",
+    "qw_item": "处罚关键词：告知书"
+   },
+   {
+    "key": "a:210483434.97元",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该金额",
+    "qw_evidence": "文档中未出现该金额",
+    "ds_item": "金额：210,483,434.97元",
+    "qw_item": "210,483,434.97元"
+   },
+   {
+    "key": "d:20251231",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该日期",
+    "qw_evidence": "文档中未出现该日期",
+    "ds_item": "日期：2025年12月31日",
+    "qw_item": "2025年12月31日"
+   },
+   {
+    "key": "d:2025521",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该日期",
+    "qw_evidence": "文档中未出现该日期",
+    "ds_item": "日期：2025年5月21日",
+    "qw_item": "2025年5月21日"
+   },
+   {
+    "key": "a:147791659.62元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "公司 2025 年度期末净资产为-147,791,659.62 元",
+    "qw_evidence": "公司 2025 年度期末净资产为-147,791,659.62 元",
+    "ds_item": "金额：147,791,659.62元",
+    "qw_item": "147,791,659.62元（2025年度期末净资产为负值）"
+   },
+   {
+    "key": "a:516854453.98元",
+    "category": "AGREED",
+    "ds_verdict": "UNCERTAIN",
+    "qw_verdict": "UNCERTAIN",
+    "ds_evidence": "文档中未出现该金额",
+    "qw_evidence": "文档中未出现该金额",
+    "ds_item": "金额：516,854,453.98元",
+    "qw_item": "516,854,453.98元"
+   },
+   {
+    "key": "d:2026428|p:退市",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年4月28日披露退市风险警示提示性公告",
+    "ds_verdict": null
+   },
+   {
+    "key": "不可核验主张：模糊来源（据报道/媒体报道等）",
+    "category": "DS_ONLY",
+    "ds_verdict": "UNCERTAIN",
+    "ds_item": "不可核验主张：模糊来源（据报道/媒体报道等）",
+    "qw_verdict": null
+   }
+  ],
+  "CT04": [
+   {
+    "key": "d:2025731",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "日期：2025年7月31日",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026429",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年4月29日",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:20251231|d:2026428",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "UNCERTAIN",
+    "qw_item": "cross_source_date:2025年12月31日与2026年4月28日构成时间序列矛盾",
+    "ds_verdict": null
+   },
+   {
+    "key": "文档中存在'据报道''媒体报道'等模糊来源表述",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "REJECTED",
+    "qw_item": "文档中存在'据报道''媒体报道'等模糊来源表述",
+    "ds_verdict": null
+   },
+   {
+    "key": "a:307178200.95元",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "金额：307,178,200.95元",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:274749679.09元",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "金额：274,749,679.09元",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:516854453.98元",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "金额：516,854,453.98元",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2025521|d:2025731|d:2026130|d:2026210|d:202629",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "REJECTED",
+    "qw_item": "2025年5月21日、2025年7月31日、2026年1月30日、2026年2月9日、2026年2月",
+    "ds_verdict": null
+   },
+   {
+    "key": "不可核验主张：模糊来源",
+    "category": "DS_ONLY",
+    "ds_verdict": "UNCERTAIN",
+    "ds_item": "不可核验主张：模糊来源",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026130",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "日期：2026年1月30日",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:264503773.76元",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "金额：264,503,773.76元",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026429|p:退市",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年4月29日，公司股票开市起被实施退市风险警示",
+    "ds_verdict": null
+   },
+   {
+    "key": "p:处罚|p:虚假",
+    "category": "AGREED",
+    "ds_verdict": "REJECTED",
+    "qw_verdict": "REJECTED",
+    "ds_evidence": "文档中未出现“虚假”相关处罚表述",
+    "qw_evidence": "文档中无'虚假'作为处罚关键词；仅出现'没有虚假记载'的声明",
+    "ds_item": "处罚关键词：虚假",
+    "qw_item": "处罚关键词'虚假'在文档中出现"
+   },
+   {
+    "key": "d:2026428|d:2026429",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "UNCERTAIN",
+    "qw_item": "cross_source_date:2026年4月28日与cross_source_date:202",
+    "ds_verdict": null
+   },
+   {
+    "key": "a:512932838.85元",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "金额：512,932,838.85元",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:202629",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "日期：2026年2月9日",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026428",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年4月28日",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:210483434.97元",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "金额：210,483,434.97元",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:210483434.97元|a:264503773.76元|a:274749679.09元|a:307178200.",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "REJECTED",
+    "qw_item": "金额210,483,434.97元、264,503,773.76元、274,749,679.09元、",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:20251231",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "截至 2025 年 12 月 31 日，董事会成员人数仍低于纳川股份章程规定标准",
+    "qw_evidence": "截至2025年12月31日，董事会成员人数仍低于纳川股份章程规定标准",
+    "ds_item": "日期：2025年12月31日",
+    "qw_item": "2025年12月31日，纳川股份董事会成员人数低于公司章程规定标准"
+   },
+   {
+    "key": "d:2025521",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "日期：2025年5月21日",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:147791659.62元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "公司 2025 年度期末净资产为-147,791,659.62 元",
+    "qw_evidence": "公司2025年度期末净资产为-147,791,659.62元",
+    "ds_item": "金额：147,791,659.62元",
+    "qw_item": "147,791,659.62元为公司2025年度期末净资产绝对值"
+   },
+   {
+    "key": "d:2026210",
+    "category": "DS_ONLY",
+    "ds_verdict": "REJECTED",
+    "ds_item": "日期：2026年2月10日",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026428|p:退市",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年4月28日，公司披露《关于公司股票交易将被实施退市风险警示...提示性公告》（公告编号：2",
+    "ds_verdict": null
+   }
+  ],
+  "CT05": [
+   {
+    "key": "p:处罚|p:虚假",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "处罚关键词：虚假",
+    "qw_verdict": null
+   },
+   {
+    "key": "p:虚假",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "UNCERTAIN",
+    "qw_item": "存在虚假记载",
+    "ds_verdict": null
+   },
+   {
+    "key": "金额：",
+    "category": "DS_ONLY",
+    "ds_verdict": "UNCERTAIN",
+    "ds_item": "金额：",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026918",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "欢瑞世纪联合股份有限公司董事会 2026 年 9 月 18 日",
+    "qw_evidence": "欢瑞世纪联合股份有限公司董事会 2026 年 9 月 18 日",
+    "ds_item": "日期：2026年9月18日",
+    "qw_item": "2026年9月18日发布投资者接待日公告"
+   },
+   {
+    "key": "p:告知书|p:处罚",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "处罚关键词：告知书",
+    "qw_verdict": null
+   },
+   {
+    "key": "p:处罚|p:立案",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "处罚关键词：立案",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026421",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年4月21日",
+    "qw_verdict": null
+   },
+   {
+    "key": "潜在冲突项",
+    "category": "DS_ONLY",
+    "ds_verdict": "UNCERTAIN",
+    "ds_item": "潜在冲突项",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026421|p:告知书|p:立案",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年4月21日收到证监会《立案告知书》",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:2026422|p:立案",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "CONFIRMED",
+    "qw_item": "2026年4月22日发布立案公告",
+    "ds_verdict": null
+   },
+   {
+    "key": "p:处罚",
+    "category": "REAL_DIVERGENCE",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "REJECTED",
+    "ds_evidence": "根据《中华人民共和国证券法》《中华人民共和国行政处罚法》",
+    "qw_evidence": "截至本公告披露日，公司尚未收到中国证监会的最终调查结论",
+    "ds_item": "处罚关键词：处罚",
+    "qw_item": "存在处罚决定"
+   },
+   {
+    "key": "d:2026422",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "日期：2026年4月22日",
+    "qw_verdict": null
+   },
+   {
+    "key": "使用'据报道''媒体报道'等模糊来源",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "UNCERTAIN",
+    "qw_item": "使用'据报道''媒体报道'等模糊来源",
+    "ds_verdict": null
+   },
+   {
+    "key": "不可核验主张：模糊来源",
+    "category": "DS_ONLY",
+    "ds_verdict": "UNCERTAIN",
+    "ds_item": "不可核验主张：模糊来源",
+    "qw_verdict": null
+   },
+   {
+    "key": "d:2026923",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "将于 2026 年 9 月 23 日（星期三）15:30-17:00 参加",
+    "qw_evidence": "公司将于 2026 年 9 月 23 日（星期三）15:30-17:00 参加……活动",
+    "ds_item": "日期：2026年9月23日",
+    "qw_item": "2026年9月23日举办投资者网上集体接待日"
+   }
+  ],
+  "CT06": [
+   {
+    "key": "a:12500.00万元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "归属于上市公司股东的净利润 亏损：12,500.00 万元",
+    "qw_evidence": "归属于上市公司股东的净利润 亏损：12,500.00 万元",
+    "ds_item": "金额：12,500.00万元",
+    "qw_item": "12,500.00万元"
+   },
+   {
+    "key": "p:虚假",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "REJECTED",
+    "qw_item": "虚假",
+    "ds_verdict": null
+   },
+   {
+    "key": "d:202611",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "业绩预告期间：2026 年 1 月 1 日至 2026 年 6 月 30 日",
+    "qw_evidence": "业绩预告期间：2026 年 1 月 1 日至 2026 年 6 月 30 日",
+    "ds_item": "日期：2026年1月1日",
+    "qw_item": "2026年1月1日"
+   },
+   {
+    "key": "d:2026918",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "欢瑞世纪联合股份有限公司董事会\n2026 年 9 月 18 日",
+    "qw_evidence": "欢瑞世纪联合股份有限公司董事会 2026 年 9 月 18 日",
+    "ds_item": "日期：2026年9月18日",
+    "qw_item": "2026年9月18日"
+   },
+   {
+    "key": "潜在冲突项",
+    "category": "DS_ONLY",
+    "ds_verdict": "UNCERTAIN",
+    "ds_item": "潜在冲突项",
+    "qw_verdict": null
+   },
+   {
+    "key": "据报道",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "UNCERTAIN",
+    "qw_item": "据报道",
+    "ds_verdict": null
+   },
+   {
+    "key": "不可核验主张（模糊来源）",
+    "category": "DS_ONLY",
+    "ds_verdict": "UNCERTAIN",
+    "ds_item": "不可核验主张（模糊来源）",
+    "qw_verdict": null
+   },
+   {
+    "key": "a:0.13元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "基本每股收益 亏损：0.13 元/股",
+    "qw_evidence": "基本每股收益 亏损：0.13 元/股",
+    "ds_item": "金额：0.13元",
+    "qw_item": "0.13元"
+   },
+   {
+    "key": "a:2187.21万元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "扣除非经常性损益后的净利润 亏损：2,187.21 万元",
+    "qw_evidence": "上年同期 扣除非经常性损益后的净利润 亏损：2,187.21 万元",
+    "ds_item": "金额：2,187.21万元",
+    "qw_item": "2,187.21万元"
+   },
+   {
+    "key": "d:2026714",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "欢瑞世纪联合股份有限公司董事会\n2026年7月14日",
+    "qw_evidence": "欢瑞世纪联合股份有限公司董事会 2026年7月14日",
+    "ds_item": "日期：2026年7月14日",
+    "qw_item": "2026年7月14日"
+   },
+   {
+    "key": "a:0.01元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "基本每股收益 亏损：0.01 元/股",
+    "qw_evidence": "基本每股收益 亏损：0.01 元/股",
+    "ds_item": "金额：0.01元",
+    "qw_item": "0.01元"
+   },
+   {
+    "key": "p:处罚|p:虚假",
+    "category": "DS_ONLY",
+    "ds_verdict": "CONFIRMED",
+    "ds_item": "处罚关键词：虚假",
+    "qw_verdict": null
+   },
+   {
+    "key": "媒体报道",
+    "category": "QWEN_ONLY",
+    "qw_verdict": "UNCERTAIN",
+    "qw_item": "媒体报道",
+    "ds_verdict": null
+   },
+   {
+    "key": "a:12300.00万元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "扣除非经常性损益后的净利润 亏损：12,300.00 万元",
+    "qw_evidence": "扣除非经常性损益后的净利润 亏损：12,300.00 万元",
+    "ds_item": "金额：12,300.00万元",
+    "qw_item": "12,300.00万元"
+   },
+   {
+    "key": "a:19804.88万元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "营业收入 24,500.00 万元 19,804.88 万元",
+    "qw_evidence": "上年同期 营业收入 19,804.88 万元",
+    "ds_item": "金额：19,804.88万元",
+    "qw_item": "19,804.88万元"
+   },
+   {
+    "key": "a:24500.00万元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "营业收入 24,500.00 万元",
+    "qw_evidence": "营业收入 24,500.00 万元",
+    "ds_item": "金额：24,500.00万元",
+    "qw_item": "24,500.00万元"
+   },
+   {
+    "key": "a:200.00万元",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "预计非经常性损益对当期归母净利润的影响金额约为 200.00 万元",
+    "qw_evidence": "预计非经常性损益对当期归母净利润的影响金额约为 200.00 万元",
+    "ds_item": "金额：200.00万元",
+    "qw_item": "200.00万元"
+   },
+   {
+    "key": "d:2026630",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "业绩预告期间：2026 年 1 月 1 日至 2026 年 6 月 30 日",
+    "qw_evidence": "业绩预告期间：2026 年 1 月 1 日至 2026 年 6 月 30 日",
+    "ds_item": "日期：2026年6月30日",
+    "qw_item": "2026年6月30日"
+   },
+   {
+    "key": "d:2026923",
+    "category": "AGREED",
+    "ds_verdict": "CONFIRMED",
+    "qw_verdict": "CONFIRMED",
+    "ds_evidence": "将于 2026 年 9 月 23 日（星期三）15:30-17:00 参加",
+    "qw_evidence": "将于 2026 年 9 月 23 日（星期三）15:30-17:00 参加",
+    "ds_item": "日期：2026年9月23日",
+    "qw_item": "2026年9月23日"
+   }
+  ]
+ }
+}{"interpretation": {
+  "overall_agreement_33pct_is_misleading": "67/107 items are coverage gaps (DS_ONLY or QWEN_ONLY), not disagreements. Among the 40 items BOTH models covered: 35 AGREED + 1 EXPRESSION_DIFF + 4 REAL_DIVERGENCE = 87.5% agreement, 10% divergence, 2.5% expression-only difference.",
+  "coverage_gap_is_the_main_challenge": "The two models extract different fact sets from the same documents. DS extracts more (17-21/task), qwen fewer but sometimes different (8-17). This means dual-model verification captures MORE facts together than either alone, but automatic alignment requires better fact extraction normalization.",
+  "real_divergences_need_human_review": "CT01's 3 date divergences (DS=REJECTED vs QW=UNCERTAIN) are confidence-level differences, not factual disagreements. CT05's penalty divergence (DS=CONFIRMED vs QW=REJECTED) is a genuine factual disagreement requiring human adjudication.",
+  "recommendation": "The alignment method (fact-ID normalization) is a significant improvement over exact string matching (35 agreements found vs 3 before). For the scoring reference: jointly covered AGREED items are the most reliable; REAL_DIVERGENCE items should be marked PENDING; DS_ONLY/QWEN_ONLY items are complementary coverage, not conflicts."
+}}
