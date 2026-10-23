@@ -1,0 +1,140 @@
+{
+ "version": "SCORING_REFERENCE_FINAL_v1",
+ "status": "PARTIAL (5/10 tasks verified; CT02/07/08-10 pending)",
+ "method": "dual-model (DS thinking=disabled + qwen-plus) → fact-ID alignment → source-doc verification → divergence adjudication",
+ "tasks": {
+  "CT01": {
+   "event": "*ST卓然",
+   "structure": "diamond_8",
+   "n_valid_items": 1,
+   "n_partial": 0,
+   "n_excluded": 0,
+   "valid_keys": [
+    "p:处罚"
+   ],
+   "valid_verdicts": {
+    "p:处罚": "CONFIRMED"
+   },
+   "excluded_keys": [],
+   "exclusion_reason": "amount fact-ID not found in source document (likely model-computed value)"
+  },
+  "CT03": {
+   "event": "*ST纳川",
+   "structure": "diamond_8",
+   "n_valid_items": 9,
+   "n_partial": 0,
+   "n_excluded": 7,
+   "valid_keys": [
+    "d:2026130",
+    "d:202629",
+    "p:处罚|p:立案",
+    "p:处罚",
+    "d:2026210",
+    "d:2025731",
+    "p:告知书|p:处罚",
+    "d:20251231",
+    "d:2025521"
+   ],
+   "valid_verdicts": {
+    "d:2026130": "UNCERTAIN",
+    "d:202629": "UNCERTAIN",
+    "p:处罚|p:立案": "CONFIRMED",
+    "p:处罚": "UNCERTAIN",
+    "d:2026210": "UNCERTAIN",
+    "d:2025731": "UNCERTAIN",
+    "p:告知书|p:处罚": "CONFIRMED",
+    "d:20251231": "UNCERTAIN",
+    "d:2025521": "UNCERTAIN"
+   },
+   "excluded_keys": [
+    "a:274749679.09元",
+    "a:264503773.76元",
+    "a:307178200.95元",
+    "a:512932838.85元",
+    "a:210483434.97元",
+    "a:147791659.62元",
+    "a:516854453.98元"
+   ],
+   "exclusion_reason": "amount fact-ID not found in source document (likely model-computed value)"
+  },
+  "CT04": {
+   "event": "*ST纳川",
+   "structure": "chain_8",
+   "n_valid_items": 1,
+   "n_partial": 1,
+   "n_excluded": 1,
+   "valid_keys": [
+    "d:20251231"
+   ],
+   "valid_verdicts": {
+    "d:20251231": "CONFIRMED"
+   },
+   "excluded_keys": [
+    "a:147791659.62元"
+   ],
+   "exclusion_reason": "amount fact-ID not found in source document (likely model-computed value)"
+  },
+  "CT05": {
+   "event": "欢瑞世纪",
+   "structure": "diamond_8",
+   "n_valid_items": 3,
+   "n_partial": 0,
+   "n_excluded": 0,
+   "valid_keys": [
+    "d:2026918",
+    "d:2026923",
+    "p:处罚"
+   ],
+   "valid_verdicts": {
+    "d:2026918": "CONFIRMED",
+    "d:2026923": "CONFIRMED",
+    "p:处罚": "CONFIRMED"
+   },
+   "excluded_keys": [],
+   "exclusion_reason": "amount fact-ID not found in source document (likely model-computed value)",
+   "adjudicated": "CT05 处罚 keyword confirmed by fact-ID check; DS=CONFIRMED upheld over QW=REJECTED"
+  },
+  "CT06": {
+   "event": "欢瑞世纪",
+   "structure": "multipath_8",
+   "n_valid_items": 8,
+   "n_partial": 0,
+   "n_excluded": 5,
+   "valid_keys": [
+    "d:202611",
+    "d:2026918",
+    "a:0.13元",
+    "d:2026714",
+    "a:0.01元",
+    "a:200.00万元",
+    "d:2026630",
+    "d:2026923"
+   ],
+   "valid_verdicts": {
+    "d:202611": "CONFIRMED",
+    "d:2026918": "CONFIRMED",
+    "a:0.13元": "CONFIRMED",
+    "d:2026714": "CONFIRMED",
+    "a:0.01元": "CONFIRMED",
+    "a:200.00万元": "CONFIRMED",
+    "d:2026630": "CONFIRMED",
+    "d:2026923": "CONFIRMED"
+   },
+   "excluded_keys": [
+    "a:12500.00万元",
+    "a:2187.21万元",
+    "a:12300.00万元",
+    "a:19804.88万元",
+    "a:24500.00万元"
+   ],
+   "exclusion_reason": "amount fact-ID not found in source document (likely model-computed value)"
+  }
+ },
+ "total_valid_items": 22,
+ "limitations": [
+  "5/10 tasks verified; CT02 qwen truncated; CT07 qwen not run; CT08 ran but data lost (background task killed); CT09 DS-only ran but data lost; CT10 not started",
+  "machine cross-verified, not dual-annotator blind review",
+  "amounts have low verification rate (model computation tendency); dates and penalty keywords are reliable",
+  "all events used in prior experiments"
+ ]
+}
