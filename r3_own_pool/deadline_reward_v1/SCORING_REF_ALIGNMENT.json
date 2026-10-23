@@ -935,10 +935,13 @@
     "qw_item": "2026年9月23日"
    }
   ]
+ },
+ "interpretation": {
+  "interpretation": {
+   "overall_agreement_33pct_is_misleading": "67/107 items are coverage gaps (DS_ONLY or QWEN_ONLY), not disagreements. Among the 40 items BOTH models covered: 35 AGREED + 1 EXPRESSION_DIFF + 4 REAL_DIVERGENCE = 87.5% agreement, 10% divergence, 2.5% expression-only difference.",
+   "coverage_gap_is_the_main_challenge": "The two models extract different fact sets from the same documents. DS extracts more (17-21/task), qwen fewer but sometimes different (8-17). This means dual-model verification captures MORE facts together than either alone, but automatic alignment requires better fact extraction normalization.",
+   "real_divergences_need_human_review": "CT01's 3 date divergences (DS=REJECTED vs QW=UNCERTAIN) are confidence-level differences, not factual disagreements. CT05's penalty divergence (DS=CONFIRMED vs QW=REJECTED) is a genuine factual disagreement requiring human adjudication.",
+   "recommendation": "The alignment method (fact-ID normalization) is a significant improvement over exact string matching (35 agreements found vs 3 before). For the scoring reference: jointly covered AGREED items are the most reliable; REAL_DIVERGENCE items should be marked PENDING; DS_ONLY/QWEN_ONLY items are complementary coverage, not conflicts."
+  }
  }
-}{"interpretation": {
-  "overall_agreement_33pct_is_misleading": "67/107 items are coverage gaps (DS_ONLY or QWEN_ONLY), not disagreements. Among the 40 items BOTH models covered: 35 AGREED + 1 EXPRESSION_DIFF + 4 REAL_DIVERGENCE = 87.5% agreement, 10% divergence, 2.5% expression-only difference.",
-  "coverage_gap_is_the_main_challenge": "The two models extract different fact sets from the same documents. DS extracts more (17-21/task), qwen fewer but sometimes different (8-17). This means dual-model verification captures MORE facts together than either alone, but automatic alignment requires better fact extraction normalization.",
-  "real_divergences_need_human_review": "CT01's 3 date divergences (DS=REJECTED vs QW=UNCERTAIN) are confidence-level differences, not factual disagreements. CT05's penalty divergence (DS=CONFIRMED vs QW=REJECTED) is a genuine factual disagreement requiring human adjudication.",
-  "recommendation": "The alignment method (fact-ID normalization) is a significant improvement over exact string matching (35 agreements found vs 3 before). For the scoring reference: jointly covered AGREED items are the most reliable; REAL_DIVERGENCE items should be marked PENDING; DS_ONLY/QWEN_ONLY items are complementary coverage, not conflicts."
-}}
+}
