@@ -311,6 +311,61 @@ class RealServer:
         return VPROMPT.format(q=task['question'], facts=json.dumps(facts),
                               expr=expr)
 
+    def cache_identity(self, model, node, kind, profile_key=None, *, uid=None):
+        """Offline checkpoint/Tokenizer and complete prompt binding.
+
+        No GPU/service is needed. Full manifest weights are verified on first
+        use or a file-stat change, not inferred from the slot name. Cache
+        reuse is scoped to this verified, immutable-files session.
+        """
+        import hashlib
+        import inspect
+        if self.budget is not None:
+            self.budget.check()
+        mod = self.manager._mod()
+        cfg = mod.MODELS[model]
+        manifest_path = (mod.ROOT / 'router_v2/label_repair_experiment/raw'
+                         / (model + '_MODEL_PROVENANCE.json'))
+        manifest = json.loads(manifest_path.read_text())
+        expected = {**manifest['config_sha256'], **manifest['weight_sha256']}
+        root = Path(cfg['path'])
+        files = {name: root / name for name in expected}
+        for name in ('tokenizer.json', 'tokenizer_config.json'):
+            files[name] = root / name
+        stat_key = tuple((name, str(path.resolve()), path.stat().st_ino,
+                          path.stat().st_size, path.stat().st_mtime_ns,
+                          path.stat().st_ctime_ns)
+                         for name, path in sorted(files.items()))
+        manifest_sha = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+        memo = getattr(self.manager, '_verified_cache_models', {})
+        previous = memo.get(model)
+        if previous is None or previous[0] != (stat_key, manifest_sha):
+            actual = {name: mod.sha(path) for name, path in files.items()}
+            for name, digest in expected.items():
+                if actual[name] != digest:
+                    raise ValueError('Cache checkpoint identity mismatch: '
+                                     + model + '/' + name)
+            memo[model] = ((stat_key, manifest_sha), actual)
+            self.manager._verified_cache_models = memo
+        # Bind real transport/start parameters and all prompt builder sources;
+        # changing code or prompt invalidates cache without starting a model.
+        tav, _, _ = self._b()
+        from static_dag_v0 import multidag_dynamic
+        from deadline_reward_v1 import joint_verification_runner
+        code = {str(Path(m.__file__).resolve()): mod.sha(Path(m.__file__))
+                for m in (mod, tav, multidag_dynamic,
+                          joint_verification_runner)}
+        prompt = self.build_prompt(node, kind, uid)
+        if self.budget is not None:
+            self.budget.check()
+        return dict(version='real-cache-v2', model=model, config=cfg,
+                    model_files=memo[model][1], manifest_sha=manifest_sha,
+                    contract_sources=code, node=node, kind=kind,
+                    profile_key=profile_key,
+                    prompt_sha=hashlib.sha256(prompt.encode()).hexdigest(),
+                    request_builder_sha=hashlib.sha256(
+                        inspect.getsource(mod.call_model).encode()).hexdigest())
+
     def draw(self, node, kind, model, uid, attempt, profile_key=None):
         prompt = self.build_prompt(node, kind, uid)
         mod = self.manager._mod()

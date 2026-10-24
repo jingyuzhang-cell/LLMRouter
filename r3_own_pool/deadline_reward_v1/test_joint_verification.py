@@ -28,6 +28,15 @@ from deadline_reward_v1.scheduler_state import SchedulerState
 from deadline_reward_v1.stub_engine import (InjectedClock, StubEngine,
                                             StubModelServer)
 
+from deadline_reward_v1.supplementary_runner import RealServer as _IdentityRealServer
+
+class MockIdentityServer(_IdentityRealServer):
+    """Explicit Mock provider identity; actual file binding tested separately."""
+    def cache_identity(self, model, node, kind, profile_key=None, *, uid=None):
+        return dict(version='mock-contract-v2', model=model, node=node,
+                    kind=kind, prompt=self.build_prompt(node, kind, uid))
+
+
 LAM = jv.LAM
 
 PRIORS = json.loads((HERE / 'PRIORS_STUB_V1.json').read_text())
@@ -262,7 +271,7 @@ def _real_server_fake_transport(out):
                             max_output_tokens=4096))
     task_map = {t['uid']: t for t in TASKS}
     mgr = FakeMgr()
-    server = sr.RealServer({}, mgr, budget, task_map, d)
+    server = MockIdentityServer({}, mgr, budget, task_map, d)
     server.engine = None
     return server, mgr
 
@@ -508,7 +517,7 @@ def test_T12_fake_transport_six_arm_loop():
 
     def run(run_root, mgr, sha=p3_sha):
         def make(budget, task_map):
-            return sr.RealServer({}, mgr, budget, task_map, root)
+            return MockIdentityServer({}, mgr, budget, task_map, root)
         return jv.execute(
             approved_p3_sha=sha, run_root=run_root, make_server=make,
             manager=mgr, tasks=tasks, gold_map=gold_map,
@@ -531,6 +540,16 @@ def test_T12_fake_transport_six_arm_loop():
     # ---- happy path ---------------------------------------------------
     payload = run(root / 'run1', FakeMgr())
     assert set(payload['statuses']) == set(jv.ARMS) | {'base'}
+    # New decision/settlement anchor records one unrounded absolute deadline.
+    for arm in jv.ARMS:
+        events = [json.loads(l) for l in
+                  (root / 'run1' / arm / 'TASK_LEDGER.jsonl').read_text().splitlines()]
+        anchors = [e for e in events if e['event']=='deadline_anchor']
+        assert len(anchors)==1
+        a=anchors[0]
+        assert set(a['absolute_deadlines'])=={t['uid'] for t in tasks}
+        for uid,d in a['absolute_deadlines'].items():
+            assert abs((d-a['t_origin'])-a['deadline_offsets'][uid])<1e-7
     # B2: per-task base attribution (sum of per-task == base total)
     pt = payload['shared_base']['per_task_tokens']
     assert set(pt) == {t['uid'] for t in tasks} and all(v > 0 for v in pt.values())

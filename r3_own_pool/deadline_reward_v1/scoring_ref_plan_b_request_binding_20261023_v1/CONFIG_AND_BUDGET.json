@@ -1,0 +1,194 @@
+{
+  "status": "CONFIG_AND_PAYLOAD_BOUND_BUDGET_CONFIRMATION_PENDING",
+  "date": "2026-10-23 Asia/Shanghai",
+  "source_freeze": {
+    "file": "/root/r3_own_pool/deadline_reward_v1/scoring_ref_plan_b_freeze_20261023_v1/SCORING_REF_FREEZE.json",
+    "sha256": "af8bb869b3971764062446f7d653da8322244f4dd5f8b8eabd1adbeea14d9399",
+    "scope_decision": "/root/r3_own_pool/deadline_reward_v1/scoring_ref_plan_b_freeze_20261023_v1/SCOPE_DECISION_16.json",
+    "scope_sha256": "7cb479c7dc60facab9bfcd1a1331fa7686576d1ed478e849743e66ed1c662c2b"
+  },
+  "models": [
+    {
+      "family": "deepseek",
+      "model": "deepseek-flash",
+      "endpoint": "https://api.deepseek.com/chat/completions",
+      "parameters": {
+        "thinking": {
+          "type": "disabled"
+        }
+      },
+      "currency": "USD",
+      "input_price": "0.3",
+      "output_price": "1.2",
+      "pricing_basis": "peak cache-miss public list price",
+      "model_version": "alias; preserve returned model/id/system_fingerprint; not proof of immutable weights"
+    },
+    {
+      "family": "qwen",
+      "model": "qwen-plus",
+      "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "parameters": {
+        "enable_thinking": false
+      },
+      "currency": "CNY",
+      "input_price": "0.8",
+      "output_price": "2",
+      "pricing_basis": "Beijing non-thinking <=128K input public list price; actual account region/rights unconfirmed",
+      "model_version": "alias publicly equivalent to qwen-plus-2025-12-01; preserve returned identity"
+    }
+  ],
+  "task_payloads": [
+    {
+      "task_id": "CT01",
+      "messages_sha256": "7a93240ee5dcf52499ad6230fddb2b63fb7e77c89fd213fa3498f9955f45ce48",
+      "message_utf8_bytes": 19258,
+      "potential_conflict_ids": []
+    },
+    {
+      "task_id": "CT02",
+      "messages_sha256": "9c217ed8c43b9343f74b776cb02aaa14fe44696092740e1966ba01bf73d30129",
+      "message_utf8_bytes": 27143,
+      "potential_conflict_ids": [
+        "CT02_C01",
+        "CT02_C02",
+        "CT02_C03",
+        "CT02_C04",
+        "CT02_C05",
+        "CT02_C06"
+      ]
+    },
+    {
+      "task_id": "CT03",
+      "messages_sha256": "fb3bd1b363983ff6c43fc8329181ccf433ae6618339f4833339686657a58bfda",
+      "message_utf8_bytes": 24368,
+      "potential_conflict_ids": []
+    },
+    {
+      "task_id": "CT04",
+      "messages_sha256": "2d3e64bcafc9d421d60f555a3ace6c5487bcd086fac5608036b85286003f6166",
+      "message_utf8_bytes": 40186,
+      "potential_conflict_ids": [
+        "CT04_C01",
+        "CT04_C02",
+        "CT04_C03",
+        "CT04_C04",
+        "CT04_C05",
+        "CT04_C06",
+        "CT04_C07",
+        "CT04_C08",
+        "CT04_C09",
+        "CT04_C10"
+      ]
+    },
+    {
+      "task_id": "CT05",
+      "messages_sha256": "f4b69950bdcabc0d1a7456ac401b632068bfb51c3a505edd1d1d172add4d83f9",
+      "message_utf8_bytes": 10788,
+      "potential_conflict_ids": []
+    },
+    {
+      "task_id": "CT06",
+      "messages_sha256": "fd89eef195ea341bd79ba451e43188ddadf7b362e2e51693f18a98128f335276",
+      "message_utf8_bytes": 11655,
+      "potential_conflict_ids": []
+    },
+    {
+      "task_id": "CT07",
+      "messages_sha256": "d238ab4305e0edc4e213399333de2d08290f398201663cd3ab507b3185bf5993",
+      "message_utf8_bytes": 14532,
+      "potential_conflict_ids": []
+    },
+    {
+      "task_id": "CT08",
+      "messages_sha256": "bb0f32b3b10fa267f200d17271bf2968ba41f8e18b596e78a03f6548c165d981",
+      "message_utf8_bytes": 32737,
+      "potential_conflict_ids": []
+    },
+    {
+      "task_id": "CT09",
+      "messages_sha256": "9da1f118fe161b088bb7ab7487c1de176cfff401bae23fb47018b81cdcaed1f5",
+      "message_utf8_bytes": 14853,
+      "potential_conflict_ids": []
+    },
+    {
+      "task_id": "CT10",
+      "messages_sha256": "afbefc6f13106d3645d319d75c9db1e72cb056dbd029419d82ff80e52f094aea",
+      "message_utf8_bytes": 11667,
+      "potential_conflict_ids": []
+    }
+  ],
+  "budget": {
+    "requests_max": 20,
+    "requests_per_model": 10,
+    "output_per_request_max": 8192,
+    "total_output_max": 163840,
+    "input_reservation_per_request": 65536,
+    "total_input_reservation": 1310720,
+    "input_upper_certified": false,
+    "input_utf8_message_bytes_max": 40186,
+    "input_utf8_message_bytes_total": 414374,
+    "request_timeout_s": 180,
+    "batch_wall_s": 5400,
+    "automatic_retry": false,
+    "no_append_or_resume_old_batch": true,
+    "native_estimate_stop_proposal_NOT_APPROVED": {
+      "CNY": "1",
+      "USD": "0.40"
+    },
+    "conditional_20_request_cost": {
+      "deepseek-flash": {
+        "currency": "USD",
+        "for_10_requests": "0.2949120",
+        "note": "conditional reservation calculation, not actual bill or certified hard upper"
+      },
+      "qwen-plus": {
+        "currency": "CNY",
+        "for_10_requests": "0.6881280",
+        "note": "conditional reservation calculation, not actual bill or certified hard upper"
+      }
+    },
+    "cash_hard_upper": null,
+    "account_entitlement_certified": false,
+    "fee_risk_acceptance": null,
+    "experiment_authorization_received": "用户本轮：授权；执行意图已记录，金额边界未指定，不自动增加费用授权",
+    "budget_scope_confirmation_pending": true
+  },
+  "source_sha256": {
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E03-yuandao_sup2.pdf": "51e7d4496865b2ee9aebfc1c0fdf2cd4e1e5f8777086a96869ce60f13b56c0f0",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E04-zhuoran.pdf": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E04-zhuoran_sup1.pdf": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E04-zhuoran_sup2.pdf": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E05-nachuan.pdf": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E05-nachuan_sup1.pdf": "d0e09e0c86b33d247e7c62450e8ed8b708b57646bf079f7f962b8199fb3a8acf",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E05-nachuan_sup2.pdf": "a8243edacba79fb6e2a5cecc47ca93c546cdefb5d246b6ce55ea625320458479",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E06-huanrui.pdf": "6653261eaba59efb38d1c8317212c687985ebf39f1a61457e11f8e5363dee795",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E06-huanrui_sup1.pdf": "adf1666f79033d35c0df61053dc418c41cd456cb704cdbd21c2eaa08a8f36298",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E06-huanrui_sup2.pdf": "54ad071638b31181b5474c038b1155ae74d7b77030dea6d189bdb7e021ecae7c",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E07-xiwang.pdf": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E07-xiwang_sup1.pdf": "b80b0923e4ce9eda920a492a3a43891d5b5d8d12480ff35694431f877bb96bac",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E08-zhongtie.pdf": "84fe84cb0b00cad43e32eacf74d1214b6d3cc20a16bbe2e2c440facb9cbd0ab0",
+    "/root/capital_opinion_pilot/benchmark_v1/docs/E08-zhongtie_sup1.pdf": "9d348b90fe6581f4d6e85fc3fde182a72f0f5a43cccd3bec283b9cb8307da205",
+    "/root/capital_opinion_pilot/evidence/raw/csrc_penalty_2024_41.html": "5f004919755761b4e756bcc8a58bafa625e20d6fe390f82a6d7f0426fdb5e783",
+    "/root/capital_opinion_pilot/evidence/text/csrc_penalty_2024_41.txt": "bd737603de0c4a4355a0d0707582a0a6e0e5d30162fd9515d889215e4a657756"
+  },
+  "same_payload_across_families": true,
+  "peer_results_or_scheduler_outputs_in_payload": false,
+  "judge_reference_label": "机器辅助构建、来源证据约束的评分参考",
+  "previous_results_reuse": {
+    "file": "/root/r3_own_pool/deadline_reward_v1/fe_screening_runs/scoring_ref_final_20261023_124209/SCORING_REF_FINAL.json",
+    "sha256": "228a3cb8dc9a17774b3f7de98b7a9089b817e39f5b3bf87cbca81db4d831508d",
+    "counts": {
+      "ds": 7,
+      "qwen": 6
+    },
+    "reuse_authorized_as_this_batch": false,
+    "reason": "Summary has no per-request raw body/hash/source-version binding sufficient for current independent payload. Do not count13 summaries as completed20 or silently resume7."
+  },
+  "remaining_semantic_gap": "现有CT任务未提供最终问题字段，模型可核对来源事实和16候选项，但不能据此自动完成必要完整性/问题相关性两个维度的独立终端参考。保持UNKNOWN。",
+  "public_price_sources": [
+    "https://api-docs.deepseek.com/quick_start/pricing/",
+    "https://help.aliyun.com/zh/model-studio/model-pricing"
+  ],
+  "new_model_requests": 0,
+  "code_changes": false
+}

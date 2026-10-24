@@ -22,6 +22,15 @@ from collab_scheduler_v1.joint_search_smoke.proposal_v2.smoke_runner \
     import Budget
 
 PRIORS = json.loads((HERE / 'PRIORS_STUB_V1.json').read_text())
+from deadline_reward_v1.supplementary_runner import RealServer as _IdentityRealServer
+
+class MockIdentityServer(_IdentityRealServer):
+    """Explicit Mock provider identity; actual file binding tested separately."""
+    def cache_identity(self, model, node, kind, profile_key=None, *, uid=None):
+        return dict(version='mock-contract-v2', model=model, node=node,
+                    kind=kind, prompt=self.build_prompt(node, kind, uid))
+
+
 PLANNED = dict(e1='large', e2='large', r='medium', v='coder')
 TASKS = [dict(uid=f'w{i}', question=f'q{i}', derivation='1.5',
               answer=1.5, ctx_table='T', ctx_text='P') for i in range(3)]
@@ -69,7 +78,7 @@ def run_arm(arm, out):
                          request_token_reservation=2048,
                          max_output_tokens=4096))
     mgr = FakeMgr()
-    server = sr.RealServer({}, mgr, budget,
+    server = MockIdentityServer({}, mgr, budget,
                            {t['uid']: t for t in TASKS}, out)
     eng = sr.RealEngine(out, server, sr.RealClock(), seed=arm,
                         manager=mgr)
@@ -197,7 +206,7 @@ def main():
                           request_token_reservation=2048,
                           max_output_tokens=4096))
     mgr2 = FakeMgr()
-    server2 = sr.RealServer({}, mgr2, budget2,
+    server2 = MockIdentityServer({}, mgr2, budget2,
                             {t['uid']: t for t in TASKS}, out2)
     eng2 = sr.RealEngine(out2, server2, sr.RealClock(), seed='hb',
                          manager=mgr2)

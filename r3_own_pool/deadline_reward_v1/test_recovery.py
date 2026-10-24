@@ -123,6 +123,16 @@ def production_reference(arm, tasks):
         wall_seconds=3600, logical_calls_per_task_config_state=1000))
     ex = MeteredExecutor(Path(tmp.name), budget, dispatch, lambda m: None,
                          dict(medium='medium', large='large', coder='coder'))
+    # Reference executor predates contract-kind identity. Bind that variant
+    # into its independent prompt key without changing the returned answer
+    # or recovery plan. This is the v2 cache migration, not altered gold.
+    original_call = ex.call
+    def bound_call(key, model, prompt, uid=None, node=None):
+        parts = key.split(':')
+        variant = parts[-2] if parts[-2] in {'plain','fb','fbd','esc'} else 'plain'
+        return original_call(key, model, prompt + '\ncontract_variant:' + variant,
+                             uid=uid, node=node)
+    ex.call = bound_call
     collected: list = []
 
     def arm_eval(config, subset, faults, recovery, label, cell):

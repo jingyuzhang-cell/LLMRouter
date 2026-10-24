@@ -378,6 +378,8 @@ def main():
     eng_mx.start_panel([tmx], NODES_MODELS)
     eng_mx.run_jobs('A', eng_mx.planned_jobs([tmx], NODES_MODELS,
                                              ('e1', 'e2')))
+    # Explicit same-contract repeat: cross-kind reuse is no longer legal.
+    eng_mx._call('CACHE_PROBE', tmx, 'e1', 'plain', NODES_MODELS['e1'])
     eng_mx.run_jobs('R1', eng_mx.planned_jobs([tmx], NODES_MODELS,
                                               ('r',)))
     cands_mx = _re.enumerate_candidates(st_mx, 'mx0', NODES_MODELS)

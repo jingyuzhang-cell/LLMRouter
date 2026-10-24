@@ -229,7 +229,7 @@ def main():
         len(calls_of(ev3))
     invocations = server.invocations + server2.invocations + server3.invocations
     checks['z1_sentinel_engine_only'] = invocations == total_calls
-    allowed = {'__future__', 'json', 'random', 'hashlib', 'dataclasses',
+    allowed = {'__future__', 'copy', 'json', 'random', 'hashlib', 'dataclasses',
                'pathlib', 'typing', 'os',
                # sibling module since the M3 errata: the engine computes the
                # frozen input identity via dag_closure.input_signature so

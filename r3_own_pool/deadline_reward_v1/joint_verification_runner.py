@@ -526,14 +526,20 @@ def execute(approved_p3_sha, run_root, make_server, manager, tasks,
             # decision budget (candidate feasibility must not depend on
             # arm execution order). Physical enforcement remains on the
             # global Budget; the decision-time allocation is a constant.
+            # One monotonic origin for decision and settlement; retain the
+            # frozen service-derived offsets, never extend a task deadline.
+            deadline_origin = eng.clock.time()
+            d_abs = {t['uid']: deadline_origin + _d_abs(t['uid'])
+                     for t in tasks}
+            eng._append(dict(event='deadline_anchor',
+                             t_origin=deadline_origin,
+                             absolute_deadlines=d_abs,
+                             deadline_offsets={t['uid']: _d_abs(t['uid'])
+                                               for t in tasks}))
             state = SchedulerState(
-                eng.clock,
-                task_deadlines={t['uid']: eng.clock.time()
-                                + _d_abs(t['uid']) for t in tasks},
+                eng.clock, task_deadlines=dict(d_abs),
                 token_allocation=float(caps['new_total_tokens']))
             state.attach(eng)
-            d_abs = {t['uid']: eng.clock.time() + _d_abs(t['uid'])
-                     for t in tasks}
             if arm == 'MONO':
                 rows = run_mono_cell(eng, state, tasks, planned['e1'],
                                      gold_map, lam, d_abs)

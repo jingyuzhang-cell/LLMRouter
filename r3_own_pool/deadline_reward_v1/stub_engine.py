@@ -18,6 +18,7 @@ against independently generated production references by the test suite
 """
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import random
@@ -71,6 +72,13 @@ class StubModelServer:
         self.seed = seed
         self.invocations = 0  # Z1 sentinel: engine is the only caller
         self.faults: Dict[Tuple[str, str, str], str] = {}
+
+    def cache_identity(self, model, node, kind, profile_key=None, *, uid=None):
+        # Synthetic server version, contract, parameters and output fixture.
+        # RealServer overrides this with verified checkpoint/prompt identity.
+        return dict(version='stub-cache-v2', model=model, node=node, kind=kind,
+                    profile_key=profile_key, priors=self.priors, seed=self.seed,
+                    answers=sorted((list(k), v) for k, v in self.answers.items()))
 
     def set_fault(self, uid: str, node: str, model: str,
                   failing: str) -> None:
@@ -271,32 +279,56 @@ class StubEngine:
         self.attempts[(uid, node, kind)] = \
             self.attempts.get((uid, node, kind), 0) + 1
         attempt = self.attempts[(uid, node, kind)]
-        sw_idx = self._switch(model, uid, key)
-        t0 = self.clock.time()
-        # Frozen input identity AT CALL TIME: static context + the parent
-        # outputs this call actually consumes (no future information).
+        lookup_start = self.clock.time()
+        # Identity is computable without loading a service. Legacy tuple keys
+        # cannot match the new digest. Providers without version identity are
+        # never reusable; no_cache remains authoritative for recovery.
         input_sha = dag_closure.input_signature(uid, node, st.ctx_sha,
                                                 st.answers)
+        identity_fn = getattr(self.server, 'cache_identity', None)
+        try:
+            identity = (identity_fn(model, node, kind, self.profile_key, uid=uid)
+                        if identity_fn is not None else None)
+        except BaseException as exc:
+            self._append(dict(event='cache_identity_failed', task=uid,
+                              node=node, model=model, kind=kind,
+                              t_start=lookup_start, t_end=self.clock.time(),
+                              error_type=type(exc).__name__, error=str(exc)))
+            raise
+        cache_sha = hashlib.sha256(json.dumps(dict(
+            version='complete-cache-v2', provider=identity,
+            input_sha=input_sha, question=task.get('question'),
+            context=fresh_ctx, topo=self.topo, fam=self.fam,
+            node=node, kind=kind), sort_keys=True).encode()).hexdigest()
+        cache_key = (model, cache_sha)
+        cache_allowed = not no_cache and identity is not None
+        cached = cache_allowed and cache_key in self._cache
+        lookup_s = self.clock.time() - lookup_start
+        sw_idx = None if cached else self._switch(model, uid, key)
+        t0 = self.clock.time()
         self._append(dict(event='call_start', key=key, stage=stage,
                           node=node, kind=kind, model=model, task=uid,
                           t_start=t0, switch_before=sw_idx,
-                          input_sha=input_sha))
+                          input_sha=input_sha, cache_sha=cache_sha,
+                          cached=cached, cache_lookup_s=lookup_s))
         # Production METERED-EXECUTOR semantics (evaluator.py:29-60): the
         # underlying call is a NORMAL cache-or-server call (charged, cached
         # by identity); CORRUPTION is applied AFTER metering on a copy —
         # "faults retain the deployment cost of the response being
         # corrupted". Faults do NOT bypass the cache.
         fault = self.server.fault_for(uid, node, model)
-        if not no_cache and (model, input_sha) in self._cache:
-            cached = True
-            resp = self._cache[(model, input_sha)]
+        if cached:
+            resp = copy.deepcopy(self._cache[cache_key])
             self.cached_calls += 1
         else:
             cached = False
             resp = self.server.draw(node, kind, model, uid, attempt,
                                     profile_key=self.profile_key)
-            if not no_cache:
-                self._cache[(model, input_sha)] = resp
+            if cache_allowed:
+                self._cache[cache_key] = copy.deepcopy(resp)
+        historical_latency = resp['latency_s'] if cached else None
+        if cached:
+            resp = dict(resp, latency_s=0.0)
         self.clock.advance(resp['latency_s'])
         physical = not cached
         if physical:
@@ -315,7 +347,9 @@ class StubEngine:
                        resp['answer'].encode()).hexdigest(),
                    answer=resp['answer'], usage=resp['usage'],
                    latency_s=resp['latency_s'],
-                   input_sha=input_sha,
+                   input_sha=input_sha, cache_sha=cache_sha,
+                   cache_lookup_s=lookup_s,
+                   cached_response_latency_s=historical_latency,
                    cached=cached, injected=injected, physical=physical,
                    answer_replaced_after_call=answer_replaced,
                    no_cache=no_cache,
@@ -327,10 +361,9 @@ class StubEngine:
         # Per-task wall starts at the switch attributed to this task's first
         # call (cold start included) — the honest E2E span on the clock.
         if st.t_first is None:
-            if sw_idx is not None and self._last_switch_idx == sw_idx:
-                st.t_first = self._last_switch_t0
-            else:
-                st.t_first = t0
+            # Include identity verification as well as any switch; it is real
+            # preparation work and must not vanish from the task wall span.
+            st.t_first = lookup_start
         st.t_last = self.clock.time()
         st.service_sum += resp['latency_s']
         st.calls += 1
