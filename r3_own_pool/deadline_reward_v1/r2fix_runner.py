@@ -329,7 +329,7 @@ def execute(args):
 
     # PLAN-LEVEL HARD-BUDGET ASSERTION (before ANY call):
     # sum of per-call worst costs over the frozen 18-call sequence.
-    specs, bounds = plan_call_specs(doc['text'])
+    specs, bounds = plan_call_specs(doc['text'], doc['doc_id'])
     plan_worst = plan_worst_total(specs, billing=BILLING)
     if plan_worst > CAP_CNY + 1e-12:
         raise PermissionError(
