@@ -1,0 +1,83 @@
+{
+ "status": "COMPLETE",
+ "checks": {
+  "S1 zero-marginal + non-empty + HTTP200": true,
+  "S2 extraction valid JSON + >=3 atom hits + no trunc": true,
+  "S3a timeline consumes valid extraction (>=1 date)": false,
+  "S3b garbage -> NO fabricated dates": true,
+  "S4 mixed synthesis parseable + no trunc": true
+ },
+ "all_pass": false,
+ "calls": [
+  {
+   "call_id": "C1_extraction",
+   "http": 200,
+   "finish_reason": "end_turn",
+   "tokens_in": 1909,
+   "tokens_out": 1226,
+   "cash_cny": 0.0,
+   "latency_s": 14.4,
+   "has_thinking_block": false,
+   "answer_len": 2493
+  },
+  {
+   "call_id": "C2_timeline_valid",
+   "http": 200,
+   "finish_reason": "max_tokens",
+   "tokens_in": 1330,
+   "tokens_out": 768,
+   "cash_cny": 0.0,
+   "latency_s": 10.7,
+   "has_thinking_block": true,
+   "answer_len": 794
+  },
+  {
+   "call_id": "C3_timeline_garbage",
+   "http": 200,
+   "finish_reason": "end_turn",
+   "tokens_in": 120,
+   "tokens_out": 25,
+   "cash_cny": 0.0,
+   "latency_s": 10.2,
+   "has_thinking_block": false,
+   "answer_len": 45
+  },
+  {
+   "call_id": "C4_synthesis_mixed",
+   "http": 200,
+   "finish_reason": "end_turn",
+   "tokens_in": 633,
+   "tokens_out": 674,
+   "cash_cny": 0.0,
+   "latency_s": 9.8,
+   "has_thinking_block": false,
+   "answer_len": 1298
+  }
+ ],
+ "detail": {
+  "C1": {
+   "answer_head": "```json\n[\n  {\"fact\": \"元道通信因涉嫌证券发行文件等信息披露文件财务数据存在虚假记载等违法行为被中国证监会立案调查\", \"date\": \"2025-07-11\", \"entities\": [\"元道通信\", \"中国证监会\"], \"evidence_doc_id\": \"D3_E03-yuandao_2026-08-29\"},\n  {\"fact\": \"元道通信及315相关当事人收到中国证监会《行政处罚事先告知书》（处罚字【2026】14号）\", \"date\": \"2026-05-08\", \"entities\": [\"元道通信\", \"中国证监会\"], \"evidence_doc_i"
+  },
+  "S2": {
+   "n_entries": 15,
+   "atom_hits": 3,
+   "truncated": false
+  },
+  "S3a": {
+   "n_entries": 0,
+   "upstream_dates": 1,
+   "timeline_dates": 0
+  },
+  "S3b": {
+   "parse_ok": true,
+   "fabricated_dates": [],
+   "answer_head": "[{\"date\":\"未知\",\"event\":\"上游仅提供占位事实，无含时间事件可整理\"}]"
+  },
+  "S4": {
+   "n_entries": 1,
+   "key_dates_present": 0,
+   "answer_head": "```json\n[\n  {\n    \"conclusion\": \"元道通信（证券代码301139，现证券简称*ST元道）涉嫌欺诈发行及信息披露违法：2019-2021年通过虚构工作量确认单等方式虚增营业收入65,902,640.59元、160,688,291.80元、263,632,076.14元，分别占招股说明书披露各年度营业收入的8.75%、13.12%、16.23%；2022年虚增营业收入166,218,396.33元，占年报披露营业收入的7.87%。公司于2022-07-08在创业板上市，募集资金1,169,184,000元。2025-07-11被中国证监会立案调查，2026-05-0"
+  }
+ },
+ "scope": "GLM-5.3-Flash zero-marginal screening ONLY; NOT R2-fix; no fallback to option (d) on failure"
+}
