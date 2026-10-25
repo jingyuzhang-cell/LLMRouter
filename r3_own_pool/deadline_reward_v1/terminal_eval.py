@@ -19,9 +19,13 @@ def eval_terminal(outputs, edges, valid_keys):
                               f'{yyyy}-{mm}-{dd}', d]:
                         if v in text: return True
             elif part.startswith('a:'):
-                if part[2:] in text or part[2:].replace(',', '') in text:
+                v = part[2:]
+                t2 = text.replace(',', '')
+                if v in text or v.replace(',', '') in t2:
                     return True
             elif part.startswith('p:'):
+                if part[2:] in text: return True
+            elif part.startswith('e:'):
                 if part[2:] in text: return True
         return False
     t_hits = sum(1 for k in valid_keys if check(clean_sink, k))

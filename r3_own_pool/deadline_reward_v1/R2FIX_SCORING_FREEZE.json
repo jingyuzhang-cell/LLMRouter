@@ -1,0 +1,67 @@
+{
+ "version": "R2FIX_SCORING_FREEZE_v1",
+ "frozen_at": "2026-10-24T23:48:24",
+ "doc_slot": "ydt#D3_E03-yuandao_2026-08-29",
+ "fault": "b0",
+ "rule": "doc_atoms mechanical slices, identical rule to R1/R2 (dates[:4], amounts[:3], penalties[:3]); entities[:3] new namespace e:; symmetric comma-insensitive amount match; NO manual cherry-picking",
+ "valid_keys": [
+  "d:2020年10月12日",
+  "d:2021年11月12日",
+  "d:2021年6月28日",
+  "d:2021年7月28日",
+  "a:088元",
+  "a:1,169,184,000元",
+  "a:100万元",
+  "p:告知书",
+  "p:处罚",
+  "p:市场禁入",
+  "e:中国证监会",
+  "e:元道通信股份有限公司",
+  "e:对元道通信股份有限公司"
+ ],
+ "categories": {
+  "timeline": [
+   "2020年10月12日",
+   "2021年11月12日",
+   "2021年6月28日",
+   "2021年7月28日"
+  ],
+  "amounts": [
+   "088元",
+   "1,169,184,000元",
+   "100万元"
+  ],
+  "penalties": [
+   "告知书",
+   "处罚",
+   "市场禁入"
+  ],
+  "entities": [
+   "中国证监会",
+   "元道通信股份有限公司",
+   "对元道通信股份有限公司"
+  ]
+ },
+ "doc_sha256": "dfdd15333c02985e6f4acb7c1285b42302d4919578c4ea13ba60b81f8bd9e7ca",
+ "caps": {
+  "planned_calls": 18,
+  "cap_cash_cny": 0.3,
+  "wall_s": 1800.0,
+  "mode": "adaptive"
+ },
+ "utility": {
+  "D_s": 350.0,
+  "C0_tokens": 60000.0
+ },
+ "model": "deepseek-flash thinking=disabled temp=0 max_tokens=2048",
+ "known_noise": "amounts slice may include regex-truncated artifacts (e.g. \"088元\") — kept because the rule is mechanical and identical across arms; entity keys may be substring-superset redundant",
+ "preregistered_criteria": {
+  "C1_restoration": "t_q(D2) > t_q(D0)",
+  "C2_category": "timeline hits D2 > timeline hits D0",
+  "C3_sibling_no_harm": "non-timeline hits D2 >= non-timeline hits D0",
+  "C4_quality_noninferior": "t_q(D2) >= t_q(C)",
+  "C5_utility_efficiency": "eU(D2) > eU(C)",
+  "C6_preserved": "b1,b2,b3,x1 byte-identical to shared in D2 arm",
+  "C7_heterogeneity": "healthy b-outputs pairwise distinct (honest report if violated)"
+ }
+}

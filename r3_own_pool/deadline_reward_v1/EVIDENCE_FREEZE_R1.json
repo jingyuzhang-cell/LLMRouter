@@ -1,0 +1,59 @@
+{
+ "version": "EVIDENCE_FREEZE_R1_v1",
+ "frozen_at": "2026-10-24",
+ "operator_directive": "冻结 R1 结果：保留两次正向证据及各自限制，不修改历史记录，不宣称已证明稳定收益",
+ "claim_permitted": "D2 定向恢复（修复故障节点 + 重执行其下游闭包）在单抽取、真实信息依赖的 chain_8 DAG 上，两次真实模型实验中同时取得终端质量提升与正向净效用增量（2/2 文档）。这支持'D2 在该架构上有恢复潜力'，不构成普遍有效性证明。",
+ "claim_forbidden": [
+  "不得宣称 D2 收益稳定/普遍有效（无重复运行、无波动分析、仅 2 任务）",
+  "不得宣称完整联合调度 (Z,R,π) 优于静态基线（π 未测试，Z 仅在 D2 内部隐式使用）",
+  "不得把自建评分项当作人工金标",
+  "不得合并或改写下列原始运行记录"
+ ],
+ "runs": [
+  {
+   "id": "FIRST_POSITIVE_CT10",
+   "commit": "51f8991d",
+   "run_dir": "deadline_reward_v1/fe_screening_runs/ct10_d2_complete_20261024_225203",
+   "doc": "交建 D1（UNUSED_DOCS）",
+   "dag": "chain_8 single-extraction（仅 root 收文档，其余仅收上游输出）",
+   "fault": "F_JSON 垃圾注入 root n0",
+   "model": "deepseek-flash thinking=disabled temp=0",
+   "scoring": "terminal_eval.eval_terminal，6 个自建评分项（文档原子机械切片）",
+   "D0": {"t_q": 0.000, "eU": -0.051},
+   "D2": {"t_q": 0.333, "eU": 0.216, "recovery_calls": 8},
+   "delta": {"d_t_q": 0.333, "d_eU": 0.267},
+   "budget": {"calls": 8, "cash_cny": 0.053}
+  },
+  {
+   "id": "R1_SHUNTIAN_REPLICATION",
+   "commit": "85d850fe",
+   "run_dir": "deadline_reward_v1/fe_screening_runs/r1_20261024_232812",
+   "doc": "舜天 st_announce_2024_020（14465 字符，53 原子）",
+   "dag": "chain_8 single-extraction",
+   "fault": "F_JSON 垃圾注入 root n0",
+   "model": "deepseek-flash thinking=disabled temp=0",
+   "scoring": "terminal_eval.eval_terminal，10 个自建评分项（文档原子机械切片：4日期+3金额+3处罚）",
+   "D0": {"t_q": 0.000, "eU": -0.0347},
+   "D2": {"t_q": 0.200, "eU": 0.0771, "recovery_calls": 8},
+   "delta": {"d_t_q": 0.200, "d_eU": 0.1119},
+   "budget": {"calls": 16, "cash_cny": 0.0732, "caps": {"calls": 16, "cash_cny": 0.13}}
+  }
+ ],
+ "shared_limitations": [
+  "均为 chain 结构；分支/汇合 DAG 未验证（R2 首次尝试因同质分支设计缺陷 INCOMPLETE，见 r2_20261024_233337）",
+  "均为 root 故障；非根故障未验证",
+  "每文档仅单次运行；无重复实验、无方差/显著性",
+  "评分项为规则自建（doc_atoms 机械切片），非双模型交叉验证金标；SCORING_REFERENCE_FINAL 的 33 项金标不覆盖这两个文档",
+  "同一操作者、同日、同一模型（deepseek-flash），存在共同偏差风险",
+  "文档截断：root 提示词仅含文档前 3000 字符，评分上限受此约束（两文档均如此，方向对 D0/D2 对称）",
+  "效用函数 U = 1(T<=D)q - 0.5C/C0 - 滞后罚 - 迟到罚，C0=60K tokens，D=350s；该效用形状本身未经独立验证"
+ ],
+ "context_negative": {
+  "prior_negatives_explained": "CT03-diamond+F_JSON / CT10-chain+F_TRUNCATED / CT10-chain+F_JSON 三个负结果由文档泄漏架构解释（downstream 直接见文档，故障不可传播）；修复架构后不复用这些负结果作为对照",
+  "r2_homogeneous_branch": "r2_20261024_233337（INCOMPLETE）：同质分支输出克隆（b1==b2==b3 逐字节），D2 无质量增益。归因于实现层设计缺陷（所有非根节点同一提示词），不是定向恢复概念的证伪"
+ },
+ "integrity": {
+  "history_untouched": "本冻结为新增文件；两次运行的原始 JSON/提交未修改",
+  "verification": "git show 51f8991d / 85d850fe 可复核原始数据"
+ }
+}
