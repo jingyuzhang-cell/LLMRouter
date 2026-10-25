@@ -10,8 +10,11 @@ Design (frozen in R2FIX_SCORING_FREEZE.json):
   Fault    F_JSON garbage replacing b0's output (non-root branch node)
   Arms     D0 accept | D2 closure {b0,x0,sink} | C all 7 non-root
   Scoring  frozen mechanical slices of doc atoms (13 keys, 4 categories)
-  Budget   adaptive worst-case guard, planned 18 calls, cap ¥0.30,
-           wall 1800s, fail-stop on first error (no retries)
+  Model    GLM-5.3-Flash via zhipu anthropic-compatible endpoint (v3
+           track switch, operator approval 2026-10-25); subscription
+           billing -> marginal cash ¥0/call, cash cap holds trivially
+  Budget   guard enforces planned 18 calls + wall 1800s + anomaly
+           fail-stop on first error (no retries, no paid-model switch)
 
 Import is side-effect-free (zero API calls); review script imports this
 to verify prompt/closure/budget properties before any authorization.
@@ -62,12 +65,23 @@ SINKS = [n for n in ORDER if not EDGES.get(n)]
 # tokens ≈ 1,500-1,900 chars of role-focused JSON; sink 1,280 ≈
 # 2,100-2,600 chars vs observed 2,455-char synthesis. Truncation risk
 # is recorded honestly via finish_reason in the artifacts.
-OUT_CAP = {'extraction': 2048, 'timeline': 768, 'timeline_deep': 768,
-           'amounts': 768, 'amounts_check': 768, 'penalties': 768,
-           'entity_relations': 768, 'synthesis': 1280}
-SECTION_OUT_CAP = 768
-ROOT_OUT_CAP = 2048
-SINK_OUT_CAP = 1280
+# Per-role output caps — v3 (GLM-5.3-Flash track, operator approval
+# 2026-10-25). Uniform 3072: GLM thinking blocks fire NONDETERMINISTICALLY
+# and count against max_tokens (screening: 768-cap timeline truncated
+# when a thinking block appeared; 1536 completed). 3072 absorbs the
+# thinking variance; it REDUCES truncation risk and is NOT a correctness
+# guarantee — incomplete outputs are recorded honestly via
+# finish_reason/has_thinking_block, criteria never loosened. Under
+# subscription billing (marginal ¥0/call) caps cost nothing.
+OUT_CAP = {'extraction': 3072, 'timeline': 3072, 'timeline_deep': 3072,
+           'amounts': 3072, 'amounts_check': 3072, 'penalties': 3072,
+           'entity_relations': 3072, 'synthesis': 3072}
+SECTION_OUT_CAP = 3072
+ROOT_OUT_CAP = 3072
+SINK_OUT_CAP = 3072
+BILLING = 'subscription'          # GLM via zhipu: marginal ¥0/call
+GLM_MODEL = 'GLM-5.3-Flash'
+GLM_URL = 'https://open.bigmodel.cn/api/anthropic/v1/messages'
 
 # Frozen 18-call sequence: shared 8 -> D0 0 -> D2 3 -> C 7.
 # Roles in dispatch order; char bounds are by CONSTRUCTION (doc[:3000]
@@ -250,29 +264,41 @@ def eval_by_category(outputs, valid_keys):
     return full, by_cat
 
 
-def call_ds(prompt: str, creds: dict, max_out_tokens: int = 2048):
+def call_ds(prompt: str, creds: dict, max_out_tokens: int = 3072):
+    """GLM-5.3-Flash dispatch (v3). thinking:disabled is REQUESTED but
+    not guaranteed (screening evidence); thinking blocks are detected
+    and recorded, never silently dropped. cash_cny = 0.0 exactly
+    (subscription profile, frozen rates glm_53_flash ¥0/call)."""
     import requests
-    body = dict(model='deepseek-flash', max_tokens=max_out_tokens,
+    body = dict(model=GLM_MODEL, max_tokens=max_out_tokens,
                 messages=[dict(role='user', content=prompt)],
                 temperature=0.0, thinking={'type': 'disabled'})
     t0 = time.time()
     resp = requests.post(
-        'https://api.deepseek.com/chat/completions',
-        headers={'Authorization': f'Bearer {creds["DEEPSEEK_API_KEY"]}',
+        GLM_URL,
+        headers={'x-api-key': creds['ZHIPU_API_KEY'],
+                 'anthropic-version': '2023-06-01',
                  'Content-Type': 'application/json'},
         json=body, timeout=180)
     lat = time.time() - t0
     d = resp.json()
-    ch = d.get('choices', [{}])[0]
+    text = ''
+    has_thinking = False
+    for blk in d.get('content', []) or []:
+        if blk.get('type') == 'text':
+            text += blk.get('text', '')
+        elif blk.get('type') == 'thinking':
+            has_thinking = True
     u = d.get('usage', {})
-    tin, tout = u.get('prompt_tokens', 0), u.get('completion_tokens', 0)
-    if resp.status_code != 200 or not ch.get('message', {}).get('content'):
+    if resp.status_code != 200 or not text:
         raise RuntimeError(f'API error: HTTP {resp.status_code} '
                            f'{str(d)[:200]}')
-    return dict(answer=ch['message']['content'],
-                finish_reason=ch.get('finish_reason'),
-                tokens_in=tin, tokens_out=tout,
-                cash_cny=round((tin * 2.13 + tout * 8.52) / 1e6, 6),
+    return dict(answer=text,
+                finish_reason=d.get('stop_reason'),
+                tokens_in=u.get('input_tokens', 0),
+                tokens_out=u.get('output_tokens', 0),
+                cash_cny=0.0,
+                has_thinking_block=has_thinking,
                 latency_s=round(lat, 1))
 
 
@@ -288,7 +314,7 @@ def gates(args):
     if args.approved_freeze_sha256 != hashlib.sha256(raw).hexdigest():
         raise PermissionError('scoring freeze hash mismatch')
     f = json.loads(raw)
-    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v2_1'
+    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v3'
             or f['doc_slot'] != DOC_SLOT or f['fault'] != FAULT):
         raise PermissionError('freeze design mismatch')
     return f
@@ -304,7 +330,7 @@ def execute(args):
     # PLAN-LEVEL HARD-BUDGET ASSERTION (before ANY call):
     # sum of per-call worst costs over the frozen 18-call sequence.
     specs, bounds = plan_call_specs(doc['text'])
-    plan_worst = plan_worst_total(specs)
+    plan_worst = plan_worst_total(specs, billing=BILLING)
     if plan_worst > CAP_CNY + 1e-12:
         raise PermissionError(
             f'plan worst-case total ¥{plan_worst:.4f} > cap '
@@ -313,7 +339,7 @@ def execute(args):
           f'¥{CAP_CNY} (bounds {bounds})', flush=True)
 
     guard = BudgetGuard(PLANNED_CALLS, CAP_CNY, mode='adaptive',
-                        wall_seconds=WALL_S)
+                        wall_seconds=WALL_S, billing=BILLING)
     run_dir = HERE / 'fe_screening_runs' / time.strftime(
         'r2fix_%Y%m%d_%H%M%S')
     run_dir.mkdir(parents=True)
@@ -348,6 +374,7 @@ def execute(args):
             raise RuntimeError(f'guard: {guard.anomaly}')
         print(f'  {node} [{role}]: {o["latency_s"]}s len={len(o["answer"])}'
               f' finish={o["finish_reason"]} '
+              f'think={o.get("has_thinking_block")} '
               f'{"<-GARBAGE" if replace_garbage else ""}', flush=True)
         return o
 
@@ -390,7 +417,9 @@ def execute(args):
                 preserved_byte_identical=pres,
                 lost_in_synthesis=full['lost_in_synthesis']))
             (run_dir / f'{label}_outputs.json').write_text(json.dumps(
-                {n: dict(answer=o['answer'][:2000], role=ROLE[n])
+                {n: dict(answer=o['answer'][:2000], role=ROLE[n],
+                         finish=o.get('finish_reason'),
+                         thinking=o.get('has_thinking_block'))
                  for n, o in ac.outputs.items()}, indent=1,
                 ensure_ascii=False))
             print(f'{label}: t_q={full["terminal_q"]:.3f} '

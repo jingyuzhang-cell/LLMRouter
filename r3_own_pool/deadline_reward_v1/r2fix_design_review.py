@@ -55,7 +55,7 @@ def main():
     # shared zero-call inputs
     doc = load_docs()[R.DOC_SLOT]
     specs, bounds = R.plan_call_specs(doc['text'], doc['doc_id'])
-    plan_worst = plan_worst_total(specs)
+    plan_worst = plan_worst_total(specs, billing=R.BILLING)
 
     # tok/char ratio evidence from REAL delivered calls (zero-call)
     fe = (ROOT / 'deadline_reward_v1' / 'fe_screening_runs' /
@@ -100,24 +100,30 @@ def main():
     check('R1 scorer (e: namespace, comma-symmetric amounts) 7/7',
           all(st), f'{sum(st)}/7')
 
-    # ---- R2 budget guard tests ------------------------------------------
-    g = BudgetGuard(18, 0.30, mode='adaptive')
+    # ---- R2 budget guard tests (v3: GLM subscription profile) -----------
+    g = BudgetGuard(18, 0.30, mode='adaptive', billing='subscription')
     ok_walk = True
     for chars, out in specs:
-        s = g.may_start(prompt_chars=chars, max_out_tokens=out)
-        if s:
+        st = g.may_start(prompt_chars=chars, max_out_tokens=out)
+        if st:
             ok_walk = False
             break
-        g.record(worst_case_cny(chars, out) * 0.85)   # realistic-high
-    check('R2 guard: realistic-high walk over the frozen plan completes '
-          'at cap 0.30', ok_walk and g.calls == 18)
-    check('R2 guard: cap 0.28 cannot carry this plan '
-          f'(plan worst ¥{plan_worst:.4f} > 0.28 -> start refused)',
-          plan_worst > 0.28)
-    ga = BudgetGuard(5, 1.0, mode='adaptive')
+        g.record(0.0)   # subscription: marginal cash exactly ¥0
+    check('R2 guard: 18-call walk under subscription profile completes,'
+          ' cash spent ¥0', ok_walk and g.calls == 18 and g.spent == 0.0)
+    check(f'R2 guard: plan worst under subscription = ¥{plan_worst:.4f}'
+          f' <= 0.30 (trivially, cash bound exact)',
+          plan_worst == 0.0)
+    gs = BudgetGuard(3, 1.0, mode='adaptive', billing='subscription')
+    for _ in range(3):
+        assert gs.may_start(prompt_chars=100) is None
+        gs.record(0.0)
+    check('R2 guard: planned-calls cap still fires (subscription does '
+          'not bypass)', gs.may_start(prompt_chars=100) == 'calls cap (3)')
+    ga = BudgetGuard(5, 1.0, mode='adaptive', billing='per_token')
     ga.may_start(prompt_chars=1000)
-    ga.record(0.5)   # above admitted worst -> anomaly must be flagged
-    check('R2 guard: billing anomaly (actual > admitted worst) flagged',
+    ga.record(0.5)   # above admitted worst -> anomaly flagged
+    check('R2 guard: per-token billing anomaly detector intact (lineage)',
           ga.anomaly is not None)
 
     # ---- R3 scoring freeze ----------------------------------------------
@@ -137,7 +143,7 @@ def main():
           all(len(v) >= 2 for v in cats.values()),
           json.dumps({k: v for k, v in cats.items()}, ensure_ascii=False))
     freeze = dict(
-        version='R2FIX_SCORING_FREEZE_v2_1',
+        version='R2FIX_SCORING_FREEZE_v3',
         frozen_at=time_str(), doc_slot=R.DOC_SLOT, fault=R.FAULT,
         rule=('doc_atoms mechanical slices, identical rule to R1/R2 '
               '(dates[:4], amounts[:3], penalties[:3]); entities[:3] '
@@ -148,14 +154,19 @@ def main():
         doc_sha256=hashlib.sha256(doc['text'].encode()).hexdigest(),
         caps=dict(planned_calls=R.PLANNED_CALLS, cap_cash_cny=R.CAP_CNY,
                   wall_s=R.WALL_S, mode='adaptive',
-                  tok_per_char_bound=0.75, envelope_tokens=128,
+                  billing=R.BILLING, marginal_cash_per_call_cny=0.0,
                   char_bounds_by_construction=bounds,
                   out_caps=R.OUT_CAP,
                   plan_worst_total_cny=plan_worst),
         utility=dict(D_s=R.D, C0_tokens=R.C0_TOK),
-        model=('deepseek-flash thinking=disabled temp=0; per-role '
-               'max_tokens: extraction 2048, sections 768, synthesis '
-               '1280'),
+        model=('GLM-5.3-Flash via zhipu anthropic-compatible endpoint, '
+               'temp=0, thinking:disabled REQUESTED (not guaranteed; '
+               'blocks detected+recorded); uniform max_tokens 3072'),
+        track_note=('v3 track switch approved by operator 2026-10-25 '
+                    'after budget audit proved ¥0.30 uncertifiable on '
+                    'per-token track; screening validated model '
+                    'capability (conditional pass); screening results '
+                    'are NOT recovery-algorithm evidence'),
         budget_bound_validation=dict(
             source='fe_recovery_20261013_213713 FE_LEDGER.jsonl, 5 '
                    'delivered deepseek calls, prompts reconstructed '
@@ -263,24 +274,38 @@ def main():
     print(f'    worst-case bounds: {w}')
 
     # ---- R10-R12 hard-budget verification (operator 2026-10-25) --------
-    check(f'R10 plan worst-case total ¥{plan_worst:.4f} <= cap '
-          f'¥{R.CAP_CNY} (sum over all 18 calls, worst output on every '
-          f'call)', plan_worst <= R.CAP_CNY,
-          f'bounds={bounds} out_caps={R.OUT_CAP}')
+    ds_lineage = plan_worst_total(specs, billing='per_token')
+    check(f'R10 (v3) plan worst-case cash = ¥{plan_worst:.4f} <= cap '
+          f'¥{R.CAP_CNY} (subscription: exact ¥0; per-token lineage at '
+          f'3072 caps would be ¥{ds_lineage:.4f} — infeasible on a paid '
+          f'track, documented not applied)', plan_worst <= R.CAP_CNY,
+          f'bounds={bounds} out_caps=uniform 3072')
 
     # R11: tok/char bound validated on REAL delivered calls
-    check('R11 tok/char bound 0.75 validated: real max '
-          f'{rmax:.4f} x1.15 = {rmax * 1.15:.4f} <= 0.75 over '
-          f'{len(ratios)} delivered calls (2,061-9,832-char prompts); '
-          f'billed prompt_tokens already includes envelope, +128 extra',
-          rmax * 1.15 <= 0.75 and len(ratios) >= 5)
+    rates_v2 = json.loads((ROOT / 'deadline_reward_v1' /
+                           'REVERSE_ENGINEERED_RATES_V2.json').read_text())
+    glm_rate = rates_v2['rates']['glm_53_flash']
+    screen = json.loads(sorted((ROOT / 'deadline_reward_v1' /
+                                'fe_screening_runs').glob(
+        'glm53flash_*/SCREEN_RESULTS.json'))[-1].read_text())
+    n_zero = sum(1 for c in screen['calls'] if c['cash_cny'] == 0.0)
+    check('R11 (v3) GLM billing evidence: frozen rates subscription '
+          f'¥{glm_rate["cash_cny_per_call"]}/call; screening {n_zero}/'
+          f'{len(screen["calls"])} calls at ¥0; prior 17 GLM calls '
+          'total ¥0.0 — cash cap holds exactly, no tokenizer bound '
+          'needed on this track (deepseek tok/char lineage retained in '
+          'budget_guard docstring)',
+          glm_rate['billing'] == 'subscription'
+          and n_zero == len(screen['calls'])
+          and rates_v2['total_costs_cny']['glm'] == 0.0)
 
-    check('R12 output caps: extraction 2048 / sections 768 / synthesis '
-          '1280; section roles strictly smaller than observed '
-          'homogeneous clones (2,981 ch, stop<2048); truncation risk '
-          'recorded honestly via finish_reason',
-          R.ROOT_OUT_CAP == 2048 and R.SECTION_OUT_CAP == 768
-          and R.SINK_OUT_CAP == 1280)
+    check('R12 (v3) uniform 3072 output caps absorb GLM thinking '
+          'variance (screening: 768 truncated when a thinking block '
+          'fired; 1536 completed); caps reduce truncation risk only, '
+          'NOT a correctness guarantee — finish_reason + thinking-block '
+          'recorded per call, criteria never loosened',
+          R.ROOT_OUT_CAP == 3072 and R.SECTION_OUT_CAP == 3072
+          and R.SINK_OUT_CAP == 3072)
 
     # ---- R9 arm parity ----------------------------------------------------
     check('R9 D2/C share source/fault/scorer/utility (module singletons)',

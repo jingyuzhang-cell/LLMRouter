@@ -38,38 +38,53 @@ ENVELOPE_TOKENS = 128    # extra buffer; billed prompt_tokens already
 
 
 def worst_case_cny(prompt_chars: int, max_out_tokens: int = MAX_OUT_TOKENS,
-                   tok_per_char: float = TOK_PER_CHAR) -> float:
+                   tok_per_char: float = TOK_PER_CHAR,
+                   billing: str = 'per_token') -> float:
     """Provable single-call cost bound BEFORE dispatch.
 
-    tok_per_char bound validation (operator directive 2026-10-25):
-    5 real delivered deepseek calls (fe_recovery_20261013_213713 ledger,
-    prompts 2,061-9,832 chars reconstructed exactly from V2 samples) gave
-    max prompt_tokens/chars = 0.6259; x1.15 margin = 0.7198 <= 0.75.
+    billing='per_token' (deepseek): tok_per_char bound validation
+    (operator directive 2026-10-25): 5 real delivered deepseek calls
+    (fe_recovery_20261013_213713 ledger, prompts 2,061-9,832 chars
+    reconstructed exactly from V2 samples) gave max
+    prompt_tokens/chars = 0.6259; x1.15 margin = 0.7198 <= 0.75.
     prompt_tokens as billed already includes the chat-template envelope;
-    ENVELOPE_TOKENS adds further buffer on top."""
+    ENVELOPE_TOKENS adds further buffer on top.
+
+    billing='subscription' (GLM via zhipu, frozen V2 rates
+    cash_cny_per_call=0): marginal cash per call is EXACTLY ¥0 —
+    the hard cash cap holds trivially and no tokenizer bound is
+    needed. Input sizes are still bounded/recorded for latency and
+    token accounting, not for cash."""
+    if billing == 'subscription':
+        return 0.0
     tok_in_ub = prompt_chars * tok_per_char + ENVELOPE_TOKENS
     cost = tok_in_ub * CNY_PER_TOK_IN + max_out_tokens * CNY_PER_TOK_OUT
     return round(cost, 6)
 
 
-def plan_worst_total(call_specs) -> float:
+def plan_worst_total(call_specs, billing: str = 'per_token') -> float:
     """Sum of per-call worst costs over a frozen call plan.
 
     call_specs: iterable of (prompt_chars_bound, max_out_tokens) — the
     FULL planned sequence. Guarantees (operator requirement): under
     worst-case costs on every call the plan completes within the sum;
     callers must assert sum <= cap before any dispatch."""
-    return round(sum(worst_case_cny(c, o) for c, o in call_specs), 6)
+    return round(sum(worst_case_cny(c, o, billing=billing)
+                     for c, o in call_specs), 6)
 
 
 class BudgetGuard:
     def __init__(self, planned_calls: int, cap_cash_cny: float,
                  mode: str = 'adaptive',
                  worst_case_cny: float | None = None,
-                 wall_seconds: float = 1800.0):
+                 wall_seconds: float = 1800.0,
+                 billing: str = 'per_token'):
         if mode not in ('uniform', 'adaptive'):
             raise ValueError(f'unknown mode {mode!r}')
+        if billing not in ('per_token', 'subscription'):
+            raise ValueError(f'unknown billing {billing!r}')
         self.mode = mode
+        self.billing = billing
         self.planned_calls = planned_calls
         self.cap_cash_cny = cap_cash_cny
         self.wall_seconds = wall_seconds
@@ -103,7 +118,8 @@ class BudgetGuard:
         if self.mode == 'adaptive':
             if prompt_chars is None:
                 raise ValueError('adaptive mode requires prompt_chars')
-            worst = worst_case_cny(prompt_chars, max_out_tokens)
+            worst = worst_case_cny(prompt_chars, max_out_tokens,
+                                   billing=self.billing)
         else:
             worst = self.default_worst
         if self.spent + worst > self.cap_cash_cny + 1e-12:
@@ -126,7 +142,7 @@ class BudgetGuard:
                 f'violated, fail-stop required')
 
     def snapshot(self):
-        return dict(mode=self.mode, calls=self.calls,
+        return dict(mode=self.mode, billing=self.billing, calls=self.calls,
                     spent_cny=round(self.spent, 6),
                     max_single_cny=round(self.max_single, 6),
                     max_admitted_worst_cny=round(

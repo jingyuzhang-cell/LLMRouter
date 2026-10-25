@@ -1,6 +1,6 @@
 {
- "version": "R2FIX_SCORING_FREEZE_v2_1",
- "frozen_at": "2026-10-25T10:57:19",
+ "version": "R2FIX_SCORING_FREEZE_v3",
+ "frozen_at": "2026-10-25T11:21:56",
  "doc_slot": "ydt#D3_E03-yuandao_2026-08-29",
  "fault": "b0",
  "rule": "doc_atoms mechanical slices, identical rule to R1/R2 (dates[:4], amounts[:3], penalties[:3]); entities[:3] new namespace e:; symmetric comma-insensitive amount match; NO manual cherry-picking",
@@ -48,30 +48,31 @@
   "cap_cash_cny": 0.3,
   "wall_s": 1800.0,
   "mode": "adaptive",
-  "tok_per_char_bound": 0.75,
-  "envelope_tokens": 128,
+  "billing": "subscription",
+  "marginal_cash_per_call_cny": 0.0,
   "char_bounds_by_construction": {
    "root": 3211,
    "section": 3192,
    "sink": 12365
   },
   "out_caps": {
-   "extraction": 2048,
-   "timeline": 768,
-   "timeline_deep": 768,
-   "amounts": 768,
-   "amounts_check": 768,
-   "penalties": 768,
-   "entity_relations": 768,
-   "synthesis": 1280
+   "extraction": 3072,
+   "timeline": 3072,
+   "timeline_deep": 3072,
+   "amounts": 3072,
+   "amounts_check": 3072,
+   "penalties": 3072,
+   "entity_relations": 3072,
+   "synthesis": 3072
   },
-  "plan_worst_total_cny": 0.282454
+  "plan_worst_total_cny": 0.0
  },
  "utility": {
   "D_s": 350.0,
   "C0_tokens": 60000.0
  },
- "model": "deepseek-flash thinking=disabled temp=0; per-role max_tokens: extraction 2048, sections 768, synthesis 1280",
+ "model": "GLM-5.3-Flash via zhipu anthropic-compatible endpoint, temp=0, thinking:disabled REQUESTED (not guaranteed; blocks detected+recorded); uniform max_tokens 3072",
+ "track_note": "v3 track switch approved by operator 2026-10-25 after budget audit proved ¥0.30 uncertifiable on per-token track; screening validated model capability (conditional pass); screening results are NOT recovery-algorithm evidence",
  "budget_bound_validation": {
   "source": "fe_recovery_20261013_213713 FE_LEDGER.jsonl, 5 delivered deepseek calls, prompts reconstructed exactly from FACT_EXTRACTION_SAMPLES_V2",
   "max_input_tok_per_char": 0.6259,
