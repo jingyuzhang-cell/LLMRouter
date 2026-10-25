@@ -1,6 +1,6 @@
 {
- "version": "R2FIX_SCORING_FREEZE_v1",
- "frozen_at": "2026-10-24T23:48:24",
+ "version": "R2FIX_SCORING_FREEZE_v2",
+ "frozen_at": "2026-10-25T10:40:08",
  "doc_slot": "ydt#D3_E03-yuandao_2026-08-29",
  "fault": "b0",
  "rule": "doc_atoms mechanical slices, identical rule to R1/R2 (dates[:4], amounts[:3], penalties[:3]); entities[:3] new namespace e:; symmetric comma-insensitive amount match; NO manual cherry-picking",
@@ -47,14 +47,40 @@
   "planned_calls": 18,
   "cap_cash_cny": 0.3,
   "wall_s": 1800.0,
-  "mode": "adaptive"
+  "mode": "adaptive",
+  "tok_per_char_bound": 0.75,
+  "envelope_tokens": 128,
+  "char_bounds_by_construction": {
+   "root": 3197,
+   "section": 3192,
+   "sink": 12365
+  },
+  "out_caps": {
+   "extraction": 2048,
+   "timeline": 768,
+   "timeline_deep": 768,
+   "amounts": 768,
+   "amounts_check": 768,
+   "penalties": 768,
+   "entity_relations": 768,
+   "synthesis": 1280
+  },
+  "plan_worst_total_cny": 0.282432
  },
  "utility": {
   "D_s": 350.0,
   "C0_tokens": 60000.0
  },
- "model": "deepseek-flash thinking=disabled temp=0 max_tokens=2048",
- "known_noise": "amounts slice may include regex-truncated artifacts (e.g. \"088元\") — kept because the rule is mechanical and identical across arms; entity keys may be substring-superset redundant",
+ "model": "deepseek-flash thinking=disabled temp=0; per-role max_tokens: extraction 2048, sections 768, synthesis 1280",
+ "budget_bound_validation": {
+  "source": "fe_recovery_20261013_213713 FE_LEDGER.jsonl, 5 delivered deepseek calls, prompts reconstructed exactly from FACT_EXTRACTION_SAMPLES_V2",
+  "max_input_tok_per_char": 0.6259,
+  "with_15pct_margin": 0.7198,
+  "bound_used": 0.75,
+  "envelope": "billed prompt_tokens already includes chat template; +128 tokens extra buffer",
+  "plan_worst_note": "sum of per-call worst over the frozen 18-call sequence; runner asserts this before any dispatch"
+ },
+ "known_noise": "amounts slice may include regex-truncated artifacts (e.g. \"088元\") — kept because the rule is mechanical and identical across arms; entity keys may be substring-superset redundant; section outputs may hit the 768-token cap (finish_reason=length) — recorded honestly, evaluation proceeds regardless",
  "preregistered_criteria": {
   "C1_restoration": "t_q(D2) > t_q(D0)",
   "C2_category": "timeline hits D2 > timeline hits D0",

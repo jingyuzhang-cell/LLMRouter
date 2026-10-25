@@ -31,7 +31,8 @@ from pathlib import Path
 ROOT = Path('/root/r3_own_pool')
 sys.path.insert(0, str(ROOT))
 
-from deadline_reward_v1.budget_guard import BudgetGuard, worst_case_cny
+from deadline_reward_v1.budget_guard import (
+    BudgetGuard, worst_case_cny, plan_worst_total)
 from deadline_reward_v1.complex_dag import STRUCTURES, topo_sort
 from deadline_reward_v1.full_dag_executor import load_env_creds
 from deadline_reward_v1.full_dag_tasks import load_docs
@@ -52,6 +53,29 @@ EDGES = STRUCTURES['diamond'](8)
 ORDER = topo_sort(EDGES)
 ROOT_NODE = ORDER[0]
 SINKS = [n for n in ORDER if not EDGES.get(n)]
+
+# Per-role output caps (operator directive 2026-10-25: hard budget must
+# hold under worst-case output on EVERY call). Justification vs observed
+# real outputs: extraction completed at 3,723-4,000 chars within 2048
+# (keep 2048); role sections are strictly smaller than the homogeneous
+# full-summary clones (2,981 chars, finished 'stop' under 2048) — 768
+# tokens ≈ 1,500-1,900 chars of role-focused JSON; sink 1,280 ≈
+# 2,100-2,600 chars vs observed 2,455-char synthesis. Truncation risk
+# is recorded honestly via finish_reason in the artifacts.
+OUT_CAP = {'extraction': 2048, 'timeline': 768, 'timeline_deep': 768,
+           'amounts': 768, 'amounts_check': 768, 'penalties': 768,
+           'entity_relations': 768, 'synthesis': 1280}
+SECTION_OUT_CAP = 768
+ROOT_OUT_CAP = 2048
+SINK_OUT_CAP = 1280
+
+# Frozen 18-call sequence: shared 8 -> D0 0 -> D2 3 -> C 7.
+# Roles in dispatch order; char bounds are by CONSTRUCTION (doc[:3000]
+# at root; each upstream answer truncated [:3000]; fixed boilerplate).
+PLAN_ROLES = (['extraction'] + ['section'] * 6 + ['synthesis']   # shared
+              + ['section', 'section', 'synthesis']              # D2
+              + ['section'] * 6 + ['synthesis'])                 # C
+assert len(PLAN_ROLES) == 18
 
 ROLE = {
     ROOT_NODE: 'extraction',
@@ -141,6 +165,37 @@ class HeteroDAG:
         return {d for d in seen if d in self.outputs and d != node}
 
 
+def construction_bounds(doc_text: str) -> dict:
+    """Provable prompt-char bounds by construction (zero-call): every
+    upstream answer enters the prompt truncated to [:3000]; the doc
+    enters only at root truncated to [:3000]; boilerplate is fixed.
+    Adversarial probe: EVERY upstream answered exactly 3000 chars."""
+    dag = HeteroDAG(doc_text, 'BOUND_PROBE')
+    fat = 'X' * 3000
+    for n in ORDER:
+        dag.outputs[n] = dict(answer=fat)
+    sizes = dict(
+        root=len(dag.build_prompt(ROOT_NODE)),
+        section=max(len(dag.build_prompt(n)) for n in ORDER
+                    if n not in (ROOT_NODE, 'sink')),
+        sink=len(dag.build_prompt('sink')))
+    return sizes
+
+
+def plan_call_specs(doc_text: str):
+    """(char_bound, out_cap) per planned call, in dispatch order."""
+    b = construction_bounds(doc_text)
+    out = []
+    for role in PLAN_ROLES:
+        if role == 'extraction':
+            out.append((b['root'], ROOT_OUT_CAP))
+        elif role == 'synthesis':
+            out.append((b['sink'], SINK_OUT_CAP))
+        else:
+            out.append((b['section'], SECTION_OUT_CAP))
+    return out, b
+
+
 def closures():
     fault = FAULT
     d2 = {fault} | downstream(fault)
@@ -192,9 +247,9 @@ def eval_by_category(outputs, valid_keys):
     return full, by_cat
 
 
-def call_ds(prompt: str, creds: dict):
+def call_ds(prompt: str, creds: dict, max_out_tokens: int = 2048):
     import requests
-    body = dict(model='deepseek-flash', max_tokens=2048,
+    body = dict(model='deepseek-flash', max_tokens=max_out_tokens,
                 messages=[dict(role='user', content=prompt)],
                 temperature=0.0, thinking={'type': 'disabled'})
     t0 = time.time()
@@ -230,7 +285,8 @@ def gates(args):
     if args.approved_freeze_sha256 != hashlib.sha256(raw).hexdigest():
         raise PermissionError('scoring freeze hash mismatch')
     f = json.loads(raw)
-    if f['doc_slot'] != DOC_SLOT or f['fault'] != FAULT:
+    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v2'
+            or f['doc_slot'] != DOC_SLOT or f['fault'] != FAULT):
         raise PermissionError('freeze design mismatch')
     return f
 
@@ -241,6 +297,18 @@ def execute(args):
     creds = load_env_creds()
     doc = load_docs()[DOC_SLOT]
     d2_closure, c_full, preserved = closures()
+
+    # PLAN-LEVEL HARD-BUDGET ASSERTION (before ANY call):
+    # sum of per-call worst costs over the frozen 18-call sequence.
+    specs, bounds = plan_call_specs(doc['text'])
+    plan_worst = plan_worst_total(specs)
+    if plan_worst > CAP_CNY + 1e-12:
+        raise PermissionError(
+            f'plan worst-case total ¥{plan_worst:.4f} > cap '
+            f'¥{CAP_CNY} — refusing to start (bounds {bounds})')
+    print(f'plan worst-case total: ¥{plan_worst:.4f} <= cap '
+          f'¥{CAP_CNY} (bounds {bounds})', flush=True)
+
     guard = BudgetGuard(PLANNED_CALLS, CAP_CNY, mode='adaptive',
                         wall_seconds=WALL_S)
     run_dir = HERE / 'fe_screening_runs' / time.strftime(
@@ -249,18 +317,34 @@ def execute(args):
     results = []
     from copy import deepcopy
 
+    def bound_for(node):
+        if node == ROOT_NODE:
+            return bounds['root']
+        if node in SINKS:
+            return bounds['sink']
+        return bounds['section']
+
     def call_checked(dag, node, replace_garbage=False):
+        role = ROLE[node]
+        cap_out = OUT_CAP[role]
         prompt = dag.build_prompt(node)
-        stop = guard.may_start(prompt_chars=len(prompt))
+        if len(prompt) > bound_for(node):
+            raise RuntimeError(
+                f'construction bound violated: {node} prompt '
+                f'{len(prompt)} > bound {bound_for(node)} — fail-stop')
+        stop = guard.may_start(prompt_chars=len(prompt),
+                               max_out_tokens=cap_out)
         if stop:
             raise RuntimeError(f'budget stop: {stop}')
-        o = call_ds(prompt, creds)
+        o = call_ds(prompt, creds, max_out_tokens=cap_out)
         if replace_garbage:
             o = dict(o, answer=GARBAGE, finish_reason='stop')
         dag.outputs[node] = o
         guard.record(o['cash_cny'])
-        print(f'  {node} [{ROLE[node]}]: {o["latency_s"]}s '
-              f'len={len(o["answer"])} '
+        if guard.anomaly:
+            raise RuntimeError(f'guard: {guard.anomaly}')
+        print(f'  {node} [{role}]: {o["latency_s"]}s len={len(o["answer"])}'
+              f' finish={o["finish_reason"]} '
               f'{"<-GARBAGE" if replace_garbage else ""}', flush=True)
         return o
 
@@ -330,7 +414,9 @@ def execute(args):
             fault=FAULT, d2_closure=sorted(d2_closure),
             c_full=sorted(c_full),
             preserved_siblings=sorted(preserved),
-            doc=DOC_SLOT, budget=guard.snapshot()), indent=1))
+            doc=DOC_SLOT, budget=guard.snapshot(),
+            plan_worst_cny=plan_worst, char_bounds=bounds,
+            out_caps=OUT_CAP), indent=1))
         print(f'\nCOMPLETE: {guard.calls} calls, ¥{guard.spent:.4f}')
     except BaseException as exc:
         (run_dir / 'R2FIX_INCOMPLETE.json').write_text(json.dumps(dict(

@@ -31,16 +31,35 @@ import time
 
 CNY_PER_TOK_IN = 2.13e-6
 CNY_PER_TOK_OUT = 8.52e-6
-TOK_PER_CHAR = 0.75      # generous upper bound for Chinese + JSON mix
+TOK_PER_CHAR = 0.75      # validated: real max 0.6259 x1.15 = 0.7198 <= 0.75
 MAX_OUT_TOKENS = 2048    # deepseek-flash max_tokens used by the runner
+ENVELOPE_TOKENS = 128    # extra buffer; billed prompt_tokens already
+                         # includes the chat template
 
 
 def worst_case_cny(prompt_chars: int, max_out_tokens: int = MAX_OUT_TOKENS,
                    tok_per_char: float = TOK_PER_CHAR) -> float:
-    """Provable single-call cost bound BEFORE dispatch."""
-    tok_in_ub = prompt_chars * tok_per_char + 64   # + message boilerplate
+    """Provable single-call cost bound BEFORE dispatch.
+
+    tok_per_char bound validation (operator directive 2026-10-25):
+    5 real delivered deepseek calls (fe_recovery_20261013_213713 ledger,
+    prompts 2,061-9,832 chars reconstructed exactly from V2 samples) gave
+    max prompt_tokens/chars = 0.6259; x1.15 margin = 0.7198 <= 0.75.
+    prompt_tokens as billed already includes the chat-template envelope;
+    ENVELOPE_TOKENS adds further buffer on top."""
+    tok_in_ub = prompt_chars * tok_per_char + ENVELOPE_TOKENS
     cost = tok_in_ub * CNY_PER_TOK_IN + max_out_tokens * CNY_PER_TOK_OUT
     return round(cost, 6)
+
+
+def plan_worst_total(call_specs) -> float:
+    """Sum of per-call worst costs over a frozen call plan.
+
+    call_specs: iterable of (prompt_chars_bound, max_out_tokens) — the
+    FULL planned sequence. Guarantees (operator requirement): under
+    worst-case costs on every call the plan completes within the sum;
+    callers must assert sum <= cap before any dispatch."""
+    return round(sum(worst_case_cny(c, o) for c, o in call_specs), 6)
 
 
 class BudgetGuard:
@@ -58,6 +77,10 @@ class BudgetGuard:
         self.spent = 0.0
         self.max_single = 0.0
         self.max_admitted_worst = 0.0
+        self._last_admitted_worst = 0.0
+        self.anomaly = None   # set if an actual charge exceeds its
+        # admitted worst-case bound — the mathematical guarantee is
+        # broken; the runner MUST fail-stop and re-derive the bound
         self.start = time.monotonic()
         if mode == 'uniform':
             if not worst_case_cny or worst_case_cny <= 0:
@@ -89,12 +112,18 @@ class BudgetGuard:
         if time.monotonic() - self.start > self.wall_seconds:
             return 'wall clock cap'
         self.max_admitted_worst = max(self.max_admitted_worst, worst)
+        self._last_admitted_worst = worst
         return None
 
     def record(self, cash_cny: float):
         self.calls += 1
         self.spent += float(cash_cny)
         self.max_single = max(self.max_single, float(cash_cny))
+        if float(cash_cny) > self._last_admitted_worst + 1e-12:
+            self.anomaly = (
+                f'call {self.calls} charged ¥{cash_cny:.6f} > admitted '
+                f'worst ¥{self._last_admitted_worst:.6f} — bound '
+                f'violated, fail-stop required')
 
     def snapshot(self):
         return dict(mode=self.mode, calls=self.calls,

@@ -35,7 +35,8 @@ ROOT = Path('/root/r3_own_pool')
 sys.path.insert(0, str(ROOT))
 
 from deadline_reward_v1 import r2fix_runner as R
-from deadline_reward_v1.budget_guard import BudgetGuard, worst_case_cny
+from deadline_reward_v1.budget_guard import (BudgetGuard, worst_case_cny,
+                                             plan_worst_total)
 from deadline_reward_v1.full_dag_silver import doc_atoms
 from deadline_reward_v1.full_dag_tasks import load_docs
 from deadline_reward_v1.terminal_eval import eval_terminal
@@ -51,6 +52,34 @@ def check(name, ok, detail=''):
 
 
 def main():
+    # shared zero-call inputs
+    doc = load_docs()[R.DOC_SLOT]
+    specs, bounds = R.plan_call_specs(doc['text'])
+    plan_worst = plan_worst_total(specs)
+
+    # tok/char ratio evidence from REAL delivered calls (zero-call)
+    fe = (ROOT / 'deadline_reward_v1' / 'fe_screening_runs' /
+          'fe_recovery_20261013_213713' / 'FE_LEDGER.jsonl')
+    tpl = ('你是一个资本市场事件调查助手。\n\n## 任务类型：fact_extraction'
+           '\n\n## 任务描述\n从证据文档中抽取原子事实：涉及主体、处罚决定'
+           '（罚款金额、警告、市场禁入）、违法行为类型，每条含事实陈述、'
+           '数值/日期、证据doc_id。\n\n## 证据文档\n{ev}\n\n## 输出要求\n'
+           '- 输出格式：JSON数组，每个元素包含 fact, date, entities, '
+           'evidence_doc_id 字段\n- 输出契约：entity_facts.v1\n- 最大输出'
+           '长度：2048 tokens\n- 只抽取有证据支持的事实，不得虚构\n\n'
+           '请严格按照输出要求完成任务。')
+    v2s = {s2['sample_id']: s2 for s2 in json.loads(
+        (ROOT / 'deadline_reward_v1' / 'FACT_EXTRACTION_SAMPLES_V2.json')
+        .read_text())['samples']}
+    ratios = []
+    for line in fe.read_text().splitlines():
+        e = json.loads(line)
+        if (e.get('model_key') == 'deepseek'
+                and e.get('status') == 'delivered'):
+            pr = tpl.format(ev=v2s[e['sample_id']]['evidence_full_text'])
+            ratios.append(e['usage']['prompt_tokens'] / len(pr))
+    rmax = max(ratios)
+
     # ---- R1 scorer tests ------------------------------------------------
     E = {'n0': ['n1'], 'n1': []}
 
@@ -73,25 +102,25 @@ def main():
 
     # ---- R2 budget guard tests ------------------------------------------
     g = BudgetGuard(18, 0.30, mode='adaptive')
-    walk_sizes = [6000] + [4000] * 16 + [13000]
     ok_walk = True
-    for i in range(18):
-        s = g.may_start(prompt_chars=walk_sizes[i])
+    for chars, out in specs:
+        s = g.may_start(prompt_chars=chars, max_out_tokens=out)
         if s:
             ok_walk = False
             break
-        g.record(0.0149)
-    check('R2 guard: realistic 18-call walk completes at cap 0.30',
-          ok_walk and abs(g.spent - 0.2682) < 1e-6)
-    g2 = BudgetGuard(18, 0.28, mode='adaptive')
-    for i in range(17):
-        assert g2.may_start(prompt_chars=4000) is None
-        g2.record(0.0149)
-    check('R2 guard: cap 0.28 blocks final sink call (documented)',
-          g2.may_start(prompt_chars=13000) is not None)
+        g.record(worst_case_cny(chars, out) * 0.85)   # realistic-high
+    check('R2 guard: realistic-high walk over the frozen plan completes '
+          'at cap 0.30', ok_walk and g.calls == 18)
+    check('R2 guard: cap 0.28 cannot carry this plan '
+          f'(plan worst ¥{plan_worst:.4f} > 0.28 -> start refused)',
+          plan_worst > 0.28)
+    ga = BudgetGuard(5, 1.0, mode='adaptive')
+    ga.may_start(prompt_chars=1000)
+    ga.record(0.5)   # above admitted worst -> anomaly must be flagged
+    check('R2 guard: billing anomaly (actual > admitted worst) flagged',
+          ga.anomaly is not None)
 
     # ---- R3 scoring freeze ----------------------------------------------
-    doc = load_docs()[R.DOC_SLOT]
     atoms = doc_atoms(doc['text'])
     cats = dict(timeline=atoms['dates'][:4], amounts=atoms['amounts'][:3],
                 penalties=atoms['penalties'][:3],
@@ -108,7 +137,7 @@ def main():
           all(len(v) >= 2 for v in cats.values()),
           json.dumps({k: v for k, v in cats.items()}, ensure_ascii=False))
     freeze = dict(
-        version='R2FIX_SCORING_FREEZE_v1',
+        version='R2FIX_SCORING_FREEZE_v2',
         frozen_at=time_str(), doc_slot=R.DOC_SLOT, fault=R.FAULT,
         rule=('doc_atoms mechanical slices, identical rule to R1/R2 '
               '(dates[:4], amounts[:3], penalties[:3]); entities[:3] '
@@ -118,13 +147,33 @@ def main():
         categories=cats,
         doc_sha256=hashlib.sha256(doc['text'].encode()).hexdigest(),
         caps=dict(planned_calls=R.PLANNED_CALLS, cap_cash_cny=R.CAP_CNY,
-                  wall_s=R.WALL_S, mode='adaptive'),
+                  wall_s=R.WALL_S, mode='adaptive',
+                  tok_per_char_bound=0.75, envelope_tokens=128,
+                  char_bounds_by_construction=bounds,
+                  out_caps=R.OUT_CAP,
+                  plan_worst_total_cny=plan_worst),
         utility=dict(D_s=R.D, C0_tokens=R.C0_TOK),
-        model='deepseek-flash thinking=disabled temp=0 max_tokens=2048',
+        model=('deepseek-flash thinking=disabled temp=0; per-role '
+               'max_tokens: extraction 2048, sections 768, synthesis '
+               '1280'),
+        budget_bound_validation=dict(
+            source='fe_recovery_20261013_213713 FE_LEDGER.jsonl, 5 '
+                   'delivered deepseek calls, prompts reconstructed '
+                   'exactly from FACT_EXTRACTION_SAMPLES_V2',
+            max_input_tok_per_char=round(rmax, 4),
+            with_15pct_margin=round(rmax * 1.15, 4),
+            bound_used=0.75,
+            envelope='billed prompt_tokens already includes chat '
+                     'template; +128 tokens extra buffer',
+            plan_worst_note='sum of per-call worst over the frozen '
+                            '18-call sequence; runner asserts this '
+                            'before any dispatch'),
         known_noise=('amounts slice may include regex-truncated artifacts '
                      '(e.g. "088元") — kept because the rule is mechanical '
                      'and identical across arms; entity keys may be '
-                     'substring-superset redundant'),
+                     'substring-superset redundant; section outputs may '
+                     'hit the 768-token cap (finish_reason=length) — '
+                     'recorded honestly, evaluation proceeds regardless'),
         preregistered_criteria=dict(
             C1_restoration='t_q(D2) > t_q(D0)',
             C2_category='timeline hits D2 > timeline hits D0',
@@ -212,6 +261,26 @@ def main():
           ' / '.join(f'{k}=¥{v:.4f}' for k, v in w.items()))
     print(f'    prompt sizes: {sizes}')
     print(f'    worst-case bounds: {w}')
+
+    # ---- R10-R12 hard-budget verification (operator 2026-10-25) --------
+    check(f'R10 plan worst-case total ¥{plan_worst:.4f} <= cap '
+          f'¥{R.CAP_CNY} (sum over all 18 calls, worst output on every '
+          f'call)', plan_worst <= R.CAP_CNY,
+          f'bounds={bounds} out_caps={R.OUT_CAP}')
+
+    # R11: tok/char bound validated on REAL delivered calls
+    check('R11 tok/char bound 0.75 validated: real max '
+          f'{rmax:.4f} x1.15 = {rmax * 1.15:.4f} <= 0.75 over '
+          f'{len(ratios)} delivered calls (2,061-9,832-char prompts); '
+          f'billed prompt_tokens already includes envelope, +128 extra',
+          rmax * 1.15 <= 0.75 and len(ratios) >= 5)
+
+    check('R12 output caps: extraction 2048 / sections 768 / synthesis '
+          '1280; section roles strictly smaller than observed '
+          'homogeneous clones (2,981 ch, stop<2048); truncation risk '
+          'recorded honestly via finish_reason',
+          R.ROOT_OUT_CAP == 2048 and R.SECTION_OUT_CAP == 768
+          and R.SINK_OUT_CAP == 1280)
 
     # ---- R9 arm parity ----------------------------------------------------
     check('R9 D2/C share source/fault/scorer/utility (module singletons)',
