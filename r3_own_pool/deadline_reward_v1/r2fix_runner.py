@@ -314,9 +314,16 @@ def gates(args):
     if args.approved_freeze_sha256 != hashlib.sha256(raw).hexdigest():
         raise PermissionError('scoring freeze hash mismatch')
     f = json.loads(raw)
-    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v3'
+    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v4'
             or f['doc_slot'] != DOC_SLOT or f['fault'] != FAULT):
         raise PermissionError('freeze design mismatch')
+    ev_path = ROOT / 'deadline_reward_v1' / 'terminal_eval.py'
+    ev_sha = hashlib.sha256(ev_path.read_bytes()).hexdigest()
+    if f.get('evaluator_sha256') != ev_sha:
+        raise PermissionError(
+            f'evaluator sha mismatch: freeze pins '
+            f'{f.get("evaluator_sha256", "?")[:12]}... current '
+            f'{ev_sha[:12]}... — scoring instrument drifted')
     return f
 
 
@@ -326,9 +333,9 @@ def execute(args):
     creds = load_env_creds()
     doc = load_docs()[DOC_SLOT]
     d2_closure, c_full, preserved = closures()
+    repeats = int(freeze.get('repeats', 1))
 
-    # PLAN-LEVEL HARD-BUDGET ASSERTION (before ANY call):
-    # sum of per-call worst costs over the frozen 18-call sequence.
+    # PLAN-LEVEL HARD-BUDGET ASSERTION (before ANY call, per repeat)
     specs, bounds = plan_call_specs(doc['text'], doc['doc_id'])
     plan_worst = plan_worst_total(specs, billing=BILLING)
     if plan_worst > CAP_CNY + 1e-12:
@@ -336,127 +343,218 @@ def execute(args):
             f'plan worst-case total ¥{plan_worst:.4f} > cap '
             f'¥{CAP_CNY} — refusing to start (bounds {bounds})')
     print(f'plan worst-case total: ¥{plan_worst:.4f} <= cap '
-          f'¥{CAP_CNY} (bounds {bounds})', flush=True)
+          f'¥{CAP_CNY} x {repeats} repeats '
+          f'(bounds {bounds})', flush=True)
 
-    guard = BudgetGuard(PLANNED_CALLS, CAP_CNY, mode='adaptive',
-                        wall_seconds=WALL_S, billing=BILLING)
-    run_dir = HERE / 'fe_screening_runs' / time.strftime(
-        'r2fix_%Y%m%d_%H%M%S')
-    run_dir.mkdir(parents=True)
-    results = []
+    base_dir = HERE / 'fe_screening_runs' / time.strftime(
+        'r2fixv4_%Y%m%d_%H%M%S')
+    base_dir.mkdir(parents=True)
+    t_start = time.monotonic()
+    all_reps = []
     from copy import deepcopy
+    import statistics as _st
 
-    def bound_for(node):
-        if node == ROOT_NODE:
-            return bounds['root']
-        if node in SINKS:
-            return bounds['sink']
-        return bounds['section']
+    for rep in range(1, repeats + 1):
+        if time.monotonic() - t_start > 5400.0:
+            raise RuntimeError('global wall cap 5400s')
+        run_dir = base_dir / f'rep{rep}'
+        run_dir.mkdir(parents=True)
+        print(f'\n===== repeat {rep}/{repeats} =====', flush=True)
+        guard = BudgetGuard(PLANNED_CALLS, CAP_CNY, mode='adaptive',
+                            wall_seconds=WALL_S, billing=BILLING)
+        results = []
 
-    def call_checked(dag, node, replace_garbage=False):
-        role = ROLE[node]
-        cap_out = OUT_CAP[role]
-        prompt = dag.build_prompt(node)
-        if len(prompt) > bound_for(node):
-            raise RuntimeError(
-                f'construction bound violated: {node} prompt '
-                f'{len(prompt)} > bound {bound_for(node)} — fail-stop')
-        stop = guard.may_start(prompt_chars=len(prompt),
-                               max_out_tokens=cap_out)
-        if stop:
-            raise RuntimeError(f'budget stop: {stop}')
-        o = call_ds(prompt, creds, max_out_tokens=cap_out)
-        if replace_garbage:
-            o = dict(o, answer=GARBAGE, finish_reason='stop')
-        dag.outputs[node] = o
-        guard.record(o['cash_cny'])
-        if guard.anomaly:
-            raise RuntimeError(f'guard: {guard.anomaly}')
-        print(f'  {node} [{role}]: {o["latency_s"]}s len={len(o["answer"])}'
-              f' finish={o["finish_reason"]} '
-              f'think={o.get("has_thinking_block")} '
-              f'{"<-GARBAGE" if replace_garbage else ""}', flush=True)
-        return o
+        def bound_for(node):
+            if node == ROOT_NODE:
+                return bounds['root']
+            if node in SINKS:
+                return bounds['sink']
+            return bounds['section']
 
-    try:
-        chain = HeteroDAG(doc['text'], doc['doc_id'])
-        clk = tok = 0.0
-        for node in chain.order:
-            o = call_checked(chain, node, replace_garbage=(node == FAULT))
-            clk += o['latency_s']
-            tok += o['tokens_in'] + o['tokens_out']
-        shared, sh_clk, sh_tok = deepcopy(chain.outputs), clk, tok
-        (run_dir / 'shared_outputs.json').write_text(json.dumps(
-            {n: dict(answer=o['answer'][:2000], role=ROLE[n])
-             for n, o in shared.items()}, indent=1, ensure_ascii=False))
-        print(f'Shared: {sh_clk:.1f}s, ¥{guard.spent:.4f}')
+        def call_checked(dag, node, replace_garbage=False):
+            role = ROLE[node]
+            cap_out = OUT_CAP[role]
+            prompt = dag.build_prompt(node)
+            if len(prompt) > bound_for(node):
+                raise RuntimeError(
+                    f'construction bound violated: {node} prompt '
+                    f'{len(prompt)} > bound {bound_for(node)} — fail-stop')
+            stop = guard.may_start(prompt_chars=len(prompt),
+                                   max_out_tokens=cap_out)
+            if stop:
+                raise RuntimeError(f'budget stop: {stop}')
+            o = call_ds(prompt, creds, max_out_tokens=cap_out)
+            if replace_garbage:
+                o = dict(o, answer=GARBAGE, finish_reason='stop')
+            dag.outputs[node] = o
+            guard.record(o['cash_cny'])
+            if guard.anomaly:
+                raise RuntimeError(f'guard: {guard.anomaly}')
+            print(f'  {node} [{role}]: {o["latency_s"]}s '
+                  f'len={len(o["answer"])} '
+                  f'finish={o["finish_reason"]} '
+                  f'think={o.get("has_thinking_block")} '
+                  f'{"<-GARBAGE" if replace_garbage else ""}', flush=True)
+            return o
 
-        def arm(label, closure):
-            ac = HeteroDAG(doc['text'], doc['doc_id'])
-            ac.outputs = deepcopy(shared)
-            r_clk, r_tok = sh_clk, sh_tok
-            for rn in sorted(n for n in closure if n == FAULT):
-                o = call_checked(ac, rn)
-                r_clk += o['latency_s']
-                r_tok += o['tokens_in'] + o['tokens_out']
-            for dn in ORDER:
-                if dn in closure and dn != FAULT:
-                    o = call_checked(ac, dn)
-                    r_clk += o['latency_s']
-                    r_tok += o['tokens_in'] + o['tokens_out']
-            full, by_cat = eval_by_category(ac.outputs, valid_keys)
-            eu = utility(full['terminal_q'], r_tok, r_clk)
-            pres = {n: (ac.outputs[n]['answer'] == shared[n]['answer'])
-                    for n in preserved}
-            results.append(dict(
-                arm=label, calls=len(closure), t_q=full['terminal_q'],
-                hits=full['terminal_hits'], n_ref=full['n_ref'],
-                p_q=full['pipeline_q'], by_category=by_cat,
-                tokens=int(r_tok), latency=round(r_clk, 1),
-                met=r_clk <= D, eU=round(eu, 4),
-                preserved_byte_identical=pres,
-                lost_in_synthesis=full['lost_in_synthesis']))
-            (run_dir / f'{label}_outputs.json').write_text(json.dumps(
-                {n: dict(answer=o['answer'][:2000], role=ROLE[n],
+        try:
+            chain = HeteroDAG(doc['text'], doc['doc_id'])
+            clk = tok = 0.0
+            for node in chain.order:
+                o = call_checked(chain, node,
+                                 replace_garbage=(node == FAULT))
+                clk += o['latency_s']
+                tok += o['tokens_in'] + o['tokens_out']
+            shared, sh_clk, sh_tok = deepcopy(chain.outputs), clk, tok
+            (run_dir / 'shared_outputs.json').write_text(json.dumps(
+                {n: dict(answer=o['answer'], role=ROLE[n],
                          finish=o.get('finish_reason'),
                          thinking=o.get('has_thinking_block'))
-                 for n, o in ac.outputs.items()}, indent=1,
+                 for n, o in shared.items()}, indent=1,
                 ensure_ascii=False))
-            print(f'{label}: t_q={full["terminal_q"]:.3f} '
-                  f'({full["terminal_hits"]}/{full["n_ref"]}) '
-                  f'cats={by_cat} eU={eu:+.4f}', flush=True)
+            print(f'Shared: {sh_clk:.1f}s, ¥{guard.spent:.4f}')
 
-        # D0: accept garbage, zero calls
-        full0, cat0 = eval_by_category(shared, valid_keys)
-        results.append(dict(
-            arm='D0', calls=0, t_q=full0['terminal_q'],
-            hits=full0['terminal_hits'], n_ref=full0['n_ref'],
-            p_q=full0['pipeline_q'], by_category=cat0, tokens=int(sh_tok),
-            latency=round(sh_clk, 1), met=sh_clk <= D,
-            eU=round(utility(full0['terminal_q'], sh_tok, sh_clk), 4),
-            preserved_byte_identical={}, 
-            lost_in_synthesis=full0['lost_in_synthesis']))
-        print(f'D0: t_q={full0["terminal_q"]:.3f} cats={cat0}', flush=True)
+            def arm(label, closure):
+                ac = HeteroDAG(doc['text'], doc['doc_id'])
+                ac.outputs = deepcopy(shared)
+                r_clk, r_tok = sh_clk, sh_tok
+                for rn in sorted(n for n in closure if n == FAULT):
+                    o = call_checked(ac, rn)
+                    r_clk += o['latency_s']
+                    r_tok += o['tokens_in'] + o['tokens_out']
+                for dn in ORDER:
+                    if dn in closure and dn != FAULT:
+                        o = call_checked(ac, dn)
+                        r_clk += o['latency_s']
+                        r_tok += o['tokens_in'] + o['tokens_out']
+                full, by_cat = eval_by_category(ac.outputs, valid_keys)
+                eu = utility(full['terminal_q'], r_tok, r_clk)
+                pres = {n: (ac.outputs[n]['answer']
+                            == shared[n]['answer'])
+                        for n in preserved}
+                results.append(dict(
+                    arm=label, calls=len(closure),
+                    t_q=full['terminal_q'], hits=full['terminal_hits'],
+                    n_ref=full['n_ref'], p_q=full['pipeline_q'],
+                    by_category=by_cat, tokens=int(r_tok),
+                    latency=round(r_clk, 1), met=r_clk <= D,
+                    eU=round(eu, 4),
+                    preserved_byte_identical=pres,
+                    lost_in_synthesis=full['lost_in_synthesis']))
+                (run_dir / f'{label}_outputs.json').write_text(
+                    json.dumps(
+                        {n: dict(answer=o['answer'], role=ROLE[n],
+                                 finish=o.get('finish_reason'),
+                                 thinking=o.get('has_thinking_block'))
+                         for n, o in ac.outputs.items()}, indent=1,
+                        ensure_ascii=False))
+                print(f'{label}: t_q={full["terminal_q"]:.3f} '
+                      f'({full["terminal_hits"]}/{full["n_ref"]}) '
+                      f'cats={by_cat} eU={eu:+.4f}', flush=True)
 
-        arm('D2', d2_closure)
-        arm('C', c_full)
+            full0, cat0 = eval_by_category(shared, valid_keys)
+            results.append(dict(
+                arm='D0', calls=0, t_q=full0['terminal_q'],
+                hits=full0['terminal_hits'], n_ref=full0['n_ref'],
+                p_q=full0['pipeline_q'], by_category=cat0,
+                tokens=int(sh_tok), latency=round(sh_clk, 1),
+                met=sh_clk <= D,
+                eU=round(utility(full0['terminal_q'], sh_tok, sh_clk), 4),
+                preserved_byte_identical={},
+                lost_in_synthesis=full0['lost_in_synthesis']))
+            print(f'D0: t_q={full0["terminal_q"]:.3f} cats={cat0}',
+                  flush=True)
 
-        (run_dir / 'R2FIX_RESULTS.json').write_text(json.dumps(dict(
-            status='COMPLETE', results=results,
-            fault=FAULT, d2_closure=sorted(d2_closure),
-            c_full=sorted(c_full),
-            preserved_siblings=sorted(preserved),
-            doc=DOC_SLOT, budget=guard.snapshot(),
-            plan_worst_cny=plan_worst, char_bounds=bounds,
-            out_caps=OUT_CAP), indent=1))
-        print(f'\nCOMPLETE: {guard.calls} calls, ¥{guard.spent:.4f}')
-    except BaseException as exc:
-        (run_dir / 'R2FIX_INCOMPLETE.json').write_text(json.dumps(dict(
-            status='INCOMPLETE', reason=repr(exc), results=results,
-            budget=guard.snapshot(),
-            traceback=traceback.format_exc()), indent=1))
-        print(f'INCOMPLETE: {exc}')
-    print(f'Run: {run_dir}')
+            arm('D2', d2_closure)
+            arm('C', c_full)
+
+            (run_dir / 'REP_RESULTS.json').write_text(json.dumps(dict(
+                status='COMPLETE', rep=rep, results=results,
+                fault=FAULT, d2_closure=sorted(d2_closure),
+                c_full=sorted(c_full),
+                preserved_siblings=sorted(preserved),
+                doc=DOC_SLOT, budget=guard.snapshot(),
+                plan_worst_cny=plan_worst, char_bounds=bounds,
+                out_caps=OUT_CAP), indent=1))
+            all_reps.append(dict(rep=rep, results=results,
+                                 budget=guard.snapshot()))
+            print(f'rep{rep} COMPLETE: {guard.calls} calls, '
+                  f'¥{guard.spent:.4f}', flush=True)
+        except BaseException as exc:
+            (run_dir / 'REP_INCOMPLETE.json').write_text(json.dumps(dict(
+                status='INCOMPLETE', rep=rep, reason=repr(exc),
+                results=results, budget=guard.snapshot(),
+                traceback=traceback.format_exc()), indent=1))
+            (base_dir / 'AGGREGATE.json').write_text(json.dumps(dict(
+                status='INCOMPLETE_AT_REP', rep=rep, reason=repr(exc),
+                completed_reps=[r['rep'] for r in all_reps]),
+                indent=1))
+            print(f'INCOMPLETE at rep{rep}: {exc}')
+            print(f'Run: {base_dir}')
+            return
+
+    # ---- pre-registered aggregate analysis ----
+    def arm_rows(arm):
+        return [next(r for r in rep['results'] if r['arm'] == arm)
+                for rep in all_reps]
+
+    d0s, d2s, cs = arm_rows('D0'), arm_rows('D2'), arm_rows('C')
+
+    def series(rows, k):
+        return [r[k] for r in rows]
+
+    def stats(v):
+        return dict(mean=round(_st.mean(v), 4),
+                    sd=round(_st.stdev(v), 4) if len(v) > 1 else 0.0,
+                    min=min(v), max=max(v))
+
+    paired = dict(
+        d_tq_recovery=[a['t_q'] - b['t_q'] for a, b in zip(d2s, d0s)],
+        d_eU_recovery=[a['eU'] - b['eU'] for a, b in zip(d2s, d0s)],
+        d_tq_targeted=[a['t_q'] - c['t_q'] for a, c in zip(d2s, cs)],
+        d_eU_targeted=[a['eU'] - c['eU'] for a, c in zip(d2s, cs)])
+    n = len(all_reps)
+    agg = dict(
+        status='COMPLETE', repeats=n, per_arm=dict(
+            D0=dict(t_q=stats(series(d0s, 't_q')),
+                    eU=stats(series(d0s, 'eU'))),
+            D2=dict(t_q=stats(series(d2s, 't_q')),
+                    eU=stats(series(d2s, 'eU'))),
+            C=dict(t_q=stats(series(cs, 't_q')),
+                   eU=stats(series(cs, 'eU')))),
+        paired=paired,
+        decision_rules=freeze['decision_rules'],
+        verdicts=dict(
+            recovery_supported=(
+                _st.mean(paired['d_tq_recovery']) > 0
+                and sum(x > 0 for x in paired['d_tq_recovery'])
+                >= (n // 2 + 1)),
+            recovery_utility=(
+                _st.mean(paired['d_eU_recovery']) > 0),
+            targeted_beats_full_utility=(
+                _st.mean(paired['d_eU_targeted']) > 0
+                and sum(x > 0 for x in paired['d_eU_targeted'])
+                >= (n // 2 + 1)),
+            targeted_quality_noninferior=(
+                _st.mean(paired['d_tq_targeted']) >= 0)),
+        c6_all=all(all(r['preserved_byte_identical'].get(s)
+                       for s in preserved) for r in d2s))
+    # C7 (branch outputs pairwise distinct) is verified post-hoc from
+    # each repeat's saved shared_outputs.json in the analysis step
+    (base_dir / 'AGGREGATE.json').write_text(json.dumps(
+        agg, indent=1, ensure_ascii=False))
+    print('\n' + '=' * 60)
+    print(f'AGGREGATE over {n} repeats:')
+    for a in ('D0', 'D2', 'C'):
+        print(f'  {a}: t_q {agg["per_arm"][a]["t_q"]} '
+              f'eU {agg["per_arm"][a]["eU"]}')
+    for k, v in paired.items():
+        print(f'  {k}: mean {_st.mean(v):+.4f} '
+              f'[{", ".join(f"{x:+.3f}" for x in v)}]')
+    print(f'verdicts: {json.dumps(agg["verdicts"], ensure_ascii=False)}')
+    print(f'\nCOMPLETE: {n} repeats x 18 calls, '
+          f'¥{sum(r["budget"]["spent_cny"] for r in all_reps):.4f}')
+    print(f'Run: {base_dir}')
 
 
 def main():

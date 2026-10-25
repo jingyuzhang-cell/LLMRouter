@@ -1,6 +1,6 @@
 {
- "version": "R2FIX_SCORING_FREEZE_v3",
- "frozen_at": "2026-10-25T11:21:56",
+ "version": "R2FIX_SCORING_FREEZE_v4",
+ "frozen_at": "2026-10-25T11:45:26",
  "doc_slot": "ydt#D3_E03-yuandao_2026-08-29",
  "fault": "b0",
  "rule": "doc_atoms mechanical slices, identical rule to R1/R2 (dates[:4], amounts[:3], penalties[:3]); entities[:3] new namespace e:; symmetric comma-insensitive amount match; NO manual cherry-picking",
@@ -73,6 +73,17 @@
  },
  "model": "GLM-5.3-Flash via zhipu anthropic-compatible endpoint, temp=0, thinking:disabled REQUESTED (not guaranteed; blocks detected+recorded); uniform max_tokens 3072",
  "track_note": "v3 track switch approved by operator 2026-10-25 after budget audit proved ¥0.30 uncertifiable on per-token track; screening validated model capability (conditional pass); screening results are NOT recovery-algorithm evidence",
+ "repeats": 5,
+ "repeat_rationale": "GLM temp-0 is NONDETERMINISTIC (thinking blocks fire randomly; v3 run showed sibling re-execution is a re-roll, C-arm advantage could be resample variance) — 5 repeats give paired-difference variance decomposition",
+ "evaluator_sha256": "473b7c661f80ef79998d9128a4a85eabcc2b345a289977d7bae77bbaf66e7941",
+ "evaluator_note": "v4 fixes the date-key format defect (年月日 / unpadded-7-digit keys previously never matched); keys themselves unchanged from v3",
+ "decision_rules": {
+  "recovery_supported": "mean paired d(t_q, D2-D0) > 0 AND >= ceil(n/2) repeats positive",
+  "recovery_utility": "mean paired d(eU, D2-D0) > 0",
+  "targeted_beats_full_utility": "mean paired d(eU, D2-C) > 0 AND >= ceil(n/2) repeats positive",
+  "targeted_quality_noninferior": "mean paired d(t_q, D2-C) >= 0",
+  "all_verdicts_reported": "descriptive only, n=5, no p-values; negative verdicts preserved as-is"
+ },
  "budget_bound_validation": {
   "source": "fe_recovery_20261013_213713 FE_LEDGER.jsonl, 5 delivered deepseek calls, prompts reconstructed exactly from FACT_EXTRACTION_SAMPLES_V2",
   "max_input_tok_per_char": 0.6259,

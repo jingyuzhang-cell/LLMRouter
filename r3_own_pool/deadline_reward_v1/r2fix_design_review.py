@@ -143,7 +143,7 @@ def main():
           all(len(v) >= 2 for v in cats.values()),
           json.dumps({k: v for k, v in cats.items()}, ensure_ascii=False))
     freeze = dict(
-        version='R2FIX_SCORING_FREEZE_v3',
+        version='R2FIX_SCORING_FREEZE_v4',
         frozen_at=time_str(), doc_slot=R.DOC_SLOT, fault=R.FAULT,
         rule=('doc_atoms mechanical slices, identical rule to R1/R2 '
               '(dates[:4], amounts[:3], penalties[:3]); entities[:3] '
@@ -167,6 +167,28 @@ def main():
                     'per-token track; screening validated model '
                     'capability (conditional pass); screening results '
                     'are NOT recovery-algorithm evidence'),
+        repeats=5,
+        repeat_rationale=('GLM temp-0 is NONDETERMINISTIC (thinking '
+                          'blocks fire randomly; v3 run showed sibling '
+                          're-execution is a re-roll, C-arm advantage '
+                          'could be resample variance) — 5 repeats give '
+                          'paired-difference variance decomposition'),
+        evaluator_sha256=hashlib.sha256(
+            (ROOT / 'deadline_reward_v1' / 'terminal_eval.py')
+            .read_bytes()).hexdigest(),
+        evaluator_note=('v4 fixes the date-key format defect (年月日 / '
+                        'unpadded-7-digit keys previously never '
+                        'matched); keys themselves unchanged from v3'),
+        decision_rules=dict(
+            recovery_supported='mean paired d(t_q, D2-D0) > 0 AND '
+                               '>= ceil(n/2) repeats positive',
+            recovery_utility='mean paired d(eU, D2-D0) > 0',
+            targeted_beats_full_utility='mean paired d(eU, D2-C) > 0 '
+                                       'AND >= ceil(n/2) repeats '
+                                       'positive',
+            targeted_quality_noninferior='mean paired d(t_q, D2-C) >= 0',
+            all_verdicts_reported='descriptive only, n=5, no p-values; '
+                                  'negative verdicts preserved as-is'),
         budget_bound_validation=dict(
             source='fe_recovery_20261013_213713 FE_LEDGER.jsonl, 5 '
                    'delivered deepseek calls, prompts reconstructed '
@@ -306,6 +328,17 @@ def main():
           'recorded per call, criteria never loosened',
           R.ROOT_OUT_CAP == 3072 and R.SECTION_OUT_CAP == 3072
           and R.SINK_OUT_CAP == 3072)
+
+    # ---- R13 v4 repeats + evaluator binding --------------------------------
+    ev_sha = hashlib.sha256(
+        (ROOT / 'deadline_reward_v1' / 'terminal_eval.py')
+        .read_bytes()).hexdigest()
+    check('R13 (v4) repeats=5 pinned; evaluator sha bound to freeze '
+          '(drift = gate refusal); 年月日 date keys now scorable '
+          '(fixed evaluator, 14/14 regression)',
+          json.loads(FREEZE_PATH.read_text()).get('repeats') == 5
+          and json.loads(FREEZE_PATH.read_text())['evaluator_sha256']
+          == ev_sha)
 
     # ---- R9 arm parity ----------------------------------------------------
     check('R9 D2/C share source/fault/scorer/utility (module singletons)',
