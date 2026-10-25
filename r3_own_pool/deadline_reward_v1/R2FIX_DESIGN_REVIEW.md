@@ -5,8 +5,10 @@
 ¥0.30 数学上界核验后方可放行）
 **审查脚本**: `r2fix_design_review.py`（零调用，可重复执行）
 **结果**: **24/24 通过**（v1 为 20/20；新增 R10–R12 硬预算核验）
-**冻结版本**: `R2FIX_SCORING_FREEZE_v2`
-**冻结 sha256**: `869480a9b9e60502bf32c3d78d25e60bb6d9ab9039e1b20ebd57c9290c178db1`
+**冻结版本**: `R2FIX_SCORING_FREEZE_v2_1`（doc_id 探针修复，root 界 3211）
+**冻结 sha256**: `172a8bda697d203321ce148623534295cffa7ec74df4ae3092bef606b023dd73`
+
+> **2026-10-25 终审修正**：硬预算最终裁决见 `R2FIX_BUDGET_AUDIT.md`——¥0.2825 是**经验界**（C1）下的计划最坏，纯数学（字节级）下为 ¥0.845 不可证明；处置路径待操作者裁决。
 
 ## 〇、硬预算数学上界核验（操作者 2026-10-25 唯一待确认门槛）
 
@@ -111,7 +113,7 @@
 
 ```
 R2FIX_GO=1 python3 -m deadline_reward_v1.r2fix_runner \
-  --approved-freeze-sha256 869480a9b9e60502bf32c3d78d25e60bb6d9ab9039e1b20ebd57c9290c178db1
+  --approved-freeze-sha256 172a8bda697d203321ce148623534295cffa7ec74df4ae3092bef606b023dd73
 ```
 
 门禁：`R2FIX_GO=1` + 冻结哈希精确匹配（v2）+ git 树干净 + 计划级

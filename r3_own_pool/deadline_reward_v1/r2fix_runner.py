@@ -165,12 +165,15 @@ class HeteroDAG:
         return {d for d in seen if d in self.outputs and d != node}
 
 
-def construction_bounds(doc_text: str) -> dict:
+def construction_bounds(doc_text: str, doc_id: str) -> dict:
     """Provable prompt-char bounds by construction (zero-call): every
     upstream answer enters the prompt truncated to [:3000]; the doc
     enters only at root truncated to [:3000]; boilerplate is fixed.
-    Adversarial probe: EVERY upstream answered exactly 3000 chars."""
-    dag = HeteroDAG(doc_text, 'BOUND_PROBE')
+    Adversarial probe: EVERY upstream answered exactly 3000 chars.
+    Must receive the REAL doc_id (the root prompt embeds it; an earlier
+    placeholder probe under-bound root by the id-length difference and
+    was caught by the pre-dispatch bound check, 2026-10-25)."""
+    dag = HeteroDAG(doc_text, doc_id)
     fat = 'X' * 3000
     for n in ORDER:
         dag.outputs[n] = dict(answer=fat)
@@ -182,9 +185,9 @@ def construction_bounds(doc_text: str) -> dict:
     return sizes
 
 
-def plan_call_specs(doc_text: str):
+def plan_call_specs(doc_text: str, doc_id: str):
     """(char_bound, out_cap) per planned call, in dispatch order."""
-    b = construction_bounds(doc_text)
+    b = construction_bounds(doc_text, doc_id)
     out = []
     for role in PLAN_ROLES:
         if role == 'extraction':
@@ -285,7 +288,7 @@ def gates(args):
     if args.approved_freeze_sha256 != hashlib.sha256(raw).hexdigest():
         raise PermissionError('scoring freeze hash mismatch')
     f = json.loads(raw)
-    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v2'
+    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v2_1'
             or f['doc_slot'] != DOC_SLOT or f['fault'] != FAULT):
         raise PermissionError('freeze design mismatch')
     return f

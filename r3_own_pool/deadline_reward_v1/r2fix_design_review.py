@@ -54,7 +54,7 @@ def check(name, ok, detail=''):
 def main():
     # shared zero-call inputs
     doc = load_docs()[R.DOC_SLOT]
-    specs, bounds = R.plan_call_specs(doc['text'])
+    specs, bounds = R.plan_call_specs(doc['text'], doc['doc_id'])
     plan_worst = plan_worst_total(specs)
 
     # tok/char ratio evidence from REAL delivered calls (zero-call)
@@ -137,7 +137,7 @@ def main():
           all(len(v) >= 2 for v in cats.values()),
           json.dumps({k: v for k, v in cats.items()}, ensure_ascii=False))
     freeze = dict(
-        version='R2FIX_SCORING_FREEZE_v2',
+        version='R2FIX_SCORING_FREEZE_v2_1',
         frozen_at=time_str(), doc_slot=R.DOC_SLOT, fault=R.FAULT,
         rule=('doc_atoms mechanical slices, identical rule to R1/R2 '
               '(dates[:4], amounts[:3], penalties[:3]); entities[:3] '
