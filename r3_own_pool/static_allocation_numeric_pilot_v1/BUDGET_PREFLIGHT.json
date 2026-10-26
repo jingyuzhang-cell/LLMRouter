@@ -1,0 +1,277 @@
+{
+  "status": "RESERVATION_LOGIC_TESTED_TOKEN_CERTIFICATION_HOLD",
+  "date_Asia_Shanghai": "2026-10-25",
+  "rates": {
+    "deepseek-flash": {
+      "currency": "USD",
+      "input": "0.3",
+      "output": "1.2",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "basis": "peak cache miss"
+    },
+    "qwen-plus": {
+      "currency": "CNY",
+      "input": "0.8",
+      "output": "2",
+      "source": "https://help.aliyun.com/zh/model-studio/model-pricing",
+      "basis": "Beijing nonthinking input<=128000"
+    },
+    "glm-5.3": {
+      "currency": "CNY",
+      "input": "8",
+      "output": "28",
+      "source": "https://docs.bigmodel.cn/cn/guide/start/pricing",
+      "basis": "ordinary API list price, no assumed subscription entitlement"
+    }
+  },
+  "retrieval": "Official public pages accessed without credentials; GLM pricing page read via HTTPS and HTML table extraction.",
+  "cash_caps_proposed_not_authorized": {
+    "CNY": "4.00",
+    "USD": "0.20"
+  },
+  "conditional_total": {
+    "CNY": "3.4504704",
+    "USD": "0.1671168"
+  },
+  "conditional_by_model": {
+    "qwen-plus": "0.4358144",
+    "glm-5.3": "3.014656",
+    "deepseek-flash": "0.1671168"
+  },
+  "qualification": "Only if billed input<=65536 on each request, output cap includes all billable output, and listed rates apply; not an unconditional mathematical cash bound.",
+  "model_input_tokens_certified": false,
+  "deepseek_demo_count": 4715,
+  "demo_to_cloud_equivalence_proven": false,
+  "qwen_tokenizer": "Current alias + server template equivalence unavailable; historical generic SDK table is not sufficient.",
+  "glm_tokenizer": "Matching cloud tokenizer + complete template not certified.",
+  "full_batch_output_cap": 49152,
+  "FX_proposal": {
+    "USD_to_CNY": "6.7220",
+    "origin": "Reuse original 2026-10-19 price snapshot research normalization from 2026-10-16; not current spot or card settlement.",
+    "status": "PROPOSED_NOT_FINAL",
+    "sensitivity_required": true
+  },
+  "wall_and_deadline": {
+    "request_timeout_s_proposed": 180,
+    "arm_deadline_s_proposed": 240,
+    "batch_wall_s_proposed": 3600,
+    "hard_remote_compute_cancellation_certified": false
+  },
+  "guard_verification": {
+    "tests": 12,
+    "passed": 12,
+    "exit_code": 0,
+    "log": "RESERVATION_TEST.log",
+    "logical_guarantee": "Bounded reservations including inflight calls, conditional on certified per-request costs. No end-to-end model dispatch tested."
+  },
+  "dispatch_enabled": false,
+  "paid_authorization": false,
+  "model_calls": 0,
+  "remaining": [
+    "No certified complete billable input bound for all three endpoints.",
+    "Account applicability, cash envelope, deadline and FX proposal need final approval; subscriptions not assumed free.",
+    "Dispatch runner, provider response accounting and timeout binding are not implemented; do not reuse old execution scripts."
+  ],
+  "per_request": [
+    {
+      "request_id": "R1_S_QWEN_extract_purchase",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0544768",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_S_QWEN_extract_payables",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0544768",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_S_GLM_extract_purchase",
+      "model": "glm-5.3",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 8192,
+      "conditional_cost": "0.753664",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_S_GLM_extract_payables",
+      "model": "glm-5.3",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 8192,
+      "conditional_cost": "0.753664",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_S_DS_extract_purchase",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0208896",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_S_DS_extract_payables",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0208896",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_H_DQ_extract_purchase",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0208896",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_H_DQ_extract_payables",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0544768",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_H_QD_extract_purchase",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0544768",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R1_H_QD_extract_payables",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0208896",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_H_QD_extract_purchase",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0544768",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_H_QD_extract_payables",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0208896",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_H_DQ_extract_purchase",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0208896",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_H_DQ_extract_payables",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0544768",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_S_DS_extract_purchase",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0208896",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_S_DS_extract_payables",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0208896",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_S_GLM_extract_purchase",
+      "model": "glm-5.3",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 8192,
+      "conditional_cost": "0.753664",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_S_GLM_extract_payables",
+      "model": "glm-5.3",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 8192,
+      "conditional_cost": "0.753664",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_S_QWEN_extract_purchase",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0544768",
+      "hard_cash_upper": null
+    },
+    {
+      "request_id": "R2_S_QWEN_extract_payables",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "input_reservation_assumption": 65536,
+      "input_bound_certified": false,
+      "output_cap": 1024,
+      "conditional_cost": "0.0544768",
+      "hard_cash_upper": null
+    }
+  ]
+}

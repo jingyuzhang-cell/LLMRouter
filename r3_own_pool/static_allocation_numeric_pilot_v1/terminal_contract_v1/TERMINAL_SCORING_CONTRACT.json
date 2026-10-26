@@ -1,0 +1,609 @@
+{
+  "id": "STATIC_ALLOCATION_NUMERIC_TERMINAL_CONTRACT_V1",
+  "scope": "Six fixed numerical propositions only; not complete opinion analysis.",
+  "final_question": "仅回答下列明确主体、期间及字段条件下的数值。按请求角色从给定原文定位/计算，不把诉请当判赔、不把余额当发生额。仅输出items，每项为item_id、fields.amount.number、fields.amount.unit和evidence_ids；不知道则number填null。不要生成其他语义字段。",
+  "task_id": "ofg_conditional_numeric_AB_v1",
+  "development_exposure": true,
+  "independent_confirmation_set": false,
+  "information_cutoff": "2026-10-14T11:26:10.300643+00:00",
+  "cutoff_policy": "Only immutable task evidence catalogue; no retrieval or later evidence. Actual source publication-time adjudication is not separately certified by this contract.",
+  "necessary_deliverables": [
+    {
+      "slot_id": "purchase_flow_wanyuan_2023",
+      "query": "采购产品和服务年度发生额",
+      "entity": "002456",
+      "counterparty": "新思考",
+      "period": "2023",
+      "requested_unit": "万元"
+    },
+    {
+      "slot_id": "accounts_payable_year_end_wanyuan_2023",
+      "query": "年末应付账款余额",
+      "entity": "002456",
+      "counterparty": "新思考",
+      "period": "2023",
+      "requested_unit": "万元"
+    },
+    {
+      "slot_id": "purchase_flow_wanyuan_2024",
+      "query": "采购产品和服务年度发生额",
+      "entity": "002456",
+      "counterparty": "新思考",
+      "period": "2024",
+      "requested_unit": "万元"
+    },
+    {
+      "slot_id": "accounts_payable_year_end_wanyuan_2024",
+      "query": "年末应付账款余额",
+      "entity": "002456",
+      "counterparty": "新思考",
+      "period": "2024",
+      "requested_unit": "万元"
+    },
+    {
+      "slot_id": "purchase_flow_wanyuan_2025",
+      "query": "采购产品和服务年度发生额",
+      "entity": "002456",
+      "counterparty": "新思考",
+      "period": "2025",
+      "requested_unit": "万元"
+    },
+    {
+      "slot_id": "accounts_payable_year_end_wanyuan_2025",
+      "query": "年末应付账款余额",
+      "entity": "002456",
+      "counterparty": "新思考",
+      "period": "2025",
+      "requested_unit": "万元"
+    }
+  ],
+  "assigned_slots": {
+    "extract_purchase": [
+      "purchase_flow_wanyuan_2023",
+      "purchase_flow_wanyuan_2024",
+      "purchase_flow_wanyuan_2025"
+    ],
+    "extract_payables": [
+      "accounts_payable_year_end_wanyuan_2023",
+      "accounts_payable_year_end_wanyuan_2024",
+      "accounts_payable_year_end_wanyuan_2025"
+    ]
+  },
+  "reference": {
+    "verified": true,
+    "verification_method": "deterministic source literal/operator recomputation; not human adjudication of qualitative claims",
+    "complete": true,
+    "complete_for": "numeric slots declared by this bounded scope only",
+    "items": [
+      {
+        "item_id": "purchase_flow_wanyuan_2023",
+        "fields": {
+          "amount": {
+            "kind": "number",
+            "expected": {
+              "number": "32400.54",
+              "unit": "万元"
+            }
+          }
+        },
+        "proofs": [
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 1030,
+            "end": 1106,
+            "quote": "向新思考采购产品和服务            32,400.54             43,185.44             59,454.31",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 869,
+            "end": 955,
+            "quote": "2023 年度交易金   2024 年度交易金额   2025 年度交易金额    交易类型\n              额（万元）     （万元）      （万元）\n",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 803,
+            "end": 815,
+            "quote": "公司与新思考关联交易情况",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 1,
+            "start": 49,
+            "end": 60,
+            "quote": "欧菲光集团股份有限公司",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          }
+        ]
+      },
+      {
+        "item_id": "accounts_payable_year_end_wanyuan_2023",
+        "fields": {
+          "amount": {
+            "kind": "number",
+            "expected": {
+              "number": "9222.97",
+              "unit": "万元"
+            }
+          }
+        },
+        "proofs": [
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 4,
+            "start": 0,
+            "end": 85,
+            "quote": "应付账款                            9,222.97               5,048.91             13,114.01",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 1384,
+            "end": 1471,
+            "quote": "2023 年末余额（万     2024 年末余额       2025 年末余额   往来项目\n              元）       （万元）      （万元）\n",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 803,
+            "end": 815,
+            "quote": "公司与新思考关联交易情况",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 1,
+            "start": 49,
+            "end": 60,
+            "quote": "欧菲光集团股份有限公司",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          }
+        ]
+      },
+      {
+        "item_id": "purchase_flow_wanyuan_2024",
+        "fields": {
+          "amount": {
+            "kind": "number",
+            "expected": {
+              "number": "43185.44",
+              "unit": "万元"
+            }
+          }
+        },
+        "proofs": [
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 1030,
+            "end": 1106,
+            "quote": "向新思考采购产品和服务            32,400.54             43,185.44             59,454.31",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 869,
+            "end": 955,
+            "quote": "2023 年度交易金   2024 年度交易金额   2025 年度交易金额    交易类型\n              额（万元）     （万元）      （万元）\n",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 803,
+            "end": 815,
+            "quote": "公司与新思考关联交易情况",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 1,
+            "start": 49,
+            "end": 60,
+            "quote": "欧菲光集团股份有限公司",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          }
+        ]
+      },
+      {
+        "item_id": "accounts_payable_year_end_wanyuan_2024",
+        "fields": {
+          "amount": {
+            "kind": "number",
+            "expected": {
+              "number": "5048.91",
+              "unit": "万元"
+            }
+          }
+        },
+        "proofs": [
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 4,
+            "start": 0,
+            "end": 85,
+            "quote": "应付账款                            9,222.97               5,048.91             13,114.01",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 1384,
+            "end": 1471,
+            "quote": "2023 年末余额（万     2024 年末余额       2025 年末余额   往来项目\n              元）       （万元）      （万元）\n",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 803,
+            "end": 815,
+            "quote": "公司与新思考关联交易情况",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 1,
+            "start": 49,
+            "end": 60,
+            "quote": "欧菲光集团股份有限公司",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          }
+        ]
+      },
+      {
+        "item_id": "purchase_flow_wanyuan_2025",
+        "fields": {
+          "amount": {
+            "kind": "number",
+            "expected": {
+              "number": "59454.31",
+              "unit": "万元"
+            }
+          }
+        },
+        "proofs": [
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 1030,
+            "end": 1106,
+            "quote": "向新思考采购产品和服务            32,400.54             43,185.44             59,454.31",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 869,
+            "end": 955,
+            "quote": "2023 年度交易金   2024 年度交易金额   2025 年度交易金额    交易类型\n              额（万元）     （万元）      （万元）\n",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 803,
+            "end": 815,
+            "quote": "公司与新思考关联交易情况",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 1,
+            "start": 49,
+            "end": 60,
+            "quote": "欧菲光集团股份有限公司",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          }
+        ]
+      },
+      {
+        "item_id": "accounts_payable_year_end_wanyuan_2025",
+        "fields": {
+          "amount": {
+            "kind": "number",
+            "expected": {
+              "number": "13114.01",
+              "unit": "万元"
+            }
+          }
+        },
+        "proofs": [
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 4,
+            "start": 0,
+            "end": 85,
+            "quote": "应付账款                            9,222.97               5,048.91             13,114.01",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 1384,
+            "end": 1471,
+            "quote": "2023 年末余额（万     2024 年末余额       2025 年末余额   往来项目\n              元）       （万元）      （万元）\n",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 3,
+            "start": 803,
+            "end": 815,
+            "quote": "公司与新思考关联交易情况",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          },
+          {
+            "doc_id": "doc_a4947abf56ffa947dddf",
+            "page": 1,
+            "start": 49,
+            "end": 60,
+            "quote": "欧菲光集团股份有限公司",
+            "raw_sha256": "98c437b56d8b87e2ada7d95d467fc4c0f64a218185bff693dcbf18f1792f2f81"
+          }
+        ]
+      }
+    ],
+    "original_full_semantic_reference_approved": false
+  },
+  "reference_grade": "deterministic source literal/operator recomputation; not human adjudication of qualitative claims",
+  "human_independent_review": false,
+  "output_schema_path": "/root/r3_own_pool/ab_bounded_numeric_v1/OUTPUT_SCHEMA.json",
+  "original_scorer_path": "/root/r3_own_pool/ab_bounded_numeric_v1/score_terminal.py",
+  "content_metric": {
+    "name": "Q_numeric_conditioned",
+    "formula": "2*TP/(2*TP+FP+FN), original frozen numeric scorer; not TP/6 accuracy.",
+    "denominator": "Variable F1 denominator; the reference contains exactly six required items.",
+    "null": "Explicit abstention follows original MISSING semantics, not a guessed answer.",
+    "omission": "Absent declared slot is MISSING/FN, whereas unresolved interpretation is UNKNOWN.",
+    "unknown": "Preserve original null Q and UNSCORABLE reason; no zero imputation.",
+    "extras": "Original scorer extra/unknown policy unchanged; strict delivery rejects foreign IDs.",
+    "duplicates": "Original content deduplication unchanged; strict delivery rejects duplicate IDs."
+  },
+  "delivery_metric": {
+    "name": "legal_correct_targets_over_six",
+    "denominator": 6,
+    "formula": "Count MATCH rows from branches passing numeric-lane contract / 6.",
+    "missing_branch": "Contributes no legally delivered targets; separate content score may remain UNKNOWN.",
+    "not_same_as_content_quality": true
+  },
+  "numeric_lane_contract": [
+    "Native object schema, no parse repair.",
+    "Exact assigned item-ID set, once each.",
+    "Evidence IDs resolve within immutable catalogue; full evidence support evaluated separately.",
+    "No dependency on Gold values in delivery acceptance."
+  ],
+  "evidence_metrics": {
+    "citation_ID_validity": "Valid catalogue IDs / all cited IDs; no citations => UNKNOWN.",
+    "source_proof_coverage_proxy": "Original source proof span coverage; not full semantic citation correctness.",
+    "citation_semantic_accuracy": null,
+    "reason": "No independent full entailment adjudication beyond bounded numerical source reference."
+  },
+  "merge": "Deterministically concatenate complete raw rows in fixed branch order; never fill Gold, repair values, omit wrong rows or deduplicate.",
+  "unscorable_dimensions": [
+    "full_opinion_Q",
+    "causality",
+    "stance",
+    "risk_conclusions",
+    "full_semantic_contract_success",
+    "full_evidence_entailment_accuracy"
+  ],
+  "source_checks": [
+    {
+      "item_id": "purchase_flow_wanyuan_2023",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 1030,
+      "end": 1106,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2023",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 869,
+      "end": 955,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2023",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 803,
+      "end": 815,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2023",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 1,
+      "start": 49,
+      "end": 60,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2023",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 4,
+      "start": 0,
+      "end": 85,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2023",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 1384,
+      "end": 1471,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2023",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 803,
+      "end": 815,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2023",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 1,
+      "start": 49,
+      "end": 60,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2024",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 1030,
+      "end": 1106,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2024",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 869,
+      "end": 955,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2024",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 803,
+      "end": 815,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2024",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 1,
+      "start": 49,
+      "end": 60,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2024",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 4,
+      "start": 0,
+      "end": 85,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2024",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 1384,
+      "end": 1471,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2024",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 803,
+      "end": 815,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2024",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 1,
+      "start": 49,
+      "end": 60,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2025",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 1030,
+      "end": 1106,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2025",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 869,
+      "end": 955,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2025",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 803,
+      "end": 815,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "purchase_flow_wanyuan_2025",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 1,
+      "start": 49,
+      "end": 60,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2025",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 4,
+      "start": 0,
+      "end": 85,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2025",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 1384,
+      "end": 1471,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2025",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 3,
+      "start": 803,
+      "end": 815,
+      "literal_and_hash_identity": true
+    },
+    {
+      "item_id": "accounts_payable_year_end_wanyuan_2025",
+      "doc_id": "doc_a4947abf56ffa947dddf",
+      "page": 1,
+      "start": 49,
+      "end": 60,
+      "literal_and_hash_identity": true
+    }
+  ],
+  "source_hashes": {
+    "/root/r3_own_pool/ab_bounded_numeric_v1/TASK_PUBLIC.json": "30db930b90e83113553f761c098caaf6745316e59ad70575e6a30d8c30676335",
+    "/root/r3_own_pool/ab_bounded_numeric_v1/INITIAL_REQUEST_TEMPLATES.json": "6b6ef0521a77ac7df050265ccd1d5e0532cde9b5bac4ba3d32a65d6285a2a277",
+    "/root/r3_own_pool/ab_bounded_numeric_v1/OUTPUT_SCHEMA.json": "7556095ceab49222f163773922e3c13c89ca6bb4ad763725a9123f0354ae06f7",
+    "/root/r3_own_pool/ab_bounded_numeric_v1/score_terminal.py": "ac9f9a661616503f68e9a62ad01e41de22280a7174dd4d6e6dec18dfc9d952a7",
+    "/root/r3_own_pool/ab_numeric_recovery_frozen_v1/MODEL_POOL.json": "425800ab14c36becb695e66516dcd45349b216e10ac8f8a628431c6ab22a12a1",
+    "/root/r3_own_pool/qs_candidate_readiness_v1/score_numeric.py": "a736f373c2e4553f7c789d17b75a889f3bf7147cad8c98943375e2dc37050eb0",
+    "/root/r3_own_pool/qs_candidate_readiness_v1/public/SCOPES.json": "02879426273be0164a7e319db4f0b7bb37382efd8d17bf1f262ad5962b66e7e1",
+    "/root/r3_own_pool/qs_candidate_readiness_v1/public/CONDITIONED_NUMERIC_OUTPUT_SCHEMA.json": "3ff1d164b4076e2191b850dcedcd7a489bb02c205638e752097d76cf86121396",
+    "/root/r3_own_pool/qs_candidate_readiness_v1/eval_only/NUMERIC_REFERENCES.json": "0889a7d9df1b85f65964a60366d3537c06ee9c0a90e2306f1062931f9df9eec1",
+    "/root/r3_own_pool/dag_terminal_quality_gates_v1/p0/terminal_scorer.py": "efba124ad37d04e5988e8a095e6111664f9fe5789fa92ce08e32af3dfd8d668d",
+    "/root/r3_own_pool/qs_task_scoring_acceptance_v1/score.py": "d19a772750277533cd632fc5b17731acf8c978dd8d6b0a623cb0ae3ea7e11196"
+  },
+  "binding_sha256": "f635538379043e462fce261f48e824575cbd7565d6b21163e626a4c935ffe0bb",
+  "experiment_success_not_certified": true,
+  "paid_execution_authorized": false
+}

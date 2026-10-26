@@ -1,0 +1,129 @@
+{
+  "arm": "B",
+  "repeat": 2,
+  "evaluation": {
+    "branches": {
+      "extract_purchase": {
+        "status": "OBSERVED",
+        "schema": true,
+        "assigned_slots_exact": true,
+        "evidence_IDs_valid": true,
+        "numeric_lane_legal": true
+      },
+      "extract_payables": {
+        "status": "OBSERVED",
+        "schema": true,
+        "assigned_slots_exact": true,
+        "evidence_IDs_valid": true,
+        "numeric_lane_legal": true
+      }
+    },
+    "content_Q": 1.0,
+    "content_evaluation": {
+      "scope_id": "QSDEV_OFG_FLOW_BALANCE__NUMERIC_SCOPE_V1",
+      "status": "SCORABLE",
+      "content_details": {
+        "status": "SCORABLE",
+        "value": 1.0,
+        "TP": 6,
+        "FP": 0,
+        "FN": 0,
+        "UNKNOWN": 0,
+        "denominator": 12,
+        "duplicates_removed": 0,
+        "items": [
+          {
+            "item_id": "purchase_flow_wanyuan_2023",
+            "status": "MATCH",
+            "fields": {
+              "amount": "MATCH"
+            }
+          },
+          {
+            "item_id": "purchase_flow_wanyuan_2024",
+            "status": "MATCH",
+            "fields": {
+              "amount": "MATCH"
+            }
+          },
+          {
+            "item_id": "purchase_flow_wanyuan_2025",
+            "status": "MATCH",
+            "fields": {
+              "amount": "MATCH"
+            }
+          },
+          {
+            "item_id": "accounts_payable_year_end_wanyuan_2023",
+            "status": "MATCH",
+            "fields": {
+              "amount": "MATCH"
+            }
+          },
+          {
+            "item_id": "accounts_payable_year_end_wanyuan_2024",
+            "status": "MATCH",
+            "fields": {
+              "amount": "MATCH"
+            }
+          },
+          {
+            "item_id": "accounts_payable_year_end_wanyuan_2025",
+            "status": "MATCH",
+            "fields": {
+              "amount": "MATCH"
+            }
+          }
+        ]
+      },
+      "raw_schema_pass": true,
+      "quality_projection": "OBJECT",
+      "source_ids_valid": true,
+      "source_id_validity": 1.0,
+      "invalid_reference_count": 0,
+      "source_proof_coverage_proxy": 0.5,
+      "not_full_semantic_evidence_accuracy": true,
+      "Q_full_parent_semantic": null,
+      "full_semantic_contract": "NOT_EVALUATED_BY_THIS_NUMERIC_SCOPE",
+      "downstream_release": false,
+      "raw_model_output": "{\"items\": [{\"item_id\": \"purchase_flow_wanyuan_2023\", \"fields\": {\"amount\": {\"number\": 32400.54, \"unit\": \"万元\"}}, \"evidence_ids\": [\"E_785127e532619893151c\"]}, {\"item_id\": \"purchase_flow_wanyuan_2024\", \"fields\": {\"amount\": {\"number\": 43185.44, \"unit\": \"万元\"}}, \"evidence_ids\": [\"E_785127e532619893151c\"]}, {\"item_id\": \"purchase_flow_wanyuan_2025\", \"fields\": {\"amount\": {\"number\": 59454.31, \"unit\": \"万元\"}}, \"evidence_ids\": [\"E_785127e532619893151c\"]}, {\"item_id\": \"accounts_payable_year_end_wanyuan_2023\", \"fields\": {\"amount\": {\"number\": 9222.97, \"unit\": \"万元\"}}, \"evidence_ids\": [\"E_3e09ef63780abd75c15a\"]}, {\"item_id\": \"accounts_payable_year_end_wanyuan_2024\", \"fields\": {\"amount\": {\"number\": 5048.91, \"unit\": \"万元\"}}, \"evidence_ids\": [\"E_3e09ef63780abd75c15a\"]}, {\"item_id\": \"accounts_payable_year_end_wanyuan_2025\", \"fields\": {\"amount\": {\"number\": 13114.01, \"unit\": \"万元\"}}, \"evidence_ids\": [\"E_3e09ef63780abd75c15a\"]}]}",
+      "Q_numeric_conditioned": 1.0,
+      "Q_terminal_full_opinion": null,
+      "task_scope": "six numeric values under given entity/period/field conditions",
+      "historical_result_modified": false,
+      "independent_human_review_claimed": false
+    },
+    "content_status": "PARSED",
+    "legal_correct_targets": 6,
+    "required_targets": 6,
+    "legal_correct_targets_over_six": 1.0,
+    "all_branches_numeric_lane_legal": true,
+    "full_opinion_Q": null,
+    "full_semantic_contract": null,
+    "semantic_citation_accuracy": null,
+    "model_calls": 0
+  },
+  "arm_wall_s": 6.7204673662781715,
+  "sum_client_node_service_s": 8.0014863088727,
+  "deadline_met": true,
+  "cost": {
+    "estimate_spent_native": {
+      "CNY": "0.005082",
+      "USD": "0.0016149"
+    },
+    "estimate_reservations_retained_native": {
+      "CNY": "0E-7",
+      "USD": "0E-7"
+    },
+    "reserved_requests": 2,
+    "output_tokens_reserved": 2048,
+    "input_bound_certified": false,
+    "cash_hard_cap_certified": false,
+    "actual_cash": null,
+    "bill_status": "PENDING_ACCOUNT_BILL_VERIFICATION"
+  },
+  "shared_preflight_s": 1.5904143154621124,
+  "cold_start_wall_s": 8.310881681740284,
+  "amortized_wall_s": 7.1180709451437,
+  "evidence_class": "REAL_MODEL_OUTPUT"
+}

@@ -1,0 +1,116 @@
+{
+  "status": "SMALL_HARD_ENVELOPE_NOT_CERTIFIED_MODELWIDE_ALTERNATIVE_QUANTIFIED",
+  "assumptions": [
+    "Accepted calls obey published model context limits (all documented as 1M; use 2,000,000 to dominate decimal/binary interpretations).",
+    "Cloud billable text-input/output usage is bounded by those model limits; no tools, search, explicit-cache creation, batch, streaming, or extra completions.",
+    "Published per-token prices apply; for Qwen reserve the highest valid Beijing nonthinking tier, not the low input tier.",
+    "This does not guarantee account cash debits, card FX, taxes, unexpected service charges, provider overbilling, or charges on rejected/unfinished requests without usage receipts."
+  ],
+  "unchanged_small_proposal": {
+    "CNY": "3.50",
+    "USD": "0.05"
+  },
+  "modelwide_input_with_requested_output_cap": {
+    "CNY": "84.215808",
+    "USD": "1.2024576"
+  },
+  "modelwide_input_and_output_without_trusting_requested_output_cap": {
+    "CNY": "499.2",
+    "USD": "6.0"
+  },
+  "interpretation": "These are conservative usage-cost arithmetic scenarios under documented interface/billing assumptions, not actual prompt token counts or observed bills. They do not prove that the actual small prompts will cost this much.",
+  "small_cash_hard_limit_pass": false,
+  "cash_limit_changed": false,
+  "paid_authorization": false,
+  "real_model_calls": 0,
+  "rows": [
+    {
+      "request_id": "R1_A_extract_purchase",
+      "model": "glm-5.3",
+      "currency": "CNY",
+      "coarse_input_token_ceiling": 2000000,
+      "max_rate_input": "8",
+      "max_rate_output": "28",
+      "with_requested_output_cap": "16.229376",
+      "also_using_modelwide_output_2M": "72"
+    },
+    {
+      "request_id": "R1_A_extract_payables",
+      "model": "glm-5.3",
+      "currency": "CNY",
+      "coarse_input_token_ceiling": 2000000,
+      "max_rate_input": "8",
+      "max_rate_output": "28",
+      "with_requested_output_cap": "16.229376",
+      "also_using_modelwide_output_2M": "72"
+    },
+    {
+      "request_id": "R1_B_extract_purchase",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "coarse_input_token_ceiling": 2000000,
+      "max_rate_input": "4.8",
+      "max_rate_output": "48",
+      "with_requested_output_cap": "9.649152",
+      "also_using_modelwide_output_2M": "105.6"
+    },
+    {
+      "request_id": "R1_B_extract_payables",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "coarse_input_token_ceiling": 2000000,
+      "max_rate_input": "0.3",
+      "max_rate_output": "1.2",
+      "with_requested_output_cap": "0.6012288",
+      "also_using_modelwide_output_2M": "3.0"
+    },
+    {
+      "request_id": "R2_B_extract_purchase",
+      "model": "qwen-plus",
+      "currency": "CNY",
+      "coarse_input_token_ceiling": 2000000,
+      "max_rate_input": "4.8",
+      "max_rate_output": "48",
+      "with_requested_output_cap": "9.649152",
+      "also_using_modelwide_output_2M": "105.6"
+    },
+    {
+      "request_id": "R2_B_extract_payables",
+      "model": "deepseek-flash",
+      "currency": "USD",
+      "coarse_input_token_ceiling": 2000000,
+      "max_rate_input": "0.3",
+      "max_rate_output": "1.2",
+      "with_requested_output_cap": "0.6012288",
+      "also_using_modelwide_output_2M": "3.0"
+    },
+    {
+      "request_id": "R2_A_extract_purchase",
+      "model": "glm-5.3",
+      "currency": "CNY",
+      "coarse_input_token_ceiling": 2000000,
+      "max_rate_input": "8",
+      "max_rate_output": "28",
+      "with_requested_output_cap": "16.229376",
+      "also_using_modelwide_output_2M": "72"
+    },
+    {
+      "request_id": "R2_A_extract_payables",
+      "model": "glm-5.3",
+      "currency": "CNY",
+      "coarse_input_token_ceiling": 2000000,
+      "max_rate_input": "8",
+      "max_rate_output": "28",
+      "with_requested_output_cap": "16.229376",
+      "also_using_modelwide_output_2M": "72"
+    }
+  ],
+  "official_sources": {
+    "deepseek": "https://api-docs.deepseek.com/quick_start/pricing/",
+    "qwen": "https://help.aliyun.com/zh/model-studio/model-pricing",
+    "glm_context": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.3",
+    "glm_price": "https://docs.bigmodel.cn/cn/guide/start/pricing"
+  },
+  "glm_context_verification": "Official GLM model page read successfully through web tool on 2026-10-25 after direct HTTP attempt timed out; confirms 1M context/128K max output. No inference call.",
+  "stop_condition": "Do not continue adding generic tests or token heuristics. Small strict budget needs complete provider-level input counting/billing basis or a provider-enforced cash cap; exploratory estimate requires explicit policy choice and later separate execution authorization."
+}
