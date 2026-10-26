@@ -1,0 +1,48 @@
+{
+ "id": "T4_CLEAN_AB_20261026",
+ "arms": {
+  "DEDUP": {
+   "t4_user_sha256": "10600e7acf109bcfe6f6ca3ca5fa8c878b895032cb83592fff496660890d6b33",
+   "spec": "E4 node_prompt(t4): merged facts only"
+  },
+  "DUP": {
+   "t4_user_sha256": "9e5940d4617e509d433af2bc5e8da04094c16fd574e9fa4dd38d3f52ddf1cd89",
+   "spec": "DEDUP + event.lines.t1[:2000] raw-evidence channel (reconstruction of the pre-E4 duplicate injection documented by E1)"
+  }
+ },
+ "difference_claim": "arm prompts identical except the appended raw-evidence slice in DUP t4",
+ "model": {
+  "alias": "glm53flash",
+  "model_id": "GLM-5.3-Flash",
+  "thinking": "disabled",
+  "out_caps": {
+   "extract": 3072,
+   "mid": 1536,
+   "report": 2048
+  },
+  "temperature": "endpoint default"
+ },
+ "executor": "serial t1..t6, no threads",
+ "event": {
+  "task": "请调查江苏舜天（600287）专网通信业务信息披露违法违规事件：追溯2023年风险提示与 Advance Notice、2024年证监会《行政处罚决定书》〔2024〕41号认定的虚假自循环业务与2009-2021年虚增营业收入事实，梳理涉及主体、责任人员与关键时间节点，生成具有准确证据引用的调查报告。无法确认的事项必须明确标注。",
+  "dup_slice_chars": 2000,
+  "evid_chars": 8000,
+  "note": "jsst/舜天 dev sample (event used in prior dev experiments; not an unseen confirmation set)"
+ },
+ "scoring": "st_scoring_v2.score_report_st on t6 raw + t5 value; chain_filter_st vs pack_text; program-anchored, identical for both arms",
+ "n_per_arm": 5,
+ "order": "alternating DEDUP,DUP x5",
+ "caps": {
+  "calls": 66,
+  "wall_s": 1800.0,
+  "cash": "subscription marginal ¥0 (recorded, not billed per-token on this track)"
+ },
+ "fail_policy": "per-run fail-stop (run INCOMPLETE, no retry); >=3 INCOMPLETE runs -> batch stop",
+ "criteria": {
+  "quality_noninferior": "mean T1(DEDUP) >= mean T1(DUP)",
+  "cost_improved": "mean tokens(DEDUP) < mean tokens(DUP)",
+  "latency_improved": "mean serial wall(DEDUP) < mean wall(DUP)",
+  "structure_benefit_supported": "quality_noninferior AND (cost_improved OR latency_improved)"
+ },
+ "billing_note": "GLM subscription track: ¥0 marginal cash per call (frozen rates glm_53_flash subscription); tokens and wall recorded as the cost/latency axes"
+}
