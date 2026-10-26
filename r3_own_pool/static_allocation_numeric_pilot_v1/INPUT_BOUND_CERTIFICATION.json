@@ -1,0 +1,42 @@
+{
+ "id": "STATIC_AB_INPUT_BOUND_CERTIFICATION_V2",
+ "date": "2026-10-26",
+ "instrument": {
+  "path": "/root/autodl-tmp/models/Qwen2.5-1.5B-Instruct",
+  "cls": "Qwen2TokenizerFast",
+  "note": "tokenizer_public_source/ in repo is LlamaTokenizerFast measuring 0.04-0.11 tok/char on Chinese (5-15x BELOW real billing) — INVALID, must not be used for bounds; discovered in audit"
+ },
+ "measured_ratios": {
+  "extract_purchase/glm-5.3": 0.5163,
+  "extract_payables/glm-5.3": 0.5157,
+  "extract_purchase/qwen-plus": 0.5163,
+  "extract_payables/deepseek-flash": 0.5157
+ },
+ "bounds": {
+  "deepseek-flash": {
+   "ratio": 0.75,
+   "basis": "REAL validated: 5 delivered calls max 0.6259 x1.15=0.7198<=0.75"
+  },
+  "qwen-plus": {
+   "ratio": 0.7,
+   "basis": "Qwen2.5 same-family instrument 0.5163x1.15, floor 0.70 (cross-family empirical: billed 0.555-0.626, instr 0.562-0.668)"
+  },
+  "glm-5.3": {
+   "ratio": 0.75,
+   "basis": "cross-family instrument 0.5163x1.25, floor 0.75 (deepseek-validated); list price, no entitlement assumed"
+  }
+ },
+ "envelope_tokens": 128,
+ "output_caps": "frozen per request in AB_CONFIG",
+ "worst_totals": {
+  "CNY": "1.2020736",
+  "USD": "0.0074874"
+ },
+ "caps": {
+  "CNY": "3.50",
+  "USD": "0.05"
+ },
+ "verdict": "PASS",
+ "qualification": "conditional on: frozen public list rates; billed input within bound ratio per model; output caps include thinking/ALL billable completion tokens; envelope +128. qwen tier input<=128000 holds (max ~7.8K). Reservation 65,536/req remains as guard assumption; certified worst totals below caps make the guard sufficient.",
+ "fail_stops": "per existing FREEZE.json: request/arm/batch 180/240/3600s; usage>bound->Stop(TOKEN_BOUND_VIOLATION); est-cost over reservation -> recorded then stop; no retry/no resume"
+}

@@ -1,0 +1,97 @@
+{
+ "id": "REAL_RESPONSE_SCORING_DRYRUN_V1",
+ "date": "2026-10-26",
+ "model_calls": 0,
+ "evidence_class": "HISTORICAL_REAL_RESPONSES",
+ "note": "frozen REAL model outputs replayed through the exact executor scoring path (importlib-loaded frozen terminal_contract_v1/evaluate_terminal.py); no new dispatch; prompts differ from current frozen branch messages (historical phase), scoring is response-content-only",
+ "results": [
+  {
+   "step": "per_branch",
+   "id": "A1",
+   "node": "extract_purchase",
+   "model": "qwen-plus",
+   "phase": "initial",
+   "status": "OBSERVED",
+   "schema": false,
+   "lane_legal": false,
+   "slots_exact": true,
+   "evidence_ok": false,
+   "content_Q": null,
+   "content_status": "PARTIALLY_UNOBSERVABLE",
+   "legal_correct_over_6": 0.0
+  },
+  {
+   "step": "per_branch",
+   "id": "A4",
+   "node": "extract_purchase",
+   "model": "qwen-plus",
+   "phase": "recovery",
+   "status": "OBSERVED",
+   "schema": false,
+   "lane_legal": false,
+   "slots_exact": true,
+   "evidence_ok": false,
+   "content_Q": null,
+   "content_status": "PARTIALLY_UNOBSERVABLE",
+   "legal_correct_over_6": 0.0
+  },
+  {
+   "step": "per_branch",
+   "id": "B1",
+   "node": "extract_purchase",
+   "model": "qwen-plus",
+   "phase": "initial",
+   "status": "OBSERVED",
+   "schema": false,
+   "lane_legal": false,
+   "slots_exact": true,
+   "evidence_ok": false,
+   "content_Q": null,
+   "content_status": "PARTIALLY_UNOBSERVABLE",
+   "legal_correct_over_6": 0.0
+  },
+  {
+   "step": "per_branch",
+   "id": "A2",
+   "node": "extract_payables",
+   "model": "deepseek-flash",
+   "phase": "initial",
+   "status": "OBSERVED",
+   "schema": true,
+   "lane_legal": true,
+   "slots_exact": true,
+   "evidence_ok": true,
+   "content_Q": null,
+   "content_status": "PARTIALLY_UNOBSERVABLE",
+   "legal_correct_over_6": 0.5
+  },
+  {
+   "step": "per_branch",
+   "id": "B2",
+   "node": "extract_payables",
+   "model": "deepseek-flash",
+   "phase": "initial",
+   "status": "OBSERVED",
+   "schema": true,
+   "lane_legal": true,
+   "slots_exact": true,
+   "evidence_ok": true,
+   "content_Q": null,
+   "content_status": "PARTIALLY_UNOBSERVABLE",
+   "legal_correct_over_6": 0.5
+  },
+  {
+   "step": "paired_merge",
+   "id": "A1+A2",
+   "pair": [
+    "A1",
+    "A2"
+   ],
+   "content_Q": 1.0,
+   "content_status": "PARSED",
+   "legal_correct_over_6": 0.5,
+   "all_lanes_legal": false,
+   "full_opinion_Q": null
+  }
+ ]
+}
