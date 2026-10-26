@@ -1,0 +1,92 @@
+{
+ "status": "COMPLETE",
+ "repeats": 5,
+ "per_arm": {
+  "D0": {
+   "t_q": {
+    "mean": 0.4923,
+    "sd": 0.1595,
+    "min": 0.3077,
+    "max": 0.6923
+   },
+   "eU": {
+    "mean": 0.3429,
+    "sd": 0.1628,
+    "min": 0.1554,
+    "max": 0.5428
+   }
+  },
+  "D2": {
+   "t_q": {
+    "mean": 0.6462,
+    "sd": 0.0877,
+    "min": 0.5385,
+    "max": 0.7692
+   },
+   "eU": {
+    "mean": 0.4343,
+    "sd": 0.0846,
+    "min": 0.3149,
+    "max": 0.5431
+   }
+  },
+  "C": {
+   "t_q": {
+    "mean": 0.6,
+    "sd": 0.0344,
+    "min": 0.5385,
+    "max": 0.6154
+   },
+   "eU": {
+    "mean": 0.3258,
+    "sd": 0.0335,
+    "min": 0.2714,
+    "max": 0.3538
+   }
+  }
+ },
+ "paired": {
+  "d_tq_recovery": [
+   0.0,
+   0.0,
+   0.23079999999999995,
+   0.3077,
+   0.2308
+  ],
+  "d_eU_recovery": [
+   -0.06399999999999995,
+   -0.0605,
+   0.17429999999999998,
+   0.24770000000000003,
+   0.1595
+  ],
+  "d_tq_targeted": [
+   0.07690000000000008,
+   0.0,
+   0.0,
+   0.15380000000000005,
+   0.0
+  ],
+  "d_eU_targeted": [
+   0.1492,
+   0.06569999999999998,
+   0.06259999999999999,
+   0.22150000000000003,
+   0.04350000000000004
+  ]
+ },
+ "decision_rules": {
+  "recovery_supported": "mean paired d(t_q, D2-D0) > 0 AND >= ceil(n/2) repeats positive",
+  "recovery_utility": "mean paired d(eU, D2-D0) > 0",
+  "targeted_beats_full_utility": "mean paired d(eU, D2-C) > 0 AND >= ceil(n/2) repeats positive",
+  "targeted_quality_noninferior": "mean paired d(t_q, D2-C) >= 0",
+  "all_verdicts_reported": "descriptive only, n=5, no p-values; negative verdicts preserved as-is"
+ },
+ "verdicts": {
+  "recovery_supported": true,
+  "recovery_utility": true,
+  "targeted_beats_full_utility": true,
+  "targeted_quality_noninferior": true
+ },
+ "c6_all": true
+}
