@@ -1,0 +1,48 @@
+{
+ "version": "H1ONLINE_FREEZE_V7",
+ "supersedes": "H1ONLINE_FREEZE_v6 (preserved unchanged)",
+ "doc_slot": "舜天#st_announce_2024_020",
+ "theta": 0.318,
+ "theta_provenance": "fit on v4/ydt archive (0.318 between POS 0.333 and NEG/POS 0.303); trial doc Shuntian is out-of-sample for theta",
+ "archive_gate_record": "held-out Shuntian 4/5 correct (1 skip + 3 repairs); fit-doc ydt NO separation; combined 6/10 — passed at pre-registered minimum, honestly weak",
+ "scenarios": {
+  "S1": "b0 fault",
+  "S2": "b2 fault",
+  "S3": "no fault"
+ },
+ "policies": {
+  "P_ACCEPT": "never repair",
+  "P_TARGETED": "closure repair on detection",
+  "P_FULL": "all-7 rerun on detection",
+  "ONLINE_V7": "repair iff detection AND input-probe coverage of the paid D0 sink < theta",
+  "SIMPLE_COND": "INSTANTIATED BY P_TARGETED — deterministic equivalence under this fault model (detection fires iff fault injected); no duplicate calls"
+ },
+ "repeats": 2,
+ "D_s": 350.0,
+ "utility_C0_tokens": 60000,
+ "model": "GLM-5.3-Flash subscription, ¥0 marginal",
+ "out_caps": {
+  "extraction": 3072,
+  "timeline": 3072,
+  "timeline_deep": 3072,
+  "amounts": 3072,
+  "amounts_check": 3072,
+  "penalties": 3072,
+  "entity_relations": 3072,
+  "synthesis": 3072
+ },
+ "caps": {
+  "calls": 120,
+  "wall_s": 3600.0
+ },
+ "fail_policy": "per-run fail-stop; >2 INCOMPLETE -> batch stop",
+ "evaluator_sha256": "473b7c661f80ef79998d9128a4a85eabcc2b345a289977d7bae77bbaf66e7941",
+ "criteria": {
+  "C1": "ONLINE_V7 mean eU >= max(P_ACCEPT,P_TARGETED,P_FULL)",
+  "C2": "per-scenario t_q >= best-fixed - 0.05",
+  "C3": "S3: ONLINE repairs 0/2",
+  "C5": "decision-correctness reported descriptively",
+  "online_value_supported": "C1 AND C2 AND C3"
+ },
+ "boundary": "exploratory n=2/scenario, single doc, single model; no deadline axis (fault-position-conditional only); not full (Z,R,pi)"
+}
