@@ -53,7 +53,7 @@ def check(name, ok, detail=''):
 
 def main():
     # shared zero-call inputs
-    doc = load_docs()[R.DOC_SLOT]
+    doc = load_docs()['舜天#st_announce_2024_020']  # v5 slot
     specs, bounds = R.plan_call_specs(doc['text'], doc['doc_id'])
     plan_worst = plan_worst_total(specs, billing=R.BILLING)
 
@@ -143,8 +143,9 @@ def main():
           all(len(v) >= 2 for v in cats.values()),
           json.dumps({k: v for k, v in cats.items()}, ensure_ascii=False))
     freeze = dict(
-        version='R2FIX_SCORING_FREEZE_v4',
-        frozen_at=time_str(), doc_slot=R.DOC_SLOT, fault=R.FAULT,
+        version='R2FIX_SCORING_FREEZE_v5',
+        frozen_at=time_str(), doc_slot='舜天#st_announce_2024_020',
+        fault=R.FAULT,
         rule=('doc_atoms mechanical slices, identical rule to R1/R2 '
               '(dates[:4], amounts[:3], penalties[:3]); entities[:3] '
               'new namespace e:; symmetric comma-insensitive amount '
@@ -168,11 +169,13 @@ def main():
                     'capability (conditional pass); screening results '
                     'are NOT recovery-algorithm evidence'),
         repeats=5,
-        repeat_rationale=('GLM temp-0 is NONDETERMINISTIC (thinking '
-                          'blocks fire randomly; v3 run showed sibling '
-                          're-execution is a re-roll, C-arm advantage '
-                          'could be resample variance) — 5 repeats give '
-                          'paired-difference variance decomposition'),
+        repeat_rationale=('v5: second-document replication of v4 '
+                          '(舜天/st_announce_2024_020, 14,465ch, 53 '
+                          'atoms — same doc that replicated the R1 '
+                          'recovery finding on deepseek). v4 rationale '
+                          'retained: GLM nondeterminism requires '
+                          'paired repeats; identical protocol/roles/'
+                          'fault/closures/utility, only doc+keys change'),
         evaluator_sha256=hashlib.sha256(
             (ROOT / 'deadline_reward_v1' / 'terminal_eval.py')
             .read_bytes()).hexdigest(),

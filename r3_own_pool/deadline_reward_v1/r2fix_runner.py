@@ -314,9 +314,12 @@ def gates(args):
     if args.approved_freeze_sha256 != hashlib.sha256(raw).hexdigest():
         raise PermissionError('scoring freeze hash mismatch')
     f = json.loads(raw)
-    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v4'
-            or f['doc_slot'] != DOC_SLOT or f['fault'] != FAULT):
+    if (f.get('version') != 'R2FIX_SCORING_FREEZE_v5'
+            or f['doc_slot'] not in load_docs() or f['fault'] != FAULT):
         raise PermissionError('freeze design mismatch')
+    # v5: doc_slot is authoritative FROM the sha-pinned freeze
+    # (v3/v4 pinned ydt/D3; v5 pins 舜天/st_announce for second-doc
+    # replication of the v4 targeted-vs-full finding)
     ev_path = ROOT / 'deadline_reward_v1' / 'terminal_eval.py'
     ev_sha = hashlib.sha256(ev_path.read_bytes()).hexdigest()
     if f.get('evaluator_sha256') != ev_sha:
@@ -331,7 +334,7 @@ def execute(args):
     freeze = gates(args)
     valid_keys = freeze['valid_keys']
     creds = load_env_creds()
-    doc = load_docs()[DOC_SLOT]
+    doc = load_docs()[freeze['doc_slot']]
     d2_closure, c_full, preserved = closures()
     repeats = int(freeze.get('repeats', 1))
 
