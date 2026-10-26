@@ -1,0 +1,56 @@
+{
+ "version": "H1ONLINE_FREEZE_v6",
+ "doc_slots": [
+  "ydt#D3_E03-yuandao_2026-08-29",
+  "ydt#D3_E03-yuandao_2026-08-29"
+ ],
+ "doc_note": "S1/S2/S3 run on BOTH docs? NO — round 1: primary doc ydt#D3_E03-yuandao_2026-08-29 (舜天); ydt reserved for cross-doc round 2",
+ "scenarios": {
+  "S1": {
+   "fault": "b0",
+   "label": "timeline-branch fault (repair expected to pay)"
+  },
+  "S2": {
+   "fault": "b2",
+   "label": "penalties-branch fault (empirically open)"
+  },
+  "S3": {
+   "fault": null,
+   "label": "no fault (control)"
+  }
+ },
+ "policies": {
+  "P_ACCEPT": "never repair",
+  "P_TARGETED": "repair closure(fault) on any detection",
+  "P_FULL": "re-execute all 7 non-root nodes on any detection",
+  "ONLINE": "if detection AND degrade_signal -> targeted closure repair, else accept; observables whitelist = structural parse/degeneracy of node outputs + sink category-field emptiness/缺失 markers; NEVER valid_keys/reference data"
+ },
+ "repeats": 5,
+ "D_s": 350.0,
+ "utility_C0_tokens": 60000,
+ "model": "GLM-5.3-Flash subscription (marginal ¥0; tokens/latency recorded)",
+ "out_caps": {
+  "extraction": 3072,
+  "timeline": 3072,
+  "timeline_deep": 3072,
+  "amounts": 3072,
+  "amounts_check": 3072,
+  "penalties": 3072,
+  "entity_relations": 3072,
+  "synthesis": 3072
+ },
+ "caps": {
+  "calls": 300,
+  "wall_s": 5400.0
+ },
+ "fail_policy": "per-run fail-stop; >3 INCOMPLETE runs total -> batch stop; no retries",
+ "evaluator_sha256": "473b7c661f80ef79998d9128a4a85eabcc2b345a289977d7bae77bbaf66e7941",
+ "criteria": {
+  "C1": "ONLINE mean eU >= max(fixed) over all scenarios",
+  "C2": "per-scenario ONLINE t_q >= best-fixed t_q - 0.05",
+  "C3": "S3 control: ONLINE repairs 0/5",
+  "C4": "alignment: where P_ACCEPT>P_TARGETED, ONLINE chose accept",
+  "online_value_supported": "C1 AND C2 AND C3"
+ },
+ "boundary": "exploratory n=5/scenario, single doc round 1; not confirmation; not full (Z,R,pi) — Z is fixed to the closure definition, R to {accept, targeted} for ONLINE"
+}
