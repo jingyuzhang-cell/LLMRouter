@@ -43,6 +43,12 @@ from merge_facts import merge_facts
 
 ALIAS = 'glm53flash'
 MODEL = GLM_MODELS[ALIAS]
+# v2 caps (symmetric, both arms): mechanism-diagnosed after run 1 —
+# t4 outputs exceed the e4 mid cap 1536 (substantive JSON truncated on
+# BOTH arms), one t2 thinking-burn at 3072 with zero text (documented
+# GLM variance). Raised per prior r2fix-line evidence; criteria and
+# all other controls unchanged.
+OUT_CAPS_V2 = {'extract': 4096, 'mid': 3072, 'report': 3072}
 NODES = ['t1', 't2', 't3', 't4', 't5', 't6']
 CAP_CALLS, CAP_WALL_S = 66, 1800.0
 MAX_INCOMPLETE = 2
@@ -85,7 +91,8 @@ def build_freeze(event):
     dedup_sys, dedup_user = t4_user('DEDUP', event, 'MERGED_JSON')
     dup_sys, dup_user = t4_user('DUP', event, 'MERGED_JSON')
     return {
-        'id': 'T4_CLEAN_AB_20261026',
+        'id': 'T4_CLEAN_AB_20261026_V2',
+        'revision_reason': 'v1 batch fail-stopped: t4 truncation at mid cap 1536 on BOTH arms + one t2 thinking-burn; caps raised symmetrically to 4096/3072/3072 per pre-documented r2fix-line evidence; criteria/controls unchanged',
         'arms': {
             'DEDUP': dict(t4_user_sha256=hashlib.sha256(
                 (dedup_sys + '\x00' + dedup_user).encode()).hexdigest(),
@@ -99,7 +106,7 @@ def build_freeze(event):
         'difference_claim': 'arm prompts identical except the appended '
                             'raw-evidence slice in DUP t4',
         'model': dict(alias=ALIAS, model_id=MODEL, thinking='disabled',
-                      out_caps=OUT_CAPS[ALIAS], temperature='endpoint default'),
+                      out_caps=OUT_CAPS_V2, temperature='endpoint default'),
         'executor': 'serial t1..t6, no threads',
         'event': dict(task=sp2.TASK_ST, dup_slice_chars=DUP_SLICE,
                       evid_chars=EVID_CHARS,
@@ -141,7 +148,7 @@ def run_once(arm, rid, event, meter_state, ledger, resp):
             raise RuntimeError('calls cap')
         if time.monotonic() - meter_state['t0'] > CAP_WALL_S:
             raise RuntimeError('wall cap')
-        raw = glm_call(system, user, OUT_CAPS[ALIAS][NODE_KIND[node]])
+        raw = glm_call(system, user, OUT_CAPS_V2[NODE_KIND[node]])
         meter_state['calls'] += 1
         meter_state['tokens'] += raw['in'] + raw['out']
         ok, value = parse_node(node, raw['text'])

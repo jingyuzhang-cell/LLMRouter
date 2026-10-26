@@ -1,0 +1,211 @@
+{
+ "reason": "RuntimeError('too many INCOMPLETE runs')",
+ "results": [
+  {
+   "rid": "DEDUP_r1",
+   "arm": "DEDUP",
+   "status": "COMPLETE",
+   "t1_full": "2/3",
+   "t1_per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain": [
+    "RF5",
+    "RF6"
+   ],
+   "chain_reach": "2/3",
+   "tokens": 24762,
+   "serial_model_s": 138.77,
+   "wall_s": 138.78,
+   "node_log": [
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3945,
+     "out_tok": 1755,
+     "lat": 28.43,
+     "stop": "end_turn",
+     "prompt_chars": 6544
+    },
+    {
+     "node": "t2",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3983,
+     "out_tok": 1840,
+     "lat": 26.85,
+     "stop": "end_turn",
+     "prompt_chars": 6530
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3029,
+     "out_tok": 356,
+     "lat": 9.85,
+     "stop": "end_turn",
+     "prompt_chars": 6218
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3023,
+     "out_tok": 1332,
+     "lat": 27.43,
+     "stop": "end_turn",
+     "prompt_chars": 6211
+    },
+    {
+     "node": "t5",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 1607,
+     "out_tok": 1136,
+     "lat": 18.42,
+     "stop": "end_turn",
+     "prompt_chars": 3181
+    },
+    {
+     "node": "t6",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 1406,
+     "out_tok": 1350,
+     "lat": 27.79,
+     "stop": "end_turn",
+     "prompt_chars": 2854
+    }
+   ]
+  },
+  {
+   "rid": "DUP_r1",
+   "arm": "DUP",
+   "status": "INCOMPLETE",
+   "failed_node": "t4",
+   "node_log": [
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3945,
+     "out_tok": 2014,
+     "lat": 31.41,
+     "stop": "end_turn",
+     "prompt_chars": 6544
+    },
+    {
+     "node": "t2",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3983,
+     "out_tok": 1897,
+     "lat": 28.31,
+     "stop": "end_turn",
+     "prompt_chars": 6530
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3022,
+     "out_tok": 325,
+     "lat": 9.42,
+     "stop": "end_turn",
+     "prompt_chars": 6218
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": false,
+     "in_tok": 4173,
+     "out_tok": 1536,
+     "lat": 30.49,
+     "stop": "max_tokens",
+     "prompt_chars": 8225
+    }
+   ]
+  },
+  {
+   "rid": "DEDUP_r2",
+   "arm": "DEDUP",
+   "status": "INCOMPLETE",
+   "failed_node": "t4",
+   "node_log": [
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3945,
+     "out_tok": 1757,
+     "lat": 28.05,
+     "stop": "end_turn",
+     "prompt_chars": 6544
+    },
+    {
+     "node": "t2",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3983,
+     "out_tok": 1890,
+     "lat": 32.78,
+     "stop": "end_turn",
+     "prompt_chars": 6530
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3017,
+     "out_tok": 272,
+     "lat": 7.29,
+     "stop": "end_turn",
+     "prompt_chars": 6218
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": false,
+     "in_tok": 3011,
+     "out_tok": 1536,
+     "lat": 21.95,
+     "stop": "max_tokens",
+     "prompt_chars": 6211
+    }
+   ]
+  },
+  {
+   "rid": "DUP_r2",
+   "arm": "DUP",
+   "status": "INCOMPLETE",
+   "failed_node": "t2",
+   "node_log": [
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "in_tok": 3945,
+     "out_tok": 1770,
+     "lat": 30.05,
+     "stop": "end_turn",
+     "prompt_chars": 6544
+    },
+    {
+     "node": "t2",
+     "model": "glm53flash",
+     "strict_ok": false,
+     "in_tok": 3983,
+     "out_tok": 3072,
+     "lat": 49.34,
+     "stop": "max_tokens",
+     "prompt_chars": 6530
+    }
+   ]
+  }
+ ],
+ "traceback": "Traceback (most recent call last):\n  File \"/root/capital_opinion_pilot/t4_ab_clean_20261026.py\", line 231, in main\n    raise RuntimeError('too many INCOMPLETE runs')\nRuntimeError: too many INCOMPLETE runs\n"
+}
