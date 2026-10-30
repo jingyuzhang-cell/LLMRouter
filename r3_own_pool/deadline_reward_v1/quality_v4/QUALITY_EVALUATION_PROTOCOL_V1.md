@@ -97,7 +97,24 @@ semantic judge (predicate wording, text-kind paraphrase, complex relations)
 
 A calibrated judge's SUPPORTED verdict can never override a deterministic result for numeric kinds (`number/amount/ratio/percent`), dates, units, date types or subject binding — including on the explicit `fact_id` path. Non-finite numeric values (NaN, ±Infinity) are invalid claims when asserted by a candidate answer and contract-validation failures (blocking, no Q) when present in the Gold contract. Dates are validated against the real calendar (leap years included). Derivation inputs of a formal-GOLD derived fact must themselves be formal GOLD.
 
-## 11. Production acceptance
+## 11. Contract integrity and evaluation credentials (operator re-review 2026-10-30)
+
+**Contract structure gate (blocks formal Q before any matching):**
+- Every required fact carries a non-empty, globally unique `fact_id` (duplicate ids could otherwise let one answered fact satisfy another and inflate completeness or pass the critical gate).
+- Every derivation declares non-empty, duplicate-free inputs that all resolve within the contract.
+- Fact weights are finite positive; dimension weights are finite non-negative with at least one positive; `min_gold_coverage` is a finite number in [0,1]; claim weights come from the frozen extraction stage and must be finite positive — the evaluated answer cannot control them.
+- `_span_is_valid` recomputes the page-text SHA-256: a page record whose stored hash does not match its own text is rejected, beyond matching the citation's declared hashes.
+- Derivation arithmetic requires identical units across inputs (and with the target for add/subtract); no conversion rule is frozen today, so mixed units simply cannot form a valid derivation.
+
+**Judge credential binding (a bare `PASS` string is not a credential):**
+- A `calibrated_judge` assessment is valid only when the evaluation is given a calibration registry mapping `judge_id → calibration_artifact_sha256`, the assessment carries that judge_id with a well-formed 64-hex artifact hash registered there, and it is blind to model and strategy.
+- Verdicts are bound to the exact claim via `binding_claim_id`; an assessment cannot be replayed across claims. Human adjudications of claims are subject to the same binding.
+
+**Substance over field presence (UNKNOWN and conflicts):**
+- An UNKNOWN abstention counts only with an explicit non-empty refusal text; a bare item_id tick does not.
+- A conflict acknowledgement counts only when each required source document carries its own non-empty `source_versions` text attributing that source's version of the competing fact.
+
+## 12. Production acceptance
 1. Freeze task questions and required fact lists.
 2. Obtain two independent blind human reviews; adjudicate disagreements.
 3. Audit source hashes, spans, units, date types and derivations.

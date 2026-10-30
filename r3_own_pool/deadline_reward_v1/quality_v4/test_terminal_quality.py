@@ -272,8 +272,15 @@ class TerminalQualityTests(unittest.TestCase):
 
     def test_calibrated_judge_cannot_override_wrong_date_value(self):
         claim = good_claim(value="2026年9月19日", predicate="公司收件日")
-        claim["assessment"] = {"verdict": "SUPPORTED", "assessor_type": "calibrated_judge", "calibration_status": "PASS", "calibration_artifact_sha256": "c" * 64}
-        result = evaluate_terminal_quality(contract(), output(claim), self.sources)
+        claim["assessment"] = {
+            "verdict": "SUPPORTED", "assessor_type": "calibrated_judge",
+            "calibration_status": "PASS", "judge_id": "J1",
+            "calibration_artifact_sha256": "c" * 64,
+            "blind_to_strategy": True, "blind_to_model": True,
+            "binding_claim_id": "C1",
+        }
+        registry = {"J1": "c" * 64}
+        result = evaluate_terminal_quality(contract(), output(claim), self.sources, registry)
         self.assertEqual(result["fact_metrics"]["weighted_tp"], 0.0)
         self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
         self.assertEqual(result["claim_results"][0]["status"], "WRONG_GOLD_FACT_VALUE_OR_RELATION")
@@ -281,8 +288,15 @@ class TerminalQualityTests(unittest.TestCase):
 
     def test_calibrated_judge_still_authorizes_paraphrase_with_correct_value(self):
         claim = good_claim(value="2026年9月18日", predicate="公司收件日")
-        claim["assessment"] = {"verdict": "SUPPORTED", "assessor_type": "calibrated_judge", "calibration_status": "PASS", "calibration_artifact_sha256": "c" * 64}
-        result = evaluate_terminal_quality(contract(), output(claim), self.sources)
+        claim["assessment"] = {
+            "verdict": "SUPPORTED", "assessor_type": "calibrated_judge",
+            "calibration_status": "PASS", "judge_id": "J1",
+            "calibration_artifact_sha256": "c" * 64,
+            "blind_to_strategy": True, "blind_to_model": True,
+            "binding_claim_id": "C1",
+        }
+        registry = {"J1": "c" * 64}
+        result = evaluate_terminal_quality(contract(), output(claim), self.sources, registry)
         self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
         self.assertEqual(result["claim_results"][0]["status"], "SEMANTICALLY_CORRECT")
         self.assertEqual(result["Q_final"], 1.0)
@@ -387,6 +401,149 @@ class TerminalQualityTests(unittest.TestCase):
         result_full = evaluate_terminal_quality(full_gate, output(f3_claim, claims=[f3_claim]), sources)
         self.assertIsNone(result_full["Q_final"])
         self.assertIn("REFERENCE_GOLD_COVERAGE_BELOW_GATE", result_full["blocking_reasons"])
+
+
+    # --- Regression tests for independent re-review findings F7-F10 (2026-10-30) ---
+
+    def test_duplicate_fact_id_blocks_contract(self):
+        task = contract()
+        task["required_facts"].append(dict(self._amount_fact(fact_id="F1", critical=True)))  # duplicate of F1
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("CONTRACT_STRUCTURE_INVALID:FACT_ID_DUPLICATE:F1" in r for r in result["blocking_reasons"]))
+
+    def test_empty_fact_id_blocks_contract(self):
+        task = contract()
+        task["required_facts"][0]["fact_id"] = "  "
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("FACT_ID_EMPTY" in r for r in result["blocking_reasons"]))
+
+    def test_derivation_input_structure_problems_block(self):
+        duplicated = self._derived_task()[0]
+        duplicated["required_facts"][0]["derivation"]["inputs"] = ["F2", "F2"]
+        _, sources = self._derived_task()
+        result = evaluate_terminal_quality(duplicated, output(good_claim()), sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("DERIVATION_INPUTS_DUPLICATE" in r for r in result["blocking_reasons"]))
+        unresolved = self._derived_task()[0]
+        unresolved["required_facts"][0]["derivation"]["inputs"] = ["F2", "FX"]
+        result2 = evaluate_terminal_quality(unresolved, output(good_claim()), sources)
+        self.assertIsNone(result2["Q_final"])
+        self.assertTrue(any("DERIVATION_INPUT_UNRESOLVED" in r for r in result2["blocking_reasons"]))
+
+    def test_invalid_min_gold_coverage_blocks(self):
+        for bad in ("NaN", "Infinity", 1.5, -0.1):
+            task = contract()
+            task["min_gold_coverage"] = bad
+            result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+            self.assertIsNone(result["Q_final"], bad)
+            self.assertTrue(any("MIN_GOLD_COVERAGE_INVALID" in r for r in result["blocking_reasons"]), bad)
+
+    def test_invalid_fact_weight_blocks(self):
+        for bad in ("NaN", -1, 0):
+            task = contract()
+            task["required_facts"].append(self._amount_fact(value="1000"))
+            task["required_facts"][-1]["weight"] = bad
+            result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+            self.assertIsNone(result["Q_final"], bad)
+            self.assertTrue(any("FACT_WEIGHT_INVALID" in r for r in result["blocking_reasons"]), bad)
+
+    def test_invalid_dimension_weights_block(self):
+        infinite = contract()
+        infinite["dimension_weights"] = {"fact_correctness": "Infinity", "evidence_support": 1}
+        result = evaluate_terminal_quality(infinite, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("DIMENSION_WEIGHT_INVALID:fact_correctness" in r for r in result["blocking_reasons"]))
+        all_zero = contract()
+        all_zero["dimension_weights"] = {name: 0 for name in (
+            "fact_correctness", "evidence_support", "necessary_completeness",
+            "contradiction_handling", "unverifiable_refusal", "question_relevance")}
+        result2 = evaluate_terminal_quality(all_zero, output(good_claim()), self.sources)
+        self.assertIsNone(result2["Q_final"])
+        self.assertTrue(any("DIMENSION_WEIGHTS_ALL_ZERO" in r for r in result2["blocking_reasons"]))
+
+    def test_invalid_claim_weight_blocks(self):
+        claim = good_claim()
+        claim["weight"] = "NaN"
+        result = evaluate_terminal_quality(contract(), output(claim), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("CLAIM_WEIGHT_INVALID:C1" in r for r in result["blocking_reasons"]))
+        self.assertEqual(result["claim_results"][0]["status"], "INVALID_CLAIM_WEIGHT")
+
+    def test_judge_credential_requires_registry_and_binding(self):
+        claim = good_claim(value="2026年9月18日", predicate="公司收件日")
+        claim["assessment"] = {
+            "verdict": "SUPPORTED", "assessor_type": "calibrated_judge",
+            "calibration_status": "PASS", "judge_id": "J1",
+            "calibration_artifact_sha256": "c" * 64,
+            "blind_to_strategy": True, "blind_to_model": True,
+            "binding_claim_id": "C1",
+        }
+        # No registry supplied at all: a PASS string alone is not a credential.
+        no_registry = evaluate_terminal_quality(contract(), output(claim), self.sources)
+        self.assertEqual(no_registry["fact_metrics"]["weighted_tp"], 0.0)
+        # Registry that does not contain this judge's registered artifact.
+        wrong_registry = evaluate_terminal_quality(contract(), output(claim), self.sources, {"J1": "d" * 64})
+        self.assertEqual(wrong_registry["fact_metrics"]["weighted_tp"], 0.0)
+        # Registered credential but verdict bound to a different claim: no replay.
+        bound_elsewhere = dict(claim)
+        bound_elsewhere["assessment"] = dict(claim["assessment"], binding_claim_id="C9")
+        replay = evaluate_terminal_quality(
+            contract(), output(good_claim(), claims=[bound_elsewhere]), self.sources, {"J1": "c" * 64})
+        self.assertEqual(replay["fact_metrics"]["weighted_tp"], 0.0)
+        # Malformed artifact hash (not 64-hex) is rejected even when registered.
+        malformed = dict(claim)
+        malformed["assessment"] = dict(claim["assessment"], calibration_artifact_sha256="not-a-sha")
+        bad_hash = evaluate_terminal_quality(contract(), output(malformed), self.sources, {"J1": "not-a-sha"})
+        self.assertEqual(bad_hash["fact_metrics"]["weighted_tp"], 0.0)
+
+    def test_abstention_without_explicit_text_not_scored(self):
+        task = contract()
+        task["unknown_items"] = [{"item_id": "U1", "description": "最终处罚决定"}]
+        bare = output(good_claim(), abstentions=[{"item_id": "U1"}])
+        result = evaluate_terminal_quality(task, bare, self.sources)
+        self.assertEqual(result["dimensions"]["unverifiable_refusal"], 0.0)
+        self.assertTrue(any(w.startswith("ABSTENTION_WITHOUT_EXPLICIT_TEXT") for w in result["quality_warnings"]))
+
+    def test_conflict_acknowledgement_requires_per_source_versions(self):
+        task = contract()
+        task["conflict_groups"] = [{"conflict_id": "X1", "required_source_doc_ids": ["D1", "D2"]}]
+        listed_only = output(
+            good_claim(),
+            conflict_acknowledgements=[{"conflict_id": "X1", "acknowledged": True, "source_doc_ids": ["D1", "D2"]}])
+        result = evaluate_terminal_quality(task, listed_only, self.sources)
+        self.assertEqual(result["dimensions"]["contradiction_handling"], 0.0)
+        with_versions = output(
+            good_claim(),
+            conflict_acknowledgements=[{
+                "conflict_id": "X1", "acknowledged": True,
+                "source_versions": {
+                    "D1": "公告载明公司于2026年9月18日收到立案告知书。",
+                    "D2": "另一来源对同一事项的表述与此不同。",
+                }}])
+        result2 = evaluate_terminal_quality(task, with_versions, self.sources)
+        self.assertEqual(result2["dimensions"]["contradiction_handling"], 1.0)
+
+    def test_tampered_page_text_fails_hash_recomputation(self):
+        tampered = {"D1": {"raw_sha256": RAW_SHA, "pages": {"1": {
+            "text": PAGE + "篡改后的附加文本", "page_sha256": self.sources["D1"]["pages"]["1"]["page_sha256"]}}}}
+        result = evaluate_terminal_quality(contract(), output(good_claim()), tampered)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any(reason.startswith("REFERENCE_EVIDENCE_INVALID") for reason in result["blocking_reasons"]))
+
+    def test_derivation_with_incompatible_units_fails(self):
+        task, sources = self._derived_task()
+        task["required_facts"][2]["unit"] = "股"  # F3 input now in a different unit than F2
+        claim = good_claim(
+            fact_id="F1", value="100", unit="万元", predicate="收入差额", date_type="UNKNOWN",
+            citations=[
+                {"doc_id": "D1", "page": 1, "quote": "公司于2026年9月18日收到中国证监会立案告知书", "page_sha256": PAGE_SHA, "raw_sha256": RAW_SHA},
+                {"doc_id": "D2", "page": 1, "quote": "公司上年度收入为50万元。", "page_sha256": sources["D2"]["pages"]["1"]["page_sha256"], "raw_sha256": "b" * 64},
+            ])
+        result = evaluate_terminal_quality(task, output(claim), sources)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 0.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
 
 
 if __name__ == "__main__":

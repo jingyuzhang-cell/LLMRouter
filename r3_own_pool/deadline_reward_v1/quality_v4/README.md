@@ -21,6 +21,8 @@ Default weights are equal across applicable dimensions, matching the project's e
 - Critical-fact hard gate (operator ruling 2026-10-30): PASS → Q_final=Q_raw; any critical fact confirmed wrong/omitted (or evidence-unsatisfied when required) → Q_final=0; critical fact unevaluable → Q_final=NULL. Q_raw is always retained for diagnostics.
 - Non-finite numerics (NaN/±Infinity) are invalid claims, never crashes; illegal Gold values block Q. Dates are calendar-validated (leap years).
 - Missing question, incomplete claim extraction, inadequate Gold coverage, invalid hashes or unassessed material claims withhold formal Q.
+- Contract integrity gate: duplicate/empty fact ids, dead or duplicated derivation inputs, non-finite or out-of-range weights (fact/dimension/coverage/claim) all block formal Q before matching; page-text SHA-256 is recomputed, not merely compared.
+- Judge credentials: a calibrated judge needs a registry-bound judge_id + 64-hex artifact hash, model/strategy blindness, and a per-claim binding; UNKNOWN abstentions and conflict acknowledgements require explicit substance (refusal text, per-source version text), not field presence.
 - Delivery failure is separate from semantic correctness: Q_final is null, R_delivery is 0, and Q_delivered is 0.
 
 ## Use
