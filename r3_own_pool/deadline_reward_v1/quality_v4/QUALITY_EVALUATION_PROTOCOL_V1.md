@@ -117,9 +117,14 @@ A calibrated judge's SUPPORTED verdict can never override a deterministic result
 - A conflict acknowledgement counts only when each required source document carries its own non-empty `source_versions` text attributing that source's version of the competing fact.
 
 **Frozen-behavior notes (recorded from the 2026-10-30 adversarial re-review; semantic changes require an operator ruling):**
-- Native-dataset-annotation facts: the dataset annotation itself is the evidence by construction; `evidence_required` is therefore satisfied without citations for this provenance class.
-- A credentialed SUPPORTED verdict on a claim that matches no Gold fact withholds formal Q (CLAIM_ASSESSMENT_INCOMPLETE): the evaluator cannot confirm an assertion outside the frozen reference, and a bare positive verdict cannot create reference coverage. Whether such claims should instead count as a distinct beyond-contract false positive is an open ruling question.
-- Evidence satisfaction for a fact is assessed on the claim that first matched it; later duplicates carrying the real citations do not retroactively satisfy `evidence_required` (conservative first-match rule).
+- Native-dataset-annotation facts: the dataset annotation itself is the evidence by construction; `evidence_required` is therefore satisfied without citations for this provenance class. The independent dataset and annotation-file hash binding requirement stands; boundary documentation and verification are due before the P2/P3 freeze.
+- Evidence satisfaction for a fact is assessed on the claim that first matched it; later duplicates carrying the real citations do not retroactively satisfy `evidence_required` (conservative first-match rule, kept deliberately).
+- Blocking outranks the zero veto (see §9 precedence).
+
+**Beyond-contract supported claims (operator ruling L5, 2026-10-30 — supersedes the earlier open question):**
+- A material claim that matches no formal Gold fact, carrying a validly credentialed SUPPORTED verdict, enters the independent state `UNMAPPED_SUPPORTED_CLAIM`: no TP (a judge cannot create Gold), no FP (unmapped does not mean wrong), never ignored (answers must not flood unverified facts). Claim ids, count and weight are recorded for diagnosis; Q_final = NULL, status INCOMPLETE, blocking reason `UNMAPPED_MATERIAL_CLAIM`. Q_raw and dimension values remain diagnostic only and are not comparable formal scores.
+- A fact that matters must be humanly verified and pre-registered into a NEW task-contract version before formal evaluation; Gold is never extended after seeing a strategy's answers. In the new contract version the claim is evaluated under the normal matching rules.
+- `material: false` is assigned solely by the frozen fact-atomization rules of the extraction stage; the evaluated model can never declare its own claim unimportant. Non-material claims are recorded (`nonmaterial_claims`) for audit, not silently dropped.
 
 ## 12. Production acceptance
 1. Freeze task questions and required fact lists.

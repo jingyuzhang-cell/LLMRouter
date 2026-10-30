@@ -666,6 +666,100 @@ class TerminalQualityTests(unittest.TestCase):
         self.assertIsNone(result["Q_final"])
         self.assertIn("QUESTION_RELEVANCE_NOT_VALIDLY_ASSESSED", result["blocking_reasons"])
 
+    # --- Operator ruling L5 (2026-10-30): beyond-contract supported claims ---
+
+    def _credentialed_verdict(self, claim_id):
+        return {
+            "verdict": "SUPPORTED", "assessor_type": "calibrated_judge",
+            "calibration_status": "PASS", "judge_id": "J1",
+            "calibration_artifact_sha256": "c" * 64,
+            "blind_to_strategy": True, "blind_to_model": True,
+            "binding_claim_id": claim_id,
+        }
+
+    def _beyond_contract_claim(self, claim_id="C9", with_verdict=True):
+        claim = {
+            "claim_id": claim_id, "fact_id": "FX", "material": True,
+            "subject": "某公司", "predicate": "告知书编号", "value": "0142026049号",
+        }
+        if with_verdict:
+            claim["assessment"] = self._credentialed_verdict(claim_id)
+        return claim
+
+    def test_unmapped_credentialed_supported_claim_withholds_q(self):
+        registry = {"J1": "c" * 64}
+        claims = [good_claim(), self._beyond_contract_claim()]
+        result = evaluate_terminal_quality(contract(), output(good_claim(), claims=claims), self.sources, registry)
+        self.assertIsNone(result["Q_final"])
+        self.assertEqual(result["status"], "INCOMPLETE")
+        self.assertIn("UNMAPPED_MATERIAL_CLAIM", result["blocking_reasons"])
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fp"], 0.0)
+        self.assertEqual(result["unmapped_supported_claims"]["claim_ids"], ["C9"])
+        self.assertEqual(result["unmapped_supported_claims"]["weight"], 1.0)
+        self.assertEqual(result["claim_results"][1]["status"], "UNMAPPED_SUPPORTED_CLAIM")
+
+    def test_unmapped_claim_without_credential_never_counts_tp(self):
+        claims = [good_claim(), self._beyond_contract_claim(with_verdict=False)]
+        result = evaluate_terminal_quality(contract(), output(good_claim(), claims=claims), self.sources)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
+        self.assertIsNone(result["Q_final"])
+        self.assertIn("CLAIM_ASSESSMENT_INCOMPLETE", result["blocking_reasons"])
+
+    def test_claim_fully_matching_gold_uses_normal_rules_alongside_unmapped(self):
+        registry = {"J1": "c" * 64}
+        matching = dict(good_claim())
+        matching.pop("fact_id")  # tuple-matches F1 through the normal matching path
+        claims = [matching, self._beyond_contract_claim()]
+        result = evaluate_terminal_quality(contract(), output(good_claim(), claims=claims), self.sources, registry)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["claim_results"][0]["status"], "CORRECT_GOLD")
+        self.assertIsNone(result["Q_final"])  # the unmapped claim still withholds
+
+    def test_unmapped_claim_evaluated_normally_after_contract_promotion(self):
+        v2 = contract()
+        v2["task_id"] = "T1_v2"
+        v2["required_facts"].append({
+            "fact_id": "FX", "status": "GOLD_CONFIRMED", "gold_provenance": "human_adjudicated",
+            "gold_source_sha256": RAW_SHA,
+            "review": {"status": "ADJUDICATED", "independent_reviewers": 2, "reviewer_ids": ["R1", "R2"], "blind_to_strategy": True, "blind_to_model": True},
+            "weight": 1.0, "value_kind": "text", "subject": "某公司", "predicate": "告知书编号",
+            "value": "0142026049号",
+            "source_evidence": [{"doc_id": "D1", "page": 1, "quote": "编号0142026049号", "page_sha256": PAGE_SHA, "raw_sha256": RAW_SHA}],
+        })
+        promoted = {
+            "claim_id": "C9", "fact_id": "FX", "material": True,
+            "subject": "某公司", "predicate": "告知书编号", "value": "0142026049号",
+            "citations": [{"doc_id": "D1", "page": 1, "quote": "编号0142026049号", "page_sha256": PAGE_SHA, "raw_sha256": RAW_SHA}],
+        }
+        claims = [good_claim(), promoted]
+        result = evaluate_terminal_quality(v2, output(good_claim(), claims=claims), self.sources)
+        self.assertIsNotNone(result["Q_final"])
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 2.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fp"], 0.0)
+        self.assertEqual(result["unmapped_supported_claims"]["count"], 0)
+
+    def test_unmapped_rule_applies_identically_across_strategies(self):
+        registry = {"J1": "c" * 64}
+        strategy_a = output(good_claim(), claims=[good_claim(), self._beyond_contract_claim("C9")])
+        strategy_b = output(good_claim(), claims=[good_claim(), self._beyond_contract_claim("Z7")])
+        result_a = evaluate_terminal_quality(contract(), strategy_a, self.sources, registry)
+        result_b = evaluate_terminal_quality(contract(), strategy_b, self.sources, registry)
+        self.assertIsNone(result_a["Q_final"])
+        self.assertIsNone(result_b["Q_final"])
+        self.assertEqual(result_a["blocking_reasons"], result_b["blocking_reasons"])
+        self.assertEqual(result_a["fact_metrics"], result_b["fact_metrics"])
+
+    def test_nonmaterial_claims_recorded_not_dropped(self):
+        side = good_claim(claim_id="C8", material=False)
+        claims = [good_claim(), side]
+        result = evaluate_terminal_quality(contract(), output(good_claim(), claims=claims), self.sources)
+        self.assertEqual(result["nonmaterial_claims"]["claim_ids"], ["C8"])
+        self.assertEqual(result["nonmaterial_claims"]["count"], 1)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["Q_final"], 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()

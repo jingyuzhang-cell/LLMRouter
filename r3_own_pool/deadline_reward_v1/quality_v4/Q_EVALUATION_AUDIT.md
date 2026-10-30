@@ -103,3 +103,19 @@ A fresh independent adversarial review (subagent, no authorship context; every f
 **Recorded, not changed (open ruling questions):** L4 native-annotation evidence semantics, L5 credentialed-SUPPORTED-on-unmatched-claim currently withholds Q (beyond-contract true assertions make the answer unscorable — whether they should be a distinct fp class is an operator decision), L6 evidence satisfaction assessed on the first matching claim only, L9 blocking-vs-veto precedence (now documented explicitly in §9: withholding outranks the zero veto).
 
 Test suite: +12 regression tests for the above (54 total); five tautological `assertIsNotNone` gate assertions strengthened to exact values; one fixture bug (duplicate claim_id "C1" in the unanswerable-assertion test) surfaced by the new validator and fixed. **Real execution: `Ran 54 tests in 0.013s — OK (exit 0)`; double-run byte-identical.** PR remains DRAFT pending operator's final review; NOT_HUMAN_CALIBRATED unchanged.
+
+## Operator ruling L5 implemented → terminal_quality_v1.2.2 (2026-10-30)
+
+The operator closed the last open semantic question: a credentialed SUPPORTED claim beyond the Gold contract is **neither TP, nor FP, nor ignorable**. Implemented as the independent state `UNMAPPED_SUPPORTED_CLAIM`:
+
+- No TP (a judge cannot create Gold), no FP (unmapped ≠ wrong), no silent skip (answers must not flood unverified facts).
+- Independent ledger: claim ids, count, aggregate weight (`unmapped_supported_claims`).
+- Q_final = NULL, status INCOMPLETE, blocking reason `UNMAPPED_MATERIAL_CLAIM`; Q_raw/dimensions remain diagnostic only.
+- Promotion path: a fact that matters is humanly verified and pre-registered into a NEW contract version before formal evaluation — never after seeing a strategy's answers; in the new version the claim evaluates under normal matching rules.
+- `material: false` is assigned solely by the frozen atomization rules; non-material claims are now recorded (`nonmaterial_claims`) instead of silently dropped.
+
+Other open questions resolved by the same ruling without code change: L4 keeps the dataset/annotation hash-binding requirement (boundary docs due before P2/P3 freeze); L6 keeps the conservative first-match evidence rule; L9 keeps documented blocking-over-veto precedence.
+
+Regression tests added (6, per the operator's five mandated scenarios plus non-material audit): credentialed SUPPORTED beyond-Gold → independent record + NULL; beyond-Gold without credential → never TP; fully-matching claim uses normal rules alongside an unmapped one; promotion via a new contract version evaluates the same claim normally (tp=2, no unmapped); identical unmapped treatment across two simulated strategy outputs (same blocking, same metrics); non-material claims recorded, not dropped. **Real execution: `Ran 60 tests in 0.071s — OK (exit 0)`; double-run byte-identical.**
+
+PR path per operator: this version → full re-run ✔ → fresh no-author-context review (next) → final code review → operator merge approval. PR stays DRAFT.

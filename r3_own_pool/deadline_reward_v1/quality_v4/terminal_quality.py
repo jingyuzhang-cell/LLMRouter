@@ -565,6 +565,8 @@ def evaluate_terminal_quality(
     matched_ids = set()
     evidence_ok_fact_ids = set()
     unassessed_claims: List[str] = []
+    unmapped_supported: List[Dict[str, Any]] = []
+    nonmaterial_claim_ids: List[Any] = []
     claim_results = []
     seen_claim_ids = set()
     material_claims = [claim for claim in claims if isinstance(claim, Mapping) and claim.get("material", True)]
@@ -582,6 +584,10 @@ def evaluate_terminal_quality(
             blocking.append("CLAIM_STRUCTURE_INVALID_NON_MAPPING")
             continue
         if not claim.get("material", True):
+            # material=False is assigned by the frozen atomization rules of the
+            # extraction stage — never by the evaluated model. Non-material
+            # claims stay visible for audit instead of being silently dropped.
+            nonmaterial_claim_ids.append(claim.get("claim_id"))
             continue
         weight = _finite_float(claim.get("weight", 1.0))
         if weight is None or weight <= 0:
@@ -636,6 +642,17 @@ def evaluate_terminal_quality(
             fp_weight += weight
             warnings.append("UNVERIFIABLE_ITEM_ASSERTED")
             claim_results.append({"claim_id": claim.get("claim_id"), "status": "ASSERTED_UNVERIFIABLE"})
+        elif verdict == "SUPPORTED":
+            # Operator ruling L5 (2026-10-30): a credentialed SUPPORTED claim that
+            # matches no formal Gold fact is neither TP (a judge cannot create
+            # Gold), nor FP (unmapped does not mean wrong), nor ignorable (else
+            # answers could flood unverified facts). It is recorded as an
+            # independent state and withholds formal Q; if the fact matters it
+            # must be humanly verified and pre-registered into a NEW contract
+            # version before formal evaluation — never added after seeing a
+            # strategy's answers.
+            unmapped_supported.append({"claim_id": claim.get("claim_id"), "weight": weight})
+            claim_results.append({"claim_id": claim.get("claim_id"), "status": "UNMAPPED_SUPPORTED_CLAIM", "fact_id": None})
         elif verdict in {"CONTRADICTED", "UNSUPPORTED"}:
             fp_weight += weight
             claim_results.append({"claim_id": claim.get("claim_id"), "status": verdict})
@@ -646,6 +663,8 @@ def evaluate_terminal_quality(
 
     if unassessed_claims:
         blocking.append("CLAIM_ASSESSMENT_INCOMPLETE")
+    if unmapped_supported:
+        blocking.append("UNMAPPED_MATERIAL_CLAIM")
 
     def _safe_fid(fact: Mapping[str, Any]):
         fact_id = fact.get("fact_id")
@@ -789,7 +808,7 @@ def evaluate_terminal_quality(
 
     return {
         "task_id": task_contract.get("task_id"),
-        "evaluation_version": "terminal_quality_v1.2.1",
+        "evaluation_version": "terminal_quality_v1.2.2",
         "status": "SCORABLE_GOLD" if semantic_q is not None else "INCOMPLETE",
         "Q_final": round(semantic_q, 6) if semantic_q is not None else None,
         "Q_raw": round(q_partial, 6) if q_partial is not None else None,
@@ -814,6 +833,15 @@ def evaluate_terminal_quality(
         },
         "claim_results": claim_results,
         "unassessed_claim_ids": unassessed_claims,
+        "unmapped_supported_claims": {
+            "claim_ids": [entry["claim_id"] for entry in unmapped_supported],
+            "count": len(unmapped_supported),
+            "weight": round(sum(entry["weight"] for entry in unmapped_supported), 6),
+        },
+        "nonmaterial_claims": {
+            "claim_ids": nonmaterial_claim_ids,
+            "count": len(nonmaterial_claim_ids),
+        },
         "blocking_reasons": sorted(set(blocking)),
         "quality_warnings": sorted(set(warnings)),
         "scoring_scope": "final_sink_only",
