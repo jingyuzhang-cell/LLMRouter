@@ -566,11 +566,16 @@ def evaluate_terminal_quality(
     evidence_ok_fact_ids = set()
     unassessed_claims: List[str] = []
     unmapped_supported: List[Dict[str, Any]] = []
+    ledger_seen_ids = set()
     nonmaterial_claim_ids: List[Any] = []
     claim_results = []
     seen_claim_ids = set()
-    material_claims = [claim for claim in claims if isinstance(claim, Mapping) and claim.get("material", True)]
-    for claim in material_claims:
+    # Structural id/weight validation covers ALL claims, material or not: the
+    # material flag is a scoring-scope property, never a structure bypass.
+    for claim in claims:
+        if not isinstance(claim, Mapping):
+            blocking.append("CLAIM_STRUCTURE_INVALID_NON_MAPPING")
+            continue
         claim_id = claim.get("claim_id")
         if claim_id is None or not str(claim_id).strip() or not _hashable_scalar(claim_id):
             blocking.append(f"CLAIM_ID_INVALID:{claim_id}")
@@ -579,23 +584,22 @@ def evaluate_terminal_quality(
             blocking.append(f"CLAIM_ID_DUPLICATE:{claim_id}")
         else:
             seen_claim_ids.add(claim_id)
-    for claim in claims:
-        if not isinstance(claim, Mapping):
-            blocking.append("CLAIM_STRUCTURE_INVALID_NON_MAPPING")
-            continue
+        weight_probe = _finite_float(claim.get("weight", 1.0))
         if not claim.get("material", True):
-            # material=False is assigned by the frozen atomization rules of the
-            # extraction stage — never by the evaluated model. Non-material
-            # claims stay visible for audit instead of being silently dropped.
-            nonmaterial_claim_ids.append(claim.get("claim_id"))
-            continue
-        weight = _finite_float(claim.get("weight", 1.0))
-        if weight is None or weight <= 0:
+            nonmaterial_claim_ids.append(claim_id)
+        elif weight_probe is None or weight_probe <= 0:
             # Claim weights are assigned by the frozen extraction stage, not by
             # the evaluated answer; an unparseable one is an evaluation defect.
-            blocking.append(f"CLAIM_WEIGHT_INVALID:{claim.get('claim_id')}")
-            claim_results.append({"claim_id": claim.get("claim_id"), "status": "INVALID_CLAIM_WEIGHT", "fact_id": None})
-            continue
+            blocking.append(f"CLAIM_WEIGHT_INVALID:{claim_id}")
+            claim_results.append({"claim_id": claim_id, "status": "INVALID_CLAIM_WEIGHT", "fact_id": None})
+    for claim in claims:
+        if not isinstance(claim, Mapping):
+            continue  # already flagged by the structure pass
+        if not claim.get("material", True):
+            continue  # already recorded in nonmaterial_claim_ids by the structure pass
+        weight = _finite_float(claim.get("weight", 1.0))
+        if weight is None or weight <= 0:
+            continue  # already flagged by the structure pass
         asserted_claim_weight += weight
         fact = None if claim.get("item_id") in unknown_ids else _find_fact(claim, gold)
         citations = claim.get("citations") or []
@@ -651,8 +655,13 @@ def evaluate_terminal_quality(
             # must be humanly verified and pre-registered into a NEW contract
             # version before formal evaluation — never added after seeing a
             # strategy's answers.
-            unmapped_supported.append({"claim_id": claim.get("claim_id"), "weight": weight})
-            claim_results.append({"claim_id": claim.get("claim_id"), "status": "UNMAPPED_SUPPORTED_CLAIM", "fact_id": None})
+            claim_id = claim.get("claim_id")
+            if claim_id in ledger_seen_ids:
+                warnings.append(f"UNMAPPED_LEDGER_DUPLICATE_SKIPPED:{claim_id}")
+            else:
+                ledger_seen_ids.add(claim_id)
+                unmapped_supported.append({"claim_id": claim_id, "weight": weight})
+            claim_results.append({"claim_id": claim_id, "status": "UNMAPPED_SUPPORTED_CLAIM", "fact_id": None})
         elif verdict in {"CONTRADICTED", "UNSUPPORTED"}:
             fp_weight += weight
             claim_results.append({"claim_id": claim.get("claim_id"), "status": verdict})
@@ -665,6 +674,10 @@ def evaluate_terminal_quality(
         blocking.append("CLAIM_ASSESSMENT_INCOMPLETE")
     if unmapped_supported:
         blocking.append("UNMAPPED_MATERIAL_CLAIM")
+    if not all(math.isfinite(value) for value in (tp_weight, fp_weight, asserted_claim_weight)):
+        # Individually finite claim weights can still overflow the sums.
+        blocking.append("CLAIM_WEIGHT_SUM_NOT_FINITE")
+        tp_weight = fp_weight = asserted_claim_weight = 0.0
 
     def _safe_fid(fact: Mapping[str, Any]):
         fact_id = fact.get("fact_id")
@@ -721,7 +734,7 @@ def evaluate_terminal_quality(
     correct_abstentions = abstained_ids & unknown_ids
     asserted_unknown = {
         claim.get("item_id") for claim in claims
-        if isinstance(claim, Mapping) and claim.get("item_id") in unknown_ids and claim.get("material", True)
+        if isinstance(claim, Mapping) and claim.get("item_id") in unknown_ids
     }
     unknown_score = len(correct_abstentions - asserted_unknown) / len(unknown_ids) if unknown_ids else None
     if unknown_ids and not terminal_output.get("abstentions_complete", False):
@@ -808,7 +821,7 @@ def evaluate_terminal_quality(
 
     return {
         "task_id": task_contract.get("task_id"),
-        "evaluation_version": "terminal_quality_v1.2.2",
+        "evaluation_version": "terminal_quality_v1.2.3",
         "status": "SCORABLE_GOLD" if semantic_q is not None else "INCOMPLETE",
         "Q_final": round(semantic_q, 6) if semantic_q is not None else None,
         "Q_raw": round(q_partial, 6) if q_partial is not None else None,
@@ -836,7 +849,10 @@ def evaluate_terminal_quality(
         "unmapped_supported_claims": {
             "claim_ids": [entry["claim_id"] for entry in unmapped_supported],
             "count": len(unmapped_supported),
-            "weight": round(sum(entry["weight"] for entry in unmapped_supported), 6),
+            "weight": (
+                value if math.isfinite(value := round(sum(entry["weight"] for entry in unmapped_supported), 6))
+                else None
+            ),
         },
         "nonmaterial_claims": {
             "claim_ids": nonmaterial_claim_ids,

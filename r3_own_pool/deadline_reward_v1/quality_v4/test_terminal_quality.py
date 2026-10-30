@@ -760,6 +760,51 @@ class TerminalQualityTests(unittest.TestCase):
         self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
         self.assertEqual(result["Q_final"], 1.0)
 
+    # --- v1.2.3: mechanical guards from the v1.2.2 focused review ---
+
+    def test_unmapped_ledger_weight_finite_or_null(self):
+        import json as _json
+        registry = {"J1": "c" * 64}
+        heavy_a = self._beyond_contract_claim("C9")
+        heavy_a["weight"] = 1e308
+        heavy_b = self._beyond_contract_claim("C8")
+        heavy_b["weight"] = 1e308
+        claims = [good_claim(), heavy_a, heavy_b]
+        result = evaluate_terminal_quality(contract(), output(good_claim(), claims=claims), self.sources, registry)
+        self.assertIsNone(result["Q_final"])
+        self.assertIn("CLAIM_WEIGHT_SUM_NOT_FINITE", result["blocking_reasons"])
+        self.assertIsNone(result["unmapped_supported_claims"]["weight"])
+        for metric in result["fact_metrics"].values():
+            self.assertNotEqual(metric, float("inf"))
+        _json.dumps(result, allow_nan=False)  # must not raise
+
+    def test_unmapped_ledger_does_not_double_count_duplicate_ids(self):
+        registry = {"J1": "c" * 64}
+        claims = [good_claim(), self._beyond_contract_claim("C9"), self._beyond_contract_claim("C9")]
+        result = evaluate_terminal_quality(contract(), output(good_claim(), claims=claims), self.sources, registry)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("CLAIM_ID_DUPLICATE" in r for r in result["blocking_reasons"]))
+        self.assertEqual(result["unmapped_supported_claims"]["count"], 1)
+        self.assertEqual(result["unmapped_supported_claims"]["weight"], 1.0)
+        self.assertTrue(any(w.startswith("UNMAPPED_LEDGER_DUPLICATE_SKIPPED") for w in result["quality_warnings"]))
+
+    def test_nonmaterial_unknown_assertion_still_detected(self):
+        task = contract()
+        task["unknown_items"] = [{"item_id": "U1", "description": "最终处罚决定"}]
+        sneaky = good_claim(claim_id="C8", material=False)
+        sneaky["item_id"] = "U1"
+        abstention = [{"item_id": "U1", "text": "材料未披露最终处罚决定，无法核验。"}]
+        result = evaluate_terminal_quality(task, output(good_claim(), claims=[good_claim(), sneaky], abstentions=abstention), self.sources)
+        self.assertEqual(result["dimensions"]["unverifiable_refusal"], 0.0)
+        self.assertIn("UNVERIFIABLE_ITEM_ASSERTED", result["quality_warnings"])
+
+    def test_structure_gates_cover_nonmaterial_claims(self):
+        shadow = good_claim(claim_id="C1", material=False)  # duplicates the material claim's id
+        claims = [good_claim(), shadow]
+        result = evaluate_terminal_quality(contract(), output(good_claim(), claims=claims), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("CLAIM_ID_DUPLICATE:C1" in r for r in result["blocking_reasons"]))
+
 
 if __name__ == "__main__":
     unittest.main()
