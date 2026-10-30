@@ -58,20 +58,20 @@ class TerminalQualityTests(unittest.TestCase):
 
     def test_wrong_date_type_does_not_match_same_date(self):
         result = evaluate_terminal_quality(contract(), output(good_claim(date_type="publication")), self.sources)
-        self.assertIsNotNone(result["Q_final"])
+        self.assertEqual(result["Q_final"], 0.0)
         self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
         self.assertEqual(result["fact_metrics"]["weighted_tp"], 0.0)
 
     def test_keyword_or_quote_hit_without_correct_predicate_is_not_pass(self):
         claim = good_claim(predicate="行政处罚决定作出日期", value="处罚")
         result = evaluate_terminal_quality(contract(), output(claim), self.sources)
-        self.assertIsNotNone(result["Q_final"])
+        self.assertEqual(result["Q_final"], 0.0)
         self.assertEqual(result["fact_metrics"]["weighted_tp"], 0.0)
         self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
 
     def test_wrong_unit_does_not_match(self):
         result = evaluate_terminal_quality(contract(), output(good_claim(unit="publication_date")), self.sources)
-        self.assertIsNotNone(result["Q_final"])
+        self.assertEqual(result["Q_final"], 0.0)
         self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
 
     def test_missing_required_fact_reduces_completeness(self):
@@ -115,11 +115,11 @@ class TerminalQualityTests(unittest.TestCase):
     def test_unanswerable_assertion_is_not_hidden_by_keyword_match(self):
         task = contract()
         task["unknown_items"] = [{"item_id": "U1", "description": "最终处罚决定"}]
-        bad_claim = good_claim()
+        bad_claim = good_claim(claim_id="C2")
         bad_claim["item_id"] = "U1"
         final_output = output(good_claim(), claims=[good_claim(), bad_claim], abstentions=[])
         result = evaluate_terminal_quality(task, final_output, self.sources)
-        self.assertIsNotNone(result["Q_final"])
+        self.assertEqual(result["Q_final"], 0.6)
         self.assertEqual(result["dimensions"]["unverifiable_refusal"], 0.0)
         self.assertIn("UNVERIFIABLE_ITEM_ASSERTED", result["quality_warnings"])
 
@@ -307,7 +307,7 @@ class TerminalQualityTests(unittest.TestCase):
         nan_claim = good_claim(claim_id="C2", fact_id="F2", subject="某公司", predicate="处罚金额", value="NaN", unit="万元")
         inf_claim = good_claim(claim_id="C3", fact_id="F2", subject="某公司", predicate="处罚金额", value="Infinity", unit="万元")
         result = evaluate_terminal_quality(task, output(good_claim(), claims=[good_claim(), nan_claim, inf_claim]), self.sources)
-        self.assertIsNotNone(result["Q_final"])
+        self.assertAlmostEqual(result["Q_final"], 0.541667, places=6)
         self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
         self.assertEqual(result["fact_metrics"]["weighted_fp"], 2.0)
 
@@ -544,6 +544,127 @@ class TerminalQualityTests(unittest.TestCase):
         result = evaluate_terminal_quality(task, output(claim), sources)
         self.assertEqual(result["fact_metrics"]["weighted_tp"], 0.0)
         self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
+
+    # --- Regression tests for independent adversarial re-review of v1.2 (H1/M1-M7/L) ---
+
+    def test_malformed_citation_offsets_do_not_crash(self):
+        bad_offset = {"doc_id": "D1", "page": 1, "quote": "公司于2026年9月18日收到中国证监会立案告知书",
+                      "page_sha256": PAGE_SHA, "raw_sha256": RAW_SHA, "start": "x", "end": 5}
+        result = evaluate_terminal_quality(contract(), output(good_claim(citations=[bad_offset])), self.sources)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["dimensions"]["evidence_support"], 0.0)
+        self.assertIsNotNone(result["Q_final"])
+
+    def test_non_mapping_citations_and_claims_do_not_crash(self):
+        claim = good_claim(citations="not-a-list")
+        result = evaluate_terminal_quality(contract(), output(claim), self.sources)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["dimensions"]["evidence_support"], 0.0)
+        self.assertIsNotNone(result["Q_final"])
+        junk = output(good_claim(), claims=[good_claim(), "not-a-claim"])
+        result2 = evaluate_terminal_quality(contract(), junk, self.sources)
+        self.assertIsNone(result2["Q_final"])
+        self.assertIn("CLAIM_STRUCTURE_INVALID_NON_MAPPING", result2["blocking_reasons"])
+
+    def test_huge_weights_cannot_emit_nonfinite_q(self):
+        task = contract()
+        task["required_facts"].append(self._amount_fact())
+        task["required_facts"][0]["weight"] = 1e308
+        task["required_facts"][1]["weight"] = 1e308
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("WEIGHT_SUM_NOT_FINITE" in r for r in result["blocking_reasons"]))
+
+    def test_unknown_item_without_id_blocks_instead_of_poisoning(self):
+        task = contract()
+        task["unknown_items"] = [
+            {"item_id": "U1", "description": "最终处罚决定"},
+            {"description": "missing id"},
+        ]
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])  # blocked, NOT scored 0.0
+        self.assertTrue(any("UNKNOWN_ITEM_ID_INVALID" in r for r in result["blocking_reasons"]))
+
+    def test_unparseable_coverage_and_weight_do_not_crash(self):
+        unparseable = contract()
+        unparseable["min_gold_coverage"] = "abc"
+        result = evaluate_terminal_quality(unparseable, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        bad_weight = contract()
+        bad_weight["required_facts"].append(self._amount_fact())
+        bad_weight["required_facts"][-1]["weight"] = "abc"
+        result2 = evaluate_terminal_quality(bad_weight, output(good_claim()), self.sources)
+        self.assertIsNone(result2["Q_final"])
+
+    def test_verdict_on_idless_claim_is_invalid(self):
+        claim = good_claim(value="2026年9月18日", predicate="公司收件日")
+        claim.pop("claim_id")
+        claim["assessment"] = {
+            "verdict": "SUPPORTED", "assessor_type": "calibrated_judge",
+            "calibration_status": "PASS", "judge_id": "J1",
+            "calibration_artifact_sha256": "c" * 64,
+            "blind_to_strategy": True, "blind_to_model": True,
+            "binding_claim_id": "ANYTHING",
+        }
+        result = evaluate_terminal_quality(contract(), output(claim), self.sources, {"J1": "c" * 64})
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 0.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
+
+    def test_duplicate_claim_ids_block_evaluation(self):
+        verdict = {
+            "verdict": "SUPPORTED", "assessor_type": "calibrated_judge",
+            "calibration_status": "PASS", "judge_id": "J1",
+            "calibration_artifact_sha256": "c" * 64,
+            "blind_to_strategy": True, "blind_to_model": True,
+            "binding_claim_id": "C1",
+        }
+        claim = good_claim(value="2026年9月18日", predicate="公司收件日", assessment=verdict)
+        twin = good_claim(claim_id="C1", value="2026年9月18日", predicate="公司收件日", assessment=verdict)
+        result = evaluate_terminal_quality(contract(), output(claim, claims=[claim, twin]), self.sources, {"J1": "c" * 64})
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("CLAIM_ID_DUPLICATE" in r for r in result["blocking_reasons"]))
+
+    def test_conflict_unresolved_reference_blocks_formal_q(self):
+        task = contract()
+        task["required_facts"].append(self._amount_fact(status="CONFLICT_UNRESOLVED"))
+        task["min_gold_coverage"] = 0.5
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("REFERENCE_CONFLICT_UNRESOLVED" in r for r in result["blocking_reasons"]))
+
+    def test_tolerance_bounds_enforced(self):
+        unbounded = contract()
+        unbounded["required_facts"].append(self._amount_fact())
+        unbounded["required_facts"][-1]["tolerance"] = "1e999"
+        result = evaluate_terminal_quality(unbounded, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any(r.startswith("GOLD_CONTRACT_INVALID_VALUE:F2") for r in result["blocking_reasons"]))
+        negative = contract()
+        negative["required_facts"].append(self._amount_fact())
+        negative["required_facts"][-1]["tolerance"] = "-1"
+        result2 = evaluate_terminal_quality(negative, output(good_claim()), self.sources)
+        self.assertIsNone(result2["Q_final"])
+
+    def test_zero_gold_contract_never_formal(self):
+        task = contract(status="SILVER_SOURCE_ANCHORED")
+        task["min_gold_coverage"] = 0.0
+        result = evaluate_terminal_quality(task, output(good_claim(), claims=[]), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertIn("NO_FORMAL_GOLD", result["blocking_reasons"])
+
+    def test_unhashable_fact_id_blocks_without_crash(self):
+        task = contract()
+        task["required_facts"][0]["fact_id"] = ["F1"]
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any("FACT_ID_NOT_SCALAR" in r for r in result["blocking_reasons"]))
+
+    def test_bool_relevance_score_rejected(self):
+        relevance = {"score": True, "assessor_type": "human_adjudicator", "review_status": "ADJUDICATED",
+                     "reviewer_ids": ["R1", "R2"], "blind_to_strategy": True, "blind_to_model": True}
+        result = evaluate_terminal_quality(contract(), output(good_claim(), question_relevance=relevance), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertIn("QUESTION_RELEVANCE_NOT_VALIDLY_ASSESSED", result["blocking_reasons"])
 
 
 if __name__ == "__main__":

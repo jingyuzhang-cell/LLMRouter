@@ -85,6 +85,8 @@ Q_raw (the weighted six-dimension mean) is retained for diagnostics; Q_final is 
 3. Omission, wrong value, wrong subject, wrong date type and wrong fact relation are all judged against the pre-frozen contract; FAIL dominates UNKNOWN.
 4. If the contract sets `evidence_required: true` on a critical fact, a correct value without qualifying evidence support also fails the gate.
 
+Precedence (explicit): when the evaluation itself is incomplete (blocked extraction, unassessed material claims, invalid contract, insufficient Gold basis), Q_final is NULL even if a critical fact is also confirmed wrong — withholding outranks the zero veto. The zero veto applies only when the rest of the evaluation could have produced a score.
+
 ## 10. Deterministic verification precedence (operator ruling 2026-10-30)
 
 Typed deterministic validation runs first; a semantic judge may only operate where determinism does not apply:
@@ -113,6 +115,11 @@ A calibrated judge's SUPPORTED verdict can never override a deterministic result
 **Substance over field presence (UNKNOWN and conflicts):**
 - An UNKNOWN abstention counts only with an explicit non-empty refusal text; a bare item_id tick does not.
 - A conflict acknowledgement counts only when each required source document carries its own non-empty `source_versions` text attributing that source's version of the competing fact.
+
+**Frozen-behavior notes (recorded from the 2026-10-30 adversarial re-review; semantic changes require an operator ruling):**
+- Native-dataset-annotation facts: the dataset annotation itself is the evidence by construction; `evidence_required` is therefore satisfied without citations for this provenance class.
+- A credentialed SUPPORTED verdict on a claim that matches no Gold fact withholds formal Q (CLAIM_ASSESSMENT_INCOMPLETE): the evaluator cannot confirm an assertion outside the frozen reference, and a bare positive verdict cannot create reference coverage. Whether such claims should instead count as a distinct beyond-contract false positive is an open ruling question.
+- Evidence satisfaction for a fact is assessed on the claim that first matched it; later duplicates carrying the real citations do not retroactively satisfy `evidence_required` (conservative first-match rule).
 
 ## 12. Production acceptance
 1. Freeze task questions and required fact lists.

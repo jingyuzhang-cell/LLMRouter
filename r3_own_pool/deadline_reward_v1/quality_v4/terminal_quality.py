@@ -44,6 +44,30 @@ def _sha256_wellformed(value: Any) -> bool:
     )
 
 
+def _safe_int(value: Any) -> Optional[int]:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _hashable_scalar(value: Any) -> bool:
+    if isinstance(value, (list, dict, set, tuple, bool)) or value is None:
+        return False
+    try:
+        hash(value)
+    except TypeError:
+        return False
+    return True
+
+
+def _fact_weight(fact: Mapping[str, Any]) -> float:
+    """Positive finite weight with a safe default; invalid values are already
+    flagged by the contract-structure gate and must not crash the scorer."""
+    weight = _finite_float(fact.get("weight", 1.0))
+    return weight if weight is not None and weight > 0 else 1.0
+
+
 def _norm_text(value: Any) -> str:
     text = unicodedata.normalize("NFKC", str(value if value is not None else ""))
     return re.sub(r"\s+", "", text).casefold()
@@ -115,10 +139,16 @@ def _formal_gold(
     if fact["gold_provenance"] == "human_adjudicated":
         review = fact.get("review", {})
         reviewer_ids = review.get("reviewer_ids", [])
+        reviewers = _safe_int(review.get("independent_reviewers", 0))
+        try:
+            distinct_reviewers = len(set(reviewer_ids))
+        except TypeError:
+            return False
         if not (
             review.get("status") == "ADJUDICATED"
-            and int(review.get("independent_reviewers", 0)) >= 2
-            and len(set(reviewer_ids)) >= 2
+            and reviewers is not None
+            and reviewers >= 2
+            and distinct_reviewers >= 2
             and review.get("blind_to_strategy") is True
             and review.get("blind_to_model") is True
         ):
@@ -146,11 +176,18 @@ def _formal_gold(
 def _gold_contract_value_valid(fact: Mapping[str, Any]) -> bool:
     kind = fact.get("value_kind", "text")
     if kind in NUMERIC_VALUE_KINDS:
-        if _decimal(fact.get("value")) is None:
+        target = _decimal(fact.get("value"))
+        if target is None:
             return False
         tolerance = fact.get("tolerance")
-        if tolerance is not None and _decimal(tolerance) is None:
-            return False
+        if tolerance is not None:
+            parsed = _decimal(tolerance)
+            # Tolerance must be finite, non-negative and bounded by the value it
+            # guards: an unbounded tolerance voids the critical-fact gate, a
+            # negative one makes the fact permanently unmatchable.
+            bound = abs(target) if abs(target) > 0 else Decimal("1")
+            if parsed is None or parsed < 0 or parsed > bound:
+                return False
     if kind == "date" and _date(fact.get("value")) is None:
         return False
     return True
@@ -210,14 +247,15 @@ def _span_is_valid(
     if expected_raw_sha256 and doc.get("raw_sha256") != expected_raw_sha256:
         return False
     if start is not None or end is not None:
-        if start is None or end is None or not (0 <= int(start) <= int(end) <= len(text)):
+        start_i, end_i = _safe_int(start), _safe_int(end)
+        if start_i is None or end_i is None or not (0 <= start_i <= end_i <= len(text)):
             return False
-        return _norm_text(text[int(start):int(end)]) == _norm_text(quote)
+        return _norm_text(text[start_i:end_i]) == _norm_text(quote)
     return bool(_norm_text(quote) and _norm_text(quote) in _norm_text(text))
 
 
 def _reference_evidence_valid(fact: Mapping[str, Any], source_pages: Mapping[str, Any]) -> bool:
-    evidence = fact.get("source_evidence") or []
+    evidence = [item for item in (fact.get("source_evidence") or []) if isinstance(item, Mapping)]
     if not evidence:
         return fact.get("gold_provenance") == "native_dataset_annotation" and bool(fact.get("gold_source_sha256"))
     if fact.get("gold_provenance") != "native_dataset_annotation":
@@ -251,11 +289,12 @@ def _citation_matches_evidence(
 
 
 def _citations_support_fact(
-    citations: Sequence[Mapping[str, Any]], fact: Mapping[str, Any], source_pages: Mapping[str, Any]
+    citations: Any, fact: Mapping[str, Any], source_pages: Mapping[str, Any]
 ) -> bool:
-    references = fact.get("source_evidence") or []
+    references = [item for item in (fact.get("source_evidence") or []) if isinstance(item, Mapping)]
     if not references:
         return fact.get("gold_provenance") == "native_dataset_annotation" and bool(fact.get("gold_source_sha256"))
+    citations = [c for c in (citations or []) if isinstance(c, Mapping)]
     if not citations:
         return False
     mode = fact.get("evidence_mode", "ALL" if fact.get("derivation") else "ANY")
@@ -293,11 +332,14 @@ def _valid_assessment(
         valid = (
             assessment.get("calibration_status") == "PASS"
             and _sha256_wellformed(artifact)
+            and isinstance(judge_id, str)
+            and judge_id.strip() != ""
             and assessment.get("blind_to_strategy") is True
             and assessment.get("blind_to_model") is True
             and calibration_registry is not None
             and isinstance(judge_id, str)
-            and calibration_registry.get(judge_id) == artifact
+            and calibration_registry.get(judge_id) is not None
+            and str(calibration_registry[judge_id]).lower() == str(artifact).lower()
         )
         if context_claim_id is not None:
             valid = valid and assessment.get("binding_claim_id") == context_claim_id
@@ -309,8 +351,13 @@ def _assessment_verdict(
     claim: Mapping[str, Any],
     calibration_registry: Optional[Mapping[str, str]] = None,
 ) -> Optional[str]:
+    claim_id = claim.get("claim_id")
+    if not _hashable_scalar(claim_id) or not str(claim_id).strip():
+        # A verdict cannot be bound to an id-less claim; without a binding the
+        # anti-replay rule would be void.
+        return None
     assessment = claim.get("assessment")
-    if not isinstance(assessment, Mapping) or not _valid_assessment(assessment, claim.get("claim_id"), calibration_registry):
+    if not isinstance(assessment, Mapping) or not _valid_assessment(assessment, claim_id, calibration_registry):
         return None
     verdict = assessment.get("verdict")
     return verdict if verdict in {"SUPPORTED", "CONTRADICTED", "UNSUPPORTED", "UNKNOWN"} else None
@@ -354,12 +401,17 @@ def _derived_value_ok(claim: Mapping[str, Any], fact: Mapping[str, Any], facts_b
         return False
     target, candidate = _decimal(fact.get("value")), _decimal(claim.get("value"))
     tolerance = _decimal(fact.get("tolerance", "0")) or Decimal("0")
-    return target is not None and candidate is not None and abs(expected - target) <= tolerance and abs(candidate - target) <= tolerance
+    try:
+        return target is not None and candidate is not None and abs(expected - target) <= tolerance and abs(candidate - target) <= tolerance
+    except ArithmeticError:
+        return False
 
 
 def _find_fact(claim: Mapping[str, Any], facts: Sequence[Mapping[str, Any]]) -> Optional[Mapping[str, Any]]:
     fact_id = claim.get("fact_id")
-    if fact_id:
+    if fact_id is not None:
+        if not _hashable_scalar(fact_id) or not str(fact_id).strip():
+            return None
         return next((fact for fact in facts if fact.get("fact_id") == fact_id), None)
     matches = [fact for fact in facts if _tuple_equal(claim, fact)]
     return matches[0] if len(matches) == 1 else None
@@ -384,11 +436,20 @@ def _contract_structure_problems(
         fact_id = fact.get("fact_id")
         if fact_id is None or not str(fact_id).strip():
             problems.append("FACT_ID_EMPTY")
+        elif not _hashable_scalar(fact_id):
+            problems.append("FACT_ID_NOT_SCALAR")
         elif fact_id in seen_ids:
             problems.append(f"FACT_ID_DUPLICATE:{fact_id}")
         else:
             seen_ids.add(fact_id)
-    facts_by_id = {fact.get("fact_id"): fact for fact in required if fact.get("fact_id")}
+    for fact in nonexcluded:
+        if fact.get("status") == "CONFLICT_UNRESOLVED":
+            # Protocol §4: unresolved reference conflicts block the affected formal Q.
+            problems.append(f"REFERENCE_CONFLICT_UNRESOLVED:{fact.get('fact_id')}")
+    facts_by_id = {
+        fact.get("fact_id"): fact for fact in required
+        if fact.get("fact_id") is not None and _hashable_scalar(fact.get("fact_id"))
+    }
     for fact in required:
         derivation = fact.get("derivation")
         if not derivation:
@@ -421,6 +482,14 @@ def _contract_structure_problems(
             positive += 1
     if dimension_weights and positive == 0:
         problems.append("DIMENSION_WEIGHTS_ALL_ZERO")
+    for item in task_contract.get("unknown_items", []) or []:
+        item_id = item.get("item_id") if isinstance(item, Mapping) else None
+        if item_id is None or not str(item_id).strip() or not _hashable_scalar(item_id):
+            problems.append("UNKNOWN_ITEM_ID_INVALID")
+    for group in task_contract.get("conflict_groups", []) or []:
+        conflict_id = group.get("conflict_id") if isinstance(group, Mapping) else None
+        if conflict_id is None or not str(conflict_id).strip() or not _hashable_scalar(conflict_id):
+            problems.append("CONFLICT_ID_INVALID")
     return sorted(set(problems))
 
 
@@ -442,8 +511,14 @@ def evaluate_terminal_quality(
     unknown_items = list(task_contract.get("unknown_items", []))
     conflicts = list(task_contract.get("conflict_groups", []))
     claims = list(terminal_output.get("claims", []))
-    facts_by_id = {fact.get("fact_id"): fact for fact in required if fact.get("fact_id")}
-    unknown_ids = {item.get("item_id") for item in unknown_items}
+    facts_by_id = {
+        fact.get("fact_id"): fact for fact in required
+        if fact.get("fact_id") is not None and _hashable_scalar(fact.get("fact_id")) and str(fact.get("fact_id")).strip()
+    }
+    unknown_ids = {
+        item.get("item_id") for item in unknown_items
+        if isinstance(item, Mapping) and item.get("item_id") not in (None, "")
+    }
 
     if not task_contract.get("question"):
         blocking.append("TASK_QUESTION_MISSING")
@@ -456,10 +531,21 @@ def evaluate_terminal_quality(
     gold = [fact for fact in nonexcluded if _formal_gold(fact, facts_by_id)]
     for problem in _contract_structure_problems(task_contract, required, nonexcluded):
         blocking.append(f"CONTRACT_STRUCTURE_INVALID:{problem}")
-    total_weight = sum(float(fact.get("weight", 1.0)) for fact in nonexcluded)
-    gold_weight = sum(float(fact.get("weight", 1.0)) for fact in gold)
+    total_weight = sum(_fact_weight(fact) for fact in nonexcluded)
+    gold_weight = sum(_fact_weight(fact) for fact in gold)
+    if not (math.isfinite(total_weight) and math.isfinite(gold_weight)) or total_weight <= 0:
+        # Huge-but-finite weights overflow the sums to inf; inf/inf = NaN would
+        # silently bypass the coverage gate and emit a non-finite formal Q.
+        blocking.append("CONTRACT_STRUCTURE_INVALID:WEIGHT_SUM_NOT_FINITE")
+        total_weight = gold_weight = 0.0
     gold_coverage = gold_weight / total_weight if total_weight else 0.0
-    min_coverage = float(task_contract.get("min_gold_coverage", 1.0))
+    if gold_weight <= 0:
+        # No formal Gold at all can never ground a formal score, whatever the
+        # coverage threshold says.
+        blocking.append("NO_FORMAL_GOLD")
+    min_coverage = _finite_float(task_contract.get("min_gold_coverage", 1.0))
+    if min_coverage is None:
+        min_coverage = 1.0  # already flagged by the contract-structure gate
     if gold_coverage + 1e-12 < min_coverage:
         blocking.append("REFERENCE_GOLD_COVERAGE_BELOW_GATE")
     for fact in gold:
@@ -480,7 +566,21 @@ def evaluate_terminal_quality(
     evidence_ok_fact_ids = set()
     unassessed_claims: List[str] = []
     claim_results = []
+    seen_claim_ids = set()
+    material_claims = [claim for claim in claims if isinstance(claim, Mapping) and claim.get("material", True)]
+    for claim in material_claims:
+        claim_id = claim.get("claim_id")
+        if claim_id is None or not str(claim_id).strip() or not _hashable_scalar(claim_id):
+            blocking.append(f"CLAIM_ID_INVALID:{claim_id}")
+        elif claim_id in seen_claim_ids:
+            # Duplicate claim ids would let one judge verdict be replayed across claims.
+            blocking.append(f"CLAIM_ID_DUPLICATE:{claim_id}")
+        else:
+            seen_claim_ids.add(claim_id)
     for claim in claims:
+        if not isinstance(claim, Mapping):
+            blocking.append("CLAIM_STRUCTURE_INVALID_NON_MAPPING")
+            continue
         if not claim.get("material", True):
             continue
         weight = _finite_float(claim.get("weight", 1.0))
@@ -498,7 +598,7 @@ def evaluate_terminal_quality(
         verdict = _assessment_verdict(claim, judge_calibration_registry)
 
         if fact and exact and fact["fact_id"] not in matched_ids:
-            tp_weight += min(weight, float(fact.get("weight", 1.0)))
+            tp_weight += min(weight, _fact_weight(fact))
             if citation_ok:
                 supported_claim_weight += weight
                 evidence_ok_fact_ids.add(fact["fact_id"])
@@ -510,7 +610,7 @@ def evaluate_terminal_quality(
             verdict == "SUPPORTED" and fact and fact["fact_id"] not in matched_ids
             and _semantic_core_matches(claim, fact, facts_by_id)
         ):
-            tp_weight += min(weight, float(fact.get("weight", 1.0)))
+            tp_weight += min(weight, _fact_weight(fact))
             if citation_ok:
                 supported_claim_weight += weight
                 evidence_ok_fact_ids.add(fact["fact_id"])
@@ -547,13 +647,17 @@ def evaluate_terminal_quality(
     if unassessed_claims:
         blocking.append("CLAIM_ASSESSMENT_INCOMPLETE")
 
-    fn_weight = sum(float(fact.get("weight", 1.0)) for fact in gold if fact.get("fact_id") not in matched_ids)
+    def _safe_fid(fact: Mapping[str, Any]):
+        fact_id = fact.get("fact_id")
+        return fact_id if _hashable_scalar(fact_id) else None
+
+    fn_weight = sum(_fact_weight(fact) for fact in gold if _safe_fid(fact) not in matched_ids)
     precision = tp_weight / (tp_weight + fp_weight) if tp_weight + fp_weight else 0.0
     recall = tp_weight / (tp_weight + fn_weight) if tp_weight + fn_weight else 0.0
     fact_f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     support_rate = supported_claim_weight / asserted_claim_weight if asserted_claim_weight else 0.0
     completeness = (
-        sum(float(fact.get("weight", 1.0)) for fact in gold if fact.get("fact_id") in matched_ids) / gold_weight
+        sum(_fact_weight(fact) for fact in gold if _safe_fid(fact) in matched_ids) / gold_weight
         if gold_weight else 0.0
     )
 
@@ -565,14 +669,16 @@ def evaluate_terminal_quality(
     #                             and no critical fact is confirmed wrong)
     # `critical` must be frozen in the task contract before any model answer is seen;
     # critical facts must be formal Gold; FAIL dominates UNKNOWN.
-    gold_ids = {fact.get("fact_id") for fact in gold}
+    gold_ids = {fact.get("fact_id") for fact in gold if _hashable_scalar(fact.get("fact_id"))}
     critical_facts = [fact for fact in nonexcluded if fact.get("critical")]
     gate_failed_ids: List[Any] = []
     gate_evidence_failed_ids: List[Any] = []
     gate_unevaluable_ids: List[Any] = []
     for fact in critical_facts:
         fact_id = fact.get("fact_id")
-        if fact_id in matched_ids:
+        if not _hashable_scalar(fact_id):
+            gate_unevaluable_ids.append(fact_id)
+        elif fact_id in matched_ids:
             if fact.get("evidence_required") and fact_id not in evidence_ok_fact_ids:
                 gate_evidence_failed_ids.append(fact_id)
         elif fact_id in gold_ids:
@@ -588,14 +694,15 @@ def evaluate_terminal_quality(
 
     # An abstention counts only with an explicit non-empty refusal text: a bare
     # item_id tick cannot demonstrate the answer actually declined to assert.
+    abstention_items = [i for i in terminal_output.get("abstentions", []) if isinstance(i, Mapping)]
     abstained_ids = {
-        item.get("item_id") for item in terminal_output.get("abstentions", [])
+        item.get("item_id") for item in abstention_items
         if str(item.get("text", "")).strip()
     }
     correct_abstentions = abstained_ids & unknown_ids
     asserted_unknown = {
         claim.get("item_id") for claim in claims
-        if claim.get("item_id") in unknown_ids and claim.get("material", True)
+        if isinstance(claim, Mapping) and claim.get("item_id") in unknown_ids and claim.get("material", True)
     }
     unknown_score = len(correct_abstentions - asserted_unknown) / len(unknown_ids) if unknown_ids else None
     if unknown_ids and not terminal_output.get("abstentions_complete", False):
@@ -603,7 +710,7 @@ def evaluate_terminal_quality(
     if asserted_unknown:
         warnings.append("UNVERIFIABLE_ITEM_ASSERTED")
     bare_abstentions = {
-        item.get("item_id") for item in terminal_output.get("abstentions", [])
+        item.get("item_id") for item in abstention_items
         if not str(item.get("text", "")).strip()
     }
     if bare_abstentions:
@@ -611,9 +718,12 @@ def evaluate_terminal_quality(
 
     acknowledgements = {
         item.get("conflict_id"): item for item in terminal_output.get("conflict_acknowledgements", [])
+        if isinstance(item, Mapping) and _hashable_scalar(item.get("conflict_id"))
     }
     conflict_scores = []
     for conflict in conflicts:
+        if not isinstance(conflict, Mapping):
+            continue
         acknowledgement = acknowledgements.get(conflict.get("conflict_id"), {})
         required_docs = set(conflict.get("required_source_doc_ids", []))
         # Acknowledging a conflict requires per-source substance: each required
@@ -631,7 +741,7 @@ def evaluate_terminal_quality(
     relevance_score = None
     if isinstance(relevance, Mapping) and _valid_assessment(relevance, None, judge_calibration_registry):
         score = relevance.get("score")
-        if isinstance(score, (int, float)) and 0.0 <= float(score) <= 1.0:
+        if isinstance(score, (int, float)) and not isinstance(score, bool) and 0.0 <= float(score) <= 1.0:
             relevance_score = float(score)
     if relevance_score is None:
         blocking.append("QUESTION_RELEVANCE_NOT_VALIDLY_ASSESSED")
@@ -671,10 +781,15 @@ def evaluate_terminal_quality(
         else:
             semantic_q = q_partial if not blocking else None
         delivered_q = semantic_q if semantic_q is not None else None
+    if semantic_q is not None and not math.isfinite(semantic_q):
+        # Formal Q must always be a finite number or NULL — never NaN/Infinity.
+        semantic_q = None
+        delivered_q = None
+        blocking.append("Q_NOT_FINITE")
 
     return {
         "task_id": task_contract.get("task_id"),
-        "evaluation_version": "terminal_quality_v1.2",
+        "evaluation_version": "terminal_quality_v1.2.1",
         "status": "SCORABLE_GOLD" if semantic_q is not None else "INCOMPLETE",
         "Q_final": round(semantic_q, 6) if semantic_q is not None else None,
         "Q_raw": round(q_partial, 6) if q_partial is not None else None,
@@ -685,9 +800,9 @@ def evaluate_terminal_quality(
         "critical_gate": {
             "status": critical_gate,
             "critical_fact_ids": [fact.get("fact_id") for fact in critical_facts],
-            "failed_fact_ids": sorted(set(gate_failed_ids), key=str),
-            "evidence_unsatisfied_fact_ids": sorted(set(gate_evidence_failed_ids), key=str),
-            "unevaluable_fact_ids": sorted(set(gate_unevaluable_ids), key=str),
+            "failed_fact_ids": sorted(set(map(str, gate_failed_ids))),
+            "evidence_unsatisfied_fact_ids": sorted(set(map(str, gate_evidence_failed_ids))),
+            "unevaluable_fact_ids": sorted(set(map(str, gate_unevaluable_ids))),
         },
         "gold_coverage": round(gold_coverage, 6),
         "min_gold_coverage": min_coverage,
