@@ -66,7 +66,38 @@ Calibration must use independent human labels on a held-out split. Judges must b
 
 Historical Q is immutable. New scorer versions create new score versions; do not silently mix or rewrite old values.
 
-## 9. Production acceptance
+## 9. Critical-fact hard gate (operator ruling 2026-10-30)
+
+A three-state fact-level veto applies to facts marked `critical: true` in the frozen task contract:
+
+| Critical-fact state | Q_final | Handling |
+|---|---|---|
+| All correct | Q_raw | normal computation |
+| ≥1 confirmed wrong or omitted | 0 | critical-fact veto |
+| ≥1 unevaluable, no confirmed critical error | NULL | no formal score |
+| Answer not fully parseable | NULL | evaluation blocked |
+| Final answer not delivered | NULL | Q_delivered=0, R_delivery=0 |
+
+Q_raw (the weighted six-dimension mean) is retained for diagnostics; Q_final is the gated formal terminal quality. Boundaries, frozen before any model answer is seen:
+
+1. `critical` is fixed at task-contract freeze time; it must never be decided after seeing model answers.
+2. Critical facts must be formal GOLD; SILVER can never ground a hard-gate decision (a critical fact without formal Gold yields UNKNOWN, not FAIL).
+3. Omission, wrong value, wrong subject, wrong date type and wrong fact relation are all judged against the pre-frozen contract; FAIL dominates UNKNOWN.
+4. If the contract sets `evidence_required: true` on a critical fact, a correct value without qualifying evidence support also fails the gate.
+
+## 10. Deterministic verification precedence (operator ruling 2026-10-30)
+
+Typed deterministic validation runs first; a semantic judge may only operate where determinism does not apply:
+
+```
+typed deterministic checks (value/unit/date_type/subject/derivation)
+        ↓ PASS / FAIL / UNKNOWN
+semantic judge (predicate wording, text-kind paraphrase, complex relations)
+```
+
+A calibrated judge's SUPPORTED verdict can never override a deterministic result for numeric kinds (`number/amount/ratio/percent`), dates, units, date types or subject binding — including on the explicit `fact_id` path. Non-finite numeric values (NaN, ±Infinity) are invalid claims when asserted by a candidate answer and contract-validation failures (blocking, no Q) when present in the Gold contract. Dates are validated against the real calendar (leap years included). Derivation inputs of a formal-GOLD derived fact must themselves be formal GOLD.
+
+## 11. Production acceptance
 1. Freeze task questions and required fact lists.
 2. Obtain two independent blind human reviews; adjudicate disagreements.
 3. Audit source hashes, spans, units, date types and derivations.

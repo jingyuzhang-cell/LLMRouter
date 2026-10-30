@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from datetime import date as _calendar_date
 from decimal import Decimal, InvalidOperation
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
@@ -17,6 +18,9 @@ FORMAL_GOLD_PROVENANCE = {
     "native_dataset_annotation",
     "official_structured_record",
 }
+
+NUMERIC_VALUE_KINDS = {"number", "amount", "ratio", "percent"}
+DETERMINISTIC_VALUE_KINDS = NUMERIC_VALUE_KINDS | {"date"}
 
 
 def _norm_text(value: Any) -> str:
@@ -28,9 +32,10 @@ def _decimal(value: Any) -> Optional[Decimal]:
     if isinstance(value, bool) or value is None:
         return None
     try:
-        return Decimal(str(value).replace(",", "").strip())
+        number = Decimal(str(value).replace(",", "").strip())
     except (InvalidOperation, ValueError):
         return None
+    return number if number.is_finite() else None
 
 
 def _date(value: Any) -> Optional[str]:
@@ -41,7 +46,9 @@ def _date(value: Any) -> Optional[str]:
     if not match:
         return None
     year, month, day = map(int, match.groups())
-    if not (1 <= month <= 12 and 1 <= day <= 31):
+    try:
+        _calendar_date(year, month, day)
+    except ValueError:
         return None
     return f"{year:04d}-{month:02d}-{day:02d}"
 
@@ -56,7 +63,10 @@ def _value_equal(claim: Mapping[str, Any], fact: Mapping[str, Any]) -> bool:
         if a is None or b is None:
             return False
         tolerance = _decimal(fact.get("tolerance", "0")) or Decimal("0")
-        return abs(a - b) <= tolerance
+        try:
+            return abs(a - b) <= tolerance
+        except ArithmeticError:
+            return False
     if isinstance(right, list):
         return isinstance(left, list) and sorted(_norm_text(x) for x in left) == sorted(_norm_text(x) for x in right)
     aliases = [_norm_text(x) for x in fact.get("accepted_values", [])]
@@ -74,20 +84,81 @@ def _tuple_equal(claim: Mapping[str, Any], fact: Mapping[str, Any]) -> bool:
     return _value_equal(claim, fact)
 
 
-def _formal_gold(fact: Mapping[str, Any]) -> bool:
+def _formal_gold(
+    fact: Mapping[str, Any],
+    facts_by_id: Optional[Mapping[str, Any]] = None,
+    _seen: frozenset = frozenset(),
+) -> bool:
     if fact.get("status") != "GOLD_CONFIRMED" or fact.get("gold_provenance") not in FORMAL_GOLD_PROVENANCE:
         return False
     if fact["gold_provenance"] == "human_adjudicated":
         review = fact.get("review", {})
         reviewer_ids = review.get("reviewer_ids", [])
-        return (
+        if not (
             review.get("status") == "ADJUDICATED"
             and int(review.get("independent_reviewers", 0)) >= 2
             and len(set(reviewer_ids)) >= 2
             and review.get("blind_to_strategy") is True
             and review.get("blind_to_model") is True
-        )
-    return bool(fact.get("gold_source_sha256"))
+        ):
+            return False
+    elif not fact.get("gold_source_sha256"):
+        return False
+    derivation = fact.get("derivation")
+    if derivation:
+        inputs = derivation.get("inputs", [])
+        if not inputs or facts_by_id is None:
+            return False
+        fact_id = fact.get("fact_id")
+        if fact_id in _seen:
+            return False
+        seen = _seen | {fact_id}
+        for input_id in inputs:
+            input_fact = facts_by_id.get(input_id)
+            if input_fact is None or input_fact.get("status") in {"EXCLUDED", "NOT_APPLICABLE"}:
+                return False
+            if not _formal_gold(input_fact, facts_by_id, seen):
+                return False
+    return True
+
+
+def _gold_contract_value_valid(fact: Mapping[str, Any]) -> bool:
+    kind = fact.get("value_kind", "text")
+    if kind in NUMERIC_VALUE_KINDS:
+        if _decimal(fact.get("value")) is None:
+            return False
+        tolerance = fact.get("tolerance")
+        if tolerance is not None and _decimal(tolerance) is None:
+            return False
+    if kind == "date" and _date(fact.get("value")) is None:
+        return False
+    return True
+
+
+def _semantic_core_matches(
+    claim: Mapping[str, Any], fact: Mapping[str, Any], facts_by_id: Mapping[str, Any]
+) -> bool:
+    """Deterministic checks that a semantic verdict may not override.
+
+    A calibrated judge can authorize paraphrase only where deterministic
+    verification does not apply (predicate wording, text-kind values). Typed
+    values, units, date types, subject binding and derivations stay
+    deterministic and take precedence over any judge verdict.
+    """
+    for field in ("unit", "date_type"):
+        expected = fact.get(field)
+        if expected not in (None, "", "UNKNOWN") and _norm_text(claim.get(field)) != _norm_text(expected):
+            return False
+    subject = _norm_text(claim.get("subject"))
+    if subject != _norm_text(fact.get("subject")) and subject not in {
+        _norm_text(x) for x in fact.get("subject_aliases", [])
+    }:
+        return False
+    if fact.get("value_kind", "text") in DETERMINISTIC_VALUE_KINDS and not _value_equal(claim, fact):
+        return False
+    if fact.get("derivation") and not _derived_value_ok(claim, fact, facts_by_id):
+        return False
+    return True
 
 
 def _page_record(source_pages: Mapping[str, Any], doc_id: str, page: Any) -> Optional[Mapping[str, Any]]:
@@ -212,7 +283,7 @@ def _derived_value_ok(claim: Mapping[str, Any], fact: Mapping[str, Any], facts_b
             expected = (values[0] - values[1]) / values[1] * Decimal("100")
         else:
             return False
-    except (InvalidOperation, ZeroDivisionError):
+    except ArithmeticError:
         return False
     target, candidate = _decimal(fact.get("value")), _decimal(claim.get("value"))
     tolerance = _decimal(fact.get("tolerance", "0")) or Decimal("0")
@@ -255,7 +326,7 @@ def evaluate_terminal_quality(
         blocking.append("CLAIM_EXTRACTION_INCOMPLETE")
 
     nonexcluded = [fact for fact in required if fact.get("status") not in {"EXCLUDED", "NOT_APPLICABLE"}]
-    gold = [fact for fact in nonexcluded if _formal_gold(fact)]
+    gold = [fact for fact in nonexcluded if _formal_gold(fact, facts_by_id)]
     total_weight = sum(float(fact.get("weight", 1.0)) for fact in nonexcluded)
     gold_weight = sum(float(fact.get("weight", 1.0)) for fact in gold)
     gold_coverage = gold_weight / total_weight if total_weight else 0.0
@@ -265,9 +336,19 @@ def evaluate_terminal_quality(
     for fact in gold:
         if not _reference_evidence_valid(fact, source_pages):
             blocking.append(f"REFERENCE_EVIDENCE_INVALID:{fact.get('fact_id')}")
+        if not _gold_contract_value_valid(fact):
+            blocking.append(f"GOLD_CONTRACT_INVALID_VALUE:{fact.get('fact_id')}")
+    for fact in nonexcluded:
+        if (
+            fact.get("status") == "GOLD_CONFIRMED"
+            and fact.get("derivation")
+            and not _formal_gold(fact, facts_by_id)
+        ):
+            warnings.append(f"REFERENCE_DERIVATION_INPUT_NOT_GOLD:{fact.get('fact_id')}")
 
     tp_weight = fp_weight = supported_claim_weight = asserted_claim_weight = 0.0
     matched_ids = set()
+    evidence_ok_fact_ids = set()
     unassessed_claims: List[str] = []
     claim_results = []
     for claim in claims:
@@ -285,22 +366,34 @@ def evaluate_terminal_quality(
             tp_weight += min(weight, float(fact.get("weight", 1.0)))
             if citation_ok:
                 supported_claim_weight += weight
+                evidence_ok_fact_ids.add(fact["fact_id"])
             else:
                 warnings.append(f"CITATION_NOT_FULLY_SUPPORTING:{claim.get('claim_id')}")
             matched_ids.add(fact["fact_id"])
             claim_results.append({"claim_id": claim.get("claim_id"), "status": "CORRECT_GOLD" if citation_ok else "CORRECT_BUT_UNSUPPORTED_CITATION", "fact_id": fact["fact_id"]})
-        elif verdict == "SUPPORTED" and fact and fact["fact_id"] not in matched_ids:
+        elif (
+            verdict == "SUPPORTED" and fact and fact["fact_id"] not in matched_ids
+            and _semantic_core_matches(claim, fact, facts_by_id)
+        ):
             tp_weight += min(weight, float(fact.get("weight", 1.0)))
             if citation_ok:
                 supported_claim_weight += weight
+                evidence_ok_fact_ids.add(fact["fact_id"])
             else:
                 warnings.append(f"CITATION_NOT_FULLY_SUPPORTING:{claim.get('claim_id')}")
             matched_ids.add(fact["fact_id"])
             claim_results.append({"claim_id": claim.get("claim_id"), "status": "SEMANTICALLY_CORRECT" if citation_ok else "SEMANTICALLY_CORRECT_BUT_UNSUPPORTED_CITATION", "fact_id": fact["fact_id"]})
-        elif fact and fact["fact_id"] in matched_ids and citation_ok:
+        elif fact and fact["fact_id"] in matched_ids:
+            correct_duplicate = (
+                (_tuple_equal(claim, fact) and _derived_value_ok(claim, fact, facts_by_id))
+                or (verdict == "SUPPORTED" and _semantic_core_matches(claim, fact, facts_by_id))
+            )
             fp_weight += weight
-            warnings.append(f"DUPLICATE_CLAIM:{claim.get('claim_id')}")
-            claim_results.append({"claim_id": claim.get("claim_id"), "status": "DUPLICATE_CLAIM", "fact_id": fact["fact_id"]})
+            if correct_duplicate:
+                warnings.append(f"DUPLICATE_CLAIM:{claim.get('claim_id')}")
+                claim_results.append({"claim_id": claim.get("claim_id"), "status": "DUPLICATE_CLAIM", "fact_id": fact["fact_id"]})
+            else:
+                claim_results.append({"claim_id": claim.get("claim_id"), "status": "WRONG_GOLD_FACT_VALUE_OR_RELATION", "fact_id": fact["fact_id"]})
         elif fact and claim.get("fact_id") == fact["fact_id"]:
             fp_weight += weight
             claim_results.append({"claim_id": claim.get("claim_id"), "status": "WRONG_GOLD_FACT_VALUE_OR_RELATION", "fact_id": fact["fact_id"]})
@@ -328,6 +421,35 @@ def evaluate_terminal_quality(
         sum(float(fact.get("weight", 1.0)) for fact in gold if fact.get("fact_id") in matched_ids) / gold_weight
         if gold_weight else 0.0
     )
+
+    # Critical-fact hard gate (operator ruling 2026-10-30): three-state fact-level veto.
+    # PASS  -> Q_final = Q_raw
+    # FAIL  -> Q_final = 0 (at least one critical fact confirmed wrong, omitted, or
+    #                       evidence-unsatisfied when the frozen contract requires evidence)
+    # UNKNOWN -> Q_final = NULL (critical fact lacks formal Gold or cannot be judged,
+    #                             and no critical fact is confirmed wrong)
+    # `critical` must be frozen in the task contract before any model answer is seen;
+    # critical facts must be formal Gold; FAIL dominates UNKNOWN.
+    gold_ids = {fact.get("fact_id") for fact in gold}
+    critical_facts = [fact for fact in nonexcluded if fact.get("critical")]
+    gate_failed_ids: List[Any] = []
+    gate_evidence_failed_ids: List[Any] = []
+    gate_unevaluable_ids: List[Any] = []
+    for fact in critical_facts:
+        fact_id = fact.get("fact_id")
+        if fact_id in matched_ids:
+            if fact.get("evidence_required") and fact_id not in evidence_ok_fact_ids:
+                gate_evidence_failed_ids.append(fact_id)
+        elif fact_id in gold_ids:
+            gate_failed_ids.append(fact_id)
+        else:
+            gate_unevaluable_ids.append(fact_id)
+    if gate_failed_ids or gate_evidence_failed_ids:
+        critical_gate = "FAIL"
+    elif gate_unevaluable_ids:
+        critical_gate = "UNKNOWN"
+    else:
+        critical_gate = "PASS"
 
     abstained_ids = {item.get("item_id") for item in terminal_output.get("abstentions", [])}
     correct_abstentions = abstained_ids & unknown_ids
@@ -392,18 +514,32 @@ def evaluate_terminal_quality(
         delivered_q = 0.0
         blocking.append("DELIVERY_INVALID_SEMANTIC_QUALITY_UNAVAILABLE")
     else:
-        semantic_q = q_partial if not blocking else None
+        if not blocking and critical_gate == "FAIL":
+            semantic_q = 0.0 if q_partial is not None else None
+        elif not blocking and critical_gate == "UNKNOWN":
+            semantic_q = None
+            blocking.append("CRITICAL_GATE_UNKNOWN")
+        else:
+            semantic_q = q_partial if not blocking else None
         delivered_q = semantic_q if semantic_q is not None else None
 
     return {
         "task_id": task_contract.get("task_id"),
-        "evaluation_version": "terminal_quality_v1",
+        "evaluation_version": "terminal_quality_v1.1",
         "status": "SCORABLE_GOLD" if semantic_q is not None else "INCOMPLETE",
         "Q_final": round(semantic_q, 6) if semantic_q is not None else None,
+        "Q_raw": round(q_partial, 6) if q_partial is not None else None,
         "Q_partial_diagnostic": round(q_partial, 6) if q_partial is not None else None,
         "Q_delivered": round(delivered_q, 6) if delivered_q is not None else None,
         "delivery_valid": delivery_valid,
         "R_delivery": 1.0 if delivery_valid else 0.0,
+        "critical_gate": {
+            "status": critical_gate,
+            "critical_fact_ids": [fact.get("fact_id") for fact in critical_facts],
+            "failed_fact_ids": sorted(set(gate_failed_ids), key=str),
+            "evidence_unsatisfied_fact_ids": sorted(set(gate_evidence_failed_ids), key=str),
+            "unevaluable_fact_ids": sorted(set(gate_unevaluable_ids), key=str),
+        },
         "gold_coverage": round(gold_coverage, 6),
         "min_gold_coverage": min_coverage,
         "dimensions": {key: round(value, 6) if value is not None else None for key, value in dimensions.items()},

@@ -217,6 +217,177 @@ class TerminalQualityTests(unittest.TestCase):
         self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
         self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
 
+    # --- Regression tests for operator-ruled fixes F1-F6 (ruling 2026-10-30) ---
+
+    def _amount_fact(self, fact_id="F2", critical=False, evidence_required=False, value="1000", status="GOLD_CONFIRMED"):
+        return {
+            "fact_id": fact_id, "status": status, "gold_provenance": "human_adjudicated",
+            "gold_source_sha256": RAW_SHA,
+            "review": {"status": "ADJUDICATED", "independent_reviewers": 2, "reviewer_ids": ["R1", "R2"], "blind_to_strategy": True, "blind_to_model": True},
+            "weight": 1.0, "critical": critical, "evidence_required": evidence_required,
+            "value_kind": "amount", "subject": "某公司", "predicate": "处罚金额",
+            "value": value, "unit": "万元",
+            "source_evidence": [{"doc_id": "D1", "page": 1, "quote": "公司于2026年9月18日收到中国证监会立案告知书", "page_sha256": PAGE_SHA, "raw_sha256": RAW_SHA}],
+        }
+
+    def test_critical_amount_wrong_vetoes_q_final_keeps_q_raw(self):
+        task = contract()
+        task["required_facts"].append(self._amount_fact(critical=True))
+        wrong_amount = good_claim(claim_id="C2", fact_id="F2", subject="某公司", predicate="处罚金额", value="9999", unit="万元")
+        result = evaluate_terminal_quality(task, output(good_claim(), claims=[good_claim(), wrong_amount]), self.sources)
+        self.assertEqual(result["critical_gate"]["status"], "FAIL")
+        self.assertEqual(result["Q_final"], 0.0)
+        self.assertEqual(result["Q_raw"], 0.625)
+        self.assertEqual(result["status"], "SCORABLE_GOLD")
+
+    def test_critical_fact_omission_vetoes_q_final(self):
+        task = contract()
+        task["required_facts"][0]["critical"] = True
+        result = evaluate_terminal_quality(task, output(good_claim(), claims=[]), self.sources)
+        self.assertEqual(result["critical_gate"]["status"], "FAIL")
+        self.assertEqual(result["Q_final"], 0.0)
+        self.assertEqual(result["Q_raw"], 0.25)
+
+    def test_critical_fact_without_formal_gold_withholds_q(self):
+        task = contract()
+        task["required_facts"][0]["critical"] = True
+        task["required_facts"].append(self._amount_fact(fact_id="FS", status="SILVER_SOURCE_ANCHORED", critical=True))
+        task["min_gold_coverage"] = 0.5
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertEqual(result["critical_gate"]["status"], "UNKNOWN")
+        self.assertIsNone(result["Q_final"])
+        self.assertIn("CRITICAL_GATE_UNKNOWN", result["blocking_reasons"])
+
+    def test_critical_fact_evidence_requirement_enforced(self):
+        task = contract()
+        task["required_facts"].append(self._amount_fact(critical=True, evidence_required=True))
+        short_citation = [{"doc_id": "D1", "page": 1, "quote": "处罚", "page_sha256": PAGE_SHA, "raw_sha256": RAW_SHA}]
+        amount_claim = good_claim(claim_id="C2", fact_id="F2", subject="某公司", predicate="处罚金额", value="1000", unit="万元", citations=short_citation)
+        result = evaluate_terminal_quality(task, output(good_claim(), claims=[good_claim(), amount_claim]), self.sources)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 2.0)
+        self.assertEqual(result["dimensions"]["evidence_support"], 0.5)
+        self.assertEqual(result["critical_gate"]["status"], "FAIL")
+        self.assertEqual(result["critical_gate"]["evidence_unsatisfied_fact_ids"], ["F2"])
+        self.assertEqual(result["Q_final"], 0.0)
+
+    def test_calibrated_judge_cannot_override_wrong_date_value(self):
+        claim = good_claim(value="2026年9月19日", predicate="公司收件日")
+        claim["assessment"] = {"verdict": "SUPPORTED", "assessor_type": "calibrated_judge", "calibration_status": "PASS", "calibration_artifact_sha256": "c" * 64}
+        result = evaluate_terminal_quality(contract(), output(claim), self.sources)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 0.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
+        self.assertEqual(result["claim_results"][0]["status"], "WRONG_GOLD_FACT_VALUE_OR_RELATION")
+        self.assertIsNotNone(result["Q_final"])
+
+    def test_calibrated_judge_still_authorizes_paraphrase_with_correct_value(self):
+        claim = good_claim(value="2026年9月18日", predicate="公司收件日")
+        claim["assessment"] = {"verdict": "SUPPORTED", "assessor_type": "calibrated_judge", "calibration_status": "PASS", "calibration_artifact_sha256": "c" * 64}
+        result = evaluate_terminal_quality(contract(), output(claim), self.sources)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["claim_results"][0]["status"], "SEMANTICALLY_CORRECT")
+        self.assertEqual(result["Q_final"], 1.0)
+
+    def test_nonfinite_claim_values_do_not_crash(self):
+        task = contract()
+        task["required_facts"].append(self._amount_fact(critical=False))
+        nan_claim = good_claim(claim_id="C2", fact_id="F2", subject="某公司", predicate="处罚金额", value="NaN", unit="万元")
+        inf_claim = good_claim(claim_id="C3", fact_id="F2", subject="某公司", predicate="处罚金额", value="Infinity", unit="万元")
+        result = evaluate_terminal_quality(task, output(good_claim(), claims=[good_claim(), nan_claim, inf_claim]), self.sources)
+        self.assertIsNotNone(result["Q_final"])
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fp"], 2.0)
+
+    def test_gold_contract_nonfinite_value_blocks_q(self):
+        task = contract()
+        task["required_facts"].append(self._amount_fact(value="NaN"))
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any(reason.startswith("GOLD_CONTRACT_INVALID_VALUE") for reason in result["blocking_reasons"]))
+
+    def test_gold_contract_illegal_date_blocks_q(self):
+        task = contract()
+        task["required_facts"][0]["value"] = "2026-02-31"
+        result = evaluate_terminal_quality(task, output(good_claim()), self.sources)
+        self.assertIsNone(result["Q_final"])
+        self.assertTrue(any(reason.startswith("GOLD_CONTRACT_INVALID_VALUE") for reason in result["blocking_reasons"]))
+
+    def test_calendar_validity_and_leap_year_boundaries(self):
+        leap = contract()
+        leap["required_facts"][0]["value"] = "2024-02-29"
+        ok = evaluate_terminal_quality(leap, output(good_claim(value="2024年2月29日")), self.sources)
+        self.assertEqual(ok["fact_metrics"]["weighted_tp"], 1.0)
+        nonleap = contract()
+        nonleap["required_facts"][0]["value"] = "2023-03-01"
+        invalid = evaluate_terminal_quality(nonleap, output(good_claim(value="2023年2月29日")), self.sources)
+        self.assertEqual(invalid["fact_metrics"]["weighted_tp"], 0.0)
+        self.assertEqual(invalid["fact_metrics"]["weighted_fp"], 1.0)
+        impossible = contract()
+        impossible["required_facts"][0]["value"] = "2026-02-28"
+        rejected = evaluate_terminal_quality(impossible, output(good_claim(value="2026年2月31日")), self.sources)
+        self.assertEqual(rejected["fact_metrics"]["weighted_tp"], 0.0)
+
+    def test_correct_duplicate_without_citations_labeled_duplicate(self):
+        duplicate = good_claim(claim_id="C2")
+        duplicate.pop("citations")
+        result = evaluate_terminal_quality(contract(), output(good_claim(), claims=[good_claim(), duplicate]), self.sources)
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fp"], 1.0)
+        self.assertEqual(result["claim_results"][1]["status"], "DUPLICATE_CLAIM")
+        self.assertIn("DUPLICATE_CLAIM:C2", result["quality_warnings"])
+        self.assertEqual(result["blocking_reasons"], [])
+
+    def test_silver_derivation_input_cannot_formalize_gold(self):
+        page2 = "公司上年度收入为50万元。"
+        page2_sha = hashlib.sha256(page2.encode()).hexdigest()
+        task = contract()
+        derived = task["required_facts"][0]
+        derived.update({
+            "value_kind": "amount", "subject": "某公司", "predicate": "收入差额",
+            "value": "100", "unit": "万元", "date_type": "UNKNOWN",
+            "derivation": {"op": "subtract", "inputs": ["F2", "F3"]},
+            "source_evidence": [
+                {"doc_id": "D1", "page": 1, "quote": "公司于2026年9月18日收到中国证监会立案告知书", "page_sha256": PAGE_SHA, "raw_sha256": RAW_SHA},
+                {"doc_id": "D2", "page": 1, "quote": page2, "page_sha256": page2_sha, "raw_sha256": "b" * 64},
+            ],
+        })
+        silver_input = {
+            "fact_id": "F2", "status": "SILVER_SOURCE_ANCHORED", "weight": 1.0,
+            "value_kind": "amount", "subject": "某公司", "predicate": "本年度收入", "value": "150", "unit": "万元",
+            "source_evidence": [{"doc_id": "D1", "page": 1, "quote": "公司于2026年9月18日收到中国证监会立案告知书", "page_sha256": PAGE_SHA, "raw_sha256": RAW_SHA}],
+        }
+        gold_input = {
+            "fact_id": "F3", "status": "GOLD_CONFIRMED", "gold_provenance": "human_adjudicated",
+            "gold_source_sha256": "b" * 64,
+            "review": {"status": "ADJUDICATED", "independent_reviewers": 2, "reviewer_ids": ["R1", "R2"], "blind_to_strategy": True, "blind_to_model": True},
+            "weight": 1.0, "value_kind": "amount", "subject": "某公司", "predicate": "上年度收入", "value": "50", "unit": "万元",
+            "source_evidence": [{"doc_id": "D2", "page": 1, "quote": page2, "page_sha256": page2_sha, "raw_sha256": "b" * 64}],
+        }
+        task["required_facts"].extend([silver_input, gold_input])
+        sources = {**self.sources, "D2": {"raw_sha256": "b" * 64, "pages": {"1": {"text": page2, "page_sha256": page2_sha}}}}
+        f3_claim = good_claim(claim_id="C3", fact_id="F3", subject="某公司", predicate="上年度收入", value="50", unit="万元", date_type="UNKNOWN",
+                              citations=[{"doc_id": "D2", "page": 1, "quote": page2, "page_sha256": page2_sha, "raw_sha256": "b" * 64}])
+        # F1 non-critical: excluded from formal Gold, F3 still scores, F1 never counts.
+        derived["critical"] = False
+        task["min_gold_coverage"] = 0.3
+        result = evaluate_terminal_quality(task, output(f3_claim, claims=[f3_claim]), sources)
+        self.assertEqual(result["critical_gate"]["status"], "PASS")
+        self.assertEqual(result["fact_metrics"]["weighted_tp"], 1.0)
+        self.assertEqual(result["fact_metrics"]["weighted_fn"], 0.0)
+        self.assertIn("REFERENCE_DERIVATION_INPUT_NOT_GOLD:F1", result["quality_warnings"])
+        # F1 critical (fixture default): silver input makes the critical fact unevaluable -> gate UNKNOWN -> NULL.
+        derived["critical"] = True
+        result_critical = evaluate_terminal_quality(task, output(f3_claim, claims=[f3_claim]), sources)
+        self.assertEqual(result_critical["critical_gate"]["status"], "UNKNOWN")
+        self.assertIsNone(result_critical["Q_final"])
+        self.assertIn("CRITICAL_GATE_UNKNOWN", result_critical["blocking_reasons"])
+        # Full-coverage gate also blocks formal Q when a required fact cannot be formal Gold.
+        full_gate = contract()
+        full_gate["required_facts"] = task["required_facts"]
+        full_gate["min_gold_coverage"] = 1.0
+        result_full = evaluate_terminal_quality(full_gate, output(f3_claim, claims=[f3_claim]), sources)
+        self.assertIsNone(result_full["Q_final"])
+        self.assertIn("REFERENCE_GOLD_COVERAGE_BELOW_GATE", result_full["blocking_reasons"])
+
 
 if __name__ == "__main__":
     unittest.main()

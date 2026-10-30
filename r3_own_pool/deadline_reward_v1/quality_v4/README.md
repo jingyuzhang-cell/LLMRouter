@@ -16,8 +16,10 @@ Default weights are equal across applicable dimensions, matching the project's e
 - SILVER and machine-generated references cannot produce formal Q.
 - Short keyword hits do not prove claim entailment.
 - Subject, predicate, value, unit and date type must match.
-- Cross-document derivations can require all source spans.
-- Uncalibrated judges cannot authorize semantic equivalence.
+- Cross-document derivations can require all source spans; GOLD derivations only accept GOLD inputs.
+- Uncalibrated judges cannot authorize semantic equivalence; deterministic checks (typed values, units, date types, subjects, derivations) take precedence over any judge verdict.
+- Critical-fact hard gate (operator ruling 2026-10-30): PASS → Q_final=Q_raw; any critical fact confirmed wrong/omitted (or evidence-unsatisfied when required) → Q_final=0; critical fact unevaluable → Q_final=NULL. Q_raw is always retained for diagnostics.
+- Non-finite numerics (NaN/±Infinity) are invalid claims, never crashes; illegal Gold values block Q. Dates are calendar-validated (leap years).
 - Missing question, incomplete claim extraction, inadequate Gold coverage, invalid hashes or unassessed material claims withhold formal Q.
 - Delivery failure is separate from semantic correctness: Q_final is null, R_delivery is 0, and Q_delivered is 0.
 
