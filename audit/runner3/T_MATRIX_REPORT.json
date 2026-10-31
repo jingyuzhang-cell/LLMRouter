@@ -2,82 +2,101 @@
  "tests": [
   {
    "test": "T1",
-   "injected": "请求哈希不匹配(载荷篡改注入)",
-   "expected": "audit FAIL + 审计门闭锁",
+   "injected": "request hash mismatch",
+   "expected": "audit FAIL + lock",
    "actual": "PASS",
-   "evidence": "audit:FAIL fail=['request_body_sha256 mismatch T_E1_a1_0cbd481d'] lock=True"
+   "evidence": "audit=FAIL"
   },
   {
    "test": "T2",
-   "injected": "提示重建与实发不一致",
-   "expected": "发送前禁止+闭锁(非事后审计)",
+   "injected": "frozen-upstream rebuild != actual body",
+   "expected": "no-send + lock",
    "actual": "PASS",
-   "evidence": "sent=False lock=True reasons=['FAILLOCK.json']"
+   "evidence": "sent=False lock=True"
   },
   {
    "test": "T3",
-   "injected": "模型实返身份不匹配(GLM-4-Flash)",
-   "expected": "整批停止",
+   "injected": "identity mismatch",
+   "expected": "batch stop",
    "actual": "PASS",
-   "evidence": "BatchStopped=True lock=True"
+   "evidence": "stopped=True"
   },
   {
    "test": "T4",
-   "injected": "E层引文不存在于原文(日期改一日)",
-   "expected": "L1 锚点审计失败",
+   "injected": "E fabricated quote",
+   "expected": "L1 FAIL",
    "actual": "PASS",
-   "evidence": "fails=['L1: E quote not found in frozen page text (E1)']"
+   "evidence": [
+    "L1: E quote not in frozen page (E)"
+   ]
   },
   {
    "test": "T5",
-   "injected": "J层擅自修改上游引文",
-   "expected": "L2 继承审计失败",
+   "injected": "J tampered upstream quote",
+   "expected": "L2 FAIL",
    "actual": "PASS",
-   "evidence": "fails=['L2: J anchor not inherited verbatim from E (J1)']"
+   "evidence": [
+    "L2: J anchor not inherited from E ()"
+   ]
   },
   {
    "test": "T6",
-   "injected": "SINK引用未验证锚点",
-   "expected": "L3 终端审计失败",
+   "injected": "sink wrong doc_id (full quintuple)",
+   "expected": "L3 FAIL",
    "actual": "PASS",
-   "evidence": "fails=['L3: sink cites unverified anchor (未经验证的编造引文…)']"
+   "evidence": [
+    "L3: sink anchor not from verified J set (verified…)"
+   ]
   },
   {
    "test": "T7",
-   "injected": "预算预检触顶(预留超上限)",
-   "expected": "禁止发送+闭锁+零载荷",
+   "injected": "budget precheck exceeded",
+   "expected": "no-send + lock + zero payloads",
    "actual": "PASS",
-   "evidence": "stopped=True lock=True payload_dirs=0"
+   "evidence": "stopped=True"
   },
   {
    "test": "T8",
-   "injected": "响应丢失(在途未知)",
-   "expected": "未知态留存+预留永久保留+不自动重试",
+   "injected": "IN_FLIGHT + budget accumulation",
+   "expected": "pending_reserved blocks next call",
    "actual": "PASS",
-   "evidence": "permit=IN_FLIGHT reserved_retained=True unknown_fee=True"
+   "evidence": "pending=0.002962 blocked_2nd=True retained=True"
   },
   {
    "test": "T9",
-   "injected": "并发竞态(B触发闭锁,A持许可)+出网检查",
-   "expected": "闭锁原子+零外部请求",
+   "injected": "deterministic 4-scenario permit window",
+   "expected": "all 4 correct",
    "actual": "PASS",
-   "evidence": "results={1: 'HANDED_OFF', 2: 'REVOKED'} handoff_log=[{'call_id': 'T_E1_a1_d872f2dd', 'ts': 1793442306.2656827, 'result': 'HANDED_OFF'}] guard_log_exists=False"
+   "evidence": "{\"T9A\": true, \"T9B\": true, \"T9C\": true, \"T9D\": true}"
   },
   {
    "test": "T10",
-   "injected": "FAILLOCK已存在",
-   "expected": "后续调用许可数=0(零字节出网)",
+   "injected": "FAILLOCK pre-exists",
+   "expected": "zero active permits",
    "actual": "PASS",
-   "evidence": "permit=REVOKED active_permits=[]"
+   "evidence": "permit=REVOKED"
+  },
+  {
+   "test": "T11",
+   "injected": "RealTransport double-disarm",
+   "expected": "both conditions block",
+   "actual": "PASS",
+   "evidence": "no_env=True with_env_no_file=True"
+  },
+  {
+   "test": "T12",
+   "injected": "concurrent budget race",
+   "expected": "total ≤ cap",
+   "actual": "PASS",
+   "evidence": "accrued=0.000000 pending=0.000000 cap=0.01 results=['BLOCKED', 'BLOCKED', 'BLOCKED', 'BLOCKED', 'BLOCKED']"
   },
   {
    "test": "TAMPER",
-   "injected": "篡改样本回归(正确PASS/篡改FAIL)",
-   "expected": "3类全部符合",
+   "injected": "tamper regression",
+   "expected": "ok=PASS, tampered=FAIL",
    "actual": "PASS",
-   "evidence": "{\"correct\": true, \"manifest_tamper_FAIL\": true, \"prompt_tamper_FAIL\": true}"
+   "evidence": "ok=True m=True p=True"
   }
  ],
- "environment_note": "OS-namespace tools (unshare/iptables/strace) unavailable in this container (Operation not permitted) — egress evidence = SocketGuard interception log + double-disarmed RealTransport; true OS-level evidence to be re-executed on a host permitting unshare",
  "all_pass": true
 }

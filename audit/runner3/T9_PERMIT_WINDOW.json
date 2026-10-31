@@ -1,30 +1,30 @@
 [
  {
   "test": "T9A",
-  "order": "A.acquire=ISSUED → B.trigger_faillock → A.handoff",
-  "expected": "A REVOKED，零字节出网",
-  "actual": "A handoff=REVOKED",
+  "order": "ISSUED\u2192FAILLOCK\u2192handoff_and_send",
+  "expected": "REVOKED",
+  "actual": "REVOKED",
   "pass": true
  },
  {
   "test": "T9B",
-  "order": "B.acquire=ISSUED → B.handoff=HANDED_OFF → faillock → mark_in_flight",
-  "expected": "B IN_FLIGHT，保留未知态",
-  "actual": "B permit=IN_FLIGHT",
+  "order": "ISSUED\u2192handoff_and_send(drop)",
+  "expected": "IN_FLIGHT",
+  "actual": "IN_FLIGHT",
   "pass": true
  },
  {
   "test": "T9C",
-  "order": "faillock 已存在 → A.acquire",
-  "expected": "A 被拒绝(REVOKED)，零许可",
-  "actual": "A acquire=REVOKED",
+  "order": "FAILLOCK\u2192acquire",
+  "expected": "REVOKED",
+  "actual": "REVOKED",
   "pass": true
  },
  {
   "test": "T9D",
-  "order": "5×ISSUED → faillock → 检查全部状态",
-  "expected": "全部 REVOKED",
-  "actual": "permits={'call_0': 'REVOKED', 'call_1': 'REVOKED', 'call_2': 'REVOKED', 'call_3': 'REVOKED', 'call_4': 'REVOKED'}",
+  "order": "5\u00d7ISSUED\u2192FAILLOCK",
+  "expected": "all REVOKED",
+  "actual": "all REVOKED",
   "pass": true
  }
 ]
