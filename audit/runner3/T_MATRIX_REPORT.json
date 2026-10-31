@@ -1,0 +1,83 @@
+{
+ "tests": [
+  {
+   "test": "T1",
+   "injected": "请求哈希不匹配(载荷篡改注入)",
+   "expected": "audit FAIL + 审计门闭锁",
+   "actual": "PASS",
+   "evidence": "audit:FAIL fail=['request_body_sha256 mismatch T_E1_a1_0cbd481d'] lock=True"
+  },
+  {
+   "test": "T2",
+   "injected": "提示重建与实发不一致",
+   "expected": "发送前禁止+闭锁(非事后审计)",
+   "actual": "PASS",
+   "evidence": "sent=False lock=True reasons=['FAILLOCK.json']"
+  },
+  {
+   "test": "T3",
+   "injected": "模型实返身份不匹配(GLM-4-Flash)",
+   "expected": "整批停止",
+   "actual": "PASS",
+   "evidence": "BatchStopped=True lock=True"
+  },
+  {
+   "test": "T4",
+   "injected": "E层引文不存在于原文(日期改一日)",
+   "expected": "L1 锚点审计失败",
+   "actual": "PASS",
+   "evidence": "fails=['L1: E quote not found in frozen page text (E1)']"
+  },
+  {
+   "test": "T5",
+   "injected": "J层擅自修改上游引文",
+   "expected": "L2 继承审计失败",
+   "actual": "PASS",
+   "evidence": "fails=['L2: J anchor not inherited verbatim from E (J1)']"
+  },
+  {
+   "test": "T6",
+   "injected": "SINK引用未验证锚点",
+   "expected": "L3 终端审计失败",
+   "actual": "PASS",
+   "evidence": "fails=['L3: sink cites unverified anchor (未经验证的编造引文…)']"
+  },
+  {
+   "test": "T7",
+   "injected": "预算预检触顶(预留超上限)",
+   "expected": "禁止发送+闭锁+零载荷",
+   "actual": "PASS",
+   "evidence": "stopped=True lock=True payload_dirs=0"
+  },
+  {
+   "test": "T8",
+   "injected": "响应丢失(在途未知)",
+   "expected": "未知态留存+预留永久保留+不自动重试",
+   "actual": "PASS",
+   "evidence": "permit=IN_FLIGHT reserved_retained=True unknown_fee=True"
+  },
+  {
+   "test": "T9",
+   "injected": "并发竞态(B触发闭锁,A持许可)+出网检查",
+   "expected": "闭锁原子+零外部请求",
+   "actual": "PASS",
+   "evidence": "results={1: 'HANDED_OFF', 2: 'REVOKED'} handoff_log=[{'call_id': 'T_E1_a1_d872f2dd', 'ts': 1793442306.2656827, 'result': 'HANDED_OFF'}] guard_log_exists=False"
+  },
+  {
+   "test": "T10",
+   "injected": "FAILLOCK已存在",
+   "expected": "后续调用许可数=0(零字节出网)",
+   "actual": "PASS",
+   "evidence": "permit=REVOKED active_permits=[]"
+  },
+  {
+   "test": "TAMPER",
+   "injected": "篡改样本回归(正确PASS/篡改FAIL)",
+   "expected": "3类全部符合",
+   "actual": "PASS",
+   "evidence": "{\"correct\": true, \"manifest_tamper_FAIL\": true, \"prompt_tamper_FAIL\": true}"
+  }
+ ],
+ "environment_note": "OS-namespace tools (unshare/iptables/strace) unavailable in this container (Operation not permitted) — egress evidence = SocketGuard interception log + double-disarmed RealTransport; true OS-level evidence to be re-executed on a host permitting unshare",
+ "all_pass": true
+}
