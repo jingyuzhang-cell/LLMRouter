@@ -1,0 +1,59 @@
+{
+  "task_id": "EXAMPLE_ONLY",
+  "question": "What date did the company receive the regulatory notice?",
+  "min_gold_coverage": 1.0,
+  "dimension_weights": {
+    "fact_correctness": 1,
+    "evidence_support": 1,
+    "necessary_completeness": 1,
+    "contradiction_handling": 1,
+    "unverifiable_refusal": 1,
+    "question_relevance": 1
+  },
+  "required_facts": [{
+    "fact_id": "F_RECEIPT_DATE",
+    "status": "GOLD_CONFIRMED",
+    "gold_provenance": "human_adjudicated",
+    "gold_source_sha256": "<64-char-source-sha256>",
+    "review": {
+      "status": "ADJUDICATED",
+      "independent_reviewers": 2,
+      "reviewer_ids": ["R1", "R2"],
+      "blind_to_strategy": true,
+      "blind_to_model": true
+    },
+    "weight": 1.0,
+    "critical": true,
+    "evidence_required": true,
+    "value_kind": "date",
+    "subject": "Example Company",
+    "predicate": "received regulatory notice date",
+    "value": "2026-09-18",
+    "unit": "date",
+    "date_type": "receipt",
+    "source_evidence": [{
+      "doc_id": "DOC_A",
+      "page": 1,
+      "quote": "<complete adjudicated sentence, not a keyword>",
+      "raw_sha256": "<64-char-raw-pdf-sha256>",
+      "page_sha256": "<64-char-page-text-sha256>"
+    }]
+  }],
+  "unknown_items": [{
+    "item_id": "U_FINAL_SANCTION",
+    "description": "Whether a final sanction has been issued by the cutoff date",
+    "expected_status": "UNKNOWN"
+  }],
+  "conflict_groups": [],
+  "source_pages": {
+    "DOC_A": {
+      "raw_sha256": "<64-char-raw-pdf-sha256>",
+      "pages": {
+        "1": {
+          "text": "<full extracted page text>",
+          "page_sha256": "<64-char-page-text-sha256>"
+        }
+      }
+    }
+  }
+}
