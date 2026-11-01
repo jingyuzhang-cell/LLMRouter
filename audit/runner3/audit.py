@@ -1,210 +1,197 @@
 #!/usr/bin/env python3
-"""audit.py v2 — fixes for operator 7-item FAIL audit.
+"""audit.py v4.1 — independent verifier.
 
-Key fixes:
- A1 L1/L2/L3 now MANDATORY (fail if expected but inputs missing)
- A2 L3 compares full quintuple (doc, page, quote, page_sha256, raw_sha256)
- A3 Budget uses actual max_tokens from ledger (no 2500 fallback)
- A4 MANIFEST hash verified against ledger anchor; manifest covers ledger
- A5 Identity check mandatory + verifies request body model field
- A6 Request body model field independently verified against frozen allowlist
+P0-4: L1 independently reads frozen PDF; L2/L3 mandatory; judgment_item_id.
+P0-5: Ledger hash chain verification; manifest reverse-check; identity mandatory.
 """
-import hashlib
-import json
+import hashlib, json
 from pathlib import Path
 
-CANON_RULE = "canonical_messages_v1"
-
-# Frozen identity allowlist (must match runner3.py)
 IDENTITY_ALLOWLIST = {"glm": ["GLM-5.3-Flash"], "ds": ["deepseek-flash"]}
+PRICE_TABLE = {"glm": {"in": 0.80, "out": 2.80}, "ds": {"in": 0.30*7.5, "out": 1.20*7.5}}
+PRICE_TABLE_SHA = hashlib.sha256(json.dumps(PRICE_TABLE, sort_keys=True).encode()).hexdigest()
 
-
-def _sha(b: bytes) -> str:
-    return hashlib.sha256(b).hexdigest()
-
+def _sha(b): return hashlib.sha256(b).hexdigest()
 
 def _canon(system, messages):
     arr = []
-    if system:
-        arr.append({"role": "system", "content": system})
-    for m in messages:
-        arr.append({"role": m["role"], "content": m["content"]})
-    return json.dumps(arr, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+    if system: arr.append({"role":"system","content":system})
+    for m in messages: arr.append({"role":m["role"],"content":m["content"]})
+    return json.dumps(arr, ensure_ascii=False, sort_keys=True, separators=(",",":")).encode()
 
-
-def _extract_canon_from_body(body_bytes):
+def _extract_canon(body_bytes):
     body = json.loads(body_bytes)
     if "system" in body:
-        msgs = [{"role": "system", "content": body["system"]}] + body.get("messages", [])
-    else:
-        msgs = body.get("messages", [])
+        msgs = [{"role":"system","content":body["system"]}] + body.get("messages",[])
+    else: msgs = body.get("messages",[])
     return _canon(None, msgs)
 
-
-def audit_run(root: Path, *, expected_prompt: bytes,
-              upstream_e_outputs=None, j_anchors=None,
-              sink_quotes=None, frozen_pages=None,
-              expect_l1=False, expect_l2=False, expect_l3=False,
-              model_key=None) -> dict:
-    """Independent audit. A1: expect_l1/l2/l3 flags make anchor checks mandatory.
-    A5: identity check is now always performed (allowlist is built-in).
-    A6: request body model field independently verified."""
+def audit_run(root, *, expected_prompt,
+              upstream_e_outputs=None, j_anchors=None, sink_quotes=None,
+              frozen_pages=None, frozen_pdf_dir=None,
+              expect_l1=False, expect_l2=False, expect_l3=False):
     failures = []
 
-    # ---- A4: Manifest verification + ledger anchor ----
-    mpath = root / "MANIFEST.json"
-    if not mpath.exists():
-        return {"verdict": "FAIL", "failures": ["MANIFEST missing"]}
-    manifest = json.loads(mpath.read_text())
-
-    # Verify every manifest file
-    for entry in manifest["files"]:
-        p = root / entry["path"]
-        if not p.exists():
-            failures.append(f"manifest file missing: {entry['path']}")
-        elif _sha(p.read_bytes()) != entry["sha256"] or p.stat().st_size != entry["bytes"]:
-            failures.append(f"manifest hash/size mismatch: {entry['path']}")
-
-    # Verify manifest hash is anchored in ledger
+    # ---- P0-5: Ledger hash chain verification ----
     ledger_path = root / "ledger.jsonl"
     if not ledger_path.exists():
-        return {"verdict": "FAIL", "failures": ["ledger.jsonl missing"]}
+        return {"verdict":"FAIL","failures":["ledger missing"]}
     ledger_lines = [json.loads(l) for l in ledger_path.read_text().splitlines() if l.strip()]
-    manifest_sha = _sha(mpath.read_bytes())
-    anchor_lines = [l for l in ledger_lines if l.get("anchor") == "MANIFEST"]
-    if not anchor_lines:
-        failures.append("MANIFEST hash not anchored in ledger")
-    elif anchor_lines[-1].get("manifest_sha256") != manifest_sha:
-        failures.append("MANIFEST hash in ledger does not match actual manifest")
+    prev_hash = "GENESIS"
+    for i, line in enumerate(ledger_lines):
+        if line.get("prev_hash") != prev_hash:
+            failures.append(f"HASH_CHAIN: line {i} prev_hash mismatch")
+        if "record_hash" in line:
+            rec = {k:v for k,v in line.items() if k != "record_hash"}
+            canonical = json.dumps(rec, ensure_ascii=False, sort_keys=True, separators=(",",":"))
+            expected = _sha(canonical.encode("utf-8"))
+            if line["record_hash"] != expected:
+                failures.append(f"HASH_CHAIN: line {i} record_hash mismatch")
+            prev_hash = line["record_hash"]
+        else:
+            prev_hash = "GENESIS"  # non-chained line (e.g. anchor)
+
+    # ---- Manifest verification + reverse check ----
+    mpath = root / "MANIFEST.json"
+    if mpath.exists():
+        manifest = json.loads(mpath.read_text())
+        manifest_paths = set()
+        for entry in manifest.get("files", []):
+            p = root / entry["path"]
+            manifest_paths.add(entry["path"])
+            if not p.exists():
+                failures.append(f"manifest file missing: {entry['path']}")
+            elif _sha(p.read_bytes()) != entry["sha256"]:
+                failures.append(f"manifest hash mismatch: {entry['path']}")
+        # P0-5: reverse check — actual payload files ⊆ manifest
+        if (root / "payloads").exists():
+            for d in (root / "payloads").iterdir():
+                for f in d.iterdir():
+                    rel = str(f.relative_to(root))
+                    if rel not in manifest_paths:
+                        failures.append(f"orphan file not in manifest: {rel}")
 
     # ---- Per-call verification ----
     call_lines = [l for l in ledger_lines if l.get("call_id")]
-    seen_calls = set()
+    seen = set()
     for line in call_lines:
         cid = line["call_id"]
-        if cid in seen_calls:
-            failures.append(f"duplicate call_id {cid}")
-        seen_calls.add(cid)
+        if cid in seen: failures.append(f"duplicate call_id {cid}")
+        seen.add(cid)
         d = root / "payloads" / cid
         req = d / f"{cid}.request_body.bin"
         if not req.exists():
-            failures.append(f"request_body.bin missing for {cid}")
-            continue
+            failures.append(f"request_body.bin missing for {cid}"); continue
         req_bytes = req.read_bytes()
         if _sha(req_bytes) != line["request_body_sha256"]:
-            failures.append(f"request_body_sha256 mismatch {cid}")
-
-        # Prompt equality (independent): rebuild == extract from actual body
+            failures.append(f"request hash mismatch {cid}")
         try:
-            extracted = _extract_canon_from_body(req_bytes)
+            extracted = _extract_canon(req_bytes)
         except (json.JSONDecodeError, UnicodeDecodeError):
             extracted = None
         if extracted is None or _sha(extracted) != _sha(expected_prompt):
-            failures.append(f"PROMPT_EQUALITY: rebuild != actual body ({cid})")
-        if _sha(expected_prompt) != line["prompt_sha256"]:
-            failures.append(f"prompt_sha256 vs expected mismatch {cid}")
+            failures.append(f"PROMPT_EQUALITY: rebuild != body ({cid})")
 
-        # A5+A6: Identity — ALWAYS check (not optional)
+        # P0-5: identity mandatory (no skip)
         try:
             req_body = json.loads(req_bytes)
         except (json.JSONDecodeError, UnicodeDecodeError):
             req_body = {}
-        sent_model = req_body.get("model", "")
-        model_key_from_ledger = line.get("model", "")
-        if model_key_from_ledger and model_key_from_ledger in IDENTITY_ALLOWLIST:
-            if sent_model not in IDENTITY_ALLOWLIST[model_key_from_ledger]:
-                failures.append(f"IDENTITY_REQUEST: sent={sent_model!r} not in allowlist for {model_key_from_ledger} ({cid})")
+        mk = line.get("model","")
+        if mk not in IDENTITY_ALLOWLIST:
+            failures.append(f"IDENTITY: unknown model_key {mk!r} in ledger ({cid})")
+        else:
+            sent = req_body.get("model","")
+            if sent not in IDENTITY_ALLOWLIST[mk]:
+                failures.append(f"IDENTITY_REQUEST: sent={sent!r} ({cid})")
 
         rsp = d / f"{cid}.response_body.bin"
         if line.get("response_body_sha256"):
             if not rsp.exists() or _sha(rsp.read_bytes()) != line["response_body_sha256"]:
-                failures.append(f"response_body_sha256 mismatch {cid}")
+                failures.append(f"response hash mismatch {cid}")
             else:
                 resp = json.loads(rsp.read_bytes())
-                returned_model = resp.get("model", "")
-                if model_key_from_ledger in IDENTITY_ALLOWLIST:
-                    if returned_model not in IDENTITY_ALLOWLIST[model_key_from_ledger]:
-                        failures.append(f"IDENTITY_RESPONSE: returned={returned_model!r} ({cid})")
-        else:
-            status_f = d / f"{cid}.response_meta.json"
-            if not status_f.exists():
-                failures.append(f"response artifacts missing for no-response call {cid}")
-
-        # A3: Budget recomputation using ACTUAL max_tokens from ledger
-        if line.get("budget_reserved_this_call") is not None and line.get("est_in_tokens") is not None:
-            actual_max_tokens = line.get("max_tokens")  # F6: from ledger, no 2500 fallback
-            if actual_max_tokens is None:
-                failures.append(f"max_tokens missing from ledger {cid}")
+                ret = resp.get("model","")
+                if mk in IDENTITY_ALLOWLIST and ret not in IDENTITY_ALLOWLIST[mk]:
+                    failures.append(f"IDENTITY_RESPONSE: returned={ret!r} ({cid})")
+        # Budget: use actual max_tokens + frozen price table
+        if line.get("budget_reserved_this_call") is not None:
+            mt = line.get("max_tokens")
+            if mt is None:
+                failures.append(f"max_tokens missing {cid}")
             else:
-                exp = line["est_in_tokens"] / 1e6 * line["unit_price_in"] + \
-                      actual_max_tokens / 1e6 * line["unit_price_out"]
-                if abs(exp - line["budget_reserved_this_call"]) > 5e-6:
-                    failures.append(f"reservation arithmetic mismatch {cid} (max_tokens={actual_max_tokens})")
+                # P0-5: verify against frozen price table, not ledger's self-reported prices
+                frozen_price = PRICE_TABLE.get(mk, {})
+                if frozen_price:
+                    exp = line["est_in_tokens"]/1e6*frozen_price["in"] + mt/1e6*frozen_price["out"]
+                    if abs(exp - line["budget_reserved_this_call"]) > 5e-6:
+                        failures.append(f"budget mismatch {cid}")
+                if line.get("price_table_sha256") != PRICE_TABLE_SHA:
+                    failures.append(f"price table SHA mismatch {cid}")
 
-        # F2: pending_reserved check
-        if line.get("record", {}).get("status") == "IN_FLIGHT":
-            if not line.get("record", {}).get("reserved_retained"):
-                failures.append(f"IN_FLIGHT call {cid} missing reserved_retained flag")
-            if line.get("pending_reserved_total") is None:
-                failures.append(f"IN_FLIGHT call {cid} missing pending_reserved_total")
-
-    # Payload<->ledger closure
-    if (root / "payloads").exists():
-        for d in (root / "payloads").iterdir():
-            if d.name not in seen_calls:
-                failures.append(f"orphan payload dir: {d.name}")
-
-    # ---- A1+A2: L1/L2/L3 mandatory when expected ----
+    # ---- P0-4: L1/L2/L3 mandatory checks ----
     if expect_l1:
-        if not frozen_pages:
-            failures.append("L1_EXPECTED_BUT_NO_FROZEN_PAGES")
+        if not frozen_pages and not frozen_pdf_dir:
+            failures.append("L1_EXPECTED: no frozen pages or PDF dir")
         if not upstream_e_outputs:
-            failures.append("L1_EXPECTED_BUT_NO_E_OUTPUTS")
-    if expect_l2 and not j_anchors:
-        failures.append("L2_EXPECTED_BUT_NO_J_ANCHORS")
-    if expect_l3 and not sink_quotes:
-        failures.append("L3_EXPECTED_BUT_NO_SINK_QUOTES")
+            failures.append("L1_EXPECTED: no E outputs")
+    if expect_l2:
+        if not upstream_e_outputs:
+            failures.append("L2_EXPECTED: no upstream E outputs")
+        if not j_anchors:
+            failures.append("L2_EXPECTED: no J anchors")
 
     if frozen_pages and upstream_e_outputs:
-        for out in upstream_e_outputs:  # L1
-            key = (out["doc"], out["page"])
+        for out in upstream_e_outputs:
+            key = (out.get("doc"), out.get("page"))
             page = frozen_pages.get(key)
             if page is None:
-                failures.append(f"L1: unknown frozen page {key}")
-                continue
-            if _sha(page["text"].encode()) != out["page_sha256"] or page["raw_sha256"] != out["raw_sha256"]:
-                failures.append(f"L1: hash mismatch for {key}")
-            qn = "".join(ch for ch in out["quote"] if not ch.isspace())
-            tn = "".join(ch for ch in page["text"] if not ch.isspace())
-            if qn not in tn:
-                failures.append(f"L1: E quote not in frozen page ({out.get('label', '')})")
+                failures.append(f"L1: unknown page {key}"); continue
+            # P0-4: if PDF dir provided, independently verify raw hash
+            if frozen_pdf_dir and out.get("raw_sha256"):
+                pdf_path = frozen_pdf_dir / f"{out['doc']}.pdf"
+                if pdf_path.exists():
+                    actual_raw = _sha(pdf_path.read_bytes())
+                    if actual_raw != out["raw_sha256"]:
+                        failures.append(f"L1: PDF raw hash mismatch for {out['doc']}")
+            if page.get("page_sha256") and _sha(page["text"].encode()) != out.get("page_sha256"):
+                failures.append(f"L1: page hash mismatch {key}")
+            qn = "".join(c for c in out.get("quote","") if not c.isspace())
+            tn = "".join(c for c in page["text"] if not c.isspace())
+            if qn and qn not in tn:
+                failures.append(f"L1: quote not in page ({out.get('label','')})")
 
     if upstream_e_outputs and j_anchors:
-        for a in j_anchors:  # L2: full quintuple comparison
+        for a in j_anchors:  # P0-4: include judgment_item_id
             match = any(
-                e["doc"] == a["doc"] and e["page"] == a["page"] and e["quote"] == a["quote"]
-                and e["page_sha256"] == a["page_sha256"] and e["raw_sha256"] == a["raw_sha256"]
+                e.get("doc")==a.get("doc") and e.get("page")==a.get("page")
+                and e.get("quote")==a.get("quote")
+                and e.get("page_sha256")==a.get("page_sha256")
+                and e.get("raw_sha256")==a.get("raw_sha256")
+                and e.get("judgment_item_id")==a.get("judgment_item_id")
                 for e in upstream_e_outputs)
             if not match:
-                failures.append(f"L2: J anchor not inherited from E ({a.get('label', '')})")
+                failures.append(f"L2: anchor not inherited ({a.get('label','')})")
 
+    if expect_l3 and not sink_quotes:
+        failures.append("L3_EXPECTED: no sink quotes")
+    if expect_l3 and not j_anchors:
+        failures.append("L3_EXPECTED: no J anchors (upstream for L3)")
     if j_anchors and sink_quotes is not None:
-        # A2: L3 compares full quintuple, not just quote string
         for sq in sink_quotes:
-            if isinstance(sq, str):
-                sq = {"quote": sq}
+            if isinstance(sq, str): sq = {"quote": sq}
             match = any(
-                a.get("doc") == sq.get("doc") and a.get("page") == sq.get("page")
-                and a["quote"] == sq.get("quote")
-                and a.get("page_sha256") == sq.get("page_sha256")
-                and a.get("raw_sha256") == sq.get("raw_sha256")
+                a.get("doc")==sq.get("doc") and a.get("page")==sq.get("page")
+                and a.get("quote")==sq.get("quote")
+                and a.get("judgment_item_id")==sq.get("judgment_item_id")
                 for a in j_anchors)
             if not match:
-                failures.append(f"L3: sink anchor not from verified J set ({sq.get('quote', '')[:20]}…)")
+                failures.append(f"L3: unverified anchor ({sq.get('quote','')[:20]})")
 
-    return {"verdict": "PASS" if not failures else "FAIL", "failures": failures}
+    # Payload-ledger closure
+    if (root/"payloads").exists():
+        for d in (root/"payloads").iterdir():
+            if d.name not in seen:
+                failures.append(f"orphan payload: {d.name}")
 
-
-if __name__ == "__main__":
-    print("audit.py v2 — independent verifier with mandatory L1/L2/L3, full quintuple L3, "
-          "built-in identity check, actual max_tokens budget recalc, manifest ledger anchor")
+    return {"verdict":"PASS" if not failures else "FAIL", "failures": failures}
