@@ -1,0 +1,30 @@
+[
+ {
+  "test": "T9A",
+  "order": "ISSUED\u2192FAILLOCK\u2192handoff_and_send",
+  "expected": "REVOKED",
+  "actual": "REVOKED",
+  "pass": true
+ },
+ {
+  "test": "T9B",
+  "order": "ISSUED\u2192handoff_and_send(drop)",
+  "expected": "IN_FLIGHT",
+  "actual": "IN_FLIGHT",
+  "pass": true
+ },
+ {
+  "test": "T9C",
+  "order": "FAILLOCK\u2192acquire",
+  "expected": "REVOKED",
+  "actual": "REVOKED",
+  "pass": true
+ },
+ {
+  "test": "T9D",
+  "order": "5\u00d7ISSUED\u2192FAILLOCK",
+  "expected": "all REVOKED",
+  "actual": "all REVOKED",
+  "pass": true
+ }
+]

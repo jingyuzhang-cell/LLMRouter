@@ -1,0 +1,325 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e1_ext_pen",
+    "e1_fin"
+   ],
+   "rationale": "joint(R,π): 16 legal R × 3 π modes, argmax U=0.38578 -> R=['e1_ext_pen', 'e1_fin'], π=strong | Z-space=['KEEP'] -> KEEP "
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.40778)"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.40778)"
+  },
+  {
+   "z_op": "SPLIT_VERIFY",
+   "z_detail": "e1_chk -> per-lineage verifiers over parents ['e1_fin', 'e1_tl'] (kind=verification)",
+   "recovery_set": [
+    "e1_chk_a",
+    "e1_chk_b"
+   ],
+   "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.19289 -> R=['e1_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.40778)"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.40778)"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e1_idx",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1245,
+    "out": 299
+   }
+  },
+  {
+   "node": "e1_ext_pen",
+   "model": "glm53",
+   "success": false,
+   "usage": {
+    "in": 1429,
+    "out": 172
+   }
+  },
+  {
+   "node": "e1_ext_proc",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1425,
+    "out": 422
+   }
+  },
+  {
+   "node": "e1_ext_pen",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1429,
+    "out": 217
+   }
+  },
+  {
+   "node": "e1_fin",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 880,
+    "out": 203
+   }
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53flash",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 878,
+    "out": 280
+   }
+  },
+  {
+   "node": "e1_chk",
+   "model": "glm53",
+   "success": false,
+   "failure": "contract",
+   "usage": {
+    "in": 987,
+    "out": 1727
+   }
+  },
+  {
+   "node": "e1_chk_a",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 987,
+    "out": 876
+   }
+  },
+  {
+   "node": "e1_chk_b",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 959,
+    "out": 1069
+   }
+  },
+  {
+   "node": "e1_rpt",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2565,
+    "out": 712
+   }
+  }
+ ],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "2020-06-23 公司收到证监会《行政处罚决定书》【2020】29号及《市场禁入决定书》【2020】9号",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f2",
+   "content": "2018-02-09 公司收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f3",
+   "content": "2019-07-09 公司收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f4",
+   "content": "2018-02-09 公司收到证监会《调查通知书》（连调查字[2018]001号），因涉嫌信息披露违法违规被立案调查",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f5",
+   "content": "zzd_penalty_2020前600字未含虚假记载年度、虚增利润金额及罚款金额的具体违法事实细节",
+   "kind": "amount",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f6",
+   "content": "zzd_notice_2019前600字未含虚假记载年度、虚增利润金额及罚款金额的具体违法事实细节",
+   "kind": "amount",
+   "status": "insufficient_evidence",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f7",
+   "content": "当事人权利（陈述、申辩、要求听证等）：所提供文档片段未包含事先告知书中关于当事人陈述申辩及听证权利的正文段落",
+   "kind": "fact",
+   "status": "insufficient_evidence",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f8",
+   "content": "核验2016年虚增利润13114.77万元与《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）口径一致性：所提供文档片段（zzd_notice_2019前600字及zzd_penalty_2020前600字）均未载明2016年虚增利润具体金额，无法在本分支单侧核验该数字，缺少告知书正文中的虚增利润金额明细",
+   "kind": "amount",
+   "status": "insufficient_evidence",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f9",
+   "content": "|2020-06-23 - 2018-02-09|天(2018-02-09→2020-06-23, zzd_notice_2019 × zzd_penalty_2020)：立案调查到收到处罚决定书间隔865天",
+   "kind": "timeline",
+   "status": "confirmed",
+   "source": "zzd_notice_2019×zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f10",
+   "content": "|2019-07-09 - 2018-02-09|天(2018-02-09→2019-07-09, zzd_notice_2019 × zzd_penalty_2020)：立案调查到收到事先告知书间隔515天",
+   "kind": "timeline",
+   "status": "confirmed",
+   "source": "zzd_notice_2019×zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f11",
+   "content": "|2020-06-23 - 2019-07-09|天(2019-07-09→2020-06-23, zzd_notice_2019 × zzd_penalty_2020)：收到事先告知书到收到处罚决定书间隔350天",
+   "kind": "timeline",
+   "status": "confirmed",
+   "source": "zzd_notice_2019×zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f12",
+   "content": "UNRESOLVED：两份文档（zzd_penalty_2020、zzd_notice_2019）前600字片段均未载明虚假记载年度、虚增利润金额（含2016年虚增利润13114.77万元）及罚款金额，时间线与财务金额的交叉核验无法完成，金额口径一致性待补充文档正文",
+   "kind": "amount",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f13",
+   "content": "换股比例一致（2018-02-09 收到《调查通知书》（连调查字【2018】001号）@zzd_penalty_2020 vs 2018-02-09 收到《调查通知书》（连调查字[2018]001号）@zzd_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f14",
+   "content": "换股比例一致（2019-07-09 收到处罚字【2019】95号《行政处罚及市场禁入事先告知书》@zzd_penalty_2020 vs 2019-07-09 收到处罚字【2019】95号《事先告知书》@zzd_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f15",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  }
+ ],
+ "terminal_stats": {
+  "n": 15,
+  "confirmed": 9,
+  "unconfirmed": 0,
+  "insufficient_evidence": 6,
+  "upstream_missing": 0
+ },
+ "report": {
+  "new_facts": [],
+  "comparisons": [
+   {
+    "item": "立案调查日期",
+    "operand_a": "2018-02-09 收到《调查通知书》（连调查字【2018】001号）",
+    "span_a": "全文",
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": "2018-02-09 收到《调查通知书》（连调查字[2018]001号）",
+    "span_b": "全文",
+    "doc_b": "zzd_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "收到事先告知书日期及文号",
+    "operand_a": "2019-07-09 收到处罚字【2019】95号《行政处罚及市场禁入事先告知书》",
+    "span_a": "全文",
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": "2019-07-09 收到处罚字【2019】95号《事先告知书》",
+    "span_b": "全文",
+    "doc_b": "zzd_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "2016年虚增利润金额口径",
+    "operand_a": null,
+    "span_a": null,
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": null,
+    "span_b": null,
+    "doc_b": "zzd_notice_2019",
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   }
+  ],
+  "report": "獐子岛（002069）信息披露违法违规事件时间线核验报告。\n\n一、事件时间线（均为confirmed事实）：\n1. 2018年2月9日，公司收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查（f2/f4，两份文档口径一致）；\n2. 2019年7月9日，公司及相关人员收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）（f3，两份文档口径一致）；\n3. 2020年6月23日，公司收到证监会《行政处罚决定书》【2020】29号及《市场禁入决定书》【2020】9号（f1）。\n\n二、时间间隔：立案调查到事先告知书间隔515天（f10）；事先告知书到处罚决定书间隔350天（f11）；立案调查到处罚决定书总计865天（f9）。\n\n三、退市风险认定：两份公告均声明认定事实未触及深交所重大违法强制退市情形（zzd_notice_2019引第二条、第四条、第五条；zzd_penalty_2020引上市规则13.2.1条第(七)至(九)项及相关办法）。\n\n四、未决事项：两份文档片段均未载明虚假记载年度、虚增利润金额（含2016年虚增利润13114.77万元）及罚款金额，金额口径一致性无法核验；事先告知书中当事人陈述申辩及听证权利条款亦未在片段中出现（f5/f6/f7/f8/f12）。\n\n结论：三份关键文书日期及文号在两份公告间完全一致，时间线闭合；财务金额与当事人权利部分待补充文档正文核验。",
+  "unknown_marks": [
+   "f12",
+   "f5",
+   "f6",
+   "f7",
+   "f8"
+  ],
+  "dropped": [],
+  "status_changes": []
+ },
+ "makespan": 97.4,
+ "tokens": 18761
+}

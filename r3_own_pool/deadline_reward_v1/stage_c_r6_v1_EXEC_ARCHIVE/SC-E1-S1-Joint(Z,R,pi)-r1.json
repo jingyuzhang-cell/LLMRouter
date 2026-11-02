@@ -1,0 +1,321 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e1_tl"
+   ],
+   "reoptimize": [
+    [
+     "e1_rpt",
+     "glm53"
+    ],
+    [
+     "e1_tl",
+     "glm53"
+    ]
+   ],
+   "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e1_tl'], π=strong | Z-space=['KEEP'] -> KEEP (U_keep=0.37129)"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+  },
+  {
+   "round": 3,
+   "action": "recover",
+   "z_op": "SPLIT_VERIFY",
+   "z_detail": "e1_chk -> per-lineage verifiers over parents ['e1_fin', 'e1_tl'] (kind=verification)",
+   "recovery_set": [
+    "e1_chk_a",
+    "e1_chk_b"
+   ],
+   "reoptimize": [],
+   "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.18015 -> R=['e1_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.18015, U_split=0.36029)"
+  },
+  {
+   "round": 4,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+  },
+  {
+   "round": 5,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e1_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 959,
+    "out": 540
+   },
+   "latency_s": 15.253
+  },
+  {
+   "node": "e1_ext_pen",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1117,
+    "out": 563
+   },
+   "latency_s": 9.464
+  },
+  {
+   "node": "e1_ext_proc",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1113,
+    "out": 368
+   },
+   "latency_s": 7.836
+  },
+  {
+   "node": "e1_fin",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 733,
+    "out": 698
+   },
+   "latency_s": 13.339
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 731,
+    "out": 599
+   },
+   "latency_s": 7.316
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53",
+   "attempt": 2,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 731,
+    "out": 815
+   },
+   "latency_s": 8.531
+  },
+  {
+   "node": "e1_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": false,
+   "failure": "parse",
+   "usage": {
+    "in": 859,
+    "out": 1024
+   },
+   "latency_s": 10.288
+  },
+  {
+   "node": "e1_chk_a",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 799,
+    "out": 1008
+   },
+   "latency_s": 21.398
+  },
+  {
+   "node": "e1_chk_b",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 888,
+    "out": 1007
+   },
+   "latency_s": 11.714
+  },
+  {
+   "node": "e1_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2362,
+    "out": 891
+   },
+   "latency_s": 12.083
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "文书索引：zzd_penalty_2020为獐子岛公告2020-48，关于收到行政处罚决定书及市场禁入决定书的公告",
+   "kind": "索引",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f2",
+   "content": "文书索引：zzd_notice_2019为獐子岛公告2019-34，关于收到行政处罚及市场禁入事先告知书的公告",
+   "kind": "索引",
+   "status": "confirmed",
+   "source": "zzd_notice_2019"
+  },
+  {
+   "fid": "f3",
+   "content": "两份文书时间线：2018-02-09立案调查→2019-07-09事先告知书→2020-06-23行政处罚及市场禁入决定书，构成完整处罚流程",
+   "kind": "推理",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  },
+  {
+   "fid": "f4",
+   "content": "2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）",
+   "kind": "事实",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f5",
+   "content": "公司判断违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定情形",
+   "kind": "事实",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f6",
+   "content": "2018-02-09公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）",
+   "kind": "事实",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f7",
+   "content": "2019-07-09公司收到证监会处罚字【2019】95号事先告知书，认定事实未触及重大违法强制退市情形",
+   "kind": "事实",
+   "status": "confirmed",
+   "source": "zzd_notice_2019"
+  },
+  {
+   "fid": "f8",
+   "content": "虚假记载具体年度、虚增利润金额：所提供的两份文档节选（各前600字）未包含处罚决定书中关于虚假记载年份及虚增利润数额的具体认定内容",
+   "kind": "事实",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  },
+  {
+   "fid": "f9",
+   "content": "罚款金额：所提供文档节选未披露证监会对公司及相关责任人的罚款金额",
+   "kind": "事实",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f10",
+   "content": "2016年虚增利润13114.77万元：所提供的两份文档节选（各前600字）均未包含具体虚增利润数额的认定内容，无法与告知书口径进行比对核验",
+   "kind": "事实",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  },
+  {
+   "fid": "f11",
+   "content": "交叉核查结论：时间线（立案2018-02-09→事先告知2019-07-09→处罚决定2020-06-23）与文书编号（连调查字【2018】001号、处罚字【2019】95号、【2020】29号/【2020】9号）相互印证，时间线内部一致，无矛盾",
+   "kind": "推理",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  },
+  {
+   "fid": "f12",
+   "content": "财务核验结论：虚增利润具体数额（含2016年13114.77万元口径）及罚款金额在现有文档节选中均无法核验，整体标记UNRESOLVED，需调取处罚决定书全文",
+   "kind": "推理",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  }
+ ],
+ "terminal_stats": {
+  "n": 12,
+  "confirmed": 8,
+  "unconfirmed": 0,
+  "insufficient_evidence": 4,
+  "upstream_missing": 0
+ },
+ "report": {
+  "investigation_timeline": "2018-02-09獐子岛因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号，见f6）；调查期间公司按月披露进展公告（2018-03至2019-06共16次，见f1文书摘录）；2019-07-09公司及相关人员收到处罚字【2019】95号事先告知书（f7）；2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）（f4），构成完整处罚流程（f3），时间线与文书编号相互印证、内部一致（f11）。",
+  "fraud_nature": "信息披露违法违规。证监会经调查认定獐子岛存在信息披露违法并作出行政处罚及市场禁入决定；公司自行判断该违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形（f5、f7）。",
+  "report": "獐子岛集团股份有限公司（证券代码002069）信息披露违法违规案调查报告\n\n一、案件概述\n2018年2月9日，公司因涉嫌信息披露违法违规被中国证监会立案调查（调查通知书编号：连调查字【2018】001号）[f6]。此后历经约17个月调查，2019年7月9日公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）[f7]，2020年6月23日收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）[f4]，处罚流程完整闭合[f3]。\n\n二、时间线与文书核验\n两份关键公告文书——公告2019-34（事先告知书公告）[f2]与公告2020-48（处罚决定书公告）[f1]——披露的时间线与文书编号（连调查字【2018】001号、处罚字【2019】95号、【2020】29号及【2020】9号）相互印证，两份文书内容交叉核查无矛盾[f11]。调查期间，公司按《深圳证券交易所股票上市规则》要求，于2018年3月至2019年6月共披露16次立案调查进展暨风险提示公告（公告编号2018-24至2019-31）[f1]。处罚决定书及市场禁入决定书还涉及吴厚刚、梁峻、勾荣、孙福君、于成家等相关责任人[f2]。\n\n三、退市风险认定\n根据事先告知书认定事实，公司判断未触及《深圳证券交易所上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形[f7]；根据最终处罚决定书认定事实，公司进一步判断违法行为不触及深交所上市规则第13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》相关条款[f5]，两阶段判断口径一致。\n\n四、未决事项（UNRESOLVED）\n现有两份文档节选（各前600字）均未包含处罚决定书中关于虚假记载具体年份、虚增利润数额及罚款金额的认定内容[f8][f9]，其中“2016年虚增利润13114.77万元”的口径在现有节选中无法核验比对[f10]。财务与处罚金额层面的核验整体标记UNRESOLVED，需调取处罚决定书全文后方可补充认定[f12]。",
+  "fact_ids_used": [
+   "f1",
+   "f2",
+   "f3",
+   "f4",
+   "f5",
+   "f6",
+   "f7",
+   "f11",
+   "f8",
+   "f9",
+   "f10",
+   "f12"
+  ],
+  "unknown_marks": [
+   {
+    "fid": "f8",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f9",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f10",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f12",
+    "status": "insufficient_evidence"
+   }
+  ]
+ },
+ "makespan": 117.22,
+ "tokens": 17805,
+ "arm": "Joint(Z,R,pi)",
+ "suffix_makespan": 64.01
+}

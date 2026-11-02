@@ -1,0 +1,88 @@
+{
+ "nsim": 20000,
+ "test": "exact_sign_flip_enumeration",
+ "implementation": "exact_perm.exact_paired_perm",
+ "scenarios": {
+  "基准保守": {
+   "p_tie": 0.25,
+   "mu": 1.0,
+   "sd": 1.2,
+   "seeds": [
+    20261102,
+    42,
+    12345
+   ],
+   "integer": [
+    0.7688,
+    0.7767,
+    0.7703
+   ],
+   "integer_mean": 0.7719333333333332,
+   "continuous": [
+    0.817,
+    0.8227,
+    0.81555
+   ],
+   "continuous_mean": 0.8184166666666667,
+   "delta_integer_minus_continuous": -0.04648333333333343
+  },
+  "更保守": {
+   "p_tie": 0.3,
+   "mu": 0.8,
+   "sd": 1.3,
+   "seeds": [
+    20261102
+   ],
+   "integer": [
+    0.50255
+   ],
+   "integer_mean": 0.50255,
+   "continuous": [
+    0.5641
+   ],
+   "continuous_mean": 0.5641,
+   "delta_integer_minus_continuous": -0.061549999999999994
+  },
+  "乐观(接近D2实测)": {
+   "p_tie": 0.2,
+   "mu": 2.0,
+   "sd": 1.5,
+   "seeds": [
+    20261102
+   ],
+   "integer": [
+    0.99085
+   ],
+   "integer_mean": 0.99085,
+   "continuous": [
+    0.9925
+   ],
+   "continuous_mean": 0.9925,
+   "delta_integer_minus_continuous": -0.0016500000000000403
+  }
+ },
+ "S3_single_family_integer": 0.1822,
+ "S5_sign_test_power_ge7of8": {
+  "0.7": 0.2552983299999999,
+  "0.8": 0.5033164800000002,
+  "0.9": 0.81310473
+ },
+ "layers": {
+  "L1_main": 0.7719333333333332,
+  "L2_main_x_gate": 0.6947399999999999,
+  "L3_all_conditions": 0.17340545807312488,
+  "L3_prime_protection_1": 0.19380610019937486,
+  "assumptions": {
+   "gate": 0.9,
+   "Q1_three_families": 0.6141249999999999,
+   "S5_ge7of8@0.8": 0.5033164800000002,
+   "quality_gate": 0.95,
+   "protection_0": 0.85,
+   "protection_1": 0.95
+  }
+ },
+ "scipy_crosscheck": {
+  "cases_compared": 2000,
+  "mismatches": 0
+ }
+}

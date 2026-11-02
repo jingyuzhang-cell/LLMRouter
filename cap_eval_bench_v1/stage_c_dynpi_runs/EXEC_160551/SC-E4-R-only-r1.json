@@ -1,0 +1,335 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e4_idx"
+   ],
+   "rationale": "FIX-2 real comparison: 32 legal sets, argmax U=0.13682 -> R=['e4_idx'] (runner-up U=0.12582 R=['e4_chk', 'e4_idx'])"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e4_seq"
+   ],
+   "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.28164 -> R=['e4_seq'] (runner-up U=0.27064 R=['e4_chk', 'e4_seq'])"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e4_idx",
+   "model": "glm53",
+   "success": false,
+   "failure": "parse",
+   "usage": {
+    "in": 1262,
+    "out": 2048
+   }
+  },
+  {
+   "node": "e4_idx",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1262,
+    "out": 492
+   }
+  },
+  {
+   "node": "e4_ext_term",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1654,
+    "out": 202
+   }
+  },
+  {
+   "node": "e4_ext_period",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1660,
+    "out": 403
+   }
+  },
+  {
+   "node": "e4_seq",
+   "model": "glm53flash",
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 1153,
+    "out": 664
+   }
+  },
+  {
+   "node": "e4_seq",
+   "model": "glm53flash",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1153,
+    "out": 589
+   }
+  },
+  {
+   "node": "e4_chk",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1405,
+    "out": 81
+   }
+  },
+  {
+   "node": "e4_rpt",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2686,
+    "out": 1175
+   }
+  }
+ ],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "日期：2020年5月14日，乐视网收到深交所终止上市决定（深证上【2020】405号）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f2",
+   "content": "日期：2020年6月5日，乐视网股票进入退市整理期，交易30个交易日后摘牌",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f3",
+   "content": "日期：2020年5月14日，乐视网收到深交所终止上市决定",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f4",
+   "content": "日期：2020年6月5日，乐视网股票进入退市整理期",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f5",
+   "content": "日期：2019年5月13日，乐视网股票暂停上市（2018年度期末净资产为负）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f6",
+   "content": "日期：2020年4月27日，乐视网披露《2019年年度报告》，净利润及期末净资产均为负，审计报告为保留意见",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f7",
+   "content": "|2020-05-14 − 2020-06-05|=22天(2020年5月14日→2020年6月5日,ls_delist_2020×ls_terminate_2020)",
+   "kind": "derived_interval",
+   "status": "confirmed",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f8",
+   "content": "|2020-04-27 − 2020-06-05|=39天(2020年4月27日→2020年6月5日,ls_terminate_2020×ls_delist_2020)",
+   "kind": "derived_interval",
+   "status": "confirmed",
+   "source": "ls_terminate_2020×ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f9",
+   "content": "终止原因：乐视网2019年度经审计的归属于上市公司股东的净利润、扣除非经常性损益后的净利润、期末净资产均为负值，且财务会计报告被出具保留意见审计报告，触及《创业板股票上市规则（2018年11月修订）》第13.4.1条第（二）（三）（五）项规定终止上市情形",
+   "kind": "reason",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f10",
+   "content": "终止原因（前因）：乐视网2018年度经审计的归属于上市公司股东的期末净资产为负值，股票自2019年5月13日起暂停上市",
+   "kind": "reason",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f11",
+   "content": "退市整理期最后交易日/摘牌具体日期未披露",
+   "kind": "date",
+   "status": "insufficient_evidence",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f12",
+   "content": "退市整理期期间证券简称变更信息：文档可见范围内未披露简称变更安排",
+   "kind": "event",
+   "status": "insufficient_evidence",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f13",
+   "content": "时序链条：终止上市决定日2020年5月14日（ls_delist_2020）→ 退市整理期起始日2020年6月5日（ls_terminate_2020），|2020-06-05 − 2020-05-14|=22天(2020年5月14日→2020年6月5日,ls_delist_2020×ls_terminate_2020)",
+   "kind": "derived_interval",
+   "status": "confirmed",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f14",
+   "content": "退市整理期末日：整理期自2020年6月5日起持续30个交易日，具体末日历日期在两份文档可见范围内均未披露（缺ls_delist_2020侧、缺ls_terminate_2020侧具体日期）",
+   "kind": "derived_interval",
+   "status": "insufficient_evidence",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f15",
+   "content": "终止（摘牌）日：整理期交易期满后摘牌并终止上市，具体终止日期文档未披露（缺双侧具体日期来源，禁止间隔断言）",
+   "kind": "derived_interval",
+   "status": "insufficient_evidence",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f16",
+   "content": "换股比例一致（2020年5月14日@ls_delist_2020 vs 2020年5月14日@ls_terminate_2020）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f17",
+   "content": "换股比例一致（2020年6月5日@ls_delist_2020 vs 2020年6月5日@ls_terminate_2020）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f18",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  }
+ ],
+ "terminal_stats": {
+  "n": 18,
+  "confirmed": 13,
+  "unconfirmed": 0,
+  "insufficient_evidence": 5,
+  "upstream_missing": 0
+ },
+ "report": {
+  "new_facts": [],
+  "comparisons": [
+   {
+    "item": "终止上市决定日（收到深交所决定）",
+    "operand_a": "2020年5月14日",
+    "span_a": "于 2020 年 5 月 14 日收到深圳证券交易所下发的《关于乐视网信息技术（北京）股份有限公司股票终止上市的决定》（深证上【2020】405 号）",
+    "doc_a": "ls_delist_2020",
+    "operand_b": "2020年5月14日",
+    "span_b": "于 2020 年 5 月 14 日收到深圳证券交易所下发的《关于乐视网信息技术（北京）股份有限公司股票终止上市的决定》（深证上【2020】405 号）",
+    "doc_b": "ls_terminate_2020",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "退市整理期起始日",
+    "operand_a": "2020年6月5日",
+    "span_a": "公司股票将于 2020 年 6 月 5 日起进入退市整理期交易……交易 30 个交易日后公司股票将被摘牌",
+    "doc_a": "ls_delist_2020",
+    "operand_b": "2020年6月5日",
+    "span_b": "自深圳证券交易所作出公司股票终止上市的决定后十五个交易日届满的次一交易日（即 2020 年 6 月 5 日）起，公司股票交易进入退市整理期",
+    "doc_b": "ls_terminate_2020",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "退市整理期最后交易日/摘牌具体日期",
+    "operand_a": null,
+    "span_a": null,
+    "doc_a": null,
+    "operand_b": null,
+    "span_b": null,
+    "doc_b": null,
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   }
+  ],
+  "report": "综合调查报告——乐视网（300104）终止上市时序与原因核查。\n\n一、核心时序（均基于confirmed事实）：\n1. 2019年5月13日：乐视网因2018年度经审计的期末净资产为负，股票暂停上市（f5，ls_terminate_2020）。\n2. 2020年4月27日：公司披露《2019年年度报告》，净利润及期末净资产均为负，审计报告为保留意见（f6，ls_terminate_2020）。距退市整理期起始日39天（f8）。\n3. 2020年5月14日：公司收到深交所终止上市决定（深证上【2020】405号）（f1，ls_delist_2020；f3，ls_terminate_2020，两文档交叉验证一致）。\n4. 2020年6月5日：股票进入退市整理期，交易30个交易日后摘牌（f2，ls_delist_2020；f4，ls_terminate_2020，两文档交叉验证一致）。距终止上市决定日22天（f13/f7）。\n\n二、终止原因（f9，ls_terminate_2020，confirmed）：2019年度经审计的归母净利润、扣非净利润、期末净资产均为负，且财务报告被出具保留意见，触及《创业板股票上市规则（2018年11月修订）》第13.4.1条第（二）（三）（五）项终止上市情形；前因为2018年度期末净资产为负导致暂停上市（f10）。\n\n三、未定事项：退市整理期最后交易日与摘牌具体日期在合并事实清单中无confirmed来源（f11、f14、f15均为insufficient_evidence），故本报告不对整理期末日及摘牌日给出确定结论或间隔断言。\n\n结论：两份公告在终止上市决定日与退市整理期起始日两项关键日期上完全一致，时序链条confirmed；唯摘牌具体日期证据不足。",
+  "unknown_marks": [
+   "f11|退市整理期最后交易日/摘牌具体日期未披露|insufficient_evidence",
+   "f12|退市整理期期间证券简称变更信息未披露|insufficient_evidence",
+   "f14|退市整理期末日具体日期|insufficient_evidence",
+   "f15|终止（摘牌）日具体日期|insufficient_evidence"
+  ],
+  "dropped": [],
+  "status_changes": []
+ },
+ "makespan": 92.6,
+ "tokens": 17889
+}

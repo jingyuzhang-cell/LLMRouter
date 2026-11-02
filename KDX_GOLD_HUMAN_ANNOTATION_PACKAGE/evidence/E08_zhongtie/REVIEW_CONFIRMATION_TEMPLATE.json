@@ -1,0 +1,32 @@
+[
+  {
+    "_说明": "E08 事实级 Gold 确认记录模板。每位评审者复制本文件为 REVIEW_CONFIRMATION_<A|B>.json 并独立填写；盲于模型、盲于调度策略。verdict 取值：CONFIRMED（事实与证据跨度均正确）/ CORRECTED（需修正，填 corrected_value 与 note）/ REJECTED（事实不成立或证据不支持）/ DOWNGRADE_UNKNOWN（证据不足，应归 UNKNOWN）。evidence_span_ok：原文跨度（起止偏移+引文+双哈希）是否与事实一一对应。",
+    "reviewer_id": "A",
+    "review_date": "",
+    "blind_to_model": true,
+    "blind_to_strategy": true,
+    "facts": [
+      {"fact_id": "F1", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F2", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F3", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F4", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F5", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F6", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F7", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F8", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F9", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""},
+      {"fact_id": "F10", "verdict": "", "evidence_span_ok": null, "corrected_value": null, "note": ""}
+    ],
+    "unknown_items": [
+      {"item_id": "U1", "verdict": "", "note": "确认该事项在截止日内确属证据不足（应保持 UNKNOWN 拒判）"}
+    ],
+    "criticality_review": {
+      "_说明": "对 critical_proposed（F4/F6/F7/F8）的确认或调整建议；冻结后不可再改。",
+      "F4": "agree|disagree+理由",
+      "F6": "agree|disagree+理由",
+      "F7": "agree|disagree+理由",
+      "F8": "agree|disagree+理由"
+    },
+    "overall_confidence": "low|medium|high"
+  }
+]

@@ -1,0 +1,115 @@
+{
+ "results": {
+  "①_版本身份": {
+   "runner3.py": {
+    "expected": "6be671df69ee6a3e",
+    "actual": "6be671df69ee6a3e",
+    "match": true
+   },
+   "audit.py": {
+    "expected": "7a1c2e708883e325",
+    "actual": "7a1c2e708883e325",
+    "match": true
+   },
+   "dryrun_tests.py": {
+    "expected": "4a8c1c548a36810d",
+    "actual": "4a8c1c548a36810d",
+    "match": true
+   },
+   "PASS": true
+  },
+  "②_载荷真实性": {
+   "传输字节写入": true,
+   "fsync持久化": true,
+   "响应字节文件": true,
+   "哈希基于字节": true,
+   "哈希基于重构造": false,
+   "代码行数": 367,
+   "PASS": true
+  },
+  "③_提示一致性": {
+   "发送前等值门存在": true,
+   "从实际body提取函数": true,
+   "规范化序列化函数": true,
+   "等值门在交接前": true,
+   "PASS": true
+  },
+  "④_模型身份": {
+   "冻结允许清单": true,
+   "精确匹配(非子串)": true,
+   "不匹配→停批": true,
+   "PASS": true
+  },
+  "⑤_成本安全": {
+   "Token系数1.0": true,
+   "协议开销公式": true,
+   "最大费用预留": true,
+   "未知费用标记": true,
+   "预算预检停止": true,
+   "T8预留保留": true,
+   "PASS": true
+  },
+  "⑥_证据真实性": {
+   "L1_原文检查": true,
+   "L2_节点继承": true,
+   "L3_终端继承": true,
+   "独立实现(不复用runner3)": true,
+   "PASS": true
+  },
+  "⑦_许可与闭锁": {
+   "三态许可机": true,
+   "FAILLOCK原子创建": true,
+   "flock线性化": true,
+   "统一闸门": true,
+   "在途请求标记": true,
+   "PASS": true
+  },
+  "⑧_测试对应性": {
+   "T矩阵报告存在": true,
+   "全部PASS": true,
+   "测试数": 11,
+   "测试名": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T9",
+    "T10",
+    "TAMPER"
+   ],
+   "T9许可窗口测试": true,
+   "代码版本对应": true,
+   "PASS": true
+  }
+ },
+ "independence": {
+  "audit不import_runner3": true,
+  "audit不import_dryrun": true,
+  "runner3不import_audit": true,
+  "audit有独立_canon函数": true,
+  "audit有独立_sha函数": true,
+  "audit有独立_extract函数": true,
+  "runner3有canonical_messages": true,
+  "audit不调用runner3的canonical_messages": true,
+  "常量标识非代码复用": true,
+  "实现代码不同": true,
+  "实现行数_runner3": 8,
+  "实现行数_audit": 9,
+  "代码行级不同": true,
+  "PASS": true
+ },
+ "all_eight_pass": true,
+ "independence_pass": true,
+ "overall": "PASS",
+ "sha256s": {
+  "runner3.py": "6be671df69ee6a3e7815e57c66316f0f1d8b02bfe8b3ba4ab9dda4f1c2e793d9",
+  "audit.py": "7a1c2e708883e325a19c192ac58a926760bc049f75b67e907ee04040fdb23c71",
+  "dryrun_tests.py": "4a8c1c548a36810de78978f43da64e599e991060d7c33c31b8b412ab832c63cf"
+ },
+ "note": "零调用审计；PHASE2B HOLD 维持；OS级隔离 BLOCKED 待补验",
+ "independence_note": "修正说明：前次检查将 audit.py 的字符串常量 CANON_RULE='canonical_messages_v1' 误判为代码复用。实际检查应为 import/from 关系 + 函数调用 + 行级代码对比——三项均确认独立。CANON_RULE 常量仅用于标识规范化规则版本，不是从 runner3 导入的代码。"
+}

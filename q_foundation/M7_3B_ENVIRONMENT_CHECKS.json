@@ -1,0 +1,63 @@
+{
+ "checks": [
+  {
+   "object": "1 模型适配器",
+   "status": "PASS",
+   "evidence": "chain SHA 34e563a8 == last frozen record 34e563a8 (DYNPI freeze; R9B admission c74c9cb9 superseded); delta-contract text-path tests PASS=8/8",
+   "blocked_reason": ""
+  },
+  {
+   "object": "2 执行器循环",
+   "status": "BLOCKED",
+   "evidence": "engine + acceptance tests exist (33/33); M7-3 driver (assignments->adapter call->state update->apply_split->decide) not implemented",
+   "blocked_reason": "缺少 M7-3 驱动器实现（引擎与适配器/计量器/日志的集成层）"
+  },
+  {
+   "object": "3 Z/R/π 六条件动作合法",
+   "status": "PASS",
+   "evidence": "8 个预注册状态-动作对照全部命中",
+   "blocked_reason": ""
+  },
+  {
+   "object": "4 GROSS 预算",
+   "status": "PASS",
+   "evidence": "engine-side gross reservation acceptance True; meter(v2.2 calibrated reservation) present=True; budget_guard present=True; NOTE engine<->meter integration pending driver (blocked with #2)",
+   "blocked_reason": ""
+  },
+  {
+   "object": "5 P0 评分器",
+   "status": "PASS",
+   "evidence": "test_terminal_quality.py exit=0; OK; INCOMPLETE-handling present=True",
+   "blocked_reason": ""
+  },
+  {
+   "object": "6 Schema V1",
+   "status": "PASS",
+   "evidence": "schema layers 6/6; field dictionary present=True; NOTE run-level recorder pending driver (blocked with #2)",
+   "blocked_reason": ""
+  },
+  {
+   "object": "7 前瞻任务",
+   "status": "FAIL",
+   "evidence": "doc counts {'E04': 3, 'E05': 2, 'E06': 3, 'E08': 3, 'E10': 2, 'E07': 3} vs declared {'E04': 3, 'E05': 2, 'E06': 3, 'E07': 3, 'E08': 3, 'E10': 2}; E10-pair SHA vs frozen manifest: 2/2 exact (0 mismatch); THIS-line run-dir exposure = 0 hits; CROSS-LINE exposure found: deadline_reward_v1 V-tasks executed 138+ real calls on ['E07', 'E08', 'E10', 'E10b'] → strict-virgin set = E04, E06 only (anchor/screening packages for E04/E06 are zero-call deterministic candidates)",
+   "blocked_reason": ""
+  },
+  {
+   "object": "8 参考事实",
+   "status": "BLOCKED",
+   "evidence": "annotation spec exists (BENCHMARK_SCHEMA_AND_ANNOTATION per pool doc); 4 任务 silver 参考未构建（池文档明示\"待做\"）",
+   "blocked_reason": "参考事实集未构建：需确定性接地层产出（来源/页码/原文跨度/UNKNOWN 边界），AI 裁定须标 AI_ADJUDICATED"
+  },
+  {
+   "object": "9 故障注入",
+   "status": "BLOCKED",
+   "evidence": "contract 注入机制经 R9B 验证=True; transport 经 R6 验证；C1-C6 六条件注入配置未构建（C3 血统绑定/C4 弱模型+parse/C6 签名剥离为新增）",
+   "blocked_reason": "六条件注入配置未按协议 v1.1 §3.1 绑定语义构建并冻结"
+  }
+ ],
+ "counts": {
+  "PASS": 5,
+  "FAIL": 1,
+  "BLOCKED": 3
+ }
+}

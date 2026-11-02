@@ -1,0 +1,225 @@
+{
+ "S1_leak_excluded_deltas": [
+  {
+   "tier": "原始(全事实)",
+   "per_pair_d_f1": [
+    0.0625,
+    0.0,
+    0.0,
+    0.0625,
+    -0.037,
+    0.0,
+    0.0,
+    -0.1111
+   ],
+   "batch_mean": -0.0029,
+   "per_event_mean": {
+    "MVR1": 0.0312,
+    "MVR2": -0.037
+   }
+  },
+  {
+   "tier": "排除MVR2数值泄漏7项",
+   "per_pair_d_f1": [
+    0.0625,
+    0.0,
+    0.0,
+    0.0625,
+    -0.05,
+    0.0,
+    0.0,
+    -0.05
+   ],
+   "batch_mean": 0.0031,
+   "per_event_mean": {
+    "MVR1": 0.0312,
+    "MVR2": -0.025
+   }
+  },
+  {
+   "tier": "再排除MVR1公式提示3项",
+   "per_pair_d_f1": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -0.05,
+    0.0,
+    0.0,
+    -0.05
+   ],
+   "batch_mean": -0.0125,
+   "per_event_mean": {
+    "MVR1": 0.0,
+    "MVR2": -0.025
+   }
+  }
+ ],
+ "S2_p4_dependency_trace": {
+  "FD1": {
+   "数据路径": "E页抽取(当事人主体轮换,两臂同GLM) → F1-F3聚合(日期文号类,B臂=DeepSeek/A臂=GLM) → SINK(两臂同GLM)",
+   "A值": "5",
+   "B值": "5年",
+   "结论": "两臂FD差异只能产生自F层(路径上唯一不同的执行者)；'与切换无关'不成立，修正为：FD格式漂移经F层传递影响sink的可能性无法排除（F层输出未持久化，为数据缺口）"
+  },
+  "FD2": {
+   "数据路径": "E页抽取(当事人主体轮换,两臂同GLM) → F1-F3聚合(日期文号类,B臂=DeepSeek/A臂=GLM) → SINK(两臂同GLM)",
+   "A值": "4",
+   "B值": "4年",
+   "结论": "两臂FD差异只能产生自F层(路径上唯一不同的执行者)；'与切换无关'不成立，修正为：FD格式漂移经F层传递影响sink的可能性无法排除（F层输出未持久化，为数据缺口）"
+  },
+  "FD3": {
+   "数据路径": "E页抽取(当事人主体轮换,两臂同GLM) → F1-F3聚合(日期文号类,B臂=DeepSeek/A臂=GLM) → SINK(两臂同GLM)",
+   "A值": "5",
+   "B值": "5年",
+   "结论": "两臂FD差异只能产生自F层(路径上唯一不同的执行者)；'与切换无关'不成立，修正为：FD格式漂移经F层传递影响sink的可能性无法排除（F层输出未持久化，为数据缺口）"
+  }
+ },
+ "S3_tstar_domain_wrong_pattern": {
+  "MVR1": [
+   {
+    "fact": "F12",
+    "A错次": 4,
+    "B错次": 4,
+    "共同错": 4,
+    "仅A错": 0,
+    "仅B错": 0
+   }
+  ],
+  "MVR2": []
+ },
+ "S4_sampling_variance": {
+  "MVR1": {
+   "n_facts": 16,
+   "n_unstable_in_A_repeats": 6,
+   "examples": [
+    {
+     "fact": "F1",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "1000",
+      "1,000",
+      "1000",
+      "1000"
+     ]
+    },
+    {
+     "fact": "F7",
+     "distinct_value_forms_across_4_repeats": 4,
+     "forms": [
+      "1440",
+      "1,430",
+      "1430",
+      "1380"
+     ]
+    },
+    {
+     "fact": "F8",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "10,333,448,392.98",
+      "10,333,448,392.98",
+      "10333448392.98",
+      "10333448392.98"
+     ]
+    },
+    {
+     "fact": "F9",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "9,398,996,635.72",
+      "9,398,996,635.72",
+      "9398996635.72",
+      "9398996635.72"
+     ]
+    },
+    {
+     "fact": "F10",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "934,451,757.26",
+      "934,451,757.26",
+      "934451757.26",
+      "934451757.26"
+     ]
+    },
+    {
+     "fact": "F16",
+     "distinct_value_forms_across_4_repeats": 4,
+     "forms": [
+      "3年证券市场禁入",
+      "是，对高松采取3年证券市场禁入措施",
+      "对高松采取3年证券市场禁入措施（并作出《市场禁入",
+      "对高松采取3年证券市场禁入措施"
+     ]
+    }
+   ]
+  },
+  "MVR2": {
+   "n_facts": 27,
+   "n_unstable_in_A_repeats": 17,
+   "examples": [
+    {
+     "fact": "FA1",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "233836800",
+      "233836800",
+      "233836800",
+      "233,836,800元"
+     ]
+    },
+    {
+     "fact": "FA2",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "5000000",
+      "5000000",
+      "5000000",
+      "5,000,000元"
+     ]
+    },
+    {
+     "fact": "FA3",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "238836800",
+      "238836800",
+      "238836800",
+      "238,836,800元"
+     ]
+    },
+    {
+     "fact": "FB1",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "7500000",
+      "7500000",
+      "7500000",
+      "7,500,000元"
+     ]
+    },
+    {
+     "fact": "FB2",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "4000000",
+      "4000000",
+      "4000000",
+      "4,000,000元"
+     ]
+    },
+    {
+     "fact": "FB3",
+     "distinct_value_forms_across_4_repeats": 2,
+     "forms": [
+      "2000000",
+      "2000000",
+      "2000000",
+      "2,000,000元"
+     ]
+    }
+   ]
+  }
+ }
+}

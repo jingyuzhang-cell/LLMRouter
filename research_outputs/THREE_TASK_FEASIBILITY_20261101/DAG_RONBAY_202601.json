@@ -1,0 +1,438 @@
+{
+  "task_id": "RONBAY_202601",
+  "origin": "MANUALLY_SOURCE_DERIVED_CONTRACT_DAG_NOT_LLM_GENERATED_OR_EXECUTED",
+  "cutoff": "2026-01-19",
+  "original_broad_question": "截至2026年1月19日，区分合同约定、公司估算、采购预测和仍待落实的条件；逐项核对问询及回复是否回答同一问题。",
+  "scoring_scope": "Only the six explicit source-grounded questions; not general sentiment or all material conclusions",
+  "public_questions": [
+    {
+      "id": "RONBAY_202601_T1",
+      "question": "何时收到问询，公告何时公开？"
+    },
+    {
+      "id": "RONBAY_202601_T2",
+      "question": "1200亿元是合同约定还是公司估算？"
+    },
+    {
+      "id": "RONBAY_202601_T3",
+      "question": "305万吨是保证采购量还是预测需求？"
+    },
+    {
+      "id": "RONBAY_202601_T4",
+      "question": "现有产能与预计需求有什么口径区别？"
+    },
+    {
+      "id": "RONBAY_202601_T5",
+      "question": "哪些未来商务条件尚待约定？"
+    },
+    {
+      "id": "RONBAY_202601_T6",
+      "question": "哪些履约风险仍未消除，能否推定收入必然实现？"
+    }
+  ],
+  "reference_answers_accessible_to_scheduler": false,
+  "evidence_manifest": [
+    {
+      "source_id": "INQUIRY",
+      "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/RONBAY_202601/INQUIRY/source.pdf",
+      "sha256": "2ea2db215154843372f5190575a7366b6c7e7af21b9dcf3bd53cd25bc3111e14",
+      "publication_date_from_archive": "2026-01-14"
+    },
+    {
+      "source_id": "REPLY",
+      "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/RONBAY_202601/REPLY/source.pdf",
+      "sha256": "5ce53a9aa23d920172ef1135b773a9cbcf8975e661e72cef4d61d32c31052366",
+      "publication_date_from_archive": "2026-01-19"
+    }
+  ],
+  "Z": "FIXED_FOR_NEXT_COMPARISON",
+  "nodes": [
+    {
+      "id": "INQUIRY",
+      "parents": [],
+      "executor_kind": "LLM",
+      "role": "Inquiry requirement and premise extraction",
+      "allowed_sources": [
+        "INQUIRY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "接收/公开日期",
+          "监管要求核实的问题与前提",
+          "监管提问不等同最终认定"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6"
+        ]
+      },
+      "edge_rationale": {},
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "REPLY",
+      "parents": [],
+      "executor_kind": "LLM",
+      "role": "Attributed reply facts extraction",
+      "allowed_sources": [
+        "REPLY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "公司估算与协议转述分开",
+          "预测量、附条件最低采购、计价与未来条款",
+          "产能及代际量产状态、风险和日期"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6"
+        ]
+      },
+      "edge_rationale": {},
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "OBLIGATIONS",
+      "parents": [
+        "REPLY"
+      ],
+      "executor_kind": "LLM",
+      "role": "Classify conditional commitments",
+      "allowed_sources": [
+        "REPLY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "REPLY"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "金额估算与约定量分离",
+          "保留附条件最低采购且具体量UNKNOWN",
+          "未来商务条款待定；公司能力判断不作保证"
+        ],
+        "terminal_items_served": [
+          "T2",
+          "T3",
+          "T5",
+          "T6"
+        ]
+      },
+      "edge_rationale": {
+        "REPLY": "必须消费承诺条件、最终采购规则及计价记录"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "CAPACITY",
+      "parents": [
+        "REPLY"
+      ],
+      "executor_kind": "DETERMINISTIC",
+      "role": "Unit-aware illustrative capacity comparison",
+      "allowed_sources": [
+        "REPLY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "REPLY"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "区分多年需求与年产能",
+          "必须完成单位与期间比较；均摊/比例仅为可选示例，操作数和单位有效才计算",
+          "输出明确不是年度承诺或实际履约概率"
+        ],
+        "terminal_items_served": [
+          "T4"
+        ]
+      },
+      "edge_rationale": {
+        "REPLY": "原始需求、年数、产能和不确定性来自同一冻结回复"
+      },
+      "llm_candidates": [],
+      "model_contract_measurements": "NOT_APPLICABLE_DETERMINISTIC",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "CROSSCHECK",
+      "parents": [
+        "INQUIRY",
+        "REPLY",
+        "OBLIGATIONS",
+        "CAPACITY"
+      ],
+      "executor_kind": "LLM",
+      "role": "Inquiry-response coverage and limits",
+      "allowed_sources": [
+        "INQUIRY",
+        "REPLY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "INQUIRY",
+          "REPLY",
+          "OBLIGATIONS",
+          "CAPACITY"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "逐项问题对应回复、遗漏或UNKNOWN",
+          "保留估算/保证边界和四类风险",
+          "区分客观披露与公司解释"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6"
+        ]
+      },
+      "edge_rationale": {
+        "INQUIRY": "需要回答的问询及日期",
+        "REPLY": "回复的来源事实与日期",
+        "OBLIGATIONS": "合同条件语义",
+        "CAPACITY": "一致单位的可核验计算"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "FINAL",
+      "parents": [
+        "CROSSCHECK"
+      ],
+      "executor_kind": "LLM",
+      "role": "Six-question final deliverable",
+      "allowed_sources": [
+        "INQUIRY",
+        "REPLY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "CROSSCHECK"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "输出六项结论及逐项引用",
+          "未披露最低采购量不得补值",
+          "保留跨页证据链与截止时点"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6"
+        ]
+      },
+      "edge_rationale": {
+        "CROSSCHECK": "已携带原始父claim及引用链的六问核对结果"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    }
+  ],
+  "edges": [
+    [
+      "REPLY",
+      "OBLIGATIONS"
+    ],
+    [
+      "REPLY",
+      "CAPACITY"
+    ],
+    [
+      "INQUIRY",
+      "CROSSCHECK"
+    ],
+    [
+      "REPLY",
+      "CROSSCHECK"
+    ],
+    [
+      "OBLIGATIONS",
+      "CROSSCHECK"
+    ],
+    [
+      "CAPACITY",
+      "CROSSCHECK"
+    ],
+    [
+      "CROSSCHECK",
+      "FINAL"
+    ]
+  ],
+  "semantic_dependency_basis": "Each edge has explicit consumed deliverable and rationale in the destination node; not page-order rotation",
+  "cache_key_components": [
+    "task_id",
+    "node_id",
+    "node_contract_sha256",
+    "source_text_hashes",
+    "parent_output_hashes",
+    "model_version",
+    "prompt_hash"
+  ],
+  "cache_rule": "Re-executing a node does not invalidate healthy independent branches. Descendants invalidated only if their consumed input/version changes; same output hash permits reuse.",
+  "natural_feedback": [
+    {
+      "trigger": "SOURCE_ID_OR_SPAN_MISMATCH",
+      "observable_without_gold": true,
+      "action": "If owning extractor output invalid, retry that node within reserved budget; invalidate affected committed descendants only. Valid source records in other branches remain cached."
+    },
+    {
+      "trigger": "DERIVATION_OPERAND_OR_UNIT_MISMATCH",
+      "observable_without_gold": true,
+      "action": "Check typed operands and provenance; no LLM rerun for a deterministic arithmetic formatting issue; repair failed source node only if independently evidenced."
+    },
+    {
+      "trigger": "SOURCE_CONFLICT",
+      "observable_without_gold": true,
+      "action": "Preserve UNKNOWN/CONFLICT. If conflict is already present in source, no repeated model calls to force resolution."
+    },
+    {
+      "trigger": "TIMEOUT_OR_SLOTS_DELAY",
+      "observable_without_gold": true,
+      "action": "Stop or legally reassign future nodes within remainder; unresolved billed/cancelled calls remain UNKNOWN. No automatic API retries."
+    },
+    {
+      "trigger": "SEMANTIC_UNSUPPORTED",
+      "observable_without_gold": "ONLY_WITH_VALIDATED_GUARD",
+      "action": "Current semantic guard not calibrated for these contracts; cannot use private reference to trigger repair."
+    }
+  ],
+  "recovery_analysis": {
+    "observed_natural_failures": 0,
+    "actual_R_candidates": null,
+    "guaranteed_R_count": null,
+    "minimal_legal_recovery": "For a known invalid node, that node plus actually affected already-committed descendant outputs; pending descendants are first executions, not extra retries",
+    "structural_dependency_closures": {
+      "INQUIRY": [
+        "CROSSCHECK",
+        "FINAL",
+        "INQUIRY"
+      ],
+      "REPLY": [
+        "CAPACITY",
+        "CROSSCHECK",
+        "FINAL",
+        "OBLIGATIONS",
+        "REPLY"
+      ],
+      "OBLIGATIONS": [
+        "CROSSCHECK",
+        "FINAL",
+        "OBLIGATIONS"
+      ],
+      "CAPACITY": [
+        "CAPACITY",
+        "CROSSCHECK",
+        "FINAL"
+      ],
+      "CROSSCHECK": [
+        "CROSSCHECK",
+        "FINAL"
+      ],
+      "FINAL": [
+        "FINAL"
+      ]
+    },
+    "closure_note": "These are possible dependency invalidation sets, not observed faults or multiple competing R actions at the same state",
+    "identifiability": "With one required legal R, R-only may coincide with Static recovery and Joint with pi-only. Different failure locations do not prove two R choices at one state. No larger R added without evidence."
+  },
+  "pi_analysis": {
+    "candidate_models": [
+      "qwen-plus-2025-12-01",
+      "deepseek-flash"
+    ],
+    "identity_basis": "Archived real calibration model labels only; current provider version not revalidated",
+    "contract_compatible_current_measurements": 0,
+    "Q": "UNKNOWN",
+    "C": "UNKNOWN_CURRENT_CONTRACT",
+    "L": "UNKNOWN_CURRENT_CONTRACT",
+    "reliability": "UNKNOWN_CURRENT_CONTRACT",
+    "dynamic_opportunity": "At source-branch completion, remaining LLM merge/synthesis nodes may be reassigned; no observed ranking reversal or benefit yet",
+    "independent_confirmatory_status": "NOT_CERTIFIED; current source/reference/DAG design is recorded development exposure"
+  },
+  "optimizations_not_applied": {
+    "merge": "May combine interpretation/finalization only if all typed outputs, source lineage, explicit UNKNOWN and six deliverables retained. No measured saving asserted.",
+    "split": "Split only on separately sourced responsibilities or independently checkable calculations; not arbitrary page slicing.",
+    "remove_edges": "Only if destination contract demonstrably no longer consumes parent; cannot remove compulsory source comparison.",
+    "Z_testing": "NOT_TESTED"
+  },
+  "admission": {
+    "dag_acyclic_contract_complete": true,
+    "execution_validated": false,
+    "formal_Gold": false,
+    "formal_Q_calculable": false,
+    "five_arm_identifiable": false
+  }
+}

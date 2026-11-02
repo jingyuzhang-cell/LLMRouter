@@ -1,0 +1,39 @@
+{
+  "version": "TGV-stage2-v1",
+  "created": "2026-10-30",
+  "provenance": "stage-2 work package 1; task DAGs mirror frozen SC schema; docs zero-exposure (TGV_STAGE1_EXPOSURE_AUDIT.md)",
+  "tasks": [
+    {
+      "task_id": "TGV-T1",
+      "event": "E5_nachuan",
+      "doc_ids": ["E05-nachuan_20260904", "E05-nachuan_20261009"],
+      "deadline": 1800,
+      "task": {"question": "纳川股份退市风险链与证监会立案的跨文书调查"},
+      "dag": {"nodes": [
+        {"id": "e05_idx", "kind": "index", "deps": [], "subtask": "索引两份文书：第五次终止上市风险提示(2026-118)与立案告知公告(2026-132)"},
+        {"id": "e05_ext_risk", "kind": "extracts", "deps": ["e05_idx"], "subtask": "从风险提示书抽取：风险警示实施日期、提示公告日期、2025期末净资产、审计意见类型、治理缺陷事实"},
+        {"id": "e05_ext_case", "kind": "extracts", "deps": ["e05_idx"], "subtask": "从立案公告抽取：收到立案告知书日期、告知书编号、立案事由"},
+        {"id": "e05_temporal", "kind": "timeline", "deps": ["e05_ext_risk", "e05_ext_case"], "subtask": "跨文书时间推导：风险警示实施日(文书A)→立案告知日(文书B)间隔天数，双侧来源"},
+        {"id": "e05_gov", "kind": "reasoning", "deps": ["e05_ext_risk"], "subtask": "治理与审计事实推理：内控否定意见+保留意见年度、董事长兼任财务总监期间"},
+        {"id": "e05_chk", "kind": "verification", "deps": ["e05_temporal", "e05_gov"], "subtask": "交叉核查时间推导与治理推理，标注UNRESOLVED"},
+        {"id": "e05_rpt", "kind": "report", "deps": ["e05_chk"], "subtask": "综合调查报告"}
+      ]}
+    },
+    {
+      "task_id": "TGV-T2",
+      "event": "E8_zhongtie",
+      "doc_ids": ["E08-zhongtie_20260129", "E08-zhongtie_20260327", "E08-zhongtie_20260918"],
+      "deadline": 1800,
+      "task": {"question": "中铁装配业绩预告-年报披露-立案调查链的跨文书调查"},
+      "dag": {"nodes": [
+        {"id": "e08_idx", "kind": "index", "deps": [], "subtask": "索引三份文书：业绩预告(2026-002)、业绩说明会公告(2026-011)、立案告知公告(2026-037)"},
+        {"id": "e08_ext_forecast", "kind": "extracts", "deps": ["e08_idx"], "subtask": "从业绩预告抽取：归母净利润预告区间、扣非区间、上年同期数、预告公告日期"},
+        {"id": "e08_ext_disc", "kind": "extracts", "deps": ["e08_idx"], "subtask": "从说明会与立案公告抽取：年报披露日期、说明会日期、立案告知日期与编号、立案事由"},
+        {"id": "e08_temporal", "kind": "timeline", "deps": ["e08_ext_forecast", "e08_ext_disc"], "subtask": "跨文书时间推导：预告日→年报披露日、年报披露日→立案日间隔，双侧来源"},
+        {"id": "e08_numeric", "kind": "reasoning", "deps": ["e08_ext_forecast"], "subtask": "数值推理：预告区间宽度、区间中值、与上年同期亏损的比较结论"},
+        {"id": "e08_chk", "kind": "verification", "deps": ["e08_temporal", "e08_numeric"], "subtask": "交叉核查时间推导与数值推理，标注UNRESOLVED"},
+        {"id": "e08_rpt", "kind": "report", "deps": ["e08_chk"], "subtask": "综合调查报告"}
+      ]}
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "batch_id": "RONBAY_DYNAMIC_PI_20261102",
+  "max_requests": 34,
+  "repeats": 3,
+  "independent_events": 1,
+  "calibration_task": "JCZ_202605",
+  "evaluation_task": "RONBAY_202601",
+  "R": "NO_RETRIES",
+  "Z": "FIXED",
+  "models": [
+    {
+      "request_model": "qwen-plus-2025-12-01",
+      "currency": "CNY",
+      "input_per_million": 0.8,
+      "output_per_million": 2,
+      "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+    },
+    {
+      "request_model": "deepseek-flash",
+      "currency": "USD",
+      "input_per_million": 0.3,
+      "output_per_million": 1.2,
+      "endpoint": "https://api.deepseek.com/chat/completions"
+    }
+  ],
+  "batch_wall_s": 5400,
+  "task_wall_s": 240,
+  "request_wall_s": 180,
+  "currency_accounting": "CNY + 8*USD; 8 is conservative accounting convention, not live FX",
+  "total_estimate_stop_cny": 10,
+  "input_reserve_per_request": 65536,
+  "output_max_per_request": 3072,
+  "input_reserve_not_certified": true,
+  "max_request_bytes": 131072,
+  "selection": "Among role calibration K-passing models choose shortest observed latency; tie public CNY-equivalent estimate then model name; Q/reliability unknown, no guarantee. If none passes, preregistered Qwen fallback, do not impute Q.",
+  "feedback": "After common prefix, only observed model latency >1.5x same-role calibration triggers Dynamic. Model latency multiplier=max(1,observed/calibration); unobserved models unchanged. Re-rank all pending roles by multiplied observed latency; no private reference inputs. No injected faults.",
+  "arm_order": [
+    "Static,Dynamic",
+    "Dynamic,Static",
+    "Static,Dynamic"
+  ],
+  "statistical_scope": "n=1 event; 3 paired repetitions descriptive only; report every failure/refusal; no cross-event significance claim.",
+  "quality": "All six references are Silver, non-independent. Full frozen Q unavailable; preserve outputs for source-constrained partial Q/E diagnostics, no keyword F1 as complete quality.",
+  "stopping": "System API/usage/budget error stops batch. Model schema/evidence-ID failure blocks dependent descendants, counted as failure; other pairs continue. Deadline stops branch. No retries/replacement/extra samples.",
+  "profile_scope": "JCZ is disjoint development calibration, transferable role estimates NOT Rongbay measured Q. K and latency select models; semantic Q remains UNKNOWN.",
+  "guard": {
+    "batch_id": "RONBAY_DYNAMIC_PI_20261102",
+    "global": {
+      "requests": 34,
+      "input_tokens": 2228224,
+      "output_tokens": 104448,
+      "total_tokens": 2332672,
+      "micro_cny": 10000000,
+      "micro_usd": 1250000
+    },
+    "models": {
+      "qwen-plus-2025-12-01": {
+        "requests": 29,
+        "input_tokens": 1900544,
+        "output_tokens": 89088,
+        "total_tokens": 1989632,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "deepseek-flash": {
+        "requests": 29,
+        "input_tokens": 1900544,
+        "output_tokens": 89088,
+        "total_tokens": 1989632,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      }
+    },
+    "cells": {
+      "cal_0": {
+        "requests": 5,
+        "input_tokens": 327680,
+        "output_tokens": 15360,
+        "total_tokens": 343040,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "cal_1": {
+        "requests": 5,
+        "input_tokens": 327680,
+        "output_tokens": 15360,
+        "total_tokens": 343040,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p0_prefix": {
+        "requests": 2,
+        "input_tokens": 131072,
+        "output_tokens": 6144,
+        "total_tokens": 137216,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p0_Static": {
+        "requests": 3,
+        "input_tokens": 196608,
+        "output_tokens": 9216,
+        "total_tokens": 205824,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p0_Dynamic": {
+        "requests": 3,
+        "input_tokens": 196608,
+        "output_tokens": 9216,
+        "total_tokens": 205824,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p1_prefix": {
+        "requests": 2,
+        "input_tokens": 131072,
+        "output_tokens": 6144,
+        "total_tokens": 137216,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p1_Static": {
+        "requests": 3,
+        "input_tokens": 196608,
+        "output_tokens": 9216,
+        "total_tokens": 205824,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p1_Dynamic": {
+        "requests": 3,
+        "input_tokens": 196608,
+        "output_tokens": 9216,
+        "total_tokens": 205824,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p2_prefix": {
+        "requests": 2,
+        "input_tokens": 131072,
+        "output_tokens": 6144,
+        "total_tokens": 137216,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p2_Static": {
+        "requests": 3,
+        "input_tokens": 196608,
+        "output_tokens": 9216,
+        "total_tokens": 205824,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      },
+      "p2_Dynamic": {
+        "requests": 3,
+        "input_tokens": 196608,
+        "output_tokens": 9216,
+        "total_tokens": 205824,
+        "micro_cny": 10000000,
+        "micro_usd": 1250000
+      }
+    }
+  }
+}

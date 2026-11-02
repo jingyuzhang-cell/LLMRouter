@@ -1,0 +1,225 @@
+{
+ "run_id": "SCR1-Joint(Z,R,pi)-SC-E3-S2_contract-r2",
+ "arm": "Joint(Z,R,pi)",
+ "task": "SC-E3",
+ "scenario": "S2_contract",
+ "rep": 2,
+ "status": "COMPLETE",
+ "Q": 0.6667,
+ "covered": 4,
+ "n_silver": 6,
+ "tokens": 4914,
+ "n_calls": 9,
+ "suffix_makespan_s": 7.81,
+ "reconstructed_e2e_makespan_s": 27.82,
+ "deadline_met": true,
+ "z_ops_applied": [
+  "SPLIT_VERIFY:e3_chk"
+ ],
+ "baseline_type": "adaptive",
+ "attribution_note": "",
+ "wait_total": 0.0,
+ "wall_s": 7.8,
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "SPLIT_VERIFY",
+   "z_detail": "e3_chk -> per-lineage verifiers over parents ['e3_param_check', 'e3_timeline'] (kind=verification)",
+   "recovery_set": [
+    "e3_chk_a",
+    "e3_chk_b"
+   ],
+   "reoptimize": [],
+   "assignments": [
+    [
+     "e3_chk_a",
+     "glm53"
+    ]
+   ],
+   "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.14192, U_split=0.28383)"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "assignments": [
+    [
+     "e3_chk_b",
+     "glm53"
+    ]
+   ],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "assignments": [
+    [
+     "e3_rpt",
+     "glm53"
+    ]
+   ],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 0.0,
+   "finish": 3.34,
+   "latency_s": 3.342,
+   "usage": {
+    "in": 701,
+    "out": 178
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 3.34,
+   "finish": 6.11,
+   "latency_s": 2.77,
+   "usage": {
+    "in": 876,
+    "out": 73
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 3.34,
+   "finish": 13.85,
+   "latency_s": 10.512,
+   "usage": {
+    "in": 874,
+    "out": 156
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 13.85,
+   "finish": 17.88,
+   "latency_s": 4.035,
+   "usage": {
+    "in": 333,
+    "out": 70
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 13.85,
+   "finish": 16.97,
+   "latency_s": 3.119,
+   "usage": {
+    "in": 333,
+    "out": 102
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 17.88,
+   "finish": 20.01,
+   "latency_s": 2.129,
+   "usage": {
+    "in": 202,
+    "out": 115
+   },
+   "success": false,
+   "failure": "contract",
+   "shared": true
+  },
+  {
+   "node": "e3_chk_a",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 20.01,
+   "finish": 21.31,
+   "latency_s": 1.299,
+   "usage": {
+    "in": 165,
+    "out": 42
+   },
+   "success": true,
+   "failure": null
+  },
+  {
+   "node": "e3_chk_b",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 21.31,
+   "finish": 24.17,
+   "latency_s": 2.857,
+   "usage": {
+    "in": 190,
+    "out": 108
+   },
+   "success": true,
+   "failure": null
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 24.17,
+   "finish": 27.82,
+   "latency_s": 3.649,
+   "usage": {
+    "in": 262,
+    "out": 134
+   },
+   "success": true,
+   "failure": null
+  }
+ ]
+}

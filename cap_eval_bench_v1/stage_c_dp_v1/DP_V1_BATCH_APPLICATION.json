@@ -1,0 +1,148 @@
+{
+ "batch_name": "dp_v1_dev",
+ "identity": "DEVELOPMENT/EXPLORATORY — 开发集配对实验，不冒充独立确认",
+ "research_question": "反馈驱动的模型重分配能否改善 DAG 终端 Q/C/L？",
+ "task": {
+  "task_id": "SC-E1",
+  "event": "E1_zhangzidao",
+  "dag_sha": "28d9ef2d3df9",
+  "evidence": {
+   "zzd_penalty_2020": "3fb8dcbf08a8",
+   "zzd_notice_2019": "89ccf12e1921"
+  },
+  "silver_v2_sha": "b375eb335cb4",
+  "fault": {
+   "node": "e1_tl",
+   "kind": "transport",
+   "left": 1
+  },
+  "initial_pi": {
+   "index": "glm53",
+   "extracts": "glm53",
+   "timeline": "glm53flash",
+   "reasoning": "glm53flash",
+   "verification": "glm53",
+   "report": "glm53"
+  },
+  "flash_nodes": [
+   "e1_fin",
+   "e1_tl"
+  ],
+  "glm53_nodes": [
+   "e1_idx",
+   "e1_ext_pen",
+   "e1_ext_proc",
+   "e1_chk",
+   "e1_rpt"
+  ],
+  "downstream_facts": [
+   "E1-DD-1",
+   "E1-DD-2"
+  ],
+  "n_original": 7,
+  "n_downstream": 2
+ },
+ "design": {
+  "research_question": "反馈驱动的模型重分配能否改善 DAG 终端 Q/C/L？",
+  "design": "配对分叉：同一故障后状态 → Static-π vs Dynamic-π",
+  "arm_A": {
+   "name": "Static-π",
+   "behavior": "恢复使用原模型分配（Flash 节点保持 Flash）",
+   "recovery": "同模型重试 + 下游按原 π 执行"
+  },
+  "arm_B": {
+   "name": "Dynamic-π",
+   "behavior": "反馈后将剩余 Flash 节点全部切换为 GLM-53",
+   "switch_rule": "故障检测后，所有尚未执行的 Flash 分配节点 → GLM-53",
+   "recovery": "切换后模型执行 + 下游按新 π 执行"
+  },
+  "shared": {
+   "dag": "SC-E1 7-node DAG",
+   "fault": "transport@timeline(left=1)",
+   "evidence": "2 docs (zzd_penalty + zzd_notice)",
+   "budget": 30000,
+   "deadline": 1800,
+   "initial_pi": {
+    "index": "glm53",
+    "extracts": "glm53",
+    "timeline": "glm53flash",
+    "reasoning": "glm53flash",
+    "verification": "glm53",
+    "report": "glm53"
+   }
+  },
+  "reps": 3,
+  "fork_point": "故障触发后的第一个决策轮（前缀完全相同）",
+  "primary_metrics": [
+   "Q_terminal(Silver v2)",
+   "Q_downstream(操作数感知)",
+   "tokens_actual",
+   "makespan_actual",
+   "completion_rate",
+   "model_switch_count",
+   "replanning_overhead_tokens"
+  ]
+ },
+ "calibration": {
+  "purpose": "独立于配对实验：测量两模型在关键节点类型上的 Q/C/L",
+  "node_types": [
+   "timeline",
+   "verification",
+   "report"
+  ],
+  "models": [
+   "glm53",
+   "glm53flash"
+  ],
+  "reps": 2,
+  "method": "对每 (node_type, model)：以 SC-E1 证据为输入，独立执行该节点 2 次，测量 Silver 覆盖率 / tokens / latency",
+  "calls_est": 12,
+  "independence": "校准调用不与配对实验共享 purpose 前缀；结果不直接进入配对评分"
+ },
+ "budget": {
+  "batch_name": "dp_v1_dev",
+  "calibration": {
+   "calls": 12,
+   "tokens": 30000
+  },
+  "main_experiment": {
+   "calls": 45,
+   "tokens": 99000
+  },
+  "total_est": {
+   "calls": 57,
+   "tokens": 129000
+  },
+  "caps": {
+   "calls": 79,
+   "tokens": 172000,
+   "glm53_calls": 63,
+   "glm53_tokens": 146000,
+   "flash_calls": 24,
+   "flash_tokens": 43000
+  },
+  "cash": 0
+ },
+ "models": [
+  "glm53",
+  "glm53flash"
+ ],
+ "execution_plan": [
+  "Phase 1 (calibration): 独立测量两模型×3节点类型×2重复的 Q/C/L",
+  "Phase 2 (main): 3重复配对分叉，每重复共享前缀→分叉 Static-π/Dynamic-π",
+  "Phase 3 (analysis): 配对差值+均值+净收益（扣除重规划开销）"
+ ],
+ "success_criteria": [
+  "Dynamic-π 实际改变了至少一个节点的模型分配（switch_count > 0）",
+  "Q_terminal 或 Q_downstream 有可测差异",
+  "成本与时延差异被完整记录",
+  "无论正负，结果如实报告，不补跑不换任务"
+ ],
+ "reporting_rules": [
+  "PENDING 事实不算通过",
+  "未结算费用记为 UNKNOWN",
+  "失败和超时保留在统计中",
+  "没有发生模型切换也如实报告",
+  "结果不理想不补跑不换任务不追加样本"
+ ]
+}

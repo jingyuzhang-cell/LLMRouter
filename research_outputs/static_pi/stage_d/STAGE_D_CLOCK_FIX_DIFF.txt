@@ -1,0 +1,28 @@
+--- archive_f9ceaf54_stage_d_executor.py	2026-11-02 12:27:54.670520060 +0800
++++ stage_d_executor.py	2026-11-02 12:28:01.942338542 +0800
+@@ -43,6 +43,15 @@
+     pass
+ 
+ 
++def make_clock(real: bool, mock_scale: float) -> "VirtualClock":
++    """时钟选择单点（操作者 2026-11-02 裁定）。
++
++    --real：scale=1.0（1 真实秒 = 1 虚拟秒）——截止期/timeout/时延语义有效。
++    mock  ：保持配置缩放（默认 1000），dry-run 行为不变。
++    """
++    return VirtualClock(1.0 if real else float(mock_scale))
++
++
+ class VirtualClock:
+     """缩放实时：1 虚拟秒 = 1/scale 实秒。所有截止/时延以虚拟秒计。"""
+ 
+@@ -936,7 +945,8 @@
+         if os.environ.get("STAGE_D_REAL_CALLS_AUTHORIZED") != "1":
+             raise SystemExit("REFUSED: --real requires STAGE_D_REAL_CALLS_AUTHORIZED=1; "
+                              "no GO present")
+-    clock = VirtualClock(cfg["mock"]["scale"])
++    # 真实模式 1:1 时钟；mock 保持缩放（见 make_clock）。
++    clock = make_clock(a.real, cfg["mock"]["scale"])
+     gb = GlobalBudget(cfg["global"]["calls"], cfg["global"]["yuan"],
+                       cfg["global"].get("tokens"), state_dir)
+     slots = SlotManager(cfg["slots"], clock)

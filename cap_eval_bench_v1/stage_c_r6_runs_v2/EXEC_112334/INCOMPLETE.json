@@ -1,0 +1,187 @@
+{
+ "reason": "TimeoutError('The read operation timed out')",
+ "results": [
+  {
+   "arm": "Static-Parallel",
+   "scenario": "S1",
+   "rep": 1,
+   "task": "SC-E1",
+   "status": "INCOMPLETE_NO_RECOVERY",
+   "tokens": 7421,
+   "n_calls": 5,
+   "suffix_mk": 0.0,
+   "e2e_mk": 53.21,
+   "terminal_stats": null,
+   "z_ops": []
+  },
+  {
+   "arm": "Simple-Dynamic",
+   "scenario": "S1",
+   "rep": 1,
+   "task": "SC-E1",
+   "status": "COMPLETE",
+   "tokens": 13793,
+   "n_calls": 8,
+   "suffix_mk": 49.07,
+   "e2e_mk": 102.28,
+   "terminal_stats": {
+    "n": 11,
+    "confirmed": 8,
+    "unconfirmed": 0,
+    "insufficient_evidence": 3,
+    "upstream_missing": 0
+   },
+   "z_ops": []
+  },
+  {
+   "arm": "R-only",
+   "scenario": "S1",
+   "rep": 1,
+   "task": "SC-E1",
+   "status": "COMPLETE",
+   "tokens": 13643,
+   "n_calls": 8,
+   "suffix_mk": 34.51,
+   "e2e_mk": 87.72,
+   "terminal_stats": {
+    "n": 11,
+    "confirmed": 8,
+    "unconfirmed": 0,
+    "insufficient_evidence": 3,
+    "upstream_missing": 0
+   },
+   "z_ops": []
+  },
+  {
+   "arm": "pi-only",
+   "scenario": "S1",
+   "rep": 1,
+   "task": "SC-E1",
+   "status": "COMPLETE",
+   "tokens": 13661,
+   "n_calls": 8,
+   "suffix_mk": 35.04,
+   "e2e_mk": 88.25,
+   "terminal_stats": {
+    "n": 11,
+    "confirmed": 7,
+    "unconfirmed": 1,
+    "insufficient_evidence": 3,
+    "upstream_missing": 0
+   },
+   "z_ops": []
+  },
+  {
+   "arm": "Joint(R,pi)",
+   "scenario": "S1",
+   "rep": 1,
+   "task": "SC-E1",
+   "status": "COMPLETE",
+   "tokens": 13034,
+   "n_calls": 8,
+   "suffix_mk": 31.41,
+   "e2e_mk": 84.62,
+   "terminal_stats": {
+    "n": 12,
+    "confirmed": 9,
+    "unconfirmed": 0,
+    "insufficient_evidence": 3,
+    "upstream_missing": 0
+   },
+   "z_ops": []
+  },
+  {
+   "arm": "Joint(Z,R,pi)",
+   "scenario": "S1",
+   "rep": 1,
+   "task": "SC-E1",
+   "status": "COMPLETE",
+   "tokens": 17805,
+   "n_calls": 10,
+   "suffix_mk": 64.01,
+   "e2e_mk": 117.22,
+   "terminal_stats": {
+    "n": 12,
+    "confirmed": 8,
+    "unconfirmed": 0,
+    "insufficient_evidence": 4,
+    "upstream_missing": 0
+   },
+   "z_ops": [
+    "SPLIT_VERIFY"
+   ]
+  },
+  {
+   "arm": "Joint(R,pi)",
+   "scenario": "S2",
+   "rep": 1,
+   "task": "SC-E1",
+   "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+   "tokens": 11719,
+   "n_calls": 8,
+   "suffix_mk": 28.68,
+   "e2e_mk": 109.56,
+   "terminal_stats": null,
+   "z_ops": []
+  },
+  {
+   "arm": "Joint(Z,R,pi)",
+   "scenario": "S2",
+   "rep": 1,
+   "task": "SC-E1",
+   "status": "COMPLETE",
+   "tokens": 14801,
+   "n_calls": 9,
+   "suffix_mk": 40.01,
+   "e2e_mk": 120.89,
+   "terminal_stats": {
+    "n": 8,
+    "confirmed": 5,
+    "unconfirmed": 1,
+    "insufficient_evidence": 2,
+    "upstream_missing": 0
+   },
+   "z_ops": [
+    "SPLIT_VERIFY"
+   ]
+  },
+  {
+   "arm": "Static-Parallel",
+   "scenario": "S1",
+   "rep": 1,
+   "task": "SC-E3",
+   "status": "INCOMPLETE_NO_RECOVERY",
+   "tokens": 6444,
+   "n_calls": 5,
+   "suffix_mk": -0.0,
+   "e2e_mk": 49.22,
+   "terminal_stats": null,
+   "z_ops": []
+  },
+  {
+   "arm": "Simple-Dynamic",
+   "scenario": "S1",
+   "rep": 1,
+   "task": "SC-E3",
+   "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+   "tokens": 14944,
+   "n_calls": 9,
+   "suffix_mk": 86.55,
+   "e2e_mk": 135.77,
+   "terminal_stats": null,
+   "z_ops": []
+  }
+ ],
+ "quota": {
+  "meter": "<pilot_common.Meter object at 0x7f39e9964a70>",
+  "calls": {
+   "glm53": 16,
+   "glm53flash": 4
+  },
+  "tokens": {
+   "glm53": 28326,
+   "glm53flash": 4601
+  }
+ },
+ "traceback": "Traceback (most recent call last):\n  File \"/root/cap_eval_bench_v1/integration/stage_c_r6_exec_v2.py\", line 327, in main\n    res, iso = run_cell(qm, out, tasks[tid], scen, rep, writer)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/cap_eval_bench_v1/integration/stage_c_r6_exec_v2.py\", line 239, in run_cell\n    r = run_from(st, led, arm, fork_anom, data,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/cap_eval_bench_v1/integration/stage_c_r6_exec_v2.py\", line 153, in run_from\n    trunc += execute(state, dec.assignments, ledgers, anomalies, data, calls)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/cap_eval_bench_v1/integration/stage_c_r6_exec_v2.py\", line 98, in execute\n    r = adapter.call(nid, state.kinds[nid], model, prompt, merged,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/cap_eval_bench_v1/integration/stage_c_r4_runner.py\", line 277, in call\n    rec, txt = self.meter.call(\n               ^^^^^^^^^^^^^^^^\n  File \"/root/cap_eval_bench_v1/integration/stage_c_r6_exec_v2.py\", line 59, in call\n    rec, txt = self.meter.call(alias, system, user, max_tokens,\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/capital_opinion_pilot/pilot_common.py\", line 141, in call\n    r = self._transport(alias, system, user, max_tokens, timeout_s)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/capital_opinion_pilot/pilot_common.py\", line 81, in _transport\n    with urllib.request.urlopen(req, timeout=timeout_s) as r:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/urllib/request.py\", line 1392, in https_open\n    return self.do_open(http.client.HTTPSConnection, req,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/http/client.py\", line 1428, in getresponse\n    response.begin()\n  File \"/root/miniconda3/lib/python3.12/http/client.py\", line 331, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/http/client.py\", line 292, in _read_status\n    line = str(self.fp.readline(_MAXLINE + 1), \"iso-8859-1\")\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/socket.py\", line 707, in readinto\n    return self._sock.recv_into(b)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/ssl.py\", line 1252, in recv_into\n    return self.read(nbytes, buffer)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/miniconda3/lib/python3.12/ssl.py\", line 1104, in read\n    return self._sslobj.read(len, buffer)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTimeoutError: The read operation timed out\n"
+}

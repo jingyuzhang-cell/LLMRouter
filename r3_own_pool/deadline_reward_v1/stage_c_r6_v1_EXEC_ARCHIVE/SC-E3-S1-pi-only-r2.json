@@ -1,0 +1,196 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e3_timeline"
+   ],
+   "reoptimize": [
+    [
+     "e3_timeline",
+     "glm53"
+    ],
+    [
+     "e3_rpt",
+     "glm53"
+    ]
+   ],
+   "rationale": "pi-only: retry {failed} + re-optimize π over 2 remaining nodes"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "pi_only: normal execution"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "pi_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 937,
+    "out": 496
+   },
+   "latency_s": 12.801
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1030,
+    "out": 210
+   },
+   "latency_s": 5.7
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1028,
+    "out": 226
+   },
+   "latency_s": 12.513
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 412,
+    "out": 246
+   },
+   "latency_s": 10.091
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 415,
+    "out": 624
+   },
+   "latency_s": 10.641
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53",
+   "attempt": 2,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 415,
+    "out": 373
+   },
+   "latency_s": 6.763
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 530,
+    "out": 421
+   },
+   "latency_s": 5.95
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1863,
+    "out": 874
+   },
+   "latency_s": 16.099
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "索引确认：cs_plan_summary_2024（2025年6月，上会稿草案摘要）与cs_listing_2025（2025年9月，实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段，前者为方案摘要阶段，后者为实施完成阶段。",
+   "kind": "index_relationship",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024+cs_listing_2025"
+  },
+  {
+   "fid": "f2",
+   "content": "调查目标：从方案中抽取设计参数——换股比例（拟核验为1:0.1339）及换股价格；所提供的两份文档前600字片段均未包含该等参数的明确表述。",
+   "kind": "design_parameter",
+   "status": "insufficient_evidence",
+   "source": "cs_plan_summary_2024+cs_listing_2025"
+  },
+  {
+   "fid": "f3",
+   "content": "并购时间线阶段确认：交易流程为 方案阶段（2025年6月，上会稿草案摘要，cs_plan_summary_2024）→ 实施/上市阶段（2025年9月，实施情况暨新增股份上市公告书，cs_listing_2025）。基于现有片段无法确认审批（上会/过会具体日期）与终止（如是否有终止环节或交易已全部完成）两个中间/后续节点的独立证据。",
+   "kind": "timeline",
+   "status": "insufficient_evidence",
+   "source": "cs_plan_summary_2024+cs_listing_2025"
+  }
+ ],
+ "terminal_stats": {
+  "n": 3,
+  "confirmed": 1,
+  "unconfirmed": 0,
+  "insufficient_evidence": 2,
+  "upstream_missing": 0
+ },
+ "report": {
+  "investigation_timeline": "本次交易时间线基于两份文档确认如下两个节点：①方案阶段——2025年6月，中国船舶（600150）披露《换股吸收合并中国重工暨关联交易报告书（草案）摘要（上会稿）》（cs_plan_summary_2024），交易尚待上交所、中国证监会等监管机构核准；②实施/上市阶段——2025年9月，中国船舶披露《实施情况暨新增股份上市公告书》（cs_listing_2025），新增股份3,053,192,530股于2025年9月16日上市，证券变更登记于2025年9月11日完成。审批（上会/过会）具体日期及是否存在终止环节，现有片段中无独立证据确认（见f3）。",
+  "fraud_nature": "基于现有证据，未发现欺诈迹象。两份文档均为合法信息披露文件，描述同一换股吸收合并交易的方案阶段与实施完成阶段（f1），且换股比例1:0.1339在实施公告书中得到明确记载并可交叉核验。中国船舶换股价格37.59元/股、中国重工换股价格5.032元/股，1股中国重工换0.1339股中国船舶，37.59×0.1339≈5.033，与5.032元基本吻合，价格关系自洽。部分内幕关联方（中船重工集团等）所获1,454,168,398股锁定6个月，符合监管安排。",
+  "report": "一、交易背景与链条确认\n根据f1（confirmed），cs_plan_summary_2024（2025年6月上会稿草案摘要）与cs_listing_2025（2025年9月实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段：中国船舶（600150）换股吸收合并中国重工（601989）暨关联交易。\n\n二、方案阶段\ncs_plan_summary_2024为上会稿草案摘要，披露双方声明、承诺锁定安排，并明确交易'尚待取得上交所、中国证监会等有权监管机构的核准、批准、注册或同意'。\n\n三、实施阶段关键参数\ncs_listing_2025确认：换股价格为中国船舶37.59元/股、中国重工5.032元/股，换股比例1:0.1339；新增股份3,053,192,530股，上市日期2025年9月16日；中船重工集团、中船工业集团等九家关联方换股取得的1,454,168,398股自发行结束之日起锁定6个月；2025年9月11日完成证券变更登记。注：该等参数取自实施公告书摘录原文；f2所指'前600字片段未包含换股参数'的情形因摘录扩充已可核实，比例与拟核验值1:0.1339一致。\n\n四、时间线与未决事项\nf3（insufficient_evidence）指出：现有片段可确认方案阶段与实施阶段两个节点，但审批（上会/过会具体日期）与终止环节（或交易是否已全部完成）缺乏独立证据。实施公告书的披露本身强烈暗示交易已实施完成，但严格而言未取得独立终止/完成节点证据，保留为未决。\n\n五、结论\n综合判断：本交易为公开披露的上市公司换股吸收合并，两阶段文件相互印证（f1），关键换股参数自洽可核验，未发现欺诈性线索；审批与终止节点的完整证据链尚待补充。",
+  "fact_ids_used": [
+   "f1",
+   "f2",
+   "f3"
+  ],
+  "unknown_marks": [
+   {
+    "fid": "f2",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f3",
+    "status": "insufficient_evidence"
+   }
+  ]
+ },
+ "makespan": 80.56,
+ "tokens": 10100,
+ "arm": "pi-only",
+ "suffix_makespan": 28.81
+}

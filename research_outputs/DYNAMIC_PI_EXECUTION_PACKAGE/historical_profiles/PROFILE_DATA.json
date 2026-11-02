@@ -1,0 +1,217 @@
+{
+  "nodes": [
+    {
+      "id": "extract_purchase",
+      "deps": [],
+      "targets": [
+        "purchase_flow_wanyuan_2023",
+        "purchase_flow_wanyuan_2024",
+        "purchase_flow_wanyuan_2025"
+      ]
+    },
+    {
+      "id": "extract_payables",
+      "deps": [],
+      "targets": [
+        "accounts_payable_year_end_wanyuan_2023",
+        "accounts_payable_year_end_wanyuan_2024",
+        "accounts_payable_year_end_wanyuan_2025"
+      ]
+    },
+    {
+      "id": "deterministic_merge",
+      "deps": [
+        "extract_purchase",
+        "extract_payables"
+      ],
+      "targets": [],
+      "tool": true,
+      "duration_s": 0.0,
+      "duration_note": "Zero-duration abstraction; observed merge+dispatch overhead added globally, never claimed free in real execution."
+    }
+  ],
+  "required": [
+    "purchase_flow_wanyuan_2023",
+    "accounts_payable_year_end_wanyuan_2023",
+    "purchase_flow_wanyuan_2024",
+    "accounts_payable_year_end_wanyuan_2024",
+    "purchase_flow_wanyuan_2025",
+    "accounts_payable_year_end_wanyuan_2025"
+  ],
+  "models": [
+    "glm-5.3",
+    "qwen-plus",
+    "deepseek-flash"
+  ],
+  "profiles": {
+    "extract_purchase": {
+      "glm-5.3": {
+        "available": true,
+        "availability_note": "Assumed menu eligibility for offline analysis, not live account probe.",
+        "correct_target_fraction": 1.0,
+        "contract_rate": 1.0,
+        "cost_native": 0.043344,
+        "currency": "CNY",
+        "latency_s": 3.2875178679823875,
+        "sample_count": 2,
+        "independent_events": 1,
+        "certified_target_lower": null,
+        "certified_contract_lower": null,
+        "calibrated_latency_upper": null,
+        "duration_estimator": "max of two observed client node durations; NOT future upper bound or P95",
+        "observed_latency_range": [
+          2.2570838555693626,
+          3.2875178679823875
+        ],
+        "observed_input_tokens": [
+          4886,
+          4886
+        ],
+        "observed_output_tokens": [
+          152,
+          152
+        ],
+        "source_request_ids": [
+          "R1_A_extract_purchase",
+          "R2_A_extract_purchase"
+        ],
+        "source_response_sha256": [
+          "d18b50b81775578ff952b1d447f835380e9ac189b7c23078406ccfac5839414c",
+          "56255d18f1202902f2564451a6b0f585d057e158dd139c377e93b58a5872378e"
+        ]
+      },
+      "qwen-plus": {
+        "available": true,
+        "availability_note": "Assumed menu eligibility for offline analysis, not live account probe.",
+        "correct_target_fraction": 1.0,
+        "contract_rate": 1.0,
+        "cost_native": 0.005082,
+        "currency": "CNY",
+        "latency_s": 6.722986958920956,
+        "sample_count": 2,
+        "independent_events": 1,
+        "certified_target_lower": null,
+        "certified_contract_lower": null,
+        "calibrated_latency_upper": null,
+        "duration_estimator": "max of two observed client node durations; NOT future upper bound or P95",
+        "observed_latency_range": [
+          6.7090029790997505,
+          6.722986958920956
+        ],
+        "observed_input_tokens": [
+          5685,
+          5685
+        ],
+        "observed_output_tokens": [
+          267,
+          267
+        ],
+        "source_request_ids": [
+          "R1_B_extract_purchase",
+          "R2_B_extract_purchase"
+        ],
+        "source_response_sha256": [
+          "ca21112d7f9aaf20f6e484693590694ee043d159d097a5e7a4bbc32b52443d62",
+          "be5be57bf9d982d2fa7bb6719863087c7cfc5b7ee7dcec22fe40a2cb315cabdd"
+        ]
+      }
+    },
+    "extract_payables": {
+      "glm-5.3": {
+        "available": true,
+        "availability_note": "Assumed menu eligibility for offline analysis, not live account probe.",
+        "correct_target_fraction": 1.0,
+        "contract_rate": 1.0,
+        "cost_native": 0.043592,
+        "currency": "CNY",
+        "latency_s": 3.058292731642723,
+        "sample_count": 2,
+        "independent_events": 1,
+        "certified_target_lower": null,
+        "certified_contract_lower": null,
+        "calibrated_latency_upper": null,
+        "duration_estimator": "max of two observed client node durations; NOT future upper bound or P95",
+        "observed_latency_range": [
+          3.031692251563072,
+          3.058292731642723
+        ],
+        "observed_input_tokens": [
+          4889,
+          4889
+        ],
+        "observed_output_tokens": [
+          160,
+          160
+        ],
+        "source_request_ids": [
+          "R1_A_extract_payables",
+          "R2_A_extract_payables"
+        ],
+        "source_response_sha256": [
+          "20c61916fc9c4f16d5ac1e452056c004e2555659fdd8b3593a1a36cf79607502",
+          "636f1e01a2a13a034e2b07c38bf3cc55964634fdd49a9769c01eff21c56ab83d"
+        ]
+      },
+      "deepseek-flash": {
+        "available": true,
+        "availability_note": "Assumed menu eligibility for offline analysis, not live account probe.",
+        "correct_target_fraction": 1.0,
+        "contract_rate": 1.0,
+        "cost_native": 0.0016149,
+        "currency": "USD",
+        "latency_s": 1.3765872046351433,
+        "sample_count": 2,
+        "independent_events": 1,
+        "certified_target_lower": null,
+        "certified_contract_lower": null,
+        "calibrated_latency_upper": null,
+        "duration_estimator": "max of two observed client node durations; NOT future upper bound or P95",
+        "observed_latency_range": [
+          1.2924833297729492,
+          1.3765872046351433
+        ],
+        "observed_input_tokens": [
+          4739,
+          4739
+        ],
+        "observed_output_tokens": [
+          161,
+          161
+        ],
+        "source_request_ids": [
+          "R1_B_extract_payables",
+          "R2_B_extract_payables"
+        ],
+        "source_response_sha256": [
+          "d3b6c9c4cca2b5ef68b1150f7ee6d0633191f8eadb7a8c8b11af7ea833e783e0",
+          "abd7a2f827823a101fdd6635897fa3e4bb9f696c9443b52b148b7415158934e8"
+        ]
+      }
+    }
+  },
+  "constraints": {
+    "q_min": 1.0,
+    "contract_min": 1.0,
+    "budget_native": {
+      "CNY": 0.1,
+      "USD": 0.02
+    },
+    "budget_CNY": 0.1,
+    "deadline_s": 10.0,
+    "fx_CNY_per_USD": 6.722,
+    "slots": {
+      "glm-5.3": 2,
+      "qwen-plus": 2,
+      "deepseek-flash": 2
+    },
+    "concurrency": 2,
+    "overhead_s": 1.6028564870357513,
+    "cost_scale_CNY": 0.1,
+    "latency_scale_s": 10.0
+  },
+  "source_real_run": "/root/r3_own_pool/static_allocation_numeric_pilot_v1/http_execution_v1/REAL_RUN_20261026_012116",
+  "information_policy": "Observed development batch is calibration for NEW post-hoc offline optimizer, not an independent test.",
+  "quality_type": "Expected fraction of disjoint numeric targets correct; NOT terminal F1 or complete opinion Q.",
+  "strict_constraint_semantics": "Requires externally certified numeric coverage and contract lower bounds; unavailable here.",
+  "empirical_constraint_semantics": "Point estimates under profile stationarity assumption only; cannot certify quality, deadlines or cash."
+}

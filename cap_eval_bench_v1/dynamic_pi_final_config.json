@@ -1,0 +1,41 @@
+{
+  "batch_name": "stage_c_dynpi_v1",
+  "version": "1.0",
+  "created": "2026-10-30",
+  "status": "HOLD_pending_independent_adjudication",
+  "research_question": "Post-anomaly feedback-driven model reassignment for unexecuted nodes (Dynamic-pi) vs keeping original assignment (Static-pi): terminal Q/C/L on paired same-state forks; R and Z fixed, out of scope",
+  "arms": {
+    "A_static_pi": {"frozen_impl": "six_arm_scheduler.decide_R_only", "pi": "keep original"},
+    "B_dynamic_pi": {"frozen_impl": "six_arm_scheduler.decide_pi_only", "pi": "budget-feedback reassignment, thresholds 10000/3000, may keep original"}
+  },
+  "tasks": ["SC-E2", "SC-E4"],
+  "task_rationale": "only unexposed frozen tasks with non-empty silver references; T-P3/T-D2 silver empty; SC-E1/E3 and T-P1/R1/R2/D1/M1 exposed in real-call ledgers",
+  "matrix": {"cells": 6, "runs": 12, "reps": 3, "pairing": "shared paid prefix to S2 contract fault at verification node, then fork; prefix dedup via Meter; divergence marked NON_ISOLATED"},
+  "models": {"glm53": "GLM-5.3", "glm53flash": "GLM-5.3-Flash"},
+  "capability_profile": {"source": "stage_b 124-call calibration, frozen in six_arm_scheduler.py cd68ec44",
+                          "Q": {"index": {"glm53": 0.85, "flash": 0.62}, "extracts": {"glm53": 0.85, "flash": 0.62},
+                                "timeline": {"glm53": 0.75, "flash": 0.60}, "reasoning": {"glm53": 0.80, "flash": 0.58},
+                                "verification": {"glm53": 0.83, "flash": 0.80}, "report": {"glm53": 0.85, "flash": 0.60}},
+                          "tokens_prior": {"glm53": 1100, "flash": 1400},
+                          "latency_prior_s": {"glm53": 8.0, "flash": 10.0}},
+  "frozen_shas": {"stage_c_r9_chain.py": "34e563a8", "six_arm_scheduler.py": "cd68ec44", "stage_c_r1.py": "eaffda4e"},
+  "budget": {"expected_calls": 78, "expected_tokens": 115000,
+              "caps": {"calls": 100, "tokens": 150000, "glm53_calls": 80, "glm53_tokens": 120000,
+                        "flash_calls": 20, "flash_tokens": 30000, "cash_cny": 0},
+              "rate_basis": "bigmodel coding-plan subscription endpoint, marginal cash 0 CNY; nominal rate table not on disk (optional operator supply)"},
+  "reference_slates": {
+    "primary_six_for_adjudication": ["SC-E2-S1", "SC-E2-S2", "SC-E2-S3", "SC-E4-S2", "SC-E4-S3", "SC-E4-S4"],
+    "also_requires_adjudication": ["E2-DD-1 (structurally suspect: answer 0 days, no source_dates)", "E4-DD-1"],
+    "current_status": "all machine-built SILVER; NO independent adjudication exists; unadjudicated refs excluded from deterministic Q until ruled",
+    "independent_reviewer": "PENDING_OPERATOR_DESIGNATION (candidate generator is barred by protocol)"
+  },
+  "scoring": {"Q_terminal": "normalized silver coverage, R4 frozen scorer semantics, scorer unmodified",
+               "excluded_from_deterministic_Q": ["E2-DD-1 until adjudicated"],
+               "secondary_metrics": ["report_generation_rate", "unknown_mark_rate", "failure_rate", "on_time_rate(deadline 1800s)", "settled_tokens", "makespan"],
+               "statistics": "paired differences over 6 cells, sign test, two-sided alpha 0.10, no interim adaptation"},
+  "executor": "this ZCode session only; concurrent agent read-only (R9B governance lesson)",
+  "run_command": "cd /root/cap_eval_bench_v1 && python3 integration/stage_c_dynpi_exec.py",
+  "driver_delta": "single config-level variant of R9B exec: ARMS, batch name, task table; SHA-frozen at authorization",
+  "stop_rules": ["fixed sample completion", "any cap reached -> BUDGET_STOP with honest ledger", "infra-signature failure batch -> halt, preserve, report invalid", "missing pair -> pairwise exclusion, reported"],
+  "verdict": "HOLD: blocking = independent adjudication of six-fact slate; all other eight preconditions ready"
+}

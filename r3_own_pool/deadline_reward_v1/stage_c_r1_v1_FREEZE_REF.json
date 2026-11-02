@@ -1,0 +1,2548 @@
+{
+ "checks": {
+  "1a 48 runs enumerated (2 tasks x 2 scenarios x 2 reps x 6 arms)": {
+   "ok": true,
+   "detail": "48 runs, 8 cells"
+  },
+  "1b fault fires exactly once inside every shared prefix": {
+   "ok": true,
+   "detail": ""
+  },
+  "2a meter path imports the production scheduler (ARM_DECIDERS)": {
+   "ok": true,
+   "detail": ""
+  },
+  "2b fault injection is executor-level (shared by meter + deterministic)": {
+   "ok": true,
+   "detail": ""
+  },
+  "2c old single-strategy path not imported/called by the new runner (docstring provenance notes allowed)": {
+   "ok": true,
+   "detail": ""
+  },
+  "2d meter adapter purposes carry run/node/version, caps per kind": {
+   "ok": true,
+   "detail": ""
+  },
+  "2e adapters called only through the shared Kernel": {
+   "ok": true,
+   "detail": ""
+  },
+  "2f meter path safe in both auth states (refuse, or open+zero-calls)": {
+   "ok": true,
+   "detail": "rc=0 (authorization present: gate open, zero API calls)"
+  },
+  "3a SPLIT legality basis: verification kind + two distinct-kind healthy parents (e3_param_check/e3_timeline)": {
+   "ok": true,
+   "detail": ""
+  },
+  "3b negative: same-kind parents do NOT qualify for SPLIT": {
+   "ok": true,
+   "detail": ""
+  },
+  "3c split branches both executed and required downstream (report ran last, both branches in versions)": {
+   "ok": true,
+   "detail": ""
+  },
+  "3d split cost fully counted (JointZ tokens > JointRP on same cell)": {
+   "ok": true,
+   "detail": "JointZ=12080 > JointRP=11498"
+  },
+  "3e terminal scorer consumed the split outputs (Q from joint arms)": {
+   "ok": true,
+   "detail": "covered=0/6"
+  },
+  "4a sweep call count fits the 550 hard cap with margin": {
+   "ok": true,
+   "detail": "144 calls (with shared prefixes)"
+  },
+  "4b token estimate fits the 600K hard cap": {
+   "ok": true,
+   "detail": "227245 est, x1.3=295419"
+  },
+  "5a injection preserves real usage/latency (failures billed)": {
+   "ok": true,
+   "detail": ""
+  },
+  "5b cash cap ¥0 (subscription pool, no paid models)": {
+   "ok": true,
+   "detail": ""
+  },
+  "5c failed/retry calls present and meter-billable in sweep": {
+   "ok": true,
+   "detail": "76 failed calls counted"
+  },
+  "6a all six arms forked from ONE shared prefix (identical initial fault)": {
+   "ok": true,
+   "detail": ""
+  },
+  "6b healthy prefix nodes never re-executed in any arm (cache legality)": {
+   "ok": true,
+   "detail": ""
+  },
+  "6c reps are independent prefix instances (separate samplings)": {
+   "ok": true,
+   "detail": ""
+  },
+  "7 freeze written": {
+   "ok": true,
+   "detail": "all SHAs recorded"
+  }
+ },
+ "pass": true,
+ "matrix": {
+  "n_runs": 48,
+  "n_cells": 8,
+  "cells": [
+   {
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ]
+   },
+   {
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ]
+   },
+   {
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ]
+   },
+   {
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ]
+   },
+   {
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ]
+   },
+   {
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ]
+   },
+   {
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ]
+   },
+   {
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ]
+   }
+  ],
+  "runs": [
+   {
+    "run_id": "SCR1-Static-Parallel-SC-E1-S1_transport-r1",
+    "arm": "Static-Parallel",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_NO_RECOVERY",
+     "z": [],
+     "n_calls": 5,
+     "tokens": 7727,
+     "makespan": 26.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Simple-Dynamic-SC-E1-S1_transport-r1",
+    "arm": "Simple-Dynamic",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11715,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-R-only-SC-E1-S1_transport-r1",
+    "arm": "R-only",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11032,
+     "makespan": 52.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-pi-only-SC-E1-S1_transport-r1",
+    "arm": "pi-only",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11715,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(R,pi)-SC-E1-S1_transport-r1",
+    "arm": "Joint(R,pi)",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11715,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(Z,R,pi)-SC-E1-S1_transport-r1",
+    "arm": "Joint(Z,R,pi)",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11715,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Static-Parallel-SC-E1-S1_transport-r2",
+    "arm": "Static-Parallel",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_NO_RECOVERY",
+     "z": [],
+     "n_calls": 5,
+     "tokens": 7727,
+     "makespan": 26.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Simple-Dynamic-SC-E1-S1_transport-r2",
+    "arm": "Simple-Dynamic",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11715,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-R-only-SC-E1-S1_transport-r2",
+    "arm": "R-only",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11032,
+     "makespan": 52.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-pi-only-SC-E1-S1_transport-r2",
+    "arm": "pi-only",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11715,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(R,pi)-SC-E1-S1_transport-r2",
+    "arm": "Joint(R,pi)",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11715,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(Z,R,pi)-SC-E1-S1_transport-r2",
+    "arm": "Joint(Z,R,pi)",
+    "task": "SC-E1",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e1_tl",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_tl"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11715,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Static-Parallel-SC-E1-S2_contract-r1",
+    "arm": "Static-Parallel",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_NO_RECOVERY",
+     "z": [],
+     "n_calls": 6,
+     "tokens": 8879,
+     "makespan": 34.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Simple-Dynamic-SC-E1-S2_contract-r1",
+    "arm": "Simple-Dynamic",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 7,
+     "tokens": 10031,
+     "makespan": 42.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-R-only-SC-E1-S2_contract-r1",
+    "arm": "R-only",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11183,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-pi-only-SC-E1-S2_contract-r1",
+    "arm": "pi-only",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11183,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(R,pi)-SC-E1-S2_contract-r1",
+    "arm": "Joint(R,pi)",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11183,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(Z,R,pi)-SC-E1-S2_contract-r1",
+    "arm": "Joint(Z,R,pi)",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [
+      "SPLIT_VERIFY:e1_chk"
+     ],
+     "n_calls": 9,
+     "tokens": 11801,
+     "makespan": 58.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Static-Parallel-SC-E1-S2_contract-r2",
+    "arm": "Static-Parallel",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_NO_RECOVERY",
+     "z": [],
+     "n_calls": 6,
+     "tokens": 8879,
+     "makespan": 34.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Simple-Dynamic-SC-E1-S2_contract-r2",
+    "arm": "Simple-Dynamic",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 7,
+     "tokens": 10031,
+     "makespan": 42.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-R-only-SC-E1-S2_contract-r2",
+    "arm": "R-only",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11183,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-pi-only-SC-E1-S2_contract-r2",
+    "arm": "pi-only",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11183,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(R,pi)-SC-E1-S2_contract-r2",
+    "arm": "Joint(R,pi)",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11183,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(Z,R,pi)-SC-E1-S2_contract-r2",
+    "arm": "Joint(Z,R,pi)",
+    "task": "SC-E1",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e1_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e1_idx",
+      "glm53"
+     ],
+     [
+      "e1_ext_pen",
+      "glm53"
+     ],
+     [
+      "e1_ext_proc",
+      "glm53"
+     ],
+     [
+      "e1_fin",
+      "glm53flash"
+     ],
+     [
+      "e1_tl",
+      "glm53flash"
+     ],
+     [
+      "e1_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e1_chk"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [
+      "SPLIT_VERIFY:e1_chk"
+     ],
+     "n_calls": 9,
+     "tokens": 11801,
+     "makespan": 58.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Static-Parallel-SC-E3-S1_transport-r1",
+    "arm": "Static-Parallel",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_NO_RECOVERY",
+     "z": [],
+     "n_calls": 5,
+     "tokens": 8093,
+     "makespan": 26.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Simple-Dynamic-SC-E3-S1_transport-r1",
+    "arm": "Simple-Dynamic",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 12336,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-R-only-SC-E3-S1_transport-r1",
+    "arm": "R-only",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11809,
+     "makespan": 52.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-pi-only-SC-E3-S1_transport-r1",
+    "arm": "pi-only",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 12336,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(R,pi)-SC-E3-S1_transport-r1",
+    "arm": "Joint(R,pi)",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 12336,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(Z,R,pi)-SC-E3-S1_transport-r1",
+    "arm": "Joint(Z,R,pi)",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 1,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 12336,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Static-Parallel-SC-E3-S1_transport-r2",
+    "arm": "Static-Parallel",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_NO_RECOVERY",
+     "z": [],
+     "n_calls": 5,
+     "tokens": 8093,
+     "makespan": 26.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Simple-Dynamic-SC-E3-S1_transport-r2",
+    "arm": "Simple-Dynamic",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 12336,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-R-only-SC-E3-S1_transport-r2",
+    "arm": "R-only",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11809,
+     "makespan": 52.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-pi-only-SC-E3-S1_transport-r2",
+    "arm": "pi-only",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 12336,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(R,pi)-SC-E3-S1_transport-r2",
+    "arm": "Joint(R,pi)",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 12336,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(Z,R,pi)-SC-E3-S1_transport-r2",
+    "arm": "Joint(Z,R,pi)",
+    "task": "SC-E3",
+    "scenario": "S1_transport",
+    "rep": 2,
+    "fault_node": "e3_timeline",
+    "fault_type": "transport",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_timeline"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 12336,
+     "makespan": 50.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Static-Parallel-SC-E3-S2_contract-r1",
+    "arm": "Static-Parallel",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_NO_RECOVERY",
+     "z": [],
+     "n_calls": 6,
+     "tokens": 9228,
+     "makespan": 34.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Simple-Dynamic-SC-E3-S2_contract-r1",
+    "arm": "Simple-Dynamic",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 7,
+     "tokens": 10363,
+     "makespan": 42.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-R-only-SC-E3-S2_contract-r1",
+    "arm": "R-only",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11498,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-pi-only-SC-E3-S2_contract-r1",
+    "arm": "pi-only",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11498,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(R,pi)-SC-E3-S2_contract-r1",
+    "arm": "Joint(R,pi)",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11498,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(Z,R,pi)-SC-E3-S2_contract-r1",
+    "arm": "Joint(Z,R,pi)",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 1,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [
+      "SPLIT_VERIFY:e3_chk"
+     ],
+     "n_calls": 9,
+     "tokens": 12080,
+     "makespan": 58.8,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Static-Parallel-SC-E3-S2_contract-r2",
+    "arm": "Static-Parallel",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_NO_RECOVERY",
+     "z": [],
+     "n_calls": 6,
+     "tokens": 9228,
+     "makespan": 34.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Simple-Dynamic-SC-E3-S2_contract-r2",
+    "arm": "Simple-Dynamic",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 7,
+     "tokens": 10363,
+     "makespan": 42.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-R-only-SC-E3-S2_contract-r2",
+    "arm": "R-only",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11498,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-pi-only-SC-E3-S2_contract-r2",
+    "arm": "pi-only",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11498,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(R,pi)-SC-E3-S2_contract-r2",
+    "arm": "Joint(R,pi)",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+     "z": [],
+     "n_calls": 8,
+     "tokens": 11498,
+     "makespan": 50.0,
+     "deadline_met": true
+    }
+   },
+   {
+    "run_id": "SCR1-Joint(Z,R,pi)-SC-E3-S2_contract-r2",
+    "arm": "Joint(Z,R,pi)",
+    "task": "SC-E3",
+    "scenario": "S2_contract",
+    "rep": 2,
+    "fault_node": "e3_chk",
+    "fault_type": "contract",
+    "shared_prefix": [
+     [
+      "e3_idx",
+      "glm53"
+     ],
+     [
+      "e3_ext_plan",
+      "glm53"
+     ],
+     [
+      "e3_ext_impl",
+      "glm53"
+     ],
+     [
+      "e3_param_check",
+      "glm53flash"
+     ],
+     [
+      "e3_timeline",
+      "glm53flash"
+     ],
+     [
+      "e3_chk",
+      "glm53"
+     ]
+    ],
+    "fault_fired_in_prefix": [
+     "e3_chk"
+    ],
+    "fingerprint": {
+     "status": "COMPLETE",
+     "z": [
+      "SPLIT_VERIFY:e3_chk"
+     ],
+     "n_calls": 9,
+     "tokens": 12080,
+     "makespan": 58.8,
+     "deadline_met": true
+    }
+   }
+  ]
+ },
+ "budget": {
+  "sweep_calls": 144,
+  "sweep_token_estimate": 227245,
+  "hard_caps": {
+   "calls": 550,
+   "tokens": 600000
+  },
+  "per_model": {
+   "glm53": {
+    "calls": 124,
+    "token_est": 193544
+   },
+   "glm53flash": {
+    "calls": 20,
+    "token_est": 33701
+   }
+  }
+ },
+ "quota_recommendation": {
+  "glm53": {
+   "calls": 160,
+   "tokens": 266000
+  },
+  "glm53flash": {
+   "calls": 30,
+   "tokens": 50000
+  }
+ },
+ "shas": {
+  "runner_stage_c_r1": "eaffda4ec485cf8b64fdd63098ddfe7a253dde0607ea4b5ec8a195802c668edf",
+  "scheduler_six_arm": "cd68ec44287051983930ea9e53f123ec0d561b2c45693f5c09e6a51486fa4362",
+  "acceptance_test": "27a857f6ba6645f8916c9a147efc12d85be6788582fcf1872c11fc8f115ebc14",
+  "tasks_json": "1c3e3bb6ab3b9c8de8ba69e30835ca9052aa0d047a7fc6f29f27cf39d071b62c",
+  "event_dags": "cd5f84663f91c2caf6de598dfe75b0c680177a8f80c8461ddadca38e31f5de07",
+  "silver": {
+   "E1_zhangzidao_silver.json": "7ea81c336648911c9e9dbef91ddf46ce1c205de38e2d4f8f994d376becfd42ea",
+   "E2_kangmei_silver.json": "50e8c4ab79c50ac9c4378f9bfeb66779757a1db3606b4d0352c252479e7741ce",
+   "E3_chinaship_silver.json": "23028ed6931858f39353b81557ad1a8d9819b120ba879efc010b0003b09a2c46",
+   "E4_leshi_silver.json": "52fb5a15a386e65c2b8c3ff4033fcab6a8e94a9eb7537acbba95a6653b0ddb26"
+  },
+  "evidence_texts": {
+   "cs_listing_2025.txt": "16ba6f28318a6bed88a9fa3aa7602cfea6858b715915173f4001ab9e0d82d7b7",
+   "cs_plan_2024.txt": "6f5afc855fc44a6e4338ce3a67668bdb2cd680e85a21e55add394890a189db5e",
+   "cs_plan_summary_2024.txt": "ccaa940b7f3859f693ad6d52fe7364830ebf9b21fc5814ec422522fb227f685c",
+   "km_notice_2019.txt": "f6685e67202c09e63e9e173b7e69a888edee928fac1e54f22249bcb7cd7816ff",
+   "km_penalty_2020.txt": "ebd5b35d533e28fc9a605994690de3a680370bf58546d2320fcebdbc7fc9e44b",
+   "ls_delist_2020.txt": "d94e6df43ad6ee040860de13d5d21a7e33be77801e1543ec3bc1fcf5e023e868",
+   "ls_terminate_2020.txt": "0c2adeb30937f0ed067dc63de4a50504c200f4715159066c24be0e4cf60daf31",
+   "zzd_notice_2019.txt": "89ccf12e1921dc43d617301ab9e001e445507bc4f20d84708badb991cb982e9f",
+   "zzd_penalty_2020.txt": "3fb8dcbf08a8469c4735c54bbe8e9c6553971d5b93a51319e95f42f4831934be"
+  },
+  "manifest": "c443d1b92f7e1888fe730c2090ba3e96c8c2cebca136d4c5b268b494f24fdbde",
+  "scorer_source_digest": "4f6f6b79ced4e41b1478c4876bdd9fee1cc7ddb3f15ca6aba86e50ca9af08036",
+  "frozen_config": "8dc12444391a57762fe40abf18af6a4f9338876869a33d30c802c31b4ca058d9"
+ }
+}

@@ -1,0 +1,104 @@
+{
+  "scope": "POST_RUN_SOURCE_CONSTRAINED_DIAGNOSTIC_NOT_FROZEN_SCORE_OR_INDEPENDENT_REVIEW",
+  "task": "JCZ_202605_CALIBRATION_ONLY",
+  "records": [
+    {
+      "request": "cal_0__INQUIRY",
+      "model": "qwen-plus-2025-12-01",
+      "node": "INQUIRY",
+      "K": true,
+      "errors": [],
+      "wall_s": 13.829211376607418,
+      "input_tokens": 2332,
+      "output_tokens": 599,
+      "Q": null,
+      "E_semantic": null
+    },
+    {
+      "request": "cal_0__REPLY",
+      "model": "qwen-plus-2025-12-01",
+      "node": "REPLY",
+      "K": false,
+      "errors": [
+        "CLAIM_SCHEMA",
+        "CLAIM_SCHEMA",
+        "CLAIM_SCHEMA",
+        "CLAIM_SCHEMA",
+        "CLAIM_SCHEMA",
+        "CLAIM_SCHEMA"
+      ],
+      "wall_s": 15.480382159352303,
+      "input_tokens": 18818,
+      "output_tokens": 626,
+      "Q": null,
+      "E_semantic": null
+    },
+    {
+      "request": "cal_1__INQUIRY",
+      "model": "deepseek-flash",
+      "node": "INQUIRY",
+      "K": true,
+      "errors": [],
+      "wall_s": 5.447166070342064,
+      "input_tokens": 2264,
+      "output_tokens": 1240,
+      "Q": null,
+      "E_semantic": null
+    },
+    {
+      "request": "cal_1__OBLIGATIONS",
+      "model": "deepseek-flash",
+      "node": "OBLIGATIONS",
+      "K": true,
+      "errors": [],
+      "wall_s": 4.678557761013508,
+      "input_tokens": 23420,
+      "output_tokens": 985,
+      "Q": null,
+      "E_semantic": null
+    },
+    {
+      "request": "cal_1__REPLY",
+      "model": "deepseek-flash",
+      "node": "REPLY",
+      "K": true,
+      "errors": [],
+      "wall_s": 5.4947585463523865,
+      "input_tokens": 17863,
+      "output_tokens": 932,
+      "Q": null,
+      "E_semantic": null
+    }
+  ],
+  "observations": [
+    {
+      "request": "cal_0__INQUIRY",
+      "claim": "INQUIRY:C5",
+      "dimension": "semantic_reasoning",
+      "finding": "It labels May 15 disclosure, May 18 inquiry receipt, May 19 notice signature as a temporal contradiction. This chronological sequence does not itself imply a contradiction. K passing does not imply factual correctness.",
+      "score_changed": false
+    },
+    {
+      "request": "cal_0__REPLY",
+      "dimension": "schema",
+      "finding": "All six claims omit required unknown_reason, including null for ASSERTED. Frozen K failure retained; values are not automatically counted wrong.",
+      "score_changed": false
+    },
+    {
+      "request": "cal_1__REPLY",
+      "claim": "REPLY:R04",
+      "dimension": "evidence_support_and_conflict",
+      "finding": "R04 asserts listed board date May 14 2026 while cited E0192 states 2025. R05 separately recognizes the 2025/2026 conflict. Must not score R04 as unqualified correct simply because another claim mentions conflict.",
+      "score_changed": false
+    },
+    {
+      "request": "cal_1__OBLIGATIONS",
+      "dimension": "information_propagation",
+      "finding": "Consumes actual REPLY claim IDs, removes unqualified board year in approvals and retains two-notice date conflict. This is one within-model intermediate transformation, not a terminal or dynamic-pi benefit.",
+      "score_changed": false
+    }
+  ],
+  "terminal_outputs": 0,
+  "formal_Q": null,
+  "independent_reviews": 0
+}

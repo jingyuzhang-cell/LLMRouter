@@ -1,0 +1,99 @@
+{
+ "nsim": 20000,
+ "seeds": [
+  20261102,
+  42,
+  12345
+ ],
+ "implementation": "exact_perm.exact_paired_perm",
+ "note": "p_structural_zero = 生成模型强制置零概率；整数化后实际平局率见 observed_tie",
+ "基准保守": {
+  "p_structural_zero": 0.25,
+  "mu": 1.0,
+  "sd": 1.2,
+  "power_per_seed": [
+   0.7688,
+   0.7767,
+   0.7703
+  ],
+  "power_mean": 0.7719333333333332,
+  "observed_win": 0.49665,
+  "observed_tie": 0.42434062499999997,
+  "observed_loss": 0.079009375
+ },
+ "更保守": {
+  "p_structural_zero": 0.3,
+  "mu": 0.8,
+  "sd": 1.3,
+  "power_per_seed": [
+   0.50255,
+   0.50435,
+   0.50175
+  ],
+  "power_mean": 0.5028833333333333,
+  "observed_win": 0.41434687499999995,
+  "observed_tie": 0.47495,
+  "observed_loss": 0.110703125
+ },
+ "乐观(接近D2实测)": {
+  "p_structural_zero": 0.2,
+  "mu": 2.0,
+  "sd": 1.5,
+  "power_per_seed": [
+   0.99085,
+   0.9933,
+   0.99205
+  ],
+  "power_mean": 0.9920666666666667,
+  "observed_win": 0.6730406250000001,
+  "observed_tie": 0.2886,
+  "observed_loss": 0.038359375
+ },
+ "L2_joint_simulated": {
+  "joint": 0.7716833333333333,
+  "main_only": 0.7719333333333332,
+  "gate_only": 0.9962833333333334,
+  "per_seed": [
+   {
+    "L2_joint": 0.76855,
+    "main_sig_rate": 0.7688,
+    "gate_pass_rate": 0.99675
+   },
+   {
+    "L2_joint": 0.77645,
+    "main_sig_rate": 0.7767,
+    "gate_pass_rate": 0.9963
+   },
+   {
+    "L2_joint": 0.77005,
+    "main_sig_rate": 0.7703,
+    "gate_pass_rate": 0.9958
+   }
+  ]
+ },
+ "S3_single_family": {
+  "power_mean": 0.18176666666666666,
+  "per_seed": [
+   0.1822,
+   0.18255,
+   0.18055
+  ]
+ },
+ "S5_directional_only": {
+  "0.7": 0.2552983299999999,
+  "0.8": 0.5033164800000002,
+  "0.9": 0.81310473
+ },
+ "L3_scenario_based": {
+  "value": 0.17686450164938153,
+  "verified": false,
+  "components": {
+   "L2_joint_simulated": 0.7716833333333333,
+   "Q1_family_pass@0.85_single": 0.6571830309765623,
+   "Q1_three_families": 0.2838304744493049,
+   "quality_gate_assumed": 0.95,
+   "protection_zero_assumed": 0.85
+  },
+  "label": "情景化联合通过概率（外部假设成分下），非验证性功效"
+ }
+}

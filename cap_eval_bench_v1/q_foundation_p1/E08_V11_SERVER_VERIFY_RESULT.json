@@ -1,0 +1,35 @@
+{
+ "batch": "e08_v11_server_verify",
+ "version": "v4-FINAL",
+ "date": "2026-10-31",
+ "verdict": "SERVER PASS",
+ "checks": {
+  "P1": "PASS — ZIP size (7577B)",
+  "P2": "PASS — ZIP SHA256 (a5666f62...)",
+  "P3": "PASS — ZIP CRC (all entries)",
+  "P4": "PASS — files exact (5 + MANIFEST)",
+  "P5": "PASS — MANIFEST bytes+sha256 per file",
+  "P6": "PASS — frozen text SHA256+size",
+  "P7": "PASS — F1-F10 spans/quotes/context/supplementary",
+  "P8": "PASS — 3-layer consistency (14/14, actual structures)"
+ },
+ "p8_checks_passed": 14,
+ "p8_structural_notes": [
+  "identity is a STRING: 'AI-adjudicated Reference — NEVER human Gold; P1 human gate remains CLOSED'",
+  "layer identities verified via three_layer_provenance dict (string values)",
+  "L3 verified via findings list + verdict string (not fact_verdicts)",
+  "L2 verified via results dict, F1-F10 all ok=true, F4 date-normalization evidence present",
+  "U1 status prefix-matches 'UNKNOWN' (sentence form)"
+ ],
+ "v3_to_v4_changes": [
+  "P8 rewritten to actual data structures (operator requirement)",
+  "P2 SHA typo corrected a566f625->a5666f62",
+  "P7 F4 kw ['收','到'] (newline split), F8 kw '立案'"
+ ],
+ "script_sha256": "5b26ce7c77d86f21ed5108a0cb70dde3ec58e6d633c37a37e90e2a7fcb04286f",
+ "zip_sha256": "a5666f625ad0010f53e692f47d8df21486d0ec02479f2e6671438a94dba0d3f2",
+ "python": "3.12.3",
+ "executions": 2,
+ "reproducibility": "inline heredoc + persisted script both SERVER PASS, exit 0",
+ "saved_at": "2026-10-31T10:59:00+0800"
+}

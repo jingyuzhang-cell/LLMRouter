@@ -1,0 +1,119 @@
+{
+ "config": {
+  "batch_name": "stage_c_r1_v1",
+  "max_calls": 550,
+  "max_tokens": 600000,
+  "per_model": {
+   "glm53": {
+    "max_calls": 400,
+    "max_tokens": 420000
+   },
+   "flash": {
+    "max_calls": 200,
+    "max_tokens": 180000
+   }
+  },
+  "max_cash_cny": 0,
+  "max_cash_usd": 0,
+  "allowed_models": [
+   "glm53",
+   "flash"
+  ],
+  "timeout_per_request_s": 60,
+  "stop_on_cap": true,
+  "z_scope": "NOT_TESTED",
+  "experiment_scope": "R\u00d7\u03c0 validation",
+  "events": [
+   "SC-E1",
+   "SC-E2",
+   "SC-E3",
+   "SC-E4"
+  ],
+  "anomalies": [
+   "transport",
+   "evidence_fail"
+  ],
+  "arms": [
+   "Static-Parallel",
+   "Simple-Dynamic",
+   "R-only",
+   "pi-only",
+   "Joint(R,pi)",
+   "Joint(Z,R,pi)"
+  ],
+  "matrix": "4\u00d72\u00d76\u00d71=48 runs"
+ },
+ "checks": [
+  {
+   "name": "Engine from disk",
+   "pass": true,
+   "evidence": "sha=ac30c3980b0d77a1"
+  },
+  {
+   "name": "6 arms distinct deciders",
+   "pass": true,
+   "evidence": ""
+  },
+  {
+   "name": "Shared kernel (no per-arm branching)",
+   "pass": true,
+   "evidence": ""
+  },
+  {
+   "name": "SC tasks present",
+   "pass": true,
+   "evidence": "['SC-E1', 'SC-E2', 'SC-E3', 'SC-E4']"
+  },
+  {
+   "name": "SC-E1 Silver (7 facts)",
+   "pass": true,
+   "evidence": ""
+  },
+  {
+   "name": "SC-E2 Silver (6 facts)",
+   "pass": true,
+   "evidence": ""
+  },
+  {
+   "name": "SC-E3 Silver (6 facts)",
+   "pass": true,
+   "evidence": ""
+  },
+  {
+   "name": "SC-E4 Silver (7 facts)",
+   "pass": true,
+   "evidence": ""
+  },
+  {
+   "name": "Decision groups >=3",
+   "pass": true,
+   "evidence": "groups=3"
+  },
+  {
+   "name": "Z verdict: NOT_TESTED (label-only)",
+   "pass": true,
+   "evidence": "ADD_VERIFY selected but physical plan identical to Joint(R,\u03c0); no structural node created"
+  },
+  {
+   "name": "Budget config",
+   "pass": true,
+   "evidence": "550 calls/600K/GLM\u2264420K/Flash\u2264180K"
+  },
+  {
+   "name": "Matrix 48 runs",
+   "pass": true,
+   "evidence": "4 events \u00d7 2 anomalies \u00d7 6 arms \u00d7 1 rep"
+  },
+  {
+   "name": "All files on disk",
+   "pass": true,
+   "evidence": "engine+test+silver verified"
+  }
+ ],
+ "pass": 13,
+ "fail": 0,
+ "engine_sha256": "ac30c3980b0d77a1dcc5a8c26564de8bd876e37029c1f31649e320f7ec3d469e",
+ "z_verdict": "NOT_TESTED",
+ "scope": "R\u00d7\u03c0",
+ "verdict": "GO"
+}

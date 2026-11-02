@@ -1,0 +1,163 @@
+{
+ "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e3_timeline"
+   ],
+   "reoptimize": [],
+   "rationale": "simple-dynamic: escalate failed ['e3_timeline'] to stronger model"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "simple-dynamic: escalate failed [] to stronger model"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "simple-dynamic: escalate failed [] to stronger model"
+  },
+  {
+   "round": 4,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e3_rpt"
+   ],
+   "reoptimize": [],
+   "rationale": "simple-dynamic: escalate failed ['e3_rpt'] to stronger model"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 937,
+    "out": 499
+   },
+   "latency_s": 7.475
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1029,
+    "out": 438
+   },
+   "latency_s": 8.542
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1027,
+    "out": 343
+   },
+   "latency_s": 5.142
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 468,
+    "out": 617
+   },
+   "latency_s": 15.855
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 471,
+    "out": 615
+   },
+   "latency_s": 12.207
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53",
+   "attempt": 2,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 471,
+    "out": 452
+   },
+   "latency_s": 14.446
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 644,
+    "out": 611
+   },
+   "latency_s": 20.414
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": false,
+   "failure": "parse",
+   "usage": {
+    "in": 2137,
+    "out": 1024
+   },
+   "latency_s": 25.845
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 2,
+   "success": false,
+   "failure": "parse",
+   "usage": {
+    "in": 2137,
+    "out": 1024
+   },
+   "latency_s": 25.845
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [],
+ "terminal_stats": null,
+ "report": null,
+ "makespan": 135.77,
+ "tokens": 14944,
+ "arm": "Simple-Dynamic",
+ "suffix_makespan": 86.55
+}

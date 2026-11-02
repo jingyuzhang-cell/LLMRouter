@@ -1,0 +1,93 @@
+B1: settled key re-reserve refused
+  [PASS] B1 re-reserve after settle raises AlreadySettled
+  [PASS] B1 denial journaled
+B2: negative/zero reservations rejected
+  [PASS] B2 negative/zero unit and calls all raise InvalidReservation
+  [PASS] B2 binding unchanged (no negative quota)
+  [PASS] B2 valid small reservation still admitted
+B3: reserved call COUNT tracked and reconciled
+  [PASS] B3 outstanding calls counted pre-settle
+  [PASS] B3 call-cap enforced against outstanding CALLS (pre-execution)
+  [PASS] B3 settle accounts reserved calls (3, not 1)
+  [PASS] B3 executed-subset discrepancy journaled
+B4: partial unknown never clobbers known values
+  [PASS] B4 known output 1800 preserved; overrun detected
+  [PASS] B4 known input kept, unknown side provisional within reserved
+  [PASS] B4 provisional revised to truth by delta
+B5: negative actuals rejected (settle and revise)
+  [PASS] B5 negative settle refused, reservation restored
+  [PASS] B5 negative revise target refused
+  [PASS] B5 downward correction via revise still works
+B-combo: overrun settle then continued gating on TRUE cumulative
+  [PASS] post-overrun reservation gated on TRUE cumulative actuals
+  [PASS] concurrent re-reserve of settled key: all rejected, none admitted
+B3+: executed_calls validation (negative/over/non-int/bool/zero)
+  [PASS] B3+ all invalid executed_calls refused (incl. ZERO)
+B3++ operator repro: zero-call settle must NOT free call quota
+  [PASS] B3++ zero-call settle refused despite token consumption
+  [PASS] B3++ call cap still binds after refused zero-call settle
+  [PASS] B3++ honest settle consumes the call slot (cap binds)
+  [PASS] B3++ cancel() sanctioned for a never-launched reservation
+B2+: strict integer params (floats and bools never enter ledger)
+  [PASS] B2+ reserve rejects float/bool/nonpositive params
+  [PASS] B2+ settle rejects float/bool actuals, reservation restored
+  [PASS] B2+ revise rejects float targets
+headroom/reserve calibration consistency
+  [PASS] headroom applies the SAME param gate as reserve
+  [PASS] headroom valid query consistent with reserve arithmetic
+E1: no-fault path is constraint-gated
+  [PASS] E1 healthy state executes ready set normally
+  [PASS] E1 zero budget blocks normal execution with audit trail
+  [PASS] E1 zero deadline blocks normal execution
+  [PASS] E1 zero free slots block normal execution
+E2: slot check compares PLANNED demand vs free slots
+  [PASS] E2 split rejected when children demand exceeds free slots — slots: model glm53 planned 2 > free 1
+  [PASS] E2 normal path blocked when ready demand exceeds free slot
+E3: split_of follows the CHOSEN candidate (multi-fault P0)
+  [PASS] E3 chosen candidate is split on z_chk (not the lowest-id fault)
+  [PASS] E3 split_of == z_chk (was faulted[0]=a_fail before fix)
+  [PASS] E3 split executes on the correct node
+E4: apply_split structural integrity (in-edges, parent union, strict acyclic)
+  [PASS] E4 no dangling in-edges to removed node
+  [PASS] E4 independent parent p3 PRESERVED (union, not overwrite)
+  [PASS] E4 parents/edges consistency assertion passes
+  [PASS] E4 _acyclic rejects dangling edges
+E5: transient retry budget exhausts (attempts semantics defined)
+  [PASS] E5 attempts=1 -> retry candidate present (remaining=2)
+  [PASS] E5 attempts=2 -> remaining=1
+  [PASS] E5 attempts=3 -> NO retry candidate (exit only)
+  [PASS] E5 attempts=4 (over cap) -> same exhausted behaviour, no negative
+E6: quality and reliability are separate axes
+  [PASS] E6 dq=None vs dq=0.17 incomparable -> no dominance either way
+  [PASS] E6 both-dq-None: reliability axis still yields dominance
+  [PASS] E6 equal reliability, cheaper dominates (cost axis intact)
+E6+: selection NEVER ranks a None dq (no numeric slot for missing)
+  [PASS] E6+ selection key structurally excludes dq_hat — key=lambda n: n.node_id)
+  [PASS] E6+ scenario: switch candidate carries dq, keep does not
+  [PASS] E6+/P0-1 no assumed switch cost gain: dc_hat equal
+  [PASS] E6+/P0-1 full tie resolved by RULE precedence (PI_2-prime fired)
+  [PASS] E6+/P0-1 unapplied prior annotated on switch candidate
+E7: split never implicitly switches models
+  [PASS] E7 scenario setup: split chosen with pi=KEEP
+  [PASS] E7 children KEEP the faulted node model (glm53flash)
+  [PASS] E7 explicit authorization switches children to strong model
+P0-2: selection restricted to the Pareto FRONTIER
+  [PASS] P0-2 chosen candidate is a frontier member — chosen=split_retry:e1_chk front=('exit_node:e1_chk', 'ladder_exit:e1_chk', 'split_retry:e1_chk')
+  [PASS] P0-2 dominated candidate excluded from frontier
+  [PASS] P0-2 slot-starved state falls back to the terminal safe stop — chosen=exit_node:e1_chk front=('exit_node:e1_chk',)
+  [PASS] P0-2 empty frontier is defensive-only (forced_unique stays False)
+P0-3: ladder_switch reachable exactly at attempts>=2 (persistent+weak+gap)
+  [PASS] P0-3 attempts=1: ladder_exit present, NO switch candidate
+  [PASS] P0-3 attempts=2: ladder_switch GENERATED (path reachable)
+  [PASS] P0-3 attempts=2: no further same-config ladder
+  [PASS] P0-3 switch fires per PI_2-prime ladder (p tie -> parsimony vs exit)
+  [PASS] P0-3 strong model at attempts=2: exit only
+Guard final-P0: lifecycle and revise_calls
+  [PASS] lifecycle: cancel refused after LAUNCH (must settle)
+  [PASS] lifecycle: settle refused without LAUNCH (use cancel)
+  [PASS] lifecycle: cancel of un-launched reservation still works
+  [PASS] revise_calls: delta applied to settled_calls
+  [PASS] revise_calls: bounds [1, reserved] enforced
+  [PASS] constructor: invalid caps rejected at construction
+
+70/70 checks passed

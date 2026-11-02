@@ -1,0 +1,202 @@
+{
+ "verdict": "GO",
+ "summary": {
+  "S3-1": {
+   "cases": 4,
+   "passed": 4,
+   "failed": 0
+  },
+  "S3-2": {
+   "cases": 8,
+   "passed": 8,
+   "failed": 0
+  },
+  "S3-3": {
+   "cases": 4,
+   "passed": 4,
+   "failed": 0
+  },
+  "S3-4": {
+   "cases": 4,
+   "passed": 4,
+   "failed": 0
+  },
+  "S3-5": {
+   "cases": 4,
+   "passed": 4,
+   "failed": 0
+  }
+ },
+ "cases": [
+  {
+   "package": "S3-1",
+   "case": "no-model-conditional-injection-on-real-path",
+   "desc": "真实路径代码零模型条件化失败逻辑（源码级扫描）",
+   "passed": true,
+   "evidence": "命中=[]"
+  },
+  {
+   "package": "S3-1",
+   "case": "valid-flash-reasoning-response-passes",
+   "desc": "合法 flash 响应在 reasoning 节点原样放行（不被覆写）",
+   "passed": true,
+   "evidence": "success=True"
+  },
+  {
+   "package": "S3-1",
+   "case": "structure-rule-targets-reasoning-pi0-flash",
+   "desc": "结构规则=MCF 目标为 reasoning 节点（能力表 0.58 vs 0.80；π0=flash）",
+   "passed": true,
+   "evidence": "targets ok=True, pi0(reasoning)=glm53flash"
+  },
+  {
+   "package": "S3-1",
+   "case": "three-state-classifier-units",
+   "desc": "MCF-MANIFESTED / NOT-MANIFESTED 分类单元测试（S3-CONTROL 为设计层标签）",
+   "passed": true,
+   "evidence": "results=['MCF-MANIFESTED', 'MCF-NOT-MANIFESTED', 'MCF-NOT-MANIFESTED']"
+  },
+  {
+   "package": "S3-2",
+   "case": "TGV-T1-Static-Parallel",
+   "desc": "TGV-T1 Static-Parallel: 期望 INCOMPLETE_NO_RECOVERY + 动作约束",
+   "passed": true,
+   "evidence": "status=INCOMPLETE_NO_RECOVERY, tgt_attempts=1, z=[]"
+  },
+  {
+   "package": "S3-2",
+   "case": "TGV-T1-R-only",
+   "desc": "TGV-T1 R-only: 期望 INCOMPLETE_RECOVERY_EXHAUSTED + 动作约束",
+   "passed": true,
+   "evidence": "status=INCOMPLETE_RECOVERY_EXHAUSTED, models=['glm53flash'], z=[]"
+  },
+  {
+   "package": "S3-2",
+   "case": "TGV-T1-pi-only",
+   "desc": "TGV-T1 pi-only: 期望 COMPLETE + 动作约束",
+   "passed": true,
+   "evidence": "status=COMPLETE, tgt=[('glm53flash', False), ('glm53', True)], z=[]"
+  },
+  {
+   "package": "S3-2",
+   "case": "TGV-T1-Joint(Z,R,pi)",
+   "desc": "TGV-T1 Joint(Z,R,pi): 期望 COMPLETE + 动作约束",
+   "passed": true,
+   "evidence": "status=COMPLETE, tgt=[('glm53flash', False), ('glm53', True)], z=[]"
+  },
+  {
+   "package": "S3-2",
+   "case": "TGV-T2-Static-Parallel",
+   "desc": "TGV-T2 Static-Parallel: 期望 INCOMPLETE_NO_RECOVERY + 动作约束",
+   "passed": true,
+   "evidence": "status=INCOMPLETE_NO_RECOVERY, tgt_attempts=1, z=[]"
+  },
+  {
+   "package": "S3-2",
+   "case": "TGV-T2-R-only",
+   "desc": "TGV-T2 R-only: 期望 INCOMPLETE_RECOVERY_EXHAUSTED + 动作约束",
+   "passed": true,
+   "evidence": "status=INCOMPLETE_RECOVERY_EXHAUSTED, models=['glm53flash'], z=[]"
+  },
+  {
+   "package": "S3-2",
+   "case": "TGV-T2-pi-only",
+   "desc": "TGV-T2 pi-only: 期望 COMPLETE + 动作约束",
+   "passed": true,
+   "evidence": "status=COMPLETE, tgt=[('glm53flash', False), ('glm53', True)], z=[]"
+  },
+  {
+   "package": "S3-2",
+   "case": "TGV-T2-Joint(Z,R,pi)",
+   "desc": "TGV-T2 Joint(Z,R,pi): 期望 COMPLETE + 动作约束",
+   "passed": true,
+   "evidence": "status=COMPLETE, tgt=[('glm53flash', False), ('glm53', True)], z=[]"
+  },
+  {
+   "package": "S3-3",
+   "case": "same-key-same-model-replays-free",
+   "desc": "同 purpose+prompt+模型 → 去重重放（1 次真实传输）",
+   "passed": true,
+   "evidence": "transport_hits=1"
+  },
+  {
+   "package": "S3-3",
+   "case": "same-prompt-different-model-real-call",
+   "desc": "同 prompt 不同模型 → 独立真实调用（模型后缀进缓存键）",
+   "passed": true,
+   "evidence": "transport_hits=2"
+  },
+  {
+   "package": "S3-3",
+   "case": "purpose-suffix-equals-actual-model",
+   "desc": "账本 purpose 模型后缀与实际调用模型一致",
+   "passed": true,
+   "evidence": "purposes=['ns:n1:v1:glm53', 'ns:n1:v1:glm53flash']"
+  },
+  {
+   "package": "S3-3",
+   "case": "version-change-new-key",
+   "desc": "版本号变化 → 新缓存键（无跨版本陈旧重放）",
+   "passed": true,
+   "evidence": "transport_hits=3"
+  },
+  {
+   "package": "S3-4",
+   "case": "per-model-quota-trips-independently",
+   "desc": "flash 配额触顶时立即拒绝（不占用 glm53 额度路径）",
+   "passed": true,
+   "evidence": "flash quota cap=20"
+  },
+  {
+   "package": "S3-4",
+   "case": "replay-does-not-consume-quota",
+   "desc": "去重重放不消耗配额（真实调用计数=1）",
+   "passed": true,
+   "evidence": "glm53 counted=1, before=0"
+  },
+  {
+   "package": "S3-4",
+   "case": "call-identity-settlement",
+   "desc": "结算记录模型=请求模型（身份不串扰）",
+   "passed": true,
+   "evidence": "model=GLM-5.3, purpose=id:n:v1:glm53"
+  },
+  {
+   "package": "S3-4",
+   "case": "global-cap-equals-sum",
+   "desc": "全局硬顶=分模型之和（95 次/130K，无幻余量）",
+   "passed": true,
+   "evidence": "calls 95==95, tokens 130000==130000"
+  },
+  {
+   "package": "S3-5",
+   "case": "TGV-T1-candidates-legal",
+   "desc": "chk 失败态产生 SPLIT_VERIFY 候选（异类双亲）；MERGE 因证据焦点不相交而合法不适用",
+   "passed": true,
+   "evidence": "z_ops=['SPLIT_VERIFY']"
+  },
+  {
+   "package": "S3-5",
+   "case": "TGV-T1-apply-z-acyclic-terminal-preserved",
+   "desc": "apply_z(SPLIT_VERIFY) 后依赖无环且 report 节点仍在",
+   "passed": true,
+   "evidence": "applied=True, acyclic=True, rpt_present=True"
+  },
+  {
+   "package": "S3-5",
+   "case": "TGV-T2-candidates-legal",
+   "desc": "chk 失败态产生 SPLIT_VERIFY 候选（异类双亲）；MERGE 因证据焦点不相交而合法不适用",
+   "passed": true,
+   "evidence": "z_ops=['SPLIT_VERIFY']"
+  },
+  {
+   "package": "S3-5",
+   "case": "TGV-T2-apply-z-acyclic-terminal-preserved",
+   "desc": "apply_z(SPLIT_VERIFY) 后依赖无环且 report 节点仍在",
+   "passed": true,
+   "evidence": "applied=True, acyclic=True, rpt_present=True"
+  }
+ ],
+ "zero_model_calls": true,
+ "note": "all transports stubbed/deterministic; failures not masked"
+}

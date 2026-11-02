@@ -1,0 +1,29 @@
+{
+ "batch_name": "stage_c_r9b_v1",
+ "max_calls": 80,
+ "max_tokens": 150000,
+ "per_model_quota": {
+  "glm53": {
+   "calls": 65,
+   "tokens": 120000
+  },
+  "glm53flash": {
+   "calls": 20,
+   "tokens": 30000
+  }
+ },
+ "max_cash_cny": 0,
+ "allowed_models": [
+  "glm53",
+  "glm53flash"
+ ],
+ "tasks": "SC-E1+SC-E3 x S2_contract@verification x {A_plain=Joint(R,pi), B_split=Joint(Z,R,pi)} x 2 reps = 8 runs",
+ "issued_by": "PENDING (operator HOLD; separate authorization required before launch)",
+ "created": "2026-10-30",
+ "delta_contract": {
+  "principle": "模型只产生新事实与推理（new_facts/comparisons/dropped/status_changes，禁止回显）；执行器维护事实账本及血统（fid/doc/span/版本自动继承）",
+  "chain_sha256": "c74c9cb9653c8d54ff84fa86654e2d5c713401cfeb97f3cbf1b23e4b0d23c8b3",
+  "validation": "8/8 text-path tests PASS (stage_c_r9_verify/R9B_ALL_TESTS.json): 大账本不回显/空delta成功/多父合并/新增不覆盖/删除需原因/截断+缺字段+非法变更拒收/E1 350天双侧入终端/E3 双比率+双侧来源+不一致比较/缺侧拒绝",
+  "budget_note": "delta prompts大幅缩短（无回显），预计调用 ~52-64、Token ~60-90K；硬顶 80/150K 全额新批（旧26次失效不复用）"
+ }
+}

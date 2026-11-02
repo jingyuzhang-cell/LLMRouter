@@ -1,0 +1,46 @@
+P0-2 ruling: zero-cost exit never slot-rejected (safe stop)
+  [PASS] exit survives total slot over-subscription
+  [PASS] execution candidates slot-rejected with reasons
+  [PASS] safe stop is a terminal state (chosen exists, frontier non-empty)
+P0-1 ruling: fired rule never overrides constraints/frontier; recorded
+  [PASS] rule fired and chosen when feasible+frontier — [{'rule': 'PI_2-prime', 'candidate': 'retry_switch:v', 'fired': True, 'disposition': 'chosen', 'reason': 'PI_2-prime rule precedence within frontier'}]
+  [PASS] rule fired but rejected_infeasible is RECORDED, not forced — [{'rule': 'PI_2-prime', 'candidate': 'retry_switch:v', 'fired': True, 'disposition': 'rejected_infeasible', 'reason': 'constraint filter'}]
+P0-3 ruling: no repeated switch triggering
+  [PASS] after switch executed (strong model), no further switch candidate
+  [PASS] un-switched: offer persists but bounded (single pool of 2 models)
+Guard launch/abort boundary (send-boundary correspondence)
+  [PASS] abort -> cancel path works for never-dispatched request
+  [PASS] abort on non-launched refused (state machine enforced)
+  [PASS] dispatched timeout settles at reserved (unknown), no cancel path
+  [PASS] late true usage revises by delta
+revise_calls: down/up/repeat/over-limit/concurrent settles
+  [PASS] downward revision
+  [PASS] upward repeat revision
+  [PASS] second repeat revision
+  [PASS] over-reserved revision refused
+  [PASS] 10 concurrent lifecycle settles all clean
+P1-4: unregistered fault signature -> conservative channel
+  [PASS] unregistered signature classified unknown, conservative only — view=unknown/unknown/NONE cands=['conservative:v']
+  [PASS] never Z / never switch for unregistered signature
+E7 minimal closed loop (mock executor)
+  [PASS] E7-0 decision: split_retry chosen with pi=KEEP
+  [PASS] E7-1 executor receives chosen+split_of consistently
+  [PASS] E7-3 split children model honors pi authorization
+  [PASS] E7-5 feedback drives next decision (children ready, no faults)
+  [PASS] E7-2/4 no re-execution of the removed faulted node
+  [PASS] E7-1 executor receives chosen+split_of consistently
+  [PASS] E7 closed loop completes: report becomes ready and executes
+  [PASS] E7-1 executor receives chosen+split_of consistently
+  [PASS] terminal: DAG fully done, no further assignments
+E7-pi: switch execution chain (authorized + unauthorized)
+  [PASS] E7-pi-1 PI_2-prime fires: retry_switch chosen
+  [PASS] E7-pi-2 executor switches v to the decided target model
+  [PASS] E7-pi-3 post-switch feedback: no further switch offered
+  [PASS] E7-pi-4 scenario: decision is split with pi=KEEP
+  [PASS] E7-pi-5 unauthorized switch request REFUSED (children keep model)
+F' D4: multi-fault node-selection difference registered
+  [PASS] D4: F targets the splittable node (frontier-based)
+  [PASS] D4: F-prime serves the LOWEST node_id fault (retry on a_fail) — F-prime chosen=retry_same assignments=(('a_fail', 'glm53'),)
+  [PASS] D4: the two policies differ on multi-fault states (documented) — F=split_retry:z_chk vs F-prime=retry_same
+
+35/35 checks passed

@@ -1,0 +1,901 @@
+{
+  "status": "DESIGN_REVISED_EXECUTION_HOLD",
+  "paid_authorized": false,
+  "old_budget_transferred": false,
+  "supersedes_design_only": "/root/research_outputs/RONBAY_MODEL_POOL_AUDIT_20261102/AUDIT_AND_PLAN.json",
+  "base_plan_sha256": "92f6a4f70bf5d7ed0a9825c3044eb33cecebec88629b54f45a69cdc8c99b3417",
+  "models": [
+    {
+      "key": "glm53",
+      "label": "GLM-5.3",
+      "provider": "Zhipu BigModel",
+      "model_id": "glm-5.3",
+      "model_id_basis": "official model guide",
+      "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "endpoint_status": "PUBLIC_DOCUMENTED_ACCOUNT_UNVERIFIED",
+      "version": "ALIAS_SNAPSHOT_UNCONFIRMED",
+      "price": {
+        "currency": "CNY",
+        "input_per_M": null,
+        "output_per_M": null,
+        "cache_per_M": null,
+        "status": "ACCOUNT_TARIFF_PENDING"
+      },
+      "thinking": "mandatory enabled; proposed reasoning_effort=low, not verified equivalent to other models",
+      "source": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.3",
+      "role": "FORMAL_BASE_CANDIDATE",
+      "automatic_substitution": false,
+      "account_permission": "UNVERIFIED_FOR_NEW_BATCH",
+      "current_ronbay_measurements": 0
+    },
+    {
+      "key": "glm53flash",
+      "label": "GLM-5.3-Flash",
+      "provider": "Zhipu BigModel",
+      "model_id": "GLM-5.3-Flash",
+      "model_id_basis": "historical request exact spelling; not assumed same as glm-5.3",
+      "endpoint": "https://open.bigmodel.cn/api/anthropic/v1/messages",
+      "endpoint_status": "HISTORICAL_ONLY_ACCOUNT_UNVERIFIED",
+      "version": "SNAPSHOT_UNCONFIRMED",
+      "price": {
+        "currency": "CNY",
+        "input_per_M": null,
+        "output_per_M": null,
+        "cache_per_M": null,
+        "status": "ACCOUNT_TARIFF_PENDING"
+      },
+      "thinking": "PENDING_PROVIDER_CONFIRMATION",
+      "source": "/root/research_outputs/static_pi/stage_b/runs/run3/E_S1.json",
+      "role": "FORMAL_BASE_CANDIDATE",
+      "automatic_substitution": false,
+      "account_permission": "UNVERIFIED_FOR_NEW_BATCH",
+      "current_ronbay_measurements": 0
+    },
+    {
+      "key": "deepseek",
+      "label": "DeepSeek-Flash",
+      "provider": "DeepSeek",
+      "model_id": "deepseek-flash",
+      "model_id_basis": "prior response plus official pricing",
+      "endpoint": "https://api.deepseek.com/chat/completions",
+      "endpoint_status": "HISTORICAL_SUCCESS_NEW_BATCH_NOT_PROBED",
+      "version": "VARIABLE_ALIAS; official published V4.1-Flash-1017 not response-certified",
+      "price": {
+        "currency": "USD",
+        "input_per_M": 0.3,
+        "output_per_M": 1.2,
+        "cache_per_M": 0.006,
+        "status": "PUBLIC_PEAK_PRICE_RECHECK_BEFORE_EXECUTION"
+      },
+      "thinking": "explicit per-model setting pending common billed-output semantics",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "role": "FORMAL_BASE_CANDIDATE",
+      "automatic_substitution": false,
+      "account_permission": "UNVERIFIED_FOR_NEW_BATCH",
+      "current_ronbay_measurements": 0
+    },
+    {
+      "key": "qwen",
+      "label": "Qwen-Plus",
+      "provider": "Alibaba DashScope Beijing",
+      "model_id": "qwen-plus-2025-12-01",
+      "model_id_basis": "prior request and returned model",
+      "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "endpoint_status": "HISTORICAL_SUCCESS_NEW_BATCH_NOT_PROBED",
+      "version": "qwen-plus-2025-12-01",
+      "price": {
+        "currency": "CNY",
+        "input_per_M": 0.8,
+        "output_per_M": 2,
+        "cache_per_M": 0.16,
+        "status": "PUBLIC_NONTHINKING_INPUT_LE_128K_ONLY"
+      },
+      "thinking": "nonthinking price scenario, revise price if enabled",
+      "source": "https://help.aliyun.com/zh/model-studio/qwen-plus",
+      "role": "FORMAL_BASE_CANDIDATE",
+      "automatic_substitution": false,
+      "account_permission": "UNVERIFIED_FOR_NEW_BATCH",
+      "current_ronbay_measurements": 0
+    }
+  ],
+  "nodes": [
+    "INQUIRY",
+    "REPLY",
+    "OBLIGATIONS",
+    "CROSSCHECK",
+    "FINAL"
+  ],
+  "deterministic_node": "CAPACITY",
+  "measurement_matrix_cells": 20,
+  "measurement_repeats": 3,
+  "measurement_calls_max": 60,
+  "paired_calls_max": 24,
+  "paired_common_prefix_max": 6,
+  "paired_continuations_max": 18,
+  "paired_repeats": 3,
+  "independent_events": 1,
+  "max_calls": 84,
+  "per_model_calibration_max": 15,
+  "per_model_total_max": 39,
+  "per_model_maxima_not_simultaneous": true,
+  "schedule": [
+    {
+      "node": "INQUIRY",
+      "repeat": 1,
+      "position": 1,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 1,
+      "position": 2,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 1,
+      "position": 3,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 1,
+      "position": 4,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 2,
+      "position": 1,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 2,
+      "position": 2,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 2,
+      "position": 3,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 2,
+      "position": 4,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 3,
+      "position": 1,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 3,
+      "position": 2,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 3,
+      "position": 3,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "INQUIRY",
+      "repeat": 3,
+      "position": 4,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 1,
+      "position": 1,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 1,
+      "position": 2,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 1,
+      "position": 3,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 1,
+      "position": 4,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 2,
+      "position": 1,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 2,
+      "position": 2,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 2,
+      "position": 3,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 2,
+      "position": 4,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 3,
+      "position": 1,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 3,
+      "position": 2,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 3,
+      "position": 3,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "REPLY",
+      "repeat": 3,
+      "position": 4,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 1,
+      "position": 1,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 1,
+      "position": 2,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 1,
+      "position": 3,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 1,
+      "position": 4,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 2,
+      "position": 1,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 2,
+      "position": 2,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 2,
+      "position": 3,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 2,
+      "position": 4,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 3,
+      "position": 1,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 3,
+      "position": 2,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 3,
+      "position": 3,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "OBLIGATIONS",
+      "repeat": 3,
+      "position": 4,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 1,
+      "position": 1,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 1,
+      "position": 2,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 1,
+      "position": 3,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 1,
+      "position": 4,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 2,
+      "position": 1,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 2,
+      "position": 2,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 2,
+      "position": 3,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 2,
+      "position": 4,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 3,
+      "position": 1,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 3,
+      "position": 2,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 3,
+      "position": 3,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "CROSSCHECK",
+      "repeat": 3,
+      "position": 4,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 1,
+      "position": 1,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 1,
+      "position": 2,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 1,
+      "position": 3,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 1,
+      "position": 4,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 2,
+      "position": 1,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 2,
+      "position": 2,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 2,
+      "position": 3,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 2,
+      "position": 4,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 3,
+      "position": 1,
+      "model_key": "deepseek",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 3,
+      "position": 2,
+      "model_key": "qwen",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 3,
+      "position": 3,
+      "model_key": "glm53",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "node": "FINAL",
+      "repeat": 3,
+      "position": 4,
+      "model_key": "glm53flash",
+      "fixture_hash": null,
+      "contract_hash": null,
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "new_task_performance": {
+    "INQUIRY": {
+      "glm53": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "glm53flash": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "deepseek": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "qwen": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      }
+    },
+    "REPLY": {
+      "glm53": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "glm53flash": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "deepseek": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "qwen": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      }
+    },
+    "OBLIGATIONS": {
+      "glm53": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "glm53flash": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "deepseek": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "qwen": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      }
+    },
+    "CROSSCHECK": {
+      "glm53": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "glm53flash": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "deepseek": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "qwen": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      }
+    },
+    "FINAL": {
+      "glm53": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "glm53flash": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "deepseek": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      },
+      "qwen": {
+        "Q": null,
+        "E": null,
+        "K": null,
+        "C": null,
+        "L": null,
+        "reliability": null,
+        "n": 0
+      }
+    }
+  },
+  "input_reserve_per_call": 65536,
+  "output_total_token_planning_cap_per_call": 3072,
+  "output_cap_includes_thinking_required": true,
+  "output_parameter_semantics_verified": false,
+  "input_total_reserve": 5505024,
+  "output_total_planned_cap": 258048,
+  "token_hard_bound_certified": false,
+  "CNY_per_USD_planning_factor": 8,
+  "cost_formula": "15*(g_full+g_flash+d+q)+24*max(g_full,g_flash,d,q)",
+  "g_formula": "(65536*input_price_per_M+3072*all_billed_output_price_per_M)/1000000 plus any mandatory charges",
+  "d_public_peak_uncached_CNY": 0.1867776,
+  "q_nonthinking_CNY": 0.0585728,
+  "total_cash_estimate": null,
+  "cash_stop_threshold": null,
+  "actual_cash_upper_bound": null,
+  "fifth_model_calls": 99,
+  "fifth_model_input_reserve": 6488064,
+  "fifth_model_output_planned_cap": 304128,
+  "fifth_model_automatic_addition": false,
+  "execution_rules": {
+    "same_source_fixture_schema_scoring_resources": true,
+    "fixture_status": "PENDING_NOT_INVENTED",
+    "semantic_review_status": "SILVER_NOT_GOLD_FULL_Q_PENDING",
+    "full_parent_payload_preflight": "Must include all parent records and source registry, no silent truncation",
+    "model_switch_gate": "No Dynamic-pi until actual matched profiles and decision rules frozen; UNKNOWN not admissible quality guarantee",
+    "no_default_fallback": true,
+    "no_retries": true,
+    "no_forced_switch": true,
+    "system_error_stops_batch": true,
+    "normal_model_failure_retained": true,
+    "failed_parents_block_descendants": true,
+    "resources": {
+      "K_m": 1,
+      "global_slots": 1,
+      "request_timeout_s": 180,
+      "pair_arm_deadline_s": 240,
+      "batch_wall_s": 18000
+    }
+  },
+  "analysis": {
+    "quality": "separate factual correctness, condition semantics, semantic support, K, coverage and UNKNOWN; same frozen scorer, no K-as-Q",
+    "reliability": "separate HTTP success, K success, dependent execution completion, semantic quality stability; n=3 not 0.95 guarantee",
+    "selection": "Only after measurement; no model ranking predetermined. Profile input fixtures separate from paired real parent outputs, same event remains exposed development data. Do not select using paired outputs.",
+    "statistics": "20 cells x 3 repeats are not 60 independent tasks; descriptive model-node tradeoffs and pair differences; no population/generalization claim",
+    "dynamic": "same frozen healthy prefix, Z and R fixed, natural feedback only; no switch remains observed result; priors incomplete => do not run dynamic benefit test"
+  }
+}

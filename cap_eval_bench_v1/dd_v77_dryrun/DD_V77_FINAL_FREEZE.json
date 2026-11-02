@@ -1,0 +1,583 @@
+{
+ "version": "DD_V77_FINAL_FREEZE",
+ "created": "2026-10-30",
+ "shas": {
+  "runner_v3": "aeeb75744dd984de67bf10dd819a451bf8416ae7c53ab4918fae85cc55998de5",
+  "dag_spec_d_r1": "3fa0850abfd5d0d4b7c3f89d55cc485660751f35065b95586be3e3090bec2e12",
+  "evidence_store": "04c3fa86348c41bae3054934a7f3f1d7c2429baded61d46248509cfcd012fbb5",
+  "evidence_doc_texts": {
+   "zeda_csrc_penalty_2023_29": "d9c5406140c3dc6a8786f443ec537ee2be0181a3e4f2826707c5f233c4ff3d63",
+   "zeda_csrc_penalty_2024_kangda": "3ae18f9169678a9969f4045fe9324b8e0a4b3c8ca7b2ac5241f23682da2b3f4a"
+  },
+  "scorer_source_digest": "ab5d49b67b3637809e1682c2f04ceb20cfe7f43b96c8ed243fa78382e2437347",
+  "scorer_location": "score_q + entity_stats inside runner_v3 (label-blind, verified by dry-run T4)",
+  "dryrun_harness": "93fceded9705edf67c858ea76ad560033ff6b70980616e853da790557cd0abdd"
+ },
+ "binding_verification": {
+  "n1_prompt_sha": "c4a212b335e9db05ccf659b35018b1fb7d7c7e9afe46e1baee3a303d758af7c5",
+  "n2_prompt_sha": "25e7d2ec8dfbc7e7f4089be54fb9aac17ddd507dcade2568d729077306e98691",
+  "prompts_differ": true,
+  "n1_bound_to_2023_29_only": true,
+  "n2_bound_to_kangda_only": true,
+  "evidence_slice_cap_per_doc": 6000,
+  "evidence_slice_cap_identical_to_v2": true,
+  "slice_inventory": {
+   "zeda_csrc_penalty_2023_29": {
+    "chars": 6000,
+    "full_dates": 6,
+    "amounts": 26,
+    "entity_zeda": true,
+    "entity_kangda": false
+   },
+   "zeda_csrc_penalty_2024_kangda": {
+    "chars": 6000,
+    "full_dates": 0,
+    "amounts": 0,
+    "entity_zeda": true,
+    "entity_kangda": true,
+    "note": "kangda text is newline-fragmented; no contiguous date/amount strings — n2 gate uses entity + penalty-vocab + doc-id probes"
+   }
+  }
+ },
+ "budget": {
+  "measured_chars_per_input_token": 0.6295,
+  "analytic_worst_case": {
+   "per_request": [
+    {
+     "req_id": "R01",
+     "node": "n1",
+     "model": "glm53",
+     "purpose": "V77-shared:n1",
+     "action": null,
+     "prompt_chars_worst": 6119,
+     "in_tok_est": 3852,
+     "out_cap": 1536,
+     "req_total": 5388
+    },
+    {
+     "req_id": "R02",
+     "node": "n2",
+     "model": "glm53",
+     "purpose": "V77-shared:n2",
+     "action": null,
+     "prompt_chars_worst": 6123,
+     "in_tok_est": 3855,
+     "out_cap": 1536,
+     "req_total": 5391
+    },
+    {
+     "req_id": "R03",
+     "node": "n3",
+     "model": "glm53",
+     "purpose": "V77-shared:n3",
+     "action": null,
+     "prompt_chars_worst": 3806.3999999999996,
+     "in_tok_est": 2396,
+     "out_cap": 768,
+     "req_total": 3164
+    },
+    {
+     "req_id": "R04",
+     "node": "n4",
+     "model": "glm53",
+     "purpose": "V77-shared:n4",
+     "action": null,
+     "prompt_chars_worst": 3806.3999999999996,
+     "in_tok_est": 2396,
+     "out_cap": 768,
+     "req_total": 3164
+    },
+    {
+     "req_id": "R05",
+     "node": "n5",
+     "model": "glm53flash",
+     "purpose": "V77-fault:n5:rep1",
+     "action": "fault_inject",
+     "prompt_chars_worst": 7492.799999999999,
+     "in_tok_est": 4717,
+     "out_cap": 768,
+     "req_total": 5485
+    },
+    {
+     "req_id": "R06",
+     "node": "n5",
+     "model": "glm53flash",
+     "purpose": "V77-fault:n5:rep2",
+     "action": "fault_inject",
+     "prompt_chars_worst": 7492.799999999999,
+     "in_tok_est": 4717,
+     "out_cap": 768,
+     "req_total": 5485
+    },
+    {
+     "req_id": "R07",
+     "node": "n8",
+     "model": "glm53flash",
+     "purpose": "V77-shared:n8",
+     "action": null,
+     "prompt_chars_worst": 1963.1999999999998,
+     "in_tok_est": 1236,
+     "out_cap": 768,
+     "req_total": 2004
+    },
+    {
+     "req_id": "R08",
+     "node": "n6",
+     "model": "glm53flash",
+     "purpose": "V77-A_alt:n6:rep1",
+     "action": "A_alt",
+     "prompt_chars_worst": 7492.799999999999,
+     "in_tok_est": 4717,
+     "out_cap": 768,
+     "req_total": 5485
+    },
+    {
+     "req_id": "R09",
+     "node": "n7",
+     "model": "glm53flash",
+     "purpose": "V77-A_alt:n7:rep1",
+     "action": "A_alt",
+     "prompt_chars_worst": 3806.3999999999996,
+     "in_tok_est": 2396,
+     "out_cap": 768,
+     "req_total": 3164
+    },
+    {
+     "req_id": "R10",
+     "node": "n9",
+     "model": "glm53flash",
+     "purpose": "V77-A_alt:n9:rep1",
+     "action": "A_alt",
+     "prompt_chars_worst": 5649.599999999999,
+     "in_tok_est": 3557,
+     "out_cap": 768,
+     "req_total": 4325
+    },
+    {
+     "req_id": "R11",
+     "node": "n10",
+     "model": "glm53flash",
+     "purpose": "V77-A_alt:n10:rep1",
+     "action": "A_alt",
+     "prompt_chars_worst": 1963.1999999999998,
+     "in_tok_est": 1236,
+     "out_cap": 768,
+     "req_total": 2004
+    },
+    {
+     "req_id": "R12",
+     "node": "n6",
+     "model": "glm53flash",
+     "purpose": "V77-A_alt:n6:rep2",
+     "action": "A_alt",
+     "prompt_chars_worst": 7492.799999999999,
+     "in_tok_est": 4717,
+     "out_cap": 768,
+     "req_total": 5485
+    },
+    {
+     "req_id": "R13",
+     "node": "n7",
+     "model": "glm53flash",
+     "purpose": "V77-A_alt:n7:rep2",
+     "action": "A_alt",
+     "prompt_chars_worst": 3806.3999999999996,
+     "in_tok_est": 2396,
+     "out_cap": 768,
+     "req_total": 3164
+    },
+    {
+     "req_id": "R14",
+     "node": "n9",
+     "model": "glm53flash",
+     "purpose": "V77-A_alt:n9:rep2",
+     "action": "A_alt",
+     "prompt_chars_worst": 5649.599999999999,
+     "in_tok_est": 3557,
+     "out_cap": 768,
+     "req_total": 4325
+    },
+    {
+     "req_id": "R15",
+     "node": "n10",
+     "model": "glm53flash",
+     "purpose": "V77-A_alt:n10:rep2",
+     "action": "A_alt",
+     "prompt_chars_worst": 1963.1999999999998,
+     "in_tok_est": 1236,
+     "out_cap": 768,
+     "req_total": 2004
+    },
+    {
+     "req_id": "R16",
+     "node": "n6",
+     "model": "glm53",
+     "purpose": "V77-B_ib:n6:rep1",
+     "action": "B_ib",
+     "prompt_chars_worst": 7492.799999999999,
+     "in_tok_est": 4717,
+     "out_cap": 768,
+     "req_total": 5485
+    },
+    {
+     "req_id": "R17",
+     "node": "n7",
+     "model": "glm53",
+     "purpose": "V77-B_ib:n7:rep1",
+     "action": "B_ib",
+     "prompt_chars_worst": 3806.3999999999996,
+     "in_tok_est": 2396,
+     "out_cap": 768,
+     "req_total": 3164
+    },
+    {
+     "req_id": "R18",
+     "node": "n9",
+     "model": "glm53flash",
+     "purpose": "V77-B_ib:n9:rep1",
+     "action": "B_ib",
+     "prompt_chars_worst": 5649.599999999999,
+     "in_tok_est": 3557,
+     "out_cap": 768,
+     "req_total": 4325
+    },
+    {
+     "req_id": "R19",
+     "node": "n10",
+     "model": "glm53flash",
+     "purpose": "V77-B_ib:n10:rep1",
+     "action": "B_ib",
+     "prompt_chars_worst": 1963.1999999999998,
+     "in_tok_est": 1236,
+     "out_cap": 768,
+     "req_total": 2004
+    },
+    {
+     "req_id": "R20",
+     "node": "n6",
+     "model": "glm53",
+     "purpose": "V77-B_ib:n6:rep2",
+     "action": "B_ib",
+     "prompt_chars_worst": 7492.799999999999,
+     "in_tok_est": 4717,
+     "out_cap": 768,
+     "req_total": 5485
+    },
+    {
+     "req_id": "R21",
+     "node": "n7",
+     "model": "glm53",
+     "purpose": "V77-B_ib:n7:rep2",
+     "action": "B_ib",
+     "prompt_chars_worst": 3806.3999999999996,
+     "in_tok_est": 2396,
+     "out_cap": 768,
+     "req_total": 3164
+    },
+    {
+     "req_id": "R22",
+     "node": "n9",
+     "model": "glm53flash",
+     "purpose": "V77-B_ib:n9:rep2",
+     "action": "B_ib",
+     "prompt_chars_worst": 5649.599999999999,
+     "in_tok_est": 3557,
+     "out_cap": 768,
+     "req_total": 4325
+    },
+    {
+     "req_id": "R23",
+     "node": "n10",
+     "model": "glm53flash",
+     "purpose": "V77-B_ib:n10:rep2",
+     "action": "B_ib",
+     "prompt_chars_worst": 1963.1999999999998,
+     "in_tok_est": 1236,
+     "out_cap": 768,
+     "req_total": 2004
+    }
+   ],
+   "total_tokens": 89990,
+   "derivation": "every extraction output assumed at its 1536-token cap (~3686 chars), every other node at its 768-token cap; parent contexts capped at 3800 chars/parent (>= any possible extraction output, so no fact truncation)"
+  },
+  "envelope": 100000,
+  "envelope_margin": "11% above analytic worst case",
+  "delta_from_v2_114k": "v2 114K was a coarse pre-run ceiling built on the F4-violating both-docs extraction prompts (12,157 chars / ~7,653 in-tokens EACH for n1 and n2) plus a flat worst-case for 21 downstream requests. v3 removes only the contract-ILLEGAL input (each extraction node now reads exactly its declared doc, per-doc 6000-char slice cap unchanged from v2) and replaces the flat allowance with the per-request worst-case table above. No node sees less evidence than v2 intended; n5/n6 actually see MORE (both parents preserved, up to 2x3800 chars vs v2 single [:3000]).",
+  "hard_guard": "pilot_common.Meter conservative reservation: each call rejected unless actual + calibrated_input*1.10 + 1.5*out_cap <= 100,000; call count hard-capped at 23; cash cap ¥0 (subscription)"
+ },
+ "freshness": {
+  "new_batch_dir": "out.mkdir(parents=True, exist_ok=False) + new LEDGER.jsonl",
+  "no_old_batch_paths": false,
+  "v77_purposes_disjoint_from_v76": true,
+  "v2_cache_reusable": "0/23 — n1/n2 prompts changed by F4 (and were truncated, F3); n3+ prompts changed by the contract fix",
+  "old_result_reuse": "forbidden and mechanically absent: runner reads only the frozen spec, the evidence store and auth_gate"
+ },
+ "manifest": {
+  "total_requests": 23,
+  "glm53_calls": 8,
+  "glm53flash_calls": 15,
+  "cash_cap_cny": 0,
+  "requests": [
+   {
+    "req_id": "R01",
+    "node": "n1",
+    "model": "glm53",
+    "purpose": "V77-shared:n1",
+    "action": null,
+    "prompt_chars_worst": 6119,
+    "in_tok_est": 3852,
+    "out_cap": 1536,
+    "req_total": 5388
+   },
+   {
+    "req_id": "R02",
+    "node": "n2",
+    "model": "glm53",
+    "purpose": "V77-shared:n2",
+    "action": null,
+    "prompt_chars_worst": 6123,
+    "in_tok_est": 3855,
+    "out_cap": 1536,
+    "req_total": 5391
+   },
+   {
+    "req_id": "R03",
+    "node": "n3",
+    "model": "glm53",
+    "purpose": "V77-shared:n3",
+    "action": null,
+    "prompt_chars_worst": 3806.3999999999996,
+    "in_tok_est": 2396,
+    "out_cap": 768,
+    "req_total": 3164
+   },
+   {
+    "req_id": "R04",
+    "node": "n4",
+    "model": "glm53",
+    "purpose": "V77-shared:n4",
+    "action": null,
+    "prompt_chars_worst": 3806.3999999999996,
+    "in_tok_est": 2396,
+    "out_cap": 768,
+    "req_total": 3164
+   },
+   {
+    "req_id": "R05",
+    "node": "n5",
+    "model": "glm53flash",
+    "purpose": "V77-fault:n5:rep1",
+    "action": "fault_inject",
+    "prompt_chars_worst": 7492.799999999999,
+    "in_tok_est": 4717,
+    "out_cap": 768,
+    "req_total": 5485
+   },
+   {
+    "req_id": "R06",
+    "node": "n5",
+    "model": "glm53flash",
+    "purpose": "V77-fault:n5:rep2",
+    "action": "fault_inject",
+    "prompt_chars_worst": 7492.799999999999,
+    "in_tok_est": 4717,
+    "out_cap": 768,
+    "req_total": 5485
+   },
+   {
+    "req_id": "R07",
+    "node": "n8",
+    "model": "glm53flash",
+    "purpose": "V77-shared:n8",
+    "action": null,
+    "prompt_chars_worst": 1963.1999999999998,
+    "in_tok_est": 1236,
+    "out_cap": 768,
+    "req_total": 2004
+   },
+   {
+    "req_id": "R08",
+    "node": "n6",
+    "model": "glm53flash",
+    "purpose": "V77-A_alt:n6:rep1",
+    "action": "A_alt",
+    "prompt_chars_worst": 7492.799999999999,
+    "in_tok_est": 4717,
+    "out_cap": 768,
+    "req_total": 5485
+   },
+   {
+    "req_id": "R09",
+    "node": "n7",
+    "model": "glm53flash",
+    "purpose": "V77-A_alt:n7:rep1",
+    "action": "A_alt",
+    "prompt_chars_worst": 3806.3999999999996,
+    "in_tok_est": 2396,
+    "out_cap": 768,
+    "req_total": 3164
+   },
+   {
+    "req_id": "R10",
+    "node": "n9",
+    "model": "glm53flash",
+    "purpose": "V77-A_alt:n9:rep1",
+    "action": "A_alt",
+    "prompt_chars_worst": 5649.599999999999,
+    "in_tok_est": 3557,
+    "out_cap": 768,
+    "req_total": 4325
+   },
+   {
+    "req_id": "R11",
+    "node": "n10",
+    "model": "glm53flash",
+    "purpose": "V77-A_alt:n10:rep1",
+    "action": "A_alt",
+    "prompt_chars_worst": 1963.1999999999998,
+    "in_tok_est": 1236,
+    "out_cap": 768,
+    "req_total": 2004
+   },
+   {
+    "req_id": "R12",
+    "node": "n6",
+    "model": "glm53flash",
+    "purpose": "V77-A_alt:n6:rep2",
+    "action": "A_alt",
+    "prompt_chars_worst": 7492.799999999999,
+    "in_tok_est": 4717,
+    "out_cap": 768,
+    "req_total": 5485
+   },
+   {
+    "req_id": "R13",
+    "node": "n7",
+    "model": "glm53flash",
+    "purpose": "V77-A_alt:n7:rep2",
+    "action": "A_alt",
+    "prompt_chars_worst": 3806.3999999999996,
+    "in_tok_est": 2396,
+    "out_cap": 768,
+    "req_total": 3164
+   },
+   {
+    "req_id": "R14",
+    "node": "n9",
+    "model": "glm53flash",
+    "purpose": "V77-A_alt:n9:rep2",
+    "action": "A_alt",
+    "prompt_chars_worst": 5649.599999999999,
+    "in_tok_est": 3557,
+    "out_cap": 768,
+    "req_total": 4325
+   },
+   {
+    "req_id": "R15",
+    "node": "n10",
+    "model": "glm53flash",
+    "purpose": "V77-A_alt:n10:rep2",
+    "action": "A_alt",
+    "prompt_chars_worst": 1963.1999999999998,
+    "in_tok_est": 1236,
+    "out_cap": 768,
+    "req_total": 2004
+   },
+   {
+    "req_id": "R16",
+    "node": "n6",
+    "model": "glm53",
+    "purpose": "V77-B_ib:n6:rep1",
+    "action": "B_ib",
+    "prompt_chars_worst": 7492.799999999999,
+    "in_tok_est": 4717,
+    "out_cap": 768,
+    "req_total": 5485
+   },
+   {
+    "req_id": "R17",
+    "node": "n7",
+    "model": "glm53",
+    "purpose": "V77-B_ib:n7:rep1",
+    "action": "B_ib",
+    "prompt_chars_worst": 3806.3999999999996,
+    "in_tok_est": 2396,
+    "out_cap": 768,
+    "req_total": 3164
+   },
+   {
+    "req_id": "R18",
+    "node": "n9",
+    "model": "glm53flash",
+    "purpose": "V77-B_ib:n9:rep1",
+    "action": "B_ib",
+    "prompt_chars_worst": 5649.599999999999,
+    "in_tok_est": 3557,
+    "out_cap": 768,
+    "req_total": 4325
+   },
+   {
+    "req_id": "R19",
+    "node": "n10",
+    "model": "glm53flash",
+    "purpose": "V77-B_ib:n10:rep1",
+    "action": "B_ib",
+    "prompt_chars_worst": 1963.1999999999998,
+    "in_tok_est": 1236,
+    "out_cap": 768,
+    "req_total": 2004
+   },
+   {
+    "req_id": "R20",
+    "node": "n6",
+    "model": "glm53",
+    "purpose": "V77-B_ib:n6:rep2",
+    "action": "B_ib",
+    "prompt_chars_worst": 7492.799999999999,
+    "in_tok_est": 4717,
+    "out_cap": 768,
+    "req_total": 5485
+   },
+   {
+    "req_id": "R21",
+    "node": "n7",
+    "model": "glm53",
+    "purpose": "V77-B_ib:n7:rep2",
+    "action": "B_ib",
+    "prompt_chars_worst": 3806.3999999999996,
+    "in_tok_est": 2396,
+    "out_cap": 768,
+    "req_total": 3164
+   },
+   {
+    "req_id": "R22",
+    "node": "n9",
+    "model": "glm53flash",
+    "purpose": "V77-B_ib:n9:rep2",
+    "action": "B_ib",
+    "prompt_chars_worst": 5649.599999999999,
+    "in_tok_est": 3557,
+    "out_cap": 768,
+    "req_total": 4325
+   },
+   {
+    "req_id": "R23",
+    "node": "n10",
+    "model": "glm53flash",
+    "purpose": "V77-B_ib:n10:rep2",
+    "action": "B_ib",
+    "prompt_chars_worst": 1963.1999999999998,
+    "in_tok_est": 1236,
+    "out_cap": 768,
+    "req_total": 2004
+   }
+  ]
+ },
+ "stage_gates": {
+  "stage1": "n1,n2 only -> extraction_gate: stop_reason in (stop,end_turn), complete JSON dict, declared doc_id echoed, required entities, input-derived fact coverage (n1: >=2 slice dates, >=3 slice amounts; n2: entity+penalty vocab, doc has no contiguous dates/amounts), penalty vocabulary present",
+  "stage2": "remaining 21 -> node_gate per node: clean stop, parseable JSON dict, contract OUT_FIELD present and non-empty, >200 chars; n5 EXEMPT (injected fault)",
+  "fail_stop": "any gate FAIL -> INCOMPLETE.json + NODE_STATES.json written, sys.exit(2), NO further calls, NO retries",
+  "verified_by": "dry-run T7 (8/8): PASS path, real v2 truncated FAIL path, wrong-source FAIL path, downstream accept/reject, n5 exempt",
+  "evidence_preservation": "Meter LEDGER.jsonl (request+usage+latency+stop) + LEDGER_responses.jsonl (full texts) + NODE_STATES.json (gate verdicts) + STAGE1_GATE.json + RESULTS_RAW.json + FINAL_RESULTS.json; scoring label-blind (dry-run T4)"
+ }
+}

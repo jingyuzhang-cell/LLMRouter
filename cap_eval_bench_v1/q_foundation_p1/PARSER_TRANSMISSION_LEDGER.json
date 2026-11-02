@@ -1,0 +1,87 @@
+{
+ "updated": "2026-10-31T15:43:50+0800",
+ "file": "integration/conservative_parser.py",
+ "file_sha256": "b740c377263226c35b2b2f8a34af952cde3dc377ca99b1ad5350d3edad710f8a",
+ "plan": {
+  "bytes": 32799,
+  "b64_chars": 43732,
+  "delivery_lines": 684,
+  "last_line_chars": 20,
+  "batches": "11x60 + final 24 = 12",
+  "source_lines_wc_l": 774
+ },
+ "batches": {
+  "B1_L001-L060": {
+   "emissions": 1,
+   "line_repairs": {
+    "L056": "+1 char 'd' insertion, 1x resend, 155750d99a",
+    "L055": "space inserted (storage-side copy divergence post-signoff), 1x resend, 1a6eb4fb66"
+   },
+   "operator_ruling": "PASS 60/60 — signed after L056 repair; RE-SIGNED 60/60 after L055 re-verification (appended record)",
+   "status": "CLOSED"
+  },
+  "B2_L061-L120": {
+   "emissions": 2,
+   "emission_1": "RETRACTED — not server-generated, impossible repeated hash prefixes; NEVER to be assembled",
+   "emission_2": "server-generated, artifact cross-check 60/60, 60 distinct hashes",
+   "line_repairs": {
+    "L061": "-1 char truncation, 1x resend, e265e7f893"
+   },
+   "operator_ruling": "PASS 60/60 — formally signed off in operator message after L061 repair",
+   "status": "CLOSED"
+  },
+  "B3_L121-L180": {
+   "emissions": 1,
+   "server_generated": true,
+   "self_checks": "len 60/60, artifact 60/60; L136==L158 duplicate prefix LEGITIMATE (byte-identical payloads)",
+   "line_repairs": {
+    "L151": "transcription substitution, 1x resend, 46248ee61e — operator line-PASS",
+    "L172": "transcription Y2xhaW1m->Y2xhaW1z, 1x resend, 2f0fb69613 — operator line-PASS"
+   },
+   "operator_ruling": "58/60 initial + 2/2 repair PASS; batch sign-off PENDING operator confirmation of 58-line record",
+   "status": "PENDING_SIGNOFF"
+  },
+  "B4-B12": {
+   "status": "NOT_STARTED"
+  }
+ },
+ "cumulative": {
+  "lines_delivered": 180,
+  "lines_line_level_pass": 180,
+  "batches_closed": 12,
+  "protocol": "read-only, per-line sha256[:10], single-line repair, no assembly of retracted emissions"
+ },
+ "re_delivery_campaign": {
+  "completed": "2026-10-31T21:07:12+0800",
+  "batches_R1_R12": "60x11 + 24 = 684 lines, all line-level PASS by operator",
+  "repairs": [
+   "R1: L055",
+   "R3: L164/L173",
+   "R5: L296",
+   "R6: L353/L354/L357",
+   "R7: L415",
+   "R8: L428(seg)/L446(seg)",
+   "R10: L580(misjudge corrected)",
+   "R11: L660"
+  ],
+  "whole_file_closure": "pending operator-side assembly of 684 verified payloads; server reference values declared"
+ },
+ "segment_campaign": {
+  "completed": "2026-11-01T11:35:22+0800",
+  "segments_closed": 12,
+  "assembly": "operator concatenates 12 verified segment payloads -> 43732 chars -> decode",
+  "full_b64_sha256": "bad04d9bfa8722da26f55fbd838f44fffc7a8f49dac2a030aac063140ee61bda",
+  "whole_file_status": "pending operator-side six-item acceptance"
+ },
+ "file_delivery_campaign": {
+  "completed": "2026-11-01T13:15:04+0800",
+  "batches_P01_P13": "13/13 closed, operator byte-level SHA256 verified each",
+  "merge_instruction": "operator concatenates 13 verified batch byte-sequences in order = 32,799 bytes",
+  "whole_file": {
+   "closed": "2026-11-01T13:44:56+0800",
+   "operator_verdict": "6/6 PASS — lines=774, bytes=32799, sha256=b740c377...d710f8a, wc-l=774, py_compile=PASS, reverse-b64=43732/bad04d9b...61bda",
+   "phase": "CLOSED — Parser source transmission complete"
+  }
+ },
+ "phase_status": "SOURCE TRANSMISSION CLOSED; next: DD-V5.1 Joint experiment design"
+}

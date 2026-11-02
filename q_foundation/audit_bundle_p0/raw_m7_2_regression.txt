@@ -1,0 +1,46 @@
+#1 determinism (same state -> same decision)
+  [PASS] repeat call identical
+  [PASS] state ordering irrelevant
+#2 no illegal DAG / cycles
+  [PASS] split keeps DAG acyclic
+  [PASS] split children single-lineage
+  [PASS] downstream consumes both children
+  [PASS] unhealthy upstream blocks split — upstream parent not done (fault-inheritance risk)
+#3 done nodes never re-executed
+  [PASS] assignments exclude done
+  [PASS] retry targets are failed nodes only
+#4 budget / deadline / slot legality
+  [PASS] tight budget rejects costly candidates with reasons
+  [PASS] engine still returns a feasible decision
+  [PASS] tight deadline rejects latency-infeasible candidates
+  [PASS] oversubscribed slots flagged
+#5 unknown faults never force-classified
+  [PASS] unknown@1: conservative only (no Z / no SWITCH) — candidates=['conservative:e1_chk']
+  [PASS] unknown@2: stops with audit trail
+  [PASS] unknown view labelled unknown
+#6 INCOMPLETE never auto-scored Q=0
+  [PASS] non-COMPLETE-able candidates carry dq=None
+  [PASS] no numeric zero-quality anywhere
+#7 single-dim and interaction effects recorded separately
+  [PASS] three interaction pairs present
+  [PASS] Z*R joint-modeled (not additive)
+  [PASS] no-evidence interactions are explicit zeros
+  [PASS] calibration audit trail attached
+#8 Pareto-incomparable -> frontier, no forced unique optimum
+  [PASS] priced-recovery regime detected
+  [PASS] frontier returned with >1 member — ('exit_node:e1_chk', 'ladder_exit:e1_chk', 'split_retry:e1_chk')
+  [PASS] forced_unique=False when incomparable
+  [PASS] chosen labelled as stated-preference recommendation
+#9 predictions vs recorded outcomes (corpus self-consistency)
+  [PASS] split prediction 1.0 vs observed 6/6 — |err|=0.000
+  [PASS] persistent-retry prediction 0.03 vs observed 1/17 — |err|=0.029
+  [PASS] transient-retry prediction 0.76 vs observed 22/29 — |err|=0.001
+  [PASS] every prediction carries n and evidence level
+    NOTE: calibration was DERIVED from this corpus — this is a self-consistency audit, not prospective validation.
+#10 stability / generality edges (M7-2E)
+  [PASS] empty DAG handled
+  [PASS] all-done state handled (no faults)
+  [PASS] zero budget -> feasible-or-stop decision, no crash
+  [PASS] multi-fault state handled deterministically
+
+33/33 checks passed

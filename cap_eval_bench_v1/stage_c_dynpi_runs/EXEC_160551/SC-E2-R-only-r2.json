@@ -1,0 +1,356 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e2_amount"
+   ],
+   "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.28164 -> R=['e2_amount'] (runner-up U=0.27064 R=['e2_amount', 'e2_chk'])"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e2_idx",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1257,
+    "out": 563
+   }
+  },
+  {
+   "node": "e2_ext_fraud",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1596,
+    "out": 211
+   }
+  },
+  {
+   "node": "e2_ext_pen",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1593,
+    "out": 203
+   }
+  },
+  {
+   "node": "e2_amount",
+   "model": "glm53flash",
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 948,
+    "out": 467
+   }
+  },
+  {
+   "node": "e2_entity_map",
+   "model": "glm53flash",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 938,
+    "out": 373
+   }
+  },
+  {
+   "node": "e2_amount",
+   "model": "glm53flash",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 948,
+    "out": 320
+   }
+  },
+  {
+   "node": "e2_chk",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1173,
+    "out": 336
+   }
+  },
+  {
+   "node": "e2_rpt",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2508,
+    "out": 1560
+   }
+  }
+ ],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "2018-12-28 康美药业收到证监会《调查通知书》（粤证调查通字180199号），被立案调查",
+   "kind": "日期事件",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f2",
+   "content": "2018-12-29 披露立案调查公告（临2018-116）",
+   "kind": "日期事件",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f3",
+   "content": "2019-08-16 公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+   "kind": "日期事件",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f4",
+   "content": "2019-08-17 披露收到事先告知书公告",
+   "kind": "日期事件",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f5",
+   "content": "2020年公司收到证监会《行政处罚决定书》及《市场禁入决定书》（公告临2020-029）",
+   "kind": "日期事件",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f6",
+   "content": "2018-12-28 康美药业收到证监会《调查通知书》（粤证调查通字180199号），被立案调查",
+   "kind": "日期事件",
+   "status": "confirmed",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f7",
+   "content": "2018-12-29 披露立案调查公告（临2018-116）",
+   "kind": "日期事件",
+   "status": "confirmed",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f8",
+   "content": "2019-08-16 公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+   "kind": "日期事件",
+   "status": "confirmed",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f10",
+   "content": "处罚决定书（km_penalty_2020，前600字）未包含虚增货币资金的具体金额数字，金额口径单侧证据缺失，无法核验",
+   "kind": "核验结论",
+   "status": "insufficient_evidence",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f11",
+   "content": "告知书（km_notice_2019，前600字）未包含虚增货币资金的具体金额数字，金额口径单侧证据缺失，无法核验",
+   "kind": "核验结论",
+   "status": "insufficient_evidence",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f9",
+   "content": "处罚金额抽取失败：所提供文档片段（km_penalty_2020、km_notice_2019 各前600字）中未出现公司罚款60万、个人罚款金额或市场禁入具体措施内容，处罚金额信息需文档后续部分支持",
+   "kind": "处罚金额",
+   "status": "insufficient_evidence",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f12",
+   "content": "许冬瑾（时任副董事长、副总经理）被列为其他直接责任人员并处以罚款",
+   "kind": "处罚主体映射",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f13",
+   "content": "邱锡伟（时任董事会秘书/财务总监）作为直接责任人员被处罚",
+   "kind": "处罚主体映射",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f14",
+   "content": "f9已指出：所提供文档片段未包含个人罚款金额、公司罚款60万等具体处罚数字，主体处罚明细需文档后续部分支持",
+   "kind": "处罚金额",
+   "status": "insufficient_evidence",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f15",
+   "content": "换股比例一致（2018-12-28 康美药业收到证监会《调查通知书》（粤证调查通字180199号），被立案调查@km_penalty_2020 vs 2018-12-28 康美药业收到证监会《调查通知书》（粤证调查通字180199号），被立案调查@km_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f16",
+   "content": "换股比例一致（2018-12-29 披露立案调查公告（临2018-116）@km_penalty_2020 vs 2018-12-29 披露立案调查公告（临2018-116）@km_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f17",
+   "content": "换股比例一致（2019-08-16 公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）@km_penalty_2020 vs 2019-08-16 公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）@km_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f18",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f19",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  }
+ ],
+ "terminal_stats": {
+  "n": 19,
+  "confirmed": 13,
+  "unconfirmed": 0,
+  "insufficient_evidence": 6,
+  "upstream_missing": 0
+ },
+ "report": {
+  "new_facts": [],
+  "comparisons": [
+   {
+    "item": "立案调查日期与文号",
+    "operand_a": "2018-12-28 康美药业收到证监会《调查通知书》（粤证调查通字180199号），被立案调查",
+    "span_a": "2018年12月28日…《调查通知书》（编号：粤证调查通字180199号）",
+    "doc_a": "km_penalty_2020",
+    "operand_b": "2018-12-28 康美药业收到证监会《调查通知书》（粤证调查通字180199号），被立案调查",
+    "span_b": "2018年12月28日…《调查通知书》（编号：粤证调查通字180199号）",
+    "doc_b": "km_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "披露立案调查公告（临2018-116）日期",
+    "operand_a": "2018-12-29 披露立案调查公告（临2018-116）",
+    "span_a": "于2018年12月29日披露的…《康美药业关于收到中国证券监督管理委员会立案调查通知书的公告》（公告编号：临2018-116）",
+    "doc_a": "km_penalty_2020",
+    "operand_b": "2018-12-29 披露立案调查公告（临2018-116）",
+    "span_b": "2018年12月29日在《上海证券报》…披露的…（公告编号：临2018-116）",
+    "doc_b": "km_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "收到事先告知书（处罚字〔2019〕119号）日期",
+    "operand_a": "2019-08-16 公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+    "span_a": "2019年8月16日，公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+    "doc_a": "km_penalty_2020",
+    "operand_b": "2019-08-16 公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+    "span_b": "2019年8月16日，公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+    "doc_b": "km_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "虚增货币资金具体金额",
+    "operand_a": "处罚决定书摘录中未包含虚增货币资金具体金额",
+    "span_a": "（文档前600字未见相关数字）",
+    "doc_a": "km_penalty_2020",
+    "operand_b": "告知书摘录中未包含虚增货币资金具体金额",
+    "span_b": "（文档前600字未见相关数字）",
+    "doc_b": "km_notice_2019",
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   },
+   {
+    "item": "处罚金额（公司罚款、个人罚款、市场禁入措施）",
+    "operand_a": "处罚决定书摘录中未包含具体罚款金额",
+    "span_a": "（文档前600字未见相关数字）",
+    "doc_a": "km_penalty_2020",
+    "operand_b": "告知书摘录中未包含具体罚款金额",
+    "span_b": "（文档前600字未见相关数字）",
+    "doc_b": "km_notice_2019",
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   }
+  ],
+  "report": "综合调查报告：\n\n一、时间线（均已confirmed）\n1. 2018-12-28：康美药业收到证监会《调查通知书》（粤证调查通字180199号），因涉嫌信息披露违法违规被立案调查（f1/f6）。\n2. 2018-12-29：公司披露《关于收到中国证券监督管理委员会立案调查通知书的公告》（公告编号：临2018-116）（f2/f7）。\n3. 2019-08-16：公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）（f3/f8）。\n4. 2019-08-17：公司披露收到事先告知书的公告（公告编号：临2019-065）（f4）。\n5. 2020年（公告临2020-029载明2020-05-14）：公司收到证监会《行政处罚决定书》（[2020]24号）及《市场禁入决定书》（[2020]6号）（f5）。\n\n二、跨文档核验结论\n1. 立案调查日期与文号：km_penalty_2020与km_notice_2019两侧均载明2018-12-28收到粤证调查通字180199号《调查通知书》，两文档一致。\n2. 立案调查公告披露日期：两文档均载明2018-12-29披露临2018-116公告，一致。\n3. 事先告知书日期与文号：两文档均载明2019-08-16收到处罚字〔2019〕119号告知书，一致。\n\n三、处罚主体（confirmed）\n1. 许冬瑾：时任副董事长、副总经理，被列为其他直接责任人员并处以罚款（f12）。\n2. 邱锡伟：时任董事、副总经理、董事会秘书，作为直接责任人员被处罚（f13）。\n\n四、待查事项（证据不足）\n1. 虚增货币资金具体金额：两文档所提供片段均未包含该数字，无法核验（f10/f11）。\n2. 处罚金额明细（公司罚款、个人罚款金额）及市场禁入具体措施：所提供片段均未包含，需文档后续部分支持（f9/f14）。\n\n注：告知书摘录中载明2016-2018年各期虚增营业收入、多计利息收入及虚增营业利润的数字（如2017年报虚增营业收入100.32亿元等），但该部分事实未在合并事实清单中以双侧confirmed口径登记，仅作背景提示，不作为已核验结论引用。",
+  "unknown_marks": [
+   "虚增货币资金具体金额（两侧文档摘录均缺失，f10/f11，insufficient_evidence）",
+   "公司罚款60万、个人罚款金额等具体处罚数字（f9/f14，insufficient_evidence）",
+   "市场禁入具体措施内容（f9，insufficient_evidence）"
+  ],
+  "dropped": [],
+  "status_changes": []
+ },
+ "makespan": 78.21,
+ "tokens": 14994
+}

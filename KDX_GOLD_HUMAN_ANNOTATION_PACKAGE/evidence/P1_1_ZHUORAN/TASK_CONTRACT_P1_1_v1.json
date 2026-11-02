@@ -1,0 +1,538 @@
+{
+ "task_id": "P1_1_ZHUORAN_STATE_EVOLUTION_v1",
+ "reference_type": "MVR_v1",
+ "question": "上海卓然的监管事件在三个时间节点(2026-09-10/10-09/10-13)上，各项信息的：（1）事实状态（持续/变化/首次披露/未披露）？（2）监管程序阶段（调查/事先告知/正式处罚）？（3）证据性质（涉嫌/告知书载明/最终认定/无法判断）？注意：首次披露≠首次发生；告知书内容≠最终认定；'以处罚决定为准'≠已作出。",
+ "cutoff": "2026-10-31",
+ "min_gold_coverage": 1.0,
+ "dimension_weights": {
+  "fact_correctness": 1,
+  "evidence_support": 1,
+  "necessary_completeness": 1,
+  "contradiction_handling": 1,
+  "unverifiable_refusal": 1,
+  "question_relevance": 1
+ },
+ "state_evolution_facts": [
+  {
+   "fact_id": "VF_S1",
+   "item": "虚增利润/营收事实",
+   "stage": "S1",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "INVESTIGATION",
+   "dim3_evidentiary": "ALLEGATION",
+   "evidence": [
+    {
+     "stage": "S1",
+     "page": 1,
+     "quote": "现已初步查明，公司披露的部分年度财务信息涉嫌虚假",
+     "raw_sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "page_sha256": "28b2b008cf89b524a973ead4b9199e73186bc1559ec71a9dedc2bdaaa2cc7bc0"
+    }
+   ],
+   "note": "080：ALLEGATION",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "虚增利润/营收事实",
+   "predicate": "CONTINUING/INVESTIGATION/ALLEGATION@S1"
+  },
+  {
+   "fact_id": "VF_S2",
+   "item": "虚增利润/营收事实",
+   "stage": "S2",
+   "dim1_factual": "CHANGED",
+   "dim2_procedural": "PRIOR_NOTICE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S2",
+     "page": 2,
+     "quote": "该事先告知书查明的涉嫌违法事实",
+     "raw_sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "page_sha256": "5c8465a23000afb60f26e24a04ed92fbc10d7f3da401bf0afefddec04c73f2cf"
+    }
+   ],
+   "note": "097：程序推进+具体化≠FINAL_FINDING",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "虚增利润/营收事实",
+   "predicate": "CHANGED/PRIOR_NOTICE/NOTICE_CONTENT@S2"
+  },
+  {
+   "fact_id": "VF_S3",
+   "item": "虚增利润/营收事实",
+   "stage": "S3",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "PRIOR_NOTICE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S3",
+     "page": 2,
+     "quote": "根据收到的《告知书》认定情况",
+     "raw_sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "page_sha256": "20f14229d73760d1ff5ffa17432daf007c73bfe32ba2119b649eaee47d3b514f"
+    }
+   ],
+   "note": "098：CONTINUING_REFERENCE",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "虚增利润/营收事实",
+   "predicate": "CONTINUING/PRIOR_NOTICE/NOTICE_CONTENT@S3"
+  },
+  {
+   "fact_id": "INV_S1",
+   "item": "证监会调查状态",
+   "stage": "S1",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "INVESTIGATION",
+   "dim3_evidentiary": "ALLEGATION",
+   "evidence": [
+    {
+     "stage": "S1",
+     "page": 1,
+     "quote": "中国证监会的调查尚\n在进行中",
+     "raw_sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "page_sha256": "28b2b008cf89b524a973ead4b9199e73186bc1559ec71a9dedc2bdaaa2cc7bc0"
+    }
+   ],
+   "note": "080：调查进行中",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "证监会调查状态",
+   "predicate": "CONTINUING/INVESTIGATION/ALLEGATION@S1"
+  },
+  {
+   "fact_id": "INV_S2",
+   "item": "证监会调查状态",
+   "stage": "S2",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "PRIOR_NOTICE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S2",
+     "page": 2,
+     "quote": "公司尚未收到就上述立案调查事项的正式处罚决定",
+     "raw_sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "page_sha256": "5c8465a23000afb60f26e24a04ed92fbc10d7f3da401bf0afefddec04c73f2cf"
+    }
+   ],
+   "note": "097：已收告知书但未收处罚决定",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "证监会调查状态",
+   "predicate": "CONTINUING/PRIOR_NOTICE/NOTICE_CONTENT@S2"
+  },
+  {
+   "fact_id": "INV_S3",
+   "item": "证监会调查状态",
+   "stage": "S3",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "PRIOR_NOTICE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S3",
+     "page": 3,
+     "quote": "公司尚未收到就上述立案调查事项的正式处罚决定",
+     "raw_sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "page_sha256": "e6473760028250408bef80eb73863c26b9ecaa986453387ae9f84990fa93c47d"
+    }
+   ],
+   "note": "098：与097一致",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "证监会调查状态",
+   "predicate": "CONTINUING/PRIOR_NOTICE/NOTICE_CONTENT@S3"
+  },
+  {
+   "fact_id": "MR_S1",
+   "item": "重大违法强制退市风险",
+   "stage": "S1",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "INVESTIGATION",
+   "dim3_evidentiary": "ALLEGATION",
+   "evidence": [
+    {
+     "stage": "S1",
+     "page": 1,
+     "quote": "可能触及重大违法强制退市情形",
+     "raw_sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "page_sha256": "28b2b008cf89b524a973ead4b9199e73186bc1559ec71a9dedc2bdaaa2cc7bc0"
+    }
+   ],
+   "note": "080：'可能触及'→条件性",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "重大违法强制退市风险",
+   "predicate": "CONTINUING/INVESTIGATION/ALLEGATION@S1"
+  },
+  {
+   "fact_id": "MR_S2",
+   "item": "重大违法强制退市风险",
+   "stage": "S2",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "PRIOR_NOTICE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S2",
+     "page": 1,
+     "quote": "可能触及《上海证券交\n易所科创板股票上市规则》第12.2.1条",
+     "raw_sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "page_sha256": "9f1ee6f37c7e1efd2b1a0eba5558aebc8a2b281219fa27ab1b41bda2d4d819fc"
+    }
+   ],
+   "note": "097：基于告知书评估",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "重大违法强制退市风险",
+   "predicate": "CONTINUING/PRIOR_NOTICE/NOTICE_CONTENT@S2"
+  },
+  {
+   "fact_id": "MR_S3",
+   "item": "重大违法强制退市风险",
+   "stage": "S3",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "PRIOR_NOTICE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S3",
+     "page": 1,
+     "quote": "可能被实施重大违法强制退\n市",
+     "raw_sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "page_sha256": "c8e2b9cbbda6aa5893b380141df25ceef02f1e54fe7552a7955fe04313af13c4"
+    }
+   ],
+   "note": "098：延续",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "重大违法强制退市风险",
+   "predicate": "CONTINUING/PRIOR_NOTICE/NOTICE_CONTENT@S3"
+  },
+  {
+   "fact_id": "TR_S1",
+   "item": "交易类退市风险(价格/市值)",
+   "stage": "S1",
+   "dim1_factual": "NOT_DISCLOSED",
+   "dim2_procedural": "NOT_APPLICABLE",
+   "dim3_evidentiary": "UNKNOWN",
+   "evidence": [
+    {
+     "stage": "S1",
+     "page": 1,
+     "quote": "退市风险提示",
+     "raw_sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "page_sha256": "28b2b008cf89b524a973ead4b9199e73186bc1559ec71a9dedc2bdaaa2cc7bc0"
+    }
+   ],
+   "note": "080：未提及≠不存在",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "交易类退市风险(价格/市值)",
+   "predicate": "NOT_DISCLOSED/NOT_APPLICABLE/UNKNOWN@S1"
+  },
+  {
+   "fact_id": "TR_S2",
+   "item": "交易类退市风险(价格/市值)",
+   "stage": "S2",
+   "dim1_factual": "NOT_DISCLOSED",
+   "dim2_procedural": "NOT_APPLICABLE",
+   "dim3_evidentiary": "UNKNOWN",
+   "evidence": [
+    {
+     "stage": "S2",
+     "page": 1,
+     "quote": "行政处罚\n事先告知书",
+     "raw_sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "page_sha256": "9f1ee6f37c7e1efd2b1a0eba5558aebc8a2b281219fa27ab1b41bda2d4d819fc"
+    }
+   ],
+   "note": "097：仍未提及",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "交易类退市风险(价格/市值)",
+   "predicate": "NOT_DISCLOSED/NOT_APPLICABLE/UNKNOWN@S2"
+  },
+  {
+   "fact_id": "TR_S3",
+   "item": "交易类退市风险(价格/市值)",
+   "stage": "S3",
+   "dim1_factual": "NEWLY_DISCLOSED",
+   "dim2_procedural": "NOT_APPLICABLE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S3",
+     "page": 1,
+     "quote": "首次低于1元",
+     "raw_sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "page_sha256": "c8e2b9cbbda6aa5893b380141df25ceef02f1e54fe7552a7955fe04313af13c4"
+    }
+   ],
+   "note": "098：NEWLY_DISCLOSED≠NEWLY_OCCURRED",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "交易类退市风险(价格/市值)",
+   "predicate": "NEWLY_DISCLOSED/NOT_APPLICABLE/NOTICE_CONTENT@S3"
+  },
+  {
+   "fact_id": "PN_S1",
+   "item": "行政处罚事先告知书",
+   "stage": "S1",
+   "dim1_factual": "NOT_DISCLOSED",
+   "dim2_procedural": "NOT_APPLICABLE",
+   "dim3_evidentiary": "UNKNOWN",
+   "evidence": [
+    {
+     "stage": "S1",
+     "page": 1,
+     "quote": "调查",
+     "raw_sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+     "page_sha256": "28b2b008cf89b524a973ead4b9199e73186bc1559ec71a9dedc2bdaaa2cc7bc0"
+    }
+   ],
+   "note": "080：未提及",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "行政处罚事先告知书",
+   "predicate": "NOT_DISCLOSED/NOT_APPLICABLE/UNKNOWN@S1"
+  },
+  {
+   "fact_id": "PN_S2",
+   "item": "行政处罚事先告知书",
+   "stage": "S2",
+   "dim1_factual": "NEWLY_DISCLOSED",
+   "dim2_procedural": "PRIOR_NOTICE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S2",
+     "page": 2,
+     "quote": "2026 年9 月11 日，公司收到上海证监局下发的《行政处罚事先告知书》",
+     "raw_sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "page_sha256": "5c8465a23000afb60f26e24a04ed92fbc10d7f3da401bf0afefddec04c73f2cf"
+    }
+   ],
+   "note": "097：NEWLY_DISCLOSED",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "行政处罚事先告知书",
+   "predicate": "NEWLY_DISCLOSED/PRIOR_NOTICE/NOTICE_CONTENT@S2"
+  },
+  {
+   "fact_id": "PN_S3",
+   "item": "行政处罚事先告知书",
+   "stage": "S3",
+   "dim1_factual": "CONTINUING",
+   "dim2_procedural": "PRIOR_NOTICE",
+   "dim3_evidentiary": "NOTICE_CONTENT",
+   "evidence": [
+    {
+     "stage": "S3",
+     "page": 3,
+     "quote": "收到上海证监局下发的《行政处罚事先告知书》",
+     "raw_sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "page_sha256": "e6473760028250408bef80eb73863c26b9ecaa986453387ae9f84990fa93c47d"
+    }
+   ],
+   "note": "098：CONTINUING",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "行政处罚事先告知书",
+   "predicate": "CONTINUING/PRIOR_NOTICE/NOTICE_CONTENT@S3"
+  },
+  {
+   "fact_id": "FD_S2",
+   "item": "正式处罚决定状态",
+   "stage": "S2",
+   "dim1_factual": "NOT_YET_RECEIVED",
+   "dim2_procedural": "INVESTIGATION",
+   "dim3_evidentiary": "UNKNOWN",
+   "evidence": [
+    {
+     "stage": "S2",
+     "page": 1,
+     "quote": "最终结果以上海证监局出具的正式处罚决定为准",
+     "raw_sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+     "page_sha256": "9f1ee6f37c7e1efd2b1a0eba5558aebc8a2b281219fa27ab1b41bda2d4d819fc"
+    }
+   ],
+   "note": "097：'以处罚决定为准'≠已作出→UNKNOWN",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "正式处罚决定状态",
+   "predicate": "NOT_YET_RECEIVED/INVESTIGATION/UNKNOWN@S2"
+  },
+  {
+   "fact_id": "FD_S3",
+   "item": "正式处罚决定状态",
+   "stage": "S3",
+   "dim1_factual": "NOT_YET_RECEIVED",
+   "dim2_procedural": "INVESTIGATION",
+   "dim3_evidentiary": "UNKNOWN",
+   "evidence": [
+    {
+     "stage": "S3",
+     "page": 4,
+     "quote": "最终结果以中国证监会",
+     "raw_sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+     "page_sha256": "4c7b869ff3a8ea06dbb13e5f7dfdba8c0e32c40bb3fe996e915723c3d20a3755"
+    }
+   ],
+   "note": "098：同097→UNKNOWN",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "正式处罚决定状态",
+   "predicate": "NOT_YET_RECEIVED/INVESTIGATION/UNKNOWN@S3"
+  }
+ ],
+ "unknown_items": [
+  {
+   "item_id": "U_FD",
+   "description": "正式处罚决定是否已实际作出",
+   "expected_status": "UNKNOWN"
+  },
+  {
+   "item_id": "U_TR_PRE",
+   "description": "交易类退市风险在098前是否已存在",
+   "expected_status": "UNKNOWN"
+  },
+  {
+   "item_id": "U_INV_DATE",
+   "description": "证监会调查启动日期",
+   "expected_status": "UNKNOWN"
+  }
+ ],
+ "source_pages": {
+  "S1": {
+   "raw_sha256": "bba3b15c87c2d14e566dcb40dac5b030c027e15992e9b6b29d72e6a2000abf84",
+   "pages": {
+    "1": {
+     "text": "证券代码：688121\n证券简称：*ST 卓然\n公告编号：2026-080\n上海卓然工程技术股份有限公司\n关于公司立案调查进展暨退市风险提示公告\n本公司董事会及全体董事保证本公告内容不存在任何虚假记载、误导性陈述\n或者重大遗漏，并对其内容的真实性、准确性和完整性依法承担法律责任。\n上海卓然工程技术股份有限公司（以下简称“公司”）于2025 年12 月20\n日在上海证券交易所网站（www.sse.com.cn）披露了《关于公司及实际控制人收\n到立案告知书的公告》（公告编号：2025-053），因涉嫌信息披露违法违规等事\n项，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，\n中国证监会决定对公司及实际控制人张锦红立案。\n根据监管调查情况，现已初步查明，公司披露的部分年度财务信息涉嫌虚假\n记载，可能触及重大违法强制退市情形。若后续经中国证监会行政处罚认定的事\n实，触及《上海证券交易所科创板股票上市规则》规定的重大违法强制退市情形，\n公司股票将被实施重大违法强制退市。截至本公告披露日，中国证监会的调查尚\n在进行中。针对本次立案事项，公司高度重视，将积极配合中国证监会调查，并\n严格按照相关法律法规要求履行信息披露义务，说明立案调查进展情况。\n公司指定信息披露媒体为上海证券交易所网站（www.sse.com.cn）和《中国\n证券报》《上海证券报》《证券时报》《证券日报》，公司相关信息均以在上述\n指定媒体披露的公告为准。\n敬请广大投资者理性投资，注意投资风险。\n特此公告。\n上海卓然工程技术股份有限公司董事会\n2026 年9 月10 日\n",
+     "page_sha256": "28b2b008cf89b524a973ead4b9199e73186bc1559ec71a9dedc2bdaaa2cc7bc0"
+    }
+   }
+  },
+  "S2": {
+   "raw_sha256": "22f7703f0fb01ca23890f208e1ee9dd0eb5639ed701cdb7128fc131556643ad4",
+   "pages": {
+    "1": {
+     "text": "证券代码：688121\n证券简称：*ST 卓然\n公告编号：2026-097\n上海卓然工程技术股份有限公司\n关于公司股票可能被实施重大违法强制退市的\n第四次风险提示公告\n本公司董事会及全体董事保证本公告内容不存在任何虚假记载、误导性\n陈述或者重大遗漏，并对其内容的真实性、准确性和完整性承担法律责任。\n重要内容提示：\n\n上海卓然工程技术股份有限公司（以下简称“公司”）于2025年12月20日\n在上海证券交易所网站（www.sse.com.cn）披露了《关于公司及实际控制人收到\n立案告知书的公告》（公告编号：2025-053），因涉嫌信息披露违法违规等事项，\n根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中\n国证监会决定对公司及实际控制人张锦红立案。2026年9月11日，公司收到中国\n证券监督管理委员会上海监管局（以下简称“上海证监局”）下发的《行政处罚\n事先告知书》（沪证监处罚字[2026]11号）。\n根据收到的《行政处罚事先告知书》认定情况，公司可能触及《上海证券交\n易所科创板股票上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定\n的重大违法行为，可能被实施重大违法强制退市。公司股票已被上海证券交易所\n叠加实施退市风险警示。如根据中国证监会行政处罚决定书结论，公司触及重大\n违法强制退市情形的，公司股票将被终止上市。\n\n公司将全力配合上海证监局的相关工作，维护公司和广大投资者权益，\n最终结果以上海证监局出具的正式处罚决定为准。敬请广大投资者关注后续公告\n并注意投资风险。\n一、公司股票可能被实施重大违法强制退市风险暨立案调查进展情况\n公司于2025 年12 月19 日收到中国证券监督管理委员会（以下简称“中国\n证监会”）出具的《立案告知书》（证监立案字0032025031 号、证监立案字\n0032025032 号），因涉嫌信息披露违法违规等事项，根据《中华人民共和国证券\n法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司及实际\n",
+     "page_sha256": "9f1ee6f37c7e1efd2b1a0eba5558aebc8a2b281219fa27ab1b41bda2d4d819fc"
+    },
+    "2": {
+     "text": "控制人张锦红立案。\n2026 年9 月11 日，公司收到上海证监局下发的《行政处罚事先告知书》\n（沪证监处罚字[2026]11 号），根据该事先告知书查明的涉嫌违法事实：公司\n2021 年至2022 年年度报告虚增利润总额，2023 年至2024 年年度报告虚增营\n业收入、利润总额，存在虚假记载。公司2021 年年度报告虚增利润总额\n4,383.65 万元，占当期报告记载利润总额的12.96%;2022 年年度报告虚增利\n润总额1,372.33 万元，占当期报告记载利润总额的6.73%;2023 年年度报告虚\n增营业收入36,256.34 万元，占当期报告记载营业收入的12.25%，虚增利润总\n额22,429.51 万元，占当期报告记载利润总额的148.33%;2024 年年度报告虚\n增营业收入23,142.16 万元，占当期报告记载营业收入的8.15%，虚增利润总\n额556.72 万元，占当期报告记载利润总额的5.13%。\n此外，公司招股说明书和2021 年年度报告未披露关联交易，存在重大遗\n漏；未及时披露非经营性资金占用相关关联交易，2022 年至2024 年年度报告\n亦未披露上述事项，存在重大遗漏；未及时披露实际控制人、时任董事长张锦\n红两次被监察机关留置事项，2024 年年度报告亦未披露该重大事项，存在重大\n遗漏。具体内容详见公司于同日在上海证券交易所网站（www.sse.com.cn）披\n露的《关于收到中国证券监督管理委员会上海监管局<行政处罚事先告知书>的\n公告》（公告编号：2026-081）。\n根据收到的《行政处罚事先告知书》认定情况，公司可能触及《上海证券\n交易所科创板股票上市规则》第12.2.1 条第（一）项、第12.2.2 条第（六）\n项规定的重大违法行为，可能被实施重大违法强制退市。公司股票已被上海证\n券交易所叠加实施退市风险警示。如根据中国证监会行政处罚决定书结论，公\n司触及重大违法强制退市情形的，公司股票将被终止上市。\n截至本公告披露日，公司尚未收到就上述立案调查事项的正式处罚决定，公\n司将全力配合上海证监局的相关工作,并严格按照相关要求履行信息披露义务。\n如根据正式的行政处罚决定书结论，公司触及重大违法强制退市情形，公司股票\n将被终止上市。\n二、历次风险提示公告的披露情况\n根据《上海证券交易所科创板股票上市规则》第12.2.4 条的规定：“上市\n",
+     "page_sha256": "5c8465a23000afb60f26e24a04ed92fbc10d7f3da401bf0afefddec04c73f2cf"
+    },
+    "3": {
+     "text": "公司可能触及本节规定的重大违法强制退市情形的，应当于知悉相关行政机关行\n政处罚事先告知书或者人民法院作出司法裁判当日向本所报告，及时披露有关内\n容，就其股票可能被实施重大违法强制退市进行风险提示”\n公司于2026 年9 月12 日在上海证券交易所网站(www.sse.com.cn)及指定\n媒体上披露了《关于公司股票可能被实施重大违法强制退市的第一次风险提示公\n告》(公告编号：2026-083)。\n公司于2026 年9 月18 日披露了《关于公司股票可能被实施重大违法强制退\n市的第二次风险提示公告》（公告编号：2026-087）。\n公司于2026 年9 月25 日披露了《关于公司股票可能被实施重大违法强制退\n市的第三次风险提示公告》（公告编号：2026-092）。\n三、其他说明及风险提示\n1、公司将全力配合上海证监局的相关工作，最终结果以上海证监局出具的\n正式处罚决定为准。敬请广大投资者关注后续公告并注意投资风险。\n2、根据收到的《行政处罚事先告知书》认定情况，公司可能触及《上海证\n券交易所科创板股票上市规则》第12.2.1 条第（一）项、第12.2.2 条第（六）\n项规定的重大违法行为，可能被实施重大违法强制退市。公司股票已被上海证券\n交易所叠加实施退市风险警示。如根据中国证监会行政处罚决定书结论，公司触\n及重大违法强制退市情形的，公司股票将被终止上市。\n公司指定信息披露媒体为《中国证券报》《证券日报》以及上海证券交易所\n网站（www.sse.com.cn），有关公司的信息均以上述指定媒体刊登的信息为准。\n敬请投资者注意投资风险。\n特此公告。\n上海卓然工程技术股份有限公司董事会\n2026 年10 月9 日\n",
+     "page_sha256": "715ca046ea929bbdae86602a99d69b3fb6c77948506b49ef511d94a1fc446cf8"
+    }
+   }
+  },
+  "S3": {
+   "raw_sha256": "90928fc0c0a63e944c8fb9121f4096ab9172e840fcc976da5d4db1ec56992ffe",
+   "pages": {
+    "1": {
+     "text": "证券代码：688121\n证券简称：*ST 卓然\n公告编号：2026-098\n上海卓然工程技术股份有限公司\n关于公司股票可能存在因股价低于1 元而终止上市的\n首次风险提示暨公司股票可能被实施重大违法强制退\n市的风险提示公告\n本公司董事会及全体董事保证本公告内容不存在任何虚假记载、误导性\n陈述或者重大遗漏，并对其内容的真实性、准确性和完整性承担法律责任。\n\n重要内容提示：\n1. 公司股票可能被实施交易类强制退市\n公司股票2026年10月12日收盘价格0.96元/股，总市值2.24亿元，股票日收\n盘价格首次低于1元。根据《上海证券交易所科创板股票上市规则》\n（以下简称“股\n票上市规则”）第12.3.1条第一款第二项的规定，上市公司出现连续20个交易日\n每日股票收盘价格均低于1元情形的，上海证券交易所将决定终止公司股票上市，\n属于交易类强制退市。\n另公司股票2026年9月23日收盘价格1.16元/股，总市值2.71亿元，公司于\n2026年9月23日首次出现股票收盘市值低于3亿元，公司股票已连续8个交易日每\n日股票收盘市值低于3亿元。根据《上海证券交易所科创板股票上市规则》（以下\n简称“股票上市规则”）第12.3.1条第一款第三项的规定，上市公司出现连续20\n个交易日每日股票收盘市值均低于3亿元情形的，上海证券交易所将决定终止公\n司股票上市，属于交易类强制退市。\n根据《股票上市规则》第12.7.1条第一款的规定，交易类强制退市公司股票\n不进入退市整理期交易，敬请广大投资者注意投资风险。\n根据《股票上市规则》第12.1.10条的规定，上市公司出现两项以上终止上\n市情形的，其股票按照先触及先适用的原则实施终止上市。\n2. 公司股票可能被实施重大违法强制退市\n上海卓然工程技术股份有限公司（以下简称“公司”）因涉嫌信息披露违法\n",
+     "page_sha256": "c8e2b9cbbda6aa5893b380141df25ceef02f1e54fe7552a7955fe04313af13c4"
+    },
+    "2": {
+     "text": "违规等事项，被中国证券监督管理委员会（以下简称“中国证监会”）立案调查。\n公司于2026年9月11日收到中国证监会上海监管局（以下简称“上海证监局”）下\n发的《行政处罚事先告知书》\n（沪证监处罚字[2026]11号）\n（以下简称“《告知书》”），\n根据收到的《告知书》认定情况，公司可能触及《股票上市规则》第12.2.1条第\n（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强\n制退市。公司股票已被上海证券交易所叠加实施退市风险警示。如根据中国证监\n会行政处罚决定书结论，公司触及重大违法强制退市情形的，公司股票将被终止\n上市。\n一、可能被终止上市的情形\n（一）公司股票可能触及交易类强制退市的情况\n公司股票2026 年10 月12 日收盘价格0.96 元/股，总市值2.24 亿元，股\n票日收盘价格首次低于1 元。根据《股票上市规则》第12.3.1 条第一款第二\n项的规定，上市公司出现连续20 个交易日每日股票收盘价格均低于1 元情形\n的，上海证券交易所将决定终止公司股票上市，属于交易类强制退市。\n另公司股票2026年9月23日收盘价格1.16元/股，总市值2.71亿元，公司于\n2026年9月23日首次出现股票收盘市值低于3亿元，公司股票已连续8个交易日每\n日股票收盘市值低于3亿元。根据《股票上市规则》第12.3.1条第一款第三项的\n规定，上市公司出现连续20个交易日每日股票收盘市值均低于3亿元情形的，上\n海证券交易所将决定终止公司股票上市，属于交易类强制退市。\n根据《股票上市规则》第12.7.1 条第一款规定，交易类强制退市公司股\n票不进入退市整理期交易，敬请广大投资者注意投资风险。\n根据《股票上市规则》第12.1.10条的规定，上市公司出现两项以上终止上\n市情形的，其股票按照先触及先适用的原则实施终止上市。\n（二）公司股票可能被实施重大违法强制退市的情况\n公司于2025 年12 月19 日收到中国证券监督管理委员会出具的《立案告知\n书》（证监立案字0032025031 号、证监立案字0032025032 号），因涉嫌信息披\n露违法违规等事项，根据《中华人民共和国证券法》《中华人民共和国行政处罚\n法》等法律法规，中国证监会决定对公司及实际控制人张锦红立案。\n",
+     "page_sha256": "20f14229d73760d1ff5ffa17432daf007c73bfe32ba2119b649eaee47d3b514f"
+    },
+    "3": {
+     "text": "2026年9月11日，公司收到上海证监局下发的《行政处罚事先告知书》（沪证\n监处罚字[2026]11号），根据收到的《告知书》认定情况，公司可能触及《股票\n上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，\n可能被实施重大违法强制退市。公司股票已被上海证券交易所叠加实施退市风险\n警示。如根据中国证监会行政处罚决定书结论，公司触及重大违法强制退市情形\n的，公司股票将被终止上市。\n截至本公告披露日，公司尚未收到就上述立案调查事项的正式处罚决定，公\n司将全力配合中国证监会的相关工作，并严格按照相关要求履行信息披露义务。\n二、终止上市风险提示公告的披露情况\n（一）公司股票可能触及交易类强制退市的终止上市风险提示公告的披露\n情况\n根据《股票上市规则》第12.3.1 条第一款第二项、第三项的规定，上市公\n司出现连续20 个交易日每日股票收盘价均低于1 元情形的，或者连续20 个交易\n日每日股票收盘市值均低于3 亿元情形的，上海证券交易所将决定终止其股票上\n市，属于交易类强制退市。根据《股票上市规则》第12.3.4 条第一款的规定，\n上市公司出现第12.3.1 条情形之一的，其股票自情形出现的次一交易日起停牌，\n并披露公司股票可能被终止上市的风险提示公告。根据《股票上市规则》第\n12.7.1 条第一款的规定，交易类强制退市公司股票不进入退市整理期交易。\n公司于2026 年9 月24 日披露了《关于公司股票可能存在因市值低于3 亿元\n而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提\n示公告》（公告编号：2026-091）。\n（二）公司股票可能被实施重大违法强制退市的终止上市风险提示公告的\n披露情况\n根据《股票上市规则》第12.2.4 条第四款的规定，上市公司股票因第一款\n情形被实施退市风险警示期间，公司应当每5 个交易日披露一次相关事项进展，\n并就公司股票可能被实施重大违法强制退市进行风险提示。\n公司于2026 年9 月12 日披露了《关于公司股票可能被实施重大违法强制退\n市的第一次风险提示公告》（公告编号：2026-083）、《关于叠加实施退市风险警\n",
+     "page_sha256": "e6473760028250408bef80eb73863c26b9ecaa986453387ae9f84990fa93c47d"
+    },
+    "4": {
+     "text": "示的公告》（公告编号：2026-082）。\n公司于2026 年9 月18 日披露了《关于公司股票可能被实施重大违法强制退\n市的第二次风险提示公告》（公告编号：2026-087）。\n公司于2026 年9 月25 日披露了《关于公司股票可能被实施重大违法强制退\n市的第三次风险提示公告》（公告编号：2026-092）。\n公司于2026 年10 月9 日披露了《关于公司股票可能被实施重大违法强制退\n市的第四次风险提示公告》（公告编号：2026-097）。\n三、其他说明及风险提示\n1、如根据正式的处罚决定书，公司触及重大违法强制退市情形，公司股票\n将被终止上市，公司将全力配合中国证监会的相关工作，最终结果以中国证监会\n出具的正式处罚决定书为准。\n2、根据《股票上市规则》第12.2.6 条，在被实施退市风险警示期间，收到\n相关行政处罚决定书，可能触及重大违法类强制退市情形的，应当申请停牌，并\n及时披露有关内容。上海证券交易所后续将依法依规作出是否终止公司股票上市\n的决定。\n3、公司指定信息披露媒体为上海证券交易所网站（www.sse.com.cn）和《中\n国证券报》《证券日报》，公司相关信息均以在上述指定媒体披露的公告为准。敬\n请广大投资者理性投资，注意投资风险。\n特此公告。\n上海卓然工程技术股份有限公司董事会\n2026 年10 月13 日\n",
+     "page_sha256": "4c7b869ff3a8ea06dbb13e5f7dfdba8c0e32c40bb3fe996e915723c3d20a3755"
+    }
+   }
+  }
+ },
+ "annotation_rules": [
+  "Dim1: CONTINUING/CHANGED/NEWLY_DISCLOSED(≠NEWLY_OCCURRED)/NOT_DISCLOSED(≠不存在)",
+  "Dim2: INVESTIGATION/PRIOR_NOTICE/FINAL_DECISION/NOT_APPLICABLE",
+  "Dim3: ALLEGATION/NOTICE_CONTENT/FINAL_FINDING/UNKNOWN",
+  "修正①: ALLEGATION→PRIOR_NOTICE+NOTICE_CONTENT=程序推进≠FINAL_FINDING",
+  "修正②: NEWLY_DISCLOSED≠NEWLY_OCCURRED",
+  "修正③: '以处罚决定为准'=条件引用→UNKNOWN"
+ ],
+ "provenance": {
+  "nature": "三份公告(080/097/098)，多页PDF逐页搜索锚定",
+  "model_calls": 0,
+  "built_by": "ZCode, three-dimension state system per operator 2026-10-31"
+ }
+}

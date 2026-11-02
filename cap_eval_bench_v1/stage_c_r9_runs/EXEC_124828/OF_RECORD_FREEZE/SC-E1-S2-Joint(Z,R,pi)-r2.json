@@ -1,0 +1,391 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "z_op": "SPLIT_VERIFY",
+   "z_detail": "e1_chk -> per-lineage verifiers over parents ['e1_fin', 'e1_tl'] (kind=verification)",
+   "recovery_set": [
+    "e1_chk_a",
+    "e1_chk_b"
+   ],
+   "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e1_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e1_idx",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1245,
+    "out": 397
+   }
+  },
+  {
+   "node": "e1_ext_pen",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1528,
+    "out": 361
+   }
+  },
+  {
+   "node": "e1_ext_proc",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1524,
+    "out": 225
+   }
+  },
+  {
+   "node": "e1_fin",
+   "model": "glm53flash",
+   "success": true,
+   "usage": {
+    "in": 1035,
+    "out": 286
+   }
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53flash",
+   "success": true,
+   "usage": {
+    "in": 1033,
+    "out": 439
+   }
+  },
+  {
+   "node": "e1_chk",
+   "model": "glm53",
+   "success": false,
+   "usage": {
+    "in": 1165,
+    "out": 201
+   }
+  },
+  {
+   "node": "e1_chk_a",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1165,
+    "out": 830
+   }
+  },
+  {
+   "node": "e1_chk_b",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1094,
+    "out": 250
+   }
+  },
+  {
+   "node": "e1_rpt",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2699,
+    "out": 1748
+   }
+  }
+ ],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "日期：2020年6月23日，公司收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号",
+   "kind": "date",
+   "status": "unconfirmed",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f2",
+   "content": "日期：2018年2月9日，公司收到中国证监会《调查通知书》（连调查字【2018】001号），涉嫌信息披露违法违规被立案调查",
+   "kind": "date",
+   "status": "unconfirmed",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f3",
+   "content": "日期：2019年7月9日，公司收到中国证监会（处罚字【2019】95号）《行政处罚及市场禁入事先告知书》",
+   "kind": "date",
+   "status": "unconfirmed",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f4",
+   "content": "日期：2018年2月9日，公司收到中国证监会《调查通知书》（连调查字[2018]001号）",
+   "kind": "date",
+   "status": "unconfirmed",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f5",
+   "content": "文号：行政处罚决定书【2020】29号；市场禁入决定书【2020】9号",
+   "kind": "doc_reference",
+   "status": "unconfirmed",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f6",
+   "content": "文号：行政处罚及市场禁入事先告知书 处罚字【2019】95号",
+   "kind": "doc_reference",
+   "status": "unconfirmed",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f7",
+   "content": "虚假记载年度（2016/2017年报等违法事实年度）：在前600字可见范围内未出现",
+   "kind": "violation_fact",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f8",
+   "content": "虚增利润金额：在前600字可见范围内未出现具体虚增金额",
+   "kind": "violation_fact",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f9",
+   "content": "罚款金额：在前600字可见范围内未出现具体罚款数额",
+   "kind": "penalty_amount",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f10",
+   "content": "虚增利润/罚款金额：zzd_notice_2019前600字可见范围内未出现具体金额",
+   "kind": "violation_fact",
+   "status": "insufficient_evidence",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f11",
+   "content": "虚假记载年度：zzd_notice_2019前600字可见范围内未出现",
+   "kind": "violation_fact",
+   "status": "insufficient_evidence",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f12",
+   "content": "核验单侧事实：待核验金额“2016年虚增利润13114.77万元”，在zzd_notice_2019可见范围（前600字）内未出现该金额或2016年度虚增利润表述，无法在本分支单侧确认其与告知书口径一致",
+   "kind": "verification_fact",
+   "status": "insufficient_evidence",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f13",
+   "content": "待核验目标金额：2016年虚增利润13114.77万元（本分支仅作单侧核对基准，来源文档未提供）",
+   "kind": "verification_fact",
+   "status": "insufficient_evidence",
+   "source": "zzd_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f14",
+   "content": "|2019-07-09→2020-06-23|天=350天(事先告知书→行政处罚决定书,zzd_notice_2019×zzd_penalty_2020)",
+   "kind": "timeline_interval",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f15",
+   "content": "|2018-02-09→2019-07-09|天=515天(立案调查→事先告知书,zzd_penalty_2020×zzd_notice_2019)",
+   "kind": "timeline_interval",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f16",
+   "content": "|2018-02-09→2020-06-23|天=894天(立案调查→行政处罚决定书,zzd_penalty_2020×zzd_penalty_2020/zzd_notice_2019双侧同日基准)",
+   "kind": "timeline_interval",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f17",
+   "content": "交叉核查结论：时间线可串联（立案2018-02-09→告知2019-07-09→处罚2020-06-23，区间350/515天在行政处罚合理时限内）；但财务核验（虚增利润13114.77万元、虚假记载年度、罚款金额）因两侧文档可见范围内均无具体金额，交叉一致性无法确认，整体标注UNRESOLVED",
+   "kind": "verification_result",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f18",
+   "content": "换股比例一致（2018年2月9日收到《调查通知书》（连调查字【2018】001号）@zzd_penalty_2020 vs 2018年2月9日收到《调查通知书》（连调查字[2018]001号）@zzd_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f19",
+   "content": "换股比例一致（2019年7月9日收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）@zzd_penalty_2020 vs 2019年7月9日收到（处罚字【2019】95号）《行政处罚及市场禁入事先告知书》@zzd_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f20",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f21",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f22",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f23",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  }
+ ],
+ "terminal_stats": {
+  "n": 23,
+  "confirmed": 5,
+  "unconfirmed": 6,
+  "insufficient_evidence": 12,
+  "upstream_missing": 0
+ },
+ "report": {
+  "new_facts": [],
+  "comparisons": [
+   {
+    "item": "立案调查日期（2018-02-09，调查通知书连调查字[2018]001号）",
+    "operand_a": "2018年2月9日收到《调查通知书》（连调查字【2018】001号）",
+    "span_a": "2018年2月9日……《调查通知书》（编号：连调查字【2018】001号）",
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": "2018年2月9日收到《调查通知书》（连调查字[2018]001号）",
+    "span_b": "2018年2月9日……《调查通知书》（编号：连调查字[2018]001号）",
+    "doc_b": "zzd_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "事先告知书日期与文号（2019-07-09，处罚字【2019】95号）",
+    "operand_a": "2019年7月9日收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+    "span_a": "2019年7月9日……《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": "2019年7月9日收到（处罚字【2019】95号）《行政处罚及市场禁入事先告知书》",
+    "span_b": "2019年7月9日……（处罚字【2019】95号）《中国证券监督管理委员会行政处罚及市场禁入事先告知书》",
+    "doc_b": "zzd_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "行政处罚决定书日期（2020-06-23，【2020】29号）",
+    "operand_a": "2020年6月23日收到《行政处罚决定书》【2020】29号",
+    "span_a": "2020年6月23日……行政处罚决定书》【2020】29号",
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": null,
+    "span_b": null,
+    "doc_b": null,
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   },
+   {
+    "item": "2016年虚增利润13114.77万元",
+    "operand_a": "前600字可见范围内未出现具体金额",
+    "span_a": "（可见范围内无该金额）",
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": "前600字可见范围内未出现该金额或2016年度虚增利润表述",
+    "span_b": "（可见范围内无该金额）",
+    "doc_b": "zzd_notice_2019",
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   },
+   {
+    "item": "虚假记载年度",
+    "operand_a": "前600字可见范围内未出现",
+    "span_a": "（可见范围内无虚假记载年度）",
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": "前600字可见范围内未出现",
+    "span_b": "（可见范围内无虚假记载年度）",
+    "doc_b": "zzd_notice_2019",
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   },
+   {
+    "item": "罚款金额",
+    "operand_a": "前600字可见范围内未出现具体罚款数额",
+    "span_a": "（可见范围内无罚款数额）",
+    "doc_a": "zzd_penalty_2020",
+    "operand_b": "前600字可见范围内未出现具体金额",
+    "span_b": "（可见范围内无罚款数额）",
+    "doc_b": "zzd_notice_2019",
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   }
+  ],
+  "report": "獐子岛（002069）信息披露违法违规案调查综合报告：\n\n一、时间线（双侧文档交叉验证一致）：\n1. 2018年2月9日，公司收到中国证监会《调查通知书》（连调查字[2018]001号），因涉嫌信息披露违法违规被立案调查。该日期与文号在zzd_penalty_2020与zzd_notice_2019两份公告中均出现，交叉比对一致（f2/f4）。\n2. 2019年7月9日，公司及相关人员收到中国证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号，公告编号2019-34）。该日期与文号在两份文档中交叉比对一致（f3）。\n3. 2020年6月23日，公司收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号（公告编号2020-48）。该事实仅见于zzd_penalty_2020单侧文档（f1/f5）。\n\n二、时间区间（基于confirmed事实f14/f15/f16）：\n- 立案调查→事先告知书：515天（2018-02-09→2019-07-09）；\n- 事先告知书→行政处罚决定书：350天（2019-07-09→2020-06-23）；\n- 立案调查→行政处罚决定书全程：894天。上述区间均在行政处罚合理时限内。\n\n三、退市风险判断（两侧口径一致）：两份公告均载明，公司判断/事先告知书认定的事实未触及深交所《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形。\n\n四、财务核验未决事项：两份文档的可见范围内均未出现2016年虚增利润金额（待核验目标13114.77万元）、虚假记载年度及罚款金额的具体数值（f7-f13），财务口径的交叉一致性无法确认，整体标注UNRESOLVED（f17）。建议调取处罚决定书正文全文或相关年报核查上述金额。",
+  "unknown_marks": [
+   "f7: 虚假记载年度在zzd_penalty_2020可见范围内未出现（insufficient_evidence）",
+   "f8: 虚增利润金额在zzd_penalty_2020可见范围内未出现（insufficient_evidence）",
+   "f9: 罚款金额在zzd_penalty_2020可见范围内未出现（insufficient_evidence）",
+   "f10: 罚款/虚增利润金额在zzd_notice_2019可见范围内未出现（insufficient_evidence）",
+   "f11: 虚假记载年度在zzd_notice_2019可见范围内未出现（insufficient_evidence）",
+   "f12: 2016年虚增利润13114.77万元在zzd_notice_2019可见范围内无法单侧确认（insufficient_evidence）",
+   "f13: 待核验目标金额13114.77万元来源文档未提供（insufficient_evidence）",
+   "f17: 财务核验交叉一致性无法确认，整体UNRESOLVED（insufficient_evidence）"
+  ],
+  "dropped": [],
+  "status_changes": []
+ },
+ "makespan": 68.07,
+ "tokens": 17225
+}

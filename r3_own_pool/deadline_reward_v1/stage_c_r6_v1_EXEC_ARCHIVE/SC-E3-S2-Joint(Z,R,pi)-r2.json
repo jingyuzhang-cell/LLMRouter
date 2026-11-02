@@ -1,0 +1,176 @@
+{
+ "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "SPLIT_VERIFY",
+   "z_detail": "e3_chk -> per-lineage verifiers over parents ['e3_param_check', 'e3_timeline'] (kind=verification)",
+   "recovery_set": [
+    "e3_chk_a",
+    "e3_chk_b"
+   ],
+   "reoptimize": [],
+   "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.14192, U_split=0.28383)"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  },
+  {
+   "round": 4,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e3_rpt"
+   ],
+   "reoptimize": [],
+   "rationale": "joint(R,π): 1 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_rpt'], π=keep | Z-space=['KEEP'] -> KEEP (U_keep=0.14192)"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 937,
+    "out": 590
+   },
+   "latency_s": 11.543
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1072,
+    "out": 372
+   },
+   "latency_s": 6.066
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 878,
+    "out": 454
+   },
+   "latency_s": 14.688
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 572,
+    "out": 706
+   },
+   "latency_s": 22.112
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 575,
+    "out": 753
+   },
+   "latency_s": 13.984
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": false,
+   "failure": "contract",
+   "usage": {
+    "in": 796,
+    "out": 594
+   },
+   "latency_s": 7.54
+  },
+  {
+   "node": "e3_chk_a",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 743,
+    "out": 926
+   },
+   "latency_s": 11.403
+  },
+  {
+   "node": "e3_chk_b",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 780,
+    "out": 886
+   },
+   "latency_s": 8.715
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": false,
+   "failure": "parse",
+   "usage": {
+    "in": 2338,
+    "out": 1024
+   },
+   "latency_s": 16.376
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 2,
+   "success": false,
+   "failure": "parse",
+   "usage": {
+    "in": 2338,
+    "out": 1024
+   },
+   "latency_s": 16.376
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [],
+ "terminal_stats": null,
+ "report": null,
+ "makespan": 128.8,
+ "tokens": 18358,
+ "arm": "Joint(Z,R,pi)",
+ "suffix_makespan": 52.87
+}

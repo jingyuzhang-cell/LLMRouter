@@ -1,0 +1,746 @@
+{
+ "matrix": {
+  "金额抽取": {
+   "glm": {
+    "precision": 1.0,
+    "recall": 0.875,
+    "f1": 0.9333,
+    "n_expected": 8,
+    "n_asserted": 7
+   },
+   "ds": {
+    "precision": 1.0,
+    "recall": 0.875,
+    "f1": 0.9333,
+    "n_expected": 8,
+    "n_asserted": 7
+   }
+  },
+  "日期文号抽取": {
+   "glm": {
+    "precision": 0.7778,
+    "recall": 0.7778,
+    "f1": 0.7778,
+    "n_expected": 9,
+    "n_asserted": 9
+   },
+   "ds": {
+    "precision": 0.875,
+    "recall": 0.7778,
+    "f1": 0.8235,
+    "n_expected": 9,
+    "n_asserted": 8
+   }
+  },
+  "当事人主体抽取": {
+   "glm": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "n_expected": 9,
+    "n_asserted": 9
+   },
+   "ds": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "n_expected": 9,
+    "n_asserted": 9
+   }
+  },
+  "跨文档一致性核验": {
+   "glm": {
+    "precision": 0.3333,
+    "recall": 0.3333,
+    "f1": 0.3333,
+    "n_expected": 6,
+    "n_asserted": 6
+   },
+   "ds": {
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1": 0.5,
+    "n_expected": 6,
+    "n_asserted": 6
+   }
+  },
+  "汇总派生": {
+   "glm": {
+    "precision": 1.0,
+    "recall": 0.6667,
+    "f1": 0.8,
+    "n_expected": 6,
+    "n_asserted": 4
+   },
+   "ds": {
+    "precision": 1.0,
+    "recall": 0.6667,
+    "f1": 0.8,
+    "n_expected": 6,
+    "n_asserted": 4
+   }
+  }
+ },
+ "raw": {
+  "金额抽取": {
+   "glm": {
+    "correct": 7,
+    "asserted": 7,
+    "expected": 8,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "金额抽取",
+      "model": "glm",
+      "fields": {
+       "缴款期限日数": {
+        "expect": "15",
+        "got": null,
+        "ok": false
+       },
+       "处罚当事人总数": {
+        "expect": "6",
+        "got": 6,
+        "ok": true
+       },
+       "听证会举行月份": {
+        "expect": "10",
+        "got": "2023-10",
+        "ok": true
+       },
+       "撤回听证申请月份": {
+        "expect": "3",
+        "got": "2024-03",
+        "ok": true
+       }
+      },
+      "in": 4543,
+      "out": 90,
+      "lat": 3.63
+     },
+     {
+      "task": "MVR2",
+      "type": "金额抽取",
+      "model": "glm",
+      "fields": {
+       "缴款期限日数": {
+        "expect": "15",
+        "got": 15,
+        "ok": true
+       },
+       "退市整理期交易日数": {
+        "expect": "15",
+        "got": 15,
+        "ok": true
+       },
+       "摘牌后退市板块可转让交易日内上限": {
+        "expect": "45",
+        "got": 45,
+        "ok": true
+       },
+       "行政诉讼期限月数": {
+        "expect": "6",
+        "got": 6,
+        "ok": true
+       }
+      },
+      "in": 4189,
+      "out": 40,
+      "lat": 1.62
+     }
+    ]
+   },
+   "ds": {
+    "correct": 7,
+    "asserted": 7,
+    "expected": 8,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "金额抽取",
+      "model": "ds",
+      "fields": {
+       "缴款期限日数": {
+        "expect": "15",
+        "got": null,
+        "ok": false
+       },
+       "处罚当事人总数": {
+        "expect": "6",
+        "got": 6,
+        "ok": true
+       },
+       "听证会举行月份": {
+        "expect": "10",
+        "got": "2023-10",
+        "ok": true
+       },
+       "撤回听证申请月份": {
+        "expect": "3",
+        "got": "2024-03",
+        "ok": true
+       }
+      },
+      "in": 4439,
+      "out": 41,
+      "lat": 0.79
+     },
+     {
+      "task": "MVR2",
+      "type": "金额抽取",
+      "model": "ds",
+      "fields": {
+       "缴款期限日数": {
+        "expect": "15",
+        "got": 15,
+        "ok": true
+       },
+       "退市整理期交易日数": {
+        "expect": "15",
+        "got": 15,
+        "ok": true
+       },
+       "摘牌后退市板块可转让交易日内上限": {
+        "expect": "45",
+        "got": 45,
+        "ok": true
+       },
+       "行政诉讼期限月数": {
+        "expect": "6",
+        "got": 6,
+        "ok": true
+       }
+      },
+      "in": 4220,
+      "out": 45,
+      "lat": 1.01
+     }
+    ]
+   }
+  },
+  "日期文号抽取": {
+   "glm": {
+    "correct": 7,
+    "asserted": 9,
+    "expected": 9,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "日期文号抽取",
+      "model": "glm",
+      "fields": {
+       "公告020编号": {
+        "expect": "临2024-020",
+        "got": "临2024-020",
+        "ok": true
+       },
+       "公司证券代码": {
+        "expect": "600287",
+        "got": "600287",
+        "ok": true
+       },
+       "公司证券简称": {
+        "expect": "江苏舜天",
+        "got": "江苏舜天",
+        "ok": true
+       },
+       "立案告知书编号尾号": {
+        "expect": "0382022008",
+        "got": "08",
+        "ok": false
+       }
+      },
+      "in": 5784,
+      "out": 57,
+      "lat": 2.09
+     },
+     {
+      "task": "MVR2",
+      "type": "日期文号抽取",
+      "model": "glm",
+      "fields": {
+       "上市日期": {
+        "expect": "2022-07-08",
+        "got": "2022-07-08",
+        "ok": true
+       },
+       "同意注册批复披露日": {
+        "expect": "2022-06-13",
+        "got": "2022-06-13",
+        "ok": true
+       },
+       "上市板块": {
+        "expect": "创业板",
+        "got": "创业板",
+        "ok": true
+       },
+       "公告090编号": {
+        "expect": "2026-090",
+        "got": "2026-090",
+        "ok": true
+       },
+       "公告031编号": {
+        "expect": "2026-031",
+        "got": "2025-031",
+        "ok": false
+       }
+      },
+      "in": 4182,
+      "out": 53,
+      "lat": 1.61
+     }
+    ]
+   },
+   "ds": {
+    "correct": 7,
+    "asserted": 8,
+    "expected": 9,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "日期文号抽取",
+      "model": "ds",
+      "fields": {
+       "公告020编号": {
+        "expect": "临2024-020",
+        "got": "临2024-020",
+        "ok": true
+       },
+       "公司证券代码": {
+        "expect": "600287",
+        "got": "600287",
+        "ok": true
+       },
+       "公司证券简称": {
+        "expect": "江苏舜天",
+        "got": "江苏舜天",
+        "ok": true
+       },
+       "立案告知书编号尾号": {
+        "expect": "0382022008",
+        "got": "2008",
+        "ok": false
+       }
+      },
+      "in": 5764,
+      "out": 36,
+      "lat": 1.55
+     },
+     {
+      "task": "MVR2",
+      "type": "日期文号抽取",
+      "model": "ds",
+      "fields": {
+       "上市日期": {
+        "expect": "2022-07-08",
+        "got": "2022-07-08",
+        "ok": true
+       },
+       "同意注册批复披露日": {
+        "expect": "2022-06-13",
+        "got": "2022-06-13",
+        "ok": true
+       },
+       "上市板块": {
+        "expect": "创业板",
+        "got": "创业板",
+        "ok": true
+       },
+       "公告090编号": {
+        "expect": "2026-090",
+        "got": "2026-090",
+        "ok": true
+       },
+       "公告031编号": {
+        "expect": "2026-031",
+        "got": null,
+        "ok": false
+       }
+      },
+      "in": 4211,
+      "out": 52,
+      "lat": 8.57
+     }
+    ]
+   }
+  },
+  "当事人主体抽取": {
+   "glm": {
+    "correct": 9,
+    "asserted": 9,
+    "expected": 9,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "当事人主体抽取",
+      "model": "glm",
+      "fields": {
+       "高松出生年": {
+        "expect": "1971",
+        "got": "1971-02",
+        "ok": true
+       },
+       "桂生春出生年": {
+        "expect": "1978",
+        "got": "1978-02",
+        "ok": true
+       },
+       "王重人出生年": {
+        "expect": "1973",
+        "got": "1973-11",
+        "ok": true
+       },
+       "李焱出生年": {
+        "expect": "1974",
+        "got": "1974-12",
+        "ok": true
+       },
+       "赵凡出生年": {
+        "expect": "1989",
+        "got": "1989-08",
+        "ok": true
+       }
+      },
+      "in": 4550,
+      "out": 94,
+      "lat": 2.24
+     },
+     {
+      "task": "MVR2",
+      "type": "当事人主体抽取",
+      "model": "glm",
+      "fields": {
+       "李晋时任职务": {
+        "expect": "董事长",
+        "got": "董事长",
+        "ok": true
+       },
+       "曹亚蕾财务类职务": {
+        "expect": "财务总监",
+        "got": "财务总监",
+        "ok": true
+       },
+       "燕某身份状态": {
+        "expect": "已故",
+        "got": "已故",
+        "ok": true
+       },
+       "被禁入当事人数": {
+        "expect": "2",
+        "got": 2,
+        "ok": true
+       }
+      },
+      "in": 3250,
+      "out": 36,
+      "lat": 1.55
+     }
+    ]
+   },
+   "ds": {
+    "correct": 9,
+    "asserted": 9,
+    "expected": 9,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "当事人主体抽取",
+      "model": "ds",
+      "fields": {
+       "高松出生年": {
+        "expect": "1971",
+        "got": "1971-02",
+        "ok": true
+       },
+       "桂生春出生年": {
+        "expect": "1978",
+        "got": "1978-02",
+        "ok": true
+       },
+       "王重人出生年": {
+        "expect": "1973",
+        "got": "1973-11",
+        "ok": true
+       },
+       "李焱出生年": {
+        "expect": "1974",
+        "got": "1974-12",
+        "ok": true
+       },
+       "赵凡出生年": {
+        "expect": "1989",
+        "got": "1989-08",
+        "ok": true
+       }
+      },
+      "in": 4446,
+      "out": 53,
+      "lat": 0.79
+     },
+     {
+      "task": "MVR2",
+      "type": "当事人主体抽取",
+      "model": "ds",
+      "fields": {
+       "李晋时任职务": {
+        "expect": "董事长",
+        "got": "董事长",
+        "ok": true
+       },
+       "曹亚蕾财务类职务": {
+        "expect": "财务总监",
+        "got": "财务总监",
+        "ok": true
+       },
+       "燕某身份状态": {
+        "expect": "已故",
+        "got": "已故",
+        "ok": true
+       },
+       "被禁入当事人数": {
+        "expect": "2",
+        "got": 2,
+        "ok": true
+       }
+      },
+      "in": 3274,
+      "out": 34,
+      "lat": 0.94
+     }
+    ]
+   }
+  },
+  "跨文档一致性核验": {
+   "glm": {
+    "correct": 2,
+    "asserted": 6,
+    "expected": 6,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "跨文档一致性核验",
+      "model": "glm",
+      "fields": {
+       "两文档立案编号是否一致": {
+        "expect": "一致",
+        "got": "一致",
+        "ok": true
+       },
+       "告知书文号是否仅D1载明": {
+        "expect": "是",
+        "got": "否",
+        "ok": false
+       },
+       "两文档机关是否同为证监会": {
+        "expect": "是",
+        "got": "是",
+        "ok": true
+       }
+      },
+      "in": 9057,
+      "out": 88,
+      "lat": 2.62
+     },
+     {
+      "task": "MVR2",
+      "type": "跨文档一致性核验",
+      "model": "glm",
+      "fields": {
+       "Da与Db募集资金总额是否一致": {
+        "expect": "是",
+        "got": "一致",
+        "ok": false
+       },
+       "Dc引用的决定书文号与Da是否一致": {
+        "expect": "是",
+        "got": "一致",
+        "ok": false
+       },
+       "Db与Da告知书文号是否一致": {
+        "expect": "是",
+        "got": "一致",
+        "ok": false
+       }
+      },
+      "in": 5615,
+      "out": 161,
+      "lat": 3.93
+     }
+    ]
+   },
+   "ds": {
+    "correct": 3,
+    "asserted": 6,
+    "expected": 6,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "跨文档一致性核验",
+      "model": "ds",
+      "fields": {
+       "两文档立案编号是否一致": {
+        "expect": "一致",
+        "got": "一致",
+        "ok": true
+       },
+       "告知书文号是否仅D1载明": {
+        "expect": "是",
+        "got": "是",
+        "ok": true
+       },
+       "两文档机关是否同为证监会": {
+        "expect": "是",
+        "got": "是",
+        "ok": true
+       }
+      },
+      "in": 9009,
+      "out": 32,
+      "lat": 0.84
+     },
+     {
+      "task": "MVR2",
+      "type": "跨文档一致性核验",
+      "model": "ds",
+      "fields": {
+       "Da与Db募集资金总额是否一致": {
+        "expect": "是",
+        "got": "一致",
+        "ok": false
+       },
+       "Dc引用的决定书文号与Da是否一致": {
+        "expect": "是",
+        "got": "一致",
+        "ok": false
+       },
+       "Db与Da告知书文号是否一致": {
+        "expect": "是",
+        "got": "一致",
+        "ok": false
+       }
+      },
+      "in": 5663,
+      "out": 39,
+      "lat": 1.15
+     }
+    ]
+   }
+  },
+  "汇总派生": {
+   "glm": {
+    "correct": 4,
+    "asserted": 4,
+    "expected": 6,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "汇总派生",
+      "model": "glm",
+      "fields": {
+       "当事人中公司主体数": {
+        "expect": "1",
+        "got": 1,
+        "ok": true
+       },
+       "千万元级罚款主体数": {
+        "expect": "1",
+        "got": null,
+        "ok": false
+       },
+       "个人罚款总额的千位级条数": {
+        "expect": "1",
+        "got": null,
+        "ok": false
+       }
+      },
+      "in": 4545,
+      "out": 88,
+      "lat": 2.7
+     },
+     {
+      "task": "MVR2",
+      "type": "汇总派生",
+      "model": "glm",
+      "fields": {
+       "公司被处罚的违法行为种类数": {
+        "expect": "2",
+        "got": 2,
+        "ok": true
+       },
+       "市场禁入措施年数之和": {
+        "expect": "9",
+        "got": 9,
+        "ok": true
+       },
+       "免予处罚人数": {
+        "expect": "1",
+        "got": 1,
+        "ok": true
+       }
+      },
+      "in": 3248,
+      "out": 35,
+      "lat": 1.79
+     }
+    ]
+   },
+   "ds": {
+    "correct": 4,
+    "asserted": 4,
+    "expected": 6,
+    "items": [
+     {
+      "task": "MVR1",
+      "type": "汇总派生",
+      "model": "ds",
+      "fields": {
+       "当事人中公司主体数": {
+        "expect": "1",
+        "got": 1,
+        "ok": true
+       },
+       "千万元级罚款主体数": {
+        "expect": "1",
+        "got": null,
+        "ok": false
+       },
+       "个人罚款总额的千位级条数": {
+        "expect": "1",
+        "got": null,
+        "ok": false
+       }
+      },
+      "in": 4442,
+      "out": 33,
+      "lat": 0.98
+     },
+     {
+      "task": "MVR2",
+      "type": "汇总派生",
+      "model": "ds",
+      "fields": {
+       "公司被处罚的违法行为种类数": {
+        "expect": "2",
+        "got": 2,
+        "ok": true
+       },
+       "市场禁入措施年数之和": {
+        "expect": "9",
+        "got": 9,
+        "ok": true
+       },
+       "免予处罚人数": {
+        "expect": "1",
+        "got": 1,
+        "ok": true
+       }
+      },
+      "in": 3272,
+      "out": 33,
+      "lat": 0.94
+     }
+    ]
+   }
+  }
+ }
+}

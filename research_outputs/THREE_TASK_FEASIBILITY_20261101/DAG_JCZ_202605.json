@@ -1,0 +1,491 @@
+{
+  "task_id": "JCZ_202605",
+  "origin": "MANUALLY_SOURCE_DERIVED_CONTRACT_DAG_NOT_LLM_GENERATED_OR_EXECUTED",
+  "cutoff": "2026-05-26",
+  "original_broad_question": "对照问询与回复，核对交易支付方式、估值及调整原因、关联关系和审批状态；区分公司解释、预测与已发生事实。",
+  "scoring_scope": "Only the six explicit source-grounded questions; not general sentiment or all material conclusions",
+  "public_questions": [
+    {
+      "id": "JCZ_202605_T1",
+      "question": "问询接收时间与公告公开时间分别是什么？"
+    },
+    {
+      "id": "JCZ_202605_T2",
+      "question": "拟收购主体、股权比例及支付方式是什么？"
+    },
+    {
+      "id": "JCZ_202605_T3",
+      "question": "本次评估值、上次评估值及下降金额如何核对？"
+    },
+    {
+      "id": "JCZ_202605_T4",
+      "question": "评估基准日与回复日期是否混淆？"
+    },
+    {
+      "id": "JCZ_202605_T5",
+      "question": "交易审批是否完成，是否可以写成已完成收购？"
+    },
+    {
+      "id": "JCZ_202605_T6",
+      "question": "原文董事会日期与2026年方案时间线是否有疑点？保留原文，不自行纠正。"
+    }
+  ],
+  "reference_answers_accessible_to_scheduler": false,
+  "evidence_manifest": [
+    {
+      "source_id": "INQUIRY",
+      "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/JCZ_202605/INQUIRY/source.pdf",
+      "sha256": "4a18f12b4346f7d3dead78258a6616d7e4435061de8dfcb4f1fecac638db123a",
+      "publication_date_from_archive": "2026-05-19"
+    },
+    {
+      "source_id": "REPLY_CNSTOCK",
+      "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/JCZ_202605/REPLY_CNSTOCK/source.html",
+      "sha256": "95a003860c993d3ba14ff8819993119fd236cbcb098183305cfa9efef83a18a4",
+      "publication_date_from_archive": "2026-05-26"
+    }
+  ],
+  "Z": "FIXED_FOR_NEXT_COMPARISON",
+  "nodes": [
+    {
+      "id": "NOTICE_BOUNDARIES",
+      "parents": [],
+      "executor_kind": "DETERMINISTIC",
+      "role": "Partition archived HTML notices",
+      "allowed_sources": [
+        "REPLY_CNSTOCK"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "按公告编号划定2026-030回复及2026-029自查报告区间",
+          "导航和图片表格占位不作正文事实",
+          "不把两公告当两独立发行人来源"
+        ],
+        "terminal_items_served": [
+          "T6"
+        ]
+      },
+      "edge_rationale": {},
+      "llm_candidates": [],
+      "model_contract_measurements": "NOT_APPLICABLE_DETERMINISTIC",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "INQUIRY",
+      "parents": [],
+      "executor_kind": "LLM",
+      "role": "Acquisition inquiry facts",
+      "allowed_sources": [
+        "INQUIRY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "问询收到日及方案变化",
+          "估值时点、比例、金额和问题范围"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T4"
+        ]
+      },
+      "edge_rationale": {},
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "REPLY",
+      "parents": [
+        "NOTICE_BOUNDARIES"
+      ],
+      "executor_kind": "LLM",
+      "role": "Reply facts with notice identity",
+      "allowed_sources": [
+        "REPLY_CNSTOCK"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "NOTICE_BOUNDARIES"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "拟收购主体/支付/比例",
+          "两次估值、价格和归属为评估师的解释",
+          "审批状态、两公告日期冲突，缺表UNKNOWN"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6"
+        ]
+      },
+      "edge_rationale": {
+        "NOTICE_BOUNDARIES": "实际允许读取区间和公告身份；严禁跨公告无标记拼接"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "VALUATION",
+      "parents": [
+        "INQUIRY",
+        "REPLY"
+      ],
+      "executor_kind": "DETERMINISTIC",
+      "role": "Comparable 100-percent equity values",
+      "allowed_sources": [
+        "INQUIRY",
+        "REPLY_CNSTOCK"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "INQUIRY",
+          "REPLY"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "同范围估值差及四舍五入降幅",
+          "不把100%评估值当55%成交价",
+          "冲突数值时拒绝选边计算"
+        ],
+        "terminal_items_served": [
+          "T3",
+          "T4"
+        ]
+      },
+      "edge_rationale": {
+        "INQUIRY": "评估范围、基准日及本次值",
+        "REPLY": "前次值及差额核对，保留公司/评估师解释"
+      },
+      "llm_candidates": [],
+      "model_contract_measurements": "NOT_APPLICABLE_DETERMINISTIC",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "APPROVAL",
+      "parents": [
+        "REPLY"
+      ],
+      "executor_kind": "LLM",
+      "role": "Separate approval from completion",
+      "allowed_sources": [
+        "REPLY_CNSTOCK"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "REPLY"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "标的股东会、上市公司董事会、上市公司股东会分别判断",
+          "预期协同不是已实现；军工程序只归属为公司说明"
+        ],
+        "terminal_items_served": [
+          "T2",
+          "T5"
+        ]
+      },
+      "edge_rationale": {
+        "REPLY": "带公告编号及证据的审批和条件句"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "DATE_CONFLICT",
+      "parents": [
+        "INQUIRY",
+        "REPLY"
+      ],
+      "executor_kind": "LLM",
+      "role": "Date-type and conflict analysis",
+      "allowed_sources": [
+        "INQUIRY",
+        "REPLY_CNSTOCK"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "INQUIRY",
+          "REPLY"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "估值时点/收到日/披露日分列",
+          "2025与2026董事会日期原样呈现，实际日期UNKNOWN"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T4",
+          "T6"
+        ]
+      },
+      "edge_rationale": {
+        "INQUIRY": "2026问询及方案披露背景",
+        "REPLY": "两个公告的会议日期和回复落款"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "FINAL",
+      "parents": [
+        "REPLY",
+        "VALUATION",
+        "APPROVAL",
+        "DATE_CONFLICT"
+      ],
+      "executor_kind": "LLM",
+      "role": "Scoped acquisition answer",
+      "allowed_sources": [
+        "INQUIRY",
+        "REPLY_CNSTOCK"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "REPLY",
+          "VALUATION",
+          "APPROVAL",
+          "DATE_CONFLICT"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "六问完整、引用所属公告明确",
+          "不自行修复日期、不重建缺失表格",
+          "估值合理性仅报告评估师判断"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6"
+        ]
+      },
+      "edge_rationale": {
+        "REPLY": "主体和方案原始事实",
+        "VALUATION": "同口径计算",
+        "APPROVAL": "未完成与待批状态",
+        "DATE_CONFLICT": "时间口径与争议"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    }
+  ],
+  "edges": [
+    [
+      "NOTICE_BOUNDARIES",
+      "REPLY"
+    ],
+    [
+      "INQUIRY",
+      "VALUATION"
+    ],
+    [
+      "REPLY",
+      "VALUATION"
+    ],
+    [
+      "REPLY",
+      "APPROVAL"
+    ],
+    [
+      "INQUIRY",
+      "DATE_CONFLICT"
+    ],
+    [
+      "REPLY",
+      "DATE_CONFLICT"
+    ],
+    [
+      "REPLY",
+      "FINAL"
+    ],
+    [
+      "VALUATION",
+      "FINAL"
+    ],
+    [
+      "APPROVAL",
+      "FINAL"
+    ],
+    [
+      "DATE_CONFLICT",
+      "FINAL"
+    ]
+  ],
+  "semantic_dependency_basis": "Each edge has explicit consumed deliverable and rationale in the destination node; not page-order rotation",
+  "cache_key_components": [
+    "task_id",
+    "node_id",
+    "node_contract_sha256",
+    "source_text_hashes",
+    "parent_output_hashes",
+    "model_version",
+    "prompt_hash"
+  ],
+  "cache_rule": "Re-executing a node does not invalidate healthy independent branches. Descendants invalidated only if their consumed input/version changes; same output hash permits reuse.",
+  "natural_feedback": [
+    {
+      "trigger": "SOURCE_ID_OR_SPAN_MISMATCH",
+      "observable_without_gold": true,
+      "action": "If owning extractor output invalid, retry that node within reserved budget; invalidate affected committed descendants only. Valid source records in other branches remain cached."
+    },
+    {
+      "trigger": "DERIVATION_OPERAND_OR_UNIT_MISMATCH",
+      "observable_without_gold": true,
+      "action": "Check typed operands and provenance; no LLM rerun for a deterministic arithmetic formatting issue; repair failed source node only if independently evidenced."
+    },
+    {
+      "trigger": "SOURCE_CONFLICT",
+      "observable_without_gold": true,
+      "action": "Preserve UNKNOWN/CONFLICT. If conflict is already present in source, no repeated model calls to force resolution."
+    },
+    {
+      "trigger": "TIMEOUT_OR_SLOTS_DELAY",
+      "observable_without_gold": true,
+      "action": "Stop or legally reassign future nodes within remainder; unresolved billed/cancelled calls remain UNKNOWN. No automatic API retries."
+    },
+    {
+      "trigger": "SEMANTIC_UNSUPPORTED",
+      "observable_without_gold": "ONLY_WITH_VALIDATED_GUARD",
+      "action": "Current semantic guard not calibrated for these contracts; cannot use private reference to trigger repair."
+    }
+  ],
+  "recovery_analysis": {
+    "observed_natural_failures": 0,
+    "actual_R_candidates": null,
+    "guaranteed_R_count": null,
+    "minimal_legal_recovery": "For a known invalid node, that node plus actually affected already-committed descendant outputs; pending descendants are first executions, not extra retries",
+    "structural_dependency_closures": {
+      "NOTICE_BOUNDARIES": [
+        "APPROVAL",
+        "DATE_CONFLICT",
+        "FINAL",
+        "NOTICE_BOUNDARIES",
+        "REPLY",
+        "VALUATION"
+      ],
+      "INQUIRY": [
+        "DATE_CONFLICT",
+        "FINAL",
+        "INQUIRY",
+        "VALUATION"
+      ],
+      "REPLY": [
+        "APPROVAL",
+        "DATE_CONFLICT",
+        "FINAL",
+        "REPLY",
+        "VALUATION"
+      ],
+      "VALUATION": [
+        "FINAL",
+        "VALUATION"
+      ],
+      "APPROVAL": [
+        "APPROVAL",
+        "FINAL"
+      ],
+      "DATE_CONFLICT": [
+        "DATE_CONFLICT",
+        "FINAL"
+      ],
+      "FINAL": [
+        "FINAL"
+      ]
+    },
+    "closure_note": "These are possible dependency invalidation sets, not observed faults or multiple competing R actions at the same state",
+    "identifiability": "With one required legal R, R-only may coincide with Static recovery and Joint with pi-only. Different failure locations do not prove two R choices at one state. No larger R added without evidence."
+  },
+  "pi_analysis": {
+    "candidate_models": [
+      "qwen-plus-2025-12-01",
+      "deepseek-flash"
+    ],
+    "identity_basis": "Archived real calibration model labels only; current provider version not revalidated",
+    "contract_compatible_current_measurements": 0,
+    "Q": "UNKNOWN",
+    "C": "UNKNOWN_CURRENT_CONTRACT",
+    "L": "UNKNOWN_CURRENT_CONTRACT",
+    "reliability": "UNKNOWN_CURRENT_CONTRACT",
+    "dynamic_opportunity": "At source-branch completion, remaining LLM merge/synthesis nodes may be reassigned; no observed ranking reversal or benefit yet",
+    "independent_confirmatory_status": "NOT_CERTIFIED; current source/reference/DAG design is recorded development exposure"
+  },
+  "optimizations_not_applied": {
+    "merge": "May combine interpretation/finalization only if all typed outputs, source lineage, explicit UNKNOWN and six deliverables retained. No measured saving asserted.",
+    "split": "Split only on separately sourced responsibilities or independently checkable calculations; not arbitrary page slicing.",
+    "remove_edges": "Only if destination contract demonstrably no longer consumes parent; cannot remove compulsory source comparison.",
+    "Z_testing": "NOT_TESTED"
+  },
+  "admission": {
+    "dag_acyclic_contract_complete": true,
+    "execution_validated": false,
+    "formal_Gold": false,
+    "formal_Q_calculable": false,
+    "five_arm_identifiable": false
+  }
+}

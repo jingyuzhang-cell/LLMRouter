@@ -1,0 +1,66 @@
+{
+  "dag_id": "E04_REFERENCE_V1",
+  "source": "M8_P1_DAG_GENERATION_DESIGN.md §4.3, operator-approved structure (ledger #108)",
+  "status": "FREEZE_CANDIDATE",
+  "task_id": "E04",
+  "description": "E04 专家参考 DAG：财务异常 × 监管事件跨文档调查任务。6 节点 / 4 层 / 3 并行分支。结构仅含拓扑与节点职责，不含模型分配与调度（P2 中另行固定）。",
+  "nodes": [
+    {
+      "id": "fin_extract",
+      "task": "提取doc2财务报表中的关键财务数据（收入、利润、现金流、负债）",
+      "kind": "extracts",
+      "doc_refs": ["doc2"],
+      "layer": 1
+    },
+    {
+      "id": "reg_timeline",
+      "task": "构建doc1与doc2中监管事件的完整时间线（立案、处罚、整改、披露）",
+      "kind": "timeline",
+      "doc_refs": ["doc1", "doc2"],
+      "layer": 1
+    },
+    {
+      "id": "biz_risk",
+      "task": "提取doc3中经营风险相关事实（行业风险、经营异常、风险提示）",
+      "kind": "extracts",
+      "doc_refs": ["doc3"],
+      "layer": 1
+    },
+    {
+      "id": "anomaly_calc",
+      "task": "基于财务数据计算并判定财务异常指标（同比变动、比率越界）",
+      "kind": "reasoning",
+      "doc_refs": [],
+      "layer": 2
+    },
+    {
+      "id": "cross_verify",
+      "task": "交叉核验财务异常与监管事件的时间与因果关系一致性",
+      "kind": "verification",
+      "doc_refs": [],
+      "layer": 3
+    },
+    {
+      "id": "final_report",
+      "task": "综合核验结论与经营风险，生成终端调查报告",
+      "kind": "report",
+      "doc_refs": [],
+      "layer": 4
+    }
+  ],
+  "edges": [
+    {"from": "fin_extract", "to": "anomaly_calc"},
+    {"from": "fin_extract", "to": "cross_verify"},
+    {"from": "reg_timeline", "to": "cross_verify"},
+    {"from": "anomaly_calc", "to": "cross_verify"},
+    {"from": "cross_verify", "to": "final_report"},
+    {"from": "biz_risk", "to": "final_report"}
+  ],
+  "expected_stats": {
+    "n_nodes": 6,
+    "n_edges": 6,
+    "depth": 4,
+    "max_parallel_width": 3
+  },
+  "notes": "设计文档 §4.3 原文注明边数 7，按其文字结构列举（A→B, A→E, B→E, C→E, E→F, D→F）实际为 6 条；以文字结构为准，设计文档已更正。优化器在该 DAG 上必须零改动（T1 不变量）。"
+}

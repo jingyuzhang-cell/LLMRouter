@@ -1,0 +1,173 @@
+{
+ "tests": {
+  "T1 F4 n1 prompt = doc 2023_29 ONLY": {
+   "ok": true,
+   "detail": "6119 chars"
+  },
+  "T1 F4 n2 prompt = doc 2024_kangda ONLY": {
+   "ok": true,
+   "detail": "6123 chars"
+  },
+  "T1 n3 prompt substantive": {
+   "ok": true,
+   "detail": "1943 chars"
+  },
+  "T1 n3 sees n1": {
+   "ok": true,
+   "detail": ""
+  },
+  "T1 n3 isolated from n2": {
+   "ok": true,
+   "detail": ""
+  },
+  "T1 n4 prompt substantive": {
+   "ok": true,
+   "detail": "1948 chars"
+  },
+  "T1 n4 sees n1": {
+   "ok": true,
+   "detail": ""
+  },
+  "T1 n4 isolated from n2": {
+   "ok": true,
+   "detail": ""
+  },
+  "T1 n5 prompt substantive": {
+   "ok": true,
+   "detail": "3716 chars"
+  },
+  "T1 n5 sees n1": {
+   "ok": true,
+   "detail": ""
+  },
+  "T1 n5 sees n2": {
+   "ok": true,
+   "detail": ""
+  },
+  "T1 n6 prompt substantive": {
+   "ok": true,
+   "detail": "3720 chars"
+  },
+  "T1 n6 sees n1": {
+   "ok": true,
+   "detail": ""
+  },
+  "T1 n6 sees n2": {
+   "ok": true,
+   "detail": ""
+  },
+  "T1 n8 gets its parent n4 (not a role key)": {
+   "ok": true,
+   "detail": ""
+  },
+  "T2 request count == 23": {
+   "ok": true,
+   "detail": "23"
+  },
+  "T2 exact parent set in every prompt (all 13 edges + isolation)": {
+   "ok": true,
+   "detail": "all edges exact"
+  },
+  "T2 fault propagated into every n9 prompt": {
+   "ok": true,
+   "detail": ""
+  },
+  "T2 no near-empty prompts (v2 regression was 66 chars)": {
+   "ok": true,
+   "detail": "min=1697"
+  },
+  "T2 extraction out cap 1536, all others 768": {
+   "ok": true,
+   "detail": ""
+  },
+  "T3 same 23 requests (node, model) as frozen manifest": {
+   "ok": true,
+   "detail": ""
+  },
+  "T3 execution order topologically valid (all parents ready)": {
+   "ok": true,
+   "detail": ""
+  },
+  "T3 A_alt n6/n7=flash, B_ib n6/n7=glm53, n9/n10 flash in both": {
+   "ok": true,
+   "detail": ""
+  },
+  "T4 scores follow the text, not the arm label": {
+   "ok": true,
+   "detail": ""
+  },
+  "T4 score_q signature takes no arm/action argument": {
+   "ok": true,
+   "detail": ""
+  },
+  "T5 V77 purposes disjoint from V76 ledger": {
+   "ok": true,
+   "detail": ""
+  },
+  "T5 v2 n1/n2 prompt-identity anomaly documented": {
+   "ok": true,
+   "detail": "v2 both = cbd68c2d2092"
+  },
+  "T5 v3 n1/n2 prompts differ from v2 and from each other (F4)": {
+   "ok": true,
+   "detail": ""
+  },
+  "T5 within-run 23 distinct (purpose, prompt_sha)": {
+   "ok": true,
+   "detail": ""
+  },
+  "T6 estimate fits a 130K envelope": {
+   "ok": true,
+   "detail": "65776 conservative + 30% margin = 85509"
+  },
+  "T7 PASS path: contract-conformant n1 passes stage-1 gate": {
+   "ok": true,
+   "detail": "{'ok': True, 'checks': {'stop_clean': True, 'json_complete': True, 'doc_id_binding': True, 'entities': True, 'dates>=min': True, 'amounts>=min': True, 'penalty_vocab': True}}"
+  },
+  "T7 PASS path: contract-conformant n2 passes stage-1 gate": {
+   "ok": true,
+   "detail": "{'ok': True, 'checks': {'stop_clean': True, 'json_complete': True, 'doc_id_binding': True, 'entities': True, 'penalty_vocab': True}}"
+  },
+  "T7 FAIL path: v2 truncated n1 is rejected": {
+   "ok": true,
+   "detail": "{'stop_clean': False, 'json_complete': False, 'dates>=min': False, 'amounts>=min': False, 'penalty_vocab': False}"
+  },
+  "T7 FAIL path: v2 truncated n2 is rejected": {
+   "ok": true,
+   "detail": "{'stop_clean': False, 'json_complete': False, 'doc_id_binding': False, 'entities': False, 'penalty_vocab': False}"
+  },
+  "T7 FAIL path: wrong-source n1 is rejected (doc-id binding)": {
+   "ok": true,
+   "detail": ""
+  },
+  "T7 downstream gate: conformant n3 passes": {
+   "ok": true,
+   "detail": ""
+  },
+  "T7 downstream gate: n5 exempt (injected fault)": {
+   "ok": true,
+   "detail": ""
+  },
+  "T7 downstream gate: empty-field n9 rejected": {
+   "ok": true,
+   "detail": ""
+  }
+ },
+ "pass": true,
+ "budget": {
+  "requests": 23,
+  "chars_per_token_ratio": 0.6295,
+  "conservative_token_sum": 65776,
+  "recommended_envelope": 90000,
+  "per_model": {
+   "glm53": {
+    "calls": 8,
+    "token_quota": 35000
+   },
+   "glm53flash": {
+    "calls": 15,
+    "token_quota": 51000
+   }
+  }
+ }
+}

@@ -1,0 +1,215 @@
+{
+ "run": 1,
+ "node": "SINK",
+ "layer": "SINK",
+ "alias": "glm53flash",
+ "model": "GLM-5.3-Flash",
+ "endpoint": "https://open.bigmodel.cn/api/anthropic/v1/messages",
+ "max_tokens": 4000,
+ "temperature": 0,
+ "prompt_sha256": "8919fcdd8f72f4209361c6ef09b4be908bcc1b50f2e0e0397dd65a51a398c6b6",
+ "upstream_text_sha256": {
+  "J2": "06286418d50e12de67de089ded8f01f3bc9adcff1ac586f5b71ec5eb63310338"
+ },
+ "system": "你是严谨的最终答案汇总器。只输出一个 JSON 对象：{\"answers\": [...], \"unknown_slots\": [...], \"complete\": true/false}。不得使用给定上游材料之外的任何信息。",
+ "user": "任务问题：上海卓然的监管事件在三个时间节点(2026-09-10/10-09/10-13)上，各项信息的：（1）事实状态（持续/变化/首次披露/未披露）？（2）监管程序阶段（调查/事先告知/正式处罚）？（3）证据性质（涉嫌/告知书载明/最终认定/无法判断）？注意：首次披露≠首次发生；告知书内容≠最终认定；'以处罚决定为准'≠已作出。\n\nJ2 结果包（含逐阶段判定与汇总）：\n```json\n{\n  \"state_judgments\": [\n    {\"item\":\"虚增利润/营收事实\",\"stage\":\"2026-09-10(公告2026-080)\",\"dim1_factual\":\"DETAIL_EXPANDED\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"evidence\":[{\"doc\":\"公告2026-080\",\"page\":1,\"quote\":\"现已初步查明，公司披露的部分年度财务信息涉嫌虚假记载\"}]},\n    {\"item\":\"虚增利润/营收事实\",\"stage\":\"2026-10-09(公告2026-097)\",\"dim1_factual\":\"DETAIL_EXPANDED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"evidence\":[{\"doc\":\"公告2026-097\",\"page\":2,\"quote\":\"公司2021年年度报告虚增利润总额4,383.65万元……2024年年度报告虚增营业收入23,142.16万元……虚增利润总额556.72万元\"}]},\n    {\"item\":\"虚增利润/营收事实\",\"stage\":\"2026-10-13(公告2026-098)\",\"dim1_factual\":\"NOT_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"UNKNOWN\",\"evidence\":[{\"doc\":\"公告2026-098\",\"page\":1,\"quote\":\"公告未披露虚增利润/营收具体事实\"}]},\n    {\"item\":\"证监会调查状态\",\"stage\":\"2026-09-10(公告2026-080)\",\"dim1_factual\":\"CONTINUING\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"evidence\":[{\"doc\":\"公告2026-080\",\"page\":1,\"quote\":\"截至本公告披露日，中国证监会的调查尚在进行中\"}]},\n    {\"item\":\"证监会调查状态\",\"stage\":\"2026-10-09(公告2026-097)\",\"dim1_factual\":\"DETAIL_EXPANDED\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"evidence\":[{\"doc\":\"公告2026-097\",\"page\":2,\"quote\":\"公司于2025年12月19日收到……《立案告知书》（证监立案字0032025031号、证监立案字0032025032号）……中国证监会决定对公司及实际控制人张锦红立案\"}]},\n    {\"item\":\"证监会调查状态\",\"stage\":\"2026-10-13(公告2026-098)\",\"dim1_factual\":\"CONTINUING\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"evidence\":[{\"doc\":\"公告2026-098\",\"page\":2,\"quote\":\"公司于2025年12月19日收到中国证券监督管理委员会出具的《立案告知书》……中国证监会决定对公司及实际控制人张锦红立案\"}]},\n    {\"item\":\"重大违法强制退市风险\",\"stage\":\"2026-09-10(公告2026-080)\",\"dim1_factual\":\"NEWLY_DISCLOSED\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"evidence\":[{\"doc\":\"公告2026-080\",\"page\":1,\"quote\":\"可能触及重大违法强制退市情形。若后续经中国证监会行政处罚认定的事实……公司股票将被实施重大违法强制退市\"}]},\n    {\"item\":\"重大违法强制退市风险\",\"stage\":\"2026-10-09(公告2026-097)\",\"dim1_factual\":\"DETAIL_EXPANDED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"evidence\":[{\"doc\":\"公告2026-097\",\"page\":1,\"quote\":\"根据收到的《行政处罚事先告知书》认定情况，公司可能触及《上海证券交易所科创板股票上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强制退市\"}]},\n    {\"item\":\"重大违法强制退市风险\",\"stage\":\"2026-10-13(公告2026-098)\",\"dim1_factual\":\"CONTINUING\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"evidence\":[{\"doc\":\"公告2026-098\",\"page\":1,\"quote\":\"根据收到的《告知书》认定情况，公司可能触及《股票上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强制退市\"}]},\n    {\"item\":\"交易类退市风险(价格/市值)\",\"stage\":\"2026-09-10(公告2026-080)\",\"dim1_factual\":\"NOT_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"UNKNOWN\",\"evidence\":[{\"doc\":\"公告2026-080\",\"page\":1,\"quote\":\"该公告未提及交易类退市风险\"}]},\n    {\"item\":\"交易类退市风险(价格/市值)\",\"stage\":\"2026-10-09(公告2026-097)\",\"dim1_factual\":\"NOT_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"UNKNOWN\",\"evidence\":[{\"doc\":\"公告2026-097\",\"page\":1,\"quote\":\"该公告未提及交易类退市风险\"}]},\n    {\"item\":\"交易类退市风险(价格/市值)\",\"stage\":\"2026-10-13(公告2026-098)\",\"dim1_factual\":\"NEWLY_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"DISCLOSED_MARKET_DATA\",\"evidence\":[{\"doc\":\"公告2026-098\",\"page\":1,\"quote\":\"公司股票2026年10月12日收盘价格0.96元/股，总市值2.24亿元，股票日收盘价格首次低于1元……公司股票已连续8个交易日每日股票收盘市值低于3亿元\"}]},\n    {\"item\":\"行政处罚事先告知书(含文号)\",\"stage\":\"2026-09-10(公告2026-080)\",\"dim1_factual\":\"NOT_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"UNKNOWN\",\"evidence\":[{\"doc\":\"公告2026-080\",\"page\":1,\"quote\":\"该公告未提及行政处罚事先告知书\"}]},\n    {\"item\":\"行政处罚事先告知书(含文号)\",\"stage\":\"2026-10-09(公告2026-097)\",\"dim1_factual\":\"NEWLY_DISCLOSED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"evidence\":[{\"doc\":\"公告2026-097\",\"page\":1,\"quote\":\"2026年9月11日，公司收到中国证券监督管理委员会上海监管局……下发的《行政处罚事先告知书》（沪证监处罚字[2026]11号）\"}]},\n    {\"item\":\"行政处罚事先告知书(含文号)\",\"stage\":\"2026-10-13(公告2026-098)\",\"dim1_factual\":\"CONTINUING\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"evidence\":[{\"doc\":\"公告2026-098\",\"page\":1,\"quote\":\"公司于2026年9月11日收到中国证监会上海监管局……下发的《行政处罚事先告知书》（沪证监处罚字[2026]11号）\"}]},\n    {\"item\":\"正式处罚决定状态\",\"stage\":\"2026-09-10(公告2026-080)\",\"dim1_factual\":\"NOT_YET_RECEIVED\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"UNKNOWN\",\"evidence\":[{\"doc\":\"公告2026-080\",\"page\":1,\"quote\":\"截至本公告披露日，中国证监会的调查尚在进行中\"}]},\n    {\"item\":\"正式处罚决定状态\",\"stage\":\"2026-10-09(公告2026-097)\",\"dim1_factual\":\"NOT_YET_RECEIVED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"UNKNOWN\",\"evidence\":[{\"doc\":\"公告2026-097\",\"page\":2,\"quote\":\"截至本公告披露日，公司尚未收到就上述立案调查事项的正式处罚决定\"}]},\n    {\"item\":\"正式处罚决定状态\",\"stage\":\"2026-10-13(公告2026-098)\",\"dim1_factual\":\"NOT_YET_RECEIVED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"UNKNOWN\",\"evidence\":[{\"doc\":\"公告2026-098\",\"page\":2,\"quote\":\"截至本公告披露日，公司尚未收到就上述立案调查事项的正式处罚决定\"}]}\n  ],\n  \"current_state\": {\n    \"虚增利润/营收事实\": \"事实状态：告知书阶段细节明确（2021年虚增利润4383.65万元、2024年虚增营收23142.16万元、虚增利润556.72万元），10-13公告未再重述；程序阶段：事先告知；证据性质：告知书载明（非最终认定）\",\n    \"证监会调查状态\": \"事实状态：持续进行中（2025-12-19立案，两案号）；程序阶段：调查；证据性质：涉嫌/调查中\",\n    \"重大违法强制退市风险\": \"事实状态：首次于09-10披露，10-09/10-13持续并细化条款依据；程序阶段：事先告知；证据性质：告知书载明的可能触及情形（未最终认定）\",\n    \"交易类退市风险(价格/市值)\": \"事实状态：10-13首次披露（股价0.96元首次破面值、市值2.24亿元、市值连续8日低于3亿元）；程序阶段：非监管处罚程序，属交易类指标；证据性质：客观市场数据\",\n    \"行政处罚事先告知书(含文号)\": \"事实状态：10-09首次披露（沪证监处罚字[2026]11号，2026-09-11收到），10-13持续；程序阶段：事先告知；证据性质：告知书载明\",\n    \"正式处罚决定状态\": \"事实状态：三个时点均未收到正式处罚决定；程序阶段：仍处调查/事先告知之间，'以处罚决定为准'不等于已作出；证据性质：无法判断最终认定\"\n  },\n  \"cross_stage_conflicts\": [\n    {\"item\": \"虚增利润/营收事实\", \"conflict\": \"非冲突，属披露口径差异：10-13公告(2026-098)未重述虚增事实细节\", \"detail\": \"09-10为调查阶段'涉嫌虚假记载'（ALLEGATION），10-09升级为告知书载明具体金额（NOTICE_CONTENT），10-13公告仅引用告知书认定情况但未重述具体虚增数据；三阶段均为程序递进而非事实回退，不构成实质矛盾，但若下游引用10-13公告作为虚增金额依据则属引用错位\"},\n    {\"item\": \"重大违法强制退市风险\", \"conflict\": \"证据性质不得升级为最终认定\", \"detail\": \"10-09/10-13均明确为'可能触及/可能被实施'且'尚未收到正式处罚决定'，退市风险仍以告知书为依据（NOTICE_CONTENT），任何阶段均不可表述为'已认定退市'或'已处罚'\"},\n    {\"item\": \"正式处罚决定状态\", \"conflict\": \"'以处罚决定为准'≠已作出，三时点一致性良好\", \"detail\": \"09-10/10-09/10-13均确认NOT_YET_RECEIVED，无矛盾；需防下游将'后续以处罚决定为准'误读为处罚已落地\"}\n  ],\n  \"derived\": {\n    \"is_final_finding\": false,\n    \"prior_notice_cited\": true\n  }\n}\n```\n\n输出：answers 数组逐槽位填写 {\"fact_id\":..., \"dim1_factual\":..., \"dim2_procedural\":..., \"dim3_evidentiary\":..., \"quote\": J层携带原句, \"doc\": 公告号, \"page\": 页码}。\n候选槽位 ID（全部 18 个）：[\"VF_S1\", \"VF_S2\", \"VF_S3\", \"INV_S1\", \"INV_S2\", \"INV_S3\", \"MR_S1\", \"MR_S2\", \"MR_S3\", \"TR_S1\", \"TR_S2\", \"TR_S3\", \"PN_S1\", \"PN_S2\", \"PN_S3\", \"FD_S1\", \"FD_S2\", \"FD_S3\"]\nunknown_slots：{\"fact_id\": \"UNK_<id>\", \"item_id\": ..., \"action\": \"ABSTAIN\", \"dim1_factual\": \"UNKNOWN\"}，拒判项：[{\"item_id\": \"U_FD\", \"description\": \"正式处罚决定是否已实际作出\"}, {\"item_id\": \"U_TR_PRE\", \"description\": \"交易类退市风险在098前是否已存在\"}, {\"item_id\": \"U_INV_DATE\", \"description\": \"证监会调查启动日期\"}]。仅当某拒判项确有超出材料的把握时才改填具体值（action 省略即视为断言）。上游不完整无法负责作答则 complete=false。",
+ "attempts": 1,
+ "wall_s": 24.32,
+ "usage": {
+  "in": 3087,
+  "out": 1562
+ },
+ "cost_accounting_yuan": 0.006843,
+ "cost_actual_yuan": 0.0,
+ "stop_reason": "end_turn",
+ "text": "{\"answers\":[{\"fact_id\":\"VF_S1\",\"dim1_factual\":\"DETAIL_EXPANDED\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"quote\":\"现已初步查明，公司披露的部分年度财务信息涉嫌虚假记载\",\"doc\":\"公告2026-080\",\"page\":1},{\"fact_id\":\"VF_S2\",\"dim1_factual\":\"DETAIL_EXPANDED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"quote\":\"公司2021年年度报告虚增利润总额4,383.65万元……2024年年度报告虚增营业收入23,142.16万元……虚增利润总额556.72万元\",\"doc\":\"公告2026-097\",\"page\":2},{\"fact_id\":\"VF_S3\",\"dim1_factual\":\"NOT_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"UNKNOWN\",\"quote\":\"公告未披露虚增利润/营收具体事实\",\"doc\":\"公告2026-098\",\"page\":1},{\"fact_id\":\"INV_S1\",\"dim1_factual\":\"CONTINUING\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"quote\":\"截至本公告披露日，中国证监会的调查尚在进行中\",\"doc\":\"公告2026-080\",\"page\":1},{\"fact_id\":\"INV_S2\",\"dim1_factual\":\"DETAIL_EXPANDED\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"quote\":\"公司于2025年12月19日收到……《立案告知书》（证监立案字0032025031号、证监立案字0032025032号）……中国证监会决定对公司及实际控制人张锦红立案\",\"doc\":\"公告2026-097\",\"page\":2},{\"fact_id\":\"INV_S3\",\"dim1_factual\":\"CONTINUING\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"quote\":\"公司于2025年12月19日收到中国证券监督管理委员会出具的《立案告知书》……中国证监会决定对公司及实际控制人张锦红立案\",\"doc\":\"公告2026-098\",\"page\":2},{\"fact_id\":\"MR_S1\",\"dim1_factual\":\"NEWLY_DISCLOSED\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"ALLEGATION\",\"quote\":\"可能触及重大违法强制退市情形。若后续经中国证监会行政处罚认定的事实……公司股票将被实施重大违法强制退市\",\"doc\":\"公告2026-080\",\"page\":1},{\"fact_id\":\"MR_S2\",\"dim1_factual\":\"DETAIL_EXPANDED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"quote\":\"根据收到的《行政处罚事先告知书》认定情况，公司可能触及《上海证券交易所科创板股票上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强制退市\",\"doc\":\"公告2026-097\",\"page\":1},{\"fact_id\":\"MR_S3\",\"dim1_factual\":\"CONTINUING\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"quote\":\"根据收到的《告知书》认定情况，公司可能触及《股票上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强制退市\",\"doc\":\"公告2026-098\",\"page\":1},{\"fact_id\":\"TR_S1\",\"dim1_factual\":\"NOT_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"UNKNOWN\",\"quote\":\"该公告未提及交易类退市风险\",\"doc\":\"公告2026-080\",\"page\":1},{\"fact_id\":\"TR_S2\",\"dim1_factual\":\"NOT_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"UNKNOWN\",\"quote\":\"该公告未提及交易类退市风险\",\"doc\":\"公告2026-097\",\"page\":1},{\"fact_id\":\"TR_S3\",\"dim1_factual\":\"NEWLY_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"DISCLOSED_MARKET_DATA\",\"quote\":\"公司股票2026年10月12日收盘价格0.96元/股，总市值2.24亿元，股票日收盘价格首次低于1元……公司股票已连续8个交易日每日股票收盘市值低于3亿元\",\"doc\":\"公告2026-098\",\"page\":1},{\"fact_id\":\"PN_S1\",\"dim1_factual\":\"NOT_DISCLOSED\",\"dim2_procedural\":\"NOT_APPLICABLE\",\"dim3_evidentiary\":\"UNKNOWN\",\"quote\":\"该公告未提及行政处罚事先告知书\",\"doc\":\"公告2026-080\",\"page\":1},{\"fact_id\":\"PN_S2\",\"dim1_factual\":\"NEWLY_DISCLOSED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"quote\":\"2026年9月11日，公司收到中国证券监督管理委员会上海监管局……下发的《行政处罚事先告知书》（沪证监处罚字[2026]11号）\",\"doc\":\"公告2026-097\",\"page\":1},{\"fact_id\":\"PN_S3\",\"dim1_factual\":\"CONTINUING\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"NOTICE_CONTENT\",\"quote\":\"公司于2026年9月11日收到中国证监会上海监管局……下发的《行政处罚事先告知书》（沪证监处罚字[2026]11号）\",\"doc\":\"公告2026-098\",\"page\":1},{\"fact_id\":\"FD_S1\",\"dim1_factual\":\"NOT_YET_RECEIVED\",\"dim2_procedural\":\"INVESTIGATION\",\"dim3_evidentiary\":\"UNKNOWN\",\"quote\":\"截至本公告披露日，中国证监会的调查尚在进行中\",\"doc\":\"公告2026-080\",\"page\":1},{\"fact_id\":\"FD_S2\",\"dim1_factual\":\"NOT_YET_RECEIVED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"UNKNOWN\",\"quote\":\"截至本公告披露日，公司尚未收到就上述立案调查事项的正式处罚决定\",\"doc\":\"公告2026-097\",\"page\":2},{\"fact_id\":\"FD_S3\",\"dim1_factual\":\"NOT_YET_RECEIVED\",\"dim2_procedural\":\"PRIOR_NOTICE\",\"dim3_evidentiary\":\"UNKNOWN\",\"quote\":\"截至本公告披露日，公司尚未收到就上述立案调查事项的正式处罚决定\",\"doc\":\"公告2026-098\",\"page\":2}],\"unknown_slots\":[{\"fact_id\":\"UNK_U_FD\",\"item_id\":\"U_FD\",\"action\":\"ABSTAIN\",\"dim1_factual\":\"UNKNOWN\"},{\"fact_id\":\"UNK_U_TR_PRE\",\"item_id\":\"U_TR_PRE\",\"action\":\"ABSTAIN\",\"dim1_factual\":\"UNKNOWN\"},{\"fact_id\":\"UNK_U_INV_DATE\",\"item_id\":\"U_INV_DATE\",\"action\":\"ABSTAIN\",\"dim1_factual\":\"UNKNOWN\"}],\"complete\":true}",
+ "error": null,
+ "parsed": {
+  "answers": [
+   {
+    "fact_id": "VF_S1",
+    "dim1_factual": "DETAIL_EXPANDED",
+    "dim2_procedural": "INVESTIGATION",
+    "dim3_evidentiary": "ALLEGATION",
+    "quote": "现已初步查明，公司披露的部分年度财务信息涉嫌虚假记载",
+    "doc": "公告2026-080",
+    "page": 1
+   },
+   {
+    "fact_id": "VF_S2",
+    "dim1_factual": "DETAIL_EXPANDED",
+    "dim2_procedural": "PRIOR_NOTICE",
+    "dim3_evidentiary": "NOTICE_CONTENT",
+    "quote": "公司2021年年度报告虚增利润总额4,383.65万元……2024年年度报告虚增营业收入23,142.16万元……虚增利润总额556.72万元",
+    "doc": "公告2026-097",
+    "page": 2
+   },
+   {
+    "fact_id": "VF_S3",
+    "dim1_factual": "NOT_DISCLOSED",
+    "dim2_procedural": "NOT_APPLICABLE",
+    "dim3_evidentiary": "UNKNOWN",
+    "quote": "公告未披露虚增利润/营收具体事实",
+    "doc": "公告2026-098",
+    "page": 1
+   },
+   {
+    "fact_id": "INV_S1",
+    "dim1_factual": "CONTINUING",
+    "dim2_procedural": "INVESTIGATION",
+    "dim3_evidentiary": "ALLEGATION",
+    "quote": "截至本公告披露日，中国证监会的调查尚在进行中",
+    "doc": "公告2026-080",
+    "page": 1
+   },
+   {
+    "fact_id": "INV_S2",
+    "dim1_factual": "DETAIL_EXPANDED",
+    "dim2_procedural": "INVESTIGATION",
+    "dim3_evidentiary": "ALLEGATION",
+    "quote": "公司于2025年12月19日收到……《立案告知书》（证监立案字0032025031号、证监立案字0032025032号）……中国证监会决定对公司及实际控制人张锦红立案",
+    "doc": "公告2026-097",
+    "page": 2
+   },
+   {
+    "fact_id": "INV_S3",
+    "dim1_factual": "CONTINUING",
+    "dim2_procedural": "INVESTIGATION",
+    "dim3_evidentiary": "ALLEGATION",
+    "quote": "公司于2025年12月19日收到中国证券监督管理委员会出具的《立案告知书》……中国证监会决定对公司及实际控制人张锦红立案",
+    "doc": "公告2026-098",
+    "page": 2
+   },
+   {
+    "fact_id": "MR_S1",
+    "dim1_factual": "NEWLY_DISCLOSED",
+    "dim2_procedural": "INVESTIGATION",
+    "dim3_evidentiary": "ALLEGATION",
+    "quote": "可能触及重大违法强制退市情形。若后续经中国证监会行政处罚认定的事实……公司股票将被实施重大违法强制退市",
+    "doc": "公告2026-080",
+    "page": 1
+   },
+   {
+    "fact_id": "MR_S2",
+    "dim1_factual": "DETAIL_EXPANDED",
+    "dim2_procedural": "PRIOR_NOTICE",
+    "dim3_evidentiary": "NOTICE_CONTENT",
+    "quote": "根据收到的《行政处罚事先告知书》认定情况，公司可能触及《上海证券交易所科创板股票上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强制退市",
+    "doc": "公告2026-097",
+    "page": 1
+   },
+   {
+    "fact_id": "MR_S3",
+    "dim1_factual": "CONTINUING",
+    "dim2_procedural": "PRIOR_NOTICE",
+    "dim3_evidentiary": "NOTICE_CONTENT",
+    "quote": "根据收到的《告知书》认定情况，公司可能触及《股票上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强制退市",
+    "doc": "公告2026-098",
+    "page": 1
+   },
+   {
+    "fact_id": "TR_S1",
+    "dim1_factual": "NOT_DISCLOSED",
+    "dim2_procedural": "NOT_APPLICABLE",
+    "dim3_evidentiary": "UNKNOWN",
+    "quote": "该公告未提及交易类退市风险",
+    "doc": "公告2026-080",
+    "page": 1
+   },
+   {
+    "fact_id": "TR_S2",
+    "dim1_factual": "NOT_DISCLOSED",
+    "dim2_procedural": "NOT_APPLICABLE",
+    "dim3_evidentiary": "UNKNOWN",
+    "quote": "该公告未提及交易类退市风险",
+    "doc": "公告2026-097",
+    "page": 1
+   },
+   {
+    "fact_id": "TR_S3",
+    "dim1_factual": "NEWLY_DISCLOSED",
+    "dim2_procedural": "NOT_APPLICABLE",
+    "dim3_evidentiary": "DISCLOSED_MARKET_DATA",
+    "quote": "公司股票2026年10月12日收盘价格0.96元/股，总市值2.24亿元，股票日收盘价格首次低于1元……公司股票已连续8个交易日每日股票收盘市值低于3亿元",
+    "doc": "公告2026-098",
+    "page": 1
+   },
+   {
+    "fact_id": "PN_S1",
+    "dim1_factual": "NOT_DISCLOSED",
+    "dim2_procedural": "NOT_APPLICABLE",
+    "dim3_evidentiary": "UNKNOWN",
+    "quote": "该公告未提及行政处罚事先告知书",
+    "doc": "公告2026-080",
+    "page": 1
+   },
+   {
+    "fact_id": "PN_S2",
+    "dim1_factual": "NEWLY_DISCLOSED",
+    "dim2_procedural": "PRIOR_NOTICE",
+    "dim3_evidentiary": "NOTICE_CONTENT",
+    "quote": "2026年9月11日，公司收到中国证券监督管理委员会上海监管局……下发的《行政处罚事先告知书》（沪证监处罚字[2026]11号）",
+    "doc": "公告2026-097",
+    "page": 1
+   },
+   {
+    "fact_id": "PN_S3",
+    "dim1_factual": "CONTINUING",
+    "dim2_procedural": "PRIOR_NOTICE",
+    "dim3_evidentiary": "NOTICE_CONTENT",
+    "quote": "公司于2026年9月11日收到中国证监会上海监管局……下发的《行政处罚事先告知书》（沪证监处罚字[2026]11号）",
+    "doc": "公告2026-098",
+    "page": 1
+   },
+   {
+    "fact_id": "FD_S1",
+    "dim1_factual": "NOT_YET_RECEIVED",
+    "dim2_procedural": "INVESTIGATION",
+    "dim3_evidentiary": "UNKNOWN",
+    "quote": "截至本公告披露日，中国证监会的调查尚在进行中",
+    "doc": "公告2026-080",
+    "page": 1
+   },
+   {
+    "fact_id": "FD_S2",
+    "dim1_factual": "NOT_YET_RECEIVED",
+    "dim2_procedural": "PRIOR_NOTICE",
+    "dim3_evidentiary": "UNKNOWN",
+    "quote": "截至本公告披露日，公司尚未收到就上述立案调查事项的正式处罚决定",
+    "doc": "公告2026-097",
+    "page": 2
+   },
+   {
+    "fact_id": "FD_S3",
+    "dim1_factual": "NOT_YET_RECEIVED",
+    "dim2_procedural": "PRIOR_NOTICE",
+    "dim3_evidentiary": "UNKNOWN",
+    "quote": "截至本公告披露日，公司尚未收到就上述立案调查事项的正式处罚决定",
+    "doc": "公告2026-098",
+    "page": 2
+   }
+  ],
+  "unknown_slots": [
+   {
+    "fact_id": "UNK_U_FD",
+    "item_id": "U_FD",
+    "action": "ABSTAIN",
+    "dim1_factual": "UNKNOWN"
+   },
+   {
+    "fact_id": "UNK_U_TR_PRE",
+    "item_id": "U_TR_PRE",
+    "action": "ABSTAIN",
+    "dim1_factual": "UNKNOWN"
+   },
+   {
+    "fact_id": "UNK_U_INV_DATE",
+    "item_id": "U_INV_DATE",
+    "action": "ABSTAIN",
+    "dim1_factual": "UNKNOWN"
+   }
+  ],
+  "complete": true
+ },
+ "json_ok": true
+}

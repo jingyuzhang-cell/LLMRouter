@@ -1,0 +1,45 @@
+--- a/runner.py
++++ b/runner.py
+@@ -412,35 +412,13 @@
+ 
+ 
+ def adapt_sink(sink_text, contracts, tid):
+-    c = contracts[tid]
+-    src = c["_source_pages"]
+-    obj = parse_json(sink_text)
+-    if not isinstance(obj, dict):
+-        return {"delivery_valid": False, "claims_complete": False, "claims": [],
+-                "abstentions": [], "raw": sink_text[:400]}
+-    claims = []
+-    for a in obj.get("answers", []) or []:
+-        if not isinstance(a, dict) or not a.get("fact_id"):
+-            continue
+-        doc_id, quote = a.get("doc", ""), str(a.get("quote", ""))
+-        page = 1
+-        for d, p, text in doc_pages(src):
+-            if d == doc_id and norm(quote) and norm(quote)[:20] in norm(text):
+-                page = p
+-                break
+-        rec = src.get(doc_id, {})
+-        pages = rec.get("pages", {})
+-        prec = pages.get(str(page), pages.get(page, {}))
+-        claims.append({"claim_id": a["fact_id"], "fact_id": a["fact_id"], "material": True,
+-                       "value": a.get("value"), "citations": [{
+-                           "doc_id": doc_id, "page": page, "quote": quote,
+-                           "raw_sha256": rec.get("raw_sha256", ""),
+-                           "page_sha256": prec.get("page_sha256", "")}]})
+-    abst = [{"item_id": x.get("item_id"), "text": x.get("text", "")}
+-            for x in obj.get("abstentions", []) if isinstance(x, dict)]
+-    return {"delivery_valid": True, "claims_complete": obj.get("complete") is True,
+-            "claims": claims, "abstentions": abst, "abstentions_complete": True,
+-            "conflict_acknowledgements": [], "raw": sink_text[:400]}
++    # Future-runner integration only. Do not overwrite closed-batch artifacts.
++    import sys
++    adapter_path = "/root/research_outputs/TERMINAL_ADAPTER_FIX_20261101"
++    if adapter_path not in sys.path:
++        sys.path.insert(0, adapter_path)
++    from online_adapter import adapt_sink as validated_adapt_sink
++    return validated_adapt_sink(sink_text, contracts, tid)
+ 
+ 
+ def eval_run(contracts, tid, terminal_output):

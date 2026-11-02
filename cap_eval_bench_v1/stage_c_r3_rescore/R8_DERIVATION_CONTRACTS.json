@@ -1,0 +1,45 @@
+{
+ "version": "R8_DERIVATION_CONTRACTS_V1",
+ "created": "2026-10-30",
+ "status": "FROZEN SPEC (implementation requires operator authorization; no runtime file touched)",
+ "extraction_nodes": {
+  "kinds": [
+   "index",
+   "extracts"
+  ],
+  "required_targets_per_doc": {
+   "dates": "ALL distinct dates (whitespace-tolerant pattern), each with span",
+   "ratios": "ALL exchange-ratio patterns (1:X.XXXX / 每股换得), each with span",
+   "amounts": "penalty/fraud amounts with units, each with span"
+  },
+  "rationale": "R8-1 audit: E3 plan-side ratio 0.1335 extracted 0/4 prefixes (root cause of the fabricated-consistency); E1 dates 2/4-3/4 unstable",
+  "completeness_metric": "per-doc regex ground truth (zero-call auditable): extraction_completeness = extracted/ground_truth per target class"
+ },
+ "timeline_node": {
+  "required_operands": "ALL dates from >=2 distinct source docs, carried in the FactLedger with fid+doc+span",
+  "computation_rule": "for each cross-doc date pair (a,b): interval_days=|b-a|; emit one derived fact per pair citing operand fids",
+  "output_schema": "new_facts += {content:'<N>天', kind:'derived', operand_fids:[fa,fb], source_docs:[da,db], status:'confirmed'}",
+  "unknown_boundary": "either doc contributes ZERO dates -> emit {status:'insufficient_evidence', note:'缺少<doc>侧日期操作数'}; asserting an interval without both operands is a CONTRACT VIOLATION"
+ },
+ "verification_node": {
+  "required_operands": "the cross-doc comparable value pair (both sides) present in the ledger with fids+spans",
+  "computation_rule": "compare the two values; emit conclusion citing BOTH values and spans",
+  "output_schema": "new_facts += {content:'<项>不一致（方案1:0.1335 vs 公告1:0.1339）', operand_fids:[fa,fb], status:'confirmed'}",
+  "unknown_boundary": "one side missing -> {status:'insufficient_evidence', note:'无法比较：缺<doc>侧操作数'}; asserting 一致/不一致 with a single operand is a CONTRACT VIOLATION (the E3 fabrication class, scorer-refused)",
+  "scorer_hook": "operand-aware crediting requires both canonical operands AND the conclusion; violations remain detectable"
+ },
+ "z_increment_design": {
+  "principle": "same fork, identical inputs/budget/K_m; only structure differs",
+  "arm_A": "plain verification node (single wide-scope chk)",
+  "arm_B": "SPLIT_VERIFY: two per-lineage verifiers -> both required downstream",
+  "measures": [
+   "downstream_fact_recovery (operand-aware)",
+   "completion",
+   "tokens",
+   "suffix_makespan",
+   "contract_violations"
+  ],
+  "matrix_for_future_real_run": "SC-E1+SC-E3 x S2_contract@verification x {A,B} x 2 reps = 8 runs; est ~8x9 calls ~ 72 calls / ~90K tokens (from R6 actuals: S2 cell ~13 calls/~23K tok for 2 arms)",
+  "gate": "zero-call simulation below must show measurable separation before any authorization"
+ }
+}

@@ -1,0 +1,418 @@
+{
+ "checks": {
+  "A1a all six arms ran with distinct registered deciders": {
+   "ok": true,
+   "detail": ""
+  },
+  "A1b Static-Parallel flagged no-recovery weak baseline": {
+   "ok": true,
+   "detail": ""
+  },
+  "A1c R-only rationale records real family comparison": {
+   "ok": true,
+   "detail": ""
+  },
+  "A2 >=5 distinct physical trace signatures across fault suite": {
+   "ok": true,
+   "detail": "5 distinct of 6"
+  },
+  "A3a single transient transport recovered by all adaptive arms": {
+   "ok": true,
+   "detail": "{'Static-Parallel': 'INCOMPLETE_NO_RECOVERY', 'Simple-Dynamic': 'COMPLETE', 'R-only': 'COMPLETE', 'pi-only': 'COMPLETE', 'Joint(R,pi)': 'COMPLETE', 'Joint(Z,R,pi)': 'COMPLETE'}"
+  },
+  "A3b double transient: Joint recovers via repeated feedback rounds (bounded)": {
+   "ok": true,
+   "detail": "feedback rounds=2, Joint=COMPLETE, SimpleDyn=INCOMPLETE_RECOVERY_EXHAUSTED"
+  },
+  "A3c persistent contract violation: ONLY Joint(Z,R,pi) completes (via SPLIT)": {
+   "ok": true,
+   "detail": "completers=['Joint(Z,R,pi)']"
+  },
+  "A4a K=1 contention produces queue waits; K=2 does not": {
+   "ok": true,
+   "detail": "wait K1=18.0s K2=0.0s"
+  },
+  "A4b parallel makespan < serial latency sum": {
+   "ok": true,
+   "detail": "mk=50.8s < serial=69s"
+  },
+  "A4c deadline + cost recorded per run": {
+   "ok": true,
+   "detail": ""
+  },
+  "A5a healthy nodes executed exactly once (cache)": {
+   "ok": true,
+   "detail": "{'e1_idx': 1, 'e1_ext_pen': 1, 'e1_ext_proc': 1, 'e1_fin': 1, 'e1_tl': 1, 'e1_chk': 2, 'e1_rpt': 1}"
+  },
+  "A5b failed node version advanced, healthy stay v1": {
+   "ok": true,
+   "detail": ""
+  },
+  "A5c multi-parent input: chk prompt carries both parents (v-tagged), no non-parents": {
+   "ok": true,
+   "detail": "parents=['e1_fin', 'e1_tl']"
+  },
+  "A6a scorer deterministic and content-driven (not arm-driven)": {
+   "ok": true,
+   "detail": "Q(A)=0.7143 Q(B)=0.1429"
+  },
+  "A7a both models in the frozen pool actually used": {
+   "ok": true,
+   "detail": "{'glm53', 'glm53flash'}"
+  },
+  "A7b concurrency never exceeds K_m per model": {
+   "ok": true,
+   "detail": "max concurrent=2 <= {'glm53': 2, 'glm53flash': 2}"
+  },
+  "A8a all 12 frozen tasks: docs present, silver refs non-empty, deadline set": {
+   "ok": true,
+   "detail": "12/12 OK"
+  },
+  "A8b SC raw PDFs match manifest sha256_raw": {
+   "ok": true,
+   "detail": ""
+  },
+  "A8c trace complete: rounds+calls (model/latency/wait/usage/version/attempt), budget accounting consistent": {
+   "ok": true,
+   "detail": "9 calls, 7 rounds, tokens=11801"
+  }
+ },
+ "pass": true,
+ "fingerprints": {
+  "Static-Parallel": {
+   "status": "INCOMPLETE_NO_RECOVERY",
+   "z": [],
+   "R": [],
+   "models": [
+    "glm53",
+    "glm53flash"
+   ],
+   "seq": [
+    [
+     "e1_idx",
+     "glm53"
+    ],
+    [
+     "e1_ext_pen",
+     "glm53"
+    ],
+    [
+     "e1_ext_proc",
+     "glm53"
+    ],
+    [
+     "e1_fin",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53flash"
+    ]
+   ],
+   "n_calls": 5,
+   "tokens": 7727,
+   "makespan": 26.0,
+   "baseline": "no-recovery weak baseline"
+  },
+  "Simple-Dynamic": {
+   "status": "COMPLETE",
+   "z": [
+    "KEEP"
+   ],
+   "R": [
+    [
+     "e1_tl"
+    ]
+   ],
+   "models": [
+    "glm53",
+    "glm53flash"
+   ],
+   "seq": [
+    [
+     "e1_idx",
+     "glm53"
+    ],
+    [
+     "e1_ext_pen",
+     "glm53"
+    ],
+    [
+     "e1_ext_proc",
+     "glm53"
+    ],
+    [
+     "e1_fin",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53"
+    ],
+    [
+     "e1_chk",
+     "glm53"
+    ],
+    [
+     "e1_rpt",
+     "glm53"
+    ]
+   ],
+   "n_calls": 8,
+   "tokens": 11715,
+   "makespan": 50.8,
+   "baseline": "adaptive"
+  },
+  "R-only": {
+   "status": "COMPLETE",
+   "z": [
+    "KEEP"
+   ],
+   "R": [
+    [
+     "e1_tl"
+    ]
+   ],
+   "models": [
+    "glm53",
+    "glm53flash"
+   ],
+   "seq": [
+    [
+     "e1_idx",
+     "glm53"
+    ],
+    [
+     "e1_ext_pen",
+     "glm53"
+    ],
+    [
+     "e1_ext_proc",
+     "glm53"
+    ],
+    [
+     "e1_fin",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53flash"
+    ],
+    [
+     "e1_chk",
+     "glm53"
+    ],
+    [
+     "e1_rpt",
+     "glm53"
+    ]
+   ],
+   "n_calls": 8,
+   "tokens": 11032,
+   "makespan": 52.8,
+   "baseline": "adaptive"
+  },
+  "pi-only": {
+   "status": "COMPLETE",
+   "z": [
+    "KEEP"
+   ],
+   "R": [
+    [
+     "e1_tl"
+    ]
+   ],
+   "models": [
+    "glm53",
+    "glm53flash"
+   ],
+   "seq": [
+    [
+     "e1_idx",
+     "glm53"
+    ],
+    [
+     "e1_ext_pen",
+     "glm53"
+    ],
+    [
+     "e1_ext_proc",
+     "glm53"
+    ],
+    [
+     "e1_fin",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53"
+    ],
+    [
+     "e1_chk",
+     "glm53"
+    ],
+    [
+     "e1_rpt",
+     "glm53"
+    ]
+   ],
+   "n_calls": 8,
+   "tokens": 11715,
+   "makespan": 50.8,
+   "baseline": "adaptive"
+  },
+  "Joint(R,pi)": {
+   "status": "COMPLETE",
+   "z": [
+    "KEEP"
+   ],
+   "R": [
+    [
+     "e1_tl"
+    ]
+   ],
+   "models": [
+    "glm53",
+    "glm53flash"
+   ],
+   "seq": [
+    [
+     "e1_idx",
+     "glm53"
+    ],
+    [
+     "e1_ext_pen",
+     "glm53"
+    ],
+    [
+     "e1_ext_proc",
+     "glm53"
+    ],
+    [
+     "e1_fin",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53"
+    ],
+    [
+     "e1_chk",
+     "glm53"
+    ],
+    [
+     "e1_rpt",
+     "glm53"
+    ]
+   ],
+   "n_calls": 8,
+   "tokens": 11715,
+   "makespan": 50.8,
+   "baseline": "adaptive"
+  },
+  "Joint(Z,R,pi)": {
+   "status": "COMPLETE",
+   "z": [
+    "KEEP"
+   ],
+   "R": [
+    [
+     "e1_tl"
+    ]
+   ],
+   "models": [
+    "glm53",
+    "glm53flash"
+   ],
+   "seq": [
+    [
+     "e1_idx",
+     "glm53"
+    ],
+    [
+     "e1_ext_pen",
+     "glm53"
+    ],
+    [
+     "e1_ext_proc",
+     "glm53"
+    ],
+    [
+     "e1_fin",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53flash"
+    ],
+    [
+     "e1_tl",
+     "glm53"
+    ],
+    [
+     "e1_chk",
+     "glm53"
+    ],
+    [
+     "e1_rpt",
+     "glm53"
+    ]
+   ],
+   "n_calls": 8,
+   "tokens": 11715,
+   "makespan": 50.8,
+   "baseline": "adaptive"
+  }
+ },
+ "transport_single": {
+  "Static-Parallel": "INCOMPLETE_NO_RECOVERY",
+  "Simple-Dynamic": "COMPLETE",
+  "R-only": "COMPLETE",
+  "pi-only": "COMPLETE",
+  "Joint(R,pi)": "COMPLETE",
+  "Joint(Z,R,pi)": "COMPLETE"
+ },
+ "transport_double": {
+  "Static-Parallel": "INCOMPLETE_NO_RECOVERY",
+  "Simple-Dynamic": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "R-only": "COMPLETE",
+  "pi-only": "COMPLETE",
+  "Joint(R,pi)": "COMPLETE",
+  "Joint(Z,R,pi)": "COMPLETE"
+ },
+ "contract_persistent": {
+  "Static-Parallel": "INCOMPLETE_NO_RECOVERY",
+  "Simple-Dynamic": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "R-only": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "pi-only": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "Joint(R,pi)": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "Joint(Z,R,pi)": "COMPLETE"
+ },
+ "km": {
+  "K1": {
+   "wait": 18.0,
+   "makespan": 68.8
+  },
+  "K2": {
+   "wait": 0.0,
+   "makespan": 50.8
+  },
+  "serial_latency_sum": 68.8
+ }
+}

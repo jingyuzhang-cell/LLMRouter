@@ -1,0 +1,38 @@
+{
+ "batch_name": "dd_v77_n5_paired_v3",
+ "max_calls": 23,
+ "max_tokens": 100000,
+ "per_model_quota": {
+  "glm53": {
+   "calls": 8,
+   "tokens": 34000
+  },
+  "glm53flash": {
+   "calls": 15,
+   "tokens": 56000
+  }
+ },
+ "max_cash": 0,
+ "allowed_models": [
+  "glm53",
+  "glm53flash"
+ ],
+ "tasks": [
+  "D_r1-n5-IB-vs-Alt-2rep"
+ ],
+ "issued_by": "PENDING",
+ "created": "2026-10-30",
+ "execution_design": "staged within this single batch: Stage 1 = n1,n2 only (2 calls) with contract gate (stop_reason / complete JSON / doc-id binding / input-derived fact coverage); any FAIL -> fail-stop, no retries. Stage 2 = remaining 21 calls with per-node contract gates (n5 exempt as injected fault), fail-stop on failure.",
+ "basis": {
+  "operator_ruling": "DD-V7.7 engineering PASS; third paired experiment conditional GO; model calls HOLD pending this config freeze and explicit user authorization",
+  "contract_audit": "DD_V77_CONTRACT_AUDIT.md (defects F1-F4 fixed)",
+  "preadmission": "DD_V77_PREADMISSION.md (7/7 items PASS)",
+  "final_freeze": "dd_v77_dryrun/DD_V77_FINAL_FREEZE.json (all SHAs, worst-case budget table 89,990 tokens, frozen 23-request manifest)",
+  "dryrun": "dd_v77_dryrun/DD_V77_DRYRUN_RESULTS.json (38/38 PASS incl. stage-gate group T7)",
+  "runner_sha256": "aeeb75744dd984de67bf10dd819a451bf8416ae7c53ab4918fae85cc55998de5",
+  "budget_derivation": "per-request analytic worst case (extraction outputs at 1536-token cap, others at 768; parent contexts capped at 3800 chars/parent = full coverage) sums to 89,990; envelope 100,000 = +11% over worst case; Meter conservative-reservation hard guard enforces per call; delta from v2's 114,000 explained in freeze (removal of contract-illegal duplicate-doc extraction prompts only; per-doc 6000-char slice cap unchanged)",
+  "v2_cache_reuse": "0/23; fresh ledger; no old-batch path references in runner source",
+  "two_checks": "DD_V77_TWO_CHECKS_REPORT.md: CHECK1 FAIL (both documents penalty-decision sections entirely beyond 6000-char slices; 21+4 unreachable facts; scorer anchor blind to 13 full-text facts), CHECK2 FAIL (parent_ctx silent [:3800] truncation, no fail-closed; 785-2321 chars lost at constructible 3-4 ch/tok densities). NOT ready for real execution until operator-approved fixes + refreeze."
+ },
+ "status": "PENDING-FIX"
+}

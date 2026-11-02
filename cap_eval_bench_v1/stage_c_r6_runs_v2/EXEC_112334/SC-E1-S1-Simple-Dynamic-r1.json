@@ -1,0 +1,255 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e1_tl"
+   ],
+   "reoptimize": [],
+   "rationale": "simple-dynamic: escalate failed ['e1_tl'] to stronger model"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "simple-dynamic: escalate failed [] to stronger model"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "simple-dynamic: escalate failed [] to stronger model"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e1_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 959,
+    "out": 540
+   },
+   "latency_s": 15.253
+  },
+  {
+   "node": "e1_ext_pen",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1117,
+    "out": 563
+   },
+   "latency_s": 9.464
+  },
+  {
+   "node": "e1_ext_proc",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1113,
+    "out": 368
+   },
+   "latency_s": 7.836
+  },
+  {
+   "node": "e1_fin",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 733,
+    "out": 698
+   },
+   "latency_s": 13.339
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 731,
+    "out": 599
+   },
+   "latency_s": 7.316
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53",
+   "attempt": 2,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 731,
+    "out": 835
+   },
+   "latency_s": 7.953
+  },
+  {
+   "node": "e1_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 799,
+    "out": 858
+   },
+   "latency_s": 27.548
+  },
+  {
+   "node": "e1_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2293,
+    "out": 856
+   },
+   "latency_s": 13.572
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "文书索引：zzd_penalty_2020为獐子岛公告2020-48，关于收到行政处罚决定书及市场禁入决定书的公告",
+   "kind": "索引",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f2",
+   "content": "文书索引：zzd_notice_2019为獐子岛公告2019-34，关于收到行政处罚及市场禁入事先告知书的公告",
+   "kind": "索引",
+   "status": "confirmed",
+   "source": "zzd_notice_2019"
+  },
+  {
+   "fid": "f3",
+   "content": "两份文书时间线：2018-02-09立案调查→2019-07-09事先告知书→2020-06-23行政处罚及市场禁入决定书，构成完整处罚流程",
+   "kind": "推理",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  },
+  {
+   "fid": "f4",
+   "content": "2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）",
+   "kind": "事实",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f5",
+   "content": "公司判断违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定情形",
+   "kind": "事实",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f6",
+   "content": "2018-02-09公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）",
+   "kind": "事实",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f7",
+   "content": "2019-07-09公司收到证监会处罚字【2019】95号事先告知书，认定事实未触及重大违法强制退市情形",
+   "kind": "事实",
+   "status": "confirmed",
+   "source": "zzd_notice_2019"
+  },
+  {
+   "fid": "f8",
+   "content": "虚假记载具体年度、虚增利润金额：所提供的两份文档节选（各前600字）未包含处罚决定书中关于虚假记载年份及虚增利润数额的具体认定内容",
+   "kind": "事实",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  },
+  {
+   "fid": "f9",
+   "content": "罚款金额：所提供文档节选未披露证监会对公司及相关责任人的罚款金额",
+   "kind": "事实",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f10",
+   "content": "2016年虚增利润13114.77万元：所提供的两份文档节选（各前600字）均未包含具体虚增利润数额的认定内容，无法与告知书口径进行比对核验",
+   "kind": "事实",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  },
+  {
+   "fid": "f11",
+   "content": "交叉核查结论：时间线部分（f3、f4、f6、f7）各节点日期与文书编号相互印证，无矛盾，判定为一致；财务核验部分（f8、f9、f10）因文档节选缺少具体金额与年度认定内容，无法完成告知书与决定书口径比对，标注UNRESOLVED，需获取处罚决定书全文后复核",
+   "kind": "推理",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020,zzd_notice_2019"
+  }
+ ],
+ "terminal_stats": {
+  "n": 11,
+  "confirmed": 8,
+  "unconfirmed": 0,
+  "insufficient_evidence": 3,
+  "upstream_missing": 0
+ },
+ "report": {
+  "investigation_timeline": "2018-02-09獐子岛因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号，公告2018-14）；此后至2019-06公司按月披露16次立案调查进展暨风险提示公告；2019-07-09公司及相关人员收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号，公告2019-34）；2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）（公告2020-48）。",
+  "fraud_nature": "信息披露违法违规。证监会经调查对公司作出行政处罚并采取市场禁入措施；根据事先告知书及处罚决定书认定事实，公司判断违法行为未触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形。具体的虚假记载年度、虚增利润金额及罚款金额因现有文档节选未包含相关内容而无法认定（UNRESOLVED）。",
+  "report": "獐子岛集团股份有限公司（证券代码002069）信息披露违法违规案调查报告\n\n一、案件时间线\n2018年2月9日，公司收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查【f6】，之后公司在指定媒体连续披露16次立案调查进展暨风险提示公告【f1】。2019年7月9日，公司及相关人员收到证监会处罚字【2019】95号《行政处罚及市场禁入事先告知书》【f2】【f7】。2020年6月23日，公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）【f4】，构成从立案调查到事先告知书、再到正式处罚决定的完整处罚流程【f3】。\n\n二、违法性质\n本案属信息披露违法违规。公司及相关责任人员（公告提及吴厚刚、梁峻、勾荣、孙福君、于成家等）被采取行政处罚及市场禁入措施【f4】。两份文书均认定相关事实不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形【f5】【f7】。\n\n三、交叉核查结论\n时间线部分各节点日期与文书编号相互印证，无矛盾，判定一致【f3】【f11】。但财务核验部分未能完成：所提供的两份文档节选均未包含虚假记载具体年份、虚增利润数额（含所谓2016年虚增利润13114.77万元的说法无法核验）及罚款金额的认定内容【f8】【f9】【f10】，故口径比对标注UNRESOLVED，需获取处罚决定书全文后复核【f11】。\n\n四、结论与遗留事项\n已确认：完整处罚流程时间线、违法行为性质（信息披露违法违规）、不触及重大违法强制退市的认定。未能确认：虚假记载年度、虚增利润金额、罚款金额等具体财务认定，待补充处罚决定书全文证据后复核。",
+  "fact_ids_used": [
+   "f1",
+   "f2",
+   "f3",
+   "f4",
+   "f5",
+   "f6",
+   "f7",
+   "f8",
+   "f9",
+   "f10",
+   "f11"
+  ],
+  "unknown_marks": [
+   {
+    "fid": "f8",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f9",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f10",
+    "status": "insufficient_evidence"
+   }
+  ]
+ },
+ "makespan": 102.28,
+ "tokens": 13793,
+ "arm": "Simple-Dynamic",
+ "suffix_makespan": 49.07
+}

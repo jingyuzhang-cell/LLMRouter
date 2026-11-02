@@ -1,0 +1,39 @@
+{
+ "batch_name": "stage_c_r1_v1",
+ "max_calls": 550,
+ "max_tokens": 600000,
+ "per_model_quota": {
+  "glm53": {
+   "calls": 160,
+   "tokens": 266000
+  },
+  "glm53flash": {
+   "calls": 30,
+   "tokens": 50000
+  }
+ },
+ "max_cash": 0,
+ "allowed_models": [
+  "glm53",
+  "glm53flash"
+ ],
+ "tasks": "SC-E1,SC-E3 x S1_transport@timeline(left=1) x S2_contract@verification(persistent) x 6 arms x 2 reps = 48 runs",
+ "issued_by": "PENDING",
+ "created": "2026-10-30",
+ "status": "AWAITING_OPERATOR_AUTHORIZATION",
+ "execution_design": "shared paid prefix per (task, scenario, rep): arm-agnostic frozen pi0 execution up to and including the first injected fault, then all six arms fork from the byte-identical post-fault state (cross-arm identical initial fault by construction; independent sampling across reps via distinct prefix purposes). Executor-level fault injection shared by meter and deterministic adapter paths; failures and retries billed; meter path FAIL-CLOSED behind auth gate 'stage_c_r1_v1'.",
+ "basis": {
+  "operator_ruling": "Stage-C-R1 engineering PASS; 48-run conditional GO; model calls HOLD pending this final freeze and explicit authorization",
+  "final_freeze": "stage_c_r1_runs/STAGE_C_R1_FINAL_FREEZE.json (7/7 gates ALL PASS; 48 per-run fingerprints; all SHAs)",
+  "preadmission": "STAGE_C_R1_PREADMISSION.md",
+  "acceptance": "STAGE_C_R1_ACCEPTANCE.md (8/8) + stage_c_r1_runs/ACCEPTANCE_LOG.json",
+  "budget_derivation": "deterministic sweep with shared prefixes: 144 calls measured / 227,245 tokens estimated (measured 0.6295 chars-per-input-token + per-kind out caps, x1.3 margin = 295K) vs hard caps 550/600K; per-model measured glm53 124 calls/193.5K, flash 20/33.7K -> quotas +25-35% margin",
+  "entry_wiring": "meter path verified through stage_c_r1.py + six_arm_scheduler.py; old single-strategy path not imported; adapters called only via the shared Kernel; negative auth test rc=1 zero-call",
+  "split_closure": "SC-E3 SPLIT_VERIFY legality (verification contract, two distinct-kind healthy parents), negative test (same-kind parents rejected), downstream requires both branches, scorer consumes both split outputs, added cost fully billed (JointZ 12,080 > JointRP 11,498 tokens)",
+  "consistency_check": "stage_c_r1_runs/STAGE_C_R1_CONSISTENCY.json (9/9 PASS) + STAGE_C_R1_CONSISTENCY.md",
+  "workspace_event": "parallel session wiped stage_c_r1_runs/ at 09:45 and re-created the demo engine; production code verified intact by SHA (eaffda4e/cd68ec44); freeze + acceptance logs regenerated zero-call with identical results"
+ },
+ "z_scope": "TESTED_UNDER_S2_CONTRACT (SPLIT_VERIFY; SC-E3 primary for Z-increment analysis, SC-E1 replication only)",
+ "experiment_scope": "受控双异常（瞬断/持续合同违约）下的动态调度与有限 Z、R、π 联合机制验证——不构成三维联合优化优于全部强基线的一般性证明",
+ "superseded": "STAGE_C_R1_FINAL_CHECK.json (13/13, demo-engine generation, NOT operator-authorized matrix, invalid model alias)"
+}
