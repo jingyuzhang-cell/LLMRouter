@@ -174,3 +174,33 @@ EOF
 4. **非模拟值标注保持**：0.1977 仍标注为算术推演（0.7717×0.2838×0.95×0.95），0.8184 仍标注为 V2.2 连续敏感性（v23 未重算）。
 
 **状态不变：零调用，执行 HOLD。** 192 次执行仍需操作员逐文件 PASS + 明确书面 GO（批次名、调用上限、token 上限）。
+
+---
+
+## 十、最终收尾记录（2026-11-02，追加；不修改前述历史审计）
+
+本节为**追加**，前述各节（含 "19/17 项"、"power_sim.py V2.2" 等表述）为**当时时点的历史审计记录，按原样保留，不回写**。以下为最终状态，冲突时以本节为准。
+
+### 10.1 版本最终态
+
+| 材料 | 历史（前述各节） | **最终态** |
+|---|---|---|
+| 功效模拟脚本 | power_sim.py V2.2（scipy exact + 整数化） | **V2.3（同批联合模拟，L2=0.7717）**；V2.2 存档为 `power_sim_v22_legacy.py` |
+| 冻结材料项数 | 17 项 → 19 项（17/17、19/19 校验） | **26 项，26/26 校验** |
+| 可复现命令 | `python3 power_sim.py 20000 \| tee POWER_SIM_V2_2.log` | **`python3 power_sim.py 2>&1 \| tee POWER_SIM_V2_3.log`**（NSIM 固定 20000，不读命令行参数） |
+| 终局分析输入校验 | `isinstance(x, int)` | **`isinstance(x, bool) or not isinstance(x, int)`** + TP∈[0,23]；自检 6/6（含 bool-reject） |
+
+### 10.2 交付缺陷与根因（如实）
+
+- 首轮推送的 `git push origin` 指向 `file:///root` 本地克隆而非 GitHub（操作者 404 核验正确）；
+- 日志缺失根因：`.gitignore` 第 57 行 `*.log` 全局排除，`git add` 静默跳过 → `git add -f` 修复；
+- 修正后远端 26/26 齐全，逐文件 API 读取+重算 SHA-256 与 MANIFEST 一致。
+
+### 10.3 最终哈希（远端验证）
+
+分支 `stage-d-final-prereg-audit`；本文件所属 commit 由推送记录给出。26 项清单见 `MANIFEST_STAGE_D.json`（count=26），全部哈希在 `PACKAGE_SHA256.txt`（28 行 = 26 制品 + MANIFEST + ZIP）。
+
+### 10.4 审计包范围（最终）
+
+ZIP **仅含**：26 项正式制品 + `MANIFEST_STAGE_D.json` + `PACKAGE_SHA256.txt` + `README_AUDIT.md`（共 29 个文件条目，无目录树）。
+**不含**运行目录（`runs_d2/`、`runs_probe/`、`runs_probe2/`、`runs_final_dryrun/` 等）——这些为历史实验档案，保留在工作区，不随审计包分发。
