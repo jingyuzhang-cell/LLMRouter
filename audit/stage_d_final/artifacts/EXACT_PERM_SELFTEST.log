@@ -1,0 +1,13 @@
+=== exact_perm self-test ===
+  S3 [2,1,0,2,0]: {'p_value': 0.125, 'W_obs': 6.0, 'm': 3, 'significant': False, 'method': 'exact_sign_flip_2^3', 'n_enumerated': 8}
+  S4 [7,4,5,7,5]: {'p_value': 0.03125, 'W_obs': 15.0, 'm': 5, 'significant': True, 'method': 'exact_sign_flip_2^5', 'n_enumerated': 32}
+  stress 8x+1   : 0.00390625
+  stress +-     : 0.63671875
+  stress zero   : 1.0
+  self-test: 300 random cases, vectorized == brute-force enumeration (exact)
+
+=== 小样本功效演示 (nsim=1000; 终版数字见 power_sim.py) ===
+  基准保守: 整数 0.768 | 连续 0.812
+  更保守: 整数 0.515 | 连续 0.578
+  乐观: 整数 0.986 | 连续 0.989
+  S3 单族 8 对（整数）: 0.197
