@@ -47,21 +47,22 @@ def _validate(payload):
         sc, rep = p.get("scenario"), p.get("rep")
         if sc not in EXPECTED:
             raise SystemExit(f"input error: unknown scenario {sc!r}")
-        if not isinstance(rep, int) or not 1 <= rep <= EXPECTED[sc]:
+        if isinstance(rep, bool) or not isinstance(rep, int) or not 1 <= rep <= EXPECTED[sc]:
             raise SystemExit(f"input error: bad rep {rep!r} for {sc}")
         key = (sc, rep)
         if key in seen:
             raise SystemExit(f"input error: duplicate pair {key}")
         seen.add(key)
         for k in ("tp_proposed", "tp_simple"):
-            if not isinstance(p.get(k), int):
-                raise SystemExit(f"input error: {k} must be int for {key}")
+            v = p.get(k)
+            if isinstance(v, bool) or not isinstance(v, int) or not 0 <= v <= 23:
+                raise SystemExit(f"input error: {k} must be int in [0,23] for {key}, got {v!r}")
     for sc, n in EXPECTED.items():
         got = {rep for s, rep in seen if s == sc}
         if got != set(range(1, n + 1)):
             raise SystemExit(f"input error: {sc} expects reps 1..{n}, got {sorted(got)}")
     pr = payload.get("protection_regressions")
-    if not isinstance(pr, int) or pr < 0:
+    if isinstance(pr, bool) or not isinstance(pr, int) or pr < 0:
         raise SystemExit("input error: 'protection_regressions' must be a non-negative int")
     return pairs, pr
 
@@ -160,7 +161,7 @@ def _selftest():
         for sc, ds in diffs_by_family.items():
             for i, d in enumerate(ds, 1):
                 pairs.append({"scenario": sc, "rep": i,
-                              "tp_proposed": 20 + d, "tp_simple": 20})
+                              "tp_proposed": 16 + d, "tp_simple": 16})
         return pairs
 
     cases = [
@@ -197,6 +198,14 @@ def _selftest():
               f"HL={sd['hodges_lehmann']:.3f} "
               f"CI=[{sd['bootstrap_95ci'][0]:.3f},{sd['bootstrap_95ci'][1]:.3f}] "
               f"LOO_max={sd['leave_one_out']['max_p']:.6f}")
+    # bool 不得通过整数校验（操作者审计项）
+    try:
+        analyze({"experiment_id": "bool-reject",
+                 "pairs": [{"scenario": "S3", "rep": 1, "tp_proposed": True, "tp_simple": 16}],
+                 "protection_regressions": 0})
+        raise AssertionError("bool passed int check")
+    except SystemExit:
+        print("  [PASS] bool-reject: True rejected by strict int check")
     print("  all 5 selftest cases passed")
 
 

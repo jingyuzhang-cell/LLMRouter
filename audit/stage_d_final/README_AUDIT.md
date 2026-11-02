@@ -3,10 +3,13 @@
 状态：**HOLD，零调用**。192 次执行未授权。
 
 ## 目录结构
-- `artifacts/` — **26 项材料逐个独立文件**（可用 GitHub API 逐个读取并自行重算 SHA-256）
+- `artifacts/` — **26 项正式冻结材料逐个独立文件（与 MANIFEST 一一对应，无多余无缺失）**（可用 GitHub API 逐个读取并自行重算 SHA-256）
 - `MANIFEST_STAGE_D.json` — 26 项全 64 位 SHA-256（不含清单自身）
 - `PACKAGE_SHA256.txt` — artifacts/ + MANIFEST + ZIP 的全部哈希
-- `STAGE_D_AUDIT_PACKAGE.zip` — 同一批材料的压缩包
+- `STAGE_D_AUDIT_PACKAGE.zip` — 同一批材料的压缩包（内含历史辅助材料：d_executor.py、
+  STAGE_D_DRYRUN/EXECUTOR 日志、STAGE_D1_REPORT.md、D2 预注册草稿两版、FINAL_PREREGISTRATION.md、
+  STAGE_D_EXECUTOR_ASSET_AUDIT.md、别名日志 power_v23.log / VERIFY_L2_JOINT.log——
+  **这些仅为溯源保留，不属 26 项正式冻结材料，无第二清单**）
 
 ## 独立核验步骤（不依赖本包内的任何声明）
 1. `gh api repos/jingyuzhang-cell/LLMRouter/contents/audit/stage_d_final/artifacts/<file>?ref=stage-d-final-prereg-audit --jq .content | base64 -d | sha256sum`

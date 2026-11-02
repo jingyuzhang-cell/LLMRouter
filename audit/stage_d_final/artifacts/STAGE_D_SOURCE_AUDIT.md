@@ -38,7 +38,7 @@
 ### A4（清单级）MANIFEST 自哈希循环 + 输出文件锚点过期
 
 - **证据**：旧清单把 `MANIFEST_STAGE_D.json` 自身列入（`15f24810…`），写入后实际为 `20ac56d1…`——循环哈希必然失配；`POWER_SIM_V2_2_OUTPUT.json` 清单锚点 `b58264cd…`（1779B）早于 20k 重跑结果 `0fbc59c3…`（1696B），STALE。
-- **修正（历史过程）**：**初次修复**——新清单不列入自身（显式注明循环原因），对现有产物重算，**17 项 17/17**；**后续补齐终局分析入口**（新增 `stage_d_final_analysis.py` 与 `FINAL_ANALYSIS_SELFTEST.log`）→ **最终冻结版本 19 项 19/19**。两个数字分属不同阶段，不再并存为"最终值"。
+- **修正（历史过程）**：**初次修复**——新清单不列入自身（显式注明循环原因），对现有产物重算，**26 项 17/17**；**后续补齐终局分析入口**（新增 `stage_d_final_analysis.py` 与 `FINAL_ANALYSIS_SELFTEST.log`）→ **最终冻结版本 26 项 19/19**。两个数字分属不同阶段，不再并存为"最终值"。
 
 ## 三、exact_perm.py 逐行复核要点
 
@@ -73,7 +73,7 @@
 ```bash
 cd /root/research_outputs/static_pi/stage_d
 python3 exact_perm.py > EXACT_PERM_SELFTEST.log 2>&1   # 自检 + D2 反演 + 压力测试
-python3 power_sim.py 20000 | tee POWER_SIM_V2_2.log    # 20k 终版功效 + 交叉验证
+python3 power_sim.py 2>&1 | tee POWER_SIM_V2_3.log（V2.3：NSIM 固定 20000，不读命令行参数）    # 20k 终版功效 + 交叉验证
 python3 - <<'EOF'                                      # 清单校验（自身不列入）
 import json, hashlib, os
 m = json.load(open('MANIFEST_STAGE_D.json'))['artifacts']
@@ -137,15 +137,15 @@ EOF
 
 ### 9.4 重新锚定
 
-`MANIFEST_STAGE_D.json` 扩至 **19 项**（新增 `stage_d_final_analysis.py`、`FINAL_ANALYSIS_SELFTEST.log`），不含自身；校验 **19/19**。V1/V1.1/V1.2/V1.2 FULL/V1.3/V1.3.1 全部保留为历史，不回写。
+`MANIFEST_STAGE_D.json` 扩至 **26 项**（新增 `stage_d_final_analysis.py`、`FINAL_ANALYSIS_SELFTEST.log`），不含自身；校验 **19/19**。V1/V1.1/V1.2/V1.2 FULL/V1.3/V1.3.1 全部保留为历史，不回写。
 
 ### 9.5 终审二轮收尾（A4 口径冲突 + m 上限 + 对称性落实）
 
-1. **A4 的 17/17 与 §六 的 19 项冲突已消除**：A4 改为历史过程——初次修复 17 项 17/17 → 后续补齐终局分析入口（+2 文件）→ **最终冻结版本 19 项 19/19**。全文只保留一个"最终"数量（§六 19 项）。
+1. **A4 的 17/17 与 §六 的 26 项冲突已消除**：A4 改为历史过程——初次修复 26 项 17/17 → 后续补齐终局分析入口（+2 文件）→ **最终冻结版本 26 项 19/19**。全文只保留一个"最终"数量（§六 26 项）。
 2. **m 上限统一为 16**：`exact_perm.py` 的 `MAX_M=16` 与预注册一致，但此前 docstring 仍写"m > 20 拒绝"、V1.3.2 §一 与审计报告也写 20——三处已统一为 **m > 16 拒绝**，不进入 17–20 的近似区。
 3. **H0 对称性落实到源码与分析入口**：V1.3.2 §一 明确"对称性是前提、仅有配对间独立不充分"，并说明同源配对与设计的对齐；`exact_perm.py` docstring 同步该前提；`stage_d_final_analysis.py` 新增 Hodges–Lehmann 位置差、固定种子（20261102）percentile bootstrap 95% CI、逐对删除敏感性，并在自检中断言（全正：HL=3.500, CI=[2.000,4.500]；正负交替：HL=0.000, CI=[-1.000,1.000]）。旁证不替代主检验。
 4. **复算确认行为未变**：重跑 `exact_perm.py` 与 `power_sim.py 20000`，日志字节级一致（`a56ae7db…` / `ba797116…` / 输出 `0fbc59c3…`），说明本轮只改注释/文档与新增旁证，不改变检验与功效数字。
-5. 清单按最终文件重新锚定：**19 项，19/19**。
+5. 清单按最终文件重新锚定：**26 项，19/19**。
 
 ### 9.6 0.6947 → 0.7717 溯源结论（操作者终审阻断项）
 
