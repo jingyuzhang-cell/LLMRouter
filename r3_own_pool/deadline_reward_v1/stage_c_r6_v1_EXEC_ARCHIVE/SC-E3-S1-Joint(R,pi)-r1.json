@@ -1,0 +1,172 @@
+{
+ "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e3_timeline"
+   ],
+   "reoptimize": [
+    [
+     "e3_rpt",
+     "glm53"
+    ],
+    [
+     "e3_timeline",
+     "glm53"
+    ]
+   ],
+   "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e3_timeline'], π=strong"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "joint_r_pi: normal execution"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "joint_r_pi: normal execution"
+  },
+  {
+   "round": 4,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e3_rpt"
+   ],
+   "reoptimize": [],
+   "rationale": "joint(R,π): 1 legal R × 3 π modes, argmax U=0.18015 -> R=['e3_rpt'], π=keep"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 937,
+    "out": 499
+   },
+   "latency_s": 7.475
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1029,
+    "out": 438
+   },
+   "latency_s": 8.542
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1027,
+    "out": 343
+   },
+   "latency_s": 5.142
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 468,
+    "out": 617
+   },
+   "latency_s": 15.855
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 471,
+    "out": 615
+   },
+   "latency_s": 12.207
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53",
+   "attempt": 2,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 471,
+    "out": 468
+   },
+   "latency_s": 8.578
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 644,
+    "out": 721
+   },
+   "latency_s": 9.619
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": false,
+   "failure": "parse",
+   "usage": {
+    "in": 2177,
+    "out": 1024
+   },
+   "latency_s": 13.555
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 2,
+   "success": false,
+   "failure": "parse",
+   "usage": {
+    "in": 2177,
+    "out": 1024
+   },
+   "latency_s": 13.555
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [],
+ "terminal_stats": null,
+ "report": null,
+ "makespan": 94.53,
+ "tokens": 15150,
+ "arm": "Joint(R,pi)",
+ "suffix_makespan": 45.31
+}

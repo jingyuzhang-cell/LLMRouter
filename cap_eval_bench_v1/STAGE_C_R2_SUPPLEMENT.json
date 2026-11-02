@@ -1,0 +1,12 @@
+{
+ "z_verdict": "NOT_TESTED",
+ "z_reason": "ADD_VERIFY_NODE is selected by decision function but does NOT change physical execution. Joint(Z,R,\u03c0) produces identical node_records to Joint(R,\u03c0). No actual verification node is created, no additional model call, no extra cost incurred. Label-level differentiation only \u2014 not a real structural optimization.",
+ "r_verdict": "DISCERNIBLE",
+ "r_detail": "SC-E1: 4 non-empty R with 3 unique effects (\u2205, {n3}, {n3,n5}, {n3,n5,n6}). SC-E3: 3 non-empty R with 2 unique effects. Arms choose different R: Static=\u2205 vs others={failed_node}.",
+ "pi_verdict": "DISCERNIBLE",
+ "pi_detail": "7 unique model assignment permutations. \u03c0-only switches to Flash under budget pressure. Joint can choose optimize_quality (GLM) or optimize_cost (Flash).",
+ "production_entry": "VERIFIED",
+ "production_detail": "Engine file on disk (SHA256 recorded), ARM_DECIDERS from engine module, stage_c_v2.py confirmed as invalid single-path. 12 tasks valid.",
+ "experiment_scope": "R\u00d7\u03c0 validation only (Z=NOT_TESTED)",
+ "recommendation": "GO for R\u00d7\u03c0 real experiment. Z dimension requires implementing actual structural node addition in executor before it can be tested."
+}

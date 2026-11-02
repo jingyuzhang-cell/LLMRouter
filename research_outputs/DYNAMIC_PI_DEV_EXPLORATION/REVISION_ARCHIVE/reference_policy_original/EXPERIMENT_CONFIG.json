@@ -1,0 +1,156 @@
+{
+  "status": "TECHNICAL_BINDING_COMPLETE_EXTERNAL_REVIEW_AND_PAYMENT_HOLD",
+  "authorized_requests": 0,
+  "tasks": {
+    "evaluation": "NINGBO_REDEMPTION_20190830",
+    "calibration": "SUPCON_CAPITAL_20240409"
+  },
+  "identity": "EXPOSED_DEVELOPMENT_ONLY",
+  "models": [
+    {
+      "request_model": "qwen-plus-2025-12-01",
+      "region": "China Beijing",
+      "thinking": false,
+      "currency": "CNY",
+      "input_per_million": 0.8,
+      "output_per_million": 2,
+      "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "pricing_source": "https://help.aliyun.com/en/model-studio/qwen-plus",
+      "account_verified": false
+    },
+    {
+      "request_model": "deepseek-flash",
+      "documented_version": "DeepSeek-V4.1-Flash-1017",
+      "immutable_version_pin": false,
+      "thinking": false,
+      "currency": "USD",
+      "input_per_million": 0.3,
+      "output_per_million": 1.2,
+      "endpoint": "https://api.deepseek.com/chat/completions",
+      "pricing_source": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "account_verified": false
+    }
+  ],
+  "budget": {
+    "requests": {
+      "calibration": 10,
+      "shared_prefix": 6,
+      "continuations": 24,
+      "total": 40,
+      "max_per_model": 35,
+      "paid_scoring": 0
+    },
+    "tokens": {
+      "input_reservation_per_request": 16384,
+      "output_limit_per_request": 3072,
+      "total_input_reservation": 655360,
+      "total_output_limit": 122880,
+      "combined": 778240,
+      "input_reservation_is_certified_bound": false
+    },
+    "public_price_conditional_bounds": {
+      "CNY": "0.673792",
+      "USD": "0.301056"
+    },
+    "proposed_estimate_stop_thresholds": {
+      "CNY": 1,
+      "USD": 0.5
+    },
+    "absolute_cash_cap_certified": false,
+    "actual_cash": null,
+    "authorization": false,
+    "notes": [
+      "per-currency maxima cannot both be realized at their maxima under total request cap",
+      "non-thinking only; cache miss / peak pricing; no paid tools or search",
+      "per-request reservation and actual accounting must be connected before dispatch; prompt cap not certified",
+      "manual adjudication labor and CPU cost unpriced, not claimed free"
+    ]
+  },
+  "calibration_nodes": [
+    "extract_1",
+    "timeline_1",
+    "relations_1",
+    "verify_1",
+    "report_1"
+  ],
+  "evaluation_nodes": [
+    "extract_notice",
+    "extract_result",
+    "timeline",
+    "relations",
+    "verify",
+    "report"
+  ],
+  "Z": "KEEP",
+  "recovery_R": "same pending set at snapshot; no healthy reexecution",
+  "feedback_checkpoint": "after both extraction nodes; before timeline/relations/verify/report",
+  "remaining_pi_nodes": [
+    "timeline",
+    "relations",
+    "verify",
+    "report"
+  ],
+  "pairs": [
+    {
+      "pair_id": "P1",
+      "arm_order": [
+        "Static-Pi",
+        "Dynamic-Pi"
+      ]
+    },
+    {
+      "pair_id": "P2",
+      "arm_order": [
+        "Dynamic-Pi",
+        "Static-Pi"
+      ]
+    },
+    {
+      "pair_id": "P3",
+      "arm_order": [
+        "Static-Pi",
+        "Dynamic-Pi"
+      ]
+    }
+  ],
+  "independent_event_count": 1,
+  "retry": false,
+  "supplement": false,
+  "actual_model_calls": 0,
+  "live_command": "python -B /root/research_outputs/DYNAMIC_PI_DEV_EXPLORATION/runner/batch.py --execute --output /root/research_outputs/DYNAMIC_PI_DEV_EXPLORATION_RUN",
+  "deadline_s": {
+    "request": 180,
+    "task": 600,
+    "batch": 5400
+  },
+  "slots_per_model": 1,
+  "global_slots": 2,
+  "reference_status": "PENDING_ALL_12_CALIBRATION_AND_EVALUATION_TARGETS",
+  "profile_status": "NOT_YET_MEASURED",
+  "no_failure_injection": true,
+  "if_no_natural_anomaly": "record runtime-feedback exploration; no anomaly-specific benefit claim",
+  "production_transport": "IMPLEMENTED_NOT_REAL_API_VERIFIED",
+  "stop_before_any_paid_request": [
+    "reference adjudication missing",
+    "matching lock-bound batch authorization/account confirmation missing",
+    "request payload or reservation exceeds cap",
+    "frozen file hashes changed",
+    "one-run lock already exists"
+  ],
+  "future_confirmation": "four-event design retained separately; no automatic launch",
+  "policy": {
+    "code": "/root/.worktrees/codex-dd-v51-six-arm/dd_v51_six_arm/engine.py:choose",
+    "objective": "unchanged latency-first, then native CNY, then native USD, then lexical model names; no new Q utility",
+    "initial": "same frozen choose() on full DAG with scale={} and calibration-only profile; freeze before evaluation requests",
+    "static": "retain initial pending pi; feasibility uses same observed feedback as dynamic",
+    "dynamic": "same choose() enumerates pending pi including retention; same R and Z",
+    "profile_mapping": "by exact output_contract, calibration task to evaluation; source-document extraction variants share one observed contract sample per model; record transfer uncertainty",
+    "missing": "unmeasured resource profile remains UNKNOWN; refuse unsupported plan, do not impute. Model Q/E/K failure retained; not all-model-success gate",
+    "feedback": "at extraction barrier, for each observed model take max(actual extraction wall/calibration extraction wall); unobserved model scale=1 with NO_NEW_OBSERVATION label. This model-wide latency transfer is a hypothesis, not measured downstream latency. Both arms use identical scale. No fabricated timeout or source failure.",
+    "quality": "Q/E/K observed separately, UNKNOWN retained; frozen choose has no calibrated Q or reliability constraint guarantee",
+    "selection_on_evaluation": "no changing initial policy with later pairs; each pair uses same initial pi, fresh prefix and own feedback; no online learning between pairs"
+  },
+  "scoring": "independent manual reference admission before calls; blinded complete-output adjudication after execution via runner/score.py; automated citation gate is structural not semantic",
+  "input_local_byte_cap": 49152,
+  "input_token_bound_certified": false
+}

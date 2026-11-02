@@ -1,0 +1,16 @@
+--- ../audit_bundle_wp1wp2/m7_policy_v10.py	2026-11-01 09:56:47.919424278 +0800
++++ m7_policy_v10.py	2026-11-01 13:17:53.770051718 +0800
+@@ -24,6 +24,13 @@
+   D1  R: EARLY_EXIT@attempt>=1          vs ladder (one retry) then exit@>=2
+   D2  pi: switch on any fault+gap+weak  vs systematic signature + attempt>=2
+   D3  unknown signature: retry(+maybe switch) vs conservative channel/stop
++  D4  MULTI-FAULT node selection (operator registration): V1.0 is an
++      event-by-event policy with no multi-fault arbitration; V10.decide
++      deterministically serves the LOWEST node_id faulted node first.
++      F (V1.1) generates candidates per node and selects from the Pareto
++      frontier, which may target a DIFFERENT node. C1-C6 single-fault
++      trajectory tests DO NOT cover D4; EP4 comparisons must exclude
++      multi-fault states or stratify by this difference.
+   Everything else (Z_1 timing, persistence-table input, scoring of nothing)
+   is identical BY CONSTRUCTION from the same historical source.
+ """

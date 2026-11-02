@@ -1,0 +1,6853 @@
+[
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [
+     [
+      "e1_rpt",
+      "glm53"
+     ],
+     [
+      "e1_tl",
+      "glm53"
+     ]
+    ],
+    "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e1_tl'], π=strong"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 540
+    },
+    "latency_s": 15.253
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1117,
+     "out": 563
+    },
+    "latency_s": 9.464
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1113,
+     "out": 368
+    },
+    "latency_s": 7.836
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 733,
+     "out": 698
+    },
+    "latency_s": 13.339
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 731,
+     "out": 599
+    },
+    "latency_s": 7.316
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 731,
+     "out": 801
+    },
+    "latency_s": 11.19
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 95,
+     "out": 775
+    },
+    "latency_s": 7.733
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2329,
+     "out": 882
+    },
+    "latency_s": 12.493
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "文书索引：zzd_penalty_2020为獐子岛公告2020-48，关于收到行政处罚决定书及市场禁入决定书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f2",
+    "content": "文书索引：zzd_notice_2019为獐子岛公告2019-34，关于收到行政处罚及市场禁入事先告知书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "两份文书时间线：2018-02-09立案调查→2019-07-09事先告知书→2020-06-23行政处罚及市场禁入决定书，构成完整处罚流程",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f4",
+    "content": "2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f5",
+    "content": "公司判断违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f6",
+    "content": "2018-02-09公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f7",
+    "content": "2019-07-09公司收到证监会处罚字【2019】95号事先告知书，认定事实未触及重大违法强制退市情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "虚假记载具体年度、虚增利润金额：所提供的两份文档节选（各前600字）未包含处罚决定书中关于虚假记载年份及虚增利润数额的具体认定内容",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f9",
+    "content": "罚款金额：所提供文档节选未披露证监会对公司及相关责任人的罚款金额",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f10",
+    "content": "2016年虚增利润13114.77万元：所提供的两份文档节选（各前600字）均未包含具体虚增利润数额的认定内容，无法与告知书口径进行比对核验",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f11",
+    "content": "事先告知书（2019-07-09）与最终决定书（2020-06-23）关于退市风险的认定一致：均认定未触及重大违法强制退市情形",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f12",
+    "content": "交叉核查结论：时间线（立案→事先告知书→决定书）与退市风险认定在两份文书间一致，通过核验；但财务核验（虚增利润年度与金额、罚款金额）因文档节选不完整而UNRESOLVED",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 12,
+   "confirmed": 9,
+   "unconfirmed": 0,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018-02-09獐子岛因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）；2018年3月至2019年6月公司多次披露立案调查进展暨风险提示公告；2019-07-09公司及相关人员收到证监会处罚字【2019】95号《行政处罚及市场禁入事先告知书》；2020-06-23公司收到证监会【2020】29号《行政处罚决定书》及【2020】9号《市场禁入决定书》，处罚流程完结。",
+   "fraud_nature": "信息披露违法违规：证监会对獐子岛集团及吴厚刚、梁峻、勾荣、孙福君、于成家等相关责任人员作出行政处罚并采取市场禁入措施；公司判断违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》相关情形。虚假记载的具体年度、虚增利润金额及罚款金额因所提供文档节选不完整无法核验。",
+   "report": "獐子岛（002069）信息披露违法处罚综合报告\n\n一、处罚流程与时间线\n2018年2月9日，公司收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查（f6）；此后公司按上市规则要求持续披露进展风险提示公告。2019年7月9日，公司及相关人员收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）（f7）。2020年6月23日，公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）（f4），构成从立案、事先告知到最终决定的完整处罚链条（f3），两份公告文书分别为2020-48号和2019-34号公告（f1、f2）。\n\n二、责任主体与违法性质\n根据事先告知书公告，被处罚主体包括獐子岛集团及吴厚刚、梁峻、勾荣、孙福君、于成家等责任人员，违法性质为信息披露违法违规，最终受到行政处罚及市场禁入措施（f4）。\n\n三、退市风险认定及交叉核验\n事先告知书（2019-07-09）认定事实未触及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条情形（f7）；最终决定书后公司同样判断不触及深交所上市规则13.2.1条第（七）至（九）项及上述实施办法相关情形（f5）。两份文书关于退市风险的认定口径一致（f11），时间线在两份文书间亦相互印证，交叉核查通过；但财务层面核验未完成（f12）。\n\n四、未决事项\n所提供的两份文档节选（各前600字）未包含虚假记载的具体年份、虚增利润金额（含传闻中的2016年虚增利润13114.77万元）及罚款金额的认定内容，上述关键财务数据无法从现有证据中核验，须以完整处罚决定书为准（f8、f9、f10）。\n\n五、结论\n本案为证监会查处的上市公司信息披露违法案件，处罚程序完整、退市风险认定前后一致且未触及重大违法强制退市情形（f5、f7、f11）；财务造假的具体数额认定因证据节选不完整而暂无法确认（f12）。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f11",
+    "f12"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f9",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f10",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 84.62,
+  "tokens": 13034,
+  "arm": "Joint(R,pi)",
+  "suffix_makespan": 31.41,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.1923,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1667,
+   "upstream_missing": 0,
+   "n_facts": 12
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [
+     [
+      "e1_rpt",
+      "glm53"
+     ],
+     [
+      "e1_tl",
+      "glm53"
+     ]
+    ],
+    "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e1_tl'], π=strong"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 452
+    },
+    "latency_s": 6.152
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1066,
+     "out": 347
+    },
+    "latency_s": 4.884
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1062,
+     "out": 390
+    },
+    "latency_s": 6.423
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 543,
+     "out": 612
+    },
+    "latency_s": 11.428
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 541,
+     "out": 481
+    },
+    "latency_s": 15.179
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 541,
+     "out": 640
+    },
+    "latency_s": 12.125
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 685,
+     "out": 701
+    },
+    "latency_s": 9.816
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2208,
+     "out": 971
+    },
+    "latency_s": 17.802
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "两份文书时间顺序：事先告知书(2019-07-09)先于行政处罚决定书(2020-06-23)，均源于2018年2月9日立案调查",
+    "kind": "derived",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f2",
+    "content": "两份文书均认定獐子岛信息披露违法违规事实，且均判断不触及重大违法强制退市情形",
+    "kind": "summary",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "公司于2020年6月23日收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f4",
+    "content": "公司于2019年7月9日收到中国证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f5",
+    "content": "虚假记载年度、虚增利润金额、罚款金额：所提供文档节选未包含具体违法事实细节（年份、虚增利润数、罚款数额），无法从当前文本抽取",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f6",
+    "content": "关于2016年虚增利润13114.77万元：现有文档节选（zzd_penalty_2020、zzd_notice_2019）均未载明2016年度虚增利润的具体金额，无法将该数字与告知书口径比对核验",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f7",
+    "content": "若需核验13114.77万元口径一致性，需补充获取两份文书中'违法事实'部分的完整原文（含分年度虚增利润明细表）",
+    "kind": "derived",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "【UNRESOLVED】时间线与财务核验交叉核查结果：时间线部分（2018-02-09立案→2019-07-09事先告知→2020-06-23处罚决定）在两份文书中相互印证，可确认；但财务核验部分（虚假记载年度、虚增利润金额、罚款金额，尤其2016年虚增利润13114.77万元口径）因两份文书节选均缺失违法事实明细，交叉核查无法完成，状态为UNRESOLVED",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 8,
+   "confirmed": 4,
+   "unconfirmed": 0,
+   "insufficient_evidence": 4,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018年2月9日，獐子岛集团股份有限公司收到中国证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查；调查期间公司按深交所规定持续披露《立案调查进展暨风险提示公告》（2018年3月至2019年6月共16次）。2019年7月9日，公司及相关人员收到中国证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）。2020年6月23日，公司收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号。两份文书时间顺序相互印证：事先告知书（2019-07-09）先于行政处罚决定书（2020-06-23），均源于2018年2月9日的立案调查。（依据f1、f3、f4）",
+   "fraud_nature": "信息披露违法违规。中国证监会在事先告知书（2019年）和行政处罚决定书（2020年）中均认定獐子岛集团存在信息披露违法违规事实，并作出行政处罚及市场禁入决定（涉及公司及吴厚刚、梁峻、勾荣、孙福君、于成家等相关人员）。两份文书均判断所涉违法行为不触及深交所《上市公司重大违法强制退市实施办法》第二条、第四条、第五条及《上市规则》第13.2.1条第（七）至（九）项规定的重大违法强制退市情形。（依据f2、f3、f4）",
+   "report": "獐子岛集团股份有限公司（证券代码002069）信息披露违法违规案综合调查报告：\n\n一、时间线（已确认）：2018年2月9日公司因涉嫌信息披露违法违规被中国证监会立案调查（连调查字【2018】001号）【f3、f4】；调查期间公司自2018年3月10日至2019年6月12日持续披露16次立案调查进展暨风险提示公告【f3、f4】；2019年7月9日公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】；2020年6月23日公司收到《行政处罚决定书》【2020】29号及《市场禁入决定书》【2020】9号【f3】。两份文书的时间顺序在两份公告中相互印证【f1】。\n\n二、违法性质（已确认）：证监会认定公司构成信息披露违法违规，涉及公司及吴厚刚、梁峻、勾荣、孙福君、于成家等相关责任人，处以行政处罚及市场禁入【f2、f3、f4】。两份文书均认定该违法行为不触及重大违法强制退市情形【f2】。\n\n三、财务核验（未完成/UNRESOLVED）：关于虚假记载所涉年度、虚增利润金额及罚款数额，现有两份公告节选均未载明违法事实明细，无法抽取核验【f5】；尤其2016年度虚增利润13114.77万元这一数字无法在现有文书中比对核验【f6】。如需完成口径一致性核验，须补充获取两份文书中'违法事实'部分的完整原文（含分年度虚增利润明细表）【f7】。时间线与财务核验交叉核查中，时间线部分相互印证可确认，但财务部分因证据缺失无法完成，整体状态为UNRESOLVED【f8】。\n\n四、结论：本案时间线清晰、性质明确，为信息披露违法违规（不触及重大违法强制退市）；但具体财务违法细节（涉及年度、虚增利润金额、罚款金额）因文档节选不完整而无法核验，需补充原始文书全文方可完成最终财务核验。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 83.81,
+  "tokens": 12199,
+  "arm": "Joint(R,pi)",
+  "suffix_makespan": 39.74,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.2308,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2,
+   "upstream_missing": 0,
+   "n_facts": 8
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [
+     [
+      "e1_rpt",
+      "glm53"
+     ],
+     [
+      "e1_tl",
+      "glm53"
+     ]
+    ],
+    "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e1_tl'], π=strong | Z-space=['KEEP'] -> KEEP (U_keep=0.37129)"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   },
+   {
+    "round": 3,
+    "action": "recover",
+    "z_op": "SPLIT_VERIFY",
+    "z_detail": "e1_chk -> per-lineage verifiers over parents ['e1_fin', 'e1_tl'] (kind=verification)",
+    "recovery_set": [
+     "e1_chk_a",
+     "e1_chk_b"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.18015 -> R=['e1_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.18015, U_split=0.36029)"
+   },
+   {
+    "round": 4,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   },
+   {
+    "round": 5,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 540
+    },
+    "latency_s": 15.253
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1117,
+     "out": 563
+    },
+    "latency_s": 9.464
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1113,
+     "out": 368
+    },
+    "latency_s": 7.836
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 733,
+     "out": 698
+    },
+    "latency_s": 13.339
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 731,
+     "out": 599
+    },
+    "latency_s": 7.316
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 731,
+     "out": 815
+    },
+    "latency_s": 8.531
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 859,
+     "out": 1024
+    },
+    "latency_s": 10.288
+   },
+   {
+    "node": "e1_chk_a",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 799,
+     "out": 1008
+    },
+    "latency_s": 21.398
+   },
+   {
+    "node": "e1_chk_b",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 888,
+     "out": 1007
+    },
+    "latency_s": 11.714
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2362,
+     "out": 891
+    },
+    "latency_s": 12.083
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "文书索引：zzd_penalty_2020为獐子岛公告2020-48，关于收到行政处罚决定书及市场禁入决定书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f2",
+    "content": "文书索引：zzd_notice_2019为獐子岛公告2019-34，关于收到行政处罚及市场禁入事先告知书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "两份文书时间线：2018-02-09立案调查→2019-07-09事先告知书→2020-06-23行政处罚及市场禁入决定书，构成完整处罚流程",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f4",
+    "content": "2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f5",
+    "content": "公司判断违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f6",
+    "content": "2018-02-09公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f7",
+    "content": "2019-07-09公司收到证监会处罚字【2019】95号事先告知书，认定事实未触及重大违法强制退市情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "虚假记载具体年度、虚增利润金额：所提供的两份文档节选（各前600字）未包含处罚决定书中关于虚假记载年份及虚增利润数额的具体认定内容",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f9",
+    "content": "罚款金额：所提供文档节选未披露证监会对公司及相关责任人的罚款金额",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f10",
+    "content": "2016年虚增利润13114.77万元：所提供的两份文档节选（各前600字）均未包含具体虚增利润数额的认定内容，无法与告知书口径进行比对核验",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f11",
+    "content": "交叉核查结论：时间线（立案2018-02-09→事先告知2019-07-09→处罚决定2020-06-23）与文书编号（连调查字【2018】001号、处罚字【2019】95号、【2020】29号/【2020】9号）相互印证，时间线内部一致，无矛盾",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f12",
+    "content": "财务核验结论：虚增利润具体数额（含2016年13114.77万元口径）及罚款金额在现有文档节选中均无法核验，整体标记UNRESOLVED，需调取处罚决定书全文",
+    "kind": "推理",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 12,
+   "confirmed": 8,
+   "unconfirmed": 0,
+   "insufficient_evidence": 4,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018-02-09獐子岛因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号，见f6）；调查期间公司按月披露进展公告（2018-03至2019-06共16次，见f1文书摘录）；2019-07-09公司及相关人员收到处罚字【2019】95号事先告知书（f7）；2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）（f4），构成完整处罚流程（f3），时间线与文书编号相互印证、内部一致（f11）。",
+   "fraud_nature": "信息披露违法违规。证监会经调查认定獐子岛存在信息披露违法并作出行政处罚及市场禁入决定；公司自行判断该违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形（f5、f7）。",
+   "report": "獐子岛集团股份有限公司（证券代码002069）信息披露违法违规案调查报告\n\n一、案件概述\n2018年2月9日，公司因涉嫌信息披露违法违规被中国证监会立案调查（调查通知书编号：连调查字【2018】001号）[f6]。此后历经约17个月调查，2019年7月9日公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）[f7]，2020年6月23日收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）[f4]，处罚流程完整闭合[f3]。\n\n二、时间线与文书核验\n两份关键公告文书——公告2019-34（事先告知书公告）[f2]与公告2020-48（处罚决定书公告）[f1]——披露的时间线与文书编号（连调查字【2018】001号、处罚字【2019】95号、【2020】29号及【2020】9号）相互印证，两份文书内容交叉核查无矛盾[f11]。调查期间，公司按《深圳证券交易所股票上市规则》要求，于2018年3月至2019年6月共披露16次立案调查进展暨风险提示公告（公告编号2018-24至2019-31）[f1]。处罚决定书及市场禁入决定书还涉及吴厚刚、梁峻、勾荣、孙福君、于成家等相关责任人[f2]。\n\n三、退市风险认定\n根据事先告知书认定事实，公司判断未触及《深圳证券交易所上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形[f7]；根据最终处罚决定书认定事实，公司进一步判断违法行为不触及深交所上市规则第13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》相关条款[f5]，两阶段判断口径一致。\n\n四、未决事项（UNRESOLVED）\n现有两份文档节选（各前600字）均未包含处罚决定书中关于虚假记载具体年份、虚增利润数额及罚款金额的认定内容[f8][f9]，其中“2016年虚增利润13114.77万元”的口径在现有节选中无法核验比对[f10]。财务与处罚金额层面的核验整体标记UNRESOLVED，需调取处罚决定书全文后方可补充认定[f12]。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f11",
+    "f8",
+    "f9",
+    "f10",
+    "f12"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f9",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f10",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f12",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 117.22,
+  "tokens": 17805,
+  "arm": "Joint(Z,R,pi)",
+  "suffix_makespan": 64.01,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.2692,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2333,
+   "upstream_missing": 0,
+   "n_facts": 12
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [
+     [
+      "e1_rpt",
+      "glm53"
+     ],
+     [
+      "e1_tl",
+      "glm53"
+     ]
+    ],
+    "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e1_tl'], π=strong | Z-space=['KEEP'] -> KEEP (U_keep=0.37129)"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 452
+    },
+    "latency_s": 6.152
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1066,
+     "out": 347
+    },
+    "latency_s": 4.884
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1062,
+     "out": 390
+    },
+    "latency_s": 6.423
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 543,
+     "out": 612
+    },
+    "latency_s": 11.428
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 541,
+     "out": 481
+    },
+    "latency_s": 15.179
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 541,
+     "out": 503
+    },
+    "latency_s": 12.209
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 685,
+     "out": 700
+    },
+    "latency_s": 12.211
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2196,
+     "out": 819
+    },
+    "latency_s": 10.928
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "两份文书时间顺序：事先告知书(2019-07-09)先于行政处罚决定书(2020-06-23)，均源于2018年2月9日立案调查",
+    "kind": "derived",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f2",
+    "content": "两份文书均认定獐子岛信息披露违法违规事实，且均判断不触及重大违法强制退市情形",
+    "kind": "summary",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "公司于2020年6月23日收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f4",
+    "content": "公司于2019年7月9日收到中国证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f5",
+    "content": "虚假记载年度、虚增利润金额、罚款金额：所提供文档节选未包含具体违法事实细节（年份、虚增利润数、罚款数额），无法从当前文本抽取",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f6",
+    "content": "关于2016年虚增利润13114.77万元：现有文档节选（zzd_penalty_2020、zzd_notice_2019）均未载明2016年度虚增利润的具体金额，无法将该数字与告知书口径比对核验",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f7",
+    "content": "若需核验13114.77万元口径一致性，需补充获取两份文书中'违法事实'部分的完整原文（含分年度虚增利润明细表）",
+    "kind": "derived",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "时间线与财务核验交叉核查结论：时间线部分（立案2018-02-09→告知书2019-07-09→处罚决定书2020-06-23）逻辑自洽、顺序无矛盾，已确认；财务核验部分（2016年虚增利润13114.77万元口径比对、虚假记载年度及罚款金额）因文档节选缺失违法事实细节，整体标注UNRESOLVED",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "本节点交叉核查（基于zzd_penalty_2020+zzd_notice_2019）"
+   }
+  ],
+  "terminal_stats": {
+   "n": 8,
+   "confirmed": 4,
+   "unconfirmed": 0,
+   "insufficient_evidence": 4,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018年2月9日，獐子岛集团收到中国证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查【f1】；此后公司按规定连续披露《立案调查进展暨风险提示公告》。2019年7月9日，公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】。2020年6月23日，公司收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号【f3】。文书时间顺序（立案→事先告知→处罚决定）逻辑自洽、无矛盾【f8】。",
+   "fraud_nature": "信息披露违法违规。两份文书均认定獐子岛存在信息披露违法违规事实【f2】。但虚假记载的具体年度、分年度虚增利润金额（含所谓2016年虚增利润13114.77万元）及罚款数额等细节，现有文档节选均未载明，无法核验【f5】【f6】【f8】。公司判断该违法行为不触及深交所重大违法强制退市情形【f2】。",
+   "report": "调查概况：獐子岛集团股份有限公司（002069）因涉嫌信息披露违法违规，于2018年2月9日被中国证监会立案调查（连调查字【2018】001号）【f1】【f3】【f4】。调查期间公司按《深圳证券交易所股票上市规则》逐月披露进展及风险提示公告【f3】【f4】。程序进程：2019年7月9日公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】；2020年6月23日收到《行政处罚决定书》【2020】29号及《市场禁入决定书》【2020】9号【f3】。两份文书时间顺序为告知书在先、处罚决定书在后，均源于同一立案调查，逻辑自洽【f1】【f8】。违法性质认定：两份文书均认定公司信息披露违法违规事实【f2】；公司在两份公告中均判断该违法行为不触及《深圳证券交易所股票上市规则》第13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形【f2】。责任人员方面，事先告知书对象包括吴厚刚、梁峻、勾荣、孙福君、于成家等。未决事项：虚假记载涉及的年度、分年度虚增利润金额（含待核验的2016年虚增利润13114.77万元口径）及罚款金额等违法事实细节，在现有两份公告节选中均未载明，无法核验【f5】【f6】【f7】【f8】，如需确认需补充获取两份文书'违法事实'部分完整原文（含分年度虚增利润明细表）【f7】。结论：时间线部分已确认，财务核验部分整体标注为UNRESOLVED【f8】。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 79.41,
+  "tokens": 11897,
+  "arm": "Joint(Z,R,pi)",
+  "suffix_makespan": 35.34,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.2692,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2333,
+   "upstream_missing": 0,
+   "n_facts": 8
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [],
+    "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.29183 -> R=['e1_tl'] (runner-up U=0.28083 R=['e1_chk', 'e1_tl'])"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "r_only: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "r_only: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 540
+    },
+    "latency_s": 15.253
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1117,
+     "out": 563
+    },
+    "latency_s": 9.464
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1113,
+     "out": 368
+    },
+    "latency_s": 7.836
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 733,
+     "out": 698
+    },
+    "latency_s": 13.339
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 731,
+     "out": 599
+    },
+    "latency_s": 7.316
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 731,
+     "out": 627
+    },
+    "latency_s": 11.724
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 799,
+     "out": 842
+    },
+    "latency_s": 9.473
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2281,
+     "out": 942
+    },
+    "latency_s": 13.313
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "文书索引：zzd_penalty_2020为獐子岛公告2020-48，关于收到行政处罚决定书及市场禁入决定书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f2",
+    "content": "文书索引：zzd_notice_2019为獐子岛公告2019-34，关于收到行政处罚及市场禁入事先告知书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "两份文书时间线：2018-02-09立案调查→2019-07-09事先告知书→2020-06-23行政处罚及市场禁入决定书，构成完整处罚流程",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f4",
+    "content": "2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f5",
+    "content": "公司判断违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f6",
+    "content": "2018-02-09公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f7",
+    "content": "2019-07-09公司收到证监会处罚字【2019】95号事先告知书，认定事实未触及重大违法强制退市情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "虚假记载具体年度、虚增利润金额：所提供的两份文档节选（各前600字）未包含处罚决定书中关于虚假记载年份及虚增利润数额的具体认定内容",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f9",
+    "content": "罚款金额：所提供文档节选未披露证监会对公司及相关责任人的罚款金额",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f10",
+    "content": "2016年虚增利润13114.77万元：所提供的两份文档节选（各前600字）均未包含具体虚增利润数额的认定内容，无法与告知书口径进行比对核验",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f11",
+    "content": "交叉核查结论【UNRESOLVED】：时间线核验通过（立案→告知→决定的日期与文书编号前后衔接一致，无矛盾）；财务核验未通过（虚假记载年度、虚增利润数额、罚款金额三项目标数据在现有文档节选中均无记载，无法完成与告知书/决定书口径的交叉比对）",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 11,
+   "confirmed": 8,
+   "unconfirmed": 0,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018年2月9日，獐子岛集团股份有限公司因涉嫌信息披露违法违规收到证监会《调查通知书》（连调查字【2018】001号），被立案调查【f6】；调查期间公司按深交所规则持续披露进展暨风险提示公告【f1】；2019年7月9日，公司及相关人员收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号），公司判断认定事实未触及重大违法强制退市情形【f7】【f2】；2020年6月23日，公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号），处罚流程完结【f4】【f3】。",
+   "fraud_nature": "信息披露违法违规。证监会经立案调查、事先告知、正式处罚及市场禁入决定三个环节，认定公司存在信息披露违法行为；公司判断该违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条情形，即不构成重大违法强制退市【f4】【f5】【f6】【f7】。涉及责任人员包括吴厚刚、梁峻、勾荣、孙福君、于成家等（见告知书公告摘录）。具体虚假记载年度、虚增利润数额及罚款金额等财务认定细节，因现有文档节选未包含相关内容，无法确认【f8】【f9】【f10】。",
+   "report": "獐子岛信息披露违法违规调查综合报告：\n\n一、案件时间线。本案历经完整处罚流程【f3】：2018年2月9日公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）【f6】，并于调查期间按深交所规则多次披露进展暨风险提示公告【f1】；2019年7月9日公司及相关人员收到处罚字【2019】95号《行政处罚及市场禁入事先告知书》【f7】【f2】；2020年6月23日公司收到《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）【f4】，文书编号与日期前后衔接一致，无矛盾【f11】。\n\n二、违法性质与退市风险评估。违法行为性质为信息披露违法违规【f6】。公司在收到事先告知书及正式处罚决定书后均判断认定事实不触及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条及深交所上市规则13.2.1条第（七）至（九）项情形，即不构成重大违法强制退市【f5】【f7】。处罚对象包括公司及吴厚刚、梁峻、勾荣、孙福君、于成家等相关责任人员，并附带市场禁入措施【f4】【f2】。\n\n三、交叉核查结论。时间线核验通过，立案→告知→决定各环节日期与文书编号衔接一致【f11】；但财务核验未完成——虚假记载涉及年度、虚增利润金额（含所提及的2016年虚增利润13114.77万元口径）及罚款金额三项关键数据在现有文档节选中均无记载，无法与告知书/决定书口径进行交叉比对【f8】【f9】【f10】【f11】。\n\n四、结论。本案为证监会查处的信息披露违法违规案件，处罚程序完整、时间线一致，且公司判断不触及重大违法强制退市情形；但具体财务造假数额、虚假记载年度及处罚金额等细节尚需补充完整处罚决定书原文后进一步核验【f8】【f9】【f10】。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10",
+    "f11"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f9",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f10",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 87.72,
+  "tokens": 13643,
+  "arm": "R-only",
+  "suffix_makespan": 34.51,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.2308,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2,
+   "upstream_missing": 0,
+   "n_facts": 11
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [],
+    "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.29183 -> R=['e1_tl'] (runner-up U=0.28083 R=['e1_chk', 'e1_tl'])"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "r_only: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "r_only: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 452
+    },
+    "latency_s": 6.152
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1066,
+     "out": 347
+    },
+    "latency_s": 4.884
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1062,
+     "out": 390
+    },
+    "latency_s": 6.423
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 543,
+     "out": 612
+    },
+    "latency_s": 11.428
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 541,
+     "out": 481
+    },
+    "latency_s": 15.179
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 541,
+     "out": 398
+    },
+    "latency_s": 11.182
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 685,
+     "out": 773
+    },
+    "latency_s": 13.647
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2209,
+     "out": 857
+    },
+    "latency_s": 11.373
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "两份文书时间顺序：事先告知书(2019-07-09)先于行政处罚决定书(2020-06-23)，均源于2018年2月9日立案调查",
+    "kind": "derived",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f2",
+    "content": "两份文书均认定獐子岛信息披露违法违规事实，且均判断不触及重大违法强制退市情形",
+    "kind": "summary",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "公司于2020年6月23日收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f4",
+    "content": "公司于2019年7月9日收到中国证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f5",
+    "content": "虚假记载年度、虚增利润金额、罚款金额：所提供文档节选未包含具体违法事实细节（年份、虚增利润数、罚款数额），无法从当前文本抽取",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f6",
+    "content": "关于2016年虚增利润13114.77万元：现有文档节选（zzd_penalty_2020、zzd_notice_2019）均未载明2016年度虚增利润的具体金额，无法将该数字与告知书口径比对核验",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f7",
+    "content": "若需核验13114.77万元口径一致性，需补充获取两份文书中'违法事实'部分的完整原文（含分年度虚增利润明细表）",
+    "kind": "derived",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "交叉核查结论（UNRESOLVED）：时间线已核验一致（立案2018-02-09 → 事先告知书2019-07-09 → 行政处罚决定书2020-06-23，逻辑顺序合理，两文书文号与日期相互印证）；但财务核验未完成——2016年虚增利润13114.77万元及罚款金额等财务数字无法在现有文档中比对确认，核验结果标记为UNRESOLVED，待补充两份文书'违法事实'部分完整原文",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 8,
+   "confirmed": 4,
+   "unconfirmed": 0,
+   "insufficient_evidence": 4,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018-02-09獐子岛收到证监会《调查通知书》（连调查字[2018]001号）被立案调查【f1、f3、f4】→ 调查期间公司持续披露进展公告（2018-03-10至2019-06-12共16次）→ 2019-07-09公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】→ 2020-06-23公司收到《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号【f3】。时间顺序经核验一致，两文书文号与日期相互印证【f1、f8】。",
+   "fraud_nature": "信息披露违法违规。两份文书均认定獐子岛存在信息披露违法违规事实，但公司判断该行为不触及深交所《股票上市规则》第13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形【f2】。具体虚假记载年度、虚增利润金额、罚款数额等财务细节无法从现有文档节选中抽取核验【f5、f6】。",
+   "report": "獐子岛集团股份有限公司（证券代码002069）信息披露违法违规案调查综合报告：\n\n一、时间线核验。2018年2月9日公司收到证监会《调查通知书》（连调查字[2018]001号）被立案调查【f3、f4】；2019年7月9日收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】；2020年6月23日收到《行政处罚决定书》【2020】29号及《市场禁入决定书》【2020】9号【f3】。文书时间顺序（事先告知书先于处罚决定书，均源于2018年2月9日立案调查）经交叉核验一致，文号与日期相互印证，逻辑顺序合理【f1、f8】。\n\n二、违法性质。两份文书均认定公司存在信息披露违法违规事实，且均判断不触及重大违法强制退市情形【f2】。涉及责任人员包括吴厚刚、梁峻、勾荣、孙福君、于成家等（据zzd_notice_2019摘录）。\n\n三、核验局限。虚假记载年度、虚增利润金额（含2016年虚增利润13114.77万元之口径）、罚款金额等财务数字，现有两份公告节选均未载明具体违法事实细节，无法进行财务口径比对核验，交叉核查结果标记为UNRESOLVED【f5、f6、f8】。若需完成核验，须补充获取两份文书中'违法事实'部分的完整原文（含分年度虚增利润明细表）【f7】。\n\n四、结论。时间线与程序合规性核验通过【f1、f8】；违法性质认定为信息披露违法违规但不触及强制退市【f2】；财务细节核验未完成，待补充材料后复核。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f8",
+    "f5",
+    "f6",
+    "f7"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 80.27,
+  "tokens": 11916,
+  "arm": "R-only",
+  "suffix_makespan": 36.2,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.2308,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2,
+   "upstream_missing": 0,
+   "n_facts": 8
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed ['e1_tl'] to stronger model"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed [] to stronger model"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed [] to stronger model"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 540
+    },
+    "latency_s": 15.253
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1117,
+     "out": 563
+    },
+    "latency_s": 9.464
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1113,
+     "out": 368
+    },
+    "latency_s": 7.836
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 733,
+     "out": 698
+    },
+    "latency_s": 13.339
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 731,
+     "out": 599
+    },
+    "latency_s": 7.316
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 731,
+     "out": 835
+    },
+    "latency_s": 7.953
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 799,
+     "out": 858
+    },
+    "latency_s": 27.548
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2293,
+     "out": 856
+    },
+    "latency_s": 13.572
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "文书索引：zzd_penalty_2020为獐子岛公告2020-48，关于收到行政处罚决定书及市场禁入决定书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f2",
+    "content": "文书索引：zzd_notice_2019为獐子岛公告2019-34，关于收到行政处罚及市场禁入事先告知书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "两份文书时间线：2018-02-09立案调查→2019-07-09事先告知书→2020-06-23行政处罚及市场禁入决定书，构成完整处罚流程",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f4",
+    "content": "2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f5",
+    "content": "公司判断违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f6",
+    "content": "2018-02-09公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f7",
+    "content": "2019-07-09公司收到证监会处罚字【2019】95号事先告知书，认定事实未触及重大违法强制退市情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "虚假记载具体年度、虚增利润金额：所提供的两份文档节选（各前600字）未包含处罚决定书中关于虚假记载年份及虚增利润数额的具体认定内容",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f9",
+    "content": "罚款金额：所提供文档节选未披露证监会对公司及相关责任人的罚款金额",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f10",
+    "content": "2016年虚增利润13114.77万元：所提供的两份文档节选（各前600字）均未包含具体虚增利润数额的认定内容，无法与告知书口径进行比对核验",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f11",
+    "content": "交叉核查结论：时间线部分（f3、f4、f6、f7）各节点日期与文书编号相互印证，无矛盾，判定为一致；财务核验部分（f8、f9、f10）因文档节选缺少具体金额与年度认定内容，无法完成告知书与决定书口径比对，标注UNRESOLVED，需获取处罚决定书全文后复核",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 11,
+   "confirmed": 8,
+   "unconfirmed": 0,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018-02-09獐子岛因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号，公告2018-14）；此后至2019-06公司按月披露16次立案调查进展暨风险提示公告；2019-07-09公司及相关人员收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号，公告2019-34）；2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）（公告2020-48）。",
+   "fraud_nature": "信息披露违法违规。证监会经调查对公司作出行政处罚并采取市场禁入措施；根据事先告知书及处罚决定书认定事实，公司判断违法行为未触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形。具体的虚假记载年度、虚增利润金额及罚款金额因现有文档节选未包含相关内容而无法认定（UNRESOLVED）。",
+   "report": "獐子岛集团股份有限公司（证券代码002069）信息披露违法违规案调查报告\n\n一、案件时间线\n2018年2月9日，公司收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查【f6】，之后公司在指定媒体连续披露16次立案调查进展暨风险提示公告【f1】。2019年7月9日，公司及相关人员收到证监会处罚字【2019】95号《行政处罚及市场禁入事先告知书》【f2】【f7】。2020年6月23日，公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）【f4】，构成从立案调查到事先告知书、再到正式处罚决定的完整处罚流程【f3】。\n\n二、违法性质\n本案属信息披露违法违规。公司及相关责任人员（公告提及吴厚刚、梁峻、勾荣、孙福君、于成家等）被采取行政处罚及市场禁入措施【f4】。两份文书均认定相关事实不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形【f5】【f7】。\n\n三、交叉核查结论\n时间线部分各节点日期与文书编号相互印证，无矛盾，判定一致【f3】【f11】。但财务核验部分未能完成：所提供的两份文档节选均未包含虚假记载具体年份、虚增利润数额（含所谓2016年虚增利润13114.77万元的说法无法核验）及罚款金额的认定内容【f8】【f9】【f10】，故口径比对标注UNRESOLVED，需获取处罚决定书全文后复核【f11】。\n\n四、结论与遗留事项\n已确认：完整处罚流程时间线、违法行为性质（信息披露违法违规）、不触及重大违法强制退市的认定。未能确认：虚假记载年度、虚增利润金额、罚款金额等具体财务认定，待补充处罚决定书全文证据后复核。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10",
+    "f11"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f9",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f10",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 102.28,
+  "tokens": 13793,
+  "arm": "Simple-Dynamic",
+  "suffix_makespan": 49.07,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.2308,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2,
+   "upstream_missing": 0,
+   "n_facts": 11
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed ['e1_tl'] to stronger model"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed [] to stronger model"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed [] to stronger model"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 452
+    },
+    "latency_s": 6.152
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1066,
+     "out": 347
+    },
+    "latency_s": 4.884
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1062,
+     "out": 390
+    },
+    "latency_s": 6.423
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 543,
+     "out": 612
+    },
+    "latency_s": 11.428
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 541,
+     "out": 481
+    },
+    "latency_s": 15.179
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 541,
+     "out": 495
+    },
+    "latency_s": 8.376
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 685,
+     "out": 832
+    },
+    "latency_s": 8.268
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2205,
+     "out": 618
+    },
+    "latency_s": 18.773
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "两份文书时间顺序：事先告知书(2019-07-09)先于行政处罚决定书(2020-06-23)，均源于2018年2月9日立案调查",
+    "kind": "derived",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f2",
+    "content": "两份文书均认定獐子岛信息披露违法违规事实，且均判断不触及重大违法强制退市情形",
+    "kind": "summary",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "公司于2020年6月23日收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f4",
+    "content": "公司于2019年7月9日收到中国证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f5",
+    "content": "虚假记载年度、虚增利润金额、罚款金额：所提供文档节选未包含具体违法事实细节（年份、虚增利润数、罚款数额），无法从当前文本抽取",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f6",
+    "content": "关于2016年虚增利润13114.77万元：现有文档节选（zzd_penalty_2020、zzd_notice_2019）均未载明2016年度虚增利润的具体金额，无法将该数字与告知书口径比对核验",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f7",
+    "content": "若需核验13114.77万元口径一致性，需补充获取两份文书中'违法事实'部分的完整原文（含分年度虚增利润明细表）",
+    "kind": "derived",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "交叉核查结论：时间线核验通过——告知书(2019-07-09)→处罚决定书(2020-06-23)顺序与文书编号、立案时点相互一致，无矛盾",
+    "kind": "finding",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f9",
+    "content": "交叉核查结论：财务核验未通过/无法完成——分年度虚增利润及罚款金额因文档节选缺失无法核验，整体核验状态标注为UNRESOLVED",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 9,
+   "confirmed": 5,
+   "unconfirmed": 0,
+   "insufficient_evidence": 4,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018-02-09 中国证监会向獐子岛下达《调查通知书》（连调查字【2018】001号）立案调查；此后至2019年6月公司按月披露立案调查进展暨风险提示公告；2019-07-09 公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）；2020-06-23 公司收到《行政处罚决定书》【2020】29号及《市场禁入决定书》【2020】9号。",
+   "fraud_nature": "信息披露违法违规（獐子岛及相关责任人员），公司判断不触及重大违法强制退市情形；具体违法细节（涉及年度、虚增利润金额、罚款数额）因现有文档节选缺失无法确认。",
+   "report": "一、事件概况：獐子岛集团股份有限公司（002069）因涉嫌信息披露违法违规，于2018年2月9日收到中国证监会《调查通知书》（连调查字【2018】001号）被立案调查（f3、f4，文书原文均载明）。二、时间线核验：事先告知书（处罚字【2019】95号，2019-07-09收到，f4）先于行政处罚决定书（【2020】29号，2020-06-23收到，f3），顺序与文书编号、立案时点相互一致，交叉核查通过（f1、f8）。三、性质认定：两份文书均认定獐子岛信息披露违法违规事实，且公司判断均不触及《上市公司重大违法强制退市实施办法》规定的重大违法强制退市情形（f2）。四、财务核验：分年度虚假记载、虚增利润金额及罚款金额在现有文档节选中未载明，无法核验，整体核验状态为UNRESOLVED（f5、f6、f9）；如需核验如'2016年虚增利润13114.77万元'等具体口径，需补充两份文书'违法事实'部分完整原文（f7）。五、结论：程序性时间线证据充分且一致，但财务造假具体数额与处罚金额尚缺原始证据支撑，报告结论以时间线与定性事实为准，量化细节待补。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f8",
+    "f5",
+    "f6",
+    "f7",
+    "f9"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f9",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 79.48,
+  "tokens": 11829,
+  "arm": "Simple-Dynamic",
+  "suffix_makespan": 35.41,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.2308,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2,
+   "upstream_missing": 0,
+   "n_facts": 9
+  }
+ },
+ {
+  "status": "INCOMPLETE_NO_RECOVERY",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "FIX-1 weak baseline: frozen π, failed nodes are NOT recovered; blocked descendants stay blocked"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 540
+    },
+    "latency_s": 15.253
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1117,
+     "out": 563
+    },
+    "latency_s": 9.464
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1113,
+     "out": 368
+    },
+    "latency_s": 7.836
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 733,
+     "out": 698
+    },
+    "latency_s": 13.339
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 731,
+     "out": 599
+    },
+    "latency_s": 7.316
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 53.21,
+  "tokens": 7421,
+  "arm": "Static-Parallel",
+  "suffix_makespan": 0.0,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "INCOMPLETE_NO_RECOVERY",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "FIX-1 weak baseline: frozen π, failed nodes are NOT recovered; blocked descendants stay blocked"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 452
+    },
+    "latency_s": 6.152
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1066,
+     "out": 347
+    },
+    "latency_s": 4.884
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1062,
+     "out": 390
+    },
+    "latency_s": 6.423
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 543,
+     "out": 612
+    },
+    "latency_s": 11.428
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 541,
+     "out": 481
+    },
+    "latency_s": 15.179
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 44.07,
+  "tokens": 6453,
+  "arm": "Static-Parallel",
+  "suffix_makespan": 0.0,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [
+     [
+      "e1_tl",
+      "glm53"
+     ],
+     [
+      "e1_rpt",
+      "glm53"
+     ]
+    ],
+    "rationale": "pi-only: retry {failed} + re-optimize π over 2 remaining nodes"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "pi_only: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "pi_only: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 540
+    },
+    "latency_s": 15.253
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1117,
+     "out": 563
+    },
+    "latency_s": 9.464
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1113,
+     "out": 368
+    },
+    "latency_s": 7.836
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 733,
+     "out": 698
+    },
+    "latency_s": 13.339
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 731,
+     "out": 599
+    },
+    "latency_s": 7.316
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 731,
+     "out": 680
+    },
+    "latency_s": 8.883
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 799,
+     "out": 748
+    },
+    "latency_s": 10.602
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2319,
+     "out": 963
+    },
+    "latency_s": 15.555
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "文书索引：zzd_penalty_2020为獐子岛公告2020-48，关于收到行政处罚决定书及市场禁入决定书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f2",
+    "content": "文书索引：zzd_notice_2019为獐子岛公告2019-34，关于收到行政处罚及市场禁入事先告知书的公告",
+    "kind": "索引",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "两份文书时间线：2018-02-09立案调查→2019-07-09事先告知书→2020-06-23行政处罚及市场禁入决定书，构成完整处罚流程",
+    "kind": "推理",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f4",
+    "content": "2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f5",
+    "content": "公司判断违法行为不触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f6",
+    "content": "2018-02-09公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f7",
+    "content": "2019-07-09公司收到证监会处罚字【2019】95号事先告知书，认定事实未触及重大违法强制退市情形",
+    "kind": "事实",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "虚假记载具体年度、虚增利润金额：所提供的两份文档节选（各前600字）未包含处罚决定书中关于虚假记载年份及虚增利润数额的具体认定内容",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f9",
+    "content": "罚款金额：所提供文档节选未披露证监会对公司及相关责任人的罚款金额",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f10",
+    "content": "2016年虚增利润13114.77万元：所提供的两份文档节选（各前600字）均未包含具体虚增利润数额的认定内容，无法与告知书口径进行比对核验",
+    "kind": "事实",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   },
+   {
+    "fid": "f11",
+    "content": "UNRESOLVED标记：交叉核查结论——时间线核验通过（立案2018-02-09→告知书2019-07-09→决定书2020-06-23，两份文书互相印证，逻辑一致）；但财务核验未完成：虚假记载涉及年度、虚增利润金额（含2016年虚增利润13114.77万元的比对）及罚款金额均无法从现有文档节选中确认，标注为UNRESOLVED，需获取处罚决定书全文方可完成核验",
+    "kind": "推理",
+    "status": "unconfirmed",
+    "source": "zzd_penalty_2020,zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 11,
+   "confirmed": 7,
+   "unconfirmed": 1,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018-02-09獐子岛因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）→调查期间公司按月披露进展暨风险提示公告（2018年3月至2019年6月，共16份）→2019-07-09公司及相关人员收到证监会处罚字【2019】95号《行政处罚及市场禁入事先告知书》→2020-06-23公司收到证监会《行政处罚决定书》（【2020】29号）及《市场禁入决定书》（【2020】9号）。两份文书（公告2019-34、2020-48）相互印证，时间线核验通过，构成完整处罚流程（f3、f6、f7、f4）。",
+   "fraud_nature": "信息披露违法违规。证监会立案调查原因为涉嫌信息披露违法违规（f6），最终处罚涉及公司及相关责任人员（吴厚刚、梁峻、勾荣、孙福君、于成家等，见告知书摘录），并同时作出行政处罚与市场禁入决定（f4）。但公司及证监会认定的事实均未触及深交所上市规则13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形（f5、f7）。注意：虚假记载涉及的具体年度、虚增利润金额（含2016年虚增利润13114.77万元的传闻口径）及罚款金额，因现有文档节选未包含相关内容，均无法确认（f8、f9、f10、f11），本报告不作认定。",
+   "report": "综合调查报告：\n\n一、案件主体与文件索引\n本报告基于獐子岛集团股份有限公司（证券代码002069）两份公告：公告2019-34《关于收到中国证监会行政处罚及市场禁入事先告知书的公告》（f2）及公告2020-48《关于收到中国证监会<行政处罚决定书>和<市场禁入决定书>的公告》（f1）。\n\n二、时间线核验\n2018年2月9日，公司收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查（f6）。2019年7月9日，公司及相关人员（含吴厚刚、梁峻、勾荣、孙福君、于成家等）收到处罚字【2019】95号事先告知书（f7）。2020年6月23日，公司收到《行政处罚决定书》（【2020】29号）及《市场禁入决定书》（【2020】9号）（f4）。立案→事先告知→处罚决定三阶段文书相互印证，时间线核验通过，构成完整处罚流程（f3）。\n\n三、违法性质\n本案属信息披露违法违规（f6），处罚对象同时涵盖公司及相关责任人员，且证监会同时作出市场禁入决定（f4）。关于退市风险，公司在两份公告中均判断认定事实未触及深交所上市规则第13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的重大违法强制退市情形（f5、f7）。\n\n四、未决事项（UNRESOLVED）\n以下关键财务事实因现有文档节选未包含相关认定内容而无法确认，需获取处罚决定书全文核验：1）虚假记载涉及的具体年度（f8）；2）证监会对公司及相关责任人的罚款金额（f9）；3）传闻中2016年虚增利润13114.77万元的数额无法与两份文书口径比对核验（f10）。上述事项整体标注为UNRESOLVED（f11），本报告不作任何未经证据支持的认定。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10",
+    "f11"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f9",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f10",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f11",
+     "status": "unconfirmed"
+    }
+   ]
+  },
+  "makespan": 88.25,
+  "tokens": 13661,
+  "arm": "pi-only",
+  "suffix_makespan": 35.04,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.2308,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2,
+   "upstream_missing": 0,
+   "n_facts": 11
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_tl"
+    ],
+    "reoptimize": [
+     [
+      "e1_tl",
+      "glm53"
+     ],
+     [
+      "e1_rpt",
+      "glm53"
+     ]
+    ],
+    "rationale": "pi-only: retry {failed} + re-optimize π over 2 remaining nodes"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "pi_only: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "pi_only: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 452
+    },
+    "latency_s": 6.152
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1066,
+     "out": 347
+    },
+    "latency_s": 4.884
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1062,
+     "out": 390
+    },
+    "latency_s": 6.423
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 543,
+     "out": 612
+    },
+    "latency_s": 11.428
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 541,
+     "out": 481
+    },
+    "latency_s": 15.179
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 541,
+     "out": 432
+    },
+    "latency_s": 7.433
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 685,
+     "out": 808
+    },
+    "latency_s": 18.648
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2293,
+     "out": 773
+    },
+    "latency_s": 11.366
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "两份文书时间顺序：事先告知书(2019-07-09)先于行政处罚决定书(2020-06-23)，均源于2018年2月9日立案调查",
+    "kind": "derived",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f2",
+    "content": "两份文书均认定獐子岛信息披露违法违规事实，且均判断不触及重大违法强制退市情形",
+    "kind": "summary",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "公司于2020年6月23日收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f4",
+    "content": "公司于2019年7月9日收到中国证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+    "kind": "evidence",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f5",
+    "content": "虚假记载年度、虚增利润金额、罚款金额：所提供文档节选未包含具体违法事实细节（年份、虚增利润数、罚款数额），无法从当前文本抽取",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f6",
+    "content": "关于2016年虚增利润13114.77万元：现有文档节选（zzd_penalty_2020、zzd_notice_2019）均未载明2016年度虚增利润的具体金额，无法将该数字与告知书口径比对核验",
+    "kind": "finding",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f7",
+    "content": "若需核验13114.77万元口径一致性，需补充获取两份文书中'违法事实'部分的完整原文（含分年度虚增利润明细表）",
+    "kind": "derived",
+    "status": "insufficient_evidence",
+    "source": "src=zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "时间线交叉核查结果：告知书签收日(2019-07-09)与处罚决定书签收日(2020-06-23)间隔约11.5个月，时间顺序自洽，无矛盾；两份文书时间线核验通过【RESOLVED】",
+    "kind": "derived",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f9",
+    "content": "财务核验交叉核查结果：因两份文书节选均未载明分年度虚增利润金额（含2016年度13114.77万元）及罚款数额，财务数据口径一致性核验无法完成，标注为UNRESOLVED",
+    "kind": "finding",
+    "status": "unconfirmed",
+    "source": "zzd_penalty_2020+zzd_notice_2019"
+   },
+   {
+    "fid": "f10",
+    "content": "整体验收状态：时间线部分可确认（RESOLVED），财务数据核验部分因证据不足维持UNRESOLVED，需下游节点补充两份文书'违法事实'完整原文后重核",
+    "kind": "summary",
+    "status": "confirmed",
+    "source": "本节点交叉核查"
+   }
+  ],
+  "terminal_stats": {
+   "n": 10,
+   "confirmed": 6,
+   "unconfirmed": 1,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018-02-09 中国证监会以连调查字[2018]001号《调查通知书》对獐子岛涉嫌信息披露违法违规立案调查【f1、f4摘录/zzd_penalty_2020】；此后公司按深交所规则按月披露《立案调查进展暨风险提示公告》（2018-03-10至2019-06-12共16次）；2019-07-09 公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】；2020-06-23 公司收到《行政处罚决定书》【2020】29号及《市场禁入决定书》【2020】9号【f3】。告知书与处罚决定书签收日间隔约11.5个月，时间顺序自洽，时间线核验通过【f8】。",
+   "fraud_nature": "中国证监会认定的信息披露违法违规案件。两份文书均认定獐子岛存在信息披露违法违规事实【f2】，但节选文本未载明具体违法事实细节（涉及年度、虚增利润金额、罚款数额）【f5、f6】，故虚增利润（如2016年度13114.77万元口径）等财务造假细节无法从当前证据确认。两份文书均判断不触及重大违法强制退市情形【f2】。",
+   "report": "獐子岛集团（002069）信息披露违法违规案综合报告：一、案件进程。公司于2018年2月9日收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查【f1、f4】。2019年7月9日公司及相关人员（含吴厚刚、梁峻、勾荣、孙福君、于成家等）收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】。2020年6月23日公司收到《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号【f3】。时间线交叉核查确认告知书先于处罚决定书，间隔约11.5个月，无矛盾【f1、f8】。二、违法性质。两份文书均认定公司信息披露违法违规，且均判断不触及深交所重大违法强制退市情形【f2】。三、证据局限。所提供文书节选未包含具体违法事实细节（虚假记载年度、虚增利润金额、罚款数额）【f5】，2016年度虚增利润13114.77万元等财务数据无法与文书口径比对核验【f6】，需补充两份文书'违法事实'部分完整原文（含分年度虚增利润明细表）后方可完成财务口径一致性核验【f7、f9】。四、验收结论。时间线核验RESOLVED，财务数据核验UNRESOLVED【f10】。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f9",
+     "status": "unconfirmed"
+    }
+   ]
+  },
+  "makespan": 81.51,
+  "tokens": 11985,
+  "arm": "pi-only",
+  "suffix_makespan": 37.44,
+  "task": "SC-E1",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.1923,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1667,
+   "upstream_missing": 0,
+   "n_facts": 10
+  }
+ },
+ {
+  "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_chk"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e1_chk'], π=keep"
+   },
+   {
+    "round": 2,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_chk"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.06546 -> R=['e1_chk'], π=keep"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 520
+    },
+    "latency_s": 6.786
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1137,
+     "out": 479
+    },
+    "latency_s": 7.61
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1133,
+     "out": 455
+    },
+    "latency_s": 13.04
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 621,
+     "out": 649
+    },
+    "latency_s": 13.465
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 619,
+     "out": 541
+    },
+    "latency_s": 28.114
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 727,
+     "out": 697
+    },
+    "latency_s": 11.863
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 2,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 727,
+     "out": 864
+    },
+    "latency_s": 14.34
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 3,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 727,
+     "out": 864
+    },
+    "latency_s": 14.34
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 109.56,
+  "tokens": 11719,
+  "arm": "Joint(R,pi)",
+  "suffix_makespan": 28.68,
+  "task": "SC-E1",
+  "scenario": "S2",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_chk"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e1_chk'], π=keep"
+   },
+   {
+    "round": 2,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e1_chk"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.06546 -> R=['e1_chk'], π=keep"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 474
+    },
+    "latency_s": 6.958
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1088,
+     "out": 431
+    },
+    "latency_s": 6.921
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1084,
+     "out": 467
+    },
+    "latency_s": 5.84
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 629,
+     "out": 752
+    },
+    "latency_s": 21.355
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 627,
+     "out": 525
+    },
+    "latency_s": 9.964
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 784,
+     "out": 887
+    },
+    "latency_s": 10.32
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 2,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 784,
+     "out": 710
+    },
+    "latency_s": 8.153
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 3,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 784,
+     "out": 710
+    },
+    "latency_s": 8.153
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 77.66,
+  "tokens": 11695,
+  "arm": "Joint(R,pi)",
+  "suffix_makespan": 16.3,
+  "task": "SC-E1",
+  "scenario": "S2",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "SPLIT_VERIFY",
+    "z_detail": "e1_chk -> per-lineage verifiers over parents ['e1_fin', 'e1_tl'] (kind=verification)",
+    "recovery_set": [
+     "e1_chk_a",
+     "e1_chk_b"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e1_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.14192, U_split=0.28383)"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 520
+    },
+    "latency_s": 6.786
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1137,
+     "out": 479
+    },
+    "latency_s": 7.61
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1133,
+     "out": 455
+    },
+    "latency_s": 13.04
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 621,
+     "out": 649
+    },
+    "latency_s": 13.465
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 619,
+     "out": 541
+    },
+    "latency_s": 28.114
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 727,
+     "out": 697
+    },
+    "latency_s": 11.863
+   },
+   {
+    "node": "e1_chk_a",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 727,
+     "out": 817
+    },
+    "latency_s": 11.913
+   },
+   {
+    "node": "e1_chk_b",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 751,
+     "out": 822
+    },
+    "latency_s": 8.732
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2252,
+     "out": 895
+    },
+    "latency_s": 19.363
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "文书索引：zzd_penalty对应獐子岛公告2020-48《关于收到中国证监会<行政处罚决定书>和<市场禁入决定书>的公告》",
+    "kind": "索引信息",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f2",
+    "content": "文书索引：zzd_notice对应獐子岛公告2019-34《关于收到中国证监会行政处罚及市场禁入事先告知书的公告》",
+    "kind": "索引信息",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "两份文书均披露同一立案调查起点（2018年2月9日调查通知书），处罚流程为：立案调查→事先告知书(2019-07-09)→行政处罚决定书及市场禁入决定书(2020-06-23)",
+    "kind": "程序事件",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f4",
+    "content": "獐子岛于2020年6月23日收到证监会《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号）",
+    "kind": "程序事件",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f5",
+    "content": "公司判断处罚认定的事实不触及深交所《股票上市规则》13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》相关强制退市情形",
+    "kind": "程序事件",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f6",
+    "content": "事先告知书所载明的当事人陈述、申辩及要求听证等权利告知内容，在所提供文档片段（前600字）中未出现，无法确认",
+    "kind": "当事人权利",
+    "status": "insufficient_evidence",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f7",
+    "content": "核验项：待核验金额“2016年虚增利润13114.77万元”在所提供的两份文档片段（zzd_penalty_2020、zzd_notice_2019前600字）中均未出现，无法确认该金额与《行政处罚决定书》及《事先告知书》认定口径是否一致，需调取两文书的违法事实认定正文章节比对",
+    "kind": "财务数据",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "交叉核查结论：时间线核验通过——两份文书披露的立案调查起点（2018年2月9日）与处罚流程节点（2019-07-09事先告知书、2020-06-23处罚决定书及市场禁入决定书）相互一致，无矛盾；但财务核验未通过——关键金额“2016年虚增利润13114.77万元”无法在现有文书片段中核验，整体状态标注为UNRESOLVED，待补充文书正文章节后再行核验",
+    "kind": "交叉核查结论",
+    "status": "unconfirmed",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 8,
+   "confirmed": 5,
+   "unconfirmed": 1,
+   "insufficient_evidence": 2,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018年2月9日獐子岛收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查（f3、f4）；调查期间公司按深交所规则持续披露立案调查进展暨风险提示公告（2018年3月至2019年6月共16次）；2019年7月9日公司及相关人员收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号，公告2019-34，f2、f3）；2020年6月23日公司收到《行政处罚决定书》（【2020】29号）和《市场禁入决定书》（【2020】9号，公告2020-48，f1、f4）。",
+   "fraud_nature": "信息披露违法违规（涉嫌信息披露违法违规，由证监会依据《证券法》立案调查并最终作出行政处罚及市场禁入决定，f3、f4）。公司自行判断处罚认定事实不触及深交所《股票上市规则》13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》规定的强制退市情形（f5）。具体违法事实及涉及金额（如传称'2016年虚增利润13114.77万元'）在现有文书片段中无法核验（f7）。",
+   "report": "獐子岛集团股份有限公司（证券代码002069）信息披露违法违规调查综合报告：一、程序脉络。2018年2月9日，公司收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查（f3、f4），其后公司按深交所规则于2018年3月至2019年6月连续披露16次立案调查进展暨风险提示公告。2019年7月9日，公司及相关人员收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号），公司于2019年7月11日公告（公告编号2019-34，f2、f3）。2020年6月23日，公司收到证监会《行政处罚决定书》（【2020】29号）及《市场禁入决定书》（【2020】9号），并于公告2020-48中披露（f1、f4）。二、退市风险判断。两份公告中，公司均判断处罚/告知书认定的事实不触及《深圳证券交易所股票上市规则》第13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》第二条、第四条、第五条规定的强制退市情形（f5）。三、交叉核查结论。时间线核验通过：两份文书披露的立案起点（2018年2月9日）及处罚流程节点（2019-07-09事先告知书、2020-06-23处罚决定书及市场禁入决定书）相互一致、无矛盾（f3、f8）；但财务核验未通过：关键金额'2016年虚增利润13114.77万元'无法在现有文书片段（前600字摘录）中核验，需调取两文书违法事实认定正文章节比对（f7、f8），整体核查状态为UNRESOLVED。四、局限与保留。本次报告仅基于两份公告的开头部分摘录：事先告知书所载当事人陈述、申辩及要求听证等权利告知内容未在文档片段中出现，无法确认（f6）；处罚决定的违法事实认定正文及具体财务数据均待补充原始文书正文后再行核验，本报告不对具体违法情节及金额作出认定。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f8",
+     "status": "unconfirmed"
+    }
+   ]
+  },
+  "makespan": 120.89,
+  "tokens": 14801,
+  "arm": "Joint(Z,R,pi)",
+  "suffix_makespan": 40.01,
+  "task": "SC-E1",
+  "scenario": "S2",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.1923,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1667,
+   "upstream_missing": 0,
+   "n_facts": 8
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "SPLIT_VERIFY",
+    "z_detail": "e1_chk -> per-lineage verifiers over parents ['e1_fin', 'e1_tl'] (kind=verification)",
+    "recovery_set": [
+     "e1_chk_a",
+     "e1_chk_b"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e1_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.14192, U_split=0.28383)"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e1_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 959,
+     "out": 474
+    },
+    "latency_s": 6.958
+   },
+   {
+    "node": "e1_ext_pen",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1088,
+     "out": 431
+    },
+    "latency_s": 6.921
+   },
+   {
+    "node": "e1_ext_proc",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1084,
+     "out": 467
+    },
+    "latency_s": 5.84
+   },
+   {
+    "node": "e1_fin",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 629,
+     "out": 752
+    },
+    "latency_s": 21.355
+   },
+   {
+    "node": "e1_tl",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 627,
+     "out": 525
+    },
+    "latency_s": 9.964
+   },
+   {
+    "node": "e1_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 784,
+     "out": 887
+    },
+    "latency_s": 10.32
+   },
+   {
+    "node": "e1_chk_a",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 592,
+     "out": 878
+    },
+    "latency_s": 12.067
+   },
+   {
+    "node": "e1_chk_b",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 735,
+     "out": 900
+    },
+    "latency_s": 10.805
+   },
+   {
+    "node": "e1_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2355,
+     "out": 979
+    },
+    "latency_s": 17.102
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "两份文书的索引关系：2019年事先告知书（处罚字【2019】95号）为程序前置文书，2020年处罚决定书（【2020】29号）为最终处罚文书，两者针对同一信息披露违法案件",
+    "kind": "relation",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f2",
+    "content": "两份文书均为獐子岛公司公告（公告编号2020-48、2019-34），披露于深交所渠道，公司代码002069",
+    "kind": "metadata",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f3",
+    "content": "公司于2020年6月23日收到证监会【2020】29号《行政处罚决定书》及【2020】9号《市场禁入决定书》，公司判断违法行为不触及重大违法强制退市情形",
+    "kind": "event",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020"
+   },
+   {
+    "fid": "f4",
+    "content": "公司于2019年7月9日收到证监会处罚字【2019】95号《行政处罚及市场禁入事先告知书》，认定事实未触及重大违法强制退市情形",
+    "kind": "event",
+    "status": "confirmed",
+    "source": "zzd_notice_2019"
+   },
+   {
+    "fid": "f5",
+    "content": "2018年2月9日公司因涉嫌信息披露违法违规被证监会立案调查（连调查字【2018】001号）",
+    "kind": "event",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f6",
+    "content": "违法事实具体内容（虚假记载年度、虚增利润金额）及罚款金额在所提供文档节选中未出现，需依据处罚决定书全文进一步抽取",
+    "kind": "insufficiency",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f7",
+    "content": "所提供文档节选中未出现『2016年虚增利润13114.77万元』的任何金额表述，无法将该金额与2019年事先告知书或2020年处罚决定书的认定口径进行比对核验，该金额与告知书口径的一致性目前不能确认",
+    "kind": "insufficiency",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f8",
+    "content": "核验所需的比对基础缺失：需获取2019年事先告知书及2020年处罚决定书中关于各年度（尤其2016年）虚增利润的完整认定数据后，方可完成口径一致性核验",
+    "kind": "todo",
+    "status": "insufficient_evidence",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f9",
+    "content": "时间线交叉核查结果：事件序列为2018年2月9日立案调查 → 2019年7月9日送达事先告知书 → 2020年6月23日送达行政处罚决定书及市场禁入决定书，程序时序合理（调查在先、告知在前、处罚在后），无时间矛盾",
+    "kind": "event",
+    "status": "confirmed",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   },
+   {
+    "fid": "f10",
+    "content": "UNRESOLVED：财务核验（2016年虚增利润13114.77万元与文书认定口径的一致性比对）因两份文书节选中均无金额数据而无法完成，比对基础缺失，该核验事项保持未解决状态，需补充处罚决定书全文或告知书全文后重核",
+    "kind": "unresolved",
+    "status": "unconfirmed",
+    "source": "zzd_penalty_2020;zzd_notice_2019"
+   }
+  ],
+  "terminal_stats": {
+   "n": 10,
+   "confirmed": 6,
+   "unconfirmed": 1,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2018年2月9日，獐子岛集团股份有限公司（002069）因涉嫌信息披露违法违规被中国证监会立案调查（连调查字【2018】001号）【f5】；此后公司按深交所规则自2018年3月至2019年6月披露了16次《立案调查进展暨风险提示公告》；2019年7月9日，公司及相关人员（吴厚刚、梁峻、勾荣、孙福君、于成家等）收到证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】；2020年6月23日，公司收到证监会《行政处罚决定书》（【2020】29号）及《市场禁入决定书》（【2020】9号），公司判断违法行为不触及重大违法强制退市情形【f3】。程序时序经交叉核查合理：调查在先、事先告知在前、处罚决定在后，无时间矛盾【f9】。",
+   "fraud_nature": "信息披露违法违规案。证监会针对同一信息披露违法案件先后作出程序性前置文书（2019年事先告知书，处罚字【2019】95号）与最终处罚文书（2020年处罚决定书，【2020】29号），并对相关责任人员作出市场禁入决定【f1】【f3】【f4】。两份文书认定事实均未触及重大违法强制退市情形【f3】【f4】。注：违法事实的具体内容（涉及虚假记载的年度、虚增利润金额）及罚款金额在所提供文档节选中未出现，性质细目暂无法确认【f6】。",
+   "report": "獐子岛（002069）信息披露违法案综合报告：\n\n一、案件性质。本案系中国证监会查处的信息披露违法违规案件【f5】，涉及同一案件的两份程序文书：2019年处罚字【2019】95号《行政处罚及市场禁入事先告知书》为程序前置文书，2020年【2020】29号《行政处罚决定书》为最终处罚文书【f1】。两份文书均为獐子岛公司公告，披露于深交所渠道（公告编号分别为2019-34、2020-48）【f2】。\n\n二、时间线。2018年2月9日公司收到《调查通知书》（连调查字【2018】001号）被立案调查【f5】；调查期间公司按上市规则持续披露进展暨风险提示公告（2018年3月至2019年6月共16次）；2019年7月9日公司及相关人员（含吴厚刚、梁峻、勾荣、孙福君、于成家等）收到事先告知书【f4】；2020年6月23日公司收到行政处罚决定书及市场禁入决定书【f3】。时间线交叉核查确认程序时序合理，无时间矛盾【f9】。\n\n三、退市影响判断。根据两份文书的认定事实，公司判断违法行为未触及深交所《股票上市规则》第13.2.1条第（七）至（九）项及《上市公司重大违法强制退市实施办法》相关条款规定的重大违法强制退市情形【f3】【f4】。\n\n四、未完成核验事项（重要）。违法事实具体内容（虚假记载年度、虚增利润金额）及罚款金额在所提供的两份文书节选中均未出现【f6】；节选中亦无『2016年虚增利润13114.77万元』的任何金额表述，无法完成该金额与文书认定口径的一致性比对【f7】；核验所需的比对基础缺失，需补充处罚决定书全文或告知书全文后方可完成各年度（尤其2016年）虚增利润数据的口径核验【f8】，该财务核验事项目前保持未解决状态【f10】。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f8",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f10",
+     "status": "unconfirmed"
+    }
+   ]
+  },
+  "makespan": 101.33,
+  "tokens": 15146,
+  "arm": "Joint(Z,R,pi)",
+  "suffix_makespan": 39.97,
+  "task": "SC-E1",
+  "scenario": "S2",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.2308,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.2,
+   "upstream_missing": 0,
+   "n_facts": 10
+  }
+ },
+ {
+  "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [
+     [
+      "e3_rpt",
+      "glm53"
+     ],
+     [
+      "e3_timeline",
+      "glm53"
+     ]
+    ],
+    "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e3_timeline'], π=strong"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution"
+   },
+   {
+    "round": 4,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_rpt"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 1 legal R × 3 π modes, argmax U=0.18015 -> R=['e3_rpt'], π=keep"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 499
+    },
+    "latency_s": 7.475
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1029,
+     "out": 438
+    },
+    "latency_s": 8.542
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1027,
+     "out": 343
+    },
+    "latency_s": 5.142
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 468,
+     "out": 617
+    },
+    "latency_s": 15.855
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 471,
+     "out": 615
+    },
+    "latency_s": 12.207
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 471,
+     "out": 468
+    },
+    "latency_s": 8.578
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 644,
+     "out": 721
+    },
+    "latency_s": 9.619
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 2177,
+     "out": 1024
+    },
+    "latency_s": 13.555
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 2,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 2177,
+     "out": 1024
+    },
+    "latency_s": 13.555
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 94.53,
+  "tokens": 15150,
+  "arm": "Joint(R,pi)",
+  "suffix_makespan": 45.31,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [
+     [
+      "e3_rpt",
+      "glm53"
+     ],
+     [
+      "e3_timeline",
+      "glm53"
+     ]
+    ],
+    "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e3_timeline'], π=strong"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution"
+   },
+   {
+    "round": 4,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_rpt"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 1 legal R × 3 π modes, argmax U=0.18015 -> R=['e3_rpt'], π=keep"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 496
+    },
+    "latency_s": 12.801
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1030,
+     "out": 210
+    },
+    "latency_s": 5.7
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1028,
+     "out": 226
+    },
+    "latency_s": 12.513
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 412,
+     "out": 246
+    },
+    "latency_s": 10.091
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 415,
+     "out": 624
+    },
+    "latency_s": 10.641
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 415,
+     "out": 662
+    },
+    "latency_s": 8.628
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 742,
+     "out": 847
+    },
+    "latency_s": 22.446
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 2277,
+     "out": 1024
+    },
+    "latency_s": 14.36
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 2,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 2277,
+     "out": 1024
+    },
+    "latency_s": 14.36
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 111.54,
+  "tokens": 14892,
+  "arm": "Joint(R,pi)",
+  "suffix_makespan": 59.79,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [
+     [
+      "e3_rpt",
+      "glm53"
+     ],
+     [
+      "e3_timeline",
+      "glm53"
+     ]
+    ],
+    "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e3_timeline'], π=strong | Z-space=['KEEP'] -> KEEP (U_keep=0.37129)"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   },
+   {
+    "round": 3,
+    "action": "recover",
+    "z_op": "SPLIT_VERIFY",
+    "z_detail": "e3_chk -> per-lineage verifiers over parents ['e3_param_check', 'e3_timeline'] (kind=verification)",
+    "recovery_set": [
+     "e3_chk_a",
+     "e3_chk_b"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.18015 -> R=['e3_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.18015, U_split=0.36029)"
+   },
+   {
+    "round": 4,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   },
+   {
+    "round": 5,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 499
+    },
+    "latency_s": 7.475
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1029,
+     "out": 438
+    },
+    "latency_s": 8.542
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1027,
+     "out": 343
+    },
+    "latency_s": 5.142
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 468,
+     "out": 617
+    },
+    "latency_s": 15.855
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 471,
+     "out": 615
+    },
+    "latency_s": 12.207
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 471,
+     "out": 522
+    },
+    "latency_s": 14.213
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 644,
+     "out": 1024
+    },
+    "latency_s": 30.848
+   },
+   {
+    "node": "e3_chk_a",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 644,
+     "out": 691
+    },
+    "latency_s": 8.802
+   },
+   {
+    "node": "e3_chk_b",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 633,
+     "out": 824
+    },
+    "latency_s": 10.42
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2250,
+     "out": 933
+    },
+    "latency_s": 13.887
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "cs_plan_summary（草案摘要，2025年6月，上会稿）为本次吸收合并的前期方案文件，cs_listing（实施情况暨新增股份上市公告书，2025年9月）为实施阶段的后续公告，两份文档共同覆盖本次交易的方案制定到实施完成过程",
+    "kind": "文档关系",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f2",
+    "content": "本次换股吸收合并的换股比例为1:0.1339，即每1股中国重工股份可换取约0.1339股中国船舶新增发行股份",
+    "kind": "交易方案设计参数",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f3",
+    "content": "换股价格（吸并方中国船舶与被吸并方中国重工的换股价格及由此确定的换股比例）为本次吸收合并方案的核心设计参数，具体数值需从cs_plan_summary_2024的方案章节原文核实",
+    "kind": "交易方案设计参数",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f4",
+    "content": "参数一致性核验方法：应将cs_plan_summary_2024中载明的换股比例（1:0.1339）与cs_listing_2025中实际实施并发行的新增股份对应比例进行比对；若两文档换股比例一致且未发生调整（如除权除息、价格调整机制触发），则方案设计与实施结果匹配",
+    "kind": "核验逻辑",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f5",
+    "content": "需在cs_listing_2025中核实的关键实施结果数据：实际发行的A股新增股份数量、被吸并方中国重工参与换股的股份总数（含异议股东现金选择权行使情况）、以及最终确定的换股比例是否与方案一致或有调整",
+    "kind": "核验要点",
+    "status": "insufficient_evidence",
+    "source": "cs_listing_2025"
+   },
+   {
+    "fid": "f6",
+    "content": "时间线核验：cs_plan_summary为2025年6月上会稿（方案制定阶段），cs_listing为2025年9月实施公告，两文件时间顺序符合'方案在前、实施在后'的交易进程，时间线无矛盾；但实施公告与方案之间是否存在换股比例调整事件需以原文核实为准",
+    "kind": "时间线核验",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f7",
+    "content": "交叉核查结论：时间线自洽，2025年6月方案→2025年9月实施完成新增股份上市，阶段顺序无矛盾；但审批阶段具体节点（如股东大会、监管批复日期）在两份文档中仅有间接记载，精确日期未在本subtask证据中核实",
+    "kind": "交叉核查结论",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f8",
+    "content": "补充说明：本次交易于2025年9月已实施完成并上市，后续若存在'终止'环节，应指被吸并方中国重工终止上市及法人资格注销相关安排，而非本次合并交易本身的终止；该安排的具体实施情况需补充注销/摘牌类公告核实",
+    "kind": "证据缺口",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   }
+  ],
+  "terminal_stats": {
+   "n": 8,
+   "confirmed": 1,
+   "unconfirmed": 4,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2025年6月：中国船舶披露换股吸收合并中国重工暨关联交易报告书（草案）摘要（上会稿），进入方案制定与审核阶段（f1、f6）。2025年9月11日：中国船舶收到中国证券登记结算有限责任公司上海分公司出具的《证券变更登记证明》，本次换股吸收合并发行股份完成变更登记（cs_listing_2025摘录）。2025年9月16日：本次换股吸收合并新增股份3,053,192,530股在上海证券交易所上市（cs_listing_2025摘录）。整体时间线'方案在前（6月）、实施在后（9月）'，阶段顺序无矛盾（f6、f7）；但股东大会、监管批复等审批节点精确日期未在本证据中核实（f7）。",
+   "fraud_nature": "基于现有两份文档（方案摘要与实施公告）的交叉核查，未发现欺诈迹象：换股比例在方案阶段（1:0.1339，f2）与实施阶段（中国船舶换股价37.59元/股、中国重工换股价5.032元/股，换股比例1:0.1339）一致，未发生调整，方案设计与实施结果匹配（f4核验逻辑）。需注意：f2在事实清单中状态为insufficient_evidence，但cs_listing_2025实施公告摘录明确载明换股比例为1:0.1339，实施侧数据已获证实。仍存在证据缺口：被吸并方中国重工的终止上市及法人资格注销安排尚未核实（f8），且实际参与换股股份总数、异议股东现金选择权行使情况等关键实施数据未见完整披露（f5），不能完全排除后续环节的异常，暂无证据支持欺诈认定。",
+   "report": "本次调查围绕中国船舶换股吸收合并中国重工暨关联交易展开，交叉核验两份核心文件：2025年6月的方案摘要（上会稿）与2025年9月的实施情况暨新增股份上市公告书（f1）。一、时间线核验：方案在前、实施在后，2025年6月方案披露→2025年9月11日完成证券变更登记→2025年9月16日新增股份上市，时间顺序自洽、无矛盾（f6、f7，均状态unconfirmed，但与cs_listing_2025摘录直接印证）。二、参数核验：方案载明的换股比例为1:0.1339（f2，insufficient_evidence，需以方案原文核实）；实施公告明确披露中国船舶换股价37.59元/股、中国重工换股价5.032元/股，换股比例1:0.1339，新增发行3,053,192,530股。按核验逻辑（f4，unconfirmed），方案与实施换股比例一致且无除权除息或调整迹象，方案设计与实施结果匹配。三、结论与缺口：现有证据未显示欺诈迹象，交易按方案实施完成。但以下事项尚待补充核实：（1）实际参与换股股份总数及异议股东现金选择权行使情况（f5，insufficient_evidence）；（2）审批阶段（股东大会、监管批复）精确日期（f7，unconfirmed）；（3）中国重工终止上市及法人资格注销安排的后续公告（f8，unconfirmed）；（4）换股价格设计依据及f2数值的方案原文核实（f3，insufficient_evidence）。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f2",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f3",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f4",
+     "status": "unconfirmed"
+    },
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f6",
+     "status": "unconfirmed"
+    },
+    {
+     "fid": "f7",
+     "status": "unconfirmed"
+    },
+    {
+     "fid": "f8",
+     "status": "unconfirmed"
+    }
+   ]
+  },
+  "makespan": 127.39,
+  "tokens": 15080,
+  "arm": "Joint(Z,R,pi)",
+  "suffix_makespan": 78.17,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.1154,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1,
+   "upstream_missing": 0,
+   "n_facts": 8
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [
+     [
+      "e3_rpt",
+      "glm53"
+     ],
+     [
+      "e3_timeline",
+      "glm53"
+     ]
+    ],
+    "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e3_timeline'], π=strong | Z-space=['KEEP'] -> KEEP (U_keep=0.37129)"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 496
+    },
+    "latency_s": 12.801
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1030,
+     "out": 210
+    },
+    "latency_s": 5.7
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1028,
+     "out": 226
+    },
+    "latency_s": 12.513
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 412,
+     "out": 246
+    },
+    "latency_s": 10.091
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 415,
+     "out": 624
+    },
+    "latency_s": 10.641
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 415,
+     "out": 410
+    },
+    "latency_s": 14.895
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 548,
+     "out": 430
+    },
+    "latency_s": 6.511
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1972,
+     "out": 807
+    },
+    "latency_s": 11.908
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "索引确认：cs_plan_summary_2024（2025年6月，上会稿草案摘要）与cs_listing_2025（2025年9月，实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段，前者为方案摘要阶段，后者为实施完成阶段。",
+    "kind": "index_relationship",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f2",
+    "content": "调查目标：从方案中抽取设计参数——换股比例（拟核验为1:0.1339）及换股价格；所提供的两份文档前600字片段均未包含该等参数的明确表述。",
+    "kind": "design_parameter",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f3",
+    "content": "并购时间线（基于文档标题与日期推断）：2025年6月为方案上会/草案摘要阶段→（审批阶段：缺失直接文档证据）→2025年9月为实施完成暨新增股份上市阶段。审批环节时间点无直接证据支持。",
+    "kind": "timeline",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f4",
+    "content": "subtask要求覆盖的'终止'阶段：两份文档片段均未涉及交易终止信息，无法确认该交易存在终止环节或其时间。",
+    "kind": "timeline",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f5",
+    "content": "交叉核查结论：时间线顺序（2025年6月方案阶段早于2025年9月实施完成阶段）与交易逻辑自洽，无矛盾；但换股比例1:0.1339及换股价格仍无文档直接表述，参数核验依赖完整版方案文档。",
+    "kind": "cross_check",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   }
+  ],
+  "terminal_stats": {
+   "n": 5,
+   "confirmed": 1,
+   "unconfirmed": 1,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2025年6月：中国船舶换股吸收合并中国重工暨关联交易报告书（草案）摘要（上会稿）披露，交易处于方案上会阶段[f1]。→2025年6月至9月之间：审批/核准环节，无直接文档证据[f3]。→2025年9月11日：中国船舶收到中国证券登记结算有限责任公司上海分公司《证券变更登记证明》（据cs_listing_2025摘录）。→2025年9月16日：新增股份上市，交易实施完成[f1]。交易未发现终止环节信息[f4]。",
+   "fraud_nature": "未发现欺诈或造假迹象。本次调查对象为中国船舶换股吸收合并中国重工的关联交易信息披露链条。两份文档时间顺序与交易逻辑自洽、无矛盾[f5]。但需注意：换股比例1:0.1339、换股价格（中国船舶37.59元/股、中国重工5.032元/股）仅由cs_listing_2025文档摘录显示，结构化事实清单中相应核验结论仍为insufficient_evidence[f2][f5]，参数的正式核验依赖完整版方案文档。",
+   "report": "一、索引与链条确认：cs_plan_summary_2024（2025年6月上会稿草案摘要）与cs_listing_2025（2025年9月实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段，前者为方案摘要阶段，后者为实施完成阶段，索引关系已确认[f1]。二、时间线：2025年6月为方案上会阶段，2025年9月为实施完成阶段；cs_listing_2025摘录进一步显示证券变更登记于2025年9月11日完成，新增股份于2025年9月16日上市；两份文档之间（2025年6月至9月）的监管审批环节缺乏直接文档证据，时间点未获确认[f3]。三、设计参数核验：结构化事实显示两份文档前600字片段均未含换股比例与换股价格的明确表述，参数核验状态为证据不足[f2]。但cs_listing_2025的完整摘录（超出前600字片段范围）载明：中国船舶换股价格37.59元/股，中国重工换股价格5.032元/股，换股比例1:0.1339，新增股份数量3,053,192,530股。该参数与调查目标值1:0.1339一致，但因清单事实f2、f5状态为insufficient_evidence，此一致性核验应视为初步观察而非已确认结论[f2][f5]。四、终止阶段：两份文档均未涉及交易终止信息，无法确认存在终止环节[f4]。五、交叉核查：时间线顺序（2025年6月早于2025年9月）与交易逻辑自洽，无矛盾；参数核验仍依赖完整版方案文档[f5]。六、结论：交易链条完整自洽，未见欺诈迹象；关键参数（换股比例、换股价格）的正式核验及审批环节时间点需补充完整版重组报告书全文及审批文件。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f2",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f3",
+     "status": "unconfirmed"
+    },
+    {
+     "fid": "f4",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 85.06,
+  "tokens": 10206,
+  "arm": "Joint(Z,R,pi)",
+  "suffix_makespan": 33.31,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.1154,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1,
+   "upstream_missing": 0,
+   "n_facts": 5
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [],
+    "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.29183 -> R=['e3_timeline'] (runner-up U=0.28083 R=['e3_chk', 'e3_timeline'])"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "r_only: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "r_only: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 499
+    },
+    "latency_s": 7.475
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1029,
+     "out": 438
+    },
+    "latency_s": 8.542
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1027,
+     "out": 343
+    },
+    "latency_s": 5.142
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 468,
+     "out": 617
+    },
+    "latency_s": 15.855
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 471,
+     "out": 615
+    },
+    "latency_s": 12.207
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 471,
+     "out": 721
+    },
+    "latency_s": 10.884
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 814,
+     "out": 838
+    },
+    "latency_s": 12.265
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2268,
+     "out": 861
+    },
+    "latency_s": 12.928
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "cs_plan_summary（草案摘要，2025年6月，上会稿）为本次吸收合并的前期方案文件，cs_listing（实施情况暨新增股份上市公告书，2025年9月）为实施阶段的后续公告，两份文档共同覆盖本次交易的方案制定到实施完成过程",
+    "kind": "文档关系",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f2",
+    "content": "本次换股吸收合并的换股比例为1:0.1339，即每1股中国重工股份可换取约0.1339股中国船舶新增发行股份",
+    "kind": "交易方案设计参数",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f3",
+    "content": "换股价格（吸并方中国船舶与被吸并方中国重工的换股价格及由此确定的换股比例）为本次吸收合并方案的核心设计参数，具体数值需从cs_plan_summary_2024的方案章节原文核实",
+    "kind": "交易方案设计参数",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f4",
+    "content": "参数一致性核验方法：应将cs_plan_summary_2024中载明的换股比例（1:0.1339）与cs_listing_2025中实际实施并发行的新增股份对应比例进行比对；若两文档换股比例一致且未发生调整（如除权除息、价格调整机制触发），则方案设计与实施结果匹配",
+    "kind": "核验逻辑",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f5",
+    "content": "需在cs_listing_2025中核实的关键实施结果数据：实际发行的A股新增股份数量、被吸并方中国重工参与换股的股份总数（含异议股东现金选择权行使情况）、以及最终确定的换股比例是否与方案一致或有调整",
+    "kind": "核验要点",
+    "status": "insufficient_evidence",
+    "source": "cs_listing_2025"
+   },
+   {
+    "fid": "f6",
+    "content": "基于现有两份文档，可确认的交易时间线为：方案制定（2025年6月上会稿）→ 实施完成暨新增股份上市（2025年9月）；审批节点（如证监会核准/上会、股东会批准）的具体日期在现有文档摘要信息中未明确，需回溯cs_plan_summary_2024审批与核准章节核实",
+    "kind": "并购时间线",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f7",
+    "content": "现有事实清单中未见任何关于本次交易终止的信息；两份文档均属方案推进至实施完成的正向时间线文件，暂无证据表明交易存在终止情形",
+    "kind": "并购时间线",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f8",
+    "content": "交叉核查初步结论：时间线层面（2025年6月方案→2025年9月实施完成上市）内部自洽、无矛盾，可确认；参数层面因缺少两份文档原文中的换股价格与实际发行数据原文比对，1:0.1339的换股比例实施一致性尚未最终确认，需后续节点调取cs_plan_summary_2024方案章节与cs_listing_2025发行结果章节原文完成比对",
+    "kind": "交叉核查结论",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   }
+  ],
+  "terminal_stats": {
+   "n": 8,
+   "confirmed": 1,
+   "unconfirmed": 2,
+   "insufficient_evidence": 5,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2025年6月：中国船舶披露换股吸收合并中国重工暨关联交易报告书（草案）摘要（上会稿），进入方案制定与审批阶段；2025年9月11日：中国船舶收到中国证券登记结算有限责任公司上海分公司《证券变更登记证明》，换股发行股份完成变更登记；2025年9月16日：新增股份3,053,192,530股上市，本次换股吸收合并实施完成。方案制定（2025年6月）→实施完成（2025年9月）时间线内部自洽，无矛盾。",
+   "fraud_nature": "本次调查未发现欺诈、舞弊或交易终止迹象。现有证据显示这是一宗正常推进并实施完成的A股换股吸收合并（中国船舶吸并中国重工），方案参数（换股价格、换股比例）在实施公告中与方案设计一致披露，时间线正向自洽。需注意的仅为部分核验数据（如方案章节原文、审批节点日期、实际换股股份总数）尚缺原文比对，属信息不完整而非欺诈线索。",
+   "report": "综合报告：一、交易概况。中国船舶（600150）以换股吸收合并方式合并中国重工（601989），cs_plan_summary_2024为2025年6月方案阶段文件（草案摘要上会稿），cs_listing_2025为2025年9月实施完成后的新增股份上市公告书，两份文档覆盖方案制定至实施完成全过程【f1】。二、核心参数与实施一致性。本次换股吸收合并中，中国船舶换股价格37.59元/股，中国重工换股价格5.032元/股，换股比例1:0.1339（每1股中国重工换0.1339股中国船舶），该比例在实施公告书特别提示中明确载明【f2, f3】。实施结果：新增股份3,053,192,530股，上市日期2025年9月16日，其中1,454,168,398股限售6个月；2025年9月11日完成证券变更登记。实施公告披露的换股比例与方案比例一致，未见除权除息或调整机制触发的迹象，初步判断方案设计与实施结果匹配，但因缺少方案章节原文与发行结果章节的逐项原文比对，参数一致性尚未最终完全确认【f4, f5, f8】。三、时间线与终止核查。可确认时间线为2025年6月方案上会稿至2025年9月实施完成上市，内部自洽无矛盾；审批节点（证监会核准、股东会批准等）具体日期需回溯原文核实【f6, f8】。现有全部文件均为交易正向推进文件，未发现任何终止交易的信息【f7】。四、结论。无证据表明存在欺诈或异常；建议后续调取cs_plan_summary_2024方案章节与cs_listing_2025发行结果章节原文，完成换股价格、实际换股股份数（含异议股东现金选择权行使情况）及审批节点日期的最终比对【f5, f6, f8】。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f2",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f3",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f4",
+     "status": "unconfirmed"
+    },
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f8",
+     "status": "unconfirmed"
+    }
+   ]
+  },
+  "makespan": 85.3,
+  "tokens": 12417,
+  "arm": "R-only",
+  "suffix_makespan": 36.08,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.1538,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1333,
+   "upstream_missing": 0,
+   "n_facts": 8
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [],
+    "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.29183 -> R=['e3_timeline'] (runner-up U=0.28083 R=['e3_chk', 'e3_timeline'])"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "r_only: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "r_only: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 496
+    },
+    "latency_s": 12.801
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1030,
+     "out": 210
+    },
+    "latency_s": 5.7
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1028,
+     "out": 226
+    },
+    "latency_s": 12.513
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 412,
+     "out": 246
+    },
+    "latency_s": 10.091
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 415,
+     "out": 624
+    },
+    "latency_s": 10.641
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 415,
+     "out": 515
+    },
+    "latency_s": 9.482
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 672,
+     "out": 730
+    },
+    "latency_s": 11.858
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2111,
+     "out": 815
+    },
+    "latency_s": 11.023
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "索引确认：cs_plan_summary_2024（2025年6月，上会稿草案摘要）与cs_listing_2025（2025年9月，实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段，前者为方案摘要阶段，后者为实施完成阶段。",
+    "kind": "index_relationship",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f2",
+    "content": "调查目标：从方案中抽取设计参数——换股比例（拟核验为1:0.1339）及换股价格；所提供的两份文档前600字片段均未包含该等参数的明确表述。",
+    "kind": "design_parameter",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f3",
+    "content": "时间线阶段一（方案）：cs_plan_summary_2024为2025年6月上会稿草案摘要，标志并购方案已成型并进入审核上会阶段。",
+    "kind": "timeline_node",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f4",
+    "content": "时间线阶段二（实施完成暨新增股份上市）：cs_listing_2025为2025年9月实施情况暨新增股份上市公告书，表明交易已通过审批并完成实施、新增股份完成上市。",
+    "kind": "timeline_node",
+    "status": "confirmed",
+    "source": "cs_listing_2025"
+   },
+   {
+    "fid": "f5",
+    "content": "审批与实施环节：从2025年6月上会稿到2025年9月上市公告书仅约3个月，暗示审核获批及实施完成发生于该区间内，具体审批日期在现有片段中未见明确记载。",
+    "kind": "timeline_inference",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f6",
+    "content": "终止环节：现有两份文档片段（前600字）均未记载该并购链条存在终止（撤回、否决、中止上市或退市等）情形，终止节点暂无证据支持。",
+    "kind": "timeline_termination",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f7",
+    "content": "交叉核查结论：时间线（f3→f4顺序一致，f5区间推断与f3/f4日期自洽）内部无矛盾；但设计参数（换股比例1:0.1339及换股价格）在现有片段中仍无原文佐证，参数核验结果为'不可核实'，需扩展片段或补充方案全文方可确认。",
+    "kind": "cross_check_conclusion",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   }
+  ],
+  "terminal_stats": {
+   "n": 7,
+   "confirmed": 4,
+   "unconfirmed": 1,
+   "insufficient_evidence": 2,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2025年6月：中国船舶换股吸收合并中国重工方案以上会稿草案摘要形式披露，进入审核上会阶段[f3]；2025年6月至9月间：审核获批及实施完成（具体审批日期未见明确记载）[f5]；2025年9月11日：中国船舶收到中国证券登记结算有限责任公司上海分公司《证券变更登记证明》（摘录：cs_listing_2025）；2025年9月16日：新增股份3,053,192,530股上市（摘录：cs_listing_2025），交易链条以实施完成暨新增股份上市告终[f4]。现有文档片段未发现终止（撤回、否决、中止上市或退市）情形[f6]。",
+   "fraud_nature": "本次调查未发现明显欺诈线索。cs_plan_summary_2024与cs_listing_2025描述同一交易链条的前后阶段且时间线内部自洽[f1][f7]；上市公告书原文明确记载换股比例1:0.1339（中国船舶换股价37.59元/股、中国重工换股价5.032元/股），与拟核验参数一致（摘录：cs_listing_2025特别提示第二条）。需注意两点存疑：一是该参数核验在上游结构化事实层面因片段不足被标记为insufficient_evidence[f2][f7]，本报告系依据上市公告书摘录原文补充确认；二是2025年6月至9月间的具体审批日期无文档记载[f5]，审批环节连续性尚待扩展证据核验。",
+   "report": "一、交易概况：本次调查对象为中国船舶（600150）换股吸收合并中国重工（601989）暨关联交易[f1]。两份文档索引关系已确认：cs_plan_summary_2024（2025年6月上会稿草案摘要）为方案阶段文件，cs_listing_2025（2025年9月实施情况暨新增股份上市公告书）为实施完成阶段文件，二者描述同一交易链条的前后阶段[f1]。二、时间线：方案于2025年6月成型并进入审核上会[f3]；2025年6月至9月间审核获批并完成实施（具体审批日期未见记载，属推断性节点）[f5]；2025年9月11日完成证券变更登记、9月16日新增股份上市，交易实施完成[f4]。现有片段未发现终止情形[f6]。三、参数核验：拟核验换股比例1:0.1339。上游结构化事实中该参数因片段不足标记为'不可核实'[f2][f7]；但cs_listing_2025摘录特别提示第二条明确记载'中国船舶换股价格为37.59元/股，中国重工换股价格为5.032元/股，换股比例相应为1:0.1339'，据此参数与拟核验值一致。四、交叉核查：时间线内部无矛盾，f3→f4顺序一致，f5区间推断与f3/f4日期自洽[f7]。五、结论：未发现欺诈或披露矛盾迹象；需通过扩展方案全文或审批环节补充文件进一步确认审批具体日期[f5]与终止情形存证[f6]。",
+   "fact_ids_used": [
+    "f1",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f2"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f2",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f5",
+     "status": "unconfirmed"
+    },
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 84.11,
+  "tokens": 10882,
+  "arm": "R-only",
+  "suffix_makespan": 32.36,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.1538,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1333,
+   "upstream_missing": 0,
+   "n_facts": 7
+  }
+ },
+ {
+  "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed ['e3_timeline'] to stronger model"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed [] to stronger model"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed [] to stronger model"
+   },
+   {
+    "round": 4,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_rpt"
+    ],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed ['e3_rpt'] to stronger model"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 499
+    },
+    "latency_s": 7.475
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1029,
+     "out": 438
+    },
+    "latency_s": 8.542
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1027,
+     "out": 343
+    },
+    "latency_s": 5.142
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 468,
+     "out": 617
+    },
+    "latency_s": 15.855
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 471,
+     "out": 615
+    },
+    "latency_s": 12.207
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 471,
+     "out": 452
+    },
+    "latency_s": 14.446
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 644,
+     "out": 611
+    },
+    "latency_s": 20.414
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 2137,
+     "out": 1024
+    },
+    "latency_s": 25.845
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 2,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 2137,
+     "out": 1024
+    },
+    "latency_s": 25.845
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 135.77,
+  "tokens": 14944,
+  "arm": "Simple-Dynamic",
+  "suffix_makespan": 86.55,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed ['e3_timeline'] to stronger model"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed [] to stronger model"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "simple-dynamic: escalate failed [] to stronger model"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 496
+    },
+    "latency_s": 12.801
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1030,
+     "out": 210
+    },
+    "latency_s": 5.7
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1028,
+     "out": 226
+    },
+    "latency_s": 12.513
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 412,
+     "out": 246
+    },
+    "latency_s": 10.091
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 415,
+     "out": 624
+    },
+    "latency_s": 10.641
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 415,
+     "out": 653
+    },
+    "latency_s": 8.235
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 717,
+     "out": 758
+    },
+    "latency_s": 8.364
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2178,
+     "out": 759
+    },
+    "latency_s": 10.667
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "索引确认：cs_plan_summary_2024（2025年6月，上会稿草案摘要）与cs_listing_2025（2025年9月，实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段，前者为方案摘要阶段，后者为实施完成阶段。",
+    "kind": "index_relationship",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f2",
+    "content": "调查目标：从方案中抽取设计参数——换股比例（拟核验为1:0.1339）及换股价格；所提供的两份文档前600字片段均未包含该等参数的明确表述。",
+    "kind": "design_parameter",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f3",
+    "content": "并购时间线阶段一（方案）：2025年6月形成上会稿草案摘要（cs_plan_summary_2024），标志方案阶段完成并进入审批程序。",
+    "kind": "timeline_stage",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f4",
+    "content": "并购时间线阶段四（上市）：2025年9月发布实施情况暨新增股份上市公告书（cs_listing_2025），标志实施完成且新增股份已上市。",
+    "kind": "timeline_stage",
+    "status": "confirmed",
+    "source": "cs_listing_2025"
+   },
+   {
+    "fid": "f5",
+    "content": "时间线推算：从上会稿（2025年6月）到新增股份上市（2025年9月），方案→审批→实施→上市全过程历时约3个月。",
+    "kind": "timeline_inference",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f6",
+    "content": "审批阶段与终止阶段细节：所提供的文档片段未包含审批（如并购重组委审核通过日期）及是否存在终止情形（终止上市、交易终止等）的明确信息。",
+    "kind": "timeline_gap",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f7",
+    "content": "初步判断：该交易已完成实施并上市，未见终止迹象，'终止'环节在本交易中大概率不适用；但需完整文档确认是否存在后续终止安排（如承诺期届满后事项）。",
+    "kind": "timeline_inference",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f8",
+    "content": "交叉核查结论：参数与时间线交叉验证一致性良好——两份文档的阶段定位（方案摘要 vs 实施完成）互相印证，时间线（2025年6月→2025年9月）自洽无矛盾；但换股比例1:0.1339及换股价格在现有片段中无法核验，审批与终止环节细节缺失，建议调取文档完整正文或补充独立披露文件（如重组委审核结果公告）后再行确认。",
+    "kind": "cross_check_summary",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   }
+  ],
+  "terminal_stats": {
+   "n": 8,
+   "confirmed": 4,
+   "unconfirmed": 2,
+   "insufficient_evidence": 2,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2025年6月：中国船舶发布换股吸收合并中国重工暨关联交易报告书（草案）摘要（上会稿），标志方案阶段完成并进入审批程序（f3）；2025年6月至9月：审批与实施阶段（具体审核日期在现有片段中缺失，f6）；2025年9月11日：中国船舶收到中国证券登记结算有限责任公司上海分公司《证券变更登记证明》（cs_listing_2025摘录）；2025年9月：发布实施情况暨新增股份上市公告书，2025年9月16日新增股份（3,053,192,530股）上市，标志实施完成（f4）。全过程自方案至上市历时约3个月（f5）。",
+   "fraud_nature": "本次调查未发现欺诈迹象。两份文档为同一交易链条的前后阶段文件（方案摘要 vs 实施完成），阶段定位互相印证，时间线自洽无矛盾（f1、f8）。交易已完成实施并上市，未见终止迹象（f7）。关键参数（换股价格37.59元/股与5.032元/股、换股比例1:0.1339）在cs_listing_2025摘录中有明确表述且与拟核验值一致，但在cs_plan_summary_2024片段中无法核验（f2）。",
+   "report": "一、交易概况：中国船舶（600150）换股吸收合并中国重工（601989）暨关联交易。两份文档——cs_plan_summary_2024（2025年6月上会稿草案摘要）与cs_listing_2025（2025年9月实施情况暨新增股份上市公告书）——描述同一交易链条的前后阶段，索引关系已确认（f1）。二、时间线：方案阶段于2025年6月完成（f3），新增股份于2025年9月上市，实施完成（f4），全过程约3个月（f5）；审批环节具体日期及是否存在终止情形在现有片段中无明确信息（f6），初步判断交易已完成、'终止'环节大概率不适用（f7，待确认）。三、参数核验：cs_listing_2025摘录明确载明中国船舶换股价格37.59元/股、中国重工换股价格5.032元/股、换股比例1:0.1339（每1股中国重工股票换0.1339股中国船舶股票），与拟核验的1:0.1339一致；但该参数在方案摘要前600字片段中未出现，故参数核验在结构化事实层面仍为证据不足（f2）。四、交叉核查：阶段定位互相印证，时间线自洽无矛盾，一致性良好（f8）；建议调取完整文档正文及独立披露文件（如并购重组委审核结果公告）以补足审批与终止环节细节并最终确认换股参数（f8）。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f2",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f6",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f7",
+     "status": "unconfirmed"
+    },
+    {
+     "fid": "f8",
+     "status": "unconfirmed"
+    }
+   ]
+  },
+  "makespan": 79.01,
+  "tokens": 11104,
+  "arm": "Simple-Dynamic",
+  "suffix_makespan": 27.26,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.1538,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1333,
+   "upstream_missing": 0,
+   "n_facts": 8
+  }
+ },
+ {
+  "status": "INCOMPLETE_NO_RECOVERY",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "FIX-1 weak baseline: frozen π, failed nodes are NOT recovered; blocked descendants stay blocked"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 499
+    },
+    "latency_s": 7.475
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1029,
+     "out": 438
+    },
+    "latency_s": 8.542
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1027,
+     "out": 343
+    },
+    "latency_s": 5.142
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 468,
+     "out": 617
+    },
+    "latency_s": 15.855
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 471,
+     "out": 615
+    },
+    "latency_s": 12.207
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 49.22,
+  "tokens": 6444,
+  "arm": "Static-Parallel",
+  "suffix_makespan": -0.0,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "INCOMPLETE_NO_RECOVERY",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "FIX-1 weak baseline: frozen π, failed nodes are NOT recovered; blocked descendants stay blocked"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 496
+    },
+    "latency_s": 12.801
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1030,
+     "out": 210
+    },
+    "latency_s": 5.7
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1028,
+     "out": 226
+    },
+    "latency_s": 12.513
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 412,
+     "out": 246
+    },
+    "latency_s": 10.091
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 415,
+     "out": 624
+    },
+    "latency_s": 10.641
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 51.75,
+  "tokens": 5624,
+  "arm": "Static-Parallel",
+  "suffix_makespan": 0.0,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [
+     [
+      "e3_timeline",
+      "glm53"
+     ],
+     [
+      "e3_rpt",
+      "glm53"
+     ]
+    ],
+    "rationale": "pi-only: retry {failed} + re-optimize π over 2 remaining nodes"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "pi_only: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "pi_only: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 499
+    },
+    "latency_s": 7.475
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1029,
+     "out": 438
+    },
+    "latency_s": 8.542
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1027,
+     "out": 343
+    },
+    "latency_s": 5.142
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 468,
+     "out": 617
+    },
+    "latency_s": 15.855
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 471,
+     "out": 615
+    },
+    "latency_s": 12.207
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 471,
+     "out": 579
+    },
+    "latency_s": 12.752
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 644,
+     "out": 682
+    },
+    "latency_s": 10.179
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1977,
+     "out": 1006
+    },
+    "latency_s": 23.306
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "cs_plan_summary（草案摘要，2025年6月，上会稿）为本次吸收合并的前期方案文件，cs_listing（实施情况暨新增股份上市公告书，2025年9月）为实施阶段的后续公告，两份文档共同覆盖本次交易的方案制定到实施完成过程",
+    "kind": "文档关系",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f2",
+    "content": "本次换股吸收合并的换股比例为1:0.1339，即每1股中国重工股份可换取约0.1339股中国船舶新增发行股份",
+    "kind": "交易方案设计参数",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f3",
+    "content": "换股价格（吸并方中国船舶与被吸并方中国重工的换股价格及由此确定的换股比例）为本次吸收合并方案的核心设计参数，具体数值需从cs_plan_summary_2024的方案章节原文核实",
+    "kind": "交易方案设计参数",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f4",
+    "content": "参数一致性核验方法：应将cs_plan_summary_2024中载明的换股比例（1:0.1339）与cs_listing_2025中实际实施并发行的新增股份对应比例进行比对；若两文档换股比例一致且未发生调整（如除权除息、价格调整机制触发），则方案设计与实施结果匹配",
+    "kind": "核验逻辑",
+    "status": "unconfirmed",
+    "source": "cs_plan_summary_2024; cs_listing_2025"
+   },
+   {
+    "fid": "f5",
+    "content": "需在cs_listing_2025中核实的关键实施结果数据：实际发行的A股新增股份数量、被吸并方中国重工参与换股的股份总数（含异议股东现金选择权行使情况）、以及最终确定的换股比例是否与方案一致或有调整",
+    "kind": "核验要点",
+    "status": "insufficient_evidence",
+    "source": "cs_listing_2025"
+   }
+  ],
+  "terminal_stats": {
+   "n": 5,
+   "confirmed": 1,
+   "unconfirmed": 1,
+   "insufficient_evidence": 3,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2025年6月：中国船舶披露换股吸收合并中国重工暨关联交易报告书（草案）摘要（上会稿），标志本次交易的方案制定阶段（f1）；2025年9月：中国船舶披露实施情况暨新增股份上市公告书，本次换股吸收合并进入实施完成阶段（f1）。据实施公告：中国船舶换股价格37.59元/股，中国重工换股价格5.032元/股，换股比例1:0.1339；新增发行股份3,053,192,530股，于2025年9月11日完成证券变更登记，2025年9月16日上市；其中关联方换股取得的1,454,168,398股锁定6个月。",
+   "fraud_nature": "经对现有证据的核验，未发现欺诈迹象。本调查以文档关系梳理（f1）为基础，将方案阶段披露的换股比例（1:0.1339，f2）与实施公告书载明的实际换股比例（1:0.1339，源自cs_listing_2025摘录）进行比对：两者一致，且未见除权除息或价格调整机制触发导致的比例调整迹象。换股价格（37.59元/股与5.032元/股）与比例计算逻辑自洽（5.032÷37.59≈0.1339）。基于f4所述核验逻辑（该核验方法本身为unconfirmed状态），初步判断方案设计与实施结果匹配。需注意：f2为insufficient_evidence状态，其数值现由实施公告书摘录交叉印证；异议股东现金选择权行使情况及被吸并方参与换股股份总数的明细（f5）尚未核实，故不能完全排除需补充核验的事项。",
+   "report": "本次调查围绕中国船舶换股吸收合并中国重工交易，核查方案制定与实施结果的一致性。\n\n一、文档基础与时间线。根据f1（confirmed），cs_plan_summary（2025年6月上会稿）为前期方案文件，cs_listing（2025年9月）为实施阶段后续公告，两份文档共同覆盖交易从方案制定到实施完成的全过程。\n\n二、核验方法。依据f4（unconfirmed，作为方法论参照）所述核验逻辑，应将方案文件载明的换股比例与实施公告中的实际比例比对，并关注是否存在除权除息、价格调整机制等调整情形。\n\n三、核验结果。\n（1）换股比例一致性：方案阶段换股比例为1:0.1339（f2，insufficient_evidence），实施公告书摘录载明实际换股比例同为1:0.1339（每1股中国重工换0.1339股中国船舶），中国船舶换股价格37.59元/股、中国重工换股价格5.032元/股，数值自洽。两阶段比例一致，未见调整迹象。由于f2原始数值未能在cs_plan_summary_2024方案章节原文中直接核实（f3），此处一致性结论建立在实施公告书摘录的交叉印证基础上，置信度为中等偏上。\n（2）实施结果数据：实施公告书摘录载明新增股份3,053,192,530股，上市日期2025年9月16日，2025年9月11日完成证券变更登记；关联方锁定期6个月（涉及1,454,168,398股）。但f5所列关键数据中被吸并方参与换股的股份总数明细及异议股东现金选择权行使情况，摘录中未见完整披露，尚待核实。\n\n四、结论。在现有证据范围内，方案设计与实施结果匹配，未发现欺诈迹象。但f2、f3、f5为insufficient_evidence、f4为unconfirmed状态（见unknown_marks），上述事实不构成最终认定，建议后续获取重组报告书全文及登记结算数据以完成f5所列核验要点。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f2",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f3",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f4",
+     "status": "unconfirmed"
+    },
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 95.46,
+  "tokens": 11803,
+  "arm": "pi-only",
+  "suffix_makespan": 46.24,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.1154,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1,
+   "upstream_missing": 0,
+   "n_facts": 5
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_timeline"
+    ],
+    "reoptimize": [
+     [
+      "e3_timeline",
+      "glm53"
+     ],
+     [
+      "e3_rpt",
+      "glm53"
+     ]
+    ],
+    "rationale": "pi-only: retry {failed} + re-optimize π over 2 remaining nodes"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "pi_only: normal execution"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "pi_only: normal execution"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 496
+    },
+    "latency_s": 12.801
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1030,
+     "out": 210
+    },
+    "latency_s": 5.7
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1028,
+     "out": 226
+    },
+    "latency_s": 12.513
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 412,
+     "out": 246
+    },
+    "latency_s": 10.091
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": false,
+    "failure": "transport",
+    "usage": {
+     "in": 415,
+     "out": 624
+    },
+    "latency_s": 10.641
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53",
+    "attempt": 2,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 415,
+     "out": 373
+    },
+    "latency_s": 6.763
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 530,
+     "out": 421
+    },
+    "latency_s": 5.95
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1863,
+     "out": 874
+    },
+    "latency_s": 16.099
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "索引确认：cs_plan_summary_2024（2025年6月，上会稿草案摘要）与cs_listing_2025（2025年9月，实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段，前者为方案摘要阶段，后者为实施完成阶段。",
+    "kind": "index_relationship",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f2",
+    "content": "调查目标：从方案中抽取设计参数——换股比例（拟核验为1:0.1339）及换股价格；所提供的两份文档前600字片段均未包含该等参数的明确表述。",
+    "kind": "design_parameter",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   },
+   {
+    "fid": "f3",
+    "content": "并购时间线阶段确认：交易流程为 方案阶段（2025年6月，上会稿草案摘要，cs_plan_summary_2024）→ 实施/上市阶段（2025年9月，实施情况暨新增股份上市公告书，cs_listing_2025）。基于现有片段无法确认审批（上会/过会具体日期）与终止（如是否有终止环节或交易已全部完成）两个中间/后续节点的独立证据。",
+    "kind": "timeline",
+    "status": "insufficient_evidence",
+    "source": "cs_plan_summary_2024+cs_listing_2025"
+   }
+  ],
+  "terminal_stats": {
+   "n": 3,
+   "confirmed": 1,
+   "unconfirmed": 0,
+   "insufficient_evidence": 2,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "本次交易时间线基于两份文档确认如下两个节点：①方案阶段——2025年6月，中国船舶（600150）披露《换股吸收合并中国重工暨关联交易报告书（草案）摘要（上会稿）》（cs_plan_summary_2024），交易尚待上交所、中国证监会等监管机构核准；②实施/上市阶段——2025年9月，中国船舶披露《实施情况暨新增股份上市公告书》（cs_listing_2025），新增股份3,053,192,530股于2025年9月16日上市，证券变更登记于2025年9月11日完成。审批（上会/过会）具体日期及是否存在终止环节，现有片段中无独立证据确认（见f3）。",
+   "fraud_nature": "基于现有证据，未发现欺诈迹象。两份文档均为合法信息披露文件，描述同一换股吸收合并交易的方案阶段与实施完成阶段（f1），且换股比例1:0.1339在实施公告书中得到明确记载并可交叉核验。中国船舶换股价格37.59元/股、中国重工换股价格5.032元/股，1股中国重工换0.1339股中国船舶，37.59×0.1339≈5.033，与5.032元基本吻合，价格关系自洽。部分内幕关联方（中船重工集团等）所获1,454,168,398股锁定6个月，符合监管安排。",
+   "report": "一、交易背景与链条确认\n根据f1（confirmed），cs_plan_summary_2024（2025年6月上会稿草案摘要）与cs_listing_2025（2025年9月实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段：中国船舶（600150）换股吸收合并中国重工（601989）暨关联交易。\n\n二、方案阶段\ncs_plan_summary_2024为上会稿草案摘要，披露双方声明、承诺锁定安排，并明确交易'尚待取得上交所、中国证监会等有权监管机构的核准、批准、注册或同意'。\n\n三、实施阶段关键参数\ncs_listing_2025确认：换股价格为中国船舶37.59元/股、中国重工5.032元/股，换股比例1:0.1339；新增股份3,053,192,530股，上市日期2025年9月16日；中船重工集团、中船工业集团等九家关联方换股取得的1,454,168,398股自发行结束之日起锁定6个月；2025年9月11日完成证券变更登记。注：该等参数取自实施公告书摘录原文；f2所指'前600字片段未包含换股参数'的情形因摘录扩充已可核实，比例与拟核验值1:0.1339一致。\n\n四、时间线与未决事项\nf3（insufficient_evidence）指出：现有片段可确认方案阶段与实施阶段两个节点，但审批（上会/过会具体日期）与终止环节（或交易是否已全部完成）缺乏独立证据。实施公告书的披露本身强烈暗示交易已实施完成，但严格而言未取得独立终止/完成节点证据，保留为未决。\n\n五、结论\n综合判断：本交易为公开披露的上市公司换股吸收合并，两阶段文件相互印证（f1），关键换股参数自洽可核验，未发现欺诈性线索；审批与终止节点的完整证据链尚待补充。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f2",
+     "status": "insufficient_evidence"
+    },
+    {
+     "fid": "f3",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 80.56,
+  "tokens": 10100,
+  "arm": "pi-only",
+  "suffix_makespan": 28.81,
+  "task": "SC-E3",
+  "scenario": "S1",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0.1538,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1333,
+   "upstream_missing": 0,
+   "n_facts": 3
+  }
+ },
+ {
+  "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_chk"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_chk'], π=keep"
+   },
+   {
+    "round": 2,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_chk"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.06546 -> R=['e3_chk'], π=keep"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 401
+    },
+    "latency_s": 14.057
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1064,
+     "out": 207
+    },
+    "latency_s": 3.834
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1062,
+     "out": 382
+    },
+    "latency_s": 11.069
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 541,
+     "out": 513
+    },
+    "latency_s": 16.126
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 544,
+     "out": 790
+    },
+    "latency_s": 19.076
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 602,
+     "out": 735
+    },
+    "latency_s": 14.4
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 2,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 602,
+     "out": 640
+    },
+    "latency_s": 7.417
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 3,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 602,
+     "out": 640
+    },
+    "latency_s": 7.417
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 93.4,
+  "tokens": 10262,
+  "arm": "Joint(R,pi)",
+  "suffix_makespan": 14.84,
+  "task": "SC-E3",
+  "scenario": "S2",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_chk"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_chk'], π=keep"
+   },
+   {
+    "round": 2,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_chk"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.06546 -> R=['e3_chk'], π=keep"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 590
+    },
+    "latency_s": 11.543
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1072,
+     "out": 372
+    },
+    "latency_s": 6.066
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 878,
+     "out": 454
+    },
+    "latency_s": 14.688
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 572,
+     "out": 706
+    },
+    "latency_s": 22.112
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 575,
+     "out": 753
+    },
+    "latency_s": 13.984
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 796,
+     "out": 594
+    },
+    "latency_s": 7.54
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 2,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 796,
+     "out": 684
+    },
+    "latency_s": 8.782
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 3,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 796,
+     "out": 684
+    },
+    "latency_s": 8.782
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 93.5,
+  "tokens": 11259,
+  "arm": "Joint(R,pi)",
+  "suffix_makespan": 17.57,
+  "task": "SC-E3",
+  "scenario": "S2",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ },
+ {
+  "status": "COMPLETE",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "SPLIT_VERIFY",
+    "z_detail": "e3_chk -> per-lineage verifiers over parents ['e3_param_check', 'e3_timeline'] (kind=verification)",
+    "recovery_set": [
+     "e3_chk_a",
+     "e3_chk_b"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.14192, U_split=0.28383)"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 401
+    },
+    "latency_s": 14.057
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1064,
+     "out": 207
+    },
+    "latency_s": 3.834
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1062,
+     "out": 382
+    },
+    "latency_s": 11.069
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 541,
+     "out": 513
+    },
+    "latency_s": 16.126
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 544,
+     "out": 790
+    },
+    "latency_s": 19.076
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 602,
+     "out": 735
+    },
+    "latency_s": 14.4
+   },
+   {
+    "node": "e3_chk_a",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 602,
+     "out": 559
+    },
+    "latency_s": 7.41
+   },
+   {
+    "node": "e3_chk_b",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 628,
+     "out": 696
+    },
+    "latency_s": 12.815
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 2107,
+     "out": 694
+    },
+    "latency_s": 15.899
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [
+   {
+    "fid": "f1",
+    "content": "实施公告书声明：本次交易完成后存续公司经营与收益变化由存续公司自行负责，引致的投资风险由投资者自行负责；公告书不构成中国证监会、上交所对投资价值或收益的实质判断或保证",
+    "kind": "declaration",
+    "status": "confirmed",
+    "source": "cs_listing_2025"
+   },
+   {
+    "fid": "f2",
+    "content": "时间线：2025年6月披露交易报告书草案摘要（上会稿），2025年9月披露实施情况暨新增股份上市公告书，交易已进入实施完成阶段",
+    "kind": "timeline",
+    "status": "confirmed",
+    "source": "cs_listing_2025"
+   },
+   {
+    "fid": "f3",
+    "content": "换股比例：中国重工与中国船舶的换股比例为1:0.1339，即每1股中国重工股票可换得0.1339股中国船舶股票",
+    "kind": "design_parameter",
+    "status": "confirmed",
+    "source": "cs_plan_summary_2024"
+   },
+   {
+    "fid": "f4",
+    "content": "本次换股吸收合并将新增A股股份用于换股吸收合并中国重工，新增股份上市地为中国船舶所在的上海证券交易所（证券代码600150）",
+    "kind": "implementation",
+    "status": "confirmed",
+    "source": "cs_listing_2025"
+   },
+   {
+    "fid": "f5",
+    "content": "中国重工（601989）作为被吸并方，在合并实施后其股票将终止上市（具体终止上市日期、新增股份数量及上市日期需依据公告书正文进一步核实）",
+    "kind": "delisting",
+    "status": "insufficient_evidence",
+    "source": "cs_listing_2025"
+   },
+   {
+    "fid": "f6",
+    "content": "参数一致性核验：实施阶段新增股份发行依据的换股比例1:0.1339与方案设计（草案）披露的换股比例一致，设计与实施结果匹配",
+    "kind": "consistency_check",
+    "status": "confirmed",
+    "source": "cs_listing_2025与cs_plan_summary_2024交叉比对"
+   },
+   {
+    "fid": "f7",
+    "content": "交叉核查结论：时间线与参数核验无矛盾——2025年6月草案披露的换股比例（1:0.1339）在2025年9月实施公告中沿用，未发生调整，时间线与参数两条证据链相互印证",
+    "kind": "consistency_check",
+    "status": "confirmed",
+    "source": "cs_listing_2025与cs_plan_summary_2024交叉比对"
+   },
+   {
+    "fid": "f8",
+    "content": "时间线与参数内在一致性核查：换股比例（1:0.1339）在2025年6月上会稿与2025年9月实施公告书之间保持连续，新增股份上市（600150）与中国重工终止上市（601989）作为实施完成阶段的配套事项，与2025年内完成全流程的时间线逻辑吻合",
+    "kind": "cross_check",
+    "status": "confirmed",
+    "source": "cs_listing_2025"
+   }
+  ],
+  "terminal_stats": {
+   "n": 8,
+   "confirmed": 7,
+   "unconfirmed": 0,
+   "insufficient_evidence": 1,
+   "upstream_missing": 0
+  },
+  "report": {
+   "investigation_timeline": "2025年6月：中国船舶（600150）披露换股吸收合并中国重工（601989）暨关联交易报告书（草案）摘要（上会稿）[f2]。2025年9月：披露实施情况暨新增股份上市公告书，交易进入实施完成阶段[f2]；2025年9月11日完成证券变更登记，2025年9月16日新增股份（3,053,192,530股）于上交所上市[f4]。设计与实施阶段的换股比例（1:0.1339）保持一致，未发生调整[f6][f7][f8]。",
+   "fraud_nature": "未发现欺诈。经交叉核查，方案设计阶段（2025年6月上会稿）与实施阶段（2025年9月实施公告书）的换股比例1:0.1339完全一致[f3][f6][f7]，时间线与参数两条证据链相互印证、无矛盾[f7][f8]。公告书亦明确声明不构成监管机构对投资价值的实质判断或保证[f1]，信息披露合规。仅中国重工终止上市的具体日期等细节证据不足，需进一步核实[f5]。",
+   "report": "综合调查结论：\n\n一、交易概况。中国船舶（600150）以换股方式吸收合并中国重工（601989），换股比例为1:0.1339，即每1股中国重工股票可换得0.1339股中国船舶股票[f3]。新增A股股份用于换股吸收合并中国重工，上市地为上海证券交易所（证券代码600150）[f4]。\n\n二、时间线。2025年6月披露交易报告书草案摘要（上会稿），2025年9月披露实施情况暨新增股份上市公告书，交易已进入实施完成阶段[f2]，全流程在2025年内完成，时间线逻辑吻合[f8]。\n\n三、一致性与合规性核验。实施阶段新增股份发行所依据的换股比例与草案披露的换股比例一致，设计与实施结果匹配[f6]；时间线与参数两条证据链交叉印证，未发现矛盾或调整[f7][f8]。公告书声明本次交易完成后存续公司经营与收益变化由存续公司自行负责、投资风险由投资者自行负责，且不构成中国证监会、上交所对投资价值或收益的实质判断或保证[f1]，符合信息披露规范。\n\n四、待核实事项。中国重工（601989）作为被吸并方在合并实施后将终止上市，但其具体终止上市日期、新增股份数量及上市日期等细节需依据公告书正文进一步核实[f5]。\n\n结论：现有证据链完整自洽，未发现欺诈迹象；唯一未确认事项为中国重工终止上市的具体日期等实施细节[f5]。",
+   "fact_ids_used": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8"
+   ],
+   "unknown_marks": [
+    {
+     "fid": "f5",
+     "status": "insufficient_evidence"
+    }
+   ]
+  },
+  "makespan": 114.69,
+  "tokens": 13064,
+  "arm": "Joint(Z,R,pi)",
+  "suffix_makespan": 36.13,
+  "task": "SC-E3",
+  "scenario": "S2",
+  "rep": 1,
+  "score": {
+   "Q_prefix": 0.1538,
+   "Q_downstream": 0.0,
+   "Q_terminal": 0.1333,
+   "upstream_missing": 0,
+   "n_facts": 8
+  }
+ },
+ {
+  "status": "INCOMPLETE_RECOVERY_EXHAUSTED",
+  "rounds": [
+   {
+    "round": 1,
+    "action": "recover",
+    "z_op": "SPLIT_VERIFY",
+    "z_detail": "e3_chk -> per-lineage verifiers over parents ['e3_param_check', 'e3_timeline'] (kind=verification)",
+    "recovery_set": [
+     "e3_chk_a",
+     "e3_chk_b"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_VERIFY (U_keep=0.14192, U_split=0.28383)"
+   },
+   {
+    "round": 2,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+   },
+   {
+    "round": 3,
+    "action": "execute",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [],
+    "reoptimize": [],
+    "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+   },
+   {
+    "round": 4,
+    "action": "recover",
+    "z_op": "KEEP",
+    "z_detail": "",
+    "recovery_set": [
+     "e3_rpt"
+    ],
+    "reoptimize": [],
+    "rationale": "joint(R,π): 1 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_rpt'], π=keep | Z-space=['KEEP'] -> KEEP (U_keep=0.14192)"
+   }
+  ],
+  "calls": [
+   {
+    "node": "e3_idx",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 937,
+     "out": 590
+    },
+    "latency_s": 11.543
+   },
+   {
+    "node": "e3_ext_plan",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 1072,
+     "out": 372
+    },
+    "latency_s": 6.066
+   },
+   {
+    "node": "e3_ext_impl",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 878,
+     "out": 454
+    },
+    "latency_s": 14.688
+   },
+   {
+    "node": "e3_param_check",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 572,
+     "out": 706
+    },
+    "latency_s": 22.112
+   },
+   {
+    "node": "e3_timeline",
+    "model": "glm53flash",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 575,
+     "out": 753
+    },
+    "latency_s": 13.984
+   },
+   {
+    "node": "e3_chk",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "contract",
+    "usage": {
+     "in": 796,
+     "out": 594
+    },
+    "latency_s": 7.54
+   },
+   {
+    "node": "e3_chk_a",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 743,
+     "out": 926
+    },
+    "latency_s": 11.403
+   },
+   {
+    "node": "e3_chk_b",
+    "model": "glm53",
+    "attempt": 1,
+    "success": true,
+    "failure": null,
+    "usage": {
+     "in": 780,
+     "out": 886
+    },
+    "latency_s": 8.715
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 1,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 2338,
+     "out": 1024
+    },
+    "latency_s": 16.376
+   },
+   {
+    "node": "e3_rpt",
+    "model": "glm53",
+    "attempt": 2,
+    "success": false,
+    "failure": "parse",
+    "usage": {
+     "in": 2338,
+     "out": 1024
+    },
+    "latency_s": 16.376
+   }
+  ],
+  "trunc": [],
+  "terminal_facts": [],
+  "terminal_stats": null,
+  "report": null,
+  "makespan": 128.8,
+  "tokens": 18358,
+  "arm": "Joint(Z,R,pi)",
+  "suffix_makespan": 52.87,
+  "task": "SC-E3",
+  "scenario": "S2",
+  "rep": 2,
+  "score": {
+   "Q_prefix": 0,
+   "Q_downstream": 0,
+   "Q_terminal": 0,
+   "upstream_missing": 0,
+   "n_facts": 0
+  }
+ }
+]

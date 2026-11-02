@@ -1,0 +1,108 @@
+{
+ "experiment": "dd_v51_cinfo",
+ "arms": [
+  "JointCnorm",
+  "JointCinfo",
+  "pi_only"
+ ],
+ "blocks": 5,
+ "total_runs": 15,
+ "max_calls": 150,
+ "max_tokens": 350000,
+ "block_order": [
+  [
+   1,
+   "pi_only"
+  ],
+  [
+   1,
+   "JointCinfo"
+  ],
+  [
+   1,
+   "JointCnorm"
+  ],
+  [
+   2,
+   "JointCinfo"
+  ],
+  [
+   2,
+   "JointCnorm"
+  ],
+  [
+   2,
+   "pi_only"
+  ],
+  [
+   3,
+   "JointCnorm"
+  ],
+  [
+   3,
+   "pi_only"
+  ],
+  [
+   3,
+   "JointCinfo"
+  ],
+  [
+   4,
+   "JointCinfo"
+  ],
+  [
+   4,
+   "JointCnorm"
+  ],
+  [
+   4,
+   "pi_only"
+  ],
+  [
+   5,
+   "JointCnorm"
+  ],
+  [
+   5,
+   "pi_only"
+  ],
+  [
+   5,
+   "JointCinfo"
+  ]
+ ],
+ "c_info_slots": {
+  "penalties_data": {
+   "source": "n5",
+   "weight": 0.3
+  },
+  "timeline_stages": {
+   "source": "n7",
+   "weight": 0.3
+  },
+  "amounts_checked": {
+   "source": "n8",
+   "weight": 0.4
+  }
+ },
+ "c_info_scoring_frozen": {
+  "skipped": "0.0",
+  "degraded": "0.5",
+  "ok_substantial": "1.0",
+  "ok_short": "0.5",
+  "ok_empty": "0.25",
+  "threshold_chars": 50
+ },
+ "hypotheses": {
+  "H_B_vs_A": "C_info Joint Q_F1 > C_norm Joint Q_F1 (\u0394Q_F1 \u2265 0.05)",
+  "H_B_vs_C": "C_info Joint Q_F1 \u2265 pi_only Q_F1"
+ },
+ "metrics": [
+  "Q_F1",
+  "Recall",
+  "Precision",
+  "Cost",
+  "Makespan",
+  "OnTime"
+ ]
+}

@@ -1,0 +1,328 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "z_op": "SPLIT_VERIFY",
+   "z_detail": "e3_chk -> per-lineage verifiers over parents ['e3_param_check', 'e3_timeline'] (kind=verification)",
+   "recovery_set": [
+    "e3_chk_a",
+    "e3_chk_b"
+   ],
+   "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1223,
+    "out": 349
+   }
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1405,
+    "out": 314
+   }
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1403,
+    "out": 191
+   }
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "success": true,
+   "usage": {
+    "in": 869,
+    "out": 156
+   }
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "success": true,
+   "usage": {
+    "in": 872,
+    "out": 405
+   }
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "success": false,
+   "usage": {
+    "in": 867,
+    "out": 70
+   }
+  },
+  {
+   "node": "e3_chk_a",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 867,
+    "out": 16
+   }
+  },
+  {
+   "node": "e3_chk_b",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 867,
+    "out": 113
+   }
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 3260,
+    "out": 1759
+   }
+  }
+ ],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "cs_listing_2025公告日期：二〇二五年九月",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "cs_listing_2025",
+   "span": null
+  },
+  {
+   "fid": "f2",
+   "content": "cs_plan_summary_2024（上会稿）报告日期：二〇二五年六月",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f3",
+   "content": "吸收合并双方：中国船舶（600150，吸并方）吸收合并中国重工（601989，被吸并方）",
+   "kind": "entity",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f4",
+   "content": "|约92天(2025-06→2025-09, cs_plan_summary_2024×cs_listing_2025)（按月度粒度估算，需后续精确日期核验）",
+   "kind": "interval",
+   "status": "unconfirmed",
+   "source": "cs_plan_summary_2024×cs_listing_2025",
+   "span": null
+  },
+  {
+   "fid": "f5",
+   "content": "换股比例：中国重工换股价格为x元/股，中国船舶换股价格为y元/股，由此确定换股比例为1:0.1339（即每股中国重工股票可换0.1339股中国船舶股票）",
+   "kind": "design_param",
+   "status": "insufficient_evidence",
+   "source": "cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f6",
+   "content": "换股价格：中国船舶换股价格、中国重工换股价格具体数值在前600字节选中未出现，需从报告书全文换股价格条款处补充",
+   "kind": "design_param",
+   "status": "insufficient_evidence",
+   "source": "cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f7",
+   "content": "中国重工终止上市安排：片段未披露终止上市日期",
+   "kind": "event",
+   "status": "insufficient_evidence",
+   "source": "cs_listing_2025",
+   "span": null
+  },
+  {
+   "fid": "f8",
+   "content": "换股比例一致（1:0.1339@cs_plan_summary_2024 vs 1:0.1339@cs_listing_2025）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f9",
+   "content": "换股比例一致（37.59元/股@cs_plan_summary_2024 vs 37.59元/股@cs_listing_2025）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f10",
+   "content": "换股比例一致（5.032元/股@cs_plan_summary_2024 vs 5.032元/股@cs_listing_2025）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f11",
+   "content": "换股比例一致（1:0.1335@cs_plan_summary_2024 vs 1:0.1335@cs_listing_2025）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f12",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  }
+ ],
+ "terminal_stats": {
+  "n": 12,
+  "confirmed": 7,
+  "unconfirmed": 1,
+  "insufficient_evidence": 4,
+  "upstream_missing": 0
+ },
+ "report": {
+  "new_facts": [
+   {
+    "id": "f8",
+    "type": "design_param",
+    "fact": "换股价格（初始）：中国船舶37.84元/股，中国重工5.05元/股（定价基准日前120个交易日均价，初始换股比例1:0.1335）",
+    "src": "cs_plan_summary_2024×cs_listing_2025",
+    "status": "confirmed"
+   },
+   {
+    "id": "f9",
+    "type": "design_param",
+    "fact": "换股价格（除权除息后）：中国船舶37.59元/股（2025-06-23权益分派实施完毕），中国重工5.032元/股（2025-06-18实施完毕），换股比例相应调整为1:0.1339",
+    "src": "cs_plan_summary_2024×cs_listing_2025",
+    "status": "confirmed"
+   },
+   {
+    "id": "f10",
+    "type": "event",
+    "fact": "新增股份上市日期：2025年9月16日，新增股份数量3,053,192,530股",
+    "src": "cs_listing_2025",
+    "status": "confirmed"
+   },
+   {
+    "id": "f11",
+    "type": "event",
+    "fact": "合并实施股权登记日：2025年9月4日；2025年9月11日完成证券变更登记",
+    "src": "cs_listing_2025",
+    "status": "confirmed"
+   }
+  ],
+  "comparisons": [
+   {
+    "item": "换股比例（除权除息后）",
+    "operand_a": "1:0.1339",
+    "span_a": "换股比例相应调整为 1：0.1339",
+    "doc_a": "cs_plan_summary_2024",
+    "operand_b": "1:0.1339",
+    "span_b": "中国重工和中国船舶的换股比例相应为 1:0.1339",
+    "doc_b": "cs_listing_2025",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "中国船舶换股价格（除权除息后）",
+    "operand_a": "37.59元/股",
+    "span_a": "经除权除息后的中国船舶换股价格为 37.59 元/股",
+    "doc_a": "cs_plan_summary_2024",
+    "operand_b": "37.59元/股",
+    "span_b": "中国船舶换股价格为 37.59 元/股",
+    "doc_b": "cs_listing_2025",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "中国重工换股价格（除权除息后）",
+    "operand_a": "5.032元/股",
+    "span_a": "经除权除息后的中国重工换股价格为 5.032 元/股",
+    "doc_a": "cs_plan_summary_2024",
+    "operand_b": "5.032元/股",
+    "span_b": "中国重工换股价格为 5.032 元/股",
+    "doc_b": "cs_listing_2025",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "初始换股比例（除权除息前）",
+    "operand_a": "1:0.1335",
+    "span_a": "换股比例为 1:0.1335",
+    "doc_a": "cs_plan_summary_2024",
+    "operand_b": "1:0.1335",
+    "span_b": "换股比例为 1:0.1335",
+    "doc_b": "cs_listing_2025",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "中国重工终止上市日期",
+    "operand_a": null,
+    "span_a": null,
+    "doc_a": null,
+    "operand_b": null,
+    "span_b": null,
+    "doc_b": null,
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   }
+  ],
+  "report": "本次调查围绕中国船舶（600150）换股吸收合并中国重工（601989）交易展开，交叉核验两份文件：cs_plan_summary_2024（上会稿，报告日期二〇二五年六月）与cs_listing_2025（实施情况暨新增股份上市公告书，公告日期二〇二五年九月）。\n\n一、交易主体（f3，confirmed）：中国船舶为吸并方，中国重工为被吸并方，两文件一致。\n\n二、换股价格与比例核验：初始换股价格为按定价基准日前120个交易日均价确定的中国船舶37.84元/股、中国重工5.05元/股，初始换股比例1:0.1335（f8，双侧来源一致）。因2024年度利润分配（中国船舶每10股派2.50元、中国重工每10股派0.18元）分别于2025年6月23日、6月18日实施完毕，除权除息后换股价格调整为37.59元/股与5.032元/股，换股比例调整为1:0.1339（f9）。跨文档比对显示：换股比例（1:0.1339）、中国船舶换股价格（37.59元/股）、中国重工换股价格（5.032元/股）及初始比例（1:0.1335）在两份文件中均一致（见comparisons），原f5、f6的insufficient_evidence状态可解除，具体价格已补齐。\n\n三、实施进度（f10、f11，cs_listing_2025）：合并实施股权登记日为2025年9月4日，9月11日完成证券变更登记，新增股份3,053,192,530股于2025年9月16日上市。\n\n四、时间跨度（f4）：上会稿（2025年6月）至实施公告（2025年9月）约92天，该估算基于月度粒度，属unconfirmed，需精确日期核验。\n\n五、未决事项：中国重工终止上市的具体日期两份文件均未披露（f7），无法给出结论。",
+  "unknown_marks": [
+   "f4：约92天时间间隔按月度粒度估算，未获精确日期核验",
+   "f7：中国重工终止上市日期未在两份文件中披露"
+  ],
+  "dropped": [],
+  "status_changes": [
+   {
+    "id": "f5",
+    "from": "insufficient_evidence",
+    "to": "confirmed",
+    "reason": "cs_listing_2025与cs_plan_summary_2024均明确换股价格（37.59/5.032元/股）及换股比例1:0.1339，双侧来源交叉一致"
+   },
+   {
+    "id": "f6",
+    "from": "insufficient_evidence",
+    "to": "confirmed",
+    "reason": "换股价格具体数值（初始37.84/5.05，除权除息后37.59/5.032）已在两文档关键段中获取并比对一致"
+   }
+  ]
+ },
+ "makespan": 69.97,
+ "tokens": 15006
+}

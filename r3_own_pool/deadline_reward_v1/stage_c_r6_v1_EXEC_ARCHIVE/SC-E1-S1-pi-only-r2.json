@@ -1,0 +1,260 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e1_tl"
+   ],
+   "reoptimize": [
+    [
+     "e1_tl",
+     "glm53"
+    ],
+    [
+     "e1_rpt",
+     "glm53"
+    ]
+   ],
+   "rationale": "pi-only: retry {failed} + re-optimize π over 2 remaining nodes"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "pi_only: normal execution"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "pi_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e1_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 959,
+    "out": 452
+   },
+   "latency_s": 6.152
+  },
+  {
+   "node": "e1_ext_pen",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1066,
+    "out": 347
+   },
+   "latency_s": 4.884
+  },
+  {
+   "node": "e1_ext_proc",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1062,
+    "out": 390
+   },
+   "latency_s": 6.423
+  },
+  {
+   "node": "e1_fin",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 543,
+    "out": 612
+   },
+   "latency_s": 11.428
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 541,
+    "out": 481
+   },
+   "latency_s": 15.179
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53",
+   "attempt": 2,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 541,
+    "out": 432
+   },
+   "latency_s": 7.433
+  },
+  {
+   "node": "e1_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 685,
+    "out": 808
+   },
+   "latency_s": 18.648
+  },
+  {
+   "node": "e1_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2293,
+    "out": 773
+   },
+   "latency_s": 11.366
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "两份文书时间顺序：事先告知书(2019-07-09)先于行政处罚决定书(2020-06-23)，均源于2018年2月9日立案调查",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020+zzd_notice_2019"
+  },
+  {
+   "fid": "f2",
+   "content": "两份文书均认定獐子岛信息披露违法违规事实，且均判断不触及重大违法强制退市情形",
+   "kind": "summary",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020+zzd_notice_2019"
+  },
+  {
+   "fid": "f3",
+   "content": "公司于2020年6月23日收到中国证监会《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号",
+   "kind": "evidence",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020"
+  },
+  {
+   "fid": "f4",
+   "content": "公司于2019年7月9日收到中国证监会《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）",
+   "kind": "evidence",
+   "status": "confirmed",
+   "source": "zzd_notice_2019"
+  },
+  {
+   "fid": "f5",
+   "content": "虚假记载年度、虚增利润金额、罚款金额：所提供文档节选未包含具体违法事实细节（年份、虚增利润数、罚款数额），无法从当前文本抽取",
+   "kind": "finding",
+   "status": "insufficient_evidence",
+   "source": "zzd_penalty_2020+zzd_notice_2019"
+  },
+  {
+   "fid": "f6",
+   "content": "关于2016年虚增利润13114.77万元：现有文档节选（zzd_penalty_2020、zzd_notice_2019）均未载明2016年度虚增利润的具体金额，无法将该数字与告知书口径比对核验",
+   "kind": "finding",
+   "status": "insufficient_evidence",
+   "source": "src=zzd_penalty_2020+zzd_notice_2019"
+  },
+  {
+   "fid": "f7",
+   "content": "若需核验13114.77万元口径一致性，需补充获取两份文书中'违法事实'部分的完整原文（含分年度虚增利润明细表）",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": "src=zzd_penalty_2020+zzd_notice_2019"
+  },
+  {
+   "fid": "f8",
+   "content": "时间线交叉核查结果：告知书签收日(2019-07-09)与处罚决定书签收日(2020-06-23)间隔约11.5个月，时间顺序自洽，无矛盾；两份文书时间线核验通过【RESOLVED】",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": "zzd_penalty_2020+zzd_notice_2019"
+  },
+  {
+   "fid": "f9",
+   "content": "财务核验交叉核查结果：因两份文书节选均未载明分年度虚增利润金额（含2016年度13114.77万元）及罚款数额，财务数据口径一致性核验无法完成，标注为UNRESOLVED",
+   "kind": "finding",
+   "status": "unconfirmed",
+   "source": "zzd_penalty_2020+zzd_notice_2019"
+  },
+  {
+   "fid": "f10",
+   "content": "整体验收状态：时间线部分可确认（RESOLVED），财务数据核验部分因证据不足维持UNRESOLVED，需下游节点补充两份文书'违法事实'完整原文后重核",
+   "kind": "summary",
+   "status": "confirmed",
+   "source": "本节点交叉核查"
+  }
+ ],
+ "terminal_stats": {
+  "n": 10,
+  "confirmed": 6,
+  "unconfirmed": 1,
+  "insufficient_evidence": 3,
+  "upstream_missing": 0
+ },
+ "report": {
+  "investigation_timeline": "2018-02-09 中国证监会以连调查字[2018]001号《调查通知书》对獐子岛涉嫌信息披露违法违规立案调查【f1、f4摘录/zzd_penalty_2020】；此后公司按深交所规则按月披露《立案调查进展暨风险提示公告》（2018-03-10至2019-06-12共16次）；2019-07-09 公司及相关人员收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】；2020-06-23 公司收到《行政处罚决定书》【2020】29号及《市场禁入决定书》【2020】9号【f3】。告知书与处罚决定书签收日间隔约11.5个月，时间顺序自洽，时间线核验通过【f8】。",
+  "fraud_nature": "中国证监会认定的信息披露违法违规案件。两份文书均认定獐子岛存在信息披露违法违规事实【f2】，但节选文本未载明具体违法事实细节（涉及年度、虚增利润金额、罚款数额）【f5、f6】，故虚增利润（如2016年度13114.77万元口径）等财务造假细节无法从当前证据确认。两份文书均判断不触及重大违法强制退市情形【f2】。",
+  "report": "獐子岛集团（002069）信息披露违法违规案综合报告：一、案件进程。公司于2018年2月9日收到证监会《调查通知书》（连调查字【2018】001号），因涉嫌信息披露违法违规被立案调查【f1、f4】。2019年7月9日公司及相关人员（含吴厚刚、梁峻、勾荣、孙福君、于成家等）收到《行政处罚及市场禁入事先告知书》（处罚字【2019】95号）【f4】。2020年6月23日公司收到《行政处罚决定书》【2020】29号和《市场禁入决定书》【2020】9号【f3】。时间线交叉核查确认告知书先于处罚决定书，间隔约11.5个月，无矛盾【f1、f8】。二、违法性质。两份文书均认定公司信息披露违法违规，且均判断不触及深交所重大违法强制退市情形【f2】。三、证据局限。所提供文书节选未包含具体违法事实细节（虚假记载年度、虚增利润金额、罚款数额）【f5】，2016年度虚增利润13114.77万元等财务数据无法与文书口径比对核验【f6】，需补充两份文书'违法事实'部分完整原文（含分年度虚增利润明细表）后方可完成财务口径一致性核验【f7、f9】。四、验收结论。时间线核验RESOLVED，财务数据核验UNRESOLVED【f10】。",
+  "fact_ids_used": [
+   "f1",
+   "f2",
+   "f3",
+   "f4",
+   "f5",
+   "f6",
+   "f7",
+   "f8",
+   "f9",
+   "f10"
+  ],
+  "unknown_marks": [
+   {
+    "fid": "f5",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f6",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f7",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f9",
+    "status": "unconfirmed"
+   }
+  ]
+ },
+ "makespan": 81.51,
+ "tokens": 11985,
+ "arm": "pi-only",
+ "suffix_makespan": 37.44
+}

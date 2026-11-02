@@ -1,0 +1,220 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e3_timeline"
+   ],
+   "reoptimize": [
+    [
+     "e3_timeline",
+     "glm53"
+    ],
+    [
+     "e3_rpt",
+     "glm53"
+    ]
+   ],
+   "rationale": "pi-only: retry {failed} + re-optimize π over 2 remaining nodes"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "pi_only: normal execution"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "pi_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 937,
+    "out": 499
+   },
+   "latency_s": 7.475
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1029,
+    "out": 438
+   },
+   "latency_s": 8.542
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1027,
+    "out": 343
+   },
+   "latency_s": 5.142
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 468,
+    "out": 617
+   },
+   "latency_s": 15.855
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 471,
+    "out": 615
+   },
+   "latency_s": 12.207
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53",
+   "attempt": 2,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 471,
+    "out": 579
+   },
+   "latency_s": 12.752
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 644,
+    "out": 682
+   },
+   "latency_s": 10.179
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1977,
+    "out": 1006
+   },
+   "latency_s": 23.306
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "cs_plan_summary（草案摘要，2025年6月，上会稿）为本次吸收合并的前期方案文件，cs_listing（实施情况暨新增股份上市公告书，2025年9月）为实施阶段的后续公告，两份文档共同覆盖本次交易的方案制定到实施完成过程",
+   "kind": "文档关系",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024; cs_listing_2025"
+  },
+  {
+   "fid": "f2",
+   "content": "本次换股吸收合并的换股比例为1:0.1339，即每1股中国重工股份可换取约0.1339股中国船舶新增发行股份",
+   "kind": "交易方案设计参数",
+   "status": "insufficient_evidence",
+   "source": "cs_plan_summary_2024"
+  },
+  {
+   "fid": "f3",
+   "content": "换股价格（吸并方中国船舶与被吸并方中国重工的换股价格及由此确定的换股比例）为本次吸收合并方案的核心设计参数，具体数值需从cs_plan_summary_2024的方案章节原文核实",
+   "kind": "交易方案设计参数",
+   "status": "insufficient_evidence",
+   "source": "cs_plan_summary_2024"
+  },
+  {
+   "fid": "f4",
+   "content": "参数一致性核验方法：应将cs_plan_summary_2024中载明的换股比例（1:0.1339）与cs_listing_2025中实际实施并发行的新增股份对应比例进行比对；若两文档换股比例一致且未发生调整（如除权除息、价格调整机制触发），则方案设计与实施结果匹配",
+   "kind": "核验逻辑",
+   "status": "unconfirmed",
+   "source": "cs_plan_summary_2024; cs_listing_2025"
+  },
+  {
+   "fid": "f5",
+   "content": "需在cs_listing_2025中核实的关键实施结果数据：实际发行的A股新增股份数量、被吸并方中国重工参与换股的股份总数（含异议股东现金选择权行使情况）、以及最终确定的换股比例是否与方案一致或有调整",
+   "kind": "核验要点",
+   "status": "insufficient_evidence",
+   "source": "cs_listing_2025"
+  }
+ ],
+ "terminal_stats": {
+  "n": 5,
+  "confirmed": 1,
+  "unconfirmed": 1,
+  "insufficient_evidence": 3,
+  "upstream_missing": 0
+ },
+ "report": {
+  "investigation_timeline": "2025年6月：中国船舶披露换股吸收合并中国重工暨关联交易报告书（草案）摘要（上会稿），标志本次交易的方案制定阶段（f1）；2025年9月：中国船舶披露实施情况暨新增股份上市公告书，本次换股吸收合并进入实施完成阶段（f1）。据实施公告：中国船舶换股价格37.59元/股，中国重工换股价格5.032元/股，换股比例1:0.1339；新增发行股份3,053,192,530股，于2025年9月11日完成证券变更登记，2025年9月16日上市；其中关联方换股取得的1,454,168,398股锁定6个月。",
+  "fraud_nature": "经对现有证据的核验，未发现欺诈迹象。本调查以文档关系梳理（f1）为基础，将方案阶段披露的换股比例（1:0.1339，f2）与实施公告书载明的实际换股比例（1:0.1339，源自cs_listing_2025摘录）进行比对：两者一致，且未见除权除息或价格调整机制触发导致的比例调整迹象。换股价格（37.59元/股与5.032元/股）与比例计算逻辑自洽（5.032÷37.59≈0.1339）。基于f4所述核验逻辑（该核验方法本身为unconfirmed状态），初步判断方案设计与实施结果匹配。需注意：f2为insufficient_evidence状态，其数值现由实施公告书摘录交叉印证；异议股东现金选择权行使情况及被吸并方参与换股股份总数的明细（f5）尚未核实，故不能完全排除需补充核验的事项。",
+  "report": "本次调查围绕中国船舶换股吸收合并中国重工交易，核查方案制定与实施结果的一致性。\n\n一、文档基础与时间线。根据f1（confirmed），cs_plan_summary（2025年6月上会稿）为前期方案文件，cs_listing（2025年9月）为实施阶段后续公告，两份文档共同覆盖交易从方案制定到实施完成的全过程。\n\n二、核验方法。依据f4（unconfirmed，作为方法论参照）所述核验逻辑，应将方案文件载明的换股比例与实施公告中的实际比例比对，并关注是否存在除权除息、价格调整机制等调整情形。\n\n三、核验结果。\n（1）换股比例一致性：方案阶段换股比例为1:0.1339（f2，insufficient_evidence），实施公告书摘录载明实际换股比例同为1:0.1339（每1股中国重工换0.1339股中国船舶），中国船舶换股价格37.59元/股、中国重工换股价格5.032元/股，数值自洽。两阶段比例一致，未见调整迹象。由于f2原始数值未能在cs_plan_summary_2024方案章节原文中直接核实（f3），此处一致性结论建立在实施公告书摘录的交叉印证基础上，置信度为中等偏上。\n（2）实施结果数据：实施公告书摘录载明新增股份3,053,192,530股，上市日期2025年9月16日，2025年9月11日完成证券变更登记；关联方锁定期6个月（涉及1,454,168,398股）。但f5所列关键数据中被吸并方参与换股的股份总数明细及异议股东现金选择权行使情况，摘录中未见完整披露，尚待核实。\n\n四、结论。在现有证据范围内，方案设计与实施结果匹配，未发现欺诈迹象。但f2、f3、f5为insufficient_evidence、f4为unconfirmed状态（见unknown_marks），上述事实不构成最终认定，建议后续获取重组报告书全文及登记结算数据以完成f5所列核验要点。",
+  "fact_ids_used": [
+   "f1",
+   "f2",
+   "f3",
+   "f4",
+   "f5"
+  ],
+  "unknown_marks": [
+   {
+    "fid": "f2",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f3",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f4",
+    "status": "unconfirmed"
+   },
+   {
+    "fid": "f5",
+    "status": "insufficient_evidence"
+   }
+  ]
+ },
+ "makespan": 95.46,
+ "tokens": 11803,
+ "arm": "pi-only",
+ "suffix_makespan": 46.24
+}

@@ -1,0 +1,318 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "z_op": "SPLIT_VERIFY",
+   "z_detail": "e3_chk -> per-lineage verifiers over parents ['e3_param_check', 'e3_timeline'] (kind=verification)",
+   "recovery_set": [
+    "e3_chk_a",
+    "e3_chk_b"
+   ],
+   "rationale": "joint(R,π): 2 legal R × 3 π modes, argmax U=0.14192 -> R=['e3_chk'], π=keep | Z-space=['KEEP', 'SPLIT_VERIFY'] -> SPLIT_"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.30583)"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1223,
+    "out": 253
+   }
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1330,
+    "out": 242
+   }
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "success": true,
+   "usage": {
+    "in": 1328,
+    "out": 223
+   }
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "success": true,
+   "usage": {
+    "in": 752,
+    "out": 134
+   }
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "success": true,
+   "usage": {
+    "in": 755,
+    "out": 517
+   }
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "success": false,
+   "usage": {
+    "in": 1000,
+    "out": 173
+   }
+  },
+  {
+   "node": "e3_chk_a",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 833,
+    "out": 373
+   }
+  },
+  {
+   "node": "e3_chk_b",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 995,
+    "out": 205
+   }
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2161,
+    "out": 1328
+   }
+  }
+ ],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "公告书日期：二〇二五年九月",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "cs_listing_2025",
+   "span": null
+  },
+  {
+   "fid": "f2",
+   "content": "报告书摘要（上会稿）日期：二〇二五年六月",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f3",
+   "content": "证券代码600150 中国船舶（吸并方）、601989 中国重工（被吸并方），均上市于上海证券交易所",
+   "kind": "entity",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f4",
+   "content": "换股比例 1:0.1339（中国重工换股中国船舶）",
+   "kind": "ratio",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f5",
+   "content": "吸并方独立财务顾问、被吸并方独立财务顾问披露，报告书草案摘要（上会稿）签署时间：二〇二五年六月",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f6",
+   "content": "实施情况暨新增股份上市公告书日期：二〇二五年九月",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "cs_listing_2025",
+   "span": null
+  },
+  {
+   "fid": "f7",
+   "content": "本任务参数一致性结论需基于上市公告书中披露的实施换股比例，但继承事实清单中缺少上市公告书（cs_listing_2025）侧的换股比例事实，仅存在方案侧比例 1:0.1339；无法在无双侧来源的情况下断言方案与实施结果匹配",
+   "kind": "gap_note",
+   "status": "insufficient_evidence",
+   "source": "cs_listing_2025",
+   "span": null
+  },
+  {
+   "fid": "f8",
+   "content": "|2025-09→2025-06|≈92天(约3个月，公告书2025年9月×报告书摘要2025年6月，cs_listing_2025×cs_plan_summary_2024)，双侧仅有月份精度，无具体日",
+   "kind": "interval",
+   "status": "insufficient_evidence",
+   "source": "cs_listing_2025×cs_plan_summary_2024",
+   "span": null
+  },
+  {
+   "fid": "f9",
+   "content": "参数核查缺口：上市公告书(cs_listing_2025)中未抽取到换股比例数值，方案侧1:0.1339无法与实施侧进行双侧比对",
+   "kind": "gap_note",
+   "status": "insufficient_evidence",
+   "source": "cs_listing_2025",
+   "span": null
+  },
+  {
+   "fid": "f10",
+   "content": "实施换股比例 1:0.1339（中国重工换股中国船舶，每1股中国重工换0.1339股中国船舶；中国船舶换股价37.59元/股，中国重工换股价5.032元/股）",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f11",
+   "content": "新增股份上市日期：2025年9月16日；新增股份数量3,053,192,530股",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f12",
+   "content": "换股比例一致（1:0.1339@cs_plan_summary_2024 vs 1:0.1339@cs_listing_2025）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f13",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f14",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  }
+ ],
+ "terminal_stats": {
+  "n": 14,
+  "confirmed": 9,
+  "unconfirmed": 0,
+  "insufficient_evidence": 5,
+  "upstream_missing": 0
+ },
+ "report": {
+  "new_facts": [
+   {
+    "id": "f10",
+    "type": "ratio",
+    "content": "实施换股比例 1:0.1339（中国重工换股中国船舶，每1股中国重工换0.1339股中国船舶；中国船舶换股价37.59元/股，中国重工换股价5.032元/股）",
+    "span": "本次换股吸收合并中，中国船舶换股价格为 37.59 元/股，中国重工换股价格为 5.032 元/股，中国重工和中国船舶的换股比例相应为 1:0.1339",
+    "doc": "cs_listing_2025",
+    "status": "confirmed"
+   },
+   {
+    "id": "f11",
+    "type": "date",
+    "content": "新增股份上市日期：2025年9月16日；新增股份数量3,053,192,530股",
+    "span": "本次换股吸收合并新增股份数量为 3,053,192,530 股，上市日期为 2025 年 9 月 16 日",
+    "doc": "cs_listing_2025",
+    "status": "confirmed"
+   }
+  ],
+  "comparisons": [
+   {
+    "item": "换股比例（方案 vs 实施结果）",
+    "operand_a": "1:0.1339",
+    "span_a": "换股比例 1:0.1339（中国重工换股中国船舶）",
+    "doc_a": "cs_plan_summary_2024",
+    "operand_b": "1:0.1339",
+    "span_b": "中国重工和中国船舶的换股比例相应为 1:0.1339，即每 1 股中国重工股票可以换得 0.1339 股中国船舶股票",
+    "doc_b": "cs_listing_2025",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "交易主体证券代码（方案 vs 实施公告）",
+    "operand_a": "600150 中国船舶 / 601989 中国重工，上市地上海证券交易所",
+    "span_a": "证券代码：600150 证券简称：中国船舶…证券代码：601989 证券简称：中国重工 上市地：上海证券交易所",
+    "doc_a": "cs_plan_summary_2024",
+    "operand_b": "600150 中国船舶，上市地上海证券交易所（实施公告书封面）",
+    "span_b": "证券代码：600150 证券简称：中国船舶 上市地：上海证券交易所",
+    "doc_b": "cs_listing_2025",
+    "conclusion": "一致（实施侧仅披露吸并方代码，未见冲突）",
+    "status": "confirmed"
+   },
+   {
+    "item": "公告时间间隔（2025-06报告书摘要→2025-09上市公告书）",
+    "operand_a": "二〇二五年六月",
+    "span_a": "吸并方独立财务顾问 被吸并方独立财务顾问 二〇二五年六月",
+    "doc_a": "cs_plan_summary_2024",
+    "operand_b": "二〇二五年九月",
+    "span_b": "实施情况暨新增股份上市公告书…二〇二五年九月",
+    "doc_b": "cs_listing_2025",
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   }
+  ],
+  "report": "综合调查报告：本次交易为中国船舶（600150，吸并方）换股吸收合并中国重工（601989，被吸并方），双方均上市于上海证券交易所（f3）。方案阶段：报告书摘要（上会稿）签署于二〇二五年六月（f2、f5），披露换股比例为1:0.1339（f4）。实施阶段：实施情况暨新增股份上市公告书日期为二〇二五年九月（f1、f6），新增股份3,053,192,530股于2025年9月16日上市（f11），实施公告书披露换股比例1:0.1339（中国船舶换股价37.59元/股、中国重工换股价5.032元/股）（f10）。关键参数核查：方案侧换股比例（f4，cs_plan_summary_2024）与实施侧换股比例（f10，cs_listing_2025）双侧比对结果一致，均为1:0.1339。时间线：从报告书摘要（2025年6月）到上市公告书（2025年9月）约3个月，双侧仅有月份精度（f8），间隔天数无法精确计算。",
+  "unknown_marks": [
+   "f8|interval|2025-09→2025-06|双侧仅有月份精度，无具体日期，无法计算精确间隔天数|insufficient_evidence"
+  ],
+  "dropped": [
+   {
+    "id": "f7",
+    "reason": "gap_note声明的缺口已由新事实f10（上市公告书披露实施换股比例1:0.1339）补齐，缺口不再成立"
+   },
+   {
+    "id": "f9",
+    "reason": "参数核查缺口已由f10补齐，缺口不再成立"
+   }
+  ],
+  "status_changes": [
+   {
+    "id": "f7",
+    "from": "insufficient_evidence",
+    "to": "resolved_obsolete",
+    "reason": "上市公告书侧换股比例事实（f10）已抽取，双侧比对可完成"
+   },
+   {
+    "id": "f9",
+    "from": "insufficient_evidence",
+    "to": "resolved_obsolete",
+    "reason": "同上，缺口已补齐"
+   }
+  ]
+ },
+ "makespan": 71.33,
+ "tokens": 13825
+}

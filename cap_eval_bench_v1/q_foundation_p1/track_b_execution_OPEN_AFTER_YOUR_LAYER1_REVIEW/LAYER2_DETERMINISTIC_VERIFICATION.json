@@ -1,0 +1,63 @@
+{
+ "layer": "L2 deterministic verification (zero-call)",
+ "results": {
+  "page1_text_sha256": {
+   "ok": true,
+   "evidence": "df9e87048d00dd9e"
+  },
+  "F1": {
+   "ok": true,
+   "match_type": "literal",
+   "evidence_v2": "值「300374」为引文连续字面子串"
+  },
+  "F2": {
+   "ok": true,
+   "match_type": "literal",
+   "evidence_v2": "值「中铁装配」为引文连续字面子串；值无数字，数字检查不适用（原文误记 digits-in-quote=true 属空真式误报）"
+  },
+  "F3": {
+   "ok": true,
+   "match_type": "literal",
+   "evidence_v2": "值「2026-037」为引文连续字面子串"
+  },
+  "F4": {
+   "ok": true,
+   "match_type": "normalized-date",
+   "evidence_v2": "归一化匹配：引文「于2026 年9 月18 日」解析为 2026-09-18；非连续字面子串"
+  },
+  "F5": {
+   "ok": true,
+   "match_type": "literal",
+   "evidence_v2": "值「中国证券监督管理委员会」为引文连续字面子串；值无数字，数字检查不适用（同 F2 误报）"
+  },
+  "F6": {
+   "ok": true,
+   "match_type": "normalized-identifier",
+   "evidence_v2": "空格归一化匹配：引文「证监立案字0142026049 号」去版式空格后含值；严格字面含空格差异"
+  },
+  "F7": {
+   "ok": true,
+   "match_type": "literal",
+   "evidence_v2": "值「涉嫌信息披露违法违规」为引文连续字面子串；值无数字，数字检查不适用（同 F2 误报）"
+  },
+  "F8": {
+   "ok": true,
+   "match_type": "anaphora-resolution",
+   "evidence_v2": "指代解析：引文为「决定对公司立案」——「公司」经文书标题/首段身份（F1/F2 主体）解析为中铁装配式建筑股份有限公司；值非引文字面子串"
+  },
+  "F9": {
+   "ok": true,
+   "match_type": "semantic-qualified",
+   "evidence_v2": "核心短语「实际控制人变更前开展的相关业务」为引文字面子串；值的完整表述含归属与限定注记（自查归属+『可能涉及』），属语义限定解析"
+  },
+  "F10": {
+   "ok": true,
+   "match_type": "literal",
+   "evidence_v2": "值「尚未收到」为引文连续字面子串"
+  }
+ },
+ "summary": "11/11 PASS",
+ "field_semantics_note": "匹配类型如实分类：literal（连续字面子串）/ normalized-date / normalized-identifier（版式空格）/ anaphora-resolution（F8：指代经文书身份解析）/semantic-qualified（F9：归属与限定注记）。L2 对全部事实核验的确定为：span 偏移+引文在场+来源绑定；字面包含仅对 literal 类成立。v1 的 digits-in-quote 对 F2/F5/F7 为空真式误报，v2 已按实改写；ok 判定与跨度结果不变（span/offset 核验与该字段无关）。",
+ "l2_reproducibility": "本包未附 L2 可执行脚本：sha 与跨度可独立重算，但 L2 原始程序运行过程不可仅凭本包独立重现（对端审计意见，如实采纳）",
+ "version": "L2-v2 (evidence rewritten per audit; ok/verdicts unchanged)"
+}

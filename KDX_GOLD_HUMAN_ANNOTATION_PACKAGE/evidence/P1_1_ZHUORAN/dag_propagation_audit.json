@@ -1,0 +1,62 @@
+{
+ "①_依赖真实性": {
+  "J1_upstream": {
+   "E1": "9c4a3efa011ba4ca",
+   "E2": "72247724daa43cf5",
+   "E3": "5e778b2b25ec6a8a"
+  },
+  "J2_consumes_J1": true,
+  "SINK_consumes_J2": true,
+  "J2_upstream_sha_matches_J1": true,
+  "SINK_upstream_sha_matches_J2": true,
+  "PASS": true,
+  "v1_error_propagated": true
+ },
+ "②_错误传播": {
+  "J2_invalidated": true,
+  "invalidation_reason": "upstream_version_changed",
+  "J2_sha_changed": true,
+  "PASS": true
+ },
+ "③_重新计算": {
+  "J2_v2_upstream_sha": "375acbdd0abbf6af",
+  "J1_v2_sha": "375acbdd0abbf6af",
+  "J2_uses_J1_v2": true,
+  "J2_v2_is_final": false,
+  "J2_v2_is_final_should_be_False": true,
+  "PASS": true
+ },
+ "④_Sink更新": {
+  "SINK_sha_changed": true,
+  "SINK_uses_J2_v2": true,
+  "SINK_v2_vf_is_final": false,
+  "SINK_v2_should_be_False": true,
+  "SINK_v1_was_True": true,
+  "terminal_improvement": true,
+  "PASS": true
+ },
+ "⑤_传播消融": {
+  "ablated_J2_upstream": true,
+  "ablated_J2_empty": true,
+  "ablated_SINK_empty": true,
+  "PASS": true
+ },
+ "版本追溯": {
+  "total_executions": 9,
+  "total_invalidations": 2,
+  "J1_versions": [
+   "21c4c8bb035a4ce3",
+   "375acbdd0abbf6af"
+  ],
+  "J2_versions": [
+   "077ee00a1cb9cd89",
+   "99087fbfd42e2626"
+  ],
+  "SINK_versions": [
+   "f4bde14932d5c576",
+   "21748d708180255a"
+  ],
+  "J2_recomputed": true,
+  "SINK_recomputed": true
+ }
+}

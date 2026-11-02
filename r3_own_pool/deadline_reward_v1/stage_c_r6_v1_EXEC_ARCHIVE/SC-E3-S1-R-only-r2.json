@@ -1,0 +1,223 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e3_timeline"
+   ],
+   "reoptimize": [],
+   "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.29183 -> R=['e3_timeline'] (runner-up U=0.28083 R=['e3_chk', 'e3_timeline'])"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "rationale": "r_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 937,
+    "out": 496
+   },
+   "latency_s": 12.801
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1030,
+    "out": 210
+   },
+   "latency_s": 5.7
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1028,
+    "out": 226
+   },
+   "latency_s": 12.513
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 412,
+    "out": 246
+   },
+   "latency_s": 10.091
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 415,
+    "out": 624
+   },
+   "latency_s": 10.641
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 2,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 415,
+    "out": 515
+   },
+   "latency_s": 9.482
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 672,
+    "out": 730
+   },
+   "latency_s": 11.858
+  },
+  {
+   "node": "e3_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2111,
+    "out": 815
+   },
+   "latency_s": 11.023
+  }
+ ],
+ "trunc": [],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "索引确认：cs_plan_summary_2024（2025年6月，上会稿草案摘要）与cs_listing_2025（2025年9月，实施情况暨新增股份上市公告书）描述同一交易链条的前后阶段，前者为方案摘要阶段，后者为实施完成阶段。",
+   "kind": "index_relationship",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024+cs_listing_2025"
+  },
+  {
+   "fid": "f2",
+   "content": "调查目标：从方案中抽取设计参数——换股比例（拟核验为1:0.1339）及换股价格；所提供的两份文档前600字片段均未包含该等参数的明确表述。",
+   "kind": "design_parameter",
+   "status": "insufficient_evidence",
+   "source": "cs_plan_summary_2024+cs_listing_2025"
+  },
+  {
+   "fid": "f3",
+   "content": "时间线阶段一（方案）：cs_plan_summary_2024为2025年6月上会稿草案摘要，标志并购方案已成型并进入审核上会阶段。",
+   "kind": "timeline_node",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024"
+  },
+  {
+   "fid": "f4",
+   "content": "时间线阶段二（实施完成暨新增股份上市）：cs_listing_2025为2025年9月实施情况暨新增股份上市公告书，表明交易已通过审批并完成实施、新增股份完成上市。",
+   "kind": "timeline_node",
+   "status": "confirmed",
+   "source": "cs_listing_2025"
+  },
+  {
+   "fid": "f5",
+   "content": "审批与实施环节：从2025年6月上会稿到2025年9月上市公告书仅约3个月，暗示审核获批及实施完成发生于该区间内，具体审批日期在现有片段中未见明确记载。",
+   "kind": "timeline_inference",
+   "status": "unconfirmed",
+   "source": "cs_plan_summary_2024+cs_listing_2025"
+  },
+  {
+   "fid": "f6",
+   "content": "终止环节：现有两份文档片段（前600字）均未记载该并购链条存在终止（撤回、否决、中止上市或退市等）情形，终止节点暂无证据支持。",
+   "kind": "timeline_termination",
+   "status": "insufficient_evidence",
+   "source": "cs_plan_summary_2024+cs_listing_2025"
+  },
+  {
+   "fid": "f7",
+   "content": "交叉核查结论：时间线（f3→f4顺序一致，f5区间推断与f3/f4日期自洽）内部无矛盾；但设计参数（换股比例1:0.1339及换股价格）在现有片段中仍无原文佐证，参数核验结果为'不可核实'，需扩展片段或补充方案全文方可确认。",
+   "kind": "cross_check_conclusion",
+   "status": "confirmed",
+   "source": "cs_plan_summary_2024+cs_listing_2025"
+  }
+ ],
+ "terminal_stats": {
+  "n": 7,
+  "confirmed": 4,
+  "unconfirmed": 1,
+  "insufficient_evidence": 2,
+  "upstream_missing": 0
+ },
+ "report": {
+  "investigation_timeline": "2025年6月：中国船舶换股吸收合并中国重工方案以上会稿草案摘要形式披露，进入审核上会阶段[f3]；2025年6月至9月间：审核获批及实施完成（具体审批日期未见明确记载）[f5]；2025年9月11日：中国船舶收到中国证券登记结算有限责任公司上海分公司《证券变更登记证明》（摘录：cs_listing_2025）；2025年9月16日：新增股份3,053,192,530股上市（摘录：cs_listing_2025），交易链条以实施完成暨新增股份上市告终[f4]。现有文档片段未发现终止（撤回、否决、中止上市或退市）情形[f6]。",
+  "fraud_nature": "本次调查未发现明显欺诈线索。cs_plan_summary_2024与cs_listing_2025描述同一交易链条的前后阶段且时间线内部自洽[f1][f7]；上市公告书原文明确记载换股比例1:0.1339（中国船舶换股价37.59元/股、中国重工换股价5.032元/股），与拟核验参数一致（摘录：cs_listing_2025特别提示第二条）。需注意两点存疑：一是该参数核验在上游结构化事实层面因片段不足被标记为insufficient_evidence[f2][f7]，本报告系依据上市公告书摘录原文补充确认；二是2025年6月至9月间的具体审批日期无文档记载[f5]，审批环节连续性尚待扩展证据核验。",
+  "report": "一、交易概况：本次调查对象为中国船舶（600150）换股吸收合并中国重工（601989）暨关联交易[f1]。两份文档索引关系已确认：cs_plan_summary_2024（2025年6月上会稿草案摘要）为方案阶段文件，cs_listing_2025（2025年9月实施情况暨新增股份上市公告书）为实施完成阶段文件，二者描述同一交易链条的前后阶段[f1]。二、时间线：方案于2025年6月成型并进入审核上会[f3]；2025年6月至9月间审核获批并完成实施（具体审批日期未见记载，属推断性节点）[f5]；2025年9月11日完成证券变更登记、9月16日新增股份上市，交易实施完成[f4]。现有片段未发现终止情形[f6]。三、参数核验：拟核验换股比例1:0.1339。上游结构化事实中该参数因片段不足标记为'不可核实'[f2][f7]；但cs_listing_2025摘录特别提示第二条明确记载'中国船舶换股价格为37.59元/股，中国重工换股价格为5.032元/股，换股比例相应为1:0.1339'，据此参数与拟核验值一致。四、交叉核查：时间线内部无矛盾，f3→f4顺序一致，f5区间推断与f3/f4日期自洽[f7]。五、结论：未发现欺诈或披露矛盾迹象；需通过扩展方案全文或审批环节补充文件进一步确认审批具体日期[f5]与终止情形存证[f6]。",
+  "fact_ids_used": [
+   "f1",
+   "f3",
+   "f4",
+   "f5",
+   "f6",
+   "f7",
+   "f2"
+  ],
+  "unknown_marks": [
+   {
+    "fid": "f2",
+    "status": "insufficient_evidence"
+   },
+   {
+    "fid": "f5",
+    "status": "unconfirmed"
+   },
+   {
+    "fid": "f6",
+    "status": "insufficient_evidence"
+   }
+  ]
+ },
+ "makespan": 84.11,
+ "tokens": 10882,
+ "arm": "R-only",
+ "suffix_makespan": 32.36
+}

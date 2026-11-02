@@ -1,0 +1,66 @@
+{
+ "checks": {
+  "T1a truncation fired and was recorded per node": {
+   "ok": true,
+   "detail": "77 dropped events, reasons recorded"
+  },
+  "T1b conservation: kept + upstream_missing = extracted_total (loss visible, nothing vanishes)": {
+   "ok": true,
+   "detail": "12 kept + 77 missing = 89"
+  },
+  "T2a TRANSFER fidelity: terminal ledger == directly extracted set (per task), all surviving facts confirmed": {
+   "ok": true,
+   "detail": "terminal n={'SC-E1': 89, 'SC-E3': 5} vs extracted={'SC-E1': 89, 'SC-E3': 5}; old-chain report C1 mean=0.277 (n=24)"
+  },
+  "T3 injected unverifiable fact survives with explicit status and is listed in unknown_marks": {
+   "ok": true,
+   "detail": "terminal unconfirmed/insufficient=0/1, unknown_marks=1"
+  },
+  "T4a report fact_ids_used non-empty on the completed Z run": {
+   "ok": true,
+   "detail": "8 ids used"
+  },
+  "T4b every terminal ledger fact has a source doc or explicit unconfirmed origin": {
+   "ok": true,
+   "detail": "ledger={'n': 89, 'confirmed': 89, 'unconfirmed': 0, 'insufficient_evidence': 0, 'upstream_missing': 0}"
+  },
+  "T5a C1 responds to content removal": {
+   "ok": true,
+   "detail": ""
+  },
+  "T5b C2 flags contradicted near-miss value": {
+   "ok": true,
+   "detail": "1 vs 0"
+  },
+  "T5c C3 responds to added doc_id citation": {
+   "ok": true,
+   "detail": "0.5 > 0.0"
+  }
+ },
+ "pass": true,
+ "t2": {
+  "old_report_C1_mean": 0.2768,
+  "new_ledger": {
+   "SC-E1": {
+    "terminal": {
+     "n": 89,
+     "confirmed": 89,
+     "unconfirmed": 0,
+     "insufficient_evidence": 0,
+     "upstream_missing": 0
+    },
+    "extracted_directly": 89
+   },
+   "SC-E3": {
+    "terminal": {
+     "n": 5,
+     "confirmed": 5,
+     "unconfirmed": 0,
+     "insufficient_evidence": 0,
+     "upstream_missing": 0
+    },
+    "extracted_directly": 5
+   }
+  }
+ }
+}

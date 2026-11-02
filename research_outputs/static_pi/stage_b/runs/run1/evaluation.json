@@ -1,0 +1,142 @@
+{
+ "dim_scores": {
+  "factual": {
+   "accuracy": 0.7059,
+   "correct": 12,
+   "total": 17,
+   "errors": [
+    {
+     "fact_id": "VF_S1",
+     "dim": "dim1_factual",
+     "gold": "CONTINUING",
+     "model": "DETAIL_EXPANDED"
+    },
+    {
+     "fact_id": "VF_S3",
+     "dim": "dim1_factual",
+     "gold": "CONTINUING",
+     "model": "NOT_DISCLOSED"
+    },
+    {
+     "fact_id": "INV_S2",
+     "dim": "dim1_factual",
+     "gold": "CONTINUING",
+     "model": "DETAIL_EXPANDED"
+    },
+    {
+     "fact_id": "MR_S1",
+     "dim": "dim1_factual",
+     "gold": "CONTINUING",
+     "model": "NEWLY_DISCLOSED"
+    },
+    {
+     "fact_id": "MR_S2",
+     "dim": "dim1_factual",
+     "gold": "CONTINUING",
+     "model": "DETAIL_EXPANDED"
+    }
+   ]
+  },
+  "procedural": {
+   "accuracy": 0.7059,
+   "correct": 12,
+   "total": 17,
+   "errors": [
+    {
+     "fact_id": "VF_S3",
+     "dim": "dim2_procedural",
+     "gold": "PRIOR_NOTICE",
+     "model": "NOT_APPLICABLE"
+    },
+    {
+     "fact_id": "INV_S2",
+     "dim": "dim2_procedural",
+     "gold": "PRIOR_NOTICE",
+     "model": "INVESTIGATION"
+    },
+    {
+     "fact_id": "INV_S3",
+     "dim": "dim2_procedural",
+     "gold": "PRIOR_NOTICE",
+     "model": "INVESTIGATION"
+    },
+    {
+     "fact_id": "FD_S2",
+     "dim": "dim2_procedural",
+     "gold": "INVESTIGATION",
+     "model": "PRIOR_NOTICE"
+    },
+    {
+     "fact_id": "FD_S3",
+     "dim": "dim2_procedural",
+     "gold": "INVESTIGATION",
+     "model": "PRIOR_NOTICE"
+    }
+   ]
+  },
+  "evidentiary": {
+   "accuracy": 0.8235,
+   "correct": 14,
+   "total": 17,
+   "errors": [
+    {
+     "fact_id": "VF_S3",
+     "dim": "dim3_evidentiary",
+     "gold": "NOTICE_CONTENT",
+     "model": "UNKNOWN"
+    },
+    {
+     "fact_id": "INV_S2",
+     "dim": "dim3_evidentiary",
+     "gold": "NOTICE_CONTENT",
+     "model": "ALLEGATION"
+    },
+    {
+     "fact_id": "INV_S3",
+     "dim": "dim3_evidentiary",
+     "gold": "NOTICE_CONTENT",
+     "model": "ALLEGATION"
+    }
+   ]
+  }
+ },
+ "critical_gate": {
+  "status": "FAIL",
+  "correct": 3,
+  "total": 5,
+  "failures": [
+   "FD_S2",
+   "FD_S3"
+  ]
+ },
+ "unknown_rejection": {
+  "correct_abstain": 3,
+  "wrong_assertion": 0,
+  "missing": 0,
+  "total_slots": 3,
+  "states": {
+   "U_FD": "ABSTAIN",
+   "U_TR_PRE": "ABSTAIN",
+   "U_INV_DATE": "ABSTAIN"
+  }
+ },
+ "evidence_unknown": {
+  "correct": 5,
+  "total": 5
+ },
+ "anchor_validity": {
+  "present": 17,
+  "match": 0,
+  "missing": 0,
+  "mismatch": 17
+ },
+ "completeness": {
+  "answered": 17,
+  "missing": 0,
+  "total_facts": 17,
+  "duplicates": 0
+ },
+ "structural_anomalies": {
+  "duplicate_fact_ids": []
+ }
+}

@@ -1,0 +1,436 @@
+{
+  "task_id": "JIAYUAN_202610",
+  "origin": "MANUALLY_SOURCE_DERIVED_CONTRACT_DAG_NOT_LLM_GENERATED_OR_EXECUTED",
+  "cutoff": "2026-10-23",
+  "original_broad_question": "对照处罚决定与差错更正公告，重建披露时间线，区分违法事实涉及期间、更正覆盖期间、责任主体与处罚结论；不能对应的事项标为 UNKNOWN。",
+  "scoring_scope": "Only the six explicit source-grounded questions; not general sentiment or all material conclusions",
+  "public_questions": [
+    {
+      "id": "JIAYUAN_202610_T1",
+      "question": "公司处罚结论和金额是什么？"
+    },
+    {
+      "id": "JIAYUAN_202610_T2",
+      "question": "违法事实合计影响哪些年度及财务指标？"
+    },
+    {
+      "id": "JIAYUAN_202610_T3",
+      "question": "无商业实质交易与提前确认收入是否属于不同事项？"
+    },
+    {
+      "id": "JIAYUAN_202610_T4",
+      "question": "更正覆盖年度是否等于违法行为涉及年度？"
+    },
+    {
+      "id": "JIAYUAN_202610_T5",
+      "question": "收到处罚决定与公告公开日期分别是什么？"
+    },
+    {
+      "id": "JIAYUAN_202610_T6",
+      "question": "单项影响与合计影响怎样对应，能否混用？"
+    }
+  ],
+  "reference_answers_accessible_to_scheduler": false,
+  "evidence_manifest": [
+    {
+      "source_id": "CSRC_PENALTY",
+      "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/JIAYUAN_202610/CSRC_PENALTY/source.html",
+      "sha256": "4c63bd5e429cf6d4aacf2387c74f91db8438afc7b0a30b548127444825a7afbc",
+      "publication_date_from_archive": "2026-10-23"
+    },
+    {
+      "source_id": "ACCOUNTING_CORRECTION",
+      "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/JIAYUAN_202610/ACCOUNTING_CORRECTION/source.pdf",
+      "sha256": "aa238127b1ff66d27d70f3670b32f8e355e490bbea5ca117fe8b717497a232f8",
+      "publication_date_from_archive": "2026-10-17"
+    }
+  ],
+  "Z": "FIXED_FOR_NEXT_COMPARISON",
+  "nodes": [
+    {
+      "id": "PENALTY",
+      "parents": [],
+      "executor_kind": "LLM",
+      "role": "Regulatory finding extraction",
+      "allowed_sources": [
+        "CSRC_PENALTY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "主体及公司/个人处罚",
+          "两项行为各年收入及利润的有符号万元值",
+          "处罚文号、来源措辞，不补决定日期"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T6"
+        ]
+      },
+      "edge_rationale": {},
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "CORRECTION",
+      "parents": [],
+      "executor_kind": "LLM",
+      "role": "Issuer correction scope extraction",
+      "allowed_sources": [
+        "ACCOUNTING_CORRECTION"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "更正年份及不另更正年份",
+          "收到日期、落款、不同监管决定身份",
+          "2024事项作为发行人转述"
+        ],
+        "terminal_items_served": [
+          "T4",
+          "T5"
+        ]
+      },
+      "edge_rationale": {},
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "YEAR_SCOPE",
+      "parents": [
+        "PENALTY",
+        "CORRECTION"
+      ],
+      "executor_kind": "LLM",
+      "role": "Reconcile periods and authority",
+      "allowed_sources": [
+        "CSRC_PENALTY",
+        "ACCOUNTING_CORRECTION"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "PENALTY",
+          "CORRECTION"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "分别列出52号与69号转述的期间和报表范围",
+          "区分错报方向和更正方向，不把无重大影响等同无影响"
+        ],
+        "terminal_items_served": [
+          "T3",
+          "T4"
+        ]
+      },
+      "edge_rationale": {
+        "PENALTY": "提供监管52号事项及受影响年度",
+        "CORRECTION": "提供更正年度及69号转述"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "ARITHMETIC",
+      "parents": [
+        "PENALTY"
+      ],
+      "executor_kind": "DETERMINISTIC",
+      "role": "Signed decimal sums",
+      "allowed_sources": [
+        "CSRC_PENALTY"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "PENALTY"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "逐项同年度同单位相加",
+          "保存操作数claim_id、符号及单位；输入未知则结果UNKNOWN"
+        ],
+        "terminal_items_served": [
+          "T6"
+        ]
+      },
+      "edge_rationale": {
+        "PENALTY": "必须消费从原文提取的两事项操作数，不能硬编码参考值"
+      },
+      "llm_candidates": [],
+      "model_contract_measurements": "NOT_APPLICABLE_DETERMINISTIC",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "TIMELINE",
+      "parents": [
+        "PENALTY",
+        "CORRECTION"
+      ],
+      "executor_kind": "LLM",
+      "role": "Separate receipt/signature/publication",
+      "allowed_sources": [
+        "CSRC_PENALTY",
+        "ACCOUNTING_CORRECTION"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "PENALTY",
+          "CORRECTION"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "日期种类与来源身份分列",
+          "档案公开日与正文日期分级，未证实日期UNKNOWN"
+        ],
+        "terminal_items_served": [
+          "T5"
+        ]
+      },
+      "edge_rationale": {
+        "PENALTY": "处罚文号/监管来源",
+        "CORRECTION": "收到、落款和档案公开记录"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    },
+    {
+      "id": "FINAL",
+      "parents": [
+        "PENALTY",
+        "YEAR_SCOPE",
+        "ARITHMETIC",
+        "TIMELINE"
+      ],
+      "executor_kind": "LLM",
+      "role": "Evidence-preserving final answer",
+      "allowed_sources": [
+        "CSRC_PENALTY",
+        "ACCOUNTING_CORRECTION"
+      ],
+      "input_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "consume_parent_ids": [
+          "PENALTY",
+          "YEAR_SCOPE",
+          "ARITHMETIC",
+          "TIMELINE"
+        ],
+        "upstream_contract_required": true,
+        "reference_answers_access": false
+      },
+      "output_contract": {
+        "common_contract_sha256": "a5eee2125aa1726d771b7feb4ba693ef4277f2e6e348f0e0bb533499a8e5cf4c",
+        "mandatory_deliverables": [
+          "完成六问且不越过限定范围",
+          "逐条结论保留来源或操作数链",
+          "相关性、UNKNOWN和冲突单独列示"
+        ],
+        "terminal_items_served": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6"
+        ]
+      },
+      "edge_rationale": {
+        "PENALTY": "终端罚款和单项行为原始事实",
+        "YEAR_SCOPE": "跨文档年度比较",
+        "ARITHMETIC": "合计及不可混用依据",
+        "TIMELINE": "日期口径"
+      },
+      "llm_candidates": [
+        "qwen-plus-2025-12-01",
+        "deepseek-flash"
+      ],
+      "model_contract_measurements": "UNKNOWN_CURRENT_TASK",
+      "failure_action": "BLOCK invalid assertions; preserve reason, cost and elapsed; allow evidenced minimal recovery only"
+    }
+  ],
+  "edges": [
+    [
+      "PENALTY",
+      "YEAR_SCOPE"
+    ],
+    [
+      "CORRECTION",
+      "YEAR_SCOPE"
+    ],
+    [
+      "PENALTY",
+      "ARITHMETIC"
+    ],
+    [
+      "PENALTY",
+      "TIMELINE"
+    ],
+    [
+      "CORRECTION",
+      "TIMELINE"
+    ],
+    [
+      "PENALTY",
+      "FINAL"
+    ],
+    [
+      "YEAR_SCOPE",
+      "FINAL"
+    ],
+    [
+      "ARITHMETIC",
+      "FINAL"
+    ],
+    [
+      "TIMELINE",
+      "FINAL"
+    ]
+  ],
+  "semantic_dependency_basis": "Each edge has explicit consumed deliverable and rationale in the destination node; not page-order rotation",
+  "cache_key_components": [
+    "task_id",
+    "node_id",
+    "node_contract_sha256",
+    "source_text_hashes",
+    "parent_output_hashes",
+    "model_version",
+    "prompt_hash"
+  ],
+  "cache_rule": "Re-executing a node does not invalidate healthy independent branches. Descendants invalidated only if their consumed input/version changes; same output hash permits reuse.",
+  "natural_feedback": [
+    {
+      "trigger": "SOURCE_ID_OR_SPAN_MISMATCH",
+      "observable_without_gold": true,
+      "action": "If owning extractor output invalid, retry that node within reserved budget; invalidate affected committed descendants only. Valid source records in other branches remain cached."
+    },
+    {
+      "trigger": "DERIVATION_OPERAND_OR_UNIT_MISMATCH",
+      "observable_without_gold": true,
+      "action": "Check typed operands and provenance; no LLM rerun for a deterministic arithmetic formatting issue; repair failed source node only if independently evidenced."
+    },
+    {
+      "trigger": "SOURCE_CONFLICT",
+      "observable_without_gold": true,
+      "action": "Preserve UNKNOWN/CONFLICT. If conflict is already present in source, no repeated model calls to force resolution."
+    },
+    {
+      "trigger": "TIMEOUT_OR_SLOTS_DELAY",
+      "observable_without_gold": true,
+      "action": "Stop or legally reassign future nodes within remainder; unresolved billed/cancelled calls remain UNKNOWN. No automatic API retries."
+    },
+    {
+      "trigger": "SEMANTIC_UNSUPPORTED",
+      "observable_without_gold": "ONLY_WITH_VALIDATED_GUARD",
+      "action": "Current semantic guard not calibrated for these contracts; cannot use private reference to trigger repair."
+    }
+  ],
+  "recovery_analysis": {
+    "observed_natural_failures": 0,
+    "actual_R_candidates": null,
+    "guaranteed_R_count": null,
+    "minimal_legal_recovery": "For a known invalid node, that node plus actually affected already-committed descendant outputs; pending descendants are first executions, not extra retries",
+    "structural_dependency_closures": {
+      "PENALTY": [
+        "ARITHMETIC",
+        "FINAL",
+        "PENALTY",
+        "TIMELINE",
+        "YEAR_SCOPE"
+      ],
+      "CORRECTION": [
+        "CORRECTION",
+        "FINAL",
+        "TIMELINE",
+        "YEAR_SCOPE"
+      ],
+      "YEAR_SCOPE": [
+        "FINAL",
+        "YEAR_SCOPE"
+      ],
+      "ARITHMETIC": [
+        "ARITHMETIC",
+        "FINAL"
+      ],
+      "TIMELINE": [
+        "FINAL",
+        "TIMELINE"
+      ],
+      "FINAL": [
+        "FINAL"
+      ]
+    },
+    "closure_note": "These are possible dependency invalidation sets, not observed faults or multiple competing R actions at the same state",
+    "identifiability": "With one required legal R, R-only may coincide with Static recovery and Joint with pi-only. Different failure locations do not prove two R choices at one state. No larger R added without evidence."
+  },
+  "pi_analysis": {
+    "candidate_models": [
+      "qwen-plus-2025-12-01",
+      "deepseek-flash"
+    ],
+    "identity_basis": "Archived real calibration model labels only; current provider version not revalidated",
+    "contract_compatible_current_measurements": 0,
+    "Q": "UNKNOWN",
+    "C": "UNKNOWN_CURRENT_CONTRACT",
+    "L": "UNKNOWN_CURRENT_CONTRACT",
+    "reliability": "UNKNOWN_CURRENT_CONTRACT",
+    "dynamic_opportunity": "At source-branch completion, remaining LLM merge/synthesis nodes may be reassigned; no observed ranking reversal or benefit yet",
+    "independent_confirmatory_status": "NOT_CERTIFIED; current source/reference/DAG design is recorded development exposure"
+  },
+  "optimizations_not_applied": {
+    "merge": "May combine interpretation/finalization only if all typed outputs, source lineage, explicit UNKNOWN and six deliverables retained. No measured saving asserted.",
+    "split": "Split only on separately sourced responsibilities or independently checkable calculations; not arbitrary page slicing.",
+    "remove_edges": "Only if destination contract demonstrably no longer consumes parent; cannot remove compulsory source comparison.",
+    "Z_testing": "NOT_TESTED"
+  },
+  "admission": {
+    "dag_acyclic_contract_complete": true,
+    "execution_validated": false,
+    "formal_Gold": false,
+    "formal_Q_calculable": false,
+    "five_arm_identifiable": false
+  }
+}

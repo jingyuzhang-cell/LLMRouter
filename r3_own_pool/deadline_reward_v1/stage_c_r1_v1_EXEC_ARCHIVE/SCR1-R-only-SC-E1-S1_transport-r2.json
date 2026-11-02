@@ -1,0 +1,205 @@
+{
+ "run_id": "SCR1-R-only-SC-E1-S1_transport-r2",
+ "arm": "R-only",
+ "task": "SC-E1",
+ "scenario": "S1_transport",
+ "rep": 2,
+ "status": "COMPLETE",
+ "Q": 0.5714,
+ "covered": 4,
+ "n_silver": 7,
+ "tokens": 4401,
+ "n_calls": 8,
+ "suffix_makespan_s": 10.11,
+ "reconstructed_e2e_makespan_s": 18.79,
+ "deadline_met": true,
+ "z_ops_applied": [],
+ "baseline_type": "adaptive",
+ "attribution_note": "",
+ "wait_total": 0.0,
+ "wall_s": 0.0,
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e1_tl"
+   ],
+   "reoptimize": [],
+   "assignments": [
+    [
+     "e1_tl",
+     "glm53flash"
+    ]
+   ],
+   "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.29183 -> R=['e1_tl'] (runner-up U=0.28083 R=['e1_chk', 'e1_tl'])"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "assignments": [
+    [
+     "e1_chk",
+     "glm53"
+    ]
+   ],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "assignments": [
+    [
+     "e1_rpt",
+     "glm53"
+    ]
+   ],
+   "rationale": "r_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e1_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 0.0,
+   "finish": 3.05,
+   "latency_s": 3.046,
+   "usage": {
+    "in": 728,
+    "out": 145
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e1_ext_pen",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 3.05,
+   "finish": 5.54,
+   "latency_s": 2.488,
+   "usage": {
+    "in": 892,
+    "out": 58
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e1_ext_proc",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 3.05,
+   "finish": 6.27,
+   "latency_s": 3.223,
+   "usage": {
+    "in": 888,
+    "out": 110
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e1_fin",
+   "model": "glm53flash",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 6.27,
+   "finish": 8.09,
+   "latency_s": 1.819,
+   "usage": {
+    "in": 284,
+    "out": 48
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53flash",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 6.27,
+   "finish": 8.68,
+   "latency_s": 2.41,
+   "usage": {
+    "in": 279,
+    "out": 66
+   },
+   "success": false,
+   "failure": "transport",
+   "shared": true
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53flash",
+   "attempt": 2,
+   "version": 2,
+   "wait_s": 0.0,
+   "start": 8.68,
+   "finish": 11.57,
+   "latency_s": 2.889,
+   "usage": {
+    "in": 279,
+    "out": 98
+   },
+   "success": true,
+   "failure": null
+  },
+  {
+   "node": "e1_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 11.57,
+   "finish": 16.61,
+   "latency_s": 5.044,
+   "usage": {
+    "in": 240,
+    "out": 35
+   },
+   "success": true,
+   "failure": null
+  },
+  {
+   "node": "e1_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 16.61,
+   "finish": 18.79,
+   "latency_s": 2.176,
+   "usage": {
+    "in": 151,
+    "out": 100
+   },
+   "success": true,
+   "failure": null
+  }
+ ]
+}

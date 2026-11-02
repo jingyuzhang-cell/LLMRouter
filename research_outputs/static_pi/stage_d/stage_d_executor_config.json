@@ -1,0 +1,70 @@
+{
+ "batch": "STAGE_D_CONFIRM_V1",
+ "seed": 20261102,
+ "arms": [
+  "Static",
+  "R-only",
+  "π-only",
+  "Simple-Dynamic",
+  "Fixed-Composite",
+  "Proposed-Dynamic"
+ ],
+ "blocks": {
+  "S0": 2,
+  "S1": 3,
+  "S2": 3,
+  "S3": 8,
+  "S4": 8,
+  "S5": 8
+ },
+ "per_exec": {
+  "calls": 14,
+  "yuan": 0.18
+ },
+ "global": {
+  "calls": 2688,
+  "yuan": 34.56,
+  "tokens": 9500000,
+  "tokens_note": "9.5M design cap (operator approved 2026-11-02); hard stop via reservation ledger; est=1 token/char+64, plus max_out per layer"
+ },
+ "deadline_s": {
+  "default": 180,
+  "S5": 90
+ },
+ "slots": {
+  "glm53flash": 2,
+  "deepseek": 1
+ },
+ "s5": {
+  "slo_s": 9.5,
+  "race_arms": [
+   "π-only",
+   "Fixed-Composite",
+   "Proposed-Dynamic"
+  ],
+  "note": "S5 tight-deadline variant D=90s per V1.1/V1.2 (operator ruled 2026-11-02); SLO=9.5s; race arms pi/Fixed/Proposed",
+  "cancel_effective": true
+ },
+ "mock": {
+  "scale": 1000,
+  "overhead_s": 10,
+  "latency_s": {
+   "default": {
+    "E1": 14.45,
+    "E2": 14.45,
+    "E3": 14.45,
+    "E4": 14.45,
+    "J1": 11.4,
+    "J2": 8.0,
+    "SINK": 23.8
+   },
+   "S5": {
+    "J2": {
+     "glm53flash": 29.4,
+     "deepseek": 6.3
+    }
+   }
+  }
+ },
+ "output_dir": "runs_final_dryrun"
+}

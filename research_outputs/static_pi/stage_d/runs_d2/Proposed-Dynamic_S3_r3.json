@@ -1,0 +1,210 @@
+{
+ "arm": "Proposed-Dynamic",
+ "scenario": "S3",
+ "rep": 3,
+ "makespan_s": 80.3,
+ "on_time": true,
+ "calls": 8,
+ "budget_left": {
+  "calls": 6,
+  "yuan": 0.149618
+ },
+ "actions": [
+  {
+   "kind": "structure_repair",
+   "node": "J1",
+   "t": 22.5
+  },
+  {
+   "kind": "format_repair",
+   "node": "FMT",
+   "t": 80.1
+  }
+ ],
+ "decisions": [
+  {
+   "node": "E1",
+   "sig": {},
+   "acts": [],
+   "t_rem": 172
+  },
+  {
+   "node": "E2",
+   "sig": {},
+   "acts": [],
+   "t_rem": 169
+  },
+  {
+   "node": "E4",
+   "sig": {},
+   "acts": [],
+   "t_rem": 165
+  },
+  {
+   "node": "E3",
+   "sig": {},
+   "acts": [],
+   "t_rem": 160
+  },
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "acts": [
+    [
+     "structure_repair",
+     "J1"
+    ]
+   ],
+   "t_rem": 158
+  },
+  {
+   "node": "J1",
+   "sig": {},
+   "acts": [],
+   "t_rem": 146
+  },
+  {
+   "node": "J2",
+   "sig": {},
+   "acts": [],
+   "t_rem": 122
+  },
+  {
+   "node": "SINK",
+   "sig": {},
+   "acts": [],
+   "t_rem": 100
+  },
+  {
+   "node": "FMT",
+   "sig": {
+    "D3": "format"
+   },
+   "acts": [
+    [
+     "format_repair",
+     "FMT"
+    ]
+   ],
+   "t_rem": 100
+  }
+ ],
+ "anomalies": [
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "t": 22.5
+  },
+  {
+   "node": "FMT",
+   "sig": {
+    "D3": "format"
+   },
+   "t": 80.1
+  }
+ ],
+ "final_states": {
+  "E1": "Completed",
+  "E2": "Completed",
+  "E3": "Completed",
+  "E4": "Completed",
+  "J1": "Completed",
+  "J2": "Completed",
+  "SINK": "Completed",
+  "FMT": "Completed"
+ },
+ "exec_log": [
+  {
+   "node": "E1",
+   "model": "glm53flash",
+   "prompt_sha": "40a238a4fddf",
+   "wall": 7.76
+  },
+  {
+   "node": "E2",
+   "model": "glm53flash",
+   "prompt_sha": "40a238a4fddf",
+   "wall": 11.28
+  },
+  {
+   "node": "E4",
+   "model": "glm53flash",
+   "prompt_sha": "9a5fd4276fc4",
+   "wall": 6.82
+  },
+  {
+   "node": "E3",
+   "model": "glm53flash",
+   "prompt_sha": "9a5fd4276fc4",
+   "wall": 9.12
+  },
+  {
+   "node": "J1",
+   "model": "glm53flash",
+   "prompt_sha": "6c61979d5ccd",
+   "wall": 7.87
+  },
+  {
+   "node": "J1",
+   "model": "glm53flash",
+   "prompt_sha": "c7384236807c",
+   "wall": 10.9
+  },
+  {
+   "node": "J2",
+   "model": "glm53flash",
+   "prompt_sha": "7ca250ac1a07",
+   "wall": 24.43
+  },
+  {
+   "node": "SINK",
+   "model": "glm53flash",
+   "prompt_sha": "30c5b67cc411",
+   "wall": 21.72
+  },
+  {
+   "node": "FMT",
+   "model": "deterministic",
+   "version": 0,
+   "input_sha": "cd11d72afd91",
+   "output_sha": "9e73b19a3d2b",
+   "bypassed": false,
+   "wall": 0.0
+  }
+ ],
+ "fault_checks": [
+  {
+   "node": "E1",
+   "dates_extracted": true,
+   "consistent": true
+  },
+  {
+   "node": "E2",
+   "dates_extracted": true,
+   "consistent": true
+  },
+  {
+   "node": "J1",
+   "deploy_defect_active": true,
+   "dates_relay_present": false,
+   "consistent": true
+  },
+  {
+   "node": "J1",
+   "deploy_defect_active": true,
+   "dates_relay_present": true,
+   "consistent": false
+  }
+ ],
+ "invalid_reason": null,
+ "tp": 14,
+ "slot_success": 0.6087,
+ "F1_ok": true,
+ "F2_ok": true,
+ "E2": "4",
+ "g6_j1_versions": 1
+}

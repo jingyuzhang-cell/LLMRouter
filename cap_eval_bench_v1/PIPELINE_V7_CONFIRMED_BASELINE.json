@@ -1,0 +1,88 @@
+{
+ "name": "Pipeline_V7_Confirmed_Baseline",
+ "date": "2026-11-01",
+ "operator_ruling": "CONDITIONAL POSITIVE → CONFIRMED (Precision pooled口径裁决 2026-11-01)",
+ "q_f1_median": 0.7479,
+ "q_f1_all": [
+  0.7778,
+  0.7059,
+  0.7179,
+  0.8
+ ],
+ "paired_gain_median": 0.202,
+ "paired_positive": "4/4 complete pairs (B5 truncated by budget)",
+ "recall_range": [
+  0.5455,
+  0.7273
+ ],
+ "precision_pooled": 0.918,
+ "precision_min_single": 0.8235,
+ "precision_note": "Pooled口径通过(91.8%); B3单次82.4%需保留披露",
+ "full_pipeline_cost_ratio": 1.05,
+ "full_pipeline_cost_note": "V6 avg=17,376 tok; V7 avg=18,208 tok; +4.8%",
+ "marginal_cost": "~39 tokens per Q_F1 percentage point",
+ "config": {
+  "n1_prompt": "n1_revised_prompt.txt (exhaustive extraction contract)",
+  "n1_max_tokens": 4000,
+  "n9_max_tokens": 2000,
+  "n10_max_tokens": 2000,
+  "n1_to_n9_bypass_chars": 3000,
+  "model": "glm53flash for all nodes",
+  "dag": "D_R1 authoritative spec (10 nodes)",
+  "silver_facts": "22 valid (A04 excluded as SILVER_INVALID)",
+  "evaluator": "norm() substring match with CN/ISO date variants"
+ },
+ "blocks_completed": 4,
+ "blocks_planned": 5,
+ "block5_status": "V7-B5 truncated at 4/10 nodes (budget limit)",
+ "proven": [
+  "n9+n10 output capacity co-expansion improves terminal fact coverage",
+  "Q_F1 median 0.748, +0.202 vs V6 control",
+  "Precision 91.8% pooled (no precision-recall trade-off)",
+  "Full pipeline cost only +4.8%",
+  "Capacity coupling: single-node expansion (V6) does NOT improve; co-expansion (V7) does"
+ ],
+ "not_proven": [
+  "Dynamic resource allocation > static allocation (still unproven)",
+  "Joint (Z,R,π) scheduling terminal quality advantage (still unproven)",
+  "Generalizability beyond this task/model pool",
+  "Terminal quality with heterogeneous model assignments"
+ ],
+ "next_question": "Can node-level resource allocation reduce DAG cost/latency while maintaining Q_F1≥0.70 and Precision≥85%?",
+ "progression": [
+  {
+   "version": "V2",
+   "change": "n1 exhaustive extraction",
+   "q_f1": 0.516
+  },
+  {
+   "version": "V3",
+   "change": "all-node over-correction",
+   "q_f1": 0.087,
+   "lesson": "negative"
+  },
+  {
+   "version": "V4",
+   "change": "n1→n9 bypass@3000",
+   "q_f1": 0.588
+  },
+  {
+   "version": "V5",
+   "change": "bypass@7000",
+   "q_f1": 0.37,
+   "lesson": "info overload"
+  },
+  {
+   "version": "V6",
+   "change": "n9@2000 (n10@768)",
+   "q_f1": 0.533,
+   "lesson": "capacity cascade"
+  },
+  {
+   "version": "V7",
+   "change": "n9@2000+n10@2000",
+   "q_f1": 0.778,
+   "lesson": "BREAKTHROUGH"
+  }
+ ]
+}

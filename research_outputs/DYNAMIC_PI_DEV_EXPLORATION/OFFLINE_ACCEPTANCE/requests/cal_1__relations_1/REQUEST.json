@@ -1,0 +1,15 @@
+{
+  "model": "deepseek-flash",
+  "messages": [
+    {
+      "role": "user",
+      "content": "根据给定输入完成此节点，不能读取其他资料或猜测缺失事实。只输出一个JSON对象，不使用Markdown。引用必须指向给定片段或上游项目ID，不计算字符偏移。每个新项目id必须以本node_id加冒号开头。事实不确定时明确UNKNOWN，不把计划写成已完成。Schema示例中的说明不是事实。\n{\"node_id\": \"relations_1\", \"contract\": \"capital.relations.v1\", \"schema\": {\"findings\": [{\"id\": \"<node_id>:f1\", \"statement\": \"事实关系\", \"status\": \"CONFIRMED or UNKNOWN\", \"citations\": [\"上游claimID\"]}]}, \"input\": {\"question\": \"截至2024年4月9日，中控收购Hobré与后续拟增资是什么关系？识别控制权取得、交易对价、资金来源和资本处理，比较不同文件的时点及审批状态，区分已披露事实和未能确认的执行结果，提供有出处的分析。不推断材料未载明的风险结论。\", \"claims\": [{\"id\": \"extract_1:c1\", \"statement\": \"SYNTHETIC TEST ONLY\", \"citations\": [\"SUPCON_CAPITAL:2:0\"]}]}}"
+    }
+  ],
+  "max_tokens": 3072,
+  "temperature": 0,
+  "stream": false,
+  "thinking": {
+    "type": "disabled"
+  }
+}

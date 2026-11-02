@@ -1,0 +1,103 @@
+{
+  "evidence": "OFFLINE_PROFILE_INTEGRATION_NOT_REAL_PAIRED_EXECUTION",
+  "source_hashes": {
+    "/root/.worktrees/codex-dd-v51-six-arm/dd_v51_six_arm/engine.py": "f9b26142075beb0942ea714630b2c035e7a1a23c63c7e714c48d1ae34fa5567b",
+    "/root/research_outputs/DYNAMIC_PI_DEV_EXPLORATION/calibration/DAG.json": "23a0b9c335f0575586afdf4678c3329f7fcf5782b16cacedc02c054c71e67746",
+    "/root/research_outputs/DYNAMIC_PI_FIXED_CALIBRATION_RUN/ANALYSIS.json": "34708ad41e7b006015af58ae25dc0dff64ad9d26783f3c58036289f6e0e572c3",
+    "/root/research_outputs/DYNAMIC_PI_FIXED_CALIBRATION_RUN/RESULT.json": "edd7b45027f42c9e1410f809752600c0d909036928e2ee9fa0a218965a37d1bc",
+    "/root/research_outputs/DYNAMIC_PI_FIXED_CALIBRATION_INPUTS/report_1.json": "89aab6e3695b38206a7c28e26245f97cfc9905882dbbab77044cfb8cc926d3df"
+  },
+  "limits": {
+    "slots": {
+      "qwen-plus-2025-12-01": 1,
+      "deepseek-flash": 1
+    },
+    "deadline_s": 600,
+    "request_timeout_s": 180,
+    "requests": 4,
+    "tokens": 77824,
+    "micro_cny": 200000,
+    "micro_usd": 100000
+  },
+  "failed_observations": [
+    {
+      "node": "timeline_1",
+      "model": "qwen-plus-2025-12-01",
+      "observed_failed_wall_s": 5.469427548348904,
+      "successful_completion_prediction": null,
+      "reason": "Failure observation preserved; cannot substitute for successful completion latency."
+    },
+    {
+      "node": "relations_1",
+      "model": "qwen-plus-2025-12-01",
+      "observed_failed_wall_s": 25.034913793206215,
+      "successful_completion_prediction": null,
+      "reason": "Failure observation preserved; cannot substitute for successful completion latency."
+    },
+    {
+      "node": "verify_1",
+      "model": "qwen-plus-2025-12-01",
+      "observed_failed_wall_s": 44.55495036393404,
+      "successful_completion_prediction": null,
+      "reason": "Failure observation preserved; cannot substitute for successful completion latency."
+    }
+  ],
+  "plans": [
+    {
+      "pi": {
+        "timeline_1": "deepseek-flash",
+        "relations_1": "deepseek-flash",
+        "verify_1": "deepseek-flash",
+        "report_1": "qwen-plus-2025-12-01"
+      },
+      "predicted_makespan_s": 21.448718167841434,
+      "evidence": "PREDICTION_FROM_CONDITIONAL_MEASUREMENTS_NOT_END_TO_END_REPLAY"
+    },
+    {
+      "pi": {
+        "timeline_1": "deepseek-flash",
+        "relations_1": "deepseek-flash",
+        "verify_1": "deepseek-flash",
+        "report_1": "deepseek-flash"
+      },
+      "predicted_makespan_s": 13.646189227700233,
+      "evidence": "PREDICTION_FROM_CONDITIONAL_MEASUREMENTS_NOT_END_TO_END_REPLAY"
+    }
+  ],
+  "initial_pi": {
+    "timeline_1": "deepseek-flash",
+    "relations_1": "deepseek-flash",
+    "verify_1": "deepseek-flash",
+    "report_1": "deepseek-flash"
+  },
+  "initial_audit": {
+    "feasible": 2,
+    "rejections": [
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile",
+      "UNKNOWN_model_node_profile"
+    ],
+    "quality_guarantee": "UNKNOWN",
+    "objective": "minimum predicted makespan, then CNY, USD, model ID"
+  },
+  "feedback_snapshot": null,
+  "feedback_status": "NO_REAL_PAIRED_EVALUATION_PREFIX_OR_FEEDBACK_COLLECTED",
+  "dynamic_pi": null,
+  "static_dynamic_effect": null,
+  "report_response_reusable_after_new_upstreams": false,
+  "replay_status": "BLOCKED_INPUT_LINEAGE_MISMATCH",
+  "new_model_calls": 0,
+  "semantic_Q": null,
+  "conclusion": "Two measured-supported prediction plans exist, but no current observed feedback justifies a dynamic comparison. Do not fabricate scale or splice mismatched report responses."
+}

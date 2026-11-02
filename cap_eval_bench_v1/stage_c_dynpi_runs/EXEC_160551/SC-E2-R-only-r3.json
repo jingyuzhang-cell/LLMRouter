@@ -1,0 +1,363 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e2_amount"
+   ],
+   "rationale": "FIX-2 real comparison: 4 legal sets, argmax U=0.28164 -> R=['e2_amount'] (runner-up U=0.27064 R=['e2_amount', 'e2_chk'])"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "r_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e2_idx",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1257,
+    "out": 543
+   }
+  },
+  {
+   "node": "e2_ext_fraud",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1602,
+    "out": 86
+   }
+  },
+  {
+   "node": "e2_ext_pen",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1599,
+    "out": 125
+   }
+  },
+  {
+   "node": "e2_amount",
+   "model": "glm53flash",
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 934,
+    "out": 234
+   }
+  },
+  {
+   "node": "e2_entity_map",
+   "model": "glm53flash",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 958,
+    "out": 174
+   }
+  },
+  {
+   "node": "e2_amount",
+   "model": "glm53flash",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 934,
+    "out": 148
+   }
+  },
+  {
+   "node": "e2_chk",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1017,
+    "out": 88
+   }
+  },
+  {
+   "node": "e2_rpt",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2358,
+    "out": 1780
+   }
+  }
+ ],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "2018-12-28 康美药业收到证监会《调查通知书》（粤证调查通字180199号）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f2",
+   "content": "2018-12-29 康美药业披露收到立案调查通知书的公告（临2018-116）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f3",
+   "content": "2019-08-16 公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f4",
+   "content": "2019-08-17 公司披露收到《行政处罚及市场禁入事先告知书》公告",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f5",
+   "content": "2018-12-28 康美药业收到证监会《调查通知书》（粤证调查通字180199号）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f6",
+   "content": "2018-12-29 康美药业披露收到立案调查通知书的公告（临2018-116）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f7",
+   "content": "2019-08-16 公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f8",
+   "content": "文档km_penalty_2020与km_notice_2019在所提供节选中未披露具体处罚金额、虚增金额或换股比例",
+   "kind": "note",
+   "status": "insufficient_evidence",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f9",
+   "content": "所提供文档节选（km_penalty_2020与km_notice_2019各前600字）未披露虚增货币资金的年份、金额（89.99亿）或造假手段",
+   "kind": "note",
+   "status": "insufficient_evidence",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f10",
+   "content": "km_penalty_2020节选中未出现虚增金额/处罚金额数字，无法确认处罚决定书侧虚增金额口径",
+   "kind": "note",
+   "status": "insufficient_evidence",
+   "source": "km_penalty_2020",
+   "span": null
+  },
+  {
+   "fid": "f11",
+   "content": "km_notice_2019节选中未出现虚增金额/处罚金额数字，无法确认告知书侧虚增金额口径",
+   "kind": "note",
+   "status": "insufficient_evidence",
+   "source": "km_notice_2019",
+   "span": null
+  },
+  {
+   "fid": "f12",
+   "content": "换股比例一致（2018-12-28（粤证调查通字180199号）@km_penalty_2020 vs 2018-12-28（粤证调查通字180199号）@km_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f13",
+   "content": "换股比例一致（2018-12-29，公告临2018-116@km_penalty_2020 vs 2018-12-29，公告临2018-116@km_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f14",
+   "content": "换股比例一致（2019-08-16，处罚字〔2019〕119号@km_penalty_2020 vs 2019-08-16，处罚字〔2019〕119号@km_notice_2019）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f15",
+   "content": "换股比例无法比较：缺对侧操作数",
+   "kind": "derived",
+   "status": "insufficient_evidence",
+   "source": null,
+   "span": null
+  }
+ ],
+ "terminal_stats": {
+  "n": 15,
+  "confirmed": 10,
+  "unconfirmed": 0,
+  "insufficient_evidence": 5,
+  "upstream_missing": 0
+ },
+ "report": {
+  "new_facts": [
+   {
+    "id": "f12",
+    "type": "amount",
+    "value": "《2016年年度报告》虚增营业收入89.99亿元，多计利息收入1.51亿元，虚增营业利润6.56亿元，占当期披露利润总额16.44%",
+    "src": "km_notice_2019",
+    "status": "confirmed"
+   },
+   {
+    "id": "f13",
+    "type": "amount",
+    "value": "《2017年年度报告》虚增营业收入100.32亿元，多计利息收入2.28亿元，虚增营业利润12.51亿元，占当期披露利润总额25.91%",
+    "src": "km_notice_2019",
+    "status": "confirmed"
+   },
+   {
+    "id": "f14",
+    "type": "amount",
+    "value": "《2018年半年度报告》虚增营业收入84.84亿元，多计利息收入1.31亿元，虚增营业利润20.29亿元，占当期披露利润总额65.52%",
+    "src": "km_notice_2019",
+    "status": "confirmed"
+   },
+   {
+    "id": "f15",
+    "type": "date",
+    "value": "2020年5月14日公司收到证监会《行政处罚决定书》（[2020]24号）及《市场禁入决定书》（[2020]6号）",
+    "src": "km_penalty_2020",
+    "status": "confirmed"
+   },
+   {
+    "id": "f16",
+    "type": "fact",
+    "value": "违法事实涉及《2016年年度报告》《2017年年度报告》《2018年半年度报告》《2018年年度报告》虚假记载，虚增营业收入、利息收入及营业利润",
+    "src": "km_notice_2019",
+    "status": "confirmed"
+   }
+  ],
+  "comparisons": [
+   {
+    "item": "收到《调查通知书》日期",
+    "operand_a": "2018-12-28（粤证调查通字180199号）",
+    "span_a": "2018年12月28日…《调查通知书》（编号：粤证调查通字180199号）",
+    "doc_a": "km_penalty_2020",
+    "operand_b": "2018-12-28（粤证调查通字180199号）",
+    "span_b": "2018年12月28日…《调查通知书》（编号：粤证调查通字180199号）",
+    "doc_b": "km_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "披露立案调查公告日期与编号",
+    "operand_a": "2018-12-29，公告临2018-116",
+    "span_a": "2018年12月29日披露的…（公告编号：临2018-116）",
+    "doc_a": "km_penalty_2020",
+    "operand_b": "2018-12-29，公告临2018-116",
+    "span_b": "2018年12月29日在…披露的…（公告编号：临2018-116）",
+    "doc_b": "km_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "收到《行政处罚及市场禁入事先告知书》日期与文号",
+    "operand_a": "2019-08-16，处罚字〔2019〕119号",
+    "span_a": "2019年8月16日…（处罚字〔2019〕119号）",
+    "doc_a": "km_penalty_2020",
+    "operand_b": "2019-08-16，处罚字〔2019〕119号",
+    "span_b": "2019年8月16日…（处罚字〔2019〕119号）",
+    "doc_b": "km_notice_2019",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "虚增金额口径（处罚决定书侧 vs 告知书侧）",
+    "operand_a": "km_penalty_2020节选未披露具体虚增金额",
+    "span_a": null,
+    "doc_a": "km_penalty_2020",
+    "operand_b": "2016年虚增营收89.99亿/2017年100.32亿/2018半年84.84亿",
+    "span_b": "虚增营业收入89.99亿元…虚增营业收入100.32亿元…虚增营业收入84.84亿元",
+    "doc_b": "km_notice_2019",
+    "conclusion": null,
+    "status": "insufficient_evidence"
+   }
+  ],
+  "report": "康美药业信息披露违法违规案综合报告：\n1. 立案调查：2018年12月28日，康美药业收到证监会《调查通知书》（粤证调查通字180199号），因涉嫌信息披露违法违规被立案调查；2018年12月29日公司披露公告（临2018-116）。该日期与文号在两份文档（km_penalty_2020、km_notice_2019）中记录一致（f1/f5，f2/f6）。\n2. 事先告知：2019年8月16日公司及相关当事人收到《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号），2019年8月17日披露公告（临2019-065）；两份文档记录一致（f3/f7，f4）。\n3. 处罚决定：2020年5月14日，公司收到证监会《行政处罚决定书》（[2020]24号）及《市场禁入决定书》（[2020]6号）（f15）。\n4. 违法事实：据告知书（km_notice_2019），康美药业《2016年年度报告》《2017年年度报告》《2018年半年度报告》《2018年年度报告》存在虚假记载，虚增营业收入、利息收入及营业利润（f16）。其中2016年报虚增营业收入89.99亿元、多计利息收入1.51亿元、虚增营业利润6.56亿元（占16.44%）；2017年报虚增营业收入100.32亿元、多计利息收入2.28亿元、虚增营业利润12.51亿元（占25.91%）；2018年半年报虚增营业收入84.84亿元、多计利息收入1.31亿元、虚增营业利润20.29亿元（占65.52%）（f12-f14）。\n5. 限制说明：km_penalty_2020所提供节选未披露处罚决定书侧的虚增金额与处罚金额，故无法对处罚决定书与告知书的虚增金额口径作一致性核验；最终处罚金额亦未在节选中出现。",
+  "unknown_marks": [
+   "f10: 处罚决定书（km_penalty_2020）侧虚增金额/处罚金额数字未在节选中出现",
+   "f11: 告知书侧金额口径已部分确认（f12-f14），但原标记基于节选前600字；处罚金额仍未披露",
+   "f8: 两文档均未披露具体处罚金额/换股比例（处罚金额部分仍为unknown）",
+   "f9: 2018年年度报告的具体虚增金额因节选截断未披露"
+  ],
+  "dropped": [],
+  "status_changes": [
+   {
+    "fact_id": "f9",
+    "from": "insufficient_evidence",
+    "to": "partially_confirmed",
+    "reason": "km_notice_2019节选实际包含2016/2017/2018半年报虚增金额，89.99亿元已确认；仅2018年年报数字因节选截断缺失"
+   },
+   {
+    "fact_id": "f11",
+    "from": "insufficient_evidence",
+    "to": "partially_confirmed",
+    "reason": "告知书侧虚增金额口径已可确认（f12-f14），处罚金额仍未披露"
+   }
+  ]
+ },
+ "makespan": 69.96,
+ "tokens": 13837
+}

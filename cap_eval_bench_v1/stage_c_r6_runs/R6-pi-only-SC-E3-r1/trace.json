@@ -1,0 +1,142 @@
+{
+ "arm": "pi-only",
+ "decisions": [
+  {
+   "iteration": 0,
+   "action": "execute",
+   "z_op": "IDENTITY",
+   "recovery_set": [],
+   "rationale": "pi_only: re-π (budget=8000)",
+   "assignments": [
+    [
+     "n1",
+     "flash"
+    ]
+   ]
+  },
+  {
+   "iteration": 1,
+   "action": "execute",
+   "z_op": "IDENTITY",
+   "recovery_set": [],
+   "rationale": "pi_only: re-π (budget=7035)",
+   "assignments": [
+    [
+     "n2",
+     "flash"
+    ]
+   ]
+  },
+  {
+   "iteration": 2,
+   "action": "execute",
+   "z_op": "IDENTITY",
+   "recovery_set": [],
+   "rationale": "pi_only: re-π (budget=6156)",
+   "assignments": [
+    [
+     "n3",
+     "flash"
+    ],
+    [
+     "n4",
+     "flash"
+    ]
+   ]
+  },
+  {
+   "iteration": 3,
+   "action": "recover",
+   "z_op": "IDENTITY",
+   "recovery_set": [
+    "n3"
+   ],
+   "rationale": "pi_only: re-π (budget=5986)",
+   "assignments": [
+    [
+     "n3",
+     "flash"
+    ]
+   ]
+  },
+  {
+   "iteration": 4,
+   "action": "execute",
+   "z_op": "IDENTITY",
+   "recovery_set": [],
+   "rationale": "pi_only: re-π (budget=5875)",
+   "assignments": []
+  }
+ ],
+ "node_records": [
+  {
+   "node_id": "n1",
+   "model": "flash",
+   "status": "done",
+   "usage": {
+    "in": 641,
+    "out": 324
+   },
+   "latency_s": 5.185,
+   "wait_s": 0.0,
+   "attempt": 1,
+   "failure_type": null
+  },
+  {
+   "node_id": "n2",
+   "model": "flash",
+   "status": "done",
+   "usage": {
+    "in": 640,
+    "out": 239
+   },
+   "latency_s": 13.245,
+   "wait_s": 0.0,
+   "attempt": 1,
+   "failure_type": null
+  },
+  {
+   "node_id": "n3",
+   "model": "flash",
+   "status": "failed",
+   "usage": {
+    "in": 100,
+    "out": 0
+   },
+   "latency_s": 0.5,
+   "wait_s": 0.0,
+   "attempt": 1,
+   "failure_type": "transport"
+  },
+  {
+   "node_id": "n4",
+   "model": "flash",
+   "status": "done",
+   "usage": {
+    "in": 61,
+    "out": 9
+   },
+   "latency_s": 3.336,
+   "wait_s": 0.0,
+   "attempt": 1,
+   "failure_type": null
+  },
+  {
+   "node_id": "n3",
+   "model": "flash",
+   "status": "failed",
+   "usage": {
+    "in": 63,
+    "out": 48
+   },
+   "latency_s": 2.185,
+   "wait_s": 0.0,
+   "attempt": 2,
+   "failure_type": "contract"
+  }
+ ],
+ "cache_hits": 0,
+ "makespan": 24.450999999999997,
+ "total_wait": 0.0,
+ "final_status": "MAX_ITERATIONS"
+}

@@ -1,0 +1,242 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Feedback Schema V1",
+  "description": "Unified feedback data structure for heterogeneous DAG scheduling research. Covers run context, scheduling actions, execution results, cost/latency, and attribution. Designed to serve M1-M7 module data needs.",
+  "type": "object",
+  "required": ["schema_version", "run_context", "execution_results", "cost_latency"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "v1"},
+
+    "run_context": {
+      "type": "object",
+      "required": ["task_id", "dag_snapshot", "initial_pi", "anomaly"],
+      "properties": {
+        "task_id": {"type": "string"},
+        "experiment_id": {"type": "string"},
+        "rep_id": {"type": "string"},
+        "group_id": {"type": "string", "description": "Paired comparison group"},
+        "dag_snapshot": {
+          "type": "object",
+          "required": ["nodes", "edges"],
+          "properties": {
+            "dag_version": {"type": "integer"},
+            "nodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["node_id", "kind", "subtask", "assigned_model", "status"],
+                "properties": {
+                  "node_id": {"type": "string"},
+                  "kind": {"type": "string", "enum": ["index","extracts","timeline","reasoning","verification","report","entity_facts","factcheck_full","other"]},
+                  "subtask": {"type": "string"},
+                  "assigned_model": {"type": "string"},
+                  "status": {"type": "string", "enum": ["pending","running","done","failed","blocked","replaced"]}
+                }
+              }
+            },
+            "edges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "from": {"type": "string"},
+                  "to": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "initial_pi": {
+          "type": "object",
+          "properties": {
+            "allocation_rule": {"type": "string"},
+            "per_node": {"type": "object", "additionalProperties": {"type": "string"}}
+          }
+        },
+        "anomaly": {
+          "type": "object",
+          "required": ["node_id", "fault_layer", "persistence"],
+          "properties": {
+            "node_id": {"type": "string"},
+            "fault_layer": {"type": "string", "enum": ["merge_interface","node_logic","runtime","transport","none","unknown"]},
+            "persistence": {"type": "string", "enum": ["transient","persistent","unknown","none"]},
+            "injected": {"type": "boolean"},
+            "inherited_by_splits": {"type": "boolean", "default": false},
+            "detail": {"type": "string"}
+          }
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "total_tokens": {"type": "number"},
+            "remaining_at_start": {"type": "number"},
+            "deadline_s": {"type": "number"},
+            "deadline_remaining_s": {"type": "number"}
+          }
+        },
+        "model_pool": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "model_id": {"type": "string"},
+              "available": {"type": "boolean"},
+              "resource_slots": {"type": "integer"}
+            }
+          }
+        },
+        "reference_set": {
+          "type": "object",
+          "properties": {
+            "reference_type": {"type": "string", "enum": ["GOLD_CONFIRMED","SILVER","AI_ADJUDICATED","UNKNOWN"]},
+            "reference_id": {"type": "string"},
+            "scoring_formula": {"type": "string"},
+            "num_facts": {"type": "integer"}
+          }
+        }
+      }
+    },
+
+    "scheduling_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "action", "state_snapshot"],
+        "properties": {
+          "action_id": {"type": "string"},
+          "timestamp_s": {"type": "number"},
+          "dimension": {"type": "string", "enum": ["Z","R","pi","none"]},
+          "action": {"type": "string"},
+          "action_detail": {"type": "string"},
+          "state_snapshot": {
+            "type": "object",
+            "description": "Complete state at decision time",
+            "properties": {
+              "dag_version": {"type": "integer"},
+              "completed_nodes": {"type": "array", "items": {"type": "string"}},
+              "pending_nodes": {"type": "array", "items": {"type": "string"}},
+              "failed_nodes": {"type": "array", "items": {"type": "string"}},
+              "faulted_nodes": {"type": "array", "items": {"type": "string"}},
+              "current_pi": {"type": "object", "additionalProperties": {"type": "string"}},
+              "capability_gaps": {"type": "object", "additionalProperties": {"type": "number"}},
+              "budget_remaining": {"type": "number"},
+              "deadline_remaining_s": {"type": "number"},
+              "resource_slots_in_use": {"type": "object", "additionalProperties": {"type": "integer"}},
+              "feasible_z_candidates": {"type": "array", "items": {"type": "string"}},
+              "feasible_r_candidates": {"type": "array", "items": {"type": "string"}},
+              "feasible_pi_candidates": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "decision_rationale": {"type": "string"},
+          "expected_outcome": {
+            "type": "object",
+            "properties": {
+              "expected_quality_change": {"type": ["number","null"]},
+              "expected_cost_change": {"type": ["number","null"]},
+              "expected_latency_change": {"type": ["number","null"]}
+            }
+          }
+        }
+      }
+    },
+
+    "execution_results": {
+      "type": "object",
+      "required": ["per_node", "terminal"],
+      "properties": {
+        "per_node": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["node_id", "model", "execution_status"],
+            "properties": {
+              "node_id": {"type": "string"},
+              "model": {"type": "string"},
+              "execution_status": {"type": "string", "enum": ["success","failed","blocked","replaced","not_executed"]},
+              "failure_type": {"type": ["string","null"], "enum": ["contract","parse","transport","timeout","cascade","injected","null"]},
+              "attempt_number": {"type": "integer"},
+              "tokens_in": {"type": "number"},
+              "tokens_out": {"type": "number"},
+              "latency_s": {"type": "number"},
+              "quality_signal": {"type": ["number","string","null"]},
+              "quality_signal_type": {"type": ["string","null"], "enum": ["fact_coverage","parse_success","null"]}
+            }
+          }
+        },
+        "terminal": {
+          "type": "object",
+          "required": ["execution_status", "quality_status"],
+          "properties": {
+            "execution_status": {"type": "string", "enum": ["COMPLETE","INCOMPLETE_NO_RECOVERY","INCOMPLETE_RECOVERY_EXHAUSTED","INCOMPLETE_BUDGET","INCOMPLETE_DEADLINE","INCOMPLETE_OTHER"]},
+            "quality_status": {"type": "string", "enum": ["SCORED","NOT_SCORABLE","PENDING"]},
+            "Q_terminal": {"type": ["number","null"]},
+            "Q_reference_type": {"type": "string", "enum": ["GOLD_CONFIRMED","SILVER","AI_ADJUDICATED","UNKNOWN"]},
+            "Q_scoring_formula": {"type": "string"},
+            "Q_sample_n": {"type": "integer", "description": "Number of facts scored against"},
+            "key_fact_results": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "fact_id": {"type": "string"},
+                  "result": {"type": "string", "enum": ["correct","incorrect","missing","unknown_preserved","unknown_asserted"]},
+                  "is_critical": {"type": "boolean"}
+                }
+              }
+            },
+            "report_generated": {"type": "boolean"},
+            "reliability_status": {"type": "string", "enum": ["RELIABLE","FAILED","DEGRADED"]}
+          }
+        }
+      }
+    },
+
+    "cost_latency": {
+      "type": "object",
+      "required": ["total_tokens", "makespan_s"],
+      "properties": {
+        "total_tokens": {"type": "number"},
+        "per_model_tokens": {"type": "object", "additionalProperties": {"type": "number"}},
+        "total_calls": {"type": "integer"},
+        "per_model_calls": {"type": "object", "additionalProperties": {"type": "integer"}},
+        "cash_cost_cny": {"type": "number"},
+        "makespan_s": {"type": "number"},
+        "within_budget": {"type": "boolean"},
+        "within_deadline": {"type": "boolean"},
+        "wasted_tokens": {"type": "number", "description": "Tokens spent on failed/replaced node attempts"}
+      }
+    },
+
+    "attribution": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["action_dimension", "comparison_id", "attribution_method", "evidence_status"],
+        "properties": {
+          "action_dimension": {"type": "string", "enum": ["Z","R","pi","Z_R_interaction","Z_pi_interaction","R_pi_interaction","joint"]},
+          "effect_estimate": {"type": ["number","null"]},
+          "effect_unit": {"type": "string", "enum": ["delta_Q","delta_tokens","delta_makespan_s","completion_rate_delta","null"]},
+          "comparison_id": {"type": "string", "description": "e.g. H1_SC_E1_G5_vs_G2"},
+          "attribution_method": {"type": "string", "enum": ["paired_comparison","ablation","observational","none"]},
+          "evidence_status": {"type": "string", "enum": ["PRELIMINARY","REPLICATED","CONTRADICTED","INSUFFICIENT_DATA"]},
+          "uncertainty": {"type": "string", "enum": ["LOW_N","SINGLE_CELL","CROSS_SCORING","NONE"]},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+
+    "prediction_errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "what_was_predicted": {"type": "string"},
+          "expected_value": {"type": ["number","string","null"]},
+          "actual_value": {"type": ["number","string","null"]},
+          "error_magnitude": {"type": ["number","null"]},
+          "lesson": {"type": "string"}
+        }
+      }
+    }
+  }
+}

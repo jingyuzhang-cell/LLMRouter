@@ -1,0 +1,137 @@
+{
+ "run_id": "SCR1-Static-Parallel-SC-E3-S2_contract-r1",
+ "arm": "Static-Parallel",
+ "task": "SC-E3",
+ "scenario": "S2_contract",
+ "rep": 1,
+ "status": "INCOMPLETE_NO_RECOVERY",
+ "Q": 0.5,
+ "covered": 3,
+ "n_silver": 6,
+ "tokens": 3741,
+ "n_calls": 6,
+ "suffix_makespan_s": 0.0,
+ "reconstructed_e2e_makespan_s": 28.31,
+ "deadline_met": true,
+ "z_ops_applied": [],
+ "baseline_type": "no-recovery weak baseline",
+ "attribution_note": "Q gap vs adaptive arms reflects absence of any recovery, NOT the value of joint optimization",
+ "wait_total": 0.0,
+ "wall_s": 0.0,
+ "rounds": [
+  {
+   "round": 1,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "assignments": [],
+   "rationale": "FIX-1 weak baseline: frozen π, failed nodes are NOT recovered; blocked descendants stay blocked"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e3_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 0.0,
+   "finish": 2.88,
+   "latency_s": 2.881,
+   "usage": {
+    "in": 701,
+    "out": 115
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_ext_plan",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 2.88,
+   "finish": 5.07,
+   "latency_s": 2.186,
+   "usage": {
+    "in": 811,
+    "out": 84
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_ext_impl",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 2.88,
+   "finish": 14.29,
+   "latency_s": 11.41,
+   "usage": {
+    "in": 809,
+    "out": 137
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_param_check",
+   "model": "glm53flash",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 14.29,
+   "finish": 16.96,
+   "latency_s": 2.666,
+   "usage": {
+    "in": 291,
+    "out": 47
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 14.29,
+   "finish": 24.88,
+   "latency_s": 10.591,
+   "usage": {
+    "in": 291,
+    "out": 88
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e3_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 24.88,
+   "finish": 28.31,
+   "latency_s": 3.43,
+   "usage": {
+    "in": 233,
+    "out": 134
+   },
+   "success": false,
+   "failure": "contract",
+   "shared": true
+  }
+ ]
+}

@@ -1,0 +1,98 @@
+{
+ "method": "chars(actual built prompts) x measured tokens/char(min/median/max per node) + output tokens; shared n1 charged to both arms",
+ "adopted_pad": 10,
+ "fact_records": 58,
+ "per_node_chars": {
+  "n1": 4884,
+  "n2": 224,
+  "n3": 1638,
+  "n4": 3892,
+  "n5": 160,
+  "n6": 2558,
+  "n7": 203,
+  "n8": 195,
+  "n9": 9951,
+  "n10": 4753
+ },
+ "out_tokens_assumed": {
+  "n2": 75,
+  "n3": 350,
+  "n4": 850,
+  "n5": 75,
+  "n6": 500,
+  "n7": 280,
+  "n8": 200,
+  "n9": 350,
+  "n10": 2000
+ },
+ "max_tokens_frozen": {
+  "n1": 4000,
+  "n2": 768,
+  "n3": 768,
+  "n4": 768,
+  "n5": 768,
+  "n6": 768,
+  "n7": 768,
+  "n8": 768,
+  "n9": 2000,
+  "n10": 2000
+ },
+ "a_arm": {
+  "blocks": 4,
+  "total_in": 11213.5,
+  "total_out": 9289.25,
+  "n1_in": 2944.0,
+  "n1_out": 3245.0
+ },
+ "a_non_n1": 14313.75,
+ "n1_tokens_shared": 6189.0,
+ "b_non_n1": {
+  "min": 15535,
+  "mid": 16006,
+  "max": 16986
+ },
+ "b_total": {
+  "min": 21724.0,
+  "mid": 22195.0,
+  "max": 23175.0
+ },
+ "a_total": 20502.75,
+ "ratios": {
+  "min": 1.0596,
+  "mid": 1.0825,
+  "max": 1.1303
+ },
+ "pad_sweep": {
+  "10": {
+   "store": 58,
+   "n9_chars": 9951,
+   "ratio_mid": 1.0825,
+   "ratio_max": 1.1303
+  },
+  "15": {
+   "store": 58,
+   "n9_chars": 10476,
+   "ratio_mid": 1.0941,
+   "ratio_max": 1.1429
+  },
+  "20": {
+   "store": 58,
+   "n9_chars": 11001,
+   "ratio_mid": 1.1057,
+   "ratio_max": 1.1556
+  },
+  "25": {
+   "store": 58,
+   "n9_chars": 11526,
+   "ratio_mid": 1.1173,
+   "ratio_max": 1.1681
+  },
+  "35": {
+   "store": 58,
+   "n9_chars": 12576,
+   "ratio_mid": 1.1404,
+   "ratio_max": 1.1934
+  }
+ },
+ "calls": "5 blocks x (1 shared n1 + 9 A + 9 B) = 95; cap 105"
+}

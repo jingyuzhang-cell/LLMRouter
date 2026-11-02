@@ -1,0 +1,71 @@
+{
+  "id": "GUOEN_ZHONGFUNENG_20261015_CANDIDATE",
+  "status": "DRAFT_NOT_AUTHORIZED",
+  "question": "仅依据两份公告，核对交易主体、价款安排、交割与付款状态，解释交割完成是否证明全款付清。逐项给出处并保留未知。",
+  "cutoff": "2026-10-15T23:59:59+08:00",
+  "cutoff_basis": "document-date; actual posting timestamp not certified",
+  "sources": [
+    "ACQUISITION",
+    "CLOSING"
+  ],
+  "deliverables": [
+    {
+      "id": "F1",
+      "question": "主体、股权比例与总对价"
+    },
+    {
+      "id": "F2",
+      "question": "分期金额与定金归属"
+    },
+    {
+      "id": "F3",
+      "question": "加总及前两期比例"
+    },
+    {
+      "id": "F4",
+      "question": "已披露交割和合并状态"
+    },
+    {
+      "id": "F5",
+      "question": "后续付款条件和账户"
+    },
+    {
+      "id": "F6",
+      "question": "交割是否证明全款付清"
+    }
+  ],
+  "dag_origin": "analyst-designed; NOT new LLM planning evidence",
+  "dag": [
+    {
+      "id": "terms",
+      "dependencies": [],
+      "sources": [
+        "ACQUISITION"
+      ],
+      "output": "合同主体、价款和条件，带引用"
+    },
+    {
+      "id": "observed",
+      "dependencies": [],
+      "sources": [
+        "CLOSING"
+      ],
+      "output": "已报告进展及时间口径，带引用"
+    },
+    {
+      "id": "reconcile",
+      "dependencies": [
+        "terms",
+        "observed"
+      ],
+      "sources": [
+        "ACQUISITION",
+        "CLOSING"
+      ],
+      "output": "六项终端交付；区分约定、实际进展与未知"
+    }
+  ],
+  "scope": "shallow fork/join; not complex-DAG superiority",
+  "R": "same legally necessary set for both arms",
+  "Z": "KEEP; NOT TESTED"
+}

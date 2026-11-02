@@ -1,0 +1,437 @@
+{
+ "status": "COMPLETE",
+ "rounds": [
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "pi_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "pi_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "pi_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e4_seq"
+   ],
+   "rationale": "pi-only: retry {failed} + re-optimize π over 2 remaining nodes"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "pi_only: normal execution"
+  },
+  {
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "rationale": "pi_only: normal execution"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e4_idx",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1262,
+    "out": 552
+   }
+  },
+  {
+   "node": "e4_ext_term",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1704,
+    "out": 248
+   }
+  },
+  {
+   "node": "e4_ext_period",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1710,
+    "out": 631
+   }
+  },
+  {
+   "node": "e4_seq",
+   "model": "glm53flash",
+   "success": false,
+   "failure": "transport",
+   "usage": {
+    "in": 1233,
+    "out": 303
+   }
+  },
+  {
+   "node": "e4_seq",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1233,
+    "out": 401
+   }
+  },
+  {
+   "node": "e4_chk",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 1417,
+    "out": 490
+   }
+  },
+  {
+   "node": "e4_rpt",
+   "model": "glm53",
+   "success": true,
+   "failure": null,
+   "usage": {
+    "in": 2621,
+    "out": 1806
+   }
+  }
+ ],
+ "terminal_facts": [
+  {
+   "fid": "f1",
+   "content": "日期：2020年6月5日，公司股票进入退市整理期，交易30个交易日后摘牌",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f2",
+   "content": "日期：2020年5月14日，公司收到深交所《关于乐视网股票终止上市的决定》（深证上【2020】405号）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f3",
+   "content": "退市整理期期间公司不筹划或实施重大资产重组事项",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f4",
+   "content": "日期：2020年5月14日，公司收到深交所终止上市决定（深证上【2020】405号）",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f5",
+   "content": "日期：2020年6月5日，公司股票进入退市整理期交易",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f6",
+   "content": "日期：2019年5月13日，公司股票因2018年度经审计期末净资产为负值暂停上市",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f7",
+   "content": "日期：2020年4月27日，公司披露《2019年年度报告》，触及创业板上市规则13.4.1条第（二）（三）（五）项终止上市情形",
+   "kind": "date",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f8",
+   "content": "|2020-06-05 − 2020-05-14|天(2020年5月14日→2020年6月5日,ls_delist_2020×ls_terminate_2020)",
+   "kind": "interval",
+   "status": "confirmed",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f9",
+   "content": "|2020-05-14 − 2020-04-27|天(2020年4月27日→2020年5月14日,ls_delist_2020×ls_terminate_2020)",
+   "kind": "interval",
+   "status": "confirmed",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f10",
+   "content": "终止原因：2019年度经审计的归属于上市公司股东的净利润、扣除非经常性损益后的净利润、期末净资产均为负值，且财务会计报告被大华会计师事务所出具保留意见，触及《创业板股票上市规则（2018年11月修订）》第13.4.1条第（二）（三）（五）项终止上市情形",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f11",
+   "content": "终止原因补充：2018年度经审计的归属于上市公司股东的期末净资产为负值，导致股票自2019年5月13日起暂停上市",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": "ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f12",
+   "content": "退市整理期具体最后交易日（摘牌日）日期",
+   "kind": "date",
+   "status": "insufficient_evidence",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f13",
+   "content": "退市整理期期间公司证券简称变更信息",
+   "kind": "statement",
+   "status": "insufficient_evidence",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f14",
+   "content": "公司股票属于深股通特别证券，深股通投资者可在退市整理期出售所持股票但不可买入",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f15",
+   "content": "时序链确认：2020年5月14日收到深交所终止上市决定（决定日）→ 2020年6月5日进入退市整理期（起始日）→ 交易30个交易日后摘牌（末日），三阶段顺序与文档记载一致",
+   "kind": "timeline",
+   "status": "confirmed",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f16",
+   "content": "退市整理期起始日(2020-06-05)至末日（摘牌日）间隔为30个交易日（非自然日）",
+   "kind": "interval",
+   "status": "confirmed",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f17",
+   "content": "推导退市整理期末日（摘牌日）具体日期：需起始日2020-06-05后30个交易日，缺少交易所交易日历及具体摘牌日披露，无法换算为具体日历日",
+   "kind": "interval",
+   "status": "insufficient_evidence",
+   "source": "ls_delist_2020",
+   "span": null
+  },
+  {
+   "fid": "f18",
+   "content": "|2020-06-05 − 2020-05-14|天=22天(2020年5月14日→2020年6月5日,ls_delist_2020×ls_terminate_2020)",
+   "kind": "interval",
+   "status": "confirmed",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f19",
+   "content": "|2020-05-14 − 2020-04-27|天=17天(2020年4月27日→2020年5月14日,ls_delist_2020×ls_terminate_2020)",
+   "kind": "interval",
+   "status": "confirmed",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f20",
+   "content": "时序间隔换算补正：终止上市决定(2020-05-14)→退市整理期起始(2020-06-05)间隔22个自然日；年报披露(2020-04-27)→终止上市决定(2020-05-14)间隔17个自然日，两段间隔均无异常",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": "ls_delist_2020×ls_terminate_2020",
+   "span": null
+  },
+  {
+   "fid": "f21",
+   "content": "预计最后交易日期为2020年7月20日（退市整理期起始日2020-06-05起三十个交易日）",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f22",
+   "content": "退市整理期间证券简称变更为\"乐视退\"，涨跌幅限制10%，退市整理期首日开盘参考价1.69元/股",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f23",
+   "content": "退市整理期届满的次一交易日，深交所对公司股票予以摘牌；退市整理期间全天停牌不计入退市整理期，累计停牌不超过五个交易日",
+   "kind": "statement",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f24",
+   "content": "换股比例一致（2020年5月14日收到深证上【2020】405号终止上市决定@ls_delist_2020 vs 2020年5月14日收到深证上【2020】405号终止上市决定@ls_terminate_2020）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f25",
+   "content": "换股比例一致（2020年6月5日进入退市整理期@ls_delist_2020 vs 2020年6月5日起进入退市整理期交易@ls_terminate_2020）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f26",
+   "content": "换股比例一致（交易30个交易日后摘牌@ls_delist_2020 vs 三十个交易日，届满次一交易日摘牌@ls_terminate_2020）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  },
+  {
+   "fid": "f27",
+   "content": "换股比例一致（股票简称：乐视退@ls_delist_2020 vs 股票简称：乐视退@ls_terminate_2020）",
+   "kind": "derived",
+   "status": "confirmed",
+   "source": null,
+   "span": null
+  }
+ ],
+ "terminal_stats": {
+  "n": 27,
+  "confirmed": 24,
+  "unconfirmed": 0,
+  "insufficient_evidence": 3,
+  "upstream_missing": 0
+ },
+ "report": {
+  "new_facts": [
+   {
+    "id": "nf1",
+    "type": "date",
+    "content": "预计最后交易日期为2020年7月20日（退市整理期起始日2020-06-05起三十个交易日）",
+    "src": "ls_delist_2020×ls_terminate_2020",
+    "status": "confirmed"
+   },
+   {
+    "id": "nf2",
+    "type": "statement",
+    "content": "退市整理期间证券简称变更为\"乐视退\"，涨跌幅限制10%，退市整理期首日开盘参考价1.69元/股",
+    "src": "ls_delist_2020×ls_terminate_2020",
+    "status": "confirmed"
+   },
+   {
+    "id": "nf3",
+    "type": "statement",
+    "content": "退市整理期届满的次一交易日，深交所对公司股票予以摘牌；退市整理期间全天停牌不计入退市整理期，累计停牌不超过五个交易日",
+    "src": "ls_delist_2020×ls_terminate_2020",
+    "status": "confirmed"
+   }
+  ],
+  "comparisons": [
+   {
+    "item": "收到深交所终止上市决定的日期及文号",
+    "operand_a": "2020年5月14日收到深证上【2020】405号终止上市决定",
+    "span_a": "于2020年5月14日收到深圳证券交易所下发的《关于乐视网信息技术（北京）股份有限公司股票终止上市的决定》（深证上【2020】405号）",
+    "doc_a": "ls_delist_2020",
+    "operand_b": "2020年5月14日收到深证上【2020】405号终止上市决定",
+    "span_b": "于2020年5月14日收到深圳证券交易所下发的《关于乐视网信息技术（北京）股份有限公司股票终止上市的决定》（深证上【2020】405号）",
+    "doc_b": "ls_terminate_2020",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "退市整理期起始日",
+    "operand_a": "2020年6月5日进入退市整理期",
+    "span_a": "公司股票于2020年6月5日进入退市整理期，在退市整理期交易30个交易日后公司股票将被摘牌",
+    "doc_a": "ls_delist_2020",
+    "operand_b": "2020年6月5日起进入退市整理期交易",
+    "span_b": "公司股票将于2020年6月5日起进入退市整理期交易",
+    "doc_b": "ls_terminate_2020",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "退市整理期时长与摘牌安排",
+    "operand_a": "交易30个交易日后摘牌",
+    "span_a": "退市整理期为三十个交易日，预计最后交易日期为2020年7月20日；退市整理期届满的次一个交易日，深圳证券交易所对公司股票予以摘牌",
+    "doc_a": "ls_delist_2020",
+    "operand_b": "三十个交易日，届满次一交易日摘牌",
+    "span_b": "退市整理期为三十个交易日，预计最后交易日期为2020年7月20日；退市整理期届满的次一交易日，深圳证券交易所对公司股票予以摘牌",
+    "doc_b": "ls_terminate_2020",
+    "conclusion": "一致",
+    "status": "confirmed"
+   },
+   {
+    "item": "退市整理期间证券简称",
+    "operand_a": "股票简称：乐视退",
+    "span_a": "一、公司股票在退市整理期间的证券代码、证券简称及涨跌幅限制 …2、股票简称：乐视退",
+    "doc_a": "ls_delist_2020",
+    "operand_b": "股票简称：乐视退",
+    "span_b": "二、公司股票在退市整理期间的证券代码、证券简称及涨跌幅限制 …2、股票简称：乐视退",
+    "doc_b": "ls_terminate_2020",
+    "conclusion": "一致",
+    "status": "confirmed"
+   }
+  ],
+  "report": "乐视网（300104）退市流程调查综合报告：\n\n一、终止上市决定（confirmed，ls_terminate_2020）：公司因2018年度经审计期末净资产为负值，股票自2019年5月13日起暂停上市（f6、f11）。2020年4月27日公司披露《2019年年度报告》，因2019年度净利润、扣非净利润、期末净资产均为负值，且财务会计报告被大华会计师事务所出具保留意见，触及《创业板股票上市规则（2018年11月修订）》第13.4.1条第（二）（三）（五）项终止上市情形（f7、f10）。2020年5月14日，公司收到深交所《关于乐视网股票终止上市的决定》（深证上【2020】405号）（f2、f4）。\n\n二、退市整理期安排（confirmed）：公司股票于2020年6月5日进入退市整理期（f1、f5），交易30个交易日后被摘牌（f16），预计最后交易日期为2020年7月20日（nf1，两文档一致载明）。退市整理期届满的次一交易日深交所予以摘牌，期间全天停牌不计入退市整理期（nf3）。退市整理期间证券简称变更为\"乐视退\"，涨跌幅限制10%，首日开盘参考价1.69元/股（nf2）。公司承诺退市整理期间不筹划、不实施重大资产重组（f3）；公司股票属深股通特别证券，深股通投资者可卖出但不可买入（f14）。\n\n三、时序核验（confirmed，f15、f18~f20）：2020-04-27年报披露 → 17个自然日 → 2020-05-14终止上市决定 → 22个自然日 → 2020-06-05退市整理期起始 → 30个交易日 → 摘牌。全部时间节点与两份公告记载一致，间隔无异常。\n\n四、跨文档比较结论：终止上市决定日期与文号、退市整理期起始日、时长与摘牌安排、证券简称四项关键信息在ls_delist_2020与ls_terminate_2020两文档中完全一致，无矛盾。\n\n五、存疑事项：摘牌最终实际日期在文档中仅为\"预计2020年7月20日\"，无摘牌完成确认文件，最终实际摘牌日本报告不作确定结论（见unknown_marks）。",
+  "unknown_marks": [
+   {
+    "id": "f12",
+    "reason": "摘牌最终实际日期：两文档仅载\"预计最后交易日期为2020年7月20日\"，无摘牌完成确认公告，实际摘牌日未确认"
+   },
+   {
+    "id": "f13",
+    "reason": "证券简称变更信息：已由两文档摘录补正为\"乐视退\"（nf2，confirmed），原不足标记可解除"
+   },
+   {
+    "id": "f17",
+    "reason": "起始日至摘牌日30个交易日换算为具体日历日：文档给出的2020-07-20为\"预计\"值，非经交易日历核验的确定值"
+   }
+  ],
+  "dropped": [],
+  "status_changes": [
+   {
+    "id": "f13",
+    "from": "insufficient_evidence",
+    "to": "confirmed",
+    "reason": "两份文档摘录均明确载明退市整理期间股票简称为\"乐视退\"，证据补全"
+   }
+  ]
+ },
+ "makespan": 79.25,
+ "tokens": 15611
+}

@@ -1,0 +1,235 @@
+{
+  "schema_version": "SOURCE_DAG_CONTRACT_1",
+  "input": {
+    "required": [
+      "task_id",
+      "node_id",
+      "question",
+      "cutoff",
+      "evidence_manifest_sha256",
+      "allowed_source_ids",
+      "source_records",
+      "upstream_outputs",
+      "upstream_hashes"
+    ],
+    "source_records": "Exact frozen text plus raw/page hashes; HTML page=null; known subdocuments are explicit",
+    "upstream_outputs": "Only declared parents with matching immutable hashes; no reference answers or experimental scores"
+  },
+  "output_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "node_id",
+      "task_id",
+      "evidence_manifest_sha256",
+      "input_fingerprint",
+      "parent_output_hashes",
+      "claims",
+      "complete"
+    ],
+    "properties": {
+      "node_id": {
+        "type": "string"
+      },
+      "task_id": {
+        "type": "string"
+      },
+      "evidence_manifest_sha256": {
+        "type": "string"
+      },
+      "input_fingerprint": {
+        "type": "string"
+      },
+      "parent_output_hashes": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "claims": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claim_id",
+            "subject",
+            "predicate",
+            "value",
+            "unit",
+            "time_scope",
+            "statement_kind",
+            "status",
+            "evidence",
+            "parent_claim_ids",
+            "unknown_reason"
+          ],
+          "properties": {
+            "claim_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "subject": {
+              "type": "string"
+            },
+            "predicate": {
+              "type": "string"
+            },
+            "value": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "array",
+                "object",
+                "null"
+              ]
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "time_scope": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "statement_kind": {
+              "enum": [
+                "REGULATOR_FINDING",
+                "ISSUER_ASSERTION",
+                "CONTRACT_REPORTED_TERM",
+                "ESTIMATE",
+                "FORECAST",
+                "DERIVED",
+                "CONFLICT",
+                "UNKNOWN"
+              ]
+            },
+            "status": {
+              "enum": [
+                "ASSERTED",
+                "UNKNOWN",
+                "CONFLICT"
+              ]
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_id",
+                  "subdocument",
+                  "page",
+                  "start",
+                  "end",
+                  "quote",
+                  "source_sha256",
+                  "text_sha256"
+                ],
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  },
+                  "subdocument": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "page": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "quote": {
+                    "type": "string"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "text_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                }
+              }
+            },
+            "parent_claim_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "unknown_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "calculation": {
+              "type": "object",
+              "required": [
+                "operator",
+                "operand_claim_ids",
+                "unit",
+                "rounding"
+              ],
+              "properties": {
+                "operator": {
+                  "enum": [
+                    "sum",
+                    "subtract",
+                    "divide",
+                    "percent"
+                  ]
+                },
+                "operand_claim_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "rounding": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "complete": {
+        "type": "boolean"
+      }
+    }
+  },
+  "guards": [
+    "All source spans exact and hash-consistent; ambiguity remains failure, not first-match repair",
+    "Every parent_claim_id resolves to a declared parent; upstream fingerprints match",
+    "ASSERTED requires source evidence or validated derivation with source-grounded operands",
+    "UNKNOWN uses value=null and nonempty reason; CONFLICT retains conflicting sourced alternatives",
+    "No unsupported assertion can be committed as fact; explicit UNKNOWN may propagate as unknown",
+    "Never silently change source dates, normalize an unresolved conflict or turn forecasts into guarantees",
+    "Stable source/parent/contract versions required for cache reuse; invalidate only actually affected downstream results"
+  ],
+  "validation_limit": "Schema and hashes validate provenance, NOT semantic truth; semantic support needs separately validated review.",
+  "terminal_scoring": "Frozen scorer unchanged; these drafts are Silver, not formal Gold. Formal Q remains unavailable until admissible references and relevance assessments exist."
+}

@@ -1,0 +1,96 @@
+{
+ "tests": [
+  {
+   "test": "T1",
+   "injected": "request hash tamper",
+   "expected": "audit FAIL",
+   "actual": "PASS",
+   "evidence": "['request hash mismatch T_E1_a1_734293e8', 'PROMPT_EQUALITY: rebuild != body (T_E1_a1_734293e8)']"
+  },
+  {
+   "test": "T2",
+   "injected": "fake upstream binding",
+   "expected": "reject",
+   "actual": "PASS",
+   "evidence": "sent=False"
+  },
+  {
+   "test": "T3",
+   "injected": "identity mismatch",
+   "expected": "stop",
+   "actual": "PASS",
+   "evidence": ""
+  },
+  {
+   "test": "T4",
+   "injected": "tampered PDF raw hash",
+   "expected": "L1 FAIL",
+   "actual": "PASS",
+   "evidence": "['L1: PDF raw hash mismatch for D1']"
+  },
+  {
+   "test": "T5",
+   "injected": "L2 no E outputs",
+   "expected": "FAIL",
+   "actual": "PASS",
+   "evidence": ""
+  },
+  {
+   "test": "T6",
+   "injected": "L3 no J anchors",
+   "expected": "FAIL",
+   "actual": "PASS",
+   "evidence": ""
+  },
+  {
+   "test": "T7",
+   "injected": "budget exceeded",
+   "expected": "stop+zero payloads",
+   "actual": "PASS",
+   "evidence": ""
+  },
+  {
+   "test": "T8",
+   "injected": "drop+timeout→UNKNOWN",
+   "expected": "both UNKNOWN+reserved",
+   "actual": "PASS",
+   "evidence": "drop=UNKNOWN timeout=UNKNOWN pending=0.0030"
+  },
+  {
+   "test": "T9",
+   "injected": "4+exclusivity",
+   "expected": "all pass",
+   "actual": "PASS",
+   "evidence": "{\"A\": true, \"B\": true, \"C\": true, \"D\": true}"
+  },
+  {
+   "test": "T10",
+   "injected": "FAILLOCK pre-exists",
+   "expected": "REVOKED",
+   "actual": "PASS",
+   "evidence": ""
+  },
+  {
+   "test": "T11",
+   "injected": "RealTransport disarm",
+   "expected": "both block",
+   "actual": "PASS",
+   "evidence": ""
+  },
+  {
+   "test": "T12",
+   "injected": "concurrent budget",
+   "expected": "committed≤cap+mixed results",
+   "actual": "PASS",
+   "evidence": "results=['BLOCKED', 'BLOCKED', 'OK', 'OK', 'OK'] committed=0.000000 cap=0.02"
+  },
+  {
+   "test": "TAMPER",
+   "injected": "ok+chain tamper",
+   "expected": "ok PASS+chain FAIL",
+   "actual": "PASS",
+   "evidence": "ok=True chain=True"
+  }
+ ],
+ "all_pass": true
+}

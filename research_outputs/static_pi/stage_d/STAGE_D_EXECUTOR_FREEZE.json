@@ -1,0 +1,79 @@
+{
+ "batch": "STAGE_D_CONFIRM_V1",
+ "frozen_at": "2026-11-02",
+ "status": "FROZEN",
+ "scope": "执行代码 + 配置 + 正式分析 + 检验/功效 + 保护集审计 + 测试 + 独立审计证据",
+ "policy": "冻结后不得修改以上文件；任何变更必须新版本 + 操作员批准；执行前逐文件校验哈希；GO 中引用本清单哈希；运行中缺陷按预登记纪律计入统计，不得修复后选择性重跑。",
+ "verification": "python3 -c \"import json,hashlib;m=json.load(open('STAGE_D_EXECUTOR_FREEZE.json'));print(all(hashlib.sha256(open(f,'rb').read()).hexdigest()==r['sha256'] for f,r in m['files'].items()))\"",
+ "preconditions": [
+  "三份验收报告 PASS",
+  "操作员 GO 明文（批次名/调用上限/token 上限/现金上限）",
+  "启动前哈希校验通过"
+ ],
+ "files": {
+  "stage_d_executor.py": {
+   "sha256": "ef50527e2920b42dd51ffec23e8a9f725a54889bc1033204ee517f8bc8f4c9c2",
+   "bytes": 43292,
+   "role": "执行器（S0–S5，192 块）"
+  },
+  "stage_d_executor_config.json": {
+   "sha256": "11e520323ecf94a3d70130c8b1da15cd65e31b019f4bf669aed93361bbdecdb5",
+   "bytes": 1205,
+   "role": "执行矩阵/预算/槽位/S5/截止配置"
+  },
+  "stage_d_final_analysis.py": {
+   "sha256": "037fa446c440c856ea0366d9e331bc8fa49d3a8f84318576f496c6a8e66c773e",
+   "bytes": 9490,
+   "role": "正式分析入口（统计/判定）"
+  },
+  "exact_perm.py": {
+   "sha256": "09468d2488ba3d6d6ba02f2c91c68f12bd6e8fc17954e362d2d843ca08e7fd6e",
+   "bytes": 6079,
+   "role": "精确符号翻转检验"
+  },
+  "power_sim.py": {
+   "sha256": "4eb9d3c55a7f59bba9104fe9d977a8b5e39ed675823c81466f328f34bb68edbe",
+   "bytes": 7492,
+   "role": "功效模拟 V2.3（联合模拟）"
+  },
+  "protection_set_audit.py": {
+   "sha256": "e9974f0eac6d345f7eabee0e29a6706abb949bb336889f419a431405c7bfc70a",
+   "bytes": 4959,
+   "role": "R1 保护集审计器"
+  },
+  "PROTECTION_BASELINE.json": {
+   "sha256": "652f3ea442eae78e7c2c35e2157920f238eae720a4174b44e406db916bc31b52",
+   "bytes": 992,
+   "role": "8 槽保护集基准"
+  },
+  "test_stage_d_executor.py": {
+   "sha256": "d6b672cfc7712a93d2721710c42345a4a052c0ceebf3e823d7dde109ca3270b2",
+   "bytes": 10511,
+   "role": "主测试套件"
+  },
+  "test_stage_d_p0.py": {
+   "sha256": "0646182dab041701752826d1ff2729e97eb45d1ddc7ec26b5f8632202f2b1804",
+   "bytes": 10003,
+   "role": "P0-2/3/5 专项测试"
+  },
+  "test_protection_set_audit.py": {
+   "sha256": "747bb08321f438cdbb6fceebc1a1e422d6247c11db2e71ec33369ab43a51719b",
+   "bytes": 3914,
+   "role": "保护集 R1 测试"
+  },
+  "STAGE_D_INDEPENDENT_AUDIT.md": {
+   "sha256": "e4669c676b2d27da2ebc72f71473a5450eef7e133bf734c3e4a87ed4f7be4e79",
+   "bytes": 10488,
+   "role": "独立审计证据（替代支撑文档）"
+  }
+ },
+ "note": "本清单自身不列入自哈希；与 CORE-19/完整交付清单分离；冻结不等于 GO。",
+ "frozen_copy": {
+  "stage_d_executor.py": {
+   "path": "archive_freeze_ef50527e/stage_d_executor.py",
+   "sha256": "ef50527e2920b42dd51ffec23e8a9f725a54889bc1033204ee517f8bc8f4c9c2",
+   "bytes": 43292,
+   "note": "冻结候选的不可变快照；执行前工作区文件必须与此哈希一致"
+  }
+ }
+}

@@ -1,0 +1,53 @@
+WP1 F-prime V1.0 — independent rule reproduction
+#0 differential test: historical static hetero-parent map vs F-prime semantic rule (operator audit requirement)
+  [PASS] static map == semantic rule on all corpus nodes — chk nodes True, all others False — identical classification
+#1 deterministic trajectory tests (C1/C2/C3/C4/C6)
+  [PASS] F' C1 contract@hetero@1 -> split_verify — got split_verify
+  [PASS] F' C2 transport@weak@1 -> retry_switch — got retry_switch
+  [PASS] F' C3 contract@homo@1 -> early_exit — got early_exit
+  [PASS] F' C4 parse@weak@1 -> retry_switch — got retry_switch
+  [PASS] F' C4 parse@weak@2 -> retry_switch — got retry_switch
+  [PASS] F' C6 unknown@strong@1 -> retry_same — got retry_same
+  [PASS] F' C6 unknown@weak@1 -> retry_switch — got retry_switch
+#2 determinism
+  [PASS] repeat identical
+#3 audited difference set vs F (V1.1) — only D1/D2/D3
+  [PASS] D1 (C3: F=ladder vs F-prime=exit)
+  [PASS] D2 (C2: F=keep vs F-prime=switch)
+  [PASS] D3 (C6 weak: F=conservative vs F-prime=switch)
+  [PASS] Z identical on C1 (no spurious difference)
+  [PASS] converge on C4@2 (ladder resolves to same action)
+#4 no candidate filtering (structural independence)
+  [PASS] F-prime does not call engine decide/candidates
+WP2 GROSS Budget Guard — G1..G6
+#1 G1 separate accounting
+  [PASS] settled vs outstanding separated
+#2 G2 reservation vs actual recorded separately
+  [PASS] settle replaces reservation with truth
+#3 G3 no double-use / duplicates rejected / concurrency counts
+  [PASS] two concurrent reservations both bind quota
+  [PASS] duplicate reservation rejected
+#4 G4 failed/timeout/cancelled keep true consumption
+  [PASS] failed+timeout settle, cancel releases unsettled only
+#5 G5 hard stop, no silent pass
+  [PASS] token over-budget raises hard stop
+  [PASS] exact-fit reservation is legal (invariant is <=)
+  [PASS] call-cap over-budget raises hard stop
+  [PASS] denial journaled (no silent path)
+#6 G6 post-settle overrun recorded truthfully
+  [PASS] overrun flagged and kept in actuals
+#7 invariant under a mixed operation sequence
+  [PASS] mixed sequence keeps invariants — settled=6600, binding=11600
+#8 audit concern #1 — concurrent atomicity (real threads)
+  [PASS] 20 concurrent reservations: admitted+outstanding never exceed cap — admitted=10 denied=10 binding=25000
+#9 audit concern #2 — pre-call gate with calibrated per-call bound
+  [PASS] 5th 2400-reserve hard-stopped before any call (pre-call gate)
+  [PASS] actuals within calibrated bound keep global under cap
+#10 audit concern #3 — settle consistency edges
+  [PASS] duplicate settle refused (no double count)
+  [PASS] cancel idempotent (0 released twice)
+  [PASS] unknown actual settles provisionally at reserved, flagged
+  [PASS] late revise applies DELTA only (no double count) — settled=2200
+  [PASS] phantom revise refused
+
+34/34 checks passed

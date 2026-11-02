@@ -1,0 +1,69 @@
+{
+  "schema": "dynamic-pi-execution-package.v1",
+  "decision": "HOLD",
+  "execution_enabled": false,
+  "paid_authorization": false,
+  "max_authorized_requests": 0,
+  "run_command": null,
+  "admitted_tasks": [],
+  "selected_models": [],
+  "proposed_models": [
+    "qwen-plus-2025-12-01",
+    "deepseek-flash"
+  ],
+  "matched_profile_file": "PROFILE_BINDING.json",
+  "review_file": "REVIEW_ASSIGNMENT.json",
+  "protocol_file": "PROTOCOL.json",
+  "budget_file": "BUDGET.json",
+  "implementation_file": "IMPLEMENTATION_BINDING.json",
+  "matrix": [],
+  "blocking_conditions": [
+    {
+      "id": "E1",
+      "kind": "external",
+      "owner": "研究负责人/独立数据管理者",
+      "required": "对候选事件签署此前规划、画像、调试、参数选择及关联事件簇的使用记录；若坚持未来事件定义则需协议之后的新事件。不得访问ZCode测试答案替代认证。",
+      "status": "PENDING",
+      "evidence": "candidate/ADMISSION_AND_BATCH.json"
+    },
+    {
+      "id": "E2",
+      "kind": "external",
+      "owner": "用户或指定独立研究者（不是参考编制者）",
+      "required": "独立审阅六项事实、来源、口径及UNKNOWN边界，记录逐项决定、姓名、日期。",
+      "status": "PENDING_6_OF_6",
+      "evidence": "candidate/REVIEW_REFERENCE.json"
+    },
+    {
+      "id": "E3",
+      "kind": "external_data",
+      "owner": "真实测量数据持有人；无现成数据时须由用户另行批准含校准的整批采集",
+      "required": "提供隔离校准任务上两模型/版本与正式节点合同匹配的原始输入、响应、Q/E/K、usage、费用、时延。现有两份历史画像不匹配，禁止合成补值。",
+      "status": "MISSING",
+      "evidence": "PROFILE_BINDING.json"
+    },
+    {
+      "id": "E4",
+      "kind": "external_account",
+      "owner": "账户管理者",
+      "required": "确认拟用官方端点、地域、模型访问权限、实际计价及别名版本政策；只需非密钥配置和账单依据，不在报告暴露凭证。",
+      "status": "UNVERIFIED"
+    },
+    {
+      "id": "I1",
+      "kind": "internal_integration_not_external",
+      "owner": "后续获准的执行集成人员",
+      "required": "绑定同状态派生、相同约束可行性检查、实际派发、完整终端结果归档及独立评分；不修改DD-V5.1。当前不能把未绑定函数称为整批入口。",
+      "status": "NOT_READY",
+      "evidence": "IMPLEMENTATION_BINDING.json"
+    },
+    {
+      "id": "D1",
+      "kind": "design_dependent",
+      "owner": "研究负责人及实验设计执行者",
+      "required": "根据合格事件、匹配校准数据确定固定样本量、实际时限、完整请求与预算；一个事件两次重复不能作跨事件确认。",
+      "status": "UNRESOLVED"
+    }
+  ],
+  "do_not_auto_resume": true
+}

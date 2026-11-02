@@ -1,0 +1,214 @@
+{
+ "run_id": "SCR1-Joint(Z,R,pi)-SC-E1-S1_transport-r2",
+ "arm": "Joint(Z,R,pi)",
+ "task": "SC-E1",
+ "scenario": "S1_transport",
+ "rep": 2,
+ "status": "COMPLETE",
+ "Q": 0.5714,
+ "covered": 4,
+ "n_silver": 7,
+ "tokens": 4374,
+ "n_calls": 8,
+ "suffix_makespan_s": 5.99,
+ "reconstructed_e2e_makespan_s": 14.67,
+ "deadline_met": true,
+ "z_ops_applied": [],
+ "baseline_type": "adaptive",
+ "attribution_note": "",
+ "wait_total": 0.0,
+ "wall_s": 0.0,
+ "rounds": [
+  {
+   "round": 1,
+   "action": "recover",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [
+    "e1_tl"
+   ],
+   "reoptimize": [
+    [
+     "e1_rpt",
+     "glm53"
+    ],
+    [
+     "e1_tl",
+     "glm53"
+    ]
+   ],
+   "assignments": [
+    [
+     "e1_tl",
+     "glm53"
+    ]
+   ],
+   "rationale": "joint(R,π): 4 legal R × 3 π modes, argmax U=0.37129 -> R=['e1_tl'], π=strong | Z-space=['KEEP'] -> KEEP (U_keep=0.37129)"
+  },
+  {
+   "round": 2,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "assignments": [
+    [
+     "e1_chk",
+     "glm53"
+    ]
+   ],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+  },
+  {
+   "round": 3,
+   "action": "execute",
+   "z_op": "KEEP",
+   "z_detail": "",
+   "recovery_set": [],
+   "reoptimize": [],
+   "assignments": [
+    [
+     "e1_rpt",
+     "glm53"
+    ]
+   ],
+   "rationale": "joint_r_pi: normal execution | Z-space=['KEEP'] -> KEEP (U_keep=0.38229)"
+  }
+ ],
+ "calls": [
+  {
+   "node": "e1_idx",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 0.0,
+   "finish": 3.05,
+   "latency_s": 3.046,
+   "usage": {
+    "in": 728,
+    "out": 145
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e1_ext_pen",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 3.05,
+   "finish": 5.54,
+   "latency_s": 2.488,
+   "usage": {
+    "in": 892,
+    "out": 58
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e1_ext_proc",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 3.05,
+   "finish": 6.27,
+   "latency_s": 3.223,
+   "usage": {
+    "in": 888,
+    "out": 110
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e1_fin",
+   "model": "glm53flash",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 6.27,
+   "finish": 8.09,
+   "latency_s": 1.819,
+   "usage": {
+    "in": 284,
+    "out": 48
+   },
+   "success": true,
+   "failure": null,
+   "shared": true
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53flash",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 6.27,
+   "finish": 8.68,
+   "latency_s": 2.41,
+   "usage": {
+    "in": 279,
+    "out": 66
+   },
+   "success": false,
+   "failure": "transport",
+   "shared": true
+  },
+  {
+   "node": "e1_tl",
+   "model": "glm53",
+   "attempt": 2,
+   "version": 2,
+   "wait_s": 0.0,
+   "start": 8.68,
+   "finish": 10.46,
+   "latency_s": 1.78,
+   "usage": {
+    "in": 279,
+    "out": 82
+   },
+   "success": true,
+   "failure": null
+  },
+  {
+   "node": "e1_chk",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 10.46,
+   "finish": 12.55,
+   "latency_s": 2.092,
+   "usage": {
+    "in": 233,
+    "out": 47
+   },
+   "success": true,
+   "failure": null
+  },
+  {
+   "node": "e1_rpt",
+   "model": "glm53",
+   "attempt": 1,
+   "version": 1,
+   "wait_s": 0.0,
+   "start": 12.55,
+   "finish": 14.67,
+   "latency_s": 2.117,
+   "usage": {
+    "in": 159,
+    "out": 76
+   },
+   "success": true,
+   "failure": null
+  }
+ ]
+}

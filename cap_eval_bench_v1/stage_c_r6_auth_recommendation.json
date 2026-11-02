@@ -1,0 +1,30 @@
+{
+ "batch_name": "stage_c_r6_v1",
+ "matrix": "32 runs — RECOMMENDED 32B: SC-E1+SC-E3 x (S1 transport@resp-node: 6 arms + S2 contract@verification: JointZ vs JointRP paired) x 2 reps; ALTERNATIVE 32A: 4 events x (6+2) x 1 rep (~374K est, exceeds the 250K envelope cited in the ruling)",
+ "max_calls": 170,
+ "max_tokens": 250000,
+ "per_model_quota": {
+  "glm53": {"calls": 140, "tokens": 200000},
+  "glm53flash": {"calls": 40, "tokens": 55000}
+ },
+ "per_request_caps": {"input_tokens_soft": 8000, "output_tokens": {"report": 1024, "default": 1024}},
+ "max_cash_cny": 0,
+ "allowed_models": ["glm53", "glm53flash"],
+ "tasks": "SC-E1,SC-E3 x S1_transport(left=1)@derivation-node x S2_contract(persistent)@verification-node; 32B=2 events x (6+2 arms) x 2 reps = 32 runs, ~140 calls est, ~212K token est",
+ "issued_by": "PENDING",
+ "created": "2026-10-30",
+ "status": "AWAITING_OPERATOR_AUTHORIZATION",
+ "lock_ins": {
+  "S1_fair_comparison": "all six arms share one paid prefix per cell; Static-Parallel marked no-recovery weak baseline, never used alone to claim joint-optimization advantage; primary contrasts JointRP vs R-only / pi-only / Simple-Dynamic",
+  "S2_Z_isolation": "JointZ and JointRP fork from the SAME post-fault state; decision-level base R and pi verified identical (zero-call: base R={chk}, pi=keep on both events); the ONLY executed difference is the Z structural rewrite (wide verification node -> two per-lineage verifiers, both glm53) — operator's 'ADD_VERIFY' maps to the frozen Z op SPLIT_VERIFY (add-verification semantics); if a real run diverges in base R/pi, the pair is marked NON-ISOLATED and reported, never force-credited to Z",
+  "silver_v2_frozen": "sha256 b375eb33... (26 original + 6 downstream, E2-DD-1 corrected to 272 days with bilateral spans; E1-DD-1/E3-DD-1/E4-DD-1 verified with bilateral spans; 2 UNKNOWN boundary facts); derived facts credited ONLY under the operand-aware rule (both canonical operands AND value present in the terminal artifact; value-alone coincidences do not credit)",
+  "hard_guards": "Meter global 170 calls / 250K tokens + per-model quotas simultaneous; failures/timeouts/retries/injected-fault calls all billed; any cap touch = immediate fail-stop; startup verifies frozen SHAs of six_arm_scheduler.py / stage_c_r1.py / stage_c_r4_runner.py / fact_ledger.py + silver_v2 sha; exclusive run dir + flock; ¥0 cash"
+ },
+ "execution_stack": "stage_c_r4_runner (information-faithful chain) + MeterFactAdapter (real path; parses facts/new_facts/dropped schema into the FactLedger; collision-safe fids; max_tokens -> fail-stop with billing) + frozen six-arm deciders (six_arm_scheduler.py untouched) + unified label-blind scorer (Q_prefix/Q_downstream/Q_terminal/dQ_recovery + upstream_missing/traceability/contradiction/UNKNOWN-boundary observables)",
+ "basis": {
+  "r6_report": "STAGE_C_R6_REPORT.md (P0-P3 + G1-G4 PASS)",
+  "budget": "stage_c_r3_rescore/STAGE_C_R6_BUDGET_32RUN.json (4-event variant ~374K/128 calls) + STAGE_C_R6_BUDGET.json (2-event 2-rep variant ~212K/~140 calls = fits the 250K envelope); FACT_CAP=6000 frozen; raising it requires re-authorization",
+  "zero_call_validations": "MeterFactAdapter schema parse (3/3 facts kept, inherited fid collision fixed and regression-tested), truncation fail-stop billed, S2 decision-level isolation verified on both events, operand-aware scoring rule validated (positive/negative)",
+  "superseded": "STAGE_C_R6_EXPERIMENT_DESIGN.md (parallel-session 5-arm draft)"
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "batch": "STAGE_D_CONFIRM_V1",
+ "nature": "实现缺陷修复后的重新冻结登记（操作者 2026-11-02 裁定）；不追认字节等价、不覆盖历史登记",
+ "clock_fix": {
+  "scope": "仅 --real 时钟初始化：VirtualClock(1.0)；mock 保持 cfg.mock.scale=1000",
+  "implementation": "新增 make_clock(real, mock_scale)；main 单点调用；其余代码零改动",
+  "rationale": "真实模式下 scale=1000 使 180s 截止期等价 0.18 真实秒，deadline/timeout/时延全部失效（试点 INCOMPLETE_DEADLINE, 8 调用全 429）",
+  "diff_vs_f9ceaf54": "新增 9 行 make_clock 定义 + main 中 3 行替换（见 STAGE_D_CLOCK_FIX_DIFF.txt）"
+ },
+ "hashes": {
+  "executor_fixed": {
+   "path": "stage_d_executor.py",
+   "sha256": "ef50527e2920b42dd51ffec23e8a9f725a54889bc1033204ee517f8bc8f4c9c2",
+   "bytes": 43292
+  },
+  "executor_prev_12_15": {
+   "path": "archive_f9ceaf54_stage_d_executor.py",
+   "sha256": "d816400542d83a11213d8fcb599fe72313b4d42b2b06215eb33e20941bcbcb62",
+   "bytes": 42841
+  },
+  "historical_registry_11_39": {
+   "sha256": "821bd385f305932ae85385e90742b6500c95090ce25048d8aa82a2a8684a1b0c",
+   "bytes": 42066,
+   "note": "原冻结登记；字节未留存，未追认等价"
+  },
+  "config": {
+   "path": "stage_d_executor_config.json",
+   "sha256": "11e520323ecf94a3d70130c8b1da15cd65e31b019f4bf669aed93361bbdecdb5"
+  },
+  "clock_test": {
+   "path": "test_stage_d_clock.py",
+   "sha256": "49f428c607d5c0a18d792082b39acb5d215a051ec3ebe16dc2bd1bbf49b7df45"
+  }
+ },
+ "tests": {
+  "main_suite": "test_stage_d_p0.py + test_stage_d_executor.py -> 32 passed, 1 skipped",
+  "clock_suite": "test_stage_d_clock.py -> 5 passed (C1 1:1 / C2 deadline 不压缩 / C3 mock 不变 / C4 旧缺陷可复现 / C5 配置尊重)"
+ },
+ "regression_192_mock": {
+  "runs": 2,
+  "status": "191-192 COMPLETE（S5 边界 1 例在 COMPLETE↔INCOMPLETE_DEADLINE 间翻转）",
+  "calls": [
+   1451,
+   1450
+  ],
+  "accounting_yuan": [
+   2.358712,
+   2.354782
+  ],
+  "arms": "各 32（两次一致）",
+  "scenarios": {
+   "S0": 12,
+   "S1": 18,
+   "S2": 18,
+   "S3": 48,
+   "S4": 48,
+   "S5": 48
+  },
+  "s5_race": {
+   "π-only": 8,
+   "Fixed-Composite": 8,
+   "Proposed-Dynamic": 8
+  },
+  "tokens_used": [
+   2423553,
+   2419208
+  ],
+  "token_peak": [
+   2427390,
+   2423045
+  ],
+  "finding": "S5 D=90s 与期望总时延≈90s 重合 → 亚秒抖动翻转单例结局；非代码缺陷，是设计边界敏感性",
+  "baseline_comparison": "冻结基线 192 COMPLETE/1451/¥2.358712/tokens 2423553 在无边界翻转时可达（本次 run1 仅差 1 例 status）"
+ },
+ "token_accounting_note": "历史摘要 peak 4,846,598 = 已用+预留双计；当前 2,427,390 = 单计（逐记录求和 2,423,553 一致）。双计保守，硬顶 9.5M 在两种口径下均未接近。",
+ "created": "2026-11-02T12:31:56",
+ "execution_status": "HOLD — 192 真实执行未启动；GLM 配额持续 429（并行会话 PID 30429 已结束但配额未恢复）"
+}

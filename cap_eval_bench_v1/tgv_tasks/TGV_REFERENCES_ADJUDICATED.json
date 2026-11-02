@@ -1,0 +1,64 @@
+{
+  "version": "TGV-stage2-references-v1",
+  "created": "2026-10-30",
+  "adjudication_scheme": "Path 3 per operator ruling: AI adjudication with PERMANENT disclosure",
+  "provenance": {
+    "label": "AI-ADJUDICATED (OPERATOR_DESIGNATED_AI)",
+    "disclosure": "adjudicator lineage overlaps the preparation pipeline; NOT independent human Gold; never to be cited as such in any report",
+    "rules_applied": [
+      "every fact bound to original text + doc source + char position + calculation",
+      "no conclusion beyond original-text support",
+      "UNKNOWN retained where unverifiable (none required this round — all 14 facts directly supported)",
+      "adjudication blinded to arm assignments and model results (no runs exist at adjudication time — temporal blindness by construction)",
+      "permanent AI-adjudicated labeling",
+      "never called independent human Gold"
+    ]
+  },
+  "references": {
+    "TGV-T1": [
+      {"id": "T1-R1", "type": "prefix", "q": "被风险提示的上市公司全称", "a": "福建纳川管材科技股份有限公司",
+       "ruling": "GOLD", "evidence": [{"doc": "E05-nachuan_20260904", "pos": 66, "quote": "证券简称：*ST 纳川 公告编号：2026-118 福建纳川管材科技股份有限公司"}, {"doc": "E05-nachuan_20261009", "pos": 143, "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司…收到"}]},
+      {"id": "T1-R2", "type": "prefix", "q": "股票被实施退市风险警示的日期", "a": "2026-04-29",
+       "ruling": "GOLD", "anchor_semantics": "实施日（原文明示'开市起被实施'，无作出/收到歧义）",
+       "evidence": [{"doc": "E05-nachuan_20260904", "pos": 480, "quote": "公司股票于 2026 年 4 月 29 日开市起被实施退市风险警示"}]},
+      {"id": "T1-R3", "type": "prefix", "q": "2025年度期末净资产", "a": "-147,791,659.62 元",
+       "ruling": "GOLD", "evidence": [{"doc": "E05-nachuan_20260904", "pos": 339, "quote": "公司 2025 年度期末净资产为-147,791,659.62 元"}]},
+      {"id": "T1-R4", "type": "prefix", "q": "公司收到证监会立案告知书的日期", "a": "2026-10-09（编号：证监立案字 0262026012 号）",
+       "ruling": "GOLD", "evidence": [{"doc": "E05-nachuan_20261009", "pos": 143, "quote": "2026 年 10 月 9 日…收到中国证券监督管理委员会下发的《…立案告知书》（编号：证监立案字 0262026012 号）"}]},
+      {"id": "T1-R5", "type": "prefix", "q": "立案事由", "a": "2023 年年报涉嫌信息披露违法违规",
+       "ruling": "GOLD", "evidence": [{"doc": "E05-nachuan_20261009", "pos": 260, "quote": "因公司 2023 年年报涉嫌信息披露违法违规…中国证监会决定对公司立案"}]},
+      {"id": "T1-R6", "type": "downstream_derivation", "q": "退市风险警示实施日→收到立案告知书的间隔天数", "a": "163 天",
+       "ruling": "GOLD_WITH_DERIVATION",
+       "operands": [{"fact": "T1-R2", "value": "2026-04-29", "doc": "E05-nachuan_20260904"}, {"fact": "T1-R4", "value": "2026-10-09", "doc": "E05-nachuan_20261009"}],
+       "calculation": "date(2026-10-09) - date(2026-04-29) = 163 天（确定性算术；双侧来源）"}
+    ],
+    "TGV-T2": [
+      {"id": "T2-R1", "type": "prefix", "q": "发布业绩预告的公司全称", "a": "中铁装配式建筑股份有限公司",
+       "ruling": "GOLD", "evidence": [{"doc": "E08-zhongtie_20260129", "pos": 39, "quote": "证券简称：中铁装配 公告编号：2026-002 中铁装配式建筑股份有限公司 2025 年度业绩预告"}]},
+      {"id": "T2-R2", "type": "prefix", "q": "预计归属于上市公司股东的净利润区间", "a": "-15,600 ～ -7,900 万元（上年同期 -6,371.69 万元）",
+       "ruling": "GOLD", "evidence": [{"doc": "E08-zhongtie_20260129", "pos": 226, "quote": "归属于上市公司股东的净利润 -15,600 ～ -7,900 -6,371.69"}]},
+      {"id": "T2-R3", "type": "prefix", "q": "预计扣除非经常性损益后的净利润区间", "a": "-18,600 ～ -9,900 万元（上年同期 -7,701.18 万元）",
+       "ruling": "GOLD", "evidence": [{"doc": "E08-zhongtie_20260129", "pos": 272, "quote": "扣除非经常性损益后的净利润 -18,600 ～ -9,900 -7,701.18"}]},
+      {"id": "T2-R4", "type": "prefix", "q": "2025年年度报告披露日期", "a": "2026-03-27",
+       "ruling": "GOLD", "evidence": [{"doc": "E08-zhongtie_20260327", "pos": 149, "quote": "于2026年3月27日在巨潮资讯网上披露《2025年年度报告》及其摘要"}]},
+      {"id": "T2-R5", "type": "prefix", "q": "公司收到证监会立案告知书的日期与编号", "a": "2026-09-18（编号：证监立案字 0142026049 号）",
+       "ruling": "GOLD", "evidence": [{"doc": "E08-zhongtie_20260918", "pos": 151, "quote": "于 2026 年 9 月 18 日收到…《立案告知书》（编号：证监立案字 0142026049 号）"}]},
+      {"id": "T2-R6", "type": "downstream_derivation", "q": "业绩预告公告→年报披露的间隔天数", "a": "57 天",
+       "ruling": "GOLD_WITH_DERIVATION",
+       "operands": [{"value": "2026-01-29", "doc": "E08-zhongtie_20260129（公告落款日）"}, {"fact": "T2-R4", "value": "2026-03-27", "doc": "E08-zhongtie_20260327"}],
+       "calculation": "date(2026-03-27) - date(2026-01-29) = 57 天（双侧来源）"},
+      {"id": "T2-R7", "type": "downstream_derivation", "q": "年报披露→收到立案告知的间隔天数", "a": "175 天",
+       "ruling": "GOLD_WITH_DERIVATION",
+       "operands": [{"fact": "T2-R4", "value": "2026-03-27"}, {"fact": "T2-R5", "value": "2026-09-18"}],
+       "calculation": "date(2026-09-18) - date(2026-03-27) = 175 天（双侧来源）"},
+      {"id": "T2-R8", "type": "downstream_derivation_single_doc", "q": "归母净利润预告区间宽度", "a": "7,700 万元",
+       "ruling": "GOLD_WITH_DERIVATION", "source_scope": "单文书数值推理（书 A 内两操作数，如实标注）",
+       "operands": [{"value": "-15,600", "doc": "E08-zhongtie_20260129"}, {"value": "-7,900", "doc": "E08-zhongtie_20260129"}],
+       "calculation": "|−15,600 − (−7,900)| = 7,700 万元"}
+    ]
+  },
+  "summary": {"TGV-T1": "6 facts: 5 GOLD + 1 GOLD_WITH_DERIVATION (163天, bilateral)",
+               "TGV-T2": "8 facts: 5 GOLD + 3 GOLD_WITH_DERIVATION (57天/175天 bilateral; 7,700万 single-doc labeled)",
+               "UNKNOWN_count": 0,
+               "Q_adj_scope": "全部 14 条计 Q_adj；downstream_derivation 类单列传递分析（v2.2 §4）"}
+}
