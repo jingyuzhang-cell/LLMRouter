@@ -1,0 +1,142 @@
+{
+ "run_id": "SA-auto-T-P1-r2",
+ "system_id": "auto_graph",
+ "task_id": "T-P1",
+ "config_hash": "4a1c4a7d2812af5b4dbe5c696bb51dff0971507440be12d9e4fab49caad7961f",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "t1",
+   "kind": "index",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 79,
+   "usage": {
+    "in": 465,
+    "out": 233
+   },
+   "latency_s": 3.295,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "t2",
+   "kind": "extracts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 80,
+   "usage": {
+    "in": 2460,
+    "out": 364
+   },
+   "latency_s": 7.083,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "t3",
+   "kind": "timeline",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 81,
+   "usage": {
+    "in": 518,
+    "out": 325
+   },
+   "latency_s": 4.675,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "note"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "t4",
+   "kind": "entity_facts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 82,
+   "usage": {
+    "in": 578,
+    "out": 281
+   },
+   "latency_s": 6.327,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "t5",
+   "kind": "factcheck_full",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 83,
+   "usage": {
+    "in": 1230,
+    "out": 284
+   },
+   "latency_s": 4.799,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "t6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 84,
+   "usage": {
+    "in": 594,
+    "out": 388
+   },
+   "latency_s": 5.528,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 31.707,
+ "deliverable_ref": "stage_a/SA-auto-T-P1-r2/deliverable.json",
+ "notes": "STAGE-A REAL run arm=auto_graph; fair terminal contract + canonical assembler"
+}

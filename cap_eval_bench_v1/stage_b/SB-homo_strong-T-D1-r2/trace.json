@@ -1,0 +1,144 @@
+{
+ "run_id": "SB-homo_strong-T-D1-r2",
+ "system_id": "homo_strong",
+ "task_id": "T-D1",
+ "config_hash": "4fbfc271dfcd60ff1f0f936413b125440fa1f44d91c2ac2ce66a17e7e9448eb5",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0,
+  "note": "fixed assignment"
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 96,
+   "usage": {
+    "in": 118,
+    "out": 40
+   },
+   "latency_s": 4.613,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "docs",
+     "reason"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 97,
+   "usage": {
+    "in": 2115,
+    "out": 299
+   },
+   "latency_s": 4.964,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 98,
+   "usage": {
+    "in": 415,
+    "out": 206
+   },
+   "latency_s": 3.553,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 99,
+   "usage": {
+    "in": 413,
+    "out": 210
+   },
+   "latency_s": 3.848,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 100,
+   "usage": {
+    "in": 836,
+    "out": 358
+   },
+   "latency_s": 5.673,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 101,
+   "usage": {
+    "in": 520,
+    "out": 305
+   },
+   "latency_s": 7.783,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 30.784,
+ "deliverable_ref": "stage_b/SB-homo_strong-T-D1-r2/deliverable.json",
+ "notes": "STAGE-B REAL run arm=homo_strong; frozen graph; assignment={'f1': 'glm53', 'f2': 'glm53', 'f3': 'glm53', 'f4': 'glm53', 'f5': 'glm53', 'f6': 'glm53'}"
+}

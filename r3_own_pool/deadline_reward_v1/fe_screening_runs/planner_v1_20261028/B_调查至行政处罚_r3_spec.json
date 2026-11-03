@@ -1,0 +1,158 @@
+{
+ "task_id": "planned",
+ "task_class": "证券执法全过程调查",
+ "evidence": [],
+ "constraints": {
+  "D": 140.0,
+  "Ccap": 0.02
+ },
+ "nodes": [
+  {
+   "id": "n1",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts"
+    ],
+    "requires": []
+   },
+   "evidence": "zeda_csrc_penalty_2023_29"
+  },
+  {
+   "id": "n2",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts"
+    ],
+    "requires": []
+   },
+   "evidence": "zeda_csrc_penalty_2024_kangda"
+  },
+  {
+   "id": "n3",
+   "role": "timeline",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "dates"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n4",
+   "role": "entity_relations",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "entities"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n5",
+   "role": "penalties",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "penalty_items"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n6",
+   "role": "cross_check",
+   "inputs": [
+    "n1",
+    "n2",
+    "n5"
+   ],
+   "contract": {
+    "produces": [
+     "checked"
+    ],
+    "requires": [
+     "facts",
+     "penalty_items"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n7",
+   "role": "timeline_deep",
+   "inputs": [
+    "n3",
+    "n6"
+   ],
+   "contract": {
+    "produces": [
+     "stages"
+    ],
+    "requires": [
+     "dates",
+     "checked"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n8",
+   "role": "amounts_check",
+   "inputs": [
+    "n5",
+    "n6"
+   ],
+   "contract": {
+    "produces": [
+     "amounts_checked"
+    ],
+    "requires": [
+     "penalty_items",
+     "checked"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n9",
+   "role": "synthesis",
+   "inputs": [
+    "n4",
+    "n7",
+    "n8"
+   ],
+   "contract": {
+    "produces": [
+     "report"
+    ],
+    "requires": [
+     "entities",
+     "stages",
+     "amounts_checked"
+    ]
+   },
+   "evidence": null
+  }
+ ]
+}

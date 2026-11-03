@@ -1,0 +1,196 @@
+{
+ "tier": "full-coverage (19K chars/line, 7/7 retrieval ceiling)",
+ "retrieval": {
+  "t1_regulatory": {
+   "chunks": 41,
+   "chars": 18450
+  },
+  "t2_inquiry": {
+   "chunks": 41,
+   "chars": 18450
+  }
+ },
+ "armA_single_strong_model": {
+  "model": "GLM-5.3",
+  "calls": 1,
+  "tokens": {
+   "input_tokens": 26017,
+   "output_tokens": 896
+  },
+  "latency_s": 10.677,
+  "truncated": true,
+  "injection_chars": 43336,
+  "Q": {
+   "label": "kdx_seed_silver (deterministic grounding only; NOT AI-cross-verified; NOT gold)",
+   "fact_coverage": 0.2857,
+   "coverage_full": 2,
+   "coverage_partial": 0,
+   "covered_fact_ids": [
+    "A1",
+    "A3"
+   ],
+   "tier_results": {
+    "A1": "full",
+    "A2": false,
+    "A3": "full",
+    "A4": false,
+    "A5": false,
+    "A6": false,
+    "A7": false
+   },
+   "citation_checked": 2,
+   "citation_accuracy": 1.0,
+   "per_fact_citations": [
+    {
+     "fact_id": "A1",
+     "cited": [
+      "kdx_inquiry_2019",
+      "kdx_penalty_2020"
+     ],
+     "correct_doc": true
+    },
+    {
+     "fact_id": "A3",
+     "cited": [
+      "kdx_notice_2019",
+      "kdx_penalty_2020"
+     ],
+     "correct_doc": true
+    }
+   ],
+   "unknown_doc_ids_cited": [],
+   "n_dates_claimed": 10,
+   "unverified_dates": [
+    "2019-05-14",
+    "2019-07-05",
+    "2019-07-08",
+    "2020-06-09",
+    "2020-06-24",
+    "2020-07-06",
+    "2020-08-03"
+   ],
+   "marks_unresolved": false
+  },
+  "report": "# 康得新（002450）跨年度财务披露违法违规事件调查报告\n\n## 一、调查过程时间线\n\n| 时间 | 事件 | 证据 |\n|---|---|---|\n| 2019-01-22 | 公司收到证监会《调查通知书》（苏证调字2019003号），因涉嫌信息披露违法违规被立案调查 | kdx_penalty_2020#c001 |\n| 2019-05-14 | 深交所下发2018年报问询函（中小板年报问询函【2019】第143号），公司5月31日回复 | kdx_inquiry_2018#c000 |\n| 2019-07-05 | 证监会作出《行政处罚及市场禁入事先告知书》（处罚字【2019】90号）；公司股票自2019-07-08停牌 | kdx_penalty_2020#c001、#c029 |\n| 2019-07-31、11-14、11-15、11-19 | 证监会召开听证会，会后补充调取证据 | kdx_penalty_2020#c004 |\n| 2020-06-09 | 公司收到证监会新的《调查通知书》（补充调查，公告提及） | kdx_inquiry_2019#c106 |\n| 2020-06-24/28 | 证监会重新作出《事先告知书》（处罚字【2020】56号）并送达公司及实际控制人钟玉 | kdx_penalty_2020#c002、kdx_notice_2020#c000 |\n| 2020-07-06 | 深交所下发2019年报问询函（中小板年报问询函【2020】第364号），公司7月22日回复 | kdx_inquiry_2019#c000 |\n| 2020-08-03至08-05 | 应钟玉、徐曙、张丽雄等人要求举行听证 | kdx_penalty_2020#c005、#c029 |\n| 2020-09-27 | 公司收到《行政处罚决定书》（处罚字【2020】71号）及《市场禁入决定书》（处罚字【2020】14号），9月29日公告 | kdx_penalty_2020#c000 |\n\n## 二、涉及主体\n\n- **上市公司**：康得新复合材料集团股份有限公司（*ST康得，002450）\n- **控股股东/关联方**：康得投资集团（康得集团）；配合方：北京银行西单支行、厦门国际银行北京分行、中航信托、化学赛鼎、宇龙汽车等（kdx_penalty_2020#c030、#c008、kdx_inquiry_2019#c030）\n- **责任人员**：钟玉（实际控制人、时任董事长）、王瑜（董事、财务总监）、徐曙（董事、总经理）、张丽雄（财务中心副总经理）为直接负责的主管人员；其他责任人员包括肖鹏、刘劲松、隋国军、单润泽、苏中锋、吴炎、邵明圆、张艳红、杜文静等（kdx_penalty_2020#c012、#c004）。2019年告知书阶段处罚范围更广（含闫桂新、包冠乾、侯向京等，kdx_notice_2019#c015），2020年正式决定书收窄。\n\n## 三、跨年度虚假记载的监管认定（2020年处罚决定书）\n\n1. **虚增利润（2015-2018年报虚假记载）**：通过虚构销售、采购、生产、研发及运输费用，四年分别虚增利润总额2,242,745,642.37元、2,943,420,778.01元、3,908,205,906.90元、2,436,193,525.40元，占比136.22%、127.85%、134.19%、711.29%（kdx_penalty_2020#c030）。\n2. **银行存款虚假记载（2015-2018）**：依据康得集团与北京银行西单支行《现金管理业务合作协议》，公司账户组资金实时",
+  "wall_s": null
+ },
+ "armB_fixed_model_dag": {
+  "nodes": [
+   {
+    "node": "t0",
+    "usage": {
+     "input_tokens": 301,
+     "output_tokens": 339
+    },
+    "latency_s": 6.005,
+    "status": "OK"
+   },
+   {
+    "node": "t1",
+    "usage": {
+     "input_tokens": 13196,
+     "output_tokens": 768
+    },
+    "latency_s": 8.468,
+    "status": "FAIL:Unterminated string starting at: line 1 column 1436 (char 1435)",
+    "n_facts": 0
+   },
+   {
+    "node": "t2",
+    "usage": {
+     "input_tokens": 13063,
+     "output_tokens": 768
+    },
+    "latency_s": 8.642,
+    "status": "FAIL:Unterminated string starting at: line 9 column 148 (char 1470)",
+    "n_facts": 0
+   },
+   {
+    "node": "t3",
+    "usage": {
+     "input_tokens": 124,
+     "output_tokens": 33
+    },
+    "latency_s": 2.088,
+    "status": "OK"
+   },
+   {
+    "node": "t4",
+    "usage": {
+     "input_tokens": 124,
+     "output_tokens": 77
+    },
+    "latency_s": 2.506,
+    "status": "OK"
+   },
+   {
+    "node": "t5",
+    "usage": {
+     "input_tokens": 149,
+     "output_tokens": 8
+    },
+    "latency_s": 3.554,
+    "status": "OK"
+   },
+   {
+    "node": "t6",
+    "usage": {
+     "input_tokens": 118,
+     "output_tokens": 86
+    },
+    "latency_s": 4.686,
+    "status": "OK"
+   }
+  ],
+  "wall_s": 35.96,
+  "merge_stats": {
+   "items": 0,
+   "conflict_marked": 0,
+   "multi_origin": 0,
+   "docs_touched": []
+  },
+  "Q": {
+   "label": "kdx_seed_silver (deterministic grounding only; NOT AI-cross-verified; NOT gold)",
+   "fact_coverage": 0.0,
+   "coverage_full": 0,
+   "coverage_partial": 0,
+   "covered_fact_ids": [],
+   "tier_results": {
+    "A1": false,
+    "A2": false,
+    "A3": false,
+    "A4": false,
+    "A5": false,
+    "A6": false,
+    "A7": false
+   },
+   "citation_checked": 0,
+   "citation_accuracy": null,
+   "per_fact_citations": [],
+   "unknown_doc_ids_cited": [],
+   "n_dates_claimed": 1,
+   "unverified_dates": [
+    "2021-06-30"
+   ],
+   "marks_unresolved": true
+  },
+  "report": "调查报告：经核查，本节点注入的verified_facts为空，无任何经确认的事实材料可供引用。信息截止2021-06-30。结论：UNRESOLVED——因缺乏原始材料（doc_id及对应chunk），无法生成任何带逐字引文的事实陈述。建议上游节点补充经验证的verified_facts数据后重新执行本subtask。"
+ },
+ "budget": {
+  "n_calls": 8,
+  "settled_actual_tokens": 56067,
+  "conservative_actual_plus_sum_max": 61123,
+  "caps": {
+   "calls": 18,
+   "guaranteed_settle": 62000
+  },
+  "per_model": {
+   "glm53": {
+    "calls": 8,
+    "in": 53092,
+    "out": 2975,
+    "lat_s": 46.626000000000005
+   }
+  }
+ }
+}

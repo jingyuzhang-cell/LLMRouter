@@ -1,0 +1,18 @@
+```json
+{
+  "task_class": "欺诈退市事件全景调查",
+  "nodes": [
+    {"id": "n1", "role": "extraction", "inputs": [], "contract": {"produces": ["facts_main"], "requires": []}, "evidence": "zeda_csrc_penalty_2023_29"},
+    {"id": "n2", "role": "extraction", "inputs": [], "contract": {"produces": ["facts_intermediary"], "requires": []}, "evidence": "zeda_csrc_penalty_2024_kangda"},
+    {"id": "n3", "role": "timeline", "inputs": ["n1"], "contract": {"produces": ["dates"], "requires": ["facts_main"]}, "evidence": null},
+    {"id": "n4", "role": "amounts", "inputs": ["n1"], "contract": {"produces": ["amounts"], "requires": ["facts_main"]}, "evidence": null},
+    {"id": "n5", "role": "penalties", "inputs": ["n1", "n2"], "contract": {"produces": ["penalty_items"], "requires": ["facts_main", "facts_intermediary"]}, "evidence": null},
+    {"id": "n6", "role": "entity_graph", "inputs": ["n1", "n2"], "contract": {"produces": ["entity_edges"], "requires": ["facts_main", "facts_intermediary"]}, "evidence": null},
+    {"id": "n7", "role": "timeline_deep", "inputs": ["n3", "n6"], "contract": {"produces": ["stages"], "requires": ["dates", "entity_edges"]}, "evidence": null},
+    {"id": "n8", "role": "amounts_check", "inputs": ["n4"], "contract": {"produces": ["amounts_checked"], "requires": ["amounts"]}, "evidence": null},
+    {"id": "n9", "role": "cross_check", "inputs": ["n5", "n7", "n8"], "contract": {"produces": ["checked"], "requires": ["penalty_items", "stages", "amounts_checked"]}, "evidence": null},
+    {"id": "n10", "role": "synthesis", "inputs": ["n9"], "contract": {"produces": ["report"], "requires": ["checked"]}, "evidence": null}
+  ],
+  "rationale": "以两份证监会处罚决定书为核心证据源并行抽取事实（主案与中介机构案），再分流为时间线、赔付/涉案金额、处罚梳理、主体关系图谱四条分析线，其中时间线经 entity 关系补充后做阶段复核（欺诈发行—上市—调查—退市—赔付），金额做交叉复核；cross_check 汇聚三线核验后由 synthesis 产出含市场警示意义的最终报告。节点数与证据覆盖匹配，依赖反映真实信息流，符合预算与时效约束。"
+}
+```

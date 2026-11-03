@@ -1,0 +1,129 @@
+{
+ "state_snapshot": {
+  "DONE": [
+   "n0",
+   "b2"
+  ],
+  "FAILED": [
+   "b0 (real attempt, GARBAGE placeholder, cost in prefix)"
+  ],
+  "PENDING": [
+   "x0",
+   "b1",
+   "x1",
+   "b3",
+   "sink"
+  ],
+  "prefix_attempts": 3,
+  "legal_order": "n0 -> b2 (healthy,cached) -> b0 (fails)"
+ },
+ "r_discrimination": {
+  "LOCAL": "6 calls, b2 cache KEPT",
+  "FULL": "7 calls, b2 re-executed (cache discarded)",
+  "physical_difference": true
+ },
+ "plans": {
+  "STATIC": {
+   "R": "targeted",
+   "pi": "Flash",
+   "nodes": [
+    "b0*",
+    "x0*",
+    "b1",
+    "x1",
+    "b3",
+    "sink"
+   ],
+   "calls": 6,
+   "ds": 0
+  },
+  "SD-FC": {
+   "R": "targeted",
+   "pi": "Flash",
+   "nodes": [
+    "b0*",
+    "x0*",
+    "b1",
+    "x1",
+    "b3",
+    "sink"
+   ],
+   "calls": 6,
+   "ds": 0
+  },
+  "R-only": {
+   "R": "accept",
+   "pi": "Flash",
+   "nodes": [
+    "x0",
+    "b1",
+    "x1",
+    "b3",
+    "sink"
+   ],
+   "calls": 5,
+   "ds": 0
+  },
+  "pi-only": {
+   "R": "targeted",
+   "pi": "DS3",
+   "nodes": [
+    "b0*",
+    "x0*",
+    "b1",
+    "x1",
+    "b3",
+    "sink"
+   ],
+   "calls": 6,
+   "ds": 3
+  },
+  "SEQ": {
+   "R": "accept",
+   "pi": "Flash",
+   "nodes": [
+    "x0",
+    "b1",
+    "x1",
+    "b3",
+    "sink"
+   ],
+   "calls": 5,
+   "ds": 0
+  },
+  "JOINT": {
+   "R": "targeted",
+   "pi": "DS3",
+   "nodes": [
+    "b0*",
+    "x0*",
+    "b1",
+    "x1",
+    "b3",
+    "sink"
+   ],
+   "calls": 6,
+   "ds": 3
+  }
+ },
+ "attempts_worst": 37,
+ "cash_math_worst": 0.09124,
+ "hard_constraints": {
+  "attempts_cap": 50,
+  "cash_cap_rmb": 0.25,
+  "ds_cap_per_arm": 3,
+  "B_tok_per_arm": 30000,
+  "D_arm_s": 80,
+  "deadline_basis": "REAL per-arm wall clock (predictions only for decisions)",
+  "ds_bound_basis": "prompt_chars x 0.721 tok/char (calibration max x1.2) + 3072 out cap, off-peak prices"
+ },
+ "gates": {
+  "G1_offpeak": "checked at run time",
+  "G2_attempts": "PASS 37<=50",
+  "G3_cash": "PASS ¥0.0912<=0.25",
+  "G4_ds_hard_enforced": true,
+  "G5_token_budget": "arm-level fail-stop 30K",
+  "G6_strategy_feasibility": "all 6 runnable; JOINT(targeted+DS3) != SEQ(accept+Flash) by design"
+ },
+ "ruling": "GO — execute per existing authorization at next off-peak window"
+}

@@ -1,0 +1,45 @@
+{
+ "total": {
+  "calls": 16,
+  "note": "S6 arm partially executed (3/6 calls before cap)"
+ },
+ "arms": {
+  "A_single": {
+   "tokens": 1277,
+   "lat": 8.5,
+   "t1_cover": 1,
+   "t1_total": 7,
+   "truncated": false,
+   "note": "GLM-5.3 one-shot"
+  },
+  "B_fixed_dag": {
+   "tokens": 7174,
+   "lat": 41.1,
+   "t1_cover": 1,
+   "n_facts": 18,
+   "note": "6-node DAG all GLM-5.3"
+  },
+  "S5_CloGate": {
+   "tokens": 6548,
+   "lat": 42.0,
+   "t1_cover": 1,
+   "n_facts": 13,
+   "recovery": {
+    "t1": "glm53flash",
+    "t5": "glm53flash"
+   },
+   "note": "F5 fault, fixed recovery to Flash"
+  },
+  "S6_partial": {
+   "calls_completed": 3,
+   "calls_needed": 6,
+   "note": "t1(deepseek)+t2(glm53)+t3(glm53) done; t4,t5,t6 blocked by cap"
+  }
+ },
+ "key_findings": {
+  "A_vs_B": "A(1277 tok, 8.5s) vs B(7174 tok, 41.1s) — single model ~5.6x cheaper, ~4.8x faster",
+  "B_vs_S5CG": "B(7174 tok, 41.1s, 18 facts) vs S5CG(6548 tok, 42.0s, 13 facts) — S5CG used Flash for t1, fewer facts",
+  "T1_coverage": "All arms T1=1/7 — 600-char evidence windows still too short for most T1 facts",
+  "S6_incomplete": "Could not complete S6 arm — budget under-estimated (needed 19 not 16)"
+ }
+}

@@ -1,0 +1,18 @@
+```json
+{
+  "task_class": "欺诈退市全景调查",
+  "nodes": [
+    {"id": "n1", "role": "extraction", "inputs": [], "contract": {"produces": ["facts_zeda"], "requires": []}, "evidence": "zeda_csrc_penalty_2023_29"},
+    {"id": "n2", "role": "extraction", "inputs": [], "contract": {"produces": ["facts_kangda"], "requires": []}, "evidence": "zeda_csrc_penalty_2024_kangda"},
+    {"id": "n3", "role": "timeline", "inputs": ["n1", "n2"], "contract": {"produces": ["dates"], "requires": ["facts_zeda", "facts_kangda"]}, "evidence": null},
+    {"id": "n4", "role": "timeline_deep", "inputs": ["n3"], "contract": {"produces": ["stages"], "requires": ["dates"]}, "evidence": null},
+    {"id": "n5", "role": "penalties", "inputs": ["n1", "n2"], "contract": {"produces": ["penalty_items"], "requires": ["facts_zeda", "facts_kangda"]}, "evidence": null},
+    {"id": "n6", "role": "amounts", "inputs": ["n1", "n2"], "contract": {"produces": ["amounts"], "requires": ["facts_zeda", "facts_kangda"]}, "evidence": null},
+    {"id": "n7", "role": "amounts_check", "inputs": ["n6"], "contract": {"produces": ["amounts_checked"], "requires": ["amounts"]}, "evidence": null},
+    {"id": "n8", "role": "entity_graph", "inputs": ["n1", "n2"], "contract": {"produces": ["entity_edges"], "requires": ["facts_zeda", "facts_kangda"]}, "evidence": null},
+    {"id": "n9", "role": "merge", "inputs": ["n4", "n5", "n7", "n8"], "contract": {"produces": ["merged"], "requires": ["stages", "penalty_items", "amounts_checked", "entity_edges"]}, "evidence": null},
+    {"id": "n10", "role": "synthesis", "inputs": ["n9"], "contract": {"produces": ["report"], "requires": ["merged"]}, "evidence": null}
+  ],
+  "rationale": "该问题为单一事件的四维全景调查（时间线/监管处罚/赔付/警示意义），核心证据为泽达易盛案两份处罚文书，故先用两个并行抽取节点分别从两份 doc 中提取原子事实；随后分四条并行分析线：timeline→timeline_deep 阶段化时间线、penalties 处罚梳理、amounts→amounts_check 金额交叉复核（覆盖赔付安排）、entity_graph 主体关系图；merge 汇聚四线，synthesis 单终节点产出含警示意义的最终报告。全部绑定真实 doc_id，成本集中在两个付费抽取节点，其余节点用 Flash 控制预算与时长。"
+}
+```

@@ -1,0 +1,96 @@
+"""Injected execution of a selected V5/RL action; no transport or model client.
+
+Callbacks must return explicit contract and usage observations. Unknown usage
+halts execution; it is not converted to zero. All attempted execution records
+are separate from predictions. No retry, no fallback to V4. Deterministic tools
+use the same callback with model=None, and refresh input-version fingerprints.
+"""
+from copy import deepcopy
+from scheduler_common import topological, descendants
+from cache_lineage import fingerprint
+import joint_scheduler_v5
+import rule_scheduler_rl
+
+
+class V5RecoveryExecutor:
+    def __init__(self, state, outputs, call, strategy='V5'):
+        if strategy not in ('V5', 'RL'):
+            raise ValueError('unknown strategy')
+        self.state = dict(state)
+        self.outputs = deepcopy(outputs)
+        self.call = call
+        self.strategy = strategy
+
+    def run(self):
+        chooser = joint_scheduler_v5.choose if self.strategy == 'V5' else rule_scheduler_rl.choose
+        best, audit = chooser(self.state)
+        if best is None:
+            return {'status': 'REFUSED', 'selected': None, 'candidates': audit,
+                    'outputs': self.outputs, 'actual': []}
+        actual = []
+        if best['Z'] == 'VERIFY':
+            for target in best['annotations']:
+                node = 'verify_' + target
+                result = self.call(node, best['pi'][node], {'target_output': self.outputs.get(target)})
+                actual.append({'node': node, 'result': result})
+            best = {**best, 'actual_execution': actual}
+            return {'status': 'VERIFIED_ANNOTATION', 'selected': best, 'candidates': audit,
+                    'outputs': self.outputs, 'actual': actual}  # caller processes evidence, not cache mutation
+        invalidated = set(best['R'])
+        for n in best['R']:
+            invalidated.update(descendants(n, self.state['children_map']))
+        for n in invalidated:
+            self.outputs.pop(n, None)
+        order, parents = topological(self.state['children_map'], self.state['model_nodes'])
+        required = set(best['R']) | set(self.state.get('pending_assignment', {}))
+        tools = invalidated - set(self.state['model_nodes'])
+        status = 'COMPLETE'
+        tokens, wall, cash = 0, 0, {}
+        for n in order:
+            if n not in required | tools:
+                continue
+            if not parents[n] <= set(self.outputs):
+                actual.append({'node': n, 'status': 'BLOCKED_DEPENDENCY'})
+                status = 'INCOMPLETE'
+                continue
+            model = best['pi'].get(n, self.state.get('pending_assignment', {}).get(n))
+            # Serial injected runner: serialize predictions at dispatch. Its actual
+            # wall is supplied by the callback, distinct from DAG parallel prediction.
+            if model is not None:
+                cost, lat = self.state['cost_lat'][(n, model)][:2]
+                if tokens + cost > self.state.get('token_budget_remaining', float('inf')) or wall + lat > self.state.get('deadline_remaining_s', float('inf')):
+                    actual.append({'node': n, 'status': 'STOP_CONSTRAINT'})
+                    status = 'STOPPED'
+                    break
+                cost_cash = self.state.get('cash_cost', {}).get((n, model), {})
+                if any(cash.get(cur, 0) + val > self.state.get('cash_budget', {}).get(cur, float('inf')) for cur, val in cost_cash.items()):
+                    status = 'STOPPED'
+                    actual.append({'node': n, 'status': 'STOP_CASH'})
+                    break
+            inputs = {p: self.outputs[p] for p in sorted(parents[n])}
+            try:
+                result = self.call(n, model, inputs)
+            except Exception as exc:
+                actual.append({'node': n, 'status': 'EXECUTION_FAILED', 'error_type': type(exc).__name__})
+                status = 'FAILED'
+                break
+            actual.append({'node': n, 'model': model, 'inputs_fp': fingerprint(inputs), 'result': result})
+            if not result.get('contract_ok'):
+                status = 'CONTRACT_FAILED'
+                break
+            if any(k not in result for k in ('tokens', 'wall_s', 'cash_cost')):
+                status = 'USAGE_UNKNOWN'
+                break
+            tokens += result['tokens']; wall += result['wall_s']
+            for cur, val in result['cash_cost'].items():
+                cash[cur] = cash.get(cur, 0) + val
+            if tokens > self.state.get('token_budget_remaining', float('inf')) or wall > self.state.get('deadline_remaining_s', float('inf')) or any(val > self.state.get('cash_budget', {}).get(cur, float('inf')) for cur, val in cash.items()):
+                status = 'POST_SETTLEMENT_OVERRUN'
+                break
+            self.outputs[n] = result['output']
+            if self.state.get('lineage') is not None:
+                self.state['lineage'].register(n, model, result['output'], fingerprint(inputs), 'strict')
+        best = {**best, 'actual_execution': actual}
+        return {'status': status, 'selected': best, 'candidates': audit,
+                'outputs': self.outputs, 'actual': actual,
+                'actual_tokens': tokens, 'actual_execution_s': wall, 'actual_cash': cash}

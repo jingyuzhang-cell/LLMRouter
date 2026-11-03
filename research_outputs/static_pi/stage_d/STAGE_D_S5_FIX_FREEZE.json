@@ -1,0 +1,145 @@
+{
+ "status": "EXECUTOR_APPROVED_REAL_LAUNCH_STOPPED_AT_PRECHECK",
+ "date": "2026-11-03",
+ "scope": "S5 竞争结算修复（winner-first + background loser + batch-tail settle + terminal/settlement time separation）",
+ "hashes": {
+  "executor_candidate": {
+   "sha256": "4ab0c47d642e4ec6e19b28f3725024550ea56df5842876434b55deaf5c67c997",
+   "bytes": 48385
+  },
+  "executor_frozen_prev": {
+   "sha256": "ef50527e2920b42dd51ffec23e8a9f725a54889bc1033204ee517f8bc8f4c9c2",
+   "bytes": 43292
+  },
+  "executor_partial_unregistered": {
+   "sha256": "b0d7a58900f8f27a3e6f3451147c44204533c53dd5583ebd207a78edc83fc74a",
+   "bytes": 44419
+  },
+  "config": "11e520323ecf94a3d70130c8b1da15cd65e31b019f4bf669aed93361bbdecdb5",
+  "diff": "deed0c7fb5f7db26519216c4115b5ac31a519802371463c5345aac75bfd1f29c",
+  "test_executor": "56614a8f371e2ce5812a302219c36ec6bb1665b56d7b685abf66ccc5cdfbe913",
+  "test_p0": "9349d2f91e5afe7a19ed2d6dd6498571f6c2b28d82d9acc2fe5165bcf5fcde3a",
+  "test_clock": "49f428c607d5c0a18d792082b39acb5d215a051ec3ebe16dc2bd1bbf49b7df45",
+  "protection_audit": "e9974f0eac6d345f7eabee0e29a6706abb949bb336889f419a431405c7bfc70a"
+ },
+ "tests": {
+  "main_suite": "48 passed, 1 skipped",
+  "v2_transport": "4 passed",
+  "new_s5_tests": [
+   "test_finish_returns_before_late_loser",
+   "test_loser_does_not_override_winner",
+   "test_both_branch_costs_counted",
+   "test_both_unparseable_fallback"
+  ]
+ },
+ "mock_192": {
+  "runs": "runs_s5fix_mock3",
+  "status": "192/192 COMPLETE",
+  "calls": 1451,
+  "accounting_yuan": 2.358712,
+  "tokens_in_out": 2423553,
+  "settlements": 24,
+  "late_calls_cancel_effective_true": 0,
+  "baseline_diffs": [
+   "Static|S5|r1 INCOMPLETE_DEADLINE->COMPLETE",
+   "R-only|S5|r4 INCOMPLETE_DEADLINE->COMPLETE"
+  ],
+  "note": "两例均为已知 S5 边界非确定性；非 race 臂，不受 S5 结算修复影响；旧 run1/run2 亦在这两例间翻转"
+ },
+ "r1_protection": {
+  "unit_tests": "PASS",
+  "mock_192_audit": "NOT_APPLICABLE_MOCK_FIXTURE (864 regressions; mock SINK 只输出 D_1/D_2)",
+  "real_data_audit": "BLOCKED until real outputs"
+ },
+ "dd_v4_v5": {
+  "files_found": 0,
+  "closest": "P0-4/P0-5 (P05S5Boundary) + test_stage_d_v2_transport.py (4 passed)",
+  "status": "BLOCKED/UNRESOLVED: 无 DD-V4/DD-V5 命名文件；需操作者给定路径"
+ },
+ "budget": {
+  "calls_cap": 2688,
+  "tokens_cap": 9500000,
+  "yuan_cap": 34.56,
+  "real_calls_this_round": 0,
+  "gpu_calls_this_round": 0
+ },
+ "admission": "BLOCKED",
+ "unblock_conditions": [
+  "操作者批准新执行器候选与 diff",
+  "操作者接受两例已知 S5 边界差异",
+  "R1 真实数据审计方案获接受（mock 不能替代）",
+  "DD-V4/V5 路径明确并通过",
+  "真实调用前受控预检通过"
+ ],
+ "a1_amendment": {
+  "approved_at": "2026-11-03 (operator 授权)",
+  "executor_candidate_s5_only": "4ab0c47d642e4ec6e19b28f3725024550ea56df5842876434b55deaf5c67c997",
+  "executor_with_a1": {
+   "sha256": "64dea81992f9f036af783cf91079f32dbb808948210c13ea72069ddd35839f7d",
+   "note": "唯一追加改动：precheck 提示词路径 runs_x→stage_a/runs_x（首次运行 FileNotFoundError，发生在 HTTP 调用前，零调用零预算）"
+  },
+  "a1_changes": [
+   "glm_low_call(): reasoning_effort=low, 无 thinking 字段, 凭据仅 env STAGE_D_GLM_KEY",
+   "stage_d_real_transport(): GLM→low 适配, deepseek→冻结 transport.call_model",
+   "main() --real 注入 transport_fn=stage_d_real_transport",
+   "cmd_precheck(): 1 次真实 J2 预检, 冻结 runs_x/run1/J2X 提示词, MAXTOK 4000, GO 门 STAGE_D_REAL_CALLS_AUTHORIZED=1"
+  ],
+  "transport_py_untouched": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+  "tests_after_a1": "52 passed, 1 skipped (含 v2 transport 4)",
+  "mock192_after_a1": "runs_a1_mock: 192/192 COMPLETE, calls 1451, 与 runs_s5fix_mock3 逐 run 零差异",
+  "precheck_decision_table": {
+   "HTTP错误/429/401/1210/超时": "STOP",
+   "200+stop=max_tokens": "STOP（冻结上限不足；不得自动提高）",
+   "200+end_turn/null+JSON可解析+J2时延>90s": "STOP（冻结 180s/90s 截止期体系不可行，需 V2.0 全链重预注册）",
+   "200+end_turn/null+JSON可解析+J2时延<=90s": "PROCEED_FIRST_BATCH_24（首批后 R1 stop-gate）"
+  },
+  "first_batch": {
+   "command": "STAGE_D_REAL_CALLS_AUTHORIZED=1 python3 stage_d_executor.py run --real --out runs_final --limit 24",
+   "post": "python3 protection_set_audit.py runs_final -> FAIL(>=2) 全停",
+   "monitor_rule": "首批 24 中 INCOMPLETE_DEADLINE >= 8 (1/3) -> 停止并报告（截止期体系失效证据）"
+  },
+  "budget": {
+   "calls_cap": 2688,
+   "tokens_cap": 9500000,
+   "yuan_cap": 34.56,
+   "precheck_counted": 1
+  },
+  "creds": {
+   "glm": "env STAGE_D_GLM_KEY（建议桥接 /root/.config/a5/glm.env 已验证 key；值不落盘不进对话）",
+   "deepseek": "env DEEPSEEK_API_KEY（从 provider_config 桥接；值不打印）"
+  }
+ },
+ "precheck_result": {
+  "result": "STOP",
+  "reason": "truncated: stop=max_tokens",
+  "stop": "max_tokens",
+  "usage": {
+   "in": 2716,
+   "out": 4000
+  },
+  "wall_s": 59.84,
+  "json_ok": false,
+  "prompt_sha256": "cc7939c6a26e51da1ad0e7b6807288a58e2839023e434305b674ec3ff1b8992d",
+  "node": "J2",
+  "max_tokens": 4000,
+  "thinking": null,
+  "reasoning_effort": "low",
+  "calls_counted_toward_cap": 1,
+  "interpretation": "J2 在 reasoning_effort=low 下于冻结 4000 上限处截断：out=4000 全部耗尽、无 JSON、stop=max_tokens。与 A5 线证据一致（同族 J2 提示词在 8192 下亦被 reasoning 耗尽、text=0）——J2 在 low 模式下输出预算不足不是偶发。",
+  "decision": "STOP per STAGE_D_PREREGISTRATION_AMENDMENT_A1.md §四（不得自动提高上限）",
+  "budget_consumed": {
+   "calls": 1,
+   "tokens_in": 2716,
+   "tokens_out": 4000,
+   "accounting_yuan": 0.0133728,
+   "actual_cash_yuan": 0.0,
+   "remaining": {
+    "calls": 2687,
+    "tokens": 9493284,
+    "yuan": 34.546629
+   }
+  },
+  "first_batch_started": false,
+  "runs_final_created": false
+ }
+}

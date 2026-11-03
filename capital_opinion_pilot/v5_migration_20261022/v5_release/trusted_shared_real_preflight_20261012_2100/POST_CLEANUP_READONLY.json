@@ -1,0 +1,38 @@
+{
+  "checked_at_utc": "2026-10-12T13:02:07.408193+00:00",
+  "gpu": {
+    "args": [
+      "nvidia-smi",
+      "--query-gpu=uuid,memory.used,utilization.gpu",
+      "--format=csv"
+    ],
+    "returncode": 0,
+    "stdout": "uuid, memory.used [MiB], utilization.gpu [%]\nGPU-0c62b1cf-df32-6bc8-00cc-1f0e0e8d27ea, 0 MiB, 0 %\n",
+    "stderr": ""
+  },
+  "gpu_processes": {
+    "args": [
+      "nvidia-smi",
+      "--query-compute-apps=pid,process_name,used_gpu_memory",
+      "--format=csv"
+    ],
+    "returncode": 0,
+    "stdout": "pid, process_name, used_gpu_memory [MiB]\n",
+    "stderr": ""
+  },
+  "owned_pids": {
+    "args": [
+      "ps",
+      "-p",
+      "164509",
+      "164587",
+      "-o",
+      "pid,ppid,pgid,sid,stat,comm"
+    ],
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "error: process ID list syntax error\n\nUsage:\n ps [options]\n\n Try 'ps --help <simple|list|output|threads|misc|all>'\n  or 'ps --help <s|l|o|t|m|a>'\n for additional help text.\n\nFor more details see ps(1).\n"
+  },
+  "quarantine_preserved": true,
+  "note": "later read-only verification, does not overwrite original cleanup failure or clear quarantine"
+}

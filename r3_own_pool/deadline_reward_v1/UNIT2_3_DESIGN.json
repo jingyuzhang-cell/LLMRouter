@@ -1,0 +1,54 @@
+{
+ "unit2": {
+  "state": "S2 (b2 fault) | legal order n0->b0(healthy,cached)->b2(fails) | D=80 | B_tok=30K",
+  "snapshot": "DONE={n0,b0} FAILED={b2} PENDING={x0,b1,x1,b3,sink}",
+  "R_sets": {
+   "accept": 5,
+   "LOCAL(closure b2={b2,sink})": 6,
+   "FULL(+b0 re-exec)": 7
+  },
+  "anchors": "v7 S2: accept t_q .769/eU .589 > targeted .731/.491 (repair HURTS); ROOT-cov .510-.582 >= theta' -> gate says accept",
+  "ex_ante_choices": {
+   "R-only": "accept+Flash (gate)",
+   "pi-only": "targeted+Flash (fixed rule; pred 79.5s BORDERLINE <=80)",
+   "SEQ": "accept+Flash",
+   "JOINT": "accept+Flash (Uhat .688 > targeted .621)",
+   "STATIC": "targeted+Flash",
+   "SD-FC": "accept (b2 rule)"
+  },
+  "discrimination": "JOINT(accept) vs pi-only(targeted) — REVERSE R-flip on QUALITY axis (v7: repair hurts in S2); pi-only borderline-lateness risk real",
+  "repeats": "pi-only x2 (direct same-action variance band)",
+  "attempts_worst": 41,
+  "attempts_cap": 45,
+  "cash_math_worst": 0.0963,
+  "cash_cap": 0.12,
+  "ds_note": "DS only if pi-only variants choose it; bound at peak prices"
+ },
+ "unit3": {
+  "state": "S1 (b0 fault, same as unit-1) | D=80 | B_tok=13.5K (budget binds DS3: real 13.8-14.7K > 13.5)",
+  "conflict": "TIME forces DS (targeted+Flash 84.3s>80) but BUDGET forbids DS3 (pred 14.2K>13.5K) -> only JOINT's joint feasibility search resolves (falls back accept+Flash 9.7K); pi-only blindly targeted+DS3 -> budget bust mid-arm -> INCOMPLETE",
+  "ex_ante_choices": {
+   "R-only": "accept+Flash",
+   "pi-only": "targeted+DS3 (blind rule; will bust)",
+   "SEQ": "accept+Flash",
+   "JOINT": "accept+Flash (only feasible combo)",
+   "STATIC": "targeted+Flash (13.2K<=13.5 squeaks)",
+   "SD-FC": "targeted+Flash"
+  },
+  "discrimination": "graceful degradation vs hard fail on the RESOURCE axis",
+  "attempts_worst": 37,
+  "attempts_cap": 40,
+  "cash_math_worst": 0.0963,
+  "cash_cap": 0.1,
+  "prediction_source": "token/lat predictions refreshed from unit-1 REAL arm data (prior-round observables, no leakage)"
+ },
+ "acceptance_criteria": {
+  "variance_band": "same-action repeats: unit-1 band |dE|=0.085, |dT_q|=0.077; unit-2 pi-only x2 gives direct band",
+  "unit2_pass": "JOINT eU > pi-only eU AND JOINT >= max(all) - band AND JOINT action != pi-only action",
+  "unit3_pass": "JOINT completes (deadline+budget met) AND pi-only INCOMPLETE-by-budget AND JOINT eU > pi-only",
+  "round_pass": "both units pass; JOINT never below best baseline beyond band",
+  "fairness_rule": "identical actions from same snapshot -> share ONE execution (recorded shared) or compare only via band; never treat sampling diff as algorithmic gain"
+ },
+ "fail_stop": "any 401/429/5xx/truncation/critical anomaly -> record & halt unit; no retry; caps never auto-raised",
+ "ruling": "GO (design frozen, execution HOLD pending authorization)"
+}

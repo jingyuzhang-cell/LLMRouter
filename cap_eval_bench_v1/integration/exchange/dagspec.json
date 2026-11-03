@@ -1,0 +1,379 @@
+{
+ "dag_id": "cap_opinion_pilot_v2",
+ "task_id": "T-P1",
+ "structure_version": 1,
+ "provenance": {
+  "origin": "REAL LLM-planned graph (capital_opinion_pilot initial_dag_v2.json)",
+  "planner": "GLM-5.3 semantic plan + deterministic assembly (V2 run)",
+  "graph_hash": "79b84f421bec7ff868c86c37a57d462ea5967aa491a81e6a5b9eaae9860da8ce",
+  "execution_mode": "REAL"
+ },
+ "nodes": [
+  {
+   "node_id": "t0",
+   "node_type": "extraction",
+   "output_contract": "evidence_registry.v1",
+   "dependencies": [],
+   "bindings": [
+    {
+     "port": "question",
+     "source": "task",
+     "field": "question"
+    },
+    {
+     "port": "ctx_table",
+     "source": "task",
+     "field": "ctx_table"
+    }
+   ],
+   "subtask": "建立证据索引，映射四份文档的角色与覆盖范围；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020,st_announce_2024_021,st_advance_notice_2023",
+   "state": {
+    "status": "done",
+    "model": "glm53",
+    "attempts": 2,
+    "usage": {
+     "input_tokens": 693,
+     "output_tokens": 255
+    },
+    "latency_s": 6.405,
+    "output": {
+     "evidence_index": {
+      "evidence_registry.v1": {
+       "docs": [
+        {
+         "doc_id": "csrc_penalty_2024_41",
+         "role": "监管处罚决定书",
+         "covers": "证监会认定违法事实、处罚内容、责任主体",
+         "date": "2024-04-25"
+        },
+        {
+         "doc_id": "st_announce_2024_020",
+         "role": "公司收到处罚决定书公告",
+         "covers": "处罚通知、责任主体、整改安排",
+         "date": "2024-07-06"
+        },
+        {
+         "doc_id": "st_announce_2024_021",
+         "role": "风险警示安排公告",
+         "covers": "股票风险警示相关安排",
+         "date": "2024-07-06"
+        },
+        {
+         "doc_id": "st_advance_notice_2023",
+         "role": "行政处罚事先告知公告",
+         "covers": "2023年立案调查进展、事先告知内容",
+         "date": "2023-07-03"
+        }
+       ],
+       "coverage_notes": "四文档构成时间链：2023事先告知→2024处罚决定→2024公司公告与风险警示。原文映射基于ctx_table元数据，正文核对UNRESOLVED。"
+      }
+     }
+    }
+   }
+  },
+  {
+   "node_id": "t1",
+   "node_type": "extraction",
+   "output_contract": "doc_retrieval.v1",
+   "dependencies": [
+    "t0"
+   ],
+   "bindings": [
+    {
+     "port": "question",
+     "source": "task",
+     "field": "question"
+    },
+    {
+     "port": "evidence_index",
+     "source": "node",
+     "field": "evidence_index",
+     "node_id": "t0"
+    }
+   ],
+   "subtask": "提取处罚决定书与公告中的关键事实片段；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020,st_announce_2024_021,st_advance_notice_2023",
+   "state": {
+    "status": "done",
+    "model": "glm53",
+    "attempts": 1,
+    "usage": {
+     "input_tokens": 2229,
+     "output_tokens": 400
+    },
+    "latency_s": 6.685,
+    "output": {
+     "doc_extracts": [
+      {
+       "doc_id": "csrc_penalty_2024_41",
+       "facts": [
+        "违法事实：2009年起江苏舜天参与隋某力主导专网通信虚假自循环业务，合同资金票据闭环，无商业实质，不应确认收入成本利润",
+        "处罚：对公司警告罚1000万元；高松150万、桂生春100万、王重人/李焱/赵凡各60万元，依据《证券法》第197条第二款"
+       ]
+      },
+      {
+       "doc_id": "st_announce_2024_020",
+       "facts": [
+        "2022-11-04收到立案告知书(证监立案字0382022008号)",
+        "2023-06-30收到事先告知书(处罚字〔2023〕37号)",
+        "近日收到〔2024〕41号处罚决定书及〔2024〕10号市场禁入决定书；当事人含高松、桂生春、王重人、李焱"
+       ]
+      },
+      {
+       "doc_id": "st_announce_2024_021",
+       "facts": [
+        "因〔2024〕41号处罚决定书，股票实施其他风险警示",
+        "停牌2024-07-08，ST实施起始日2024-07-09",
+        "简称变更为ST舜天，代码600287，日涨跌幅5%，风险警示板交易"
+       ]
+      },
+      {
+       "doc_id": "st_advance_notice_2023",
+       "facts": [
+        "2023-06-30收到《行政处罚及市场禁入事先告知书》(处罚字〔2023〕37号)，公告编号临2023-039",
+        "UNRESOLVED：该摘录未含告知书具体处罚内容"
+       ]
+      },
+      {
+       "coverage_notes": "正文核对部分完成；市场禁入决定书〔2024〕10号具体内容UNRESOLVED；赵凡在st_announce_2024_020摘录中未列明（UNRESOLVED）"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "node_id": "t2",
+   "node_type": "reasoning",
+   "output_contract": "timeline.v1",
+   "dependencies": [
+    "t1"
+   ],
+   "bindings": [
+    {
+     "port": "question",
+     "source": "task",
+     "field": "question"
+    },
+    {
+     "port": "doc_extracts",
+     "source": "node",
+     "field": "doc_extracts",
+     "node_id": "t1"
+    }
+   ],
+   "subtask": "梳理从事先告知到处罚及风险警示的时间节点；需要原文doc_id: st_advance_notice_2023,csrc_penalty_2024_41,st_announce_2024_020",
+   "state": {
+    "status": "done",
+    "model": "glm53",
+    "attempts": 1,
+    "usage": {
+     "input_tokens": 656,
+     "output_tokens": 313
+    },
+    "latency_s": 6.039,
+    "output": {
+     "timeline": [
+      {
+       "date": "2022-11-04",
+       "event": "收到立案告知书（证监立案字0382022008号）",
+       "doc_id": "st_announce_2024_020"
+      },
+      {
+       "date": "2023-06-30",
+       "event": "收到《行政处罚及市场禁入事先告知书》（处罚字〔2023〕37号，临2023-039）；具体处罚内容UNRESOLVED",
+       "doc_id": "st_advance_notice_2023"
+      },
+      {
+       "date": "2024-07-05前后",
+       "event": "收到〔2024〕41号处罚决定书：公司警告罚1000万元；高松150万、桂生春100万、王重人/李焱/赵凡各60万元（《证券法》197条第二款）；同收〔2024〕10号市场禁入决定书，内容UNRESOLVED",
+       "doc_id": "csrc_penalty_2024_41;st_announce_2024_020"
+      },
+      {
+       "date": "2024-07-08",
+       "event": "股票停牌1天",
+       "doc_id": "st_announce_2024_021"
+      },
+      {
+       "date": "2024-07-09",
+       "event": "实施其他风险警示，简称变ST舜天，日涨跌幅5%",
+       "doc_id": "st_announce_2024_021"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "node_id": "t3",
+   "node_type": "extraction",
+   "output_contract": "entity_facts.v1",
+   "dependencies": [
+    "t1"
+   ],
+   "bindings": [
+    {
+     "port": "question",
+     "source": "task",
+     "field": "question"
+    },
+    {
+     "port": "doc_extracts",
+     "source": "node",
+     "field": "doc_extracts",
+     "node_id": "t1"
+    }
+   ],
+   "subtask": "梳理涉及主体、违法事实与处罚结果；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020",
+   "state": {
+    "status": "done",
+    "model": "glm53",
+    "attempts": 1,
+    "usage": {
+     "input_tokens": 652,
+     "output_tokens": 330
+    },
+    "latency_s": 5.82,
+    "output": {
+     "entity_facts": {
+      "subject": "江苏舜天(600287)",
+      "violation": "2009年起参与隋某力主导专网通信虚假自循环业务，合同资金票据闭环，无商业实质，不应确认收入成本利润[csrc_penalty_2024_41]",
+      "timeline": [
+       "2022-11-04立案(证监立案字0382022008号)[st_announce_2024_020]",
+       "2023-06-30事先告知书(处罚字〔2023〕37号)[st_announce_2024_020]",
+       "2024收到〔2024〕41号处罚决定书及〔2024〕10号市场禁入决定书[st_announce_2024_020]",
+       "2024-07-08停牌，2024-07-09起ST，简称变更为ST舜天，涨跌幅5%[st_announce_2024_021]"
+      ],
+      "penalties": "公司警告罚1000万；高松150万、桂生春100万、王重人/李焱/赵凡各60万，依据《证券法》197条第二款[csrc_penalty_2024_41]",
+      "persons": [
+       "高松",
+       "桂生春",
+       "王重人",
+       "李焱",
+       "赵凡"
+      ],
+      "unresolved": [
+       "〔2024〕10号市场禁入决定书具体内容",
+       "赵凡是否列入处罚决定书当事人清单(st_announce_2024_020摘录未列)"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "node_id": "t4",
+   "node_type": "verification",
+   "output_contract": "fact_check_full.v1",
+   "dependencies": [
+    "t1",
+    "t2",
+    "t3"
+   ],
+   "bindings": [
+    {
+     "port": "question",
+     "source": "task",
+     "field": "question"
+    },
+    {
+     "port": "doc_extracts",
+     "source": "node",
+     "field": "doc_extracts",
+     "node_id": "t1"
+    },
+    {
+     "port": "timeline",
+     "source": "node",
+     "field": "timeline",
+     "node_id": "t2"
+    },
+    {
+     "port": "entity_facts",
+     "source": "node",
+     "field": "entity_facts",
+     "node_id": "t3"
+    }
+   ],
+   "subtask": "交叉核实时间线与主体事实，标注存疑项；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020,st_advance_notice_2023",
+   "state": {
+    "status": "done",
+    "model": "glm53",
+    "attempts": 1,
+    "usage": {
+     "input_tokens": 1231,
+     "output_tokens": 291
+    },
+    "latency_s": 5.092,
+    "output": {
+     "verified_facts": {
+      "subject": "江苏舜天(600287)",
+      "violation": "2009年起参与隋某力主导专网通信虚假自循环业务，无商业实质[csrc_penalty_2024_41]",
+      "timeline": [
+       "2022-11-04立案(证监立案字0382022008号)[st_announce_2024_020]",
+       "2023-06-30事先告知书(处罚字〔2023〕37号,临2023-039)[st_announce_2024_020;st_advance_notice_2023]",
+       "2024收到〔2024〕41号处罚决定书[csrc_penalty_2024_41]",
+       "2024-07-08停牌,2024-07-09起ST,简称ST舜天,涨跌幅5%[st_announce_2024_021]"
+      ],
+      "penalties": "公司警告罚1000万;高松150万,桂生春100万,王重人/李焱/赵凡各60万,《证券法》197条第二款[csrc_penalty_2024_41]",
+      "unresolved": [
+       "〔2024〕10号市场禁入决定书具体内容",
+       "赵凡是否在处罚当事人清单(公告摘录未列)",
+       "事先告知书具体处罚内容"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "node_id": "t5",
+   "node_type": "reasoning",
+   "output_contract": "report.v1",
+   "dependencies": [
+    "t4"
+   ],
+   "bindings": [
+    {
+     "port": "question",
+     "source": "task",
+     "field": "question"
+    },
+    {
+     "port": "verified_facts",
+     "source": "node",
+     "field": "verified_facts",
+     "node_id": "t4"
+    }
+   ],
+   "subtask": "生成含证据引用的调查报告，未确认事项明确标注；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020,st_announce_2024_021,st_advance_notice_2023",
+   "state": {
+    "status": "done",
+    "model": "glm53",
+    "attempts": 1,
+    "usage": {
+     "input_tokens": 535,
+     "output_tokens": 338
+    },
+    "latency_s": 4.888,
+    "output": {
+     "report": {
+      "contract": "report.v1",
+      "subject": "江苏舜天(600287)",
+      "findings": {
+       "violation": "2009年起参与隋某力主导专网通信虚假自循环业务，无商业实质[csrc_penalty_2024_41]",
+       "timeline": [
+        "2022-11-04证监会立案(证监立案字0382022008号)[st_announce_2024_020]",
+        "2023-06-30事先告知书(处罚字〔2023〕37号,临2023-039)[st_announce_2024_020;st_advance_notice_2023]",
+        "2024年收到〔2024〕41号处罚决定书[csrc_penalty_2024_41]",
+        "2024-07-08停牌,2024-07-09起ST(ST舜天,涨跌幅5%)[st_announce_2024_021]"
+       ],
+       "penalties": "公司警告+罚1000万；高松150万、桂生春100万、王重人/李焱各60万，依《证券法》197条第二款[csrc_penalty_2024_41]"
+      },
+      "unresolved": [
+       "〔2024〕10号市场禁入决定书具体内容",
+       "赵凡是否为处罚当事人(公告摘录未列)",
+       "事先告知书具体处罚内容"
+      ],
+      "risk": "2024-07-09起被实施其他风险警示，简称变更为ST舜天，日涨跌幅限制5%[st_announce_2024_021]"
+     }
+    }
+   }
+  }
+ ]
+}

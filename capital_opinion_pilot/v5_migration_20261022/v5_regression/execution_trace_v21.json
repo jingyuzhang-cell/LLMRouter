@@ -1,0 +1,116 @@
+{
+ "arms": {
+  "single_strong_model": {
+   "Q": 0.4375,
+   "citation_accuracy": 0.75,
+   "coverage_full/partial": "3/1",
+   "tokens": 2275,
+   "wall_s": 7.382,
+   "call_id": 1,
+   "wall_note": "per-call service latency from the meter ledger (first run crashed post-call; call itself persisted)",
+   "unverified_dates": [],
+   "report_chars": 782,
+   "price_cny": "UNKNOWN (coding-plan subscription; no per-call billing; tokens are the cost basis)",
+   "output_truncated": true,
+   "truncation_note": "stop_reason=max_tokens at 448 cap (782 chars); Q may UNDERSTATE single-model capability — fairness caveat against the baseline arm"
+  },
+  "static_hetero_dag": {
+   "Q": 0.8125,
+   "citation_accuracy": 1.0,
+   "coverage_full/partial": "6/1",
+   "new_tokens_this_session": 0,
+   "full_cost_tokens": 12529,
+   "full_cost_basis": "planner(2,267) + V2 real cost of reused t0/t1 (4489) + new calls this session; reused nodes are NOT zero in the full-cost view (baseline has no equivalent cache)",
+   "reused_nodes": [
+    "t0",
+    "t1"
+   ],
+   "executed_lat_s": 0.0,
+   "latency_note": "mixed-session (reused nodes carry no fresh latency); descriptive only, not a paired comparison",
+   "node_log": [
+    {
+     "node": "t0",
+     "model": "GLM-5.3(reused)",
+     "cost_new_tokens": 0
+    },
+    {
+     "node": "t1",
+     "model": "GLM-5.3(reused)",
+     "cost_new_tokens": 0
+    },
+    {
+     "node": "t2",
+     "status": "SKIPPED_BUDGET",
+     "reason": "token cap: actual=19084 + in-flight reserve=448 > guaranteed-settle cap 18000"
+    },
+    {
+     "node": "t3",
+     "status": "SKIPPED_BUDGET",
+     "reason": "token cap: actual=19084 + in-flight reserve=448 > guaranteed-settle cap 18000"
+    },
+    {
+     "node": "t4",
+     "status": "SKIPPED_BUDGET",
+     "reason": "token cap: actual=19084 + in-flight reserve=512 > guaranteed-settle cap 18000"
+    },
+    {
+     "node": "t5",
+     "status": "SKIPPED_BUDGET",
+     "reason": "token cap: actual=19084 + in-flight reserve=512 > guaranteed-settle cap 18000"
+    }
+   ],
+   "unverified_dates": [],
+   "completion": "PARTIAL: t0/t1 reused(V2), t2/t3 GLM-5.3-Flash contract-fail->deterministic salvage OK, t4 GLM-5.3 re-executed on salvaged inputs (contract OK); t5 SKIPPED_BUDGET -> final report INHERITED from the fixed-DAG arm, so hetero end-to-end Q is NOT an independent measurement",
+   "hetero_chain_viable_through": "t4 (verification consumed flash-salvaged t2/t3 outputs successfully)",
+   "new_tokens_v21_ledger_hetero": 5773,
+   "flash_in_hetero": {
+    "t2": {
+     "contract_ok": false,
+     "salvage_ok": true
+    },
+    "t3": {
+     "contract_ok": false,
+     "salvage_ok": true
+    },
+    "t4_on_salvaged_inputs": {
+     "contract_ok": true
+    }
+   }
+  },
+  "fixed_model_dag_A2": {
+   "Q": 0.8125,
+   "citation_accuracy": 1.0,
+   "coverage_full/partial": "6/1",
+   "tokens_exec": 9625,
+   "planner_amortized": 2267,
+   "full_cost_tokens": 11892,
+   "wall_s_prior_session": 42.105,
+   "price_cny": "UNKNOWN (see single arm note)",
+   "latency_caveat": "A2 wall measured in the V2 session (~3h earlier, same host); single/hetero arms measured in this session — descriptive comparison only, not paired"
+  }
+ },
+ "extracts_redo": {
+  "glm53": {
+   "source": "reused_A2_call",
+   "call_id": 5,
+   "first_attempt_contract_ok": true,
+   "Q_raw": 0.8125
+  },
+  "glm53flash": {
+   "note": "two rerun pairs in ledger (calls 2-5) due to crash-reruns; best entry: Q_raw=0.8125 (parity with GLM-5.3), contract fail, salvage_ok=True, ~2.7K tokens incl repair"
+  }
+ },
+ "budget": {
+  "n_calls": 10,
+  "authorized": {
+   "calls": 11,
+   "guaranteed_settle": 18000
+  },
+  "settled_actual": 19084,
+  "over_authorized_cap_by": 1084,
+  "no_single_call_exceeded_max_tokens": true,
+  "overage_attribution": "duplicate spend from crash-reruns: entries with failed parse are not reusable, so repeated script runs re-attempted them (calls 4-5 duplicate calls 2-3, 5438 tokens). Root causes: three aggregation bugs (usage key names, variable name, statement ordering) triggered reruns; the guard itself tripped correctly at t5 and the run stopped.",
+  "waste_prevention_fixes": "crash-resume must skip failed entries pending explicit re-authorization; reserve = max_tokens x 1.5 safety factor for thinking models; aggregation smoke-tested before paid runs"
+ },
+ "accounting_note": "hetero arm reuses persisted A2 outputs for unchanged nodes (zero new tokens); fixed arm fully from persisted V2 session"
+}

@@ -1,0 +1,282 @@
+{
+  "status": "CONCRETE_TASK_DRAFT_SCORING_REFERENCE_PENDING_DYNAMIC_ELIGIBILITY_HOLD",
+  "event_id": "V5SCREEN_ECOVACS_20250426",
+  "source_pdf": "/root/capital_opinion_pilot/v5_event_admission_20261022_v1/raw/V5SCREEN_ECOVACS_20250426.pdf",
+  "source_sha256": "05650fbabc9b0a84f6dc4428609d806ce306262a3738b4f34609c4f967e70254",
+  "task": {
+    "as_of": "2024-12-31",
+    "source_scope": "原PDF第4至6页；评分目标集中第5至6页。全PDF可追溯，不引入报告外市场信息",
+    "question": "核对科沃斯2024年募集资金账户和列示现金管理产品。分别回答六项指定金额；区分累计购买额、同时存续本金、披露余额、假设扣除与实际赎回。引用PDF页码，不作整体合规或投资建议。",
+    "required_targets": [
+      {
+        "id": "account_total",
+        "question": "12个专户披露余额之和"
+      },
+      {
+        "id": "account_total_minus_disclosed_own_cash",
+        "question": "在披露余额合计中仅扣除备注中的200万元自有资金后的算术结果"
+      },
+      {
+        "id": "listed_purchase_turnover",
+        "question": "第6页12笔产品全年累计购买金额"
+      },
+      {
+        "id": "listed_peak_principal",
+        "question": "按[start,end)及表列起止日计算的最大同时存续本金"
+      },
+      {
+        "id": "listed_scheduled_yearend_principal",
+        "question": "仅按表列期限计算的2024-12-31存续本金"
+      },
+      {
+        "id": "listed_peak_headroom_against_20231228_cap",
+        "question": "表列峰值相对2023-12-28通过的5.7亿元额度的算术余量"
+      }
+    ],
+    "output_contract_draft": {
+      "answers": [
+        {
+          "target_id": "one of six IDs",
+          "amount": "decimal string",
+          "currency": "CNY",
+          "scope": "period and balance/turnover/scheduled distinction",
+          "evidence_pdf_pages": [
+            "integer PDF pages"
+          ]
+        }
+      ],
+      "limitations": "explicit text or controlled scope labels; semantic equivalence requires reviewed rules"
+    },
+    "not_frozen": true
+  },
+  "candidate_reference": [
+    {
+      "id": "account_total",
+      "question": "12个专户披露余额之和",
+      "candidate_amount_CNY": "315710796.20",
+      "evidence_pdf_pages": [
+        5
+      ],
+      "confirmed": false,
+      "review_status": "PENDING_INDEPENDENT_CONFIRMATION",
+      "correctness_rule": "明确回答对应角色、期间、CNY金额；Decimal规范化元/万元/亿元，精确到分，绝对误差<=0.01元；不将角色错配算正确",
+      "required_qualifier": "披露时点及已折算余额"
+    },
+    {
+      "id": "account_total_minus_disclosed_own_cash",
+      "question": "在披露余额合计中仅扣除备注中的200万元自有资金后的算术结果",
+      "candidate_amount_CNY": "313710796.20",
+      "evidence_pdf_pages": [
+        5
+      ],
+      "confirmed": false,
+      "review_status": "PENDING_INDEPENDENT_CONFIRMATION",
+      "correctness_rule": "明确回答对应角色、期间、CNY金额；Decimal规范化元/万元/亿元，精确到分，绝对误差<=0.01元；不将角色错配算正确",
+      "required_qualifier": "扣除仅为假设算术，不是公告重述"
+    },
+    {
+      "id": "listed_purchase_turnover",
+      "question": "第6页12笔产品全年累计购买金额",
+      "candidate_amount_CNY": "550000000",
+      "evidence_pdf_pages": [
+        6
+      ],
+      "confirmed": false,
+      "review_status": "PENDING_INDEPENDENT_CONFIRMATION",
+      "correctness_rule": "明确回答对应角色、期间、CNY金额；Decimal规范化元/万元/亿元，精确到分，绝对误差<=0.01元；不将角色错配算正确",
+      "required_qualifier": "表列/计划本金，不代表实际赎回或所有投资"
+    },
+    {
+      "id": "listed_peak_principal",
+      "question": "按[start,end)及表列起止日计算的最大同时存续本金",
+      "candidate_amount_CNY": "300000000",
+      "evidence_pdf_pages": [
+        6
+      ],
+      "confirmed": false,
+      "review_status": "PENDING_INDEPENDENT_CONFIRMATION",
+      "correctness_rule": "明确回答对应角色、期间、CNY金额；Decimal规范化元/万元/亿元，精确到分，绝对误差<=0.01元；不将角色错配算正确",
+      "required_qualifier": "表列/计划本金，不代表实际赎回或所有投资"
+    },
+    {
+      "id": "listed_scheduled_yearend_principal",
+      "question": "仅按表列期限计算的2024-12-31存续本金",
+      "candidate_amount_CNY": "0",
+      "evidence_pdf_pages": [
+        6
+      ],
+      "confirmed": false,
+      "review_status": "PENDING_INDEPENDENT_CONFIRMATION",
+      "correctness_rule": "明确回答对应角色、期间、CNY金额；Decimal规范化元/万元/亿元，精确到分，绝对误差<=0.01元；不将角色错配算正确",
+      "required_qualifier": "表列/计划本金，不代表实际赎回或所有投资"
+    },
+    {
+      "id": "listed_peak_headroom_against_20231228_cap",
+      "question": "表列峰值相对2023-12-28通过的5.7亿元额度的算术余量",
+      "candidate_amount_CNY": "270000000",
+      "evidence_pdf_pages": [
+        6
+      ],
+      "confirmed": false,
+      "review_status": "PENDING_INDEPENDENT_CONFIRMATION",
+      "correctness_rule": "明确回答对应角色、期间、CNY金额；Decimal规范化元/万元/亿元，精确到分，绝对误差<=0.01元；不将角色错配算正确",
+      "required_qualifier": "表列/计划本金，不代表实际赎回或所有投资"
+    }
+  ],
+  "evidence_anchors": [
+    {
+      "page": 5,
+      "search_text": "2,452,595.96",
+      "bboxes": [
+        [
+          347.20001220703125,
+          109.64097595214844,
+          394.4410400390625,
+          119.60397338867188
+        ]
+      ],
+      "anchor_is_reference_lead_not_gold": true
+    },
+    {
+      "page": 5,
+      "search_text": "200万元",
+      "bboxes": [
+        [
+          439.8999938964844,
+          109.64097595214844,
+          471.3999938964844,
+          119.60397338867188
+        ]
+      ],
+      "anchor_is_reference_lead_not_gold": true
+    },
+    {
+      "page": 5,
+      "search_text": "315,710,796.20",
+      "bboxes": [
+        [
+          338.17999267578125,
+          391.3609924316406,
+          394.4210205078125,
+          401.3240051269531
+        ]
+      ],
+      "anchor_is_reference_lead_not_gold": true
+    },
+    {
+      "page": 6,
+      "search_text": "5.7",
+      "bboxes": [
+        [
+          491.9800109863281,
+          138.41683959960938,
+          505.7049865722656,
+          150.57168579101562
+        ]
+      ],
+      "anchor_is_reference_lead_not_gold": true
+    },
+    {
+      "page": 6,
+      "search_text": "2.5",
+      "bboxes": [
+        [
+          345.94000244140625,
+          308.2368469238281,
+          359.6979064941406,
+          320.3916931152344
+        ]
+      ],
+      "anchor_is_reference_lead_not_gold": true
+    },
+    {
+      "page": 6,
+      "search_text": "550,000,000.00",
+      "bboxes": [
+        [
+          278.3599853515625,
+          720.69677734375,
+          347.01776123046875,
+          732.8516845703125
+        ]
+      ],
+      "anchor_is_reference_lead_not_gold": true
+    }
+  ],
+  "quality_scoring_proposal": {
+    "denominator": 6,
+    "unit": "task, not six independent experimental samples",
+    "states": [
+      "MATCH",
+      "WRONG",
+      "MISSING",
+      "UNKNOWN"
+    ],
+    "MATCH": "reference confirmed and response value, role, period, scope supported",
+    "WRONG": "expressed amount/role/period contradicts confirmed reference",
+    "MISSING": "response clearly omits required target; no answer completion from reference",
+    "UNKNOWN": "necessary reference or response interpretation cannot be determined",
+    "Q_terminal": "matches/6 only if all six targets independently adjudicable; otherwise Q_terminal=null and report [matches/6,(matches+unknown)/6] plus per-target statuses",
+    "schema_contract_evidence": "record separately; schema failure alone never zeroes independently interpretable content",
+    "overclaim": "actual redemption/compliance claims evaluated separately; no fully valid terminal delivery if required scope violated. Rule requires independent confirmation before use",
+    "current_confirmatory_Q": null
+  },
+  "dependency_draft": {
+    "nodes": [
+      {
+        "id": "bank_evidence",
+        "sources": [
+          5
+        ],
+        "role": "12账户披露余额及自有资金备注"
+      },
+      {
+        "id": "investment_evidence",
+        "sources": [
+          6
+        ],
+        "role": "12笔金额与起止日"
+      },
+      {
+        "id": "authorization_evidence",
+        "sources": [
+          6
+        ],
+        "role": "明确当期授权额度/日期，区分累计购买额"
+      },
+      {
+        "id": "deterministic_terminal",
+        "role": "账户加总扣除、区间扫描、额度余量和带范围的终端交付"
+      }
+    ],
+    "edges": [
+      [
+        "bank_evidence",
+        "deterministic_terminal"
+      ],
+      [
+        "investment_evidence",
+        "deterministic_terminal"
+      ],
+      [
+        "authorization_evidence",
+        "deterministic_terminal"
+      ]
+    ],
+    "meaning": "三份必要信息职责可独立提取，额度余量同时依赖产品与额度；节点划分只是待确认的实现草案。不能证明需要三次模型调用，单模型联合抽取也是合法候选",
+    "not_an_approved_V5_graph": true
+  },
+  "runtime_eligibility": {
+    "matched_real_outputs": null,
+    "matched_cache_versions": null,
+    "observed_anomaly": null,
+    "available_action_differences": null,
+    "VERIFY": "没有自然冲突证据，禁止据累计额大于额度就触发",
+    "EXPAND": "无闭包外异常证据，禁止人为扩大",
+    "controlled_mechanism_test": false,
+    "independent_validation_admission": "HOLD"
+  },
+  "next_gate": "确认任务必要性、参考及评分范围；明确是否存在真实反馈决策空间。若只能用确定性表格计算完成，则保留为财务任务/评分样例，不纳入联合调度主实验",
+  "model_calls": 0,
+  "algorithm_changes": false
+}

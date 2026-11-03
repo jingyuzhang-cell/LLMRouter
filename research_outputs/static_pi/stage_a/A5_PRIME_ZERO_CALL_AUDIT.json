@@ -1,0 +1,313 @@
+{
+ "experiment": "A5 A' (thinking=low) zero-call review",
+ "date": "2026-11-03",
+ "status": "DRAFT — no API calls; not authorized",
+ "prompt_hashes": {
+  "B_J1_system": "28560bc565f40d85 (full sha in A5_PLANA_DRY.json)",
+  "C_J1_system": "c7384236807cb9b0 (full sha in A5_PLANA_DRY.json)",
+  "J2_system_shared": "7ca250ac1a075e32",
+  "SINK_system_shared": "30c5b67cc411bdc1",
+  "run1_J1_user": "f880d69bed43f5b3",
+  "run2_J1_user": "a29e39e00bde1e69",
+  "run3_J1_user": "0f49e2038e1dae63"
+ },
+ "byte_identity_with_X": {
+  "J1_C_system": "identical",
+  "J2_system_user": "identical all runs",
+  "SINK_system_user": "identical all runs"
+ },
+ "historical_disabled": {
+  "1": {
+   "J1": {
+    "in": 1828,
+    "out": 932,
+    "wall": 10.95,
+    "syslen": 704,
+    "userlen": 3318
+   },
+   "J2": {
+    "in": 2716,
+    "out": 1842,
+    "wall": 22.74,
+    "syslen": 678,
+    "userlen": 5636
+   },
+   "SINK": {
+    "in": 4542,
+    "out": 1468,
+    "wall": 16.93,
+    "syslen": 108,
+    "userlen": 10468
+   },
+   "total_in": 9086,
+   "total_out": 4242,
+   "total_wall": 50.62,
+   "cost_yuan": 0.019146
+  },
+  "2": {
+   "J1": {
+    "in": 2135,
+    "out": 985,
+    "wall": 11.18,
+    "syslen": 704,
+    "userlen": 3720
+   },
+   "J2": {
+    "in": 3103,
+    "out": 1644,
+    "wall": 21.83,
+    "syslen": 678,
+    "userlen": 6390
+   },
+   "SINK": {
+    "in": 4501,
+    "out": 1704,
+    "wall": 20.9,
+    "syslen": 108,
+    "userlen": 10455
+   },
+   "total_in": 9739,
+   "total_out": 4333,
+   "total_wall": 53.91,
+   "cost_yuan": 0.019924
+  },
+  "3": {
+   "J1": {
+    "in": 2225,
+    "out": 1105,
+    "wall": 13.87,
+    "syslen": 704,
+    "userlen": 4009
+   },
+   "J2": {
+    "in": 2884,
+    "out": 2341,
+    "wall": 43.83,
+    "syslen": 678,
+    "userlen": 5726
+   },
+   "SINK": {
+    "in": 4750,
+    "out": 2113,
+    "wall": 25.37,
+    "syslen": 108,
+    "userlen": 11096
+   },
+   "total_in": 9859,
+   "total_out": 5559,
+   "total_wall": 83.07,
+   "cost_yuan": 0.023452
+  }
+ },
+ "forced_paas_real_prompts": {
+  "B_J1": {
+   "in": 1745,
+   "out": 4277,
+   "reasoning": 3335,
+   "text_chars": 2441,
+   "stop": "stop",
+   "wall": 80.67
+  },
+  "C_J1": {
+   "in": 1828,
+   "out": 6488,
+   "reasoning": 5223,
+   "text_chars": 3221,
+   "stop": "stop",
+   "wall": 101.97,
+   "positions_relay_chars": 233
+  },
+  "B_J2": {
+   "in": 2847,
+   "out": 8000,
+   "reasoning": 7977,
+   "text_chars": 0,
+   "stop": "length",
+   "wall": 138.3
+  },
+  "B_SINK": {
+   "in": 2684,
+   "out": 8000,
+   "reasoning": 7969,
+   "text_chars": 0,
+   "stop": "length",
+   "wall": 143.23,
+   "note": "SINK 上游 J2 为空，输入 2684 非真实规模；不能用于 SINK 预算推断"
+  }
+ },
+ "phase_p_low_cross_endpoint": {
+  "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions (标准 API；非 Anthropic 端点)",
+  "schema": "thinking enabled + reasoning_effort low",
+  "calls": 17,
+  "observed": {
+   "out_tokens_range": [
+    400,
+    2342
+   ],
+   "latency_s_range": [
+    5.688,
+    34.037
+   ],
+   "truncation": 0,
+   "note": "输出 token 与文本字符数接近，low 推理开销小（跨端点参考，不可作为 A′ 直接证据）"
+  }
+ },
+ "token_budget": {
+  "C_exact_input": {
+   "1": {
+    "J1": 1828,
+    "J2": 2716,
+    "SINK": 4542
+   },
+   "2": {
+    "J1": 2135,
+    "J2": 3103,
+    "SINK": 4501
+   },
+   "3": {
+    "J1": 2225,
+    "J2": 2884,
+    "SINK": 4750
+   }
+  },
+  "B_J1_delta_tokens_measured": -83,
+  "B_J2_SINK_upper_bound": "≤ C（positions_relay 缺失；以 C 为上界）",
+  "hist_json_out_max": {
+   "J1": 1105,
+   "J2": 2341,
+   "SINK": 2113
+  },
+  "json_out_with_20pct_margin": {
+   "J1": 1326,
+   "J2": 2809,
+   "SINK": 2536
+  },
+  "headroom_at_4000": {
+   "J1": 2674,
+   "J2": 1191,
+   "SINK": 1464
+  },
+  "headroom_at_8000": {
+   "J1": 6674,
+   "J2": 5191,
+   "SINK": 5464
+  },
+  "known_accepted_max_tokens_on_anthropic": 4000,
+  "known_accepted_max_tokens_on_paas": 8000,
+  "risk": "若 low≈forced（J1 5223 / J2 7977 reasoning），4000 全部截断；8000 仅 J1 安全，J2/SINK 仍可能截断。若 low≈Phase P，4000 足够。必须用真实 SINK 提示词校准。"
+ },
+ "cost_yuan": {
+  "historical_C_per_run": {
+   "1": 0.019146,
+   "2": 0.019924,
+   "3": 0.023452
+  },
+  "historical_C_total_3runs": 0.062522,
+  "18_calls_nominal_historical_output": 0.125,
+  "18_calls_with_500_reasoning_each": 0.1502,
+  "18_calls_with_2000_reasoning_each": 0.2258,
+  "18_calls_with_5000_reasoning_each": 0.377,
+  "actual_subscription_marginal": 0.0
+ },
+ "latency_s": {
+  "historical_C_per_run": {
+   "1": 50.62,
+   "2": 53.91,
+   "3": 83.07
+  },
+  "historical_C_total_3runs": 187.6,
+  "historical_both_arms_estimate": 375.2,
+  "phase_p_low_per_call_range": [
+   5.7,
+   34.0
+  ],
+  "forced_paas_per_call": {
+   "J1": [
+    80.67,
+    101.97
+   ],
+   "J2": 138.3,
+   "SINK": 143.23
+  },
+  "predicted_A_prime_total_18": {
+   "low_like_phase_p_min": "≈330–480 s",
+   "forced_like_max": "≈2100 s (35 min)"
+  }
+ },
+ "call_budget": {
+  "consumed": 14,
+  "cap": 32,
+  "remaining": 18,
+  "options": {
+   "no_calibration_18_formal": {
+    "new": 18,
+    "cumulative": 32,
+    "cap_change": 0,
+    "risk": "首个 SINK 若截断即停，可能损失已跑调用"
+   },
+   "one_SINK_calibration_plus_18": {
+    "new": 19,
+    "cumulative": 33,
+    "cap_change": 1,
+    "risk": "单点校准覆盖最坏节点；J1/J2 以 8000 上限保守"
+   },
+   "three_node_calibration_plus_18": {
+    "new": 21,
+    "cumulative": 35,
+    "cap_change": 3,
+    "risk": "最稳；多 2 次校准"
+   },
+   "staged_run1_plus_calibration": {
+    "new": 9,
+    "cumulative": 23,
+    "cap_change": 0,
+    "risk": "先跑 run1（6 调用）+ 1 次 SINK 校准；确认后再决定 run2/3"
+   }
+  }
+ },
+ "a5_encoding_audit": {
+  "official_value": "均无职务(仅实际控制人)",
+  "official_match": "exact after NFKC/whitespace normalization; no accepted_values",
+  "natural_relay_value_test": {
+   "均为实际控制人，未在公司担任任何职务": false,
+   "实际控制人，未在公司担任任何职务": false
+  },
+  "archive_semantic_map": {
+   "non_positions_arms_12_of_12": false,
+   "X_chain_3_of_3": true
+  },
+  "expected_A_prime": {
+   "B_semantic": "0/3",
+   "C_semantic": "3/3",
+   "official_A5_both_arms": "0/6 (exact-match, relay alone cannot pass)",
+   "terminal_fact_delta_bound": "≤ 1/23 = +4.35pp; expected 0 without contract encoding change"
+  },
+  "implication": "A′ 能证明中继机制，不能证明官方终端 A5/终端质量改善；后者需另立合同编码修订。",
+  "archive_official_a5": {
+   "statuses_all_15": "WRONG_GOLD_FACT_VALUE_OR_RELATION",
+   "count": "0/15 pass"
+  },
+  "weights_total": 23.0,
+  "terminal_fact_delta_bound": "1/asserted_claims; historical N=20-23 -> +4.35-5.00pp; Q_raw lower; expected 0 without contract encoding change"
+ },
+ "pass_blocked": {
+  "PASS": [
+   "模型/端点/任务/Gold/E 冻结输出保留",
+   "B/C 提示词唯一差异=positions 中继附录",
+   "J2/SINK 提示词双臂一致",
+   "双合同评分器与 A5 辅助规则可用（规则 12/12）",
+   "现场隔离与新目录计划",
+   "成本/时延核算方法",
+   "预算算术"
+  ],
+  "BLOCKED": [
+   "Anthropic 端点 thinking=low 的 schema/行为未验证（需 1 次校准）",
+   "端点 max_tokens 已知上限 4000；8000 未验证",
+   "真实 SINK 提示词下 low 推理占用未测",
+   "官方 A5 精确匹配使终端改善结构性为零",
+   "新预算（33/35）未授权",
+   "A′ 执行器/校准器未冻结",
+   "13 次现场仅存 4 个节点文件（前 8 次截断原始件不在档）"
+  ]
+ }
+}

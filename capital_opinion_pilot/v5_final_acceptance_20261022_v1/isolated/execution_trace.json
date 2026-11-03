@@ -1,0 +1,273 @@
+{
+  "rebuilt_from_ledger": true,
+  "rebuild_reason": "in-process aggregation crashed after run B (KeyError on budget-blocked repair entry); raw responses were not persisted at call time in that run, so output content and output-derived quality scores are LOST_CRASH; usage/latency/parse-status are exact ledger facts. Meter now persists responses (pilot_common.Meter.call).",
+  "scoring": {
+    "intended": "deterministic coverage vs 8 verified silver facts + unverified-date precision",
+    "status": "NOT_COMPUTABLE_THIS_RUN (outputs lost)",
+    "parse_contract_compliance": "reported instead (first-attempt contract success rate)"
+  },
+  "runs": [
+    {
+      "run": "A",
+      "model": "GLM-5.3",
+      "scope": "all 6 DAG nodes",
+      "nodes": [
+        {
+          "node_id": "doc_index",
+          "attempts": [
+            {
+              "attempt": 1,
+              "call_id": 6,
+              "usage": {
+                "input_tokens": 653,
+                "output_tokens": 288
+              },
+              "latency_s": 11.28,
+              "stop_reason": "max_tokens",
+              "max_tokens": 288
+            },
+            {
+              "attempt": 2,
+              "call_id": 7,
+              "usage": {
+                "input_tokens": 677,
+                "output_tokens": 437
+              },
+              "latency_s": 5.945,
+              "stop_reason": "end_turn",
+              "max_tokens": 448
+            }
+          ],
+          "first_attempt_contract_ok": false,
+          "n_attempts": 2,
+          "tokens": {
+            "in": 1330,
+            "out": 725
+          },
+          "latency_s_sum": 17.225,
+          "status": "done"
+        },
+        {
+          "node_id": "doc_retrieval",
+          "attempts": [
+            {
+              "attempt": 1,
+              "call_id": 8,
+              "usage": {
+                "input_tokens": 2483,
+                "output_tokens": 358
+              },
+              "latency_s": 4.335,
+              "stop_reason": "end_turn",
+              "max_tokens": 512
+            }
+          ],
+          "first_attempt_contract_ok": true,
+          "n_attempts": 1,
+          "tokens": {
+            "in": 2483,
+            "out": 358
+          },
+          "latency_s_sum": 4.335,
+          "status": "done"
+        },
+        {
+          "node_id": "entity_facts",
+          "attempts": [
+            {
+              "attempt": 1,
+              "call_id": 9,
+              "usage": {
+                "input_tokens": 671,
+                "output_tokens": 349
+              },
+              "latency_s": 5.245,
+              "stop_reason": "end_turn",
+              "max_tokens": 384
+            }
+          ],
+          "first_attempt_contract_ok": true,
+          "n_attempts": 1,
+          "tokens": {
+            "in": 671,
+            "out": 349
+          },
+          "latency_s_sum": 5.245,
+          "status": "done"
+        },
+        {
+          "node_id": "timeline",
+          "attempts": [
+            {
+              "attempt": 1,
+              "call_id": 10,
+              "usage": {
+                "input_tokens": 661,
+                "output_tokens": 329
+              },
+              "latency_s": 4.333,
+              "stop_reason": "end_turn",
+              "max_tokens": 384
+            }
+          ],
+          "first_attempt_contract_ok": true,
+          "n_attempts": 1,
+          "tokens": {
+            "in": 661,
+            "out": 329
+          },
+          "latency_s_sum": 4.333,
+          "status": "done"
+        },
+        {
+          "node_id": "fact_check",
+          "attempts": [
+            {
+              "attempt": 1,
+              "call_id": 11,
+              "usage": {
+                "input_tokens": 1396,
+                "output_tokens": 427
+              },
+              "latency_s": 6.78,
+              "stop_reason": "end_turn",
+              "max_tokens": 448
+            }
+          ],
+          "first_attempt_contract_ok": true,
+          "n_attempts": 1,
+          "tokens": {
+            "in": 1396,
+            "out": 427
+          },
+          "latency_s_sum": 6.78,
+          "status": "done"
+        },
+        {
+          "node_id": "report",
+          "attempts": [
+            {
+              "attempt": 1,
+              "call_id": 12,
+              "usage": {
+                "input_tokens": 680,
+                "output_tokens": 317
+              },
+              "latency_s": 5.844,
+              "stop_reason": "end_turn",
+              "max_tokens": 448
+            }
+          ],
+          "first_attempt_contract_ok": true,
+          "n_attempts": 1,
+          "tokens": {
+            "in": 680,
+            "out": 317
+          },
+          "latency_s_sum": 5.844,
+          "status": "done"
+        }
+      ],
+      "wall_s": 43.762,
+      "status": "COMPLETE",
+      "completion_evidence": "executor requires each upstream output to be parsed+stored before any downstream call is possible; the call chain 7..12 (retrieval->entities/timeline->fact_check->report) therefore proves all run A outputs were contract-valid JSON; call 6 was the truncated first attempt of doc_index, repaired by call 7 (bounded repair)",
+      "tokens": {
+        "in": 7221,
+        "out": 2505
+      },
+      "first_attempt_contract_success": "5/6"
+    },
+    {
+      "run": "B",
+      "model": "GLM-5.3-Flash",
+      "scope": "subset [timeline, entity_facts] on identical run-A inputs",
+      "nodes": [
+        {
+          "node_id": "timeline",
+          "attempts": [
+            {
+              "attempt": 1,
+              "call_id": 13,
+              "usage": {
+                "input_tokens": 661,
+                "output_tokens": 308
+              },
+              "latency_s": 6.663,
+              "stop_reason": "end_turn",
+              "max_tokens": 384
+            },
+            {
+              "attempt": 2,
+              "call_id": 14,
+              "usage": {
+                "input_tokens": 696,
+                "output_tokens": 311
+              },
+              "latency_s": 5.782,
+              "stop_reason": "end_turn",
+              "max_tokens": 384
+            }
+          ],
+          "first_attempt_contract_ok": false,
+          "n_attempts": 2,
+          "tokens": {
+            "in": 1357,
+            "out": 619
+          },
+          "latency_s_sum": 12.445,
+          "status": "attempt1_contract_fail; bounded repair issued (call 14); final output content lost in crash"
+        },
+        {
+          "node_id": "entity_facts",
+          "attempts": [
+            {
+              "attempt": 1,
+              "call_id": 15,
+              "usage": {
+                "input_tokens": 671,
+                "output_tokens": 279
+              },
+              "latency_s": 5.69,
+              "stop_reason": "end_turn",
+              "max_tokens": 384
+            }
+          ],
+          "first_attempt_contract_ok": true,
+          "n_attempts": 1,
+          "tokens": {
+            "in": 671,
+            "out": 279
+          },
+          "latency_s_sum": 5.69,
+          "status": "attempt1_contract_fail; bounded repair BLOCKED by token guard (28748 actual + 384 reserve > 29000); evidence: aggregation KeyError on error-dict path"
+        }
+      ],
+      "wall_s": 18.135,
+      "status": "PARTIAL",
+      "tokens": {
+        "in": 2028,
+        "out": 898
+      },
+      "first_attempt_contract_success": "0/2"
+    },
+    {
+      "run": "baseline",
+      "model": "GLM-5.3",
+      "scope": "single-model end-to-end",
+      "status": "SKIPPED_BUDGET",
+      "evidence": "guard requires actual(28748)+max_tokens(448)<=29000; the spec marks this arm conditional (在资源允许的情况下)"
+    }
+  ],
+  "budget": {
+    "n_calls": 15,
+    "calls_cap": 20,
+    "settled_actual_tokens": 28748,
+    "actual_cap": 30000,
+    "sum_max_tokens_cumulative": 7816,
+    "conservative_actual_plus_sum_max": 36564,
+    "accounting_note": "enforced cap: guaranteed-settled actual <= 29000 (actual_before + in-flight max_tokens; serial calls bound peak outstanding to one cap). The conservative cumulative actual+sum(max_tokens) metric exceeds 30000; disclosed as the strictest-reading figure — reservations settle to actual on completion and were never simultaneously outstanding."
+  },
+  "environment_check_calls_disclosed": {
+    "note": "pre-execution connectivity probes (probe_models.py, probe_thinking.py) made 6 tiny calls ~388 tokens total; not part of the pilot ledger, disclosed for completeness"
+  }
+}

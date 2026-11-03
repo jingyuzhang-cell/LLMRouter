@@ -1,0 +1,100 @@
+{
+ "report": "FIX_AND_MINIMAL_PAIRING_REPORT.md",
+ "date": "2026-10-14",
+ "fixes": {
+  "t1_t5_cap": {
+   "protocol_v2_caps": {
+    "extract": 2048,
+    "t3": 1536,
+    "t4": 2560,
+    "t5": 4096,
+    "t6": 2048
+   },
+   "evidence": {
+    "ds_per_verdict": 55,
+    "glm_per_verdict": 110,
+    "worst_items": 35,
+    "ds_need": 2493,
+    "glm_need_raw": 3850,
+    "decision": "t5=4096 (3072 insufficient for GLM)"
+   }
+  },
+  "t2_json_compat": {
+   "layers": [
+    "L0_strict",
+    "L1_control_char"
+   ],
+   "no_repair_for": [
+    "truncation",
+    "inner_quotes"
+   ],
+   "historical": {
+    "R1": "L1",
+    "R2": "L0",
+    "R3": "L0",
+    "R4": "both-fail(unescaped quote)"
+   }
+  },
+  "t3_deadline": {
+   "executor": "execution_v2",
+   "gates": [
+    "pre-call",
+    "preflight+15%margin",
+    "hard-stop"
+   ],
+   "sim_observed_lat": {
+    "clean": {
+     "wall": 60.8,
+     "met": true
+    },
+    "S5Cap_F7": {
+     "wall": 70.2,
+     "met": true,
+     "skips": 1
+    },
+    "S6_F7": {
+     "wall": 36.1,
+     "met": true
+    }
+   },
+   "note": "simulation is mechanism demonstration, not evidence"
+  },
+  "t4_scoring_v2": {
+   "rules": "field-structured per fact",
+   "tests": "10/10 boundary cases",
+   "historical_rescore": {
+    "R1": "1/4(RF1)",
+    "R2": "1/4(RF4)",
+    "R3": "1/4(RF1)",
+    "R4": "1/4(RF1)"
+   },
+   "corrected_reachability_10k": {
+    "RF1": "COVERED",
+    "RF2": "COVERED",
+    "RF3": "NOT_COVERED",
+    "RF4": "COVERED"
+   },
+   "ceiling": "3/4 at 10K (was believed 2/4 under over-strict anchor test)"
+  }
+ },
+ "minimal_pairing": {
+  "runs": [
+   "clean_static",
+   "S5Cap_F7",
+   "S6_F7"
+  ],
+  "clean_baseline_required": true,
+  "budget": {
+   "planned_calls": 18,
+   "cap_calls": 20,
+   "worst_tokens": 99858,
+   "cap_tokens": 110000,
+   "worst_cash_rmb_offpeak": 0.126,
+   "cap_cash_rmb": 0.15,
+   "deadline_s": 90,
+   "offpeak_only": true
+  }
+ },
+ "go": "CODE-READY; awaiting numeric authorization",
+ "regression": "test_fixes_v2.py ALL PASS"
+}

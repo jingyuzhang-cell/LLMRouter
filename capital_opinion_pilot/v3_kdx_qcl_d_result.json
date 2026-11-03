@@ -1,0 +1,200 @@
+{
+ "arm": "D feedback-driven recovery (fault-injected; recovery calls real)",
+ "base_C_reference": {
+  "Q": 0.4286,
+  "cite": 0.6667,
+  "downstream_tokens": 8082
+ },
+ "seeds": {
+  "seed1": {
+   "fault_node": "t3",
+   "log": [
+    {
+     "event": "fault_injected",
+     "node": "t3",
+     "planned_model_unavailable": "glm53flash",
+     "tokens": 0
+    },
+    {
+     "event": "node_recovered",
+     "nid": "t3",
+     "model": "GLM-5.3",
+     "usage": {
+      "input_tokens": 1969,
+      "output_tokens": 387
+     },
+     "latency_s": 4.435,
+     "contract_ok": true,
+     "salvaged": false,
+     "Q_raw": 0.1429
+    },
+    {
+     "event": "descendant_rerun",
+     "nid": "t5",
+     "model": "GLM-5.3",
+     "usage": {
+      "input_tokens": 1389,
+      "output_tokens": 583
+     },
+     "latency_s": 6.069,
+     "contract_ok": true,
+     "salvaged": false,
+     "Q_raw": 0.2857
+    },
+    {
+     "event": "descendant_rerun",
+     "nid": "t6",
+     "model": "GLM-5.3",
+     "usage": {
+      "input_tokens": 757,
+      "output_tokens": 522
+     },
+     "latency_s": 7.089,
+     "contract_ok": true,
+     "salvaged": false,
+     "Q_raw": 0.2857
+    }
+   ],
+   "tokens_spent": 5607,
+   "wall_s": 17.65,
+   "final_Q": 0.4286,
+   "covered": [
+    "A1",
+    "A3",
+    "A5"
+   ],
+   "final_cite": 0.6667,
+   "no_recovery_counterfactual": "INCOMPLETE (t6 blocked by failed node)"
+  },
+  "seed2": {
+   "fault_node": "t4",
+   "log": [
+    {
+     "event": "fault_injected",
+     "node": "t4",
+     "planned_model_unavailable": "glm53flash",
+     "tokens": 0
+    },
+    {
+     "event": "node_recovered",
+     "nid": "t4",
+     "model": "GLM-5.3",
+     "usage": {
+      "input_tokens": 1959,
+      "output_tokens": 723
+     },
+     "latency_s": 8.542,
+     "contract_ok": true,
+     "salvaged": false,
+     "Q_raw": 0.4286
+    },
+    {
+     "event": "descendant_rerun",
+     "nid": "t5",
+     "model": "GLM-5.3",
+     "usage": {
+      "input_tokens": 1303,
+      "output_tokens": 532
+     },
+     "latency_s": 5.987,
+     "contract_ok": true,
+     "salvaged": false,
+     "Q_raw": 0.4286
+    },
+    {
+     "event": "descendant_rerun",
+     "nid": "t6",
+     "model": "GLM-5.3",
+     "usage": {
+      "input_tokens": 707,
+      "output_tokens": 561
+     },
+     "latency_s": 8.679,
+     "contract_ok": true,
+     "salvaged": false,
+     "Q_raw": 0.4286
+    }
+   ],
+   "tokens_spent": 5785,
+   "wall_s": 23.26,
+   "final_Q": 0.4286,
+   "covered": [
+    "A1",
+    "A3",
+    "A5"
+   ],
+   "final_cite": 0.6667,
+   "no_recovery_counterfactual": "INCOMPLETE (t6 blocked by failed node)"
+  },
+  "seed3": {
+   "fault_node": "t5",
+   "log": [
+    {
+     "event": "fault_injected",
+     "node": "t5",
+     "planned_model_unavailable": "glm53",
+     "tokens": 0
+    },
+    {
+     "event": "node_recovered",
+     "nid": "t5",
+     "model": "GLM-5.3-Flash",
+     "usage": {
+      "input_tokens": 1971,
+      "output_tokens": 719
+     },
+     "latency_s": 12.552,
+     "contract_ok": true,
+     "salvaged": false,
+     "Q_raw": 0.4286
+    },
+    {
+     "event": "descendant_rerun",
+     "nid": "t6",
+     "model": "GLM-5.3",
+     "usage": {
+      "input_tokens": 796,
+      "output_tokens": 483
+     },
+     "latency_s": 5.962,
+     "contract_ok": true,
+     "salvaged": false,
+     "Q_raw": 0.4286
+    }
+   ],
+   "tokens_spent": 3969,
+   "wall_s": 18.55,
+   "final_Q": 0.4286,
+   "covered": [
+    "A1",
+    "A3",
+    "A5"
+   ],
+   "final_cite": 1.0,
+   "no_recovery_counterfactual": "INCOMPLETE (t6 blocked by failed node)"
+  }
+ },
+ "budget": {
+  "n_calls": 8,
+  "settled_actual_tokens": 15361,
+  "conservative_actual_plus_sum_max": 23809,
+  "caps": {
+   "calls": 9,
+   "guaranteed_settle": 18000
+  },
+  "per_model": {
+   "glm53": {
+    "calls": 7,
+    "in": 8880,
+    "out": 3791,
+    "lat_s": 46.763000000000005
+   },
+   "glm53flash": {
+    "calls": 1,
+    "in": 1971,
+    "out": 719,
+    "lat_s": 12.552
+   }
+  }
+ }
+}

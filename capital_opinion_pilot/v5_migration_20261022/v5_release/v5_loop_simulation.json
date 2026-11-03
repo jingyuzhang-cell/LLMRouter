@@ -1,0 +1,72 @@
+[
+ {
+  "round": 1,
+  "step": "detect",
+  "feedback": {
+   "t1": "15/22 grounded",
+   "t2": "10/15 grounded"
+  },
+  "source": "real caches (f7v2 R2) + deterministic detector"
+ },
+ {
+  "round": 1,
+  "step": "choose",
+  "action": {
+   "class": "REEXEC_LOCAL",
+   "reexec_t2": "deepseek",
+   "extras": []
+  },
+  "q_identified": true,
+  "q_task": 14.471999999999998,
+  "score": 14.262,
+  "note": "LOCAL(t2->DS) fully identified from measured cells"
+ },
+ {
+  "round": 1,
+  "step": "execute",
+  "source": "[replay] real f7v2 R1 t2-deepseek response",
+  "new_cache_health": "13/14 grounded",
+  "improvement": "10/15 -> 13/14"
+ },
+ {
+  "round": 2,
+  "step": "detect",
+  "feedback": {
+   "t5_unresolved": 4,
+   "examples": [
+    {
+     "fact": "银行存款虚假陈述：UNRESOLVED——证据片段未包含银行存款（如北京银行账户余额）虚假记载的具体监管认定",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    },
+    {
+     "fact": "关联担保违法认定：UNRESOLVED——证据片段未包含关联担保违法事项的具体认定内容",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    }
+   ]
+  },
+  "source": "[replay] real f7v2 R2 t5 response"
+ },
+ {
+  "round": 2,
+  "step": "verify_annotation",
+  "node_spec": "verify.v1",
+  "target": "t1",
+  "prompt_chars": 9721,
+  "source": "[canned] deterministic-style verdicts (no saved verify call exists)",
+  "flagged": 0,
+  "of": 8,
+  "annotation_effect": "no downstream invalidation (annotation edge)"
+ },
+ {
+  "round": 2,
+  "step": "choose_after_verify",
+  "action": {
+   "class": "KEEP",
+   "reexec_t1": null
+  },
+  "q_identified": true,
+  "note": "t1 flash/qwen cells UNIDENTIFIED -> reexec competes on cost only; supplement (22 calls) is exactly what makes this round identifiable"
+ }
+]

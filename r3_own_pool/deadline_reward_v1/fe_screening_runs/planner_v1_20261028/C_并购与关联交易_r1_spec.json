@@ -1,0 +1,113 @@
+{
+ "task_id": "planned",
+ "task_class": "关联交易与资金流向结构分析",
+ "evidence": [],
+ "constraints": {
+  "D": 140.0,
+  "Ccap": 0.02
+ },
+ "nodes": [
+  {
+   "id": "n1",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts_transactions",
+     "facts_capital_flows"
+    ],
+    "requires": []
+   },
+   "evidence": "jsst"
+  },
+  {
+   "id": "n2",
+   "role": "entity_relations",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "entities",
+     "hidden_related_parties"
+    ],
+    "requires": [
+     "facts_transactions"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n3",
+   "role": "amounts",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "flow_amounts",
+     "roles_client_supplier_channel"
+    ],
+    "requires": [
+     "facts_capital_flows"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n4",
+   "role": "entity_graph",
+   "inputs": [
+    "n2",
+    "n3"
+   ],
+   "contract": {
+    "produces": [
+     "entity_edges"
+    ],
+    "requires": [
+     "entities",
+     "roles_client_supplier_channel"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n5",
+   "role": "cross_check",
+   "inputs": [
+    "n4",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "checked_graph",
+     "conflicts"
+    ],
+    "requires": [
+     "entity_edges",
+     "hidden_related_parties"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n6",
+   "role": "synthesis",
+   "inputs": [
+    "n5",
+    "n3"
+   ],
+   "contract": {
+    "produces": [
+     "report"
+    ],
+    "requires": [
+     "checked_graph",
+     "flow_amounts"
+    ]
+   },
+   "evidence": null
+  }
+ ]
+}

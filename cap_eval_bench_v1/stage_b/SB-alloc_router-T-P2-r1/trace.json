@@ -1,0 +1,145 @@
+{
+ "run_id": "SB-alloc_router-T-P2-r1",
+ "system_id": "alloc_router",
+ "task_id": "T-P2",
+ "config_hash": "05026b4af67e528c088a494b2903a209c2605d66e6541e5d50a1f8c7c0736332",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0,
+  "note": "fixed assignment"
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 20,
+   "usage": {
+    "in": 118,
+    "out": 60
+   },
+   "latency_s": 4.154,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 21,
+   "usage": {
+    "in": 2203,
+    "out": 332
+   },
+   "latency_s": 5.86,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "subtask"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 22,
+   "usage": {
+    "in": 424,
+    "out": 202
+   },
+   "latency_s": 11.351,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 23,
+   "usage": {
+    "in": 422,
+    "out": 168
+   },
+   "latency_s": 4.076,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 24,
+   "usage": {
+    "in": 800,
+    "out": 393
+   },
+   "latency_s": 5.516,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "unresolved"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 25,
+   "usage": {
+    "in": 536,
+    "out": 341
+   },
+   "latency_s": 4.967,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 36.955,
+ "deliverable_ref": "stage_b/SB-alloc_router-T-P2-r1/deliverable.json",
+ "notes": "STAGE-B REAL run arm=alloc_router; frozen graph; assignment={'f1': 'glm53', 'f2': 'glm53flash', 'f3': 'glm53', 'f4': 'glm53', 'f5': 'glm53', 'f6': 'glm53'}"
+}

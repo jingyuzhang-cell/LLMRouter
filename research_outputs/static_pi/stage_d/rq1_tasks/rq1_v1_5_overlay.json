@@ -1,0 +1,736 @@
+{
+ "version": "1.5",
+ "base": "rq1_tasks_materials.json",
+ "node_type_map": {
+  "E04": {
+   "fin_extract": "extract",
+   "reg_timeline": "timeline",
+   "biz_risk": "extract",
+   "anomaly_calc": "reason",
+   "cross_verify": "verification",
+   "final_report": "report"
+  },
+  "E05": {
+   "ext_doc1": "timeline",
+   "ext_doc2": "extract",
+   "merge": "merge",
+   "report": "report"
+  },
+  "E06": {
+   "ext_doc1": "extract",
+   "ext_doc2": "extract",
+   "ext_doc3": "extract",
+   "merge": "merge",
+   "report": "report"
+  },
+  "E07": {
+   "ext_doc1": "extract",
+   "ext_doc2": "extract",
+   "ext_doc3": "extract",
+   "verify": "verification",
+   "report": "report"
+  },
+  "E08": {
+   "ext_doc1": "extract",
+   "ext_doc2": "extract",
+   "ext_doc3": "extract",
+   "merge": "merge",
+   "report": "report"
+  }
+ },
+ "features": {
+  "E04": {
+   "fin_extract": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "reg_timeline": {
+    "node_type": "timeline",
+    "n_docs": 2,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 2,
+    "evidence_dispersion": 2,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "biz_risk": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "anomaly_calc": {
+    "node_type": "reason",
+    "n_docs": 0,
+    "n_upstream_facts": 6,
+    "n_output_facts": 3,
+    "information_complexity": 6,
+    "evidence_dispersion": 3,
+    "output_complexity": 3,
+    "dependency_depth": 1
+   },
+   "cross_verify": {
+    "node_type": "verification",
+    "n_docs": 0,
+    "n_upstream_facts": 5,
+    "n_output_facts": 0,
+    "information_complexity": 5,
+    "evidence_dispersion": 2,
+    "output_complexity": 0,
+    "dependency_depth": 1
+   },
+   "final_report": {
+    "node_type": "report",
+    "n_docs": 0,
+    "n_upstream_facts": 5,
+    "n_output_facts": 3,
+    "information_complexity": 5,
+    "evidence_dispersion": 2,
+    "output_complexity": 3,
+    "dependency_depth": 2
+   }
+  },
+  "E05": {
+   "ext_doc1": {
+    "node_type": "timeline",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "ext_doc2": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "merge": {
+    "node_type": "merge",
+    "n_docs": 0,
+    "n_upstream_facts": 4,
+    "n_output_facts": 3,
+    "information_complexity": 4,
+    "evidence_dispersion": 2,
+    "output_complexity": 3,
+    "dependency_depth": 1
+   },
+   "report": {
+    "node_type": "report",
+    "n_docs": 0,
+    "n_upstream_facts": 3,
+    "n_output_facts": 2,
+    "information_complexity": 3,
+    "evidence_dispersion": 1,
+    "output_complexity": 2,
+    "dependency_depth": 2
+   }
+  },
+  "E06": {
+   "ext_doc1": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "ext_doc2": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "ext_doc3": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "merge": {
+    "node_type": "merge",
+    "n_docs": 0,
+    "n_upstream_facts": 3,
+    "n_output_facts": 3,
+    "information_complexity": 3,
+    "evidence_dispersion": 1,
+    "output_complexity": 3,
+    "dependency_depth": 1
+   },
+   "report": {
+    "node_type": "report",
+    "n_docs": 0,
+    "n_upstream_facts": 3,
+    "n_output_facts": 2,
+    "information_complexity": 3,
+    "evidence_dispersion": 1,
+    "output_complexity": 2,
+    "dependency_depth": 2
+   }
+  },
+  "E07": {
+   "ext_doc1": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "ext_doc2": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "ext_doc3": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "verify": {
+    "node_type": "verification",
+    "n_docs": 0,
+    "n_upstream_facts": 4,
+    "n_output_facts": 4,
+    "information_complexity": 4,
+    "evidence_dispersion": 2,
+    "output_complexity": 4,
+    "dependency_depth": 1
+   },
+   "report": {
+    "node_type": "report",
+    "n_docs": 0,
+    "n_upstream_facts": 3,
+    "n_output_facts": 2,
+    "information_complexity": 3,
+    "evidence_dispersion": 1,
+    "output_complexity": 2,
+    "dependency_depth": 2
+   }
+  },
+  "E08": {
+   "ext_doc1": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "ext_doc2": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "ext_doc3": {
+    "node_type": "extract",
+    "n_docs": 1,
+    "n_upstream_facts": 0,
+    "n_output_facts": 0,
+    "information_complexity": 1,
+    "evidence_dispersion": 1,
+    "output_complexity": 0,
+    "dependency_depth": 0
+   },
+   "merge": {
+    "node_type": "merge",
+    "n_docs": 0,
+    "n_upstream_facts": 4,
+    "n_output_facts": 3,
+    "information_complexity": 4,
+    "evidence_dispersion": 2,
+    "output_complexity": 3,
+    "dependency_depth": 1
+   },
+   "report": {
+    "node_type": "report",
+    "n_docs": 0,
+    "n_upstream_facts": 3,
+    "n_output_facts": 2,
+    "information_complexity": 3,
+    "evidence_dispersion": 1,
+    "output_complexity": 2,
+    "dependency_depth": 2
+   }
+  }
+ },
+ "derived_gold": {
+  "E04": {
+   "anomaly_calc": [
+    {
+     "fact_id": "D-E04-AN1",
+     "category": "derived_anomaly",
+     "expected_value": "2025年末净资产为负",
+     "from_facts": [
+      "F-D1",
+      "F-D2",
+      "F-D3",
+      "F-D4"
+     ],
+     "evidence_doc": "E04-zhuoran_20260429.txt",
+     "evidence_span": "净资产",
+     "critical": true,
+     "value_match_rule": "contains:净资产 且 contains:负",
+     "review_status": "FAIL",
+     "excluded": true,
+     "reason": "evidence doc absent / facts from M8-P2 not in E04 docs"
+    },
+    {
+     "fact_id": "D-E04-AN2",
+     "category": "derived_anomaly",
+     "expected_value": "2025年度净利润为负",
+     "from_facts": [
+      "F-D2",
+      "F-D3"
+     ],
+     "evidence_doc": "E04-zhuoran_20260429.txt",
+     "evidence_span": "净利润",
+     "critical": true,
+     "value_match_rule": "contains:净利润 且 contains:负",
+     "review_status": "FAIL",
+     "excluded": true,
+     "reason": "evidence doc absent / facts from M8-P2 not in E04 docs"
+    },
+    {
+     "fact_id": "D-E04-AN3",
+     "category": "derived_anomaly",
+     "expected_value": "营业收入扣除后低于3亿元",
+     "from_facts": [
+      "F-D4",
+      "F-D5",
+      "F-D6"
+     ],
+     "evidence_doc": "E04-zhuoran_20260429.txt",
+     "evidence_span": "营业收入",
+     "critical": true,
+     "value_match_rule": "contains:营业收入 且 contains:扣除",
+     "review_status": "FAIL",
+     "excluded": true,
+     "reason": "evidence doc absent / facts from M8-P2 not in E04 docs"
+    }
+   ],
+   "final_report": [
+    {
+     "fact_id": "D-E04-R1",
+     "category": "derived_conclusion",
+     "expected_value": "财务类退市风险警示路径成立（净资产为负/净利润为负/营收低于3亿元）",
+     "from_facts": [
+      "F-C1",
+      "F-C2",
+      "F-F1",
+      "F-F2",
+      "F-F3"
+     ],
+     "evidence_doc": "E04-zhuoran_20260429.txt",
+     "evidence_span": "退市风险警示",
+     "critical": true,
+     "value_match_rule": "contains:财务类",
+     "review_status": "FAIL",
+     "excluded": true,
+     "reason": "evidence doc absent / facts from M8-P2 not in E04 docs"
+    },
+    {
+     "fact_id": "D-E04-R2",
+     "category": "derived_conclusion",
+     "expected_value": "重整/重组类路径与财务类并行，先触及先适用",
+     "from_facts": [
+      "F-C1",
+      "F-C2",
+      "F-F3"
+     ],
+     "evidence_doc": "E04-zhuoran_20260429.txt",
+     "evidence_span": "先触及先适用",
+     "critical": true,
+     "value_match_rule": "contains:先触及",
+     "review_status": "FAIL",
+     "excluded": true,
+     "reason": "evidence doc absent / facts from M8-P2 not in E04 docs"
+    },
+    {
+     "fact_id": "D-E04-R3",
+     "category": "derived_conclusion",
+     "expected_value": "2026年净资产仍为负将终止上市",
+     "from_facts": [
+      "F-C2",
+      "F-F1"
+     ],
+     "evidence_doc": "E04-zhuoran_20260429.txt",
+     "evidence_span": "终止上市",
+     "critical": true,
+     "value_match_rule": "contains:终止上市",
+     "review_status": "FAIL",
+     "excluded": true,
+     "reason": "evidence doc absent / facts from M8-P2 not in E04 docs"
+    }
+   ]
+  },
+  "E05": {
+   "merge": [
+    {
+     "fact_id": "D-E05-M1",
+     "category": "derived_relation",
+     "expected_value": "立案(2026-10-09)晚于退市风险警示(2026-04-29)",
+     "from_facts": [
+      "F-E05-2",
+      "F-E05-3"
+     ],
+     "evidence_doc": "E05-nachuan_20261009.txt",
+     "evidence_span": "2026 年 10 月 9 日",
+     "critical": true,
+     "value_match_rule": "contains:晚于"
+    },
+    {
+     "fact_id": "D-E05-M2",
+     "category": "derived_relation",
+     "expected_value": "风险警示触发原因(2025净资产为负/内控否定)与立案原因(2023年报虚假记载)不同",
+     "from_facts": [
+      "F-E05-2",
+      "F-E05-4",
+      "F-E05-9"
+     ],
+     "evidence_doc": "E05-nachuan_20260904.txt",
+     "evidence_span": "2025 年度期末净资产为-147,791,659.62 元",
+     "critical": true,
+     "value_match_rule": "contains:不同",
+     "review_status": "FIXED"
+    },
+    {
+     "fact_id": "D-E05-M3",
+     "category": "derived_relation",
+     "expected_value": "立案调查未决、退市风险警示尚未撤销",
+     "from_facts": [
+      "F-E05-2",
+      "F-E05-11"
+     ],
+     "evidence_doc": "E05-nachuan_20260904.txt",
+     "evidence_span": "尚未消除",
+     "critical": false,
+     "value_match_rule": "contains:未撤销",
+     "review_status": "FIXED"
+    }
+   ],
+   "report": [
+    {
+     "fact_id": "D-E05-R1",
+     "category": "derived_conclusion",
+     "expected_value": "公司同时处于退市风险警示与立案调查两条监管线",
+     "from_facts": [
+      "D-E05-M1",
+      "D-E05-M2",
+      "F-E05-11"
+     ],
+     "evidence_doc": "E05-nachuan_20260904.txt",
+     "evidence_span": "退市风险警示",
+     "critical": true,
+     "value_match_rule": "contains:同时"
+    },
+    {
+     "fact_id": "D-E05-R2",
+     "category": "derived_conclusion",
+     "expected_value": "风险警示解除取决于净资产/内控整改，立案结果不确定",
+     "from_facts": [
+      "D-E05-M2",
+      "D-E05-M3"
+     ],
+     "evidence_doc": "E05-nachuan_20261009.txt",
+     "evidence_span": "立案",
+     "critical": true,
+     "value_match_rule": "contains:不确定"
+    }
+   ]
+  },
+  "E06": {
+   "merge": [
+    {
+     "fact_id": "D-E06-M1",
+     "category": "derived_relation",
+     "expected_value": "立案(2026-04-21)早于半年度业绩预告(2026-07-14)",
+     "from_facts": [
+      "F-E06-1",
+      "F-E06-5"
+     ],
+     "evidence_doc": "E06-huanrui_20260423.txt",
+     "evidence_span": "2026年4月21日",
+     "critical": true,
+     "value_match_rule": "contains:早于",
+     "review_status": "FIXED"
+    },
+    {
+     "fact_id": "D-E06-M2",
+     "category": "derived_relation",
+     "expected_value": "2026H1净亏损12,500万元，较上年同期-639.38万元扩大",
+     "from_facts": [
+      "F-E06-5",
+      "F-E06-6"
+     ],
+     "evidence_doc": "E06-huanrui_20260715.txt",
+     "evidence_span": "亏损：12,500.00 万元",
+     "critical": true,
+     "value_match_rule": "contains:扩大",
+     "review_status": "FIXED"
+    },
+    {
+     "fact_id": "D-E06-M3",
+     "category": "derived_relation",
+     "expected_value": "立案原因(2022年加计抵减/其他收益)与业绩下滑不同",
+     "from_facts": [
+      "F-E06-1",
+      "F-E06-2",
+      "F-E06-5"
+     ],
+     "evidence_doc": "E06-huanrui_20260423.txt",
+     "evidence_span": "加计抵减",
+     "critical": false,
+     "value_match_rule": "contains:不同",
+     "review_status": "FIXED"
+    }
+   ],
+   "report": [
+    {
+     "fact_id": "D-E06-R1",
+     "category": "derived_conclusion",
+     "expected_value": "立案与亏损叠加，退市风险取决于全年净资产/营收",
+     "from_facts": [
+      "D-E06-M1",
+      "D-E06-M2",
+      "F-E06-12"
+     ],
+     "evidence_doc": "E06-huanrui_20260715.txt",
+     "evidence_span": "亏损",
+     "critical": true,
+     "value_match_rule": "contains:退市",
+     "review_status": "FIXED"
+    },
+    {
+     "fact_id": "D-E06-R2",
+     "category": "derived_conclusion",
+     "expected_value": "投资者沟通风险因素未披露（UNKNOWN）",
+     "from_facts": [
+      "F-E06-12"
+     ],
+     "evidence_doc": "E06-huanrui_20260919.txt",
+     "evidence_span": "投资者网上集体接待日",
+     "critical": false,
+     "value_match_rule": "contains:unknown",
+     "review_status": "FIXED"
+    }
+   ]
+  },
+  "E07": {
+   "verify": [
+    {
+     "fact_id": "D-E07-V1",
+     "category": "derived_verification",
+     "expected_value": "其他风险警示(2026-04-29)由2025年度内控否定意见触发",
+     "from_facts": [
+      "F-E07-3",
+      "F-E07-4",
+      "F-E07-5"
+     ],
+     "evidence_doc": "E07-xiwang_20260822.txt",
+     "evidence_span": "2026 年 4 月 29 日",
+     "critical": true,
+     "value_match_rule": "contains:内控"
+    },
+    {
+     "fact_id": "D-E07-V2",
+     "category": "derived_verification",
+     "expected_value": "13,000万元资金占用若一个月内未解决将叠加其他风险警示",
+     "from_facts": [
+      "F-E07-7",
+      "F-E07-8",
+      "F-E07-9"
+     ],
+     "evidence_doc": "E07-xiwang_20260822.txt",
+     "evidence_span": "13,000 万元",
+     "critical": true,
+     "value_match_rule": "contains:叠加"
+    },
+    {
+     "fact_id": "D-E07-V3",
+     "category": "derived_verification",
+     "expected_value": "立案(公司及王勇)与风险警示并行",
+     "from_facts": [
+      "F-E07-1",
+      "F-E07-3"
+     ],
+     "evidence_doc": "E07-xiwang_20260429.txt",
+     "evidence_span": "王勇",
+     "critical": false,
+     "value_match_rule": "contains:并行"
+    },
+    {
+     "fact_id": "D-E07-V4",
+     "category": "derived_verification",
+     "expected_value": "审计最终意见/正式日期 UNKNOWN",
+     "from_facts": [
+      "F-E07-11"
+     ],
+     "evidence_doc": "E07-xiwang_20260822.txt",
+     "evidence_span": "审计",
+     "critical": false,
+     "value_match_rule": "contains:unknown"
+    }
+   ],
+   "report": [
+    {
+     "fact_id": "D-E07-R1",
+     "category": "derived_conclusion",
+     "expected_value": "公司处于内控否定+资金占用+立案三重风险",
+     "from_facts": [
+      "D-E07-V1",
+      "D-E07-V2",
+      "D-E07-V3"
+     ],
+     "evidence_doc": "E07-xiwang_20260822.txt",
+     "evidence_span": "风险警示",
+     "critical": true,
+     "value_match_rule": "contains:三重"
+    },
+    {
+     "fact_id": "D-E07-R2",
+     "category": "derived_conclusion",
+     "expected_value": "其他风险警示可能叠加，解除取决于资金占用解决",
+     "from_facts": [
+      "D-E07-V2",
+      "F-E07-9"
+     ],
+     "evidence_doc": "E07-xiwang_20260822.txt",
+     "evidence_span": "一个月",
+     "critical": true,
+     "value_match_rule": "contains:整改",
+     "review_status": "FIXED"
+    }
+   ]
+  },
+  "E08": {
+   "merge": [
+    {
+     "fact_id": "D-E08-M1",
+     "category": "derived_relation",
+     "expected_value": "立案(2026-09-18)与2025年度亏损预告并存",
+     "from_facts": [
+      "F-E08-1",
+      "F-E08-5"
+     ],
+     "evidence_doc": "E08-zhongtie_20260918.txt",
+     "evidence_span": "2026 年 9 月 18 日",
+     "critical": true,
+     "value_match_rule": "contains:并存"
+    },
+    {
+     "fact_id": "D-E08-M2",
+     "category": "derived_relation",
+     "expected_value": "立案可能涉及实际控制人变更前开展的相关业务",
+     "from_facts": [
+      "F-E08-7",
+      "F-E08-8"
+     ],
+     "evidence_doc": "E08-zhongtie_20260918.txt",
+     "evidence_span": "实际控制人变更前",
+     "critical": true,
+     "value_match_rule": "contains:变更前"
+    },
+    {
+     "fact_id": "D-E08-M3",
+     "category": "derived_relation",
+     "expected_value": "投资者说明会未披露具体风险因素（UNKNOWN）",
+     "from_facts": [
+      "F-E08-10"
+     ],
+     "evidence_doc": "E08-zhongtie_20260327.txt",
+     "evidence_span": "业绩说明会",
+     "critical": false,
+     "value_match_rule": "contains:unknown"
+    }
+   ],
+   "report": [
+    {
+     "fact_id": "D-E08-R1",
+     "category": "derived_conclusion",
+     "expected_value": "2025年亏损扩大与立案调查并存",
+     "from_facts": [
+      "D-E08-M1",
+      "D-E08-M2",
+      "F-E08-10"
+     ],
+     "evidence_doc": "E08-zhongtie_20260129.txt",
+     "evidence_span": "亏损",
+     "critical": true,
+     "value_match_rule": "contains:退市",
+     "review_status": "FIXED"
+    },
+    {
+     "fact_id": "D-E08-R2",
+     "category": "derived_conclusion",
+     "expected_value": "立案调查结果不确定",
+     "from_facts": [
+      "D-E08-M2"
+     ],
+     "evidence_doc": "E08-zhongtie_20260918.txt",
+     "evidence_span": "最终调查结论",
+     "critical": true,
+     "value_match_rule": "contains:不确定"
+    }
+   ]
+  }
+ },
+ "normalization": {
+  "primary": "task_equal_tp_rate",
+  "secondary": "fact_equal_tp_rate",
+  "materiality_absolute_tp": 1,
+  "reference_task_slots": 29,
+  "note": "do not lower +1 TP; report task-equal and fact-equal sensitivity"
+ },
+ "counts": {
+  "original_facts": 73,
+  "derived_facts": 27,
+  "nodes": 25
+ }
+}

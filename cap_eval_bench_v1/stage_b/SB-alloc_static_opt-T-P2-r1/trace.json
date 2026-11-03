@@ -1,0 +1,149 @@
+{
+ "run_id": "SB-alloc_static_opt-T-P2-r1",
+ "system_id": "alloc_static_opt",
+ "task_id": "T-P2",
+ "config_hash": "ddff950c0faa18f72b962f395633196af034ace2429df07be6007384a041c53b",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0,
+  "note": "static optimizer computed offline (0 model calls)"
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 26,
+   "usage": {
+    "in": 118,
+    "out": 53
+   },
+   "latency_s": 1.783,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 27,
+   "usage": {
+    "in": 2196,
+    "out": 554
+   },
+   "latency_s": 9.175,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "subtask"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 28,
+   "usage": {
+    "in": 734,
+    "out": 308
+   },
+   "latency_s": 4.176,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 29,
+   "usage": {
+    "in": 732,
+    "out": 284
+   },
+   "latency_s": 7.718,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 30,
+   "usage": {
+    "in": 1331,
+    "out": 340
+   },
+   "latency_s": 6.782,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "subtask",
+     "unresolved"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": [
+     "subtask:对照引文交叉核查（doc_extracts+timeline+entity_facts），标注UNRESOLVED",
+     "unresolved:[\"最终违法事实认定是否已作出：证据称尚未作出(kdx_inquiry_2019)，UNRESOLVED\", \"两份处罚"
+    ]
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 31,
+   "usage": {
+    "in": 474,
+    "out": 392
+   },
+   "latency_s": 7.275,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 5.0,
+ "wall_s": 37.953,
+ "deliverable_ref": "stage_b/SB-alloc_static_opt-T-P2-r1/deliverable.json",
+ "notes": "STAGE-B REAL run arm=alloc_static_opt; frozen graph; assignment={'f1': 'glm53', 'f2': 'glm53flash', 'f3': 'glm53', 'f4': 'glm53', 'f5': 'glm53flash', 'f6': 'glm53'}"
+}

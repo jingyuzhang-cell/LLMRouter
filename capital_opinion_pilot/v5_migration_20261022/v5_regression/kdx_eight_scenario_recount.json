@@ -1,0 +1,251 @@
+[
+ {
+  "code": "F1a",
+  "name": "t1 DS unavail",
+  "fault": "['t1']",
+  "blocked": "[('t1', 'deepseek')]",
+  "S4": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53"
+   }
+  },
+  "S5": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53"
+   }
+  },
+  "S6": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53"
+   },
+   "R_size": 6
+  },
+  "s6_vs_s4": false,
+  "s6_vs_s5": false,
+  "s5_vs_s4": false,
+  "category": "NO_SEPARATION",
+  "description": "All three converge"
+ },
+ {
+  "code": "F1b",
+  "name": "t1 GLM53 unavail",
+  "fault": "['t1']",
+  "blocked": "[('t1', 'glm53')]",
+  "S4": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53flash"
+   }
+  },
+  "S5": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "deepseek"
+   }
+  },
+  "S6": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "deepseek"
+   },
+   "R_size": 6
+  },
+  "s6_vs_s4": true,
+  "s6_vs_s5": false,
+  "s5_vs_s4": true,
+  "category": "S5_S6_BEAT_S4",
+  "description": "S5 and S6 agree; both differ from S4"
+ },
+ {
+  "code": "F2a",
+  "name": "t5 GLM53 unavail",
+  "fault": "['t5']",
+  "blocked": "[('t5', 'glm53')]",
+  "S4": {
+   "Z": "LOCAL",
+   "pi": {
+    "t5": "glm53flash"
+   }
+  },
+  "S5": {
+   "Z": "LOCAL",
+   "pi": {
+    "t5": "glm53flash"
+   }
+  },
+  "S6": {
+   "Z": "NONE",
+   "pi": {
+    "t5": "?"
+   },
+   "R_size": 0
+  },
+  "s6_vs_s4": true,
+  "s6_vs_s5": true,
+  "s5_vs_s4": false,
+  "category": "S6_UNIQUE_Z_NONE",
+  "description": "S6 chose NONE; S4/S5 chose LOCAL with {'t5': 'glm53flash'}"
+ },
+ {
+  "code": "F2b",
+  "name": "t5 only Flash ok",
+  "fault": "['t5']",
+  "blocked": "[('t5', 'deepseek'), ('t5', 'glm53'), ('t5', 'qwen')]",
+  "S4": {
+   "Z": "LOCAL",
+   "pi": {
+    "t5": "glm53flash"
+   }
+  },
+  "S5": {
+   "Z": "LOCAL",
+   "pi": {
+    "t5": "glm53flash"
+   }
+  },
+  "S6": {
+   "Z": "NONE",
+   "pi": {
+    "t5": "?"
+   },
+   "R_size": 0
+  },
+  "s6_vs_s4": true,
+  "s6_vs_s5": true,
+  "s5_vs_s4": false,
+  "category": "S6_UNIQUE_Z_NONE",
+  "description": "S6 chose NONE; S4/S5 chose LOCAL with {'t5': 'glm53flash'}"
+ },
+ {
+  "code": "F3",
+  "name": "t1+t2 DS unavail",
+  "fault": "['t1', 't2']",
+  "blocked": "[('t1', 'deepseek'), ('t2', 'deepseek')]",
+  "S4": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53",
+    "t2": "glm53"
+   }
+  },
+  "S5": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53",
+    "t2": "glm53"
+   }
+  },
+  "S6": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53",
+    "t2": "?"
+   },
+   "R_size": 6
+  },
+  "s6_vs_s4": true,
+  "s6_vs_s5": true,
+  "s5_vs_s4": false,
+  "category": "S6_UNIQUE_ACTION",
+  "description": "S6 chose different action from both S4 and S5"
+ },
+ {
+  "code": "F4",
+  "name": "t1 DS + t5 GLM53",
+  "fault": "['t1', 't5']",
+  "blocked": "[('t1', 'deepseek'), ('t5', 'glm53')]",
+  "S4": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53",
+    "t5": "glm53flash"
+   }
+  },
+  "S5": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53",
+    "t5": "glm53flash"
+   }
+  },
+  "S6": {
+   "Z": "NONE",
+   "pi": {
+    "t1": "?",
+    "t5": "?"
+   },
+   "R_size": 0
+  },
+  "s6_vs_s4": true,
+  "s6_vs_s5": true,
+  "s5_vs_s4": false,
+  "category": "S6_UNIQUE_Z_NONE",
+  "description": "S6 chose NONE; S4/S5 chose LOCAL with {'t1': 'glm53', 't5': 'glm53flash'}"
+ },
+ {
+  "code": "F5",
+  "name": "t1 GLM53 + t5 GLM53",
+  "fault": "['t1', 't5']",
+  "blocked": "[('t1', 'glm53'), ('t5', 'glm53')]",
+  "S4": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "glm53flash",
+    "t5": "glm53flash"
+   }
+  },
+  "S5": {
+   "Z": "LOCAL",
+   "pi": {
+    "t1": "deepseek",
+    "t5": "glm53flash"
+   }
+  },
+  "S6": {
+   "Z": "NONE",
+   "pi": {
+    "t1": "?",
+    "t5": "?"
+   },
+   "R_size": 0
+  },
+  "s6_vs_s4": true,
+  "s6_vs_s5": true,
+  "s5_vs_s4": true,
+  "category": "S6_UNIQUE_Z_NONE",
+  "description": "S6 chose NONE; S4/S5 chose LOCAL with {'t1': 'deepseek', 't5': 'glm53flash'}"
+ },
+ {
+  "code": "F6",
+  "name": "t0 GLM53 unavail",
+  "fault": "['t0']",
+  "blocked": "[('t0', 'glm53')]",
+  "S4": {
+   "Z": "LOCAL",
+   "pi": {
+    "t0": "glm53flash"
+   }
+  },
+  "S5": {
+   "Z": "LOCAL",
+   "pi": {
+    "t0": "deepseek"
+   }
+  },
+  "S6": {
+   "Z": "LOCAL",
+   "pi": {
+    "t0": "deepseek"
+   },
+   "R_size": 8
+  },
+  "s6_vs_s4": true,
+  "s6_vs_s5": false,
+  "s5_vs_s4": true,
+  "category": "S5_S6_BEAT_S4",
+  "description": "S5 and S6 agree; both differ from S4"
+ }
+]

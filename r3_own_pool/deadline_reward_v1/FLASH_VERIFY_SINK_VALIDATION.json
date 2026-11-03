@@ -1,0 +1,38 @@
+{
+ "call1": {
+  "node": "verify",
+  "model": "flash",
+  "in": 2100,
+  "out": 593,
+  "lat": 16.9,
+  "cash": 0,
+  "n_items": 7,
+  "answer": "[\n  {\"item\": \"公司主体与证券代码\", \"doc_a\": \"main\", \"doc_b\": \"sup1/sup2\", \"verdict\": \"CONSISTENT\", \"note\": \"三份公告中公司均为欢瑞世纪联合股份有限公司（证券代码000892），主体信息一致。\"},\n  {\"item\": \"公告编号\", \"doc_a\": \"main(2026-023)\", \"doc_b\": \"sup2(2026-041)/sup1(2026-046)\", \"verdict\": \"COMPLEMENT\", \"note\": \"三份公告编号不同（023/041/046），属不同公告事项，编号顺序与披露日期先后一致，无冲突。\"},\n  {\"item\": \"披露时间线\", \"doc_a\": \"main(2026-04-22)\", \"doc_b\": \"sup2(2026-07-14)/sup1(2026-09-18)\", \"verdict\": \"COMPLEMENT\", \"note\": \"立案公告（4月）→业绩预告（7月）→投资者接待日公告（9月），时间线递进互补。\"},\n  {\"item\": \"立案调查风险状态\", \"doc_a\": \"main\", \"doc_b\": \"sup1/sup2\", \"verdict\": \"COMPLEMENT\", \"note\": \"main披露公司因涉嫌信息披露违法违规被证监会立案（涉及2022年计提加计抵减额事项），sup1/sup2未提及立案进展或最终结论，风险状态无更新，二者互补不冲突。\"},\n  {\"item\": \"经营状态表述\", \"doc_a\": \"main\", \"doc_b\": \"sup2\", \"verdict\": \"COMPLEMENT\", \"note\": \"main称经营活动正常开展、立案不影响正常经营；sup2披露2026年上半年预亏12,500万元、亏损扩大，两者分别涉及不同维度（合规经营vs财务业绩），不构成直接冲突。\"},\n  {\"item\": \"信息披露违规潜在财务影响\", \"doc_a\": \"main(2022年计提加计抵减额确认为其他收益)\", \"doc_b\": \"sup2(非经常性损益约200.00万元)\", \"verdict\": \"UNRESOLVED\", \"note\": \"立案涉及2022年加计抵减额事项，业绩预告中非经常性损益仅约200万元，无法依据现有三份公告判断立案事项是否影响当期损益或前期追溯调整。\"},\n  {\"item\": \"监管机构\", \"doc_a\": \"main(中国证监会立案)\", \"doc_b\": \"sup1(重庆证监局指导活动)\", \"verdict\": \"CONSISTENT\", \"note\": \"中国证监会立案与重庆证监局指导投资者活动属不同监管职能场景，无矛盾。\"}\n]"
+ },
+ "call2": {
+  "node": "sink",
+  "model": "flash",
+  "in": 714,
+  "out": 722,
+  "lat": 15.9,
+  "cash": 0,
+  "answer": "```json\n[\n  {\n    \"conclusion\": \"欢瑞世纪联合股份有限公司（证券代码000892）于2026年4月因涉嫌信息披露违法违规被中国证监会立案调查，立案事项涉及2022年计提加计抵减额确认为其他收益的问题；公司称经营活动正常开展，立案不影响正常生产经营。\",\n    \"timeline\": [\"2026-04-22：披露证监会立案调查公告（公告编号2026-023）\", \"2026-07-14：披露2026年半年度业绩预告（公告编号2026-041），预计上半年亏损12,500万元\", \"2026-09-18：披露投资者接待日活动公告（公告编号2026-046）\"],\n    \"amounts\": [\n      {\"item\": \"2026年上半年预计亏损\", \"value\": \"12,500万元\", \"evidence_doc_id\": \"sup2\"},\n      {\"item\": \"非经常性损益\", \"value\": \"约200.00万元\", \"evidence_doc_id\": \"sup2\"},\n      {\"item\": \"立案涉及事项\", \"value\": \"2022年计提加计抵减额确认为其他收益\", \"evidence_doc_id\": \"main\"}\n    ],\n    \"penalties\": [\n      {\"item\": \"立案调查\", \"issuer\": \"中国证监会\", \"reason\": \"涉嫌信息披露违法违规（涉及2022年计提加计抵减额事项）\", \"status\": \"调查中，暂无处罚结论\", \"evidence_doc_id\": \"main\"}\n    ],\n    \"entities\": [\n      {\"name\": \"欢瑞世纪联合股份有限公司\", \"role\": \"被立案调查主体\", \"evidence_doc_id\": \"main\"},\n      {\"name\": \"中国证监会\", \"role\": \"立案调查监管机构\", \"evidence_doc_id\": \"main\"},\n      {\"name\": \"重庆证监局\", \"role\": \"指导投资者接待活动的地方监管机构\", \"evidence_doc_id\": \"sup1\"}\n    ],\n    \"cross_doc_verdicts\": [\n      {\"item\": \"公司主体与证券代码\", \"verdict\": \"CONSISTENT\", \"note\": \"三份公告公司主体均为欢瑞世纪（000892）\", \"evidence_doc_id\": \"main\"},\n      {\"item\": \"披露时间线\", \"verdict\": \"COMPLEMENT\", \"note\": \"立案公告→业绩预告→投资者接待日公告，时间线递进互补\", \"evidence_doc_id\": \"main\"},\n      {\"item\": \"立案调查风险状态\", \"verdict\": \"COMPLEMENT\", \"note\": \"sup1/sup2未提及立案进展或结论，风险状态无更新\", \"evidence_doc_id\": \"sup1\"},\n      {\"item\": \"经营状态表述\", \"verdict\": \"COMPLEMENT\", \"note\": \"main称经营正常，sup2披露预亏，属不同维度不冲突\", \"evidence_doc_id\": \"sup2\"},\n      {\"item\": \"信息披露违规潜在财务影响\", \"verdict\": \"UNRESOLVED\", \"note\": \"无法判断立案事项是否影响当期损益或构成前期追溯调整\", \"evidence_doc_id\": \"sup2\"},\n      {\"item\": \"监管机构职能场景\", \"verdict\": \"CONSISTENT\", \"note\": \"证监会立案与重庆证监局指导活动无矛盾\", \"evidence_doc_id\": \"sup1\"}\n    ]\n  }\n]\n```"
+ },
+ "silver_flash": {
+  "q": 0.15,
+  "hits": 3,
+  "n_ref": 20
+ },
+ "ds_baseline": {
+  "verify_items": 3,
+  "sink_items": 1,
+  "silver_from_d60_diff_upstream": 0.85
+ },
+ "same_upstream_verify_comparison": {
+  "flash_items": 7,
+  "ds_items": 3,
+  "delta": 4
+ },
+ "upstream": "Frozen DS calibration extractions (_texts field)",
+ "note": "Flash chain changed BOTH verify and sink; cross-ablation needed for isolation. DS Silver baseline from D=60 run had different upstream."
+}

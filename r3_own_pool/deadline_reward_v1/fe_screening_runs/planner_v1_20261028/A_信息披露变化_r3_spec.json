@@ -1,0 +1,107 @@
+{
+ "task_id": "planned",
+ "task_class": "年报财务造假跨年度事实调查",
+ "evidence": [],
+ "constraints": {
+  "D": 140.0,
+  "Ccap": 0.02
+ },
+ "nodes": [
+  {
+   "id": "n1",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts"
+    ],
+    "requires": []
+   },
+   "evidence": "jsst"
+  },
+  {
+   "id": "n2",
+   "role": "timeline",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "dates"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n3",
+   "role": "amounts",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "amounts"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n4",
+   "role": "penalties",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "penalty_items"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n5",
+   "role": "amounts_check",
+   "inputs": [
+    "n3",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "amounts_checked"
+    ],
+    "requires": [
+     "amounts",
+     "dates"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n6",
+   "role": "synthesis",
+   "inputs": [
+    "n5",
+    "n4"
+   ],
+   "contract": {
+    "produces": [
+     "report"
+    ],
+    "requires": [
+     "amounts_checked",
+     "penalty_items"
+    ]
+   },
+   "evidence": null
+  }
+ ]
+}

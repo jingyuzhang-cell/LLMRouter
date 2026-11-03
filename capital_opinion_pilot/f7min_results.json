@@ -1,0 +1,656 @@
+{
+ "runs": {
+  "R1_B3p_clean": {
+   "policy": "static",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [],
+   "complete": false,
+   "wall_s": 41.43,
+   "deadline_met": true,
+   "t1_covered": [],
+   "t1_score": 0,
+   "t1_missing": [
+    "RF1",
+    "RF2",
+    "RF3",
+    "RF4"
+   ],
+   "tokens": 25393,
+   "cash_rmb": 0.0301,
+   "node_log": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "ok": true,
+     "in": 3939,
+     "out": 1315,
+     "lat": 6.33,
+     "truncated": false
+    },
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "ok": true,
+     "in": 3814,
+     "out": 1792,
+     "lat": 7.39,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "ok": true,
+     "in": 2959,
+     "out": 629,
+     "lat": 7.67,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "ok": true,
+     "in": 2953,
+     "out": 1252,
+     "lat": 13.89,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "ok": false,
+     "in": 1983,
+     "out": 1536,
+     "lat": 5.86,
+     "truncated": true
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "ok": false,
+     "in": 1986,
+     "out": 1235,
+     "lat": 14.28,
+     "truncated": false
+    }
+   ],
+   "decisions": [],
+   "fault_records": [
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "reason": "contract_fail",
+     "policy": "static_no_recovery"
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "reason": "contract_fail",
+     "policy": "static_no_recovery"
+    }
+   ],
+   "prefault_snapshot": null,
+   "facts": {
+    "t1": 13,
+    "t2": 17,
+    "t5": 0
+   }
+  },
+  "R2_B3p_F7": {
+   "policy": "static",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 37.59,
+   "deadline_met": true,
+   "t1_covered": [],
+   "t1_score": 0,
+   "t1_missing": [
+    "RF1",
+    "RF2",
+    "RF3",
+    "RF4"
+   ],
+   "tokens": 15185,
+   "cash_rmb": 0.0145,
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "ok": true,
+     "in": 3814,
+     "out": 1262,
+     "lat": 5.49,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "ok": true,
+     "in": 1910,
+     "out": 499,
+     "lat": 9.91,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "ok": true,
+     "in": 1904,
+     "out": 1206,
+     "lat": 15.27,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "ok": true,
+     "in": 1644,
+     "out": 767,
+     "lat": 3.16,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "ok": true,
+     "in": 988,
+     "out": 1191,
+     "lat": 13.67,
+     "truncated": false
+    }
+   ],
+   "decisions": [],
+   "fault_records": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "reason": "blocked:(t1,deepseek)",
+     "policy": "static_no_recovery"
+    }
+   ],
+   "prefault_snapshot": null,
+   "facts": {
+    "t1": 0,
+    "t2": 14,
+    "t5": 14
+   }
+  },
+  "R3_S5Cap_F7": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 98.35,
+   "deadline_met": false,
+   "t1_covered": [
+    "RF1"
+   ],
+   "t1_score": 1,
+   "t1_missing": [
+    "RF2",
+    "RF3",
+    "RF4"
+   ],
+   "tokens": 33534,
+   "cash_rmb": 0.0294,
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "ok": true,
+     "in": 3814,
+     "out": 1923,
+     "lat": 7.79,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "ok": true,
+     "in": 3817,
+     "out": 1379,
+     "lat": 16.1,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "ok": true,
+     "in": 2986,
+     "out": 769,
+     "lat": 8.96,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "ok": false,
+     "in": 2980,
+     "out": 1536,
+     "lat": 24.13,
+     "truncated": true
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "ok": true,
+     "in": 2980,
+     "out": 1092,
+     "lat": 19.98,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "ok": false,
+     "in": 1908,
+     "out": 1536,
+     "lat": 5.48,
+     "truncated": true
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "ok": false,
+     "in": 1908,
+     "out": 1536,
+     "lat": 5.6,
+     "truncated": true
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "ok": true,
+     "in": 1921,
+     "out": 1449,
+     "lat": 19.25,
+     "truncated": false
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    },
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t4",
+      "glm53"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {}
+    },
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t5",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {}
+    }
+   ],
+   "fault_records": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "reason": "blocked:(t1,deepseek)",
+     "at_s": 7.8
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "reason": "contract_fail",
+     "at_s": 48.03
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "reason": "contract_fail",
+     "at_s": 73.49
+    }
+   ],
+   "prefault_snapshot": {
+    "fault": [
+     "t5",
+     "deepseek"
+    ],
+    "fault_kind": "service_unavailable_injected",
+    "spent_tokens": 26720,
+    "elapsed_s": 73.49,
+    "completed_nodes": [
+     "m",
+     "t1",
+     "t2",
+     "t3",
+     "t4"
+    ],
+    "pi_at_fault": {
+     "t1": "glm53",
+     "t2": "deepseek",
+     "t3": "glm53",
+     "t4": "glm53",
+     "t5": "deepseek",
+     "t6": "glm53"
+    }
+   },
+   "facts": {
+    "t1": 15,
+    "t2": 16,
+    "t5": 0
+   }
+  },
+  "R4_S6_F7": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 101.69,
+   "deadline_met": false,
+   "t1_covered": [],
+   "t1_score": 0,
+   "t1_missing": [
+    "RF1",
+    "RF2",
+    "RF3",
+    "RF4"
+   ],
+   "tokens": 35634,
+   "cash_rmb": 0.0281,
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "ok": true,
+     "in": 3814,
+     "out": 1150,
+     "lat": 4.51,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "ok": true,
+     "in": 3817,
+     "out": 1712,
+     "lat": 22.88,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "ok": false,
+     "in": 3084,
+     "out": 1536,
+     "lat": 5.26,
+     "truncated": true
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "ok": true,
+     "in": 2971,
+     "out": 998,
+     "lat": 16.34,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "ok": true,
+     "in": 2965,
+     "out": 1405,
+     "lat": 16.61,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "ok": false,
+     "in": 2559,
+     "out": 1536,
+     "lat": 5.11,
+     "truncated": true
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "ok": false,
+     "in": 2499,
+     "out": 1536,
+     "lat": 17.6,
+     "truncated": true
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "ok": false,
+     "in": 2544,
+     "out": 1508,
+     "lat": 17.89,
+     "truncated": false
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521,
+     "n_candidates": 20481
+    },
+    {
+     "policy": "s6",
+     "fault": [
+      "t4",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t4": "glm53",
+      "t6": "glm53"
+     },
+     "n_feasible": 6177,
+     "n_candidates": 16449
+    },
+    {
+     "policy": "s6",
+     "fault": [
+      "t5",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t5": "glm53"
+     },
+     "n_feasible": 13,
+     "n_candidates": 16401
+    },
+    {
+     "policy": "s6",
+     "fault": [
+      "t6",
+      "glm53"
+     ],
+     "Z": "NONE",
+     "R": [],
+     "pi_changes": {},
+     "n_feasible": 0,
+     "n_candidates": 16389
+    }
+   ],
+   "fault_records": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "reason": "blocked:(t1,deepseek)",
+     "at_s": 4.52
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "reason": "contract_fail",
+     "at_s": 44.0
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "reason": "contract_fail",
+     "at_s": 65.86
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "reason": "contract_fail",
+     "at_s": 101.52
+    }
+   ],
+   "prefault_snapshot": {
+    "fault": [
+     "t6",
+     "glm53"
+    ],
+    "fault_kind": "service_unavailable_injected",
+    "spent_tokens": 35634,
+    "elapsed_s": 101.52,
+    "completed_nodes": [
+     "m",
+     "t1",
+     "t2",
+     "t3",
+     "t4"
+    ],
+    "pi_at_fault": {
+     "t1": "glm53",
+     "t2": "deepseek",
+     "t3": "glm53flash",
+     "t4": "glm53",
+     "t5": "glm53",
+     "t6": "glm53"
+    }
+   },
+   "facts": {
+    "t1": 19,
+    "t2": 12,
+    "t5": 0
+   }
+  }
+ },
+ "preflight": {
+  "planned_calls": 23,
+  "worst_case_tokens": 111919,
+  "worst_case_cash_rmb": 0.106,
+  "calls_ok": true,
+  "tokens_ok": true,
+  "cash_ok": true,
+  "offpeak_window_ok": true,
+  "peak_now": false,
+  "verdict": "GO"
+ },
+ "meter": {
+  "calls": 27,
+  "tokens": 109746,
+  "cash_rmb": 0.1021,
+  "caps": {
+   "calls": 30,
+   "tokens": 160000,
+   "cash_rmb": 0.12
+  }
+ },
+ "retrieval_reachable_t1": [
+  "RF1",
+  "RF2"
+ ]
+}

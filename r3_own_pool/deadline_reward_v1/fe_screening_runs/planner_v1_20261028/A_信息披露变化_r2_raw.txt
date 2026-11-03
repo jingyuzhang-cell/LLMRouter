@@ -1,0 +1,11 @@
+{"task_class": "财务造假跨年度事实调查",
+ "nodes": [
+  {"id": "n1", "role": "extraction", "inputs": [], "contract": {"produces": ["facts_2018", "facts_2019", "facts_2020", "facts_2021"], "requires": []}, "evidence": "jsst"},
+  {"id": "n2", "role": "amounts", "inputs": ["n1"], "contract": {"produces": ["inflated_revenue_by_year", "inflated_profit_by_year"], "requires": ["facts_2018", "facts_2019", "facts_2020", "facts_2021"]}, "evidence": null},
+  {"id": "n3", "role": "penalties", "inputs": ["n1"], "contract": {"produces": ["penalty_items", "violation_findings"], "requires": ["facts_2018", "facts_2019", "facts_2020", "facts_2021"]}, "evidence": null},
+  {"id": "n4", "role": "timeline", "inputs": ["n1"], "contract": {"produces": ["dates"], "requires": ["facts_2018", "facts_2019", "facts_2020", "facts_2021"]}, "evidence": null},
+  {"id": "n5", "role": "amounts_check", "inputs": ["n2", "n3"], "contract": {"produces": ["amounts_checked"], "requires": ["inflated_revenue_by_year", "inflated_profit_by_year", "penalty_items"]}, "evidence": null},
+  {"id": "n6", "role": "cross_check", "inputs": ["n2", "n4", "n5"], "contract": {"produces": ["checked"], "requires": ["inflated_revenue_by_year", "inflated_profit_by_year", "dates", "amounts_checked"]}, "evidence": null},
+  {"id": "n7", "role": "synthesis", "inputs": ["n5", "n6"], "contract": {"produces": ["report"], "requires": ["amounts_checked", "checked", "penalty_items"]}, "evidence": null}
+ ],
+ "rationale": "问题聚焦江苏舜天单主体、跨2018-2021年度的虚增收入/利润事实与处罚认定，唯一相关证据为jsst处罚文书，故仅需单节点抽取原子事实，不引入泽达易盛无关来源。随后并行三个加工节点：金额核算产出逐年虚增收入/利润数字、处罚梳理给出各年度虚假记载认定、时间线整理阶段脉络；再经金额交叉复核（对照处罚认定金额）与跨节点核验保证逐年数字一致性；终节点synthesis汇总生成跨年度事实对比报告。共7节点，链路短，Flash可承担n1/n2/n4，付费模型仅用于金额复核与最终报告，控制在预算与140s内。"}

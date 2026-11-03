@@ -1,0 +1,43 @@
+{
+ "arms": {
+  "A": {
+   "tok": 6776,
+   "lat": 9.9,
+   "t1": 1,
+   "t1n": 4,
+   "trunc": false
+  },
+  "B": {
+   "tok": 28042,
+   "lat": 83.7,
+   "facts": 29,
+   "t1": 1,
+   "t1n": 4
+  },
+  "S5_CG": {
+   "tok": 26139,
+   "lat": 76.8,
+   "facts": 33,
+   "t1": 2,
+   "t1n": 4,
+   "recovery": "t1\u2192flash,t5\u2192flash"
+  },
+  "S5_Cap": {
+   "tok": 20858,
+   "lat": 51.0,
+   "t1": 0,
+   "t1n": 4,
+   "facts": 0,
+   "recovery": "t1\u2192DS,t5\u2192DS",
+   "note": "DS extraction hit 2048 output cap \u2192 JSON truncated \u2192 0 facts parsed"
+  },
+  "S6": {
+   "status": "INCOMPLETE \u2014 token cap after 3/6 calls"
+  }
+ },
+ "issues": {
+  "ds_truncation": "DS with 12Kc evidence produces >2048 output tokens for extraction; JSON truncated",
+  "token_cap": "S5+Cap used 20.8K of 25K budget; S6 needed another ~20K but cap hit",
+  "fix_needed": "Increase DS output cap to 4096 for extraction OR reduce evidence per extraction node"
+ }
+}

@@ -1,0 +1,893 @@
+{
+ "runs": {
+  "ST_clean_r1": {
+   "policy": "static",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [],
+   "complete": true,
+   "wall_s": 37.92,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [],
+   "node_log": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3793,
+     "out": 2077,
+     "lat": 7.52,
+     "truncated": false
+    },
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2293,
+     "lat": 8.28,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2644,
+     "out": 723,
+     "lat": 9.33,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2638,
+     "out": 1007,
+     "lat": 12.35,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1625,
+     "out": 975,
+     "lat": 3.62,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1192,
+     "out": 1036,
+     "lat": 13.65,
+     "truncated": false
+    }
+   ],
+   "tokens": 23855,
+   "cash_rmb": 0.0653,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S5Cap_F7_r1": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 46.97,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t6",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 21.3,
+     "remaining_s": 13.03
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 1992,
+     "lat": 7.36,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": false,
+     "compat_ok": false,
+     "parse_layer": "L0: Unterminated string starting at: line 26 column 18 (char 4048) | L1: Unterminated string starting at: line 26 column 18 (char 4048)",
+     "in": 3945,
+     "out": 2048,
+     "lat": 20.6,
+     "truncated": true
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3013,
+     "out": 411,
+     "lat": 7.1,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3007,
+     "out": 1324,
+     "lat": 14.13,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1720,
+     "out": 1160,
+     "lat": 4.87,
+     "truncated": false
+    }
+   ],
+   "tokens": 22472,
+   "cash_rmb": 0.0387,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "4/5",
+   "compat_rate": "4/5"
+  },
+  "ST_S5Cap_F7_r2": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 52.5,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 10.1,
+     "remaining_s": 7.5
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 21.3,
+     "remaining_s": 7.5
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 1733,
+     "lat": 6.61,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1897,
+     "lat": 22.11,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2794,
+     "out": 357,
+     "lat": 5.48,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2788,
+     "out": 2032,
+     "lat": 23.77,
+     "truncated": false
+    }
+   ],
+   "tokens": 19398,
+   "cash_rmb": 0.023,
+   "full_set": "0/3",
+   "per_fact": {
+    "RF5": "NOT_COVERED",
+    "RF6": "NOT_COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [],
+   "reachable_chain": "0/3",
+   "strict_rate": "4/4",
+   "compat_rate": "4/4"
+  },
+  "ST_S5Cap_F7_r3": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 48.7,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t2",
+     "model": "glm53",
+     "at": "recovery",
+     "reason": "deadline_preflight",
+     "predicted_s": 30.3,
+     "remaining_s": 25.6
+    },
+    {
+     "node": "t2",
+     "model": "glm53",
+     "at": "recovery",
+     "reason": "deadline_gate_recovery"
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 28.9,
+     "remaining_s": 25.6
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 21.3,
+     "remaining_s": 11.3
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    },
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t2",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t2",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t2": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": false,
+     "compat_ok": false,
+     "parse_layer": "L0: Unterminated string starting at: line 1 column 5235 (char 5234) | L1: Unterminated string starting at: line 1 column 5235 (char 5234)",
+     "in": 3852,
+     "out": 2560,
+     "lat": 8.81,
+     "truncated": true
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1998,
+     "lat": 25.59,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2862,
+     "out": 563,
+     "lat": 11.75,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 520,
+     "out": 518,
+     "lat": 2.54,
+     "truncated": false
+    }
+   ],
+   "tokens": 16818,
+   "cash_rmb": 0.0355,
+   "full_set": "1/3",
+   "per_fact": {
+    "RF5": "NOT_COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF6"
+   ],
+   "reachable_chain": "1/3",
+   "strict_rate": "3/4",
+   "compat_rate": "3/4"
+  },
+  "ST_S6_F7_r1": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 51.04,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t5",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 17.6,
+     "remaining_s": 13.44
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 3185
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2472,
+     "lat": 8.65,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1530,
+     "lat": 20.3,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2956,
+     "out": 274,
+     "lat": 2.17,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2914,
+     "out": 986,
+     "lat": 17.32,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1372,
+     "out": 962,
+     "lat": 4.48,
+     "truncated": false
+    }
+   ],
+   "tokens": 21263,
+   "cash_rmb": 0.049,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "5/5",
+   "compat_rate": "5/5"
+  },
+  "ST_S6_F7_r2": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 58.93,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t5",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 17.6,
+     "remaining_s": 1.08
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 5.4,
+     "remaining_s": 1.07
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 2853
+    },
+    {
+     "policy": "s6",
+     "fault": [
+      "t2",
+      "deepseek"
+     ],
+     "Z": "NONE",
+     "R": [],
+     "pi_changes": {},
+     "n_feasible": 1,
+     "why": "no_feasible_action(deadline/budget/blocked)"
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": false,
+     "compat_ok": false,
+     "parse_layer": "L0: Unterminated string starting at: line 145 column 16 (char 5388) | L1: Unterminated string starting at: line 145 column 16 (char 5388)",
+     "in": 3852,
+     "out": 2560,
+     "lat": 9.32,
+     "truncated": true
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1822,
+     "lat": 30.04,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2922,
+     "out": 233,
+     "lat": 2.25,
+     "truncated": false
+    }
+   ],
+   "tokens": 15334,
+   "cash_rmb": 0.0382,
+   "full_set": "0/3",
+   "per_fact": {
+    "RF5": "NOT_COVERED",
+    "RF6": "NOT_COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [],
+   "reachable_chain": "0/3",
+   "strict_rate": "2/3",
+   "compat_rate": "2/3"
+  },
+  "ST_S6_F7_r3": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 58.13,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t5",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 17.6,
+     "remaining_s": 1.87
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 5.4,
+     "remaining_s": 1.87
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 3089
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2445,
+     "lat": 8.82,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1263,
+     "lat": 22.96,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2938,
+     "out": 331,
+     "lat": 2.16,
+     "truncated": false
+    }
+   ],
+   "tokens": 14774,
+   "cash_rmb": 0.0381,
+   "full_set": "0/3",
+   "per_fact": {
+    "RF5": "NOT_COVERED",
+    "RF6": "NOT_COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [],
+   "reachable_chain": "0/3",
+   "strict_rate": "3/3",
+   "compat_rate": "3/3"
+  }
+ },
+ "config": {
+  "stats": "capability_table_v4 era=v2 (calibrated, shared by S5Cap & S6)",
+  "deadline_s": 60.0,
+  "fault": "F7",
+  "retrieval": "frozen 10K line-split"
+ },
+ "meter": {
+  "calls": 30,
+  "tokens": 133914,
+  "cash_rmb": 0.2879
+ },
+ "preflight": {
+  "conditions": {
+   "C1_regression": true,
+   "C2_fresh_ledger": true,
+   "C3_offpeak_or_authorized": true,
+   "C4_reservation": true
+  },
+  "pricing": {
+   "in": 0.3,
+   "out": 1.2
+  },
+  "peak_authorized": true,
+  "verdict": "GO",
+  "detail": {
+   "planned_calls": 42,
+   "worst_tokens": 244266,
+   "worst_cash_rmb": 0.5233,
+   "requested_caps": {
+    "calls": 44,
+    "tokens": 256479,
+    "cash_rmb": 0.58
+   }
+  }
+ }
+}

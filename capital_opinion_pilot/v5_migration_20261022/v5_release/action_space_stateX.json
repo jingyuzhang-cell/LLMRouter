@@ -1,0 +1,74 @@
+{
+ "state_X": "f7v2 R2 double-fault moment",
+ "actions": {
+  "A_keep": {
+   "nodes": [],
+   "new_calls": 0,
+   "tokens": 0,
+   "cash": 0.0,
+   "predicted_path_s": 0.0,
+   "legality": "legal: caches format-valid; risk = 12 ungrounded facts flow into merge",
+   "quality": "grounding level measured (68%/67%); deliverable level UNMEASURED (frozen R2 deliverable=1/4 v1-loose)"
+  },
+  "B_verify_extraction": {
+   "nodes": [
+    "verify(t1) model call"
+   ],
+   "new_calls": 1,
+   "legality": "DOMINATED: deterministic quote-in-pack check gives the same signal at zero cost (feedback_detector)",
+   "note": "model-call verification only live for verify-node conflicts (state Y, post-t5)"
+  },
+  "C_reexec_t1": {
+   "nodes": [
+    "t1",
+    "t3",
+    "t4",
+    "t5",
+    "t6"
+   ],
+   "new_calls": 5,
+   "pi_candidates_t1": [
+    "glm53flash",
+    "qwen"
+   ],
+   "blocked": [
+    "deepseek (F7)"
+   ],
+   "tokens": 28200,
+   "predicted_path_s": 51.0,
+   "quality": "ΔQ unidentifiable until KDX t1 flash/qwen grounding measured (frozen supplement)",
+   "legality": "legal: t1 re-exec invalidates m,t3-t6 (input-change); t2 cache kept valid (its input unchanged)",
+   "cash_rmb": 0.0023
+  },
+  "D_reexec_t1_t2": {
+   "nodes": [
+    "t1",
+    "t2",
+    "t3",
+    "t4",
+    "t5",
+    "t6"
+   ],
+   "new_calls": 6,
+   "pi_candidates_t1": [
+    "glm53flash",
+    "qwen"
+   ],
+   "pi_candidates_t2": [
+    "deepseek",
+    "glm53flash",
+    "qwen"
+   ],
+   "tokens": 34500,
+   "predicted_path_s": 51.0,
+   "quality": "t2->DS class grounding 96.4% MEASURED (vs cache 67%): evidence-backed Δ at extraction layer; deliverable level predicted via survival rates, unmeasured",
+   "legality": "legal: both caches weak by deterministic detector; all downstream re-executed",
+   "cash_rmb": 0.0149
+  }
+ },
+ "info_gaps": [
+  "kdx t1 flash/qwen grounding (frozen 22-call supplement measures)",
+  "deliverable-level dQ for C/D",
+  "verify-node VOI at state Y"
+ ]
+}

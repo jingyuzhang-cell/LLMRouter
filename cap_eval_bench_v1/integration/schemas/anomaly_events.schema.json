@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AnomalyEvents v1 (runtime/eval-injected -> window1)",
+  "type": "object",
+  "required": ["dag_id", "structure_version", "events"],
+  "properties": {
+    "dag_id": {"type": "string"},
+    "structure_version": {"type": "integer"},
+    "events": {"type": "array", "items": {"type": "object",
+      "required": ["event_id", "node_id", "signal_type", "observed", "source"],
+      "properties": {
+        "event_id": {"type": "string"},
+        "node_id": {"type": "string"},
+        "signal_type": {"enum": ["contract_parse_failure", "timeout", "budget_stop",
+                                  "quality_flag", "transport_error"]},
+        "observed": {"type": "object"},
+        "attempt": {"type": "integer"},
+        "source": {"enum": ["REAL", "REPLAY", "SYNTHETIC"]}}}}
+  }
+}

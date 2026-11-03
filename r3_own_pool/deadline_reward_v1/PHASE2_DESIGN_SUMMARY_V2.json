@@ -1,0 +1,45 @@
+{
+ "design": "PHASE2_R_PI_JOINT_DESIGN_V2.md",
+ "date": "2026-10-26",
+ "zero_call": true,
+ "fixes": {
+  "1_decision_state": "post-fault/pre-successor snapshot: DONE/FAILED(with explicit placeholder)/PENDING/remaining B_tok+cash+deadline/observables",
+  "2_gate": "sink-cov FORBIDDEN (unobservable); ROOT-cov adopted — recalibrated on v7 archive: S1 [0.327,0.337] vs S2 [0.510,0.582] clean separation; theta_prime=0.42 midpoint; n=4 dev-fit, out-of-sample validation required in main round",
+  "3_accept": "explicit-placeholder degradation contract (GARBAGE mechanism, pre-existing); required-node (root/sink) failure -> repair-or-refuse only",
+  "4_strategies": [
+   "STATIC",
+   "SD-FC",
+   "R-only(theta_prime)",
+   "pi-only",
+   "SEQ(R-then-pi, NEW)",
+   "JOINT"
+  ],
+  "5_resources": {
+   "measured_serial_flash_path_s": 122,
+   "targeted_repair_adds_s": 44,
+   "D_tiers": {
+    "100": "infeasible for Flash-only -> real pi pressure",
+    "160": "repair marginal on Flash"
+   },
+   "C0_fix": "eU normalization FIXED 60K; hard token budget separate B_tok in {24K,60K} with fail-stop",
+   "cash_split": "GLM subscription quota vs DS paid tracked separately"
+  },
+  "6_acceptance": "net eU > max(SD-FC,R-only,pi-only,SEQ) + interaction flips + ablation; flips alone insufficient",
+  "7_budget": {
+   "calibration16": {
+    "typical": "Y0.02-0.04",
+    "worst": "Y0.77 peak / Y0.38 off-peak",
+    "cap": "Y0.40 off-peak only"
+   },
+   "main": {
+    "arms": 48,
+    "calls": "~320 cap 340",
+    "ds_worst": "~90 calls -> Y4.3 peak / Y2.2 off-peak",
+    "mitigation": "off-peak mandatory + per-arm DS cap 3 + total cash hard-stop Y1.20",
+    "typical": "Y0.3-0.5"
+   }
+  },
+  "8_rate_control": "shared limiter 1 rps / 20 per 5min; 429 -> backoff-then-HALT (no auto retry); persist HTTP error headers; cross-line daily quota coordination"
+ },
+ "ruling": "GO(design freeze V2); execution HOLD pending separate authorization"
+}

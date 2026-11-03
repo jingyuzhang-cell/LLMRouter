@@ -1,0 +1,501 @@
+{
+  "index": 43,
+  "node": "CROSSCHECK",
+  "review": {
+    "response_sha256": "69fbfbe9fc990b59f47f38709f4919b36c63dc81c3a74474f90f68af4a1b06d0",
+    "reviewer": "assistant source-constrained offline review; non-independent; operator has seen model identities",
+    "independent": false,
+    "identity_blinding_achieved": false,
+    "items": [
+      {
+        "id": "T1",
+        "factual": "UNKNOWN",
+        "evidence": "UNKNOWN",
+        "rationale": "输出将2026-01-14称为“问询函落款”，E0027实际为公司收到问询函公告的董事会落款，事件归属含混；不自动改写后判通过。",
+        "evidence_ids": [
+          "E0002",
+          "E0027",
+          "E0137"
+        ],
+        "omission_or_uncertainty": true,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T1",
+            "answer_id": "T1",
+            "subject": "容百科技问询函收悉与回复",
+            "predicate": "时间线",
+            "value": "公司于2026-01-13收到上交所问询函，问询函落款2026-01-14，回复公告签署日期为2026-01-19",
+            "unit": null,
+            "time_scope": "2026-01-13至2026-01-19",
+            "statement_kind": "ISSUER_ASSERTION",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0002",
+              "E0027",
+              "E0137"
+            ],
+            "parent_claim_ids": [
+              "INQUIRY:DATE",
+              "REPLY:T1"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T2",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "公司估算1200亿元、协议未约定固定采购金额、实际销售金额随订单价格和数量而不确定；不构成收入保证。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0035",
+          "E0036",
+          "E0133",
+          "E0134"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T2",
+            "answer_id": "T2",
+            "subject": "1200亿元合同总金额性质",
+            "predicate": "估算vs合同约定",
+            "value": "协议未约定采购金额，1200亿元系公司估算，最终销售规模取决于实际订单签订时的原材料价格及数量，销售金额不确定，公司承认原公告表述不严谨",
+            "unit": null,
+            "time_scope": "2026-01-19",
+            "statement_kind": "ESTIMATE",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0035",
+              "E0036",
+              "E0133",
+              "E0134"
+            ],
+            "parent_claim_ids": [
+              "REPLY:T2",
+              "OBLIGATIONS:T2"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T3",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "305万吨/6年是预测量；附条件最低采购存在而非无条件保证，具体最低量未披露；检查结论、主体和期间字段。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0057",
+          "E0065",
+          "E0066",
+          "E0080",
+          "E0083"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T3",
+            "answer_id": "T3",
+            "subject": "305万吨采购量性质",
+            "predicate": "保证vs预测",
+            "value": "305万吨为基于宁德时代未来6年需求预测的预测需求量，分6年分步实施；在乙方满足综合竞争力前提下双方有最低采购量约定，但最低采购量具体数值未披露，最终采购量以框架性、年度性或单笔采购合同为准，不构成无条件保证",
+            "unit": null,
+            "time_scope": "2026年至2031年",
+            "statement_kind": "FORECAST",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0057",
+              "E0065",
+              "E0066",
+              "E0080",
+              "E0083"
+            ],
+            "parent_claim_ids": [
+              "REPLY:T3",
+              "OBLIGATIONS:T3"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T4",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "6万吨/年是现有产线口径，305万吨为6年预测总量；两者不可直接证明实际履约能力。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0039",
+          "E0042",
+          "E0057",
+          "E0059",
+          "E0060"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T4",
+            "answer_id": "T4",
+            "subject": "现有产能与预计需求口径",
+            "predicate": "口径差异",
+            "value": "现有披露的贵州新仁建成产能为年产6万吨磷酸铁锂，与305万吨/6年的预测需求量相差甚远；两个数字属不同口径（万吨/年 vs 万吨/6年）且不属同一期间，不能自动推出实际履约能力，公司称将通过收购、增资及自建扩产（预计未来三年资本性支出约87亿元）匹配需求",
+            "unit": null,
+            "time_scope": "2026年至2031年",
+            "statement_kind": "ESTIMATE",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0039",
+              "E0042",
+              "E0057",
+              "E0059",
+              "E0060"
+            ],
+            "parent_claim_ids": [
+              "CAPACITY:PERIOD",
+              "REPLY:T4"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T5",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "必须同时保留2026年碳酸锂成本加加工费公式、2027年起待议、5代以上产品待议。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0086",
+          "E0088",
+          "E0089"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T5",
+            "answer_id": "T5",
+            "subject": "待约定的未来商务条件",
+            "predicate": "协议保留事项",
+            "value": "2026年销售商务条件已确定（计价公式=碳酸锂成本+加工费，锂盐按上海有色月度均价）；2027年及以后商务条件双方另行约定，5代以上产品商务条件亦另行约定；未来实际单价未提供",
+            "unit": null,
+            "time_scope": "2027年及以后",
+            "statement_kind": "CONTRACT_REPORTED_TERM",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0086",
+              "E0088",
+              "E0089"
+            ],
+            "parent_claim_ids": [
+              "REPLY:T5",
+              "OBLIGATIONS:T5"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T6",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "四类风险以及3/4代未规模化稳定量产、5代开发阶段、收入不能保证均需保留。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0037",
+          "E0057",
+          "E0060",
+          "E0062",
+          "E0063",
+          "E0067",
+          "E0068",
+          "E0097"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T6",
+            "answer_id": "T6",
+            "subject": "未消除的履约风险与收入推定",
+            "predicate": "风险与收入可推定性",
+            "value": "公司提示四类风险仍未消除：产能不能满足需求（受审批、资金、施工、市场影响）、原材料价格波动、实际订单量不及预测需求、产品开发及量产不及预期（3代及4代产品尚未规模化稳定量产，5代产品仍处开发阶段）；公司仅称具备综合履约能力，不构成收入保证，不能推定1200亿元收入必然实现",
+            "unit": null,
+            "time_scope": "2026年至2031年",
+            "statement_kind": "CONFLICT",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0037",
+              "E0057",
+              "E0060",
+              "E0062",
+              "E0063",
+              "E0067",
+              "E0068",
+              "E0097"
+            ],
+            "parent_claim_ids": [
+              "REPLY:T6",
+              "OBLIGATIONS:T6"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      }
+    ]
+  },
+  "aggregate": {
+    "node": "CROSSCHECK",
+    "reference_level": "NON_INDEPENDENT_SILVER",
+    "full_frozen_Q": null,
+    "denominator": 6,
+    "fact_correct": 5,
+    "fact_wrong": 0,
+    "fact_unknown": 1,
+    "fact_coverage": 0.8333333333333334,
+    "fact_accuracy_on_reviewed": 1.0,
+    "fact_bounds": [
+      0.8333333333333334,
+      1.0
+    ],
+    "supported_correct": 5,
+    "supported_incorrect_or_unsupported": 0,
+    "support_unknown": 1,
+    "supported_bounds": [
+      0.8333333333333334,
+      1.0
+    ],
+    "rows": [
+      {
+        "id": "T1",
+        "factual": "UNKNOWN",
+        "evidence": "UNKNOWN",
+        "rationale": "输出将2026-01-14称为“问询函落款”，E0027实际为公司收到问询函公告的董事会落款，事件归属含混；不自动改写后判通过。",
+        "evidence_ids": [
+          "E0002",
+          "E0027",
+          "E0137"
+        ],
+        "omission_or_uncertainty": true,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T1",
+            "answer_id": "T1",
+            "subject": "容百科技问询函收悉与回复",
+            "predicate": "时间线",
+            "value": "公司于2026-01-13收到上交所问询函，问询函落款2026-01-14，回复公告签署日期为2026-01-19",
+            "unit": null,
+            "time_scope": "2026-01-13至2026-01-19",
+            "statement_kind": "ISSUER_ASSERTION",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0002",
+              "E0027",
+              "E0137"
+            ],
+            "parent_claim_ids": [
+              "INQUIRY:DATE",
+              "REPLY:T1"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T2",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "公司估算1200亿元、协议未约定固定采购金额、实际销售金额随订单价格和数量而不确定；不构成收入保证。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0035",
+          "E0036",
+          "E0133",
+          "E0134"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T2",
+            "answer_id": "T2",
+            "subject": "1200亿元合同总金额性质",
+            "predicate": "估算vs合同约定",
+            "value": "协议未约定采购金额，1200亿元系公司估算，最终销售规模取决于实际订单签订时的原材料价格及数量，销售金额不确定，公司承认原公告表述不严谨",
+            "unit": null,
+            "time_scope": "2026-01-19",
+            "statement_kind": "ESTIMATE",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0035",
+              "E0036",
+              "E0133",
+              "E0134"
+            ],
+            "parent_claim_ids": [
+              "REPLY:T2",
+              "OBLIGATIONS:T2"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T3",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "305万吨/6年是预测量；附条件最低采购存在而非无条件保证，具体最低量未披露；检查结论、主体和期间字段。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0057",
+          "E0065",
+          "E0066",
+          "E0080",
+          "E0083"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T3",
+            "answer_id": "T3",
+            "subject": "305万吨采购量性质",
+            "predicate": "保证vs预测",
+            "value": "305万吨为基于宁德时代未来6年需求预测的预测需求量，分6年分步实施；在乙方满足综合竞争力前提下双方有最低采购量约定，但最低采购量具体数值未披露，最终采购量以框架性、年度性或单笔采购合同为准，不构成无条件保证",
+            "unit": null,
+            "time_scope": "2026年至2031年",
+            "statement_kind": "FORECAST",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0057",
+              "E0065",
+              "E0066",
+              "E0080",
+              "E0083"
+            ],
+            "parent_claim_ids": [
+              "REPLY:T3",
+              "OBLIGATIONS:T3"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T4",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "6万吨/年是现有产线口径，305万吨为6年预测总量；两者不可直接证明实际履约能力。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0039",
+          "E0042",
+          "E0057",
+          "E0059",
+          "E0060"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T4",
+            "answer_id": "T4",
+            "subject": "现有产能与预计需求口径",
+            "predicate": "口径差异",
+            "value": "现有披露的贵州新仁建成产能为年产6万吨磷酸铁锂，与305万吨/6年的预测需求量相差甚远；两个数字属不同口径（万吨/年 vs 万吨/6年）且不属同一期间，不能自动推出实际履约能力，公司称将通过收购、增资及自建扩产（预计未来三年资本性支出约87亿元）匹配需求",
+            "unit": null,
+            "time_scope": "2026年至2031年",
+            "statement_kind": "ESTIMATE",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0039",
+              "E0042",
+              "E0057",
+              "E0059",
+              "E0060"
+            ],
+            "parent_claim_ids": [
+              "CAPACITY:PERIOD",
+              "REPLY:T4"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T5",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "必须同时保留2026年碳酸锂成本加加工费公式、2027年起待议、5代以上产品待议。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0086",
+          "E0088",
+          "E0089"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T5",
+            "answer_id": "T5",
+            "subject": "待约定的未来商务条件",
+            "predicate": "协议保留事项",
+            "value": "2026年销售商务条件已确定（计价公式=碳酸锂成本+加工费，锂盐按上海有色月度均价）；2027年及以后商务条件双方另行约定，5代以上产品商务条件亦另行约定；未来实际单价未提供",
+            "unit": null,
+            "time_scope": "2027年及以后",
+            "statement_kind": "CONTRACT_REPORTED_TERM",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0086",
+              "E0088",
+              "E0089"
+            ],
+            "parent_claim_ids": [
+              "REPLY:T5",
+              "OBLIGATIONS:T5"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      },
+      {
+        "id": "T6",
+        "factual": "CORRECT",
+        "evidence": "SUPPORTED",
+        "rationale": "四类风险以及3/4代未规模化稳定量产、5代开发阶段、收入不能保证均需保留。 已阅读本输出结论与所引原文，覆盖成立。",
+        "evidence_ids": [
+          "E0037",
+          "E0057",
+          "E0060",
+          "E0062",
+          "E0063",
+          "E0067",
+          "E0068",
+          "E0097"
+        ],
+        "omission_or_uncertainty": false,
+        "quoted_model_claims": [
+          {
+            "claim_id": "CX:T6",
+            "answer_id": "T6",
+            "subject": "未消除的履约风险与收入推定",
+            "predicate": "风险与收入可推定性",
+            "value": "公司提示四类风险仍未消除：产能不能满足需求（受审批、资金、施工、市场影响）、原材料价格波动、实际订单量不及预测需求、产品开发及量产不及预期（3代及4代产品尚未规模化稳定量产，5代产品仍处开发阶段）；公司仅称具备综合履约能力，不构成收入保证，不能推定1200亿元收入必然实现",
+            "unit": null,
+            "time_scope": "2026年至2031年",
+            "statement_kind": "CONFLICT",
+            "status": "ASSERTED",
+            "evidence_ids": [
+              "E0037",
+              "E0057",
+              "E0060",
+              "E0062",
+              "E0063",
+              "E0067",
+              "E0068",
+              "E0097"
+            ],
+            "parent_claim_ids": [
+              "REPLY:T6",
+              "OBLIGATIONS:T6"
+            ],
+            "unknown_reason": null
+          }
+        ]
+      }
+    ],
+    "K_not_inferred": true,
+    "source_support_is_reviewed_not_computed_from_ID_presence": true
+  },
+  "K_diagnostic": "PASS",
+  "K_errors": [],
+  "no_response_repair": true
+}

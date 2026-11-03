@@ -1,0 +1,16 @@
+```json
+{
+  "task_class": "关联交易与资金流向调查",
+  "nodes": [
+    {"id": "n1", "role": "extraction", "inputs": [], "contract": {"produces": ["facts"], "requires": []}, "evidence": "jsst"},
+    {"id": "n2", "role": "entity_relations", "inputs": ["n1"], "contract": {"produces": ["entities"], "requires": ["facts"]}, "evidence": null},
+    {"id": "n3", "role": "amounts", "inputs": ["n1"], "contract": {"produces": ["amounts"], "requires": ["facts"]}, "evidence": null},
+    {"id": "n4", "role": "penalties", "inputs": ["n1"], "contract": {"produces": ["penalty_items"], "requires": ["facts"]}, "evidence": null},
+    {"id": "n5", "role": "timeline", "inputs": ["n1"], "contract": {"produces": ["dates"], "requires": ["facts"]}, "evidence": null},
+    {"id": "n6", "role": "cross_check", "inputs": ["n2", "n3", "n5"], "contract": {"produces": ["checked"], "requires": ["entities", "amounts", "dates"]}, "evidence": null},
+    {"id": "n7", "role": "entity_graph", "inputs": ["n6"], "contract": {"produces": ["entity_edges"], "requires": ["checked"]}, "evidence": null},
+    {"id": "n8", "role": "synthesis", "inputs": ["n4", "n7"], "contract": {"produces": ["report"], "requires": ["penalty_items", "entity_edges"]}, "evidence": null}
+  ],
+  "rationale": "核心证据仅在 jsst 一份文档中，故以单抽 extractor 节点为根，并行分出主体关系、金额、处罚、时间线四条分析支线；主体/金额/时间线先交叉核验以保证交易结构与资金流向认定可靠，再构建实体关系图谱（区分客户/供应商/通道角色与隐蔽关联主体）；处罚梳理独立汇入最终综合节点，形成结论报告。DS 用于核验与图谱等高质量节点、Flash 用于抽取以控成本，满足预算与截止期。"
+}
+```

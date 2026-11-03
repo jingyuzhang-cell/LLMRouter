@@ -1,0 +1,843 @@
+{
+ "confirmed_invalid": [
+  {
+   "run": "ST_clean_r1",
+   "node": "t1",
+   "model": "deepseek",
+   "why": "contract_fail"
+  },
+  {
+   "run": "ST_S5Cap_F7_r1",
+   "node": "t1",
+   "model": "glm53",
+   "why": "contract_fail"
+  },
+  {
+   "run": "ST_S5Cap_F7_r3",
+   "node": "t2",
+   "model": "deepseek",
+   "why": "contract_fail"
+  },
+  {
+   "run": "ST_S6_F7_r2",
+   "node": "t2",
+   "model": "deepseek",
+   "why": "contract_fail"
+  },
+  {
+   "run": "S5Cap_r1",
+   "node": "t1",
+   "model": "glm53",
+   "why": "contract_fail"
+  },
+  {
+   "run": "S6_r1",
+   "node": "t1",
+   "model": "glm53flash",
+   "why": "contract_fail"
+  }
+ ],
+ "semantic_suspicious": [
+  {
+   "run": "R1_B3p_clean",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 13,
+   "total": 14,
+   "rate": 0.929,
+   "flagged_examples": [
+    {
+     "idx": 6,
+     "why": "quote_not_in_own_pack",
+     "quote": "该账户实际余额为零……最终结果即实际余额101.17 元",
+     "fact_key": "银行存款虚假记载"
+    }
+   ]
+  },
+  {
+   "run": "R1_B3p_clean",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 4,
+   "examples": [
+    {
+     "fact": "2018年年报虚增利润具体金额",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    },
+    {
+     "fact": "康得新2015年—2018年年度报告中披露的银行存款余额存在虚假记载；北京银行西单支行账户实际余额101.17元，银行归",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    }
+   ]
+  },
+  {
+   "run": "R2_S5Cap_F7",
+   "node": "t2",
+   "model": "glm53",
+   "grounded": 10,
+   "total": 15,
+   "rate": 0.667,
+   "flagged_examples": [
+    {
+     "idx": 1,
+     "why": "quote_not_in_own_pack",
+     "quote": "于 2019 年 7 月 5 日收到证监会下发的（处罚字【2019】90 号）《",
+     "fact_key": "事先告知书2019"
+    },
+    {
+     "idx": 2,
+     "why": "quote_not_in_own_pack",
+     "quote": "2020年 6 月28日证监会下发的（处罚字【2020】56号）《事先告知书》",
+     "fact_key": "事先告知书2020"
+    }
+   ]
+  },
+  {
+   "run": "R2_S5Cap_F7",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 15,
+   "total": 22,
+   "rate": 0.682,
+   "flagged_examples": [
+    {
+     "idx": 14,
+     "why": "quote_not_in_own_pack",
+     "quote": "钟玉……是康得新虛增利润的决策者、组织者，负责制定虚假业绩指标和协调",
+     "fact_key": "钟玉角色认定"
+    },
+    {
+     "idx": 15,
+     "why": "quote_not_in_own_pack",
+     "quote": "当事人：钟玉……王瑜……徐曙……张丽雄……",
+     "fact_key": "市场禁入当事人"
+    }
+   ]
+  },
+  {
+   "run": "R2_S5Cap_F7",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 4,
+   "examples": [
+    {
+     "fact": "银行存款虚假陈述：UNRESOLVED——证据片段未包含银行存款（如北京银行账户余额）虚假记载的具体监管认定",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    },
+    {
+     "fact": "关联担保违法认定：UNRESOLVED——证据片段未包含关联担保违法事项的具体认定内容",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    }
+   ]
+  },
+  {
+   "run": "R3_S6_F7",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 10,
+   "total": 13,
+   "rate": 0.769,
+   "flagged_examples": [
+    {
+     "idx": 0,
+     "why": "quote_not_in_own_pack",
+     "quote": "2020年9月27日…收到…《行政处罚决定书》处罚字【2020】71号…《市场禁",
+     "fact_key": "立案与处罚时间线"
+    },
+    {
+     "idx": 7,
+     "why": "quote_not_in_own_pack",
+     "quote": "对钟玉给予警告，并处以90万元罚款…对王瑜、张丽雄给予警告，并分别处以30万元罚",
+     "fact_key": "2019年告知书责任人"
+    }
+   ]
+  },
+  {
+   "run": "R3_S6_F7",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 4,
+   "examples": [
+    {
+     "fact": "就2019年告知书于2019年11月19日举行听证",
+     "verdict": "UNRESOLVED",
+     "doc_id": "kdx_penalty_2020"
+    },
+    {
+     "fact": "2020年告知书仅给出2017年虚增利润总额3,908,205,906.90元，未见其占年报披露利润总额比例的注入引文",
+     "verdict": "UNRESOLVED",
+     "doc_id": "kdx_notice_2020"
+    }
+   ]
+  },
+  {
+   "run": "ST_clean_r1",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 6,
+   "examples": [
+    {
+     "fact": "2021年年报虚增营业收入90,666,879元起，完整金额截断，为虚假自循环业务最后一个报告年度",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_announce_2024_020"
+    },
+    {
+     "fact": "立案调查/问询/风险提示等程序性节点",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r1",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 24,
+   "total": 25,
+   "rate": 0.96,
+   "flagged_examples": [
+    {
+     "idx": 24,
+     "why": "quote_not_in_own_pack",
+     "quote": "可在收到本处罚决定书之日起 60 日内向中国证券监督管理委员会申请行政复议",
+     "fact_key": "申辩权期限"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r1",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 23,
+   "total": 24,
+   "rate": 0.958,
+   "flagged_examples": [
+    {
+     "idx": 15,
+     "why": "quote_not_in_own_pack",
+     "quote": "",
+     "fact_key": "2021年虚增"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r1",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 3,
+   "examples": [
+    {
+     "fact": "2021-12-31 造假区间终点：2021年年报为最后一份虚增年报（2021年具体金额UNRESOLVED，证据片段未",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_advance_notice_2023"
+    },
+    {
+     "fact": "2020年虚增：2020年年报虚增营业收入1,494,153,988.91元，虚增营业成本1,408,813,344.2",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_advance_notice_2023"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r2",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 18,
+   "total": 19,
+   "rate": 0.947,
+   "flagged_examples": [
+    {
+     "idx": 18,
+     "why": "quote_not_in_own_pack",
+     "quote": "可在收到本处罚决定书之日起 60 日内向中国证券监督管理委员会申请行政复议",
+     "fact_key": "处罚决定书救济途径"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r2",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 21,
+   "total": 22,
+   "rate": 0.955,
+   "flagged_examples": [
+    {
+     "idx": 21,
+     "why": "quote_not_in_own_pack",
+     "quote": "（证据片段未含2021年单年数据）",
+     "fact_key": "2021年虚增数据"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r2",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 4,
+   "examples": [
+    {
+     "fact": "法律依据：构成《证券法》第七十八条第二款、第八十二条第三款及第一百九十七条第二款所述情形",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_advance_notice_2023"
+    },
+    {
+     "fact": "分年度虚增2009-2021各年数据加总恰等于总额10,333,448,392.98元",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_advance_notice_2023"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r3",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 19,
+   "total": 20,
+   "rate": 0.95,
+   "flagged_examples": [
+    {
+     "idx": 19,
+     "why": "quote_not_in_own_pack",
+     "quote": "可在收到 本处罚决定书之日起 60 日内向中国证券监督管理委员会申请行政复议",
+     "fact_key": "处罚救济途径"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r3",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 20,
+   "total": 23,
+   "rate": 0.87,
+   "flagged_examples": [
+    {
+     "idx": 15,
+     "why": "quote_not_in_own_pack",
+     "quote": "",
+     "fact_key": "2021年报虚增"
+    },
+    {
+     "idx": 16,
+     "why": "quote_not_in_own_pack",
+     "quote": "高松、桂生春是……直接负责的主管人员，王重人、李焱、赵凡是……其他直接责任人员",
+     "fact_key": "责任人员认定"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r3",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 4,
+   "examples": [
+    {
+     "fact": "2021年报虚增具体金额未在证据片段中显示，无法确认；2020年报虚增利润总额数据被截断，未确认",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "fact": "2020年报虚增：虚增营业收入1,494,153,988.91元，虚增营业成本1,408,813,344.24元；虚增利",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_advance_notice_2023"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r1",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 19,
+   "total": 20,
+   "rate": 0.95,
+   "flagged_examples": [
+    {
+     "idx": 18,
+     "why": "quote_not_in_own_pack",
+     "quote": "可在收到本处罚决定书之日起 60 日内向中国证券监督管理委员会申请行政复议",
+     "fact_key": "救济权利"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r1",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 22,
+   "total": 25,
+   "rate": 0.88,
+   "flagged_examples": [
+    {
+     "idx": 20,
+     "why": "quote_not_in_own_pack",
+     "quote": "高松、桂生春是…直接负责的主管人员，王重人、李焱、赵凡是…其他直接责任人员",
+     "fact_key": "责任人员认定"
+    },
+    {
+     "idx": 22,
+     "why": "quote_not_in_own_pack",
+     "quote": "违反《中华人民共和国证券法》第七十八条第二款的规定",
+     "fact_key": "法律依据"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r1",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 3,
+   "examples": [
+    {
+     "fact": "2020年虚增：2020年年报虚增营业收入1,494,153,988.91元，虚增营业成本1,408,813,344.2",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_advance_notice_2023"
+    },
+    {
+     "fact": "高松处罚：对高松给予警告并处以150万元罚款；违法情节严重（片段截断，UNRESOLVED）",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r2",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 2,
+   "examples": [
+    {
+     "fact": "决定书文号为〔2024〕41号",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "fact": "救济途径完整表述（行政复议60日期限等）",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r3",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 27,
+   "total": 28,
+   "rate": 0.964,
+   "flagged_examples": [
+    {
+     "idx": 25,
+     "why": "quote_not_in_own_pack",
+     "quote": "可在收到\n本处罚决定书之日起 60 日内向中国证券监督管理委员会申请行政复议",
+     "fact_key": "救济途径与期限"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r3",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 20,
+   "total": 22,
+   "rate": 0.909,
+   "flagged_examples": [
+    {
+     "idx": 3,
+     "why": "quote_not_in_own_pack",
+     "quote": "2009年年报虚增营业收入156,498,376.07元……占当年年报披露营业收",
+     "fact_key": "2009年虚增"
+    },
+    {
+     "idx": 5,
+     "why": "quote_not_in_own_pack",
+     "quote": "虚增营业收入439,362,648.95元……占当年披露利润总额的51.12%",
+     "fact_key": "2011年虚增"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r3",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 3,
+   "examples": [
+    {
+     "fact": "江苏舜天2009-2021年年报通过虚假自循环专网通信业务，累计虚增营业收入10,333,448,392.98元、虚增营",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "fact": "赵凡提出申辩，证监会不予采纳",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    }
+   ]
+  },
+  {
+   "run": "ST_clean_r1",
+   "node": "t1",
+   "model": "deepseek",
+   "grounded": 33,
+   "total": 34,
+   "rate": 0.971,
+   "flagged_examples": [
+    {
+     "idx": 33,
+     "why": "quote_not_in_own_pack",
+     "quote": "无法确认",
+     "fact_key": "无法确认事项"
+    }
+   ]
+  },
+  {
+   "run": "ST_clean_r1",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 24,
+   "total": 25,
+   "rate": 0.96,
+   "flagged_examples": [
+    {
+     "idx": 24,
+     "why": "quote_not_in_own_pack",
+     "quote": "（证据片段中未提供）",
+     "fact_key": "2023年风险提示与Advance Notice"
+    }
+   ]
+  },
+  {
+   "run": "ST_clean_r1",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 4,
+   "examples": [
+    {
+     "fact": "正式处罚决定作出：依据《证券法》第一百九十七条第二款，对江苏舜天责令改正、警告并处1,000万元罚款；对赵凡的申辩意见不",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "fact": "对公司的处罚：责令改正，给予警告，并处以1,000万元罚款（doc截断，处罚金额待核实）",
+     "verdict": "UNRESOLVED",
+     "doc_id": "UNRESOLVED"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r1",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 8,
+   "examples": [
+    {
+     "fact": "行政处罚决定日期为2024-UNRESOLVED（决定书具体落款日期未提供）",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_announce_2024_020"
+    },
+    {
+     "fact": "处罚依据为《证券法》第一百九十七条第二款",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_announce_2024_020"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r2",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 18,
+   "total": 23,
+   "rate": 0.783,
+   "flagged_examples": [
+    {
+     "idx": 15,
+     "why": "quote_not_in_own_pack",
+     "quote": "（证据未覆盖2021年明细，无法确认）",
+     "fact_key": "2021年虚增明细"
+    },
+    {
+     "idx": 16,
+     "why": "quote_not_in_own_pack",
+     "quote": "高松、桂生春是…直接负责的主管人员，王重人、李焱、赵凡是…其他直接责任人员",
+     "fact_key": "责任人员认定"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r3",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 21,
+   "total": 25,
+   "rate": 0.84,
+   "flagged_examples": [
+    {
+     "idx": 15,
+     "why": "quote_not_in_own_pack",
+     "quote": "（证据未涵盖）",
+     "fact_key": "2021年虚增"
+    },
+    {
+     "idx": 17,
+     "why": "quote_not_in_own_pack",
+     "quote": "高松、桂生春是…直接负责的主管人员，王重人、李焱、赵凡是…其他直接责任人员",
+     "fact_key": "责任人员划分"
+    }
+   ]
+  },
+  {
+   "run": "ST_S5Cap_F7_r3",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 2,
+   "examples": [
+    {
+     "fact": "江苏舜天（600287）于2023-07-03公告收到证监会《行政处罚及市场禁入事先告知书》，公告编号临2023-039",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_advance_notice_2023"
+    },
+    {
+     "fact": "高松、桂生春、王重人、李焱被认定未勤勉尽责（涉嫌违反第八十二条第三款）",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_advance_notice_2023"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r1",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 24,
+   "total": 25,
+   "rate": 0.96,
+   "flagged_examples": [
+    {
+     "idx": 24,
+     "why": "quote_not_in_own_pack",
+     "quote": "可在收到本处罚决定书之日起 60 日内向中国证券监督管理委员会申请行政复议",
+     "fact_key": "救济途径"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r1",
+   "node": "t1",
+   "model": "glm53flash",
+   "grounded": 17,
+   "total": 19,
+   "rate": 0.895,
+   "flagged_examples": [
+    {
+     "idx": 1,
+     "why": "quote_not_in_own_pack",
+     "quote": "知悉专网通信业务是虚假自循环业务",
+     "fact_key": "虚假自循环业务定性"
+    },
+    {
+     "idx": 18,
+     "why": "quote_not_in_own_pack",
+     "quote": "（证据片段未含2021年数据及禁入措施细节）",
+     "fact_key": "无法确认事项"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r2",
+   "node": "t1",
+   "model": "glm53flash",
+   "grounded": 21,
+   "total": 24,
+   "rate": 0.875,
+   "flagged_examples": [
+    {
+     "idx": 19,
+     "why": "quote_not_in_own_pack",
+     "quote": "发布2024-04-25（文号〔2024〕41号由任务与doc_id确认）",
+     "fact_key": "处罚决定书文号与日期"
+    },
+    {
+     "idx": 20,
+     "why": "quote_not_in_own_pack",
+     "quote": "违反…《证券法》第七十八条第二款的规定",
+     "fact_key": "法律定性"
+    }
+   ]
+  },
+  {
+   "run": "ST_S6_F7_r3",
+   "node": "t1",
+   "model": "glm53flash",
+   "grounded": 14,
+   "total": 17,
+   "rate": 0.824,
+   "flagged_examples": [
+    {
+     "idx": 11,
+     "why": "quote_not_in_own_pack",
+     "quote": "违反《中华人民共和国证券法》第七十八条第二款的规定",
+     "fact_key": "处罚依据"
+    },
+    {
+     "idx": 14,
+     "why": "quote_not_in_own_pack",
+     "quote": "处罚决定书于2024-04-25发布",
+     "fact_key": "处罚决定书文号与日期"
+    }
+   ]
+  },
+  {
+   "run": "S5Cap_r1",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 7,
+   "examples": [
+    {
+     "fact": "2021年年报虚增营业收入90,666,879元（原文截断，金额未完整），造假期间最后一年",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_announce_2024_020"
+    },
+    {
+     "fact": "正式行政处罚决定书的具体日期及文号",
+     "verdict": "UNRESOLVED",
+     "doc_id": "st_announce_2024_020"
+    }
+   ]
+  },
+  {
+   "run": "S5Cap_r2",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 19,
+   "total": 22,
+   "rate": 0.864,
+   "flagged_examples": [
+    {
+     "idx": 15,
+     "why": "quote_not_in_own_pack",
+     "quote": "（证据缺失，待补充）",
+     "fact_key": "2021年虚增"
+    },
+    {
+     "idx": 16,
+     "why": "quote_not_in_own_pack",
+     "quote": "高松、桂生春是……直接负责的主管人员",
+     "fact_key": "责任人员认定"
+    }
+   ]
+  },
+  {
+   "run": "S5Cap_r2",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 3,
+   "examples": [
+    {
+     "fact": "当事人申辩阶段：赵凡提出申辩意见，证监会经审查不予采纳；申辩提出具体时间UNRESOLVED",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "fact": "逐年虚增_2021：具体虚增金额",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    }
+   ]
+  },
+  {
+   "run": "S6_r2",
+   "node": "t1",
+   "model": "glm53flash",
+   "grounded": 17,
+   "total": 19,
+   "rate": 0.895,
+   "flagged_examples": [
+    {
+     "idx": 10,
+     "why": "quote_not_in_own_pack",
+     "quote": "高松、桂生春是…直接负责的主管人员",
+     "fact_key": "责任人员分类"
+    },
+    {
+     "idx": 18,
+     "why": "quote_not_in_own_pack",
+     "quote": "",
+     "fact_key": "未确认事项"
+    }
+   ]
+  },
+  {
+   "run": "S6_r2",
+   "node": "t5",
+   "model": "glm53",
+   "conflicts": 5,
+   "examples": [
+    {
+     "fact": "2021年具体虚增金额",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    },
+    {
+     "fact": "隋某力(隋田力)及专网通信上游主体详情",
+     "verdict": "UNRESOLVED",
+     "doc_id": null
+    }
+   ]
+  },
+  {
+   "run": "S5Cap_r3",
+   "node": "t1",
+   "model": "glm53",
+   "grounded": 20,
+   "total": 21,
+   "rate": 0.952,
+   "flagged_examples": [
+    {
+     "idx": 20,
+     "why": "quote_not_in_own_pack",
+     "quote": "（证据片段未载明文号及2021年数据）",
+     "fact_key": "未确认事项"
+    }
+   ]
+  },
+  {
+   "run": "S5Cap_r3",
+   "node": "t5",
+   "model": "deepseek",
+   "conflicts": 4,
+   "examples": [
+    {
+     "fact": "处罚决定书文号是否为〔2024〕41号",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    },
+    {
+     "fact": "2021年虚增具体数额（片段截断）",
+     "verdict": "UNRESOLVED",
+     "doc_id": "csrc_penalty_2024_41"
+    }
+   ]
+  },
+  {
+   "run": "S6_r3",
+   "node": "t2",
+   "model": "deepseek",
+   "grounded": 23,
+   "total": 24,
+   "rate": 0.958,
+   "flagged_examples": [
+    {
+     "idx": 23,
+     "why": "quote_not_in_own_pack",
+     "quote": "可在收到\n本处罚决定书之日起 60 日内向中国证券监督管理委员会申请行政复议",
+     "fact_key": "救济途径"
+    }
+   ]
+  }
+ ],
+ "provenance": "all instances from saved real responses; no T1/gold access"
+}

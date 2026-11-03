@@ -1,0 +1,61 @@
+{
+  "status": "PLAN_READY / REAL_START_NOT_AUTHORIZED",
+  "no_inference_stage": {
+    "model_requests": 0,
+    "inference_tokens": 0,
+    "checks": [
+      "exclusive lock and no duplicate run",
+      "frozen weight/tokenizer/command hashes",
+      "spawn own process session",
+      "GET health/models/config evidence where version supports",
+      "installed vLLM source/actual startup command identity",
+      "stop own process group and verify all owned GPU PIDs gone",
+      "nonblocking same-inode lock reacquisition after cleanup"
+    ],
+    "wall_cap_proposal_seconds": 300,
+    "phase_deadlines_seconds": {
+      "loading_and_identity": 240,
+      "termination_wait": 5,
+      "gpu_verification": 30,
+      "margin": 25
+    },
+    "evidence": "enforced limits proposed; no actual load-time bound measured",
+    "http_metadata_requests": "not model inference; nevertheless separately authorized; not performed here"
+  },
+  "optional_inference_meter_stage": {
+    "model_requests": 1,
+    "input": "frozen token IDs for user: Reply OK; system: Return one word",
+    "output_max": 8,
+    "automatic_retry": false,
+    "purpose": "compare prompt_tokens to exact submitted ID count; not t2 execution",
+    "wall_cap_proposal_seconds": 360,
+    "request_timeout_seconds": 30,
+    "separate_authorization_required": true,
+    "input_ids": [
+      151644,
+      8948,
+      198,
+      5598,
+      825,
+      3409,
+      13,
+      151645,
+      198,
+      151644,
+      872,
+      198,
+      20841,
+      10402,
+      13,
+      151645,
+      198,
+      151644,
+      77091,
+      198
+    ],
+    "input_tokens": 20,
+    "joint_token_reserve": 28
+  },
+  "on_cleanup_failure": "QUARANTINE: no further dispatch, retain resource lock until confirmed clean; write failed GPU/PID state; do not remove lock file or terminate other sessions",
+  "implementation_gap": "current OwnedService closes flock even when cleanup fails and verifies no GPU PID state; do not use unchanged manager for authorized real start; watchdog client also cannot guarantee service process kill under OS/driver stall"
+}

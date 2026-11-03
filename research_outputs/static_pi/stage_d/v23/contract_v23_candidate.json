@@ -1,0 +1,855 @@
+{
+ "task_id": "PHASE2B_ENTITY_RESOLUTION_v2_1",
+ "reference_type": "MVR_v1",
+ "question": "四份公告各自：谁被立案（公司/实控人/两者）？告知书编号是什么？D1与D2是否指向同一个俞发祥、同一份立案告知书、同一收到事件？两家公告主体是否为同一公司？俞发祥个人被立案的文书实例数与公告公司数各是多少？D3的两个编号能否逐号对应到公司与王勇？各公告的立案事由是特定还是泛称？公告日与收到日分别是什么？",
+ "cutoff": "2026-10-31",
+ "min_gold_coverage": 1.0,
+ "dimension_weights": {
+  "fact_correctness": 1,
+  "evidence_support": 1,
+  "necessary_completeness": 1,
+  "contradiction_handling": 1,
+  "unverifiable_refusal": 1,
+  "question_relevance": 1
+ },
+ "required_facts": [
+  {
+   "fact_id": "A1",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "祥源文旅公告(D1)",
+   "predicate": "立案对象",
+   "value": "PERSON_ONLY_实际控制人俞发祥",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "实际控制人俞发祥先生通知",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 175,
+     "end": 187
+    }
+   ],
+   "bucket": "主体识别",
+   "description": "公告主体=祥源文旅(公司)；立案对象=俞发祥个人。两概念必须分离"
+  },
+  {
+   "fact_id": "A2",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "交建股份公告(D2)",
+   "predicate": "立案对象",
+   "value": "PERSON_ONLY_实际控制人俞发祥",
+   "source_evidence": [
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "实际控制人俞发祥先生通知",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 178,
+     "end": 190
+    }
+   ],
+   "bucket": "主体识别",
+   "description": ""
+  },
+  {
+   "fact_id": "A3",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "西王食品公告(D3)",
+   "predicate": "立案对象",
+   "value": "BOTH_公司及实际控制人王勇",
+   "source_evidence": [
+    {
+     "doc_id": "D3",
+     "page": 1,
+     "quote": "对公司、实际控制人王勇先生下发的《立\n案告知书》",
+     "raw_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+     "page_sha256": "8de85b865cad9d367d224e0e9aafaa586407ad7037d9850ef07ced5a19a9e5e5",
+     "start": 198,
+     "end": 222
+    }
+   ],
+   "bucket": "主体识别",
+   "description": ""
+  },
+  {
+   "fact_id": "A4",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "纳川公告(D4)",
+   "predicate": "立案对象",
+   "value": "COMPANY_ONLY_纳川公司",
+   "source_evidence": [
+    {
+     "doc_id": "D4",
+     "page": 1,
+     "quote": "决定对公司立案",
+     "raw_sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+     "page_sha256": "199b1233f58f71325a673d032b4b61415595ea2d48191c1fa36c4cf2fc05d316",
+     "start": 325,
+     "end": 332
+    }
+   ],
+   "bucket": "主体识别",
+   "description": ""
+  },
+  {
+   "fact_id": "A5",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "俞发祥",
+   "predicate": "在两家上市公司的职务",
+   "value": "均无职务(仅实际控制人)",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "除为公司实际控制人外，未在公司担任任何职务",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 323,
+     "end": 344
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "除为公司实际控制人外，未在公司担任任何职务",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 329,
+     "end": 350
+    }
+   ],
+   "bucket": "主体识别",
+   "description": "D1与D2均明示；两文档交叉验证",
+   "accepted_values": [
+    "均无职务",
+    "仅实际控制人",
+    "无其他职务"
+   ]
+  },
+  {
+   "fact_id": "B1",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D1立案告知书",
+   "predicate": "编号",
+   "value": "证监立案字01120260037号",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "证监立案字01120260037 号",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 230,
+     "end": 248
+    }
+   ],
+   "bucket": "文书归属",
+   "description": ""
+  },
+  {
+   "fact_id": "B2",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D2立案告知书",
+   "predicate": "编号",
+   "value": "证监立案字01120260037号",
+   "source_evidence": [
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "证监立案字01120260037 号",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 236,
+     "end": 254
+    }
+   ],
+   "bucket": "文书归属",
+   "description": ""
+  },
+  {
+   "fact_id": "B3",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D3立案告知书",
+   "predicate": "编号数量与结构",
+   "value": "两个编号存在、两主体(公司与王勇)均被立案",
+   "source_evidence": [
+    {
+     "doc_id": "D3",
+     "page": 1,
+     "quote": "告知书编号分别为：证监立案字0042026002 号、证监立案字\n0042026003 号",
+     "raw_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+     "page_sha256": "8de85b865cad9d367d224e0e9aafaa586407ad7037d9850ef07ced5a19a9e5e5",
+     "start": 223,
+     "end": 268
+    }
+   ],
+   "bucket": "文书归属",
+   "description": ""
+  },
+  {
+   "fact_id": "B3b",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D3两编号与两主体",
+   "predicate": "逐号绑定(按原文'分别…分别'顺序对应规则)",
+   "value": "0042026002号→公司(西王食品)；0042026003号→王勇",
+   "source_evidence": [
+    {
+     "doc_id": "D3",
+     "page": 1,
+     "quote": "分别对公司、实际控制人王勇先生下发的《立\n案告知书》（告知书编号分别为：证监立案字0042026002 号、证监立案字\n0042026003 号",
+     "raw_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+     "page_sha256": "8de85b865cad9d367d224e0e9aafaa586407ad7037d9850ef07ced5a19a9e5e5",
+     "start": 196,
+     "end": 268
+    }
+   ],
+   "bucket": "文书归属",
+   "description": "操作者2026-10-31裁定：原文两处'分别'构成有序列表对应规则，Gold复核者已确认该规则——由UNKNOWN改为可判；规则文本入annotation_rules"
+  },
+  {
+   "fact_id": "B4",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D4立案告知书",
+   "predicate": "编号",
+   "value": "证监立案字0262026012号",
+   "source_evidence": [
+    {
+     "doc_id": "D4",
+     "page": 1,
+     "quote": "证监立案字0262026012 号",
+     "raw_sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+     "page_sha256": "199b1233f58f71325a673d032b4b61415595ea2d48191c1fa36c4cf2fc05d316",
+     "start": 244,
+     "end": 261
+    }
+   ],
+   "bucket": "文书归属",
+   "description": ""
+  },
+  {
+   "fact_id": "C1",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D4纳川立案",
+   "predicate": "事由特定性",
+   "value": "SPECIFIC_因公司2023年年报涉嫌信息披露违法违规",
+   "source_evidence": [
+    {
+     "doc_id": "D4",
+     "page": 1,
+     "quote": "因公司2023\n年年报涉嫌信息披露违法违规",
+     "raw_sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+     "page_sha256": "199b1233f58f71325a673d032b4b61415595ea2d48191c1fa36c4cf2fc05d316",
+     "start": 263,
+     "end": 284
+    }
+   ],
+   "bucket": "事由特定性",
+   "description": "唯一明确到具体年报的立案事由",
+   "accepted_values": [
+    "因公司2023年年报涉嫌信息披露违法违规",
+    "公司2023年年报涉嫌信息披露违法违规"
+   ]
+  },
+  {
+   "fact_id": "C2",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D1/D2/D3立案",
+   "predicate": "事由特定性",
+   "value": "GENERIC_涉嫌信息披露违法违规(未指明具体报告)",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "因俞\n发祥先生个人涉嫌信息披露违法违规",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 250,
+     "end": 269
+    },
+    {
+     "doc_id": "D3",
+     "page": 1,
+     "quote": "因涉嫌信息披露违法违规",
+     "raw_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+     "page_sha256": "8de85b865cad9d367d224e0e9aafaa586407ad7037d9850ef07ced5a19a9e5e5",
+     "start": 270,
+     "end": 281
+    }
+   ],
+   "bucket": "事由特定性",
+   "description": "",
+   "accepted_values": [
+    "涉嫌信息披露违法违规",
+    "泛称涉嫌信息披露违法违规"
+   ]
+  },
+  {
+   "fact_id": "D_1",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "俞发祥(D1)与俞发祥(D2)",
+   "predicate": "自然人身份",
+   "value": "SAME_PERSON",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "俞发祥",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 180,
+     "end": 183
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "俞发祥",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 183,
+     "end": 186
+    }
+   ],
+   "bucket": "实体归一",
+   "description": "同名+同编号+同日→同一自然人",
+   "accepted_values": [
+    "同一人",
+    "同一自然人",
+    "同一个人"
+   ]
+  },
+  {
+   "fact_id": "D_2",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D1文书与D2文书",
+   "predicate": "监管文书实例",
+   "value": "SAME_NOTICE_INSTANCE",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "证监立案字01120260037 号",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 230,
+     "end": 248
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "证监立案字01120260037 号",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 236,
+     "end": 254
+    }
+   ],
+   "bucket": "实体归一",
+   "description": "同编号→同一份告知书（非两份）",
+   "accepted_values": [
+    "同一份立案告知书",
+    "同一份告知书",
+    "同一份文书"
+   ]
+  },
+  {
+   "fact_id": "D_3",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D1事件与D2事件",
+   "predicate": "收到文书事件",
+   "value": "SAME_RECEIPT_EVENT",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "于2026 年10 月9 日收到",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 158,
+     "end": 174
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "于2026 年10 月9 日收\n到",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 161,
+     "end": 178
+    }
+   ],
+   "bucket": "实体归一",
+   "description": "同一人同日收到同一份文书→同一事件",
+   "accepted_values": [
+    "同一收到事件",
+    "同一事件"
+   ]
+  },
+  {
+   "fact_id": "D_4",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D1公告主体与D2公告主体",
+   "predicate": "公告主体关系",
+   "value": "DIFFERENT_COMPANY",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "浙江祥源文旅股份有限公司",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 37,
+     "end": 49
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "安徽省交通建设股份有限公司",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 38,
+     "end": 51
+    }
+   ],
+   "bucket": "实体归一",
+   "description": "俞发祥同时为两家公司实控人；公告主体不同",
+   "accepted_values": [
+    "非同一公司",
+    "不同公司",
+    "两家不同公司"
+   ]
+  },
+  {
+   "fact_id": "E1",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "number",
+   "subject": "俞发祥个人",
+   "predicate": "立案文书实例数(跨D1/D2)",
+   "value": "1",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "证监立案字01120260037 号",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 230,
+     "end": 248
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "证监立案字01120260037 号",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 236,
+     "end": 254
+    }
+   ],
+   "bucket": "事件计数",
+   "description": "两公告指向同一份文书→1，非2"
+  },
+  {
+   "fact_id": "E2",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "number",
+   "subject": "涉及公告的上市公司数量",
+   "predicate": "公告主体数",
+   "value": "2",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "浙江祥源文旅股份有限公司",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 37,
+     "end": 49
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "安徽省交通建设股份有限公司",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 38,
+     "end": 51
+    }
+   ],
+   "bucket": "事件计数",
+   "description": ""
+  },
+  {
+   "fact_id": "E3",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "number",
+   "subject": "D3西王",
+   "predicate": "立案对象主体数",
+   "value": "2",
+   "source_evidence": [
+    {
+     "doc_id": "D3",
+     "page": 1,
+     "quote": "对公司、实际控制人王勇先生",
+     "raw_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+     "page_sha256": "8de85b865cad9d367d224e0e9aafaa586407ad7037d9850ef07ced5a19a9e5e5",
+     "start": 198,
+     "end": 211
+    }
+   ],
+   "bucket": "事件计数",
+   "description": "",
+   "value_note": "公司 + 自然人王勇（两个立案对象主体）"
+  },
+  {
+   "fact_id": "F1",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "date",
+   "subject": "D1祥源文旅",
+   "predicate": "公告落款日(document_signature_date)",
+   "value": "2026-10-09",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "2026 年10 月9 日",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 159,
+     "end": 172
+    }
+   ],
+   "bucket": "日期",
+   "description": "落款，非披露日"
+  },
+  {
+   "fact_id": "F2",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "date",
+   "subject": "D2交建股份",
+   "predicate": "公告落款日(document_signature_date)",
+   "value": "2026-10-10",
+   "source_evidence": [
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "2026 年10 月10 日",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 553,
+     "end": 567
+    }
+   ],
+   "bucket": "日期",
+   "description": "与D1落款差一日；披露日相同（见外部注记）"
+  },
+  {
+   "fact_id": "F3",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": false,
+   "evidence_required": true,
+   "value_kind": "date",
+   "subject": "俞发祥",
+   "predicate": "告知书收到日(D1与D2均载)",
+   "value": "2026-10-09",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "其于同日收到",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 188,
+     "end": 194
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "其于同日收到",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 191,
+     "end": 197
+    }
+   ],
+   "bucket": "日期",
+   "description": ""
+  },
+  {
+   "fact_id": "F4",
+   "status": "GOLD_CONFIRMED",
+   "gold_provenance": "official_structured_record",
+   "gold_source_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "weight": 1.0,
+   "critical": true,
+   "evidence_required": true,
+   "value_kind": "text",
+   "subject": "D1与D2的落款日与收到日关系",
+   "predicate": "落款日差与收到事件关系",
+   "value": "落款日不同(10-09 vs 10-10)且收到日相同(10-09)——落款日差不构成收到事件差",
+   "source_evidence": [
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "2026 年10 月9 日",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 159,
+     "end": 172
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "2026 年10 月10 日",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 553,
+     "end": 567
+    },
+    {
+     "doc_id": "D1",
+     "page": 1,
+     "quote": "其于同日收到",
+     "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48",
+     "start": 188,
+     "end": 194
+    },
+    {
+     "doc_id": "D2",
+     "page": 1,
+     "quote": "其于同日收到",
+     "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c",
+     "start": 191,
+     "end": 197
+    }
+   ],
+   "bucket": "日期",
+   "description": "判断点：同一收到事件、不同落款日、相同披露日（披露日见外部注记块，非计分事实）"
+  }
+ ],
+ "unknown_items": [
+  {
+   "item_id": "U2",
+   "description": "D3收到告知书的具体日期——原文仅'近日'，不可判定（独立槽位：非任何既有事实的局部字段；D3公告落款日2026-04-28另行独立记录于日期桶，不与收到日混同）",
+   "expected_status": "UNKNOWN"
+  }
+ ],
+ "verified_external_annotations": {
+  "_说明": "操作者以上交所公告目录核验，属冻结语料外证据——如实记录、不作为计分事实（无文档内锚点）",
+  "scoreable": false,
+  "prompt_visible": false,
+  "参与23项事实评分": false,
+  "作为模型对错判定依据": false,
+  "如需改为计分事实的前置条件": "须将交易所披露记录作为正式证据源单独冻结哈希",
+  "D1披露日": "2026-10-10（落款10-09）",
+  "D2披露日": "2026-10-10（落款10-10）",
+  "判断含义": "同一收到事件+不同落款日+相同正式披露日"
+ },
+ "annotation_rules": [
+  "有序列表对应规则（操作者确认）：原文'分别对A、B下发…（编号分别为：N1、N2）'中两处'分别'构成 N1→A、N2→B 的顺序对应，可判定绑定",
+  "落款日(document_signature_date)与披露日(disclosure_date)为不同日期类型，禁止混同；冻结语料外的披露日仅记录于外部注记块",
+  "收到日'近日'→该字段UNKNOWN；公告落款日独立记录，两者不得互推"
+ ],
+ "critical_fact_ids": [
+  "A1",
+  "A2",
+  "A3",
+  "A4",
+  "B3",
+  "B3b",
+  "D_1",
+  "D_2",
+  "D_4",
+  "E1",
+  "E2",
+  "F4"
+ ],
+ "conflict_groups": [],
+ "source_pages": {
+  "D1": {
+   "raw_sha256": "4c930d1536ed47282be761b74cb830c051cefe5ba2bb70c8eeb129e2cd4e2f97",
+   "pages": {
+    "1": {
+     "text": "证券代码：600576\n证券简称：祥源文旅\n公告编号：临2026-040\n浙江祥源文旅股份有限公司\n关于公司实际控制人收到立案告知书的公告\n本公司董事会及全体董事保证本公告内容不存在任何虚假记载、误导性陈\n述或者重大遗漏，并对其内容的真实性、准确性和完整性承担法律责任。\n浙江祥源文旅股份有限公司（以下简称“公司”）于2026 年10 月9 日收到\n实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称\n“中国证监会”）下发的《立案告知书》（证监立案字01120260037 号），因俞\n发祥先生个人涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》\n《中华人民共和国行政处罚法》等法律法规，决定对其立案。\n俞发祥先生除为公司实际控制人外，未在公司担任任何职务，公司生产经营\n一切正常，上述事项不会对公司正常生产经营产生重大影响。公司将持续关注上\n述事项进展情况，并按照法律法规的相关规定及时履行信息披露义务。\n公司指定的信息披露媒体为上海证券交易所网站（www.sse.com.cn）和《上\n海证券报》《中国证券报》《证券时报》《证券日报》，公司所有信息均以在上\n述指定媒体刊登的公告为准。敬请广大投资者理性投资，注意投资风险。\n特此公告。\n浙江祥源文旅股份有限公司董事会\n2026 年10 月9 日\n",
+     "page_sha256": "ef323933a82eb350658e1253ce0d11c55380c2e0f161e31c6504c31e526cba48"
+    }
+   }
+  },
+  "D2": {
+   "raw_sha256": "168f72a8ce646217965939498f82fc9f13d7a81f0439133f682562c27cc5ea5f",
+   "pages": {
+    "1": {
+     "text": "1\n证券代码：603815\n证券简称：交建股份\n公告编号：2026-053\n安徽省交通建设股份有限公司\n关于公司实际控制人收到立案告知书的公告\n本公司董事会及全体董事保证本公告内容不存在任何虚假记载、误导性陈\n述或者重大遗漏，并对其内容的真实性、准确性和完整性承担法律责任。\n安徽省交通建设股份有限公司（以下简称“公司”）于2026 年10 月9 日收\n到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简\n称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号），\n俞发祥先生个人因涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证\n券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\n俞发祥先生除为公司实际控制人外，未在公司担任任何职务，公司生产经营\n一切正常，上述事项不会对公司正常生产经营产生重大影响。公司将持续关注上\n述事项进展情况，并按照法律法规的相关规定及时履行信息披露义务。\n公司指定的信息披露媒体为上海证券交易所网站(www.sse.com.cn)和《上海\n证券报》《中国证券报》《证券日报》，公司所有信息均以在上述指定媒体刊登的\n公告为准。敬请广大投资者理性投资，注意投资风险。\n特此公告。\n安徽省交通建设股份有限公司董事会\n2026 年10 月10 日\n",
+     "page_sha256": "43a6c9490bee9b1261d1a691de334a817c52178f9f2f21dcb479095331bf055c"
+    }
+   }
+  },
+  "D3": {
+   "raw_sha256": "dd764d9fc43f2b3644a85e248b267ee3882141a1fe05b99fb3348d31b32042fa",
+   "pages": {
+    "1": {
+     "text": "证券代码：000639\n证券简称：西王食品\n公告编号：2026-008\n西王食品股份有限公司\n关于公司及实际控制人收到中国证券监督管理委员会立案告知书的\n公告\n本公司董事会及全体董事保证本公告内容不存在虚假记载、误导性陈述或重大\n遗漏，并对其内容的真实性、准确性和完整性承担个别及连带责任。\n西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理\n委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立\n案告知书》（告知书编号分别为：证监立案字0042026002 号、证监立案字\n0042026003 号）。因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、\n《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生\n进行立案调查。\n公司及王勇先生将积极配合中国证监会的调查工作，并严格按照相关法律法\n规及监管要求及时履行信息披露义务。目前公司各项生产经营活动正常有序开展，\n本次立案不会对公司生产、经营和管理造成重大影响。\n公司指定信息披露媒体为《证券时报》、《中国证券报》和巨潮资讯网\n（www.cninfo.com.cn），公司发布的信息以上述指定媒体刊登的公告为准，敬\n请广大投资者理性投资，注意投资风险。\n特此公告。\n西王食品股份有限公司董事会\n2026 年4 月28 日\n",
+     "page_sha256": "8de85b865cad9d367d224e0e9aafaa586407ad7037d9850ef07ced5a19a9e5e5"
+    }
+   }
+  },
+  "D4": {
+   "raw_sha256": "0c62e50f6e6b567fd7d1174a17309ef94fefd068229550c2bab0b1059b0638eb",
+   "pages": {
+    "1": {
+     "text": "关于收到中国证监会立案告知书的公告\n福建纳川管材科技股份有限公司\n证券代码：300198\n证券简称：*ST 纳川\n公告编号：2026-132\n福建纳川管材科技股份有限公司\n关于收到中国证监会立案告知书的公告\n本公司及董事会全体成员保证信息披露内容的真实、准确和完整，没有虚假\n记载、误导性陈述或重大遗漏。\n2026 年10 月9 日，福建纳川管材科技股份有限公司（以下简称“公司”）\n收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监\n督管理委员会立案告知书》（编号：证监立案字0262026012 号）。因公司2023\n年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和\n国行政处罚法》等法律法规，中国证监会决定对公司立案。\n立案调查期间，公司将积极配合中国证监会的调查工作，并严格按照相关法\n律法规及监管要求履行信息披露义务。公司指定的信息披露媒体为《证券时报》\n和巨潮资讯网(www.cninfo.com.cn)，公司所有公开披露的信息均以在上述指定\n媒体披露的正式公告为准，敬请广大投资者理性投资，注意投资风险。\n特此公告。\n福建纳川管材科技股份有限公司\n董\n事\n会\n二〇二六年十月九日\n",
+     "page_sha256": "199b1233f58f71325a673d032b4b61415595ea2d48191c1fa36c4cf2fc05d316"
+    }
+   }
+  }
+ },
+ "provenance": {
+  "nature": "四份公司公告（E10/E10b/E07/E05），哈希沿用冻结manifest并逐文件复核",
+  "model_calls": 0,
+  "built_by": "ZCode, frozen before any call, operator review fixes applied (date dual-type/U1 rule/E3 term/critical list)"
+ },
+ "contract_version": "v2.2-candidate-2026-11-02",
+ "parent_contract_sha256": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234",
+ "provenance_note": "Derived from TASK_CONTRACT_PHASE2B_v2_1.json for Phase Pi V2.3 (scoring repair). Only the E3 numeric-contract defect is repaired here; accepted_values are PROPOSED and require human ratification before any confirmatory run.",
+ "answer_policy": {
+  "claims_complete": "sink parses to dict AND answers is a list AND every element is a dict with a non-empty fact_id that is either a contract slot or a declared unknown item AND no duplicate fact_ids",
+  "delivery_valid": "sink parses to dict AND answers is a non-empty list AND at least one answer has a non-empty value",
+  "doc_id_normalization": {
+   "rule": "prefer D[1-4] found anywhere in the doc string; else map node prefixes E1/E2/E3/E4 and their _pos/_rest/_merge descendants to D1/D2/D3/D4",
+   "rationale": "node names are pipeline-internal; contract source documents are D1-D4",
+   "applies_to": "all six arms identically"
+  },
+  "question_relevance": "requires an externally adjudicated assessment; no synthetic value is generated by this adapter"
+ },
+ "canonicalization": {
+  "version": "v23-candidate-1",
+  "rationale": "map semantically equivalent answer forms to the frozen gold token; rules authored from gold semantics, not from observed answers",
+  "require_human_ratification": true
+ }
+}

@@ -1,0 +1,158 @@
+{
+ "scan": [
+  {
+   "name": "F1a: t1 DS unavail",
+   "S4": [
+    "glm53"
+   ],
+   "S5": [
+    "glm53"
+   ],
+   "S6": [
+    "glm53"
+   ],
+   "Z": "LOCAL",
+   "diff": false,
+   "fault_nodes": [
+    "t1"
+   ]
+  },
+  {
+   "name": "F1b: t1 GLM53 unavail",
+   "S4": [
+    "glm53flash"
+   ],
+   "S5": [
+    "deepseek"
+   ],
+   "S6": [
+    "deepseek"
+   ],
+   "Z": "LOCAL",
+   "diff": true,
+   "fault_nodes": [
+    "t1"
+   ]
+  },
+  {
+   "name": "F2a: t5 GLM53 unavail",
+   "S4": [
+    "glm53flash"
+   ],
+   "S5": [
+    "glm53flash"
+   ],
+   "S6": [
+    "?"
+   ],
+   "Z": "NONE",
+   "diff": true,
+   "fault_nodes": [
+    "t5"
+   ]
+  },
+  {
+   "name": "F2b: t5 only Flash ok",
+   "S4": [
+    "glm53flash"
+   ],
+   "S5": [
+    "glm53flash"
+   ],
+   "S6": [
+    "?"
+   ],
+   "Z": "NONE",
+   "diff": true,
+   "fault_nodes": [
+    "t5"
+   ]
+  },
+  {
+   "name": "F3: t1+t2 DS unavail",
+   "S4": [
+    "glm53",
+    "glm53"
+   ],
+   "S5": [
+    "glm53",
+    "glm53"
+   ],
+   "S6": [
+    "glm53",
+    "?"
+   ],
+   "Z": "LOCAL",
+   "diff": true,
+   "fault_nodes": [
+    "t1",
+    "t2"
+   ]
+  },
+  {
+   "name": "F4: t1 DS + t5 GLM53",
+   "S4": [
+    "glm53",
+    "glm53flash"
+   ],
+   "S5": [
+    "glm53",
+    "glm53flash"
+   ],
+   "S6": [
+    "?",
+    "?"
+   ],
+   "Z": "NONE",
+   "diff": true,
+   "fault_nodes": [
+    "t1",
+    "t5"
+   ]
+  },
+  {
+   "name": "F5: t1 GLM53 + t5 GLM53",
+   "S4": [
+    "glm53flash",
+    "glm53flash"
+   ],
+   "S5": [
+    "deepseek",
+    "glm53flash"
+   ],
+   "S6": [
+    "?",
+    "?"
+   ],
+   "Z": "NONE",
+   "diff": true,
+   "fault_nodes": [
+    "t1",
+    "t5"
+   ]
+  },
+  {
+   "name": "F6: t0 GLM53 unavail",
+   "S4": [
+    "glm53flash"
+   ],
+   "S5": [
+    "deepseek"
+   ],
+   "S6": [
+    "deepseek"
+   ],
+   "Z": "LOCAL",
+   "diff": true,
+   "fault_nodes": [
+    "t0"
+   ]
+  }
+ ],
+ "degeneracy": {
+  "R": "LOCAL≈FULL(t0 cached); near-root fault forces closure",
+  "pi": "homogeneous fault nodes→same model; no per-branch diff",
+  "none_bug": "score=-1 not -inf → wrong abandon at low w_q",
+  "fix": "completion_bonus=10.0 for all recovery actions"
+ }
+}

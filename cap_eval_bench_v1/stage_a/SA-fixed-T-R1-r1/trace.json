@@ -1,0 +1,144 @@
+{
+ "run_id": "SA-fixed-T-R1-r1",
+ "system_id": "fixed_graph",
+ "task_id": "T-R1",
+ "config_hash": "3f5af011be65a89fd28d5ad0303246a9f49cc84ba807e142b252b56a5e5632b5",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 2,
+   "usage": {
+    "in": 316,
+    "out": 142
+   },
+   "latency_s": 3.993,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 3,
+   "usage": {
+    "in": 1452,
+    "out": 350
+   },
+   "latency_s": 4.972,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 4,
+   "usage": {
+    "in": 534,
+    "out": 212
+   },
+   "latency_s": 4.071,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "unknown"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": [
+     "unknown:[\"黑洞照片内容细节\", \"网站具体恢复日期UNRESOLVED\", \"网信办约谈具体内容\"]"
+    ]
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 5,
+   "usage": {
+    "in": 555,
+    "out": 223
+   },
+   "latency_s": 3.787,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 6,
+   "usage": {
+    "in": 939,
+    "out": 201
+   },
+   "latency_s": 4.434,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 7,
+   "usage": {
+    "in": 512,
+    "out": 386
+   },
+   "latency_s": 5.898,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 27.155,
+ "deliverable_ref": "stage_a/SA-fixed-T-R1-r1/deliverable.json",
+ "notes": "STAGE-A REAL run arm=fixed_graph; fair terminal contract + canonical assembler"
+}

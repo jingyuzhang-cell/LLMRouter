@@ -1,0 +1,1080 @@
+{
+ "runs": {
+  "S5Cap_r1": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0072,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6",
+   "deadline_success": true,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 12.8,
+     "drift": 0.08
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 27.7,
+     "drift": 0.04
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 12.6,
+     "drift": 0.08
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 21.0,
+     "drift": 0.05
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 6.4,
+     "drift": 0.16
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 19.2,
+     "drift": 0.05
+    }
+   ]
+  },
+  "S6_r1": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.26,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 10149
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0109,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6",
+   "deadline_success": true,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 12.8,
+     "drift": 0.08
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "lat": 1.0,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 4.8,
+     "drift": 0.21
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "lat": 1.0,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 17.6,
+     "drift": 0.06
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 5.4,
+     "drift": 0.19
+    }
+   ]
+  },
+  "S5Cap_r2": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0072,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6",
+   "deadline_success": true,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 12.8,
+     "drift": 0.08
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 27.7,
+     "drift": 0.04
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 12.6,
+     "drift": 0.08
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 21.0,
+     "drift": 0.05
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 6.4,
+     "drift": 0.16
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 19.2,
+     "drift": 0.05
+    }
+   ]
+  },
+  "S6_r2": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.24,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 10149
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0109,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6",
+   "deadline_success": true,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 12.8,
+     "drift": 0.08
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "lat": 1.0,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 4.8,
+     "drift": 0.21
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "lat": 1.0,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 17.6,
+     "drift": 0.06
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 5.4,
+     "drift": 0.19
+    }
+   ]
+  },
+  "S5Cap_r3": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0072,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6",
+   "deadline_success": true,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 12.8,
+     "drift": 0.08
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 27.7,
+     "drift": 0.04
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 12.6,
+     "drift": 0.08
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 21.0,
+     "drift": 0.05
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 6.4,
+     "drift": 0.16
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 19.2,
+     "drift": 0.05
+    }
+   ]
+  },
+  "S6_r3": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.24,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 10149
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0109,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6",
+   "deadline_success": true,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 12.8,
+     "drift": 0.08
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "lat": 1.0,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 4.8,
+     "drift": 0.21
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "lat": 1.0,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "lat": 1.0,
+     "p90": 17.6,
+     "drift": 0.06
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "lat": 1.0,
+     "p90": 5.4,
+     "drift": 0.19
+    }
+   ]
+  }
+ },
+ "config": {
+  "stats": "capability_table_v4 era=v2 (calibrated, shared by S5Cap & S6)",
+  "deadline_s": 75.0,
+  "fault": "F7",
+  "retrieval": "frozen 10K line-split"
+ },
+ "meter": {
+  "calls": 36,
+  "tokens": 28800,
+  "cash_rmb": 0.0543
+ },
+ "preflight": {
+  "conditions": {
+   "C1_regression": true,
+   "C2_fresh_ledger": true,
+   "C3_offpeak_or_authorized": true,
+   "C4_reservation": true
+  },
+  "pricing": {
+   "in": 0.3,
+   "out": 1.2
+  },
+  "peak_authorized": true,
+  "verdict": "GO(dry-run)",
+  "detail": {
+   "planned_calls": 36,
+   "worst_tokens": 213120,
+   "worst_cash_rmb": 0.6647,
+   "requested_caps": {
+    "calls": 38,
+    "tokens": 223776,
+    "cash_rmb": 0.73
+   }
+  }
+ }
+}

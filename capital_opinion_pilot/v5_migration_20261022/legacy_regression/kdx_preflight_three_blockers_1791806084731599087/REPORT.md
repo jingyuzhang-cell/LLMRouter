@@ -1,0 +1,17 @@
+# 三阻塞收口
+
+SERVICE PREFLIGHT NO-GO。无GPU模型启动、无真实HTTP/生成请求。
+
+GPU顺序修复：Preflight将最终GPU/session探针绑定OwnedService.exit_probe；stop在持GPU flock时执行，成功后才删除隔离并关锁。后续不再在锁释放后做决定性核验。基线原有其他实验GPU PID保持记录，不发送kill；新GPU进程或自有session残留拒绝确认并保留隔离。探针错误走原有quarantine。进程/session证据与nvidia-smi联合，不以单一空闲值宣称物理driver释放。
+
+MetadataHTTP实现localhost /health、/v1/models GET白名单、禁代理/重定向、最多3秒socket timeout、响应最多64KiB，不携带业务Prompt。GPU adapter单个nvidia-smi查询最多5秒。源码和command身份离线冻结；health/models只能验证可用与served alias，不能证明服务实际权重及计量。socket timeout不是绝对HTTP墙钟，watchdog负责独立终止自有服务；健康hook慢滴响应或OS异常仍须受额外外部硬deadline保障。
+
+现86项零调用测试通过，涵盖持锁退出、其他GPU进程保留、新进程残留、metadata禁止生成和无隔离启动拒绝。正常/timeout/identity/cleanup的原测试保留。
+
+旧入口隔离仍未解决。全项目Python语法搜索候选列表见START_ENTRY_CANDIDATES.json（包含历史副本/测试，不能把匹配数当作实际入口数）；collect.runner直接Popen及typed_dag engine.start_model等不执行本隔离检查。同root进程可绕过应用层锁，不能用白名单阻止另一个root进程。当前PID1=bash，/run/systemd/system不存在，未运行systemd服务管理器；仅systemd-run二进制存在不构成实际受限服务域。未修改权限、删除旧脚本或影响其他实验。
+
+新冻结protocol isolation_enforced=false，统一入口在任何GPU/metadata动作前明确拒绝START_ISOLATION_NOT_ENFORCED。配置布尔是fail-closed门禁，不是隔离本身；不允许手工改true冒充边界。需要管理员/宿主支持的独立GPU设备访问域或所有旧入口统一服从受控服务代理，才可解除，不能通过当前更多Mock测试证明。
+
+300秒信封继续0生成/0推理Token。240加载检查，280前watchdog启动停止，进程wait5秒与两次退出探针可能各5秒，保留到300的清理余量。超时/driver无法释放则隔离，不声称期限内必然释放。未实现OS级不可绕过硬deadline，与旧入口隔离是相关宿主条件。两项适配代码改善不等于全部READY。
+
+原A图、历史4096/4000与评分不改，不提交推送。本轮停止，不真实预检。

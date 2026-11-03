@@ -1,0 +1,68 @@
+{
+ "batch": "PHASE_PI_V23_TASK_SET_VALIDATION",
+ "manifest": "task_set_T1_negative_example.json",
+ "min_groups": 12,
+ "groups": 1,
+ "pass_": false,
+ "results": [
+  {
+   "group": "T1",
+   "check": "formal_gold",
+   "pass_": true,
+   "detail": "23 facts"
+  },
+  {
+   "group": "T1",
+   "check": "gold_coverage",
+   "pass_": true,
+   "detail": "1.0"
+  },
+  {
+   "group": "T1",
+   "check": "evidence_verbatim",
+   "pass_": true,
+   "detail": "[]"
+  },
+  {
+   "group": "T1",
+   "check": "S0_declared",
+   "pass_": false,
+   "detail": "{'pass': False, 'note': 'entity occurs outside the gold spans'}"
+  },
+  {
+   "group": "T1",
+   "check": "S1_declared",
+   "pass_": false,
+   "detail": "{'pass': False, 'note': 'relation survives span ablation'}"
+  },
+  {
+   "group": "T1",
+   "check": "split_target_declared",
+   "pass_": true,
+   "detail": "{'node': 'E2', 'field': 'positions', 'affected_slots': ['A1', 'A2', 'A5'], 'entities': ['俞发祥'], 'relation_keywords': ['实际控制人', '个人', '立案']}"
+  },
+  {
+   "group": "T1",
+   "check": "question_present",
+   "pass_": true,
+   "detail": ""
+  },
+  {
+   "group": "T1",
+   "check": "S0_mechanical",
+   "pass_": false,
+   "detail": "{'outside': 3, 'undeclared': 3, 'sample': [{'doc_id': 'D1', 'page': '1', 'start': 318, 'entity': '俞发祥', 'context': '处罚法》等法律法规，决定对其立案。\\n俞发祥先生除为公司实际控制人外，未在公司担'}, {'doc_id': 'D2', 'page': '1', 'start': 257, 'entity': '俞发祥', 'context': '案字01120260037 号），\\n俞发祥先生个人因涉嫌信息披露违法违规，中国'}, {'doc_id': 'D2', 'page': '1', 'start': 324, 'entity': '俞发祥', 'context': '处罚法》等法律法规，决定对其立案。\\n俞发祥先生除为公司实际控制人外，未在公司担'}]}"
+  },
+  {
+   "group": "T1",
+   "check": "S1_ablation",
+   "pass_": false,
+   "detail": "{'hits': 1, 'sample': [{'doc_id': 'D2', 'page': '1', 'start': 257, 'entity': '俞发祥', 'keyword': '个人', 'context': '\\n安徽省交通建设股份有限公司（以下简称“公司”）于2026 年10 月9 日收\\n\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000\\u3000称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号），\\n俞发祥先生个人因涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证\\n券法》《'}]}"
+  },
+  {
+   "check": "cross_group_independence",
+   "pass_": true,
+   "detail": "[]"
+  }
+ ]
+}

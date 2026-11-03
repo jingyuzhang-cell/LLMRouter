@@ -1,0 +1,1111 @@
+[
+  {
+    "path": "/root/r3_own_pool/full_collection.py",
+    "matches": [
+      {
+        "line": 74,
+        "code": "proc=subprocess.Popen(cmd+(['--retry-failed'] if retry else []),cwd=C,stdout=f,stderr=subprocess.STDOUT)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collect/runner.py",
+    "matches": [
+      {
+        "line": 72,
+        "code": "cmd = [\"/root/autodl-tmp/r3_venv/bin/vllm\", \"serve\", path,"
+      },
+      {
+        "line": 78,
+        "code": "srv = subprocess.Popen(cmd, env=env, stdout=open(pathlib.Path(__file__).parent / \"logs\" / f\"vllm_{slot}.log\", \"a\"),"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/router_v2/run_coder_pilot.py",
+    "matches": [
+      {
+        "line": 74,
+        "code": "proc=subprocess.Popen(['/root/autodl-tmp/r3_venv/bin/vllm','serve',str(MODEL),'--served-model-name',REPO,'--port','8127','--max-model-len','8192','--max-num-seqs','2','--gpu-memory-utilization','.92','--generation-config','vllm'],stdout=log"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/router_v2/collect_label_repair.py",
+    "matches": [
+      {
+        "line": 77,
+        "code": "cmd=['/root/autodl-tmp/r3_venv/bin/vllm','serve',cfg['path'],'--served-model-name',cfg['served'],"
+      },
+      {
+        "line": 80,
+        "code": "proc=subprocess.Popen(cmd,stdout=log,stderr=subprocess.STDOUT,env={**os.environ,'HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'})"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/router_v2/collect_model_pool_screening_100.py",
+    "matches": [
+      {
+        "line": 126,
+        "code": "proc = subprocess.Popen(["
+      },
+      {
+        "line": 127,
+        "code": "\"/root/autodl-tmp/r3_venv/bin/vllm\", \"serve\", str(config[\"path\"]),"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/router_v2/collect_repeat_compatibility_115.py",
+    "matches": [
+      {
+        "line": 109,
+        "code": "proc = subprocess.Popen(["
+      },
+      {
+        "line": 110,
+        "code": "\"/root/autodl-tmp/r3_venv/bin/vllm\", \"serve\", str(config[\"path\"]),"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/router_v2/run_knowledge_validation_400.py",
+    "matches": [
+      {
+        "line": 82,
+        "code": "proc = subprocess.Popen(["
+      },
+      {
+        "line": 83,
+        "code": "\"/root/autodl-tmp/r3_venv/bin/vllm\", \"serve\", str(MODEL_DIR),"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/router_v2/run_pool4_glm_pilot.py",
+    "matches": [
+      {
+        "line": 17,
+        "code": "fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);log=(OUT/'VLLM.log').open('a');proc=subprocess.Popen(['/root/autodl-tmp/r3_venv/bin/vllm','serve',str(MODEL),'--served-model-name',protocol['glm_checkpoint'],'--port','8127','--max-model-len','8"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/router_v2/run_repeat_stability.py",
+    "matches": [
+      {
+        "line": 208,
+        "code": "\"serve\","
+      },
+      {
+        "line": 225,
+        "code": "proc = subprocess.Popen(cmd, cwd=str(COLLECT), env=env, stdout=log, stderr=subprocess.STDOUT)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/confirmation_200.py",
+    "matches": [
+      {
+        "line": 89,
+        "code": "proc, logm, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/cross_domain_math_run.py",
+    "matches": [
+      {
+        "line": 87,
+        "code": "self.proc, self.log, _ = engine.start_model(model); self.current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/live_e2e.py",
+    "matches": [
+      {
+        "line": 85,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/cross_model_matrix.py",
+    "matches": [
+      {
+        "line": 102,
+        "code": "proc, logm, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/confirmation_500.py",
+    "matches": [
+      {
+        "line": 90,
+        "code": "proc, logm, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/controlled_fault_propagation.py",
+    "matches": [
+      {
+        "line": 102,
+        "code": "self.proc, self.log, _ = engine.start_model(model); self.current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/multidag_ablation.py",
+    "matches": [
+      {
+        "line": 86,
+        "code": "self.proc, self.log, _ = engine.start_model(model); self.current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/decomp_benchmark_run.py",
+    "matches": [
+      {
+        "line": 82,
+        "code": "proc, log, _ = engine.start_model('large')"
+      },
+      {
+        "line": 117,
+        "code": "proc, log, _ = engine.start_model('medium')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/multi_seed_run.py",
+    "matches": [
+      {
+        "line": 85,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/decompose_at_scale.py",
+    "matches": [
+      {
+        "line": 92,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/frozen200_run.py",
+    "matches": [
+      {
+        "line": 101,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/repair.py",
+    "matches": [
+      {
+        "line": 110,
+        "code": "proc,log,startup=engine.start_model('large')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/decompose_pilot.py",
+    "matches": [
+      {
+        "line": 71,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/multidag_fullgraph.py",
+    "matches": [
+      {
+        "line": 103,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/capability_profiling.py",
+    "matches": [
+      {
+        "line": 116,
+        "code": "proc, logm, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/decompose_v1.py",
+    "matches": [
+      {
+        "line": 111,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/determinism_probe.py",
+    "matches": [
+      {
+        "line": 36,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/cfp_batched.py",
+    "matches": [
+      {
+        "line": 63,
+        "code": "proc, logm, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/run.py",
+    "matches": [
+      {
+        "line": 52,
+        "code": "def start_model(slot):"
+      },
+      {
+        "line": 62,
+        "code": "proc=subprocess.Popen(['/root/autodl-tmp/r3_venv/bin/vllm','serve',cfg['path'],'--served-model-name',cfg['served'],'--port','8128','--max-model-len','8192','--max-num-seqs','4','--gpu-memory-utilization','.92','--dtype','auto','--generation"
+      },
+      {
+        "line": 115,
+        "code": "proc,log,seconds=start_model(slot);current=slot;loads.append(dict(model=slot,startup_seconds=seconds))"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/dynamic_v2_test.py",
+    "matches": [
+      {
+        "line": 60,
+        "code": "proc, logm, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/end_to_end_demo.py",
+    "matches": [
+      {
+        "line": 115,
+        "code": "proc, log_, _ = engine.start_model(POOL[second])"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/evidence_reconstruction_v2.py",
+    "matches": [
+      {
+        "line": 103,
+        "code": "proc, logm, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/ext_baselines_run.py",
+    "matches": [
+      {
+        "line": 193,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/exact_pareto.py",
+    "matches": [
+      {
+        "line": 90,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/fresh_static_confirmation.py",
+    "matches": [
+      {
+        "line": 124,
+        "code": "proc,log,startup=engine.start_model(slot);done=0;missing=0"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/graph_forest_v0.py",
+    "matches": [
+      {
+        "line": 123,
+        "code": "proc, log, _ = engine.start_model('medium')"
+      },
+      {
+        "line": 141,
+        "code": "proc, log, _ = engine.start_model('medium')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/graph_forest_v1.py",
+    "matches": [
+      {
+        "line": 92,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/live_static_dynamic.py",
+    "matches": [
+      {
+        "line": 101,
+        "code": "self.proc, self.log, _ = engine.start_model(model); self.current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/monolithic_baseline.py",
+    "matches": [
+      {
+        "line": 47,
+        "code": "proc, log, _ = engine.start_model(MODEL)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/restore_small_shadow.py",
+    "matches": [
+      {
+        "line": 33,
+        "code": "log=(OUT/'SMALL_SERVER.log').open('a');t=time.monotonic();proc=subprocess.Popen(['/root/autodl-tmp/r3_venv/bin/vllm','serve',str(MODEL),'--served-model-name','Qwen/Qwen2.5-3B-Instruct','--port','8128','--max-model-len','8192','--max-num-seq"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/benchmark_run.py",
+    "matches": [
+      {
+        "line": 140,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/multidag_dynamic.py",
+    "matches": [
+      {
+        "line": 155,
+        "code": "self.proc, self.log, _ = engine.start_model(model); self.current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/recovery_matrix_v2_dev_run.py",
+    "matches": [
+      {
+        "line": 47,
+        "code": "proc, log, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/node_benchmark_collect.py",
+    "matches": [
+      {
+        "line": 126,
+        "code": "proc, log, _ = engine.start_model(slot)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/scale_up_collect.py",
+    "matches": [
+      {
+        "line": 84,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/recovery_matrix_v2_full_run.py",
+    "matches": [
+      {
+        "line": 44,
+        "code": "proc, log, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/oracle_components.py",
+    "matches": [
+      {
+        "line": 152,
+        "code": "proc, log, _ = engine.start_model(s['m_fb'])"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/p3_math_run.py",
+    "matches": [
+      {
+        "line": 126,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/p3_mbpp_run.py",
+    "matches": [
+      {
+        "line": 136,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/recovery_matrix_v2_pilot.py",
+    "matches": [
+      {
+        "line": 116,
+        "code": "proc,log,_=engine.start_model(model);current=model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/paired_decomposition.py",
+    "matches": [
+      {
+        "line": 112,
+        "code": "proc, logm, _ = engine.start_model('large')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/structure_aware_recovery.py",
+    "matches": [
+      {
+        "line": 133,
+        "code": "proc, logm, _ = engine.start_model(model); current = model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/single_model_baselines_live.py",
+    "matches": [
+      {
+        "line": 46,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/tatqa_collect.py",
+    "matches": [
+      {
+        "line": 61,
+        "code": "proc, log, _ = engine.start_model(slot)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/tool_aware_v1.py",
+    "matches": [
+      {
+        "line": 138,
+        "code": "if slot!='reasoning':proc,log,startup=engine.start_model(slot)"
+      },
+      {
+        "line": 172,
+        "code": "proc,log,startup=engine.start_model(slot);active=slot;loads.append(dict(model=slot,seconds=startup))"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/verifier_run.py",
+    "matches": [
+      {
+        "line": 71,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/verifier_v1.py",
+    "matches": [
+      {
+        "line": 85,
+        "code": "proc, log, _ = engine.start_model(MODEL)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/verifier_v1_1.py",
+    "matches": [
+      {
+        "line": 100,
+        "code": "proc, log, _ = engine.start_model(MODEL)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/graph_forest_v2_p1b_contract.py",
+    "matches": [
+      {
+        "line": 168,
+        "code": "proc, log, _ = engine.start_model(MODEL)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/graph_forest_v2_p1b2_grounded.py",
+    "matches": [
+      {
+        "line": 177,
+        "code": "proc, log, _ = engine.start_model(MODEL)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/graph_forest_v2_p1b3_step2.py",
+    "matches": [
+      {
+        "line": 182,
+        "code": "proc, log, _ = engine.start_model(MODEL)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/graph_forest_v2_p02_run.py",
+    "matches": [
+      {
+        "line": 93,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/graph_forest_v2_3x2.py",
+    "matches": [
+      {
+        "line": 134,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/cube_clean_run.py",
+    "matches": [
+      {
+        "line": 102,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/fault30_run.py",
+    "matches": [
+      {
+        "line": 134,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/dag_patch_p1b.py",
+    "matches": [
+      {
+        "line": 416,
+        "code": "proc[0], proc[1], _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/dag_patch_p1b_v3.py",
+    "matches": [
+      {
+        "line": 629,
+        "code": "proc[0], proc[1], _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/dag_patch_directed_v3.py",
+    "matches": [
+      {
+        "line": 371,
+        "code": "proc[0], proc[1], _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/deadline_reward_v1/calibrate_real.py",
+    "matches": [
+      {
+        "line": 119,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/deadline_reward_v1/supplementary_runner.py",
+    "matches": [
+      {
+        "line": 252,
+        "code": "proc, log, _ = self._mod().start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/frp_dag/phase1_collect.py",
+    "matches": [
+      {
+        "line": 189,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/live_e2e/SCRIPT_BEFORE_RESUME.py",
+    "matches": [
+      {
+        "line": 68,
+        "code": "self.proc, self.log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/decomposition_benchmark/loss_attribution/loss_attribution_run.py",
+    "matches": [
+      {
+        "line": 92,
+        "code": "proc, log, _ = engine.start_model('large')"
+      },
+      {
+        "line": 120,
+        "code": "proc, log, _ = engine.start_model('large')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/static_dag_v0/recovery_matrix_v2/legacy_before_snapshot_fix/pilot.py",
+    "matches": [
+      {
+        "line": 186,
+        "code": "proc, log, _ = engine.start_model(m)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/runtime.py",
+    "matches": [
+      {
+        "line": 146,
+        "code": "proc,log,_=backend.start_model(model);current=model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/test_runtime.py",
+    "matches": [
+      {
+        "line": 17,
+        "code": "def start_model(self,m):self.starts+=1;return object(),object(),0"
+      },
+      {
+        "line": 104,
+        "code": "def start_model(self,m):"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/netbenefit_runner.py",
+    "matches": [
+      {
+        "line": 454,
+        "code": "p, lg, _ = engine.start_model(model)"
+      },
+      {
+        "line": 458,
+        "code": "print(f'[retry] start_model({model}) failed: {e!r}')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/fullval_runner.py",
+    "matches": [
+      {
+        "line": 88,
+        "code": "proc,log,_=backend.start_model(model);current=model"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/test_fullval_safe.py",
+    "matches": [
+      {
+        "line": 10,
+        "code": "def start_model(self,m):self.starts+=1;return object(),object(),0"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/fullval_continue.py",
+    "matches": [
+      {
+        "line": 130,
+        "code": "proc, log, _ = backend.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/fast_backend.py",
+    "matches": [
+      {
+        "line": 61,
+        "code": "def start_model(self, slot):"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_v1/test_fast_backend.py",
+    "matches": [
+      {
+        "line": 31,
+        "code": "self.assertEqual(fast.start_model(p),(hashlib.sha256(b'a').hexdigest(),'isolated'))"
+      },
+      {
+        "line": 32,
+        "code": "self.assertEqual(engine.start_model(p),('original','original'))"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/real_generation_smoke.py",
+    "matches": [
+      {
+        "line": 25,
+        "code": "proc,log,load_s=engine.start_model('medium')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/real_generation_repair_smoke.py",
+    "matches": [
+      {
+        "line": 26,
+        "code": "proc,log,load_s=engine.start_model('medium')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/real_generation_repair_followup.py",
+    "matches": [
+      {
+        "line": 26,
+        "code": "proc,log,load_s=engine.start_model('medium')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/real_generation_continue.py",
+    "matches": [
+      {
+        "line": 28,
+        "code": "proc,log,load=engine.start_model('medium')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/real_fact_reference_smoke.py",
+    "matches": [
+      {
+        "line": 39,
+        "code": "if args_resume and isinstance(command,list) and 'serve' in command and any('vllm' in str(x) for x in command):command=command+['--structured-outputs-config','{\"backend\":\"xgrammar\",\"disable_any_whitespace\":true}']"
+      },
+      {
+        "line": 43,
+        "code": "try:proc,log,load_s=engine.start_model('medium')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/heterogeneous_models.py",
+    "matches": [
+      {
+        "line": 95,
+        "code": "self.proc=subprocess.Popen(['/root/autodl-tmp/r3_venv/bin/vllm','serve',cfg['path'],*(['--enable-request-id-headers'] if self.request_id_headers else []),'--served-model-name',cfg['served'],'--port',str(self.port),'--max-model-len','8192','"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/ab_acceptance.py",
+    "matches": [
+      {
+        "line": 45,
+        "code": "child=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/typed_dag_v1/ab_interleaved.py",
+    "matches": [
+      {
+        "line": 34,
+        "code": "child=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/r3_own_pool/collab_scheduler_v1/joint_search_smoke/proposal_v2/smoke_runner.py",
+    "matches": [
+      {
+        "line": 189,
+        "code": "proc, log, _ = engine.start_model(model)"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/capital_opinion_pilot/prepare_kdx_t2_final.py",
+    "matches": [
+      {
+        "line": 24,
+        "code": "command=['/root/autodl-tmp/r3_venv/bin/vllm','serve',str(model),'--tokenizer',str(model),'--served-model-name','Qwen/Qwen2.5-7B-Instruct','--host','127.0.0.1','--port','8127','--max-model-len','16384','--dtype','auto','--gpu-memory-utilizat"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": false
+  },
+  {
+    "path": "/root/capital_opinion_pilot/kdx_preflight_launcher.py",
+    "matches": [
+      {
+        "line": 18,
+        "code": "if len(command)<4 or command[1]!='serve' or any(x in command for x in ['-c','bash','sh']):raise ValueError('UNSUPPORTED_START_ENTRY')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": true
+  },
+  {
+    "path": "/root/capital_opinion_pilot/test_kdx_preflight_launcher.py",
+    "matches": [
+      {
+        "line": 12,
+        "code": "self.protocol={'isolation_enforced':True,'model_command':['vllm','serve','model','--served-model-name','qwen'],'lock_path':str(self.root/'lock')}"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": true
+  },
+  {
+    "path": "/root/capital_opinion_pilot/kdx_service_preflight_unified_1791805270792890762/kdx_preflight_launcher.py",
+    "matches": [
+      {
+        "line": 17,
+        "code": "if len(command)<4 or command[1]!='serve' or any(x in command for x in ['-c','bash','sh']):raise ValueError('UNSUPPORTED_START_ENTRY')"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": true
+  },
+  {
+    "path": "/root/capital_opinion_pilot/kdx_service_preflight_unified_1791805270792890762/test_kdx_preflight_launcher.py",
+    "matches": [
+      {
+        "line": 11,
+        "code": "self.protocol={'model_command':['vllm','serve','model','--served-model-name','qwen'],'lock_path':str(self.root/'lock')}"
+      }
+    ],
+    "classification": "syntactic candidates; includes tests, frozen copies and indirect calls; not all are live entrypoints",
+    "quarantine_token_present": true
+  }
+]

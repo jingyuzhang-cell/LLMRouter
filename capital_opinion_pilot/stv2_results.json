@@ -1,0 +1,897 @@
+{
+ "runs": {
+  "ST_clean_r1": {
+   "policy": "static",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [],
+   "complete": false,
+   "wall_s": 58.24,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2311,
+     "lat": 8.62,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "strict_ok": false,
+     "compat_ok": false,
+     "parse_layer": "L0: Unterminated string starting at: line 144 column 7 (char 5441) | L1: Unterminated string starting at: line 144 column 7 (char 5441)",
+     "in": 3793,
+     "out": 2560,
+     "lat": 8.7,
+     "truncated": true
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3053,
+     "out": 1828,
+     "lat": 17.14,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3059,
+     "out": 1365,
+     "lat": 22.07,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3152,
+     "out": 2534,
+     "lat": 8.59,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2471,
+     "out": 1414,
+     "lat": 18.85,
+     "truncated": false
+    }
+   ],
+   "tokens": 31392,
+   "cash_rmb": 0.0861,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "5/6",
+   "compat_rate": "5/6"
+  },
+  "ST_S5Cap_F7_r1": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 83.32,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2250,
+     "lat": 16.24,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1899,
+     "lat": 18.64,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2760,
+     "out": 533,
+     "lat": 8.26,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2754,
+     "out": 1680,
+     "lat": 17.3,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2111,
+     "out": 1948,
+     "lat": 6.76,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2209,
+     "out": 1373,
+     "lat": 24.36,
+     "truncated": false
+    }
+   ],
+   "tokens": 27314,
+   "cash_rmb": 0.0485,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S5Cap_F7_r2": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 64.39,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2403,
+     "lat": 8.44,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1776,
+     "lat": 17.13,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2824,
+     "out": 339,
+     "lat": 5.16,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2818,
+     "out": 2036,
+     "lat": 19.88,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2127,
+     "out": 1566,
+     "lat": 4.36,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1827,
+     "out": 1161,
+     "lat": 14.56,
+     "truncated": false
+    }
+   ],
+   "tokens": 26674,
+   "cash_rmb": 0.0466,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S5Cap_F7_r3": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 71.61,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2179,
+     "lat": 7.65,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1738,
+     "lat": 23.63,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2808,
+     "out": 577,
+     "lat": 11.42,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2802,
+     "out": 1866,
+     "lat": 18.98,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2580,
+     "out": 1934,
+     "lat": 6.81,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2208,
+     "out": 1530,
+     "lat": 14.53,
+     "truncated": false
+    }
+   ],
+   "tokens": 28019,
+   "cash_rmb": 0.0487,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S6_F7_r1": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 67.77,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2188,
+     "lat": 7.72,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1953,
+     "lat": 20.76,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2901,
+     "out": 1915,
+     "lat": 6.91,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2840,
+     "out": 300,
+     "lat": 7.12,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2445,
+     "out": 2099,
+     "lat": 7.31,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53flash",
+     "strict_ok": false,
+     "compat_ok": true,
+     "parse_layer": "L1_control_char",
+     "in": 2033,
+     "out": 1474,
+     "lat": 24.64,
+     "truncated": false
+    }
+   ],
+   "tokens": 27945,
+   "cash_rmb": 0.0724,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "5/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S6_F7_r2": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 76.66,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2328,
+     "lat": 8.15,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1974,
+     "lat": 29.48,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2899,
+     "out": 1405,
+     "lat": 5.46,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2839,
+     "out": 1049,
+     "lat": 13.67,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2689,
+     "out": 1678,
+     "lat": 6.1,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1614,
+     "out": 1352,
+     "lat": 19.01,
+     "truncated": false
+    }
+   ],
+   "tokens": 27624,
+   "cash_rmb": 0.0662,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S6_F7_r3": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 62.81,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2472,
+     "lat": 8.99,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1908,
+     "lat": 23.2,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2940,
+     "out": 356,
+     "lat": 2.46,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2895,
+     "out": 585,
+     "lat": 10.62,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1015,
+     "out": 653,
+     "lat": 3.5,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 856,
+     "out": 892,
+     "lat": 16.29,
+     "truncated": false
+    }
+   ],
+   "tokens": 22369,
+   "cash_rmb": 0.0463,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  }
+ },
+ "meter": {
+  "calls": 42,
+  "tokens": 191337,
+  "cash_rmb": 0.4148
+ },
+ "preflight": {
+  "conditions": {
+   "C1_regression": true,
+   "C2_fresh_ledger": true,
+   "C3_offpeak_or_authorized": true,
+   "C4_reservation": true
+  },
+  "pricing": {
+   "in": 0.3,
+   "out": 1.2
+  },
+  "peak_authorized": true,
+  "verdict": "GO",
+  "detail": {
+   "planned_calls": 42,
+   "worst_tokens": 244266,
+   "worst_cash_rmb": 0.5233,
+   "requested_caps": {
+    "calls": 44,
+    "tokens": 256479,
+    "cash_rmb": 0.58
+   }
+  }
+ }
+}

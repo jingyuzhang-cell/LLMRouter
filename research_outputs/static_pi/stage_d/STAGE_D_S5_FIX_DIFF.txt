@@ -1,0 +1,189 @@
+--- archive_freeze_ef50527e/stage_d_executor.py	2026-11-02 12:37:36.943265417 +0800
++++ stage_d_executor.py	2026-11-03 09:44:10.245281563 +0800
+@@ -220,7 +220,7 @@
+                 step = min(remain, 0.5)
+                 self.clock.sleep(step)
+                 remain -= step
+-                if self.cancel_event.is_set():
++                if self.cancel_event.is_set() and self.cancel_effective:
+                     break
+             cancelled = self.cancel_event.is_set()
+             self.t_end = self.clock.now()
+@@ -454,6 +454,15 @@
+         self.deadline_hit = False
+         self.raw = {"nodes": {}, "calls": []}
+         self.race_log = []
++        self.late_threads = []
++        self.terminal_completed_at_s = None
++        self.j2_winner_completed_at_s = None
++        self.settlement_done = threading.Event()
++        self.settlement_record = None
++        self.settlement_lock = threading.Lock()
++        self._commit_yuan = 0.0
++        self._commit_tokens_in = 0
++        self._commit_tokens_out = 0
+         self.s5 = {"slo_violation": False, "race_triggered": False,
+                    "winner": None, "late": False, "late_calls": 0,
+                    "late_cost_yuan": 0.0, "j2_start_at": None,
+@@ -671,19 +680,37 @@
+                 break
+             self.clock.sleep(0.2)
+         if winner is None:
++            for h in (glm, ds):
++                try:
++                    self._finish_call("J2", h)
++                except Exception:
++                    pass
+             self.state["J2"] = "Failed"
+             self.invalid_reason = "S5_BOTH_UNPARSEABLE"
+             return
+-        # 结算胜者与败者（败者若迟到，成本照计）
++        # 预注册语义：首个可解析结果胜出，迟到者作废但其成本/槽占用全额计入。
++        # 胜者立即完成 J2（SINK 不被败者阻塞）；败者在后台结算，finish 阶段 join。
+         rh = ds if winner == "deepseek" else glm
+         lh = glm if winner == "deepseek" else ds
+         r = self._finish_call("J2", rh)
+-        rl = self._finish_call("J2", lh)
+         self.s5["winner"] = winner
+-        if lh.late:
+-            self.s5["late"] = True
+-            self.s5["late_calls"] += 1
+-            self.s5["late_cost_yuan"] = round(rl.get("accounting_yuan", 0.0), 8)
++        self.j2_winner_completed_at_s = round(self.clock.now() - self.t0, 1)
++        self._after_j2(r)
++        t = threading.Thread(target=self._settle_loser,
++                             args=(winner, lh, glm, ds), daemon=True)
++        self.late_threads.append(t)
++        t.start()
++
++    def _settle_loser(self, winner, lh, glm, ds):
++        """后台结算败者：等待真实结束/迟到响应，全额计账；不阻塞 DAG。"""
++        rl = self._finish_call("J2", lh)
++        # _finish_call 会把 model_used[J2] 设为败者；恢复胜者
++        self.model_used["J2"] = "deepseek" if winner == "deepseek" else "glm53flash"
++        with self.budget_lock:
++            if lh.late:
++                self.s5["late"] = True
++                self.s5["late_calls"] += 1
++                self.s5["late_cost_yuan"] = round(rl.get("accounting_yuan", 0.0), 8)
+         self.race_log.append({
+             "slo_s": self.slo_s, "j2_start_at": self.s5["j2_start_at"],
+             "trigger_at": self.s5["ds_started_at"],
+@@ -695,7 +722,32 @@
+             "loser_cost_yuan": round(rl.get("accounting_yuan", 0.0), 8),
+             "glm_done": glm.done.is_set(), "ds_done": ds.done.is_set(),
+         })
+-        self._after_j2(r)
++        settlement = {
++            "exec_id": self.exec_id, "winner": winner,
++            "loser": ("glm53flash" if winner == "deepseek" else "deepseek"),
++            "loser_model": lh.model, "loser_late": bool(lh.late),
++            "loser_cancelled": bool((lh.result or {}).get("cancelled")),
++            "loser_cancel_state": getattr(lh, "cancel_state", "none"),
++            "loser_in": int(rl.get("in", 0)), "loser_out": int(rl.get("out", 0)),
++            "loser_accounting_yuan": round(rl.get("accounting_yuan", 0.0), 8),
++            "loser_actual_cash_yuan": round(rl.get("actual_cash_yuan", 0.0), 8),
++            "loser_error": rl.get("error"), "loser_t_end": rl.get("t_end"),
++            "j2_winner_completed_at_s": self.j2_winner_completed_at_s,
++            "terminal_completed_at_s": self.terminal_completed_at_s,
++            "settlement_completed_at_s": round(self.clock.now() - self.t0, 1),
++            "settlement_completed_at_wall": time.time(),
++        }
++        with self.settlement_lock:
++            self.settlement_record = settlement
++            self.settlement_done.set()
++            try:
++                ledger = self.store.out_dir / "S5_SETTLEMENTS.jsonl"
++                with open(ledger, "a", encoding="utf-8") as f:
++                    f.write(json.dumps(settlement, ensure_ascii=False) + "\n")
++                    f.flush()
++                    os.fsync(f.fileno())
++            except Exception:
++                pass
+ 
+     def _after_j2(self, r):
+         text = r.get("text", "")
+@@ -801,11 +853,21 @@
+ 
+     # ---------- 完成/记录 ----------
+     def finish(self):
++        # 不在主路径 join 败者；makespan 已在 run() 记录。
++        self.terminal_completed_at_s = self.makespan
++        self._commit_yuan = round(self.local_yuan, 8)
++        self._commit_tokens_in = self.tokens_in
++        self._commit_tokens_out = self.tokens_out
++        pending = any(t.is_alive() for t in getattr(self, "late_threads", []))
+         parsed = D2.extract_json(self.outputs.get("FMT") or "")
+         rec = {"exec_id": self.exec_id, "arm": self.arm, "scenario": self.scenario,
+                "rep": self.rep, "dry_run": self.dry_run, "mock": self.dry_run,
+                "deadline_s": self.deadline_s,
+                "makespan_s": self.makespan, "on_time": self.makespan <= self.deadline_s,
++               "terminal_completed_at_s": self.terminal_completed_at_s,
++               "j2_winner_completed_at_s": getattr(self, "j2_winner_completed_at_s", None),
++               "settlement_pending": bool(pending and not self.settlement_done.is_set()),
++               "settlement": self.settlement_record if self.settlement_done.is_set() else None,
+                "status": None, "calls": self.local_calls,
+                "accounting_yuan": round(self.local_yuan, 8),
+                "actual_cash_yuan": 0.0,
+@@ -856,6 +918,41 @@
+         return rec
+ 
+ 
++    def settle(self):
++        """批次尾部调用：join 后台败者，不进入主执行路径。"""
++        for t in getattr(self, "late_threads", []):
++            t.join()
++        return self.settlement_record
++
++    def recommit_with_settlement(self):
++        """settle() 后把败者成本/token/结束时间合并回该 run 的已提交记录。"""
++        self.settle()
++        rec = self.store.completed(self.exec_id)
++        if not rec:
++            return None
++        s = self.settlement_record or {}
++        rec["settlement_pending"] = False
++        rec["settlement"] = s
++        rec["terminal_completed_at_s"] = self.makespan
++        rec["j2_winner_completed_at_s"] = getattr(self, "j2_winner_completed_at_s", None)
++        rec["late_accounting_yuan"] = round(self.local_yuan - self._commit_yuan, 8)
++        rec["settled_accounting_yuan"] = round(self.local_yuan, 8)
++        rec["tokens_in"] = self.tokens_in
++        rec["tokens_out"] = self.tokens_out
++        rec["actual_cash_yuan"] = round(sum(
++            c["accounting_yuan"] for c in self.raw["calls"]
++            if c["alias"] == "deepseek"), 8)
++        rec["raw"] = self.raw
++        rec["race"] = self.race_log
++        s5 = dict(rec.get("s5") or {})
++        s5.update({"late": bool(s.get("loser_late")),
++                   "late_calls": 1 if s else 0,
++                   "late_cost_yuan": s.get("loser_accounting_yuan", 0.0)})
++        rec["s5"] = s5
++        rec["global_budget"] = self.gb.left()
++        self.store.commit(rec)
++        return rec
++
+ # ---------- 矩阵/顺序 ----------
+ def build_order(cfg):
+     rng = random.Random(cfg["seed"])
+@@ -956,6 +1053,7 @@
+         print(build_analysis_input(out_dir))
+         return 0
+     done = skipped = 0
++    execs = []
+     for i, (arm, sc, rep) in enumerate(order):
+         if a.limit is not None and done >= a.limit:
+             break
+@@ -969,7 +1067,11 @@
+         ex = FinalExec(arm, sc, rep, cfg, clock, gb, slots, provider, store,
+                        dry_run=not a.real)
+         ex.run()
++        execs.append(ex)
+         done += 1
++    for ex in execs:
++        ex.settle()
++        ex.recommit_with_settlement()
+     print(f"BATCH DONE: executed={done} skipped={skipped} "
+           f"global={gb.left()}")
+     return 0

@@ -1,0 +1,350 @@
+{
+  "study": "RQ2_FIXED_DAG_STATIC_ALLOCATION",
+  "status": "DESIGN_COMPLETE_EXECUTION_HOLD",
+  "authorization": {
+    "new_requests": 0,
+    "new_budget_cny": 0
+  },
+  "task": {
+    "id": "RONBAY_202601",
+    "identity": "EXPOSED_DEVELOPMENT_EVENT_EXPLORATORY",
+    "independent_events": 1,
+    "independent_Gold": false,
+    "dag_source": "/root/research_outputs/THREE_TASK_FEASIBILITY_20261101/DAG_RONBAY_202601.json",
+    "edges": [
+      [
+        "REPLY",
+        "OBLIGATIONS"
+      ],
+      [
+        "REPLY",
+        "CAPACITY"
+      ],
+      [
+        "INQUIRY",
+        "CROSSCHECK"
+      ],
+      [
+        "REPLY",
+        "CROSSCHECK"
+      ],
+      [
+        "OBLIGATIONS",
+        "CROSSCHECK"
+      ],
+      [
+        "CAPACITY",
+        "CROSSCHECK"
+      ],
+      [
+        "CROSSCHECK",
+        "FINAL"
+      ]
+    ],
+    "node_order": [
+      "INQUIRY",
+      "REPLY",
+      "OBLIGATIONS",
+      "CAPACITY",
+      "CROSSCHECK",
+      "FINAL"
+    ],
+    "evidence": [
+      {
+        "source_id": "INQUIRY",
+        "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/RONBAY_202601/INQUIRY/source.pdf",
+        "sha256": "2ea2db215154843372f5190575a7366b6c7e7af21b9dcf3bd53cd25bc3111e14",
+        "publication_date_from_archive": "2026-01-14"
+      },
+      {
+        "source_id": "REPLY",
+        "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/RONBAY_202601/REPLY/source.pdf",
+        "sha256": "5ce53a9aa23d920172ef1135b773a9cbcf8975e661e72cef4d61d32c31052366",
+        "publication_date_from_archive": "2026-01-19"
+      }
+    ]
+  },
+  "arms": {
+    "A": {
+      "INQUIRY": "glm53flash",
+      "REPLY": "glm53flash",
+      "OBLIGATIONS": "glm53flash",
+      "CROSSCHECK": "glm53flash",
+      "FINAL": "glm53flash"
+    },
+    "B": {
+      "INQUIRY": "deepseek",
+      "REPLY": "deepseek",
+      "OBLIGATIONS": "deepseek",
+      "CROSSCHECK": "deepseek",
+      "FINAL": "deepseek"
+    },
+    "C": {
+      "INQUIRY": "deepseek",
+      "REPLY": "deepseek",
+      "OBLIGATIONS": "glm53flash",
+      "CROSSCHECK": "glm53flash",
+      "FINAL": "glm53flash"
+    }
+  },
+  "schedule": [
+    {
+      "run_id": "r1_A",
+      "repeat_block": 1,
+      "arm": "A",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "glm53flash",
+        "REPLY": "glm53flash",
+        "OBLIGATIONS": "glm53flash",
+        "CROSSCHECK": "glm53flash",
+        "FINAL": "glm53flash"
+      }
+    },
+    {
+      "run_id": "r1_B",
+      "repeat_block": 1,
+      "arm": "B",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "deepseek",
+        "REPLY": "deepseek",
+        "OBLIGATIONS": "deepseek",
+        "CROSSCHECK": "deepseek",
+        "FINAL": "deepseek"
+      }
+    },
+    {
+      "run_id": "r1_C",
+      "repeat_block": 1,
+      "arm": "C",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "deepseek",
+        "REPLY": "deepseek",
+        "OBLIGATIONS": "glm53flash",
+        "CROSSCHECK": "glm53flash",
+        "FINAL": "glm53flash"
+      }
+    },
+    {
+      "run_id": "r2_B",
+      "repeat_block": 2,
+      "arm": "B",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "deepseek",
+        "REPLY": "deepseek",
+        "OBLIGATIONS": "deepseek",
+        "CROSSCHECK": "deepseek",
+        "FINAL": "deepseek"
+      }
+    },
+    {
+      "run_id": "r2_C",
+      "repeat_block": 2,
+      "arm": "C",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "deepseek",
+        "REPLY": "deepseek",
+        "OBLIGATIONS": "glm53flash",
+        "CROSSCHECK": "glm53flash",
+        "FINAL": "glm53flash"
+      }
+    },
+    {
+      "run_id": "r2_A",
+      "repeat_block": 2,
+      "arm": "A",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "glm53flash",
+        "REPLY": "glm53flash",
+        "OBLIGATIONS": "glm53flash",
+        "CROSSCHECK": "glm53flash",
+        "FINAL": "glm53flash"
+      }
+    },
+    {
+      "run_id": "r3_C",
+      "repeat_block": 3,
+      "arm": "C",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "deepseek",
+        "REPLY": "deepseek",
+        "OBLIGATIONS": "glm53flash",
+        "CROSSCHECK": "glm53flash",
+        "FINAL": "glm53flash"
+      }
+    },
+    {
+      "run_id": "r3_A",
+      "repeat_block": 3,
+      "arm": "A",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "glm53flash",
+        "REPLY": "glm53flash",
+        "OBLIGATIONS": "glm53flash",
+        "CROSSCHECK": "glm53flash",
+        "FINAL": "glm53flash"
+      }
+    },
+    {
+      "run_id": "r3_B",
+      "repeat_block": 3,
+      "arm": "B",
+      "max_requests": 5,
+      "assignment": {
+        "INQUIRY": "deepseek",
+        "REPLY": "deepseek",
+        "OBLIGATIONS": "deepseek",
+        "CROSSCHECK": "deepseek",
+        "FINAL": "deepseek"
+      }
+    }
+  ],
+  "model_selection": "Frozen before new arm responses; descriptive profile-informed assignment, not proven optimizer optimum",
+  "final_selection": {
+    "measured_samples": 0,
+    "C_choice": "glm53flash",
+    "basis": "Lower frozen public price scenario and same FINAL as A; not measured quality superiority"
+  },
+  "models": {
+    "glm53flash": {
+      "provider": "BigModel",
+      "model_id": "glm-5.3-flash",
+      "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "thinking": "enabled",
+      "reasoning_effort": "low"
+    },
+    "deepseek": {
+      "provider": "DeepSeek",
+      "model_id": "deepseek-flash",
+      "endpoint": "https://api.deepseek.com/chat/completions",
+      "thinking": "disabled"
+    }
+  },
+  "resources": {
+    "global_concurrency": 1,
+    "slots_per_model": 1,
+    "request_timeout_seconds": 180,
+    "run_deadline_seconds": 240,
+    "batch_deadline_seconds": 3600,
+    "retry_limit": 0,
+    "max_tokens": 3072,
+    "input_token_reserve_per_call": 65536,
+    "temperature": 1.0,
+    "stream": false,
+    "response_format": "json_object",
+    "tools_enabled": false,
+    "per_run_estimate_cap_cny": 1.2
+  },
+  "execution": {
+    "entrypoint": null,
+    "real_parent_binding": "NOT_YET_BOUND_IN_THREE_ARM_ENTRYPOINT",
+    "fixed_parent_fixtures_allowed": false,
+    "cross_arm_response_reuse": false,
+    "semantic_gold_runtime_access": false,
+    "invalid_parent_policy": "BLOCK descendants; continue independent eligible branches within deadline",
+    "normal_model_failure": "record and retain in denominators; no replacement/retry",
+    "system_or_unknown_usage": "stop batch; retain uncertainty and all dispatched attempts",
+    "automatic_dynamic_stage": false,
+    "completed_node_reexecution": false
+  },
+  "evaluation": {
+    "rubric": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/SILVER_RUBRIC.json",
+    "formal_Q": null,
+    "reference_grade": "NON_INDEPENDENT_SILVER",
+    "primary": [
+      "terminal factual correctness",
+      "terminal semantic evidence support"
+    ],
+    "separate": [
+      "K",
+      "citation validity",
+      "completeness",
+      "UNKNOWN",
+      "omissions"
+    ],
+    "review": "Hide model/arm labels for source-based review where practicable; disclose reviewer independence, no paid judge calls",
+    "partial_accuracy": "correct/(correct+wrong), null when denominator=0; always report 6-item coverage, omissions and UNKNOWN",
+    "bounds": "For valid terminal response report [correct/6,(correct+unresolved)/6] only as ignorance bounds, not confidence intervals; omissions separately classified",
+    "terminal_missing": "completion=0, factual accuracy=null; zero supported delivered items is delivery failure, not a factual error judgment",
+    "statistics": "One event, 3 paired repeat blocks; list C-A and C-B every block, descriptive range/median; no event-level significance claim",
+    "Pareto": "Only on comparable terminal quality/evidence coverage with all execution and planning costs; incomplete Q cannot establish full-Q Pareto dominance"
+  },
+  "budget": {
+    "tariff_basis": "Frozen historical public uncached peak price scenario; not account settlement/current tariff certification",
+    "fx_cny_per_usd": 8,
+    "max_requests": 45,
+    "max_by_model": {
+      "glm53flash": 24,
+      "deepseek": 21
+    },
+    "input_reserve_total": 2949120,
+    "output_plan_limit_total": 138240,
+    "per_request_cny": {
+      "glm53flash": "0.0610304",
+      "deepseek": "0.1867776"
+    },
+    "arm_three_repeats_cny": {
+      "A": "0.9154560",
+      "B": "2.8016640",
+      "C": "1.6699392"
+    },
+    "native_currency_scenario": {
+      "CNY": "1.4647296",
+      "USD": "0.4902912"
+    },
+    "conditional_full_request_scenario_cny": "5.3870592",
+    "proposed_new_estimate_stop_cny": 6,
+    "actual_settlement": null,
+    "absolute_cash_cap": false,
+    "full_expected_cost": null,
+    "guard": "used estimate + all in-flight reservations + next reservation <= batch and per-run caps; include resource-pack usage; unknown usage stops",
+    "old_budget_reused": false
+  },
+  "blockers": [
+    "New batch cost authorization absent",
+    "Three-arm full-DAG entrypoint must bind actual parent output IDs/evidence registry and terminal scoring; measurement fixture runner cannot substitute",
+    "Historical price scenario and alias versions must be bound to execution account without assuming resource packs mean zero cost"
+  ],
+  "source_manifest": [
+    {
+      "path": "/root/research_outputs/THREE_TASK_FEASIBILITY_20261101/DAG_RONBAY_202601.json",
+      "sha256": "7b709ae8d24f8784fa613638780ae706d40ab8466cb95f2b6079ca309db40c3e"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/WIRE_CONTRACT.json",
+      "sha256": "a1440b56d6af4fb9180b95678b19b765ae1c50dc8b4602c39c0f200ee4231eb9"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/SILVER_RUBRIC.json",
+      "sha256": "3de4065e25f44931a393865f1785cf25fc3c176e5dded5c605dd5016755ee003"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/score_review.py",
+      "sha256": "2075c88e6279755e1c9bfcbdc2c8a01e07a32e46e4cc105540c760cfcc6377f8"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/EVIDENCE_REGISTRY.json",
+      "sha256": "ec96903c5f8fb016a1bfc6771472aaccf8000701fb27609eee79d5e70fd7d94c"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/MODEL_BINDINGS.json",
+      "sha256": "d8691c79f28c881a7ad3e6ce0927fc58098d097e77c9811c2da22d80177bc67d"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_CROSS_NODE_ANALYSIS_20261103/MATRIX_20.json",
+      "sha256": "88d8bafa8544fcad1377ed0475ac870358331ea7ff34b9b25879bc4770db0df7"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_CROSS_NODE_ANALYSIS_20261103/REPEAT_OBSERVATIONS_60.json",
+      "sha256": "d14ec3b1c5459802a27f937a14bdb7a5e10a95267f7b885d422570b92ed347fd"
+    }
+  ],
+  "new_model_calls": 0
+}

@@ -1,0 +1,178 @@
+{
+ "graph_identity": {
+  "graph_id": "cap_opinion_pilot_v2",
+  "task_id": "jsst_600287_disclosure_pilot_v2",
+  "graph_hash": "ad46ebfc5ccc8d35feb287ba9b48f4c39eb8156922864494ed8a7501a204905b"
+ },
+ "generation_path": {
+  "planner": "GLM-5.3 compact semantic plan (<=500字)",
+  "assembler": "deterministic contract assembly (assemble_dag.py)",
+  "planner_attempts": [
+   {
+    "phase": "initial",
+    "call_id": 1,
+    "issues": []
+   }
+  ],
+  "llm_decides": [
+   "task count",
+   "task goals",
+   "analysis branches",
+   "dependency structure"
+  ],
+  "program_decides": [
+   "contract mapping",
+   "binding wiring",
+   "id/typing/format"
+  ],
+  "fallback_template_used": false
+ },
+ "structural_validation": {
+  "validator": "typed_dag_v1.protocol.validate (reused, unmodified)",
+  "status": "PASS",
+  "layers": [
+   [
+    "t1"
+   ],
+   [
+    "t2"
+   ],
+   [
+    "t3",
+    "t4"
+   ],
+   [
+    "t5"
+   ],
+   [
+    "t6"
+   ]
+  ],
+  "max_depth": 5,
+  "parallel_width_max": 2
+ },
+ "authenticity": {
+  "nodes": 6,
+  "dependency_edges": 7,
+  "all_edges_carry_typed_dataflow": true,
+  "parallel_branches": [
+   [
+    "t3",
+    "t4"
+   ]
+  ],
+  "node_provenance": {
+   "t1": {
+    "kind": "index",
+    "goal": "建立五份证据文档的语义索引与分段"
+   },
+   "t2": {
+    "kind": "extracts",
+    "goal": "抽取问询函回复中公司披露的利润、存款、担保表述"
+   },
+   "t3": {
+    "kind": "timeline",
+    "goal": "梳理问询、立案、告知书、处罚决定的关键时间节点"
+   },
+   "t4": {
+    "kind": "entity_facts",
+    "goal": "识别涉事主体、责任人与违法事实认定"
+   },
+   "t5": {
+    "kind": "factcheck_full",
+    "goal": "比对监管认定与公司披露，核实虚增利润、存款、担保"
+   },
+   "t6": {
+    "kind": "report",
+    "goal": "生成带证据引用并标注未确认事项的调查报告"
+   }
+  },
+  "planner_isolation": {
+   "facts_silver_sha256": "ffdb4caaf321f1daafb70369849a2b2c53c7d873f752b1267d5cd19cbe1d6fe5",
+   "facts_file_in_planner_inputs": false,
+   "evidence_full_text_in_planner_inputs": false
+  }
+ },
+ "structure_comparison_vs_shuntian": {
+  "shuntian": {
+   "nodes": 6,
+   "kinds": {
+    "evidence_registry.v1": 1,
+    "doc_retrieval.v1": 1,
+    "timeline.v1": 1,
+    "entity_facts.v1": 1,
+    "fact_check_full.v1": 1,
+    "report.v1": 1
+   },
+   "edges": 7,
+   "depth": 5,
+   "width": 2,
+   "layers": [
+    [
+     "t0"
+    ],
+    [
+     "t1"
+    ],
+    [
+     "t2",
+     "t3"
+    ],
+    [
+     "t4"
+    ],
+    [
+     "t5"
+    ]
+   ]
+  },
+  "kangdexin": {
+   "nodes": 6,
+   "kinds": {
+    "evidence_registry.v1": 1,
+    "doc_retrieval.v1": 1,
+    "timeline.v1": 1,
+    "entity_facts.v1": 1,
+    "fact_check_full.v1": 1,
+    "report.v1": 1
+   },
+   "edges": 7,
+   "depth": 5,
+   "width": 2,
+   "layers": [
+    [
+     "t1"
+    ],
+    [
+     "t2"
+    ],
+    [
+     "t3",
+     "t4"
+    ],
+    [
+     "t5"
+    ],
+    [
+     "t6"
+    ]
+   ]
+  },
+  "topology_identical": false,
+  "shape_identical": true,
+  "shape_note": "node ids differ (t0-based vs t1-based); the shape signature (layer sizes + contract multiset) is what matters: IDENTICAL",
+  "topology_identical_note": "raw layer-id lists differ only by id naming"
+ },
+ "evidence_volume_feasibility": {
+  "total_evidence_chars": 127598,
+  "per_doc": {
+   "kdx_inquiry_2018": 57409,
+   "kdx_notice_2019": 7360,
+   "kdx_notice_2020": 6652,
+   "kdx_penalty_2020": 15769,
+   "kdx_inquiry_2019": 40408
+  },
+  "single_extracts_injection_budget_chars": -3301,
+  "flag": "plan has ONE extracts node but evidence corpus is 127598 chars (~39x the practical injection budget): execution would require either heavy truncation (F5-style loss) or segmentation — the plan is structurally valid but execution-infeasible without a multi-branch/segmented retrieval structure or a segmentation tool. This mismatch is itself a measurable, honest driver for differentiated DAG structure."
+ }
+}

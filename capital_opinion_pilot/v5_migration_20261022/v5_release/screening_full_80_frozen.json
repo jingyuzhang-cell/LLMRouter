@@ -1,0 +1,245 @@
+{
+ "version": "v1_full_frozen",
+ "frozen_at": "2026-10-13T16:32:18",
+ "models": [
+  {
+   "alias": "glm53",
+   "model_id": "glm-5.3",
+   "family": "GLM",
+   "endpoint": "subscription",
+   "thinking": "default",
+   "output_cap": 2048
+  },
+  {
+   "alias": "glm53flash",
+   "model_id": "glm-5.3-flash",
+   "family": "GLM",
+   "endpoint": "subscription",
+   "thinking": "default",
+   "output_cap": 2048
+  },
+  {
+   "alias": "deepseek",
+   "model_id": "deepseek-flash",
+   "family": "DeepSeek",
+   "endpoint": "api.deepseek.com",
+   "thinking": "disabled",
+   "output_cap": 2048
+  },
+  {
+   "alias": "qwen",
+   "model_id": "qwen-plus",
+   "family": "Qwen",
+   "endpoint": "dashscope",
+   "thinking": "non-thinking",
+   "output_cap": 2048
+  }
+ ],
+ "node_types": {
+  "fact_extraction": {
+   "samples": [
+    {
+     "sample_id": "S1",
+     "input": "证券代码：301139         证券简称：元道通信             公告编号：2026-031\n\n\n                 元道通信股份有限公司\n\n        关于收到《行政处罚事先告知书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n   2026 年 5 月 8 日，元道通信股份有限公司（以下简称“元道通信”或“公\n司”）及相关当事人收到中国证监会出具的《行政处罚事先告知书》\n                             （处罚字【2026】\n14 号），现将相关情况公告如下：\n\n  一、《行政处罚事先告知书》的主要内容\n\n   元道通信股份有限公司、李晋先生、曹亚蕾女士、吴志锋先生：\n   元道通信股份有限公司(以下简称元道通信)涉嫌欺诈发行、信息披露违法\n违规一案，已由",
+     "input_sha": "ba965d9ccd08f5b2"
+    },
+    {
+     "sample_id": "S2",
+     "input": "证券代码：301139    证券简称：*ST元道      公告编号：2026-090\n\n\n              元道通信股份有限公司\n\n          关于收到《事先告知书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n  元道通信股份有限公司（以下简称“公司”或“元道通信”）于 2026 年 8\n月 28 日收到深圳证券交易所下发的《事先告知书》（创业板函〔2026〕第 122\n号）,拟决定终止公司股票上市交易。现将具体内容公告如下：\n\n  一、《事先告知书》的具体内容\n\n  元道通信股份有限公司：\n\n  2026 年 8 月 28 日，你公司收到中国证券监督管理委员会（以下简称证监会）\n作出的《行政处罚决定书》\n           （〔2026〕42 号）。根据《行政处罚决定书》载明的事\n实，你公司",
+     "input_sha": "db6093d037b37a6a"
+    },
+    {
+     "sample_id": "S3",
+     "input": "证券代码：301139      证券简称：*ST元道        公告编号：2026-088\n\n\n              元道通信股份有限公司\n\n         关于收到《行政处罚决定书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n   元道通信股份有限公司（以下简称“公司”或“元道通信”）因涉嫌证券发\n行文件等信息披露文件财务数据存在虚假记载等违法行为，被中国证券监督管\n理委员会（以下简称“中国证监会”）立案调查。具体内容详见公司于 2025 年\n7 月 11 日在巨潮资讯网（www.cninfo.com.cn)披露的《关于公司收到中国证券\n监督管理委员会立案告知书暨风险提示的公告》(公告编号:2025-031)。\n\n   2026 年 5 月 8 日，元道通信股份有限公司（以下简称“元道通信”或“公\n司",
+     "input_sha": "e43d7289bac0c5e9"
+    }
+   ],
+   "system_prompt": "你是资本市场调查DAG中的证据事实提取节点。从给定证据片段中提取原子事实。\n原子事实定义：一个可独立核验的陈述，包含恰好一个主体+一个行为/属性+（如适用）一个数值或日期。\n每条事实必须附：quote（≤30字逐字引文，必须能在证据中找到）、doc_id（来源文档ID）。\n证据不足以支持更多事实时停止提取，不得编造。\n只输出JSON：{\"facts\":[{\"fact_key\":\"主题\",\"value\":\"事实描述\",\"doc_id\":\"来源\",\"quote\":\"逐字引文\"}]}",
+   "output_contract": "{\"facts\":[...]}",
+   "pilot_completed": 12
+  },
+  "timeline": {
+   "samples": [
+    {
+     "sample_id": "TL1",
+     "source": "S1",
+     "event": "元道退",
+     "input": "{\"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"facts\": [{\"fact_key\": \"证券代码\", \"value\": \"元道通信的证券代码为301139\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"证券代码：301139\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"证券简称\", \"value\": \"元道通信的证券简称为元道通信\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"证券简称：元道通信\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"公告编号\", \"value\": \"该公告编号为2026-031\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"公告编号：2026-031\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"收到告知书日期\", \"value\": \"2026年5月8日，元道通信及相关当事人收到中国证监会《行政处罚事先告知书》\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"2026 年 5 月 8 日，元道通信股份有限公司\", \"normalized\": {\"dates\": [\"2026年5月8日\"], \"amounts\": [], \"entities\": [\"事人收到中国证监会\"], \"actions\": [\"收到\", \"处罚\"]}, \"grounded\": true}, {\"fact_key\": \"告知书文号\", \"value\": \"《行政处罚事先告知书》文号为处罚字【2026】14号\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"处罚字【2026】14 号\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": [\"处罚\"]}, \"grounded\": true}, {\"fact_key\": \"涉嫌违法行为\", \"value\": \"元道通信涉嫌欺诈发行、信息披露违法违规\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"涉嫌欺诈发行、信息披露违法\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"道通信涉嫌欺诈发行\"], \"actions\": [\"披露\", \"涉嫌\"]}, \"grounded\": true}, {\"fact_key\": \"当事人\", \"value\": \"告知书当事人包括元道通信股份有限公司、李晋、曹亚蕾、吴志锋\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"元道通信股份有限公司、李晋先生、曹亚蕾女士、吴志锋先生\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"元道通信股份有限公司\"], \"actions\": []}, \"grounded\": true}], \"note\": \"来自元道退证据的证据事实\"}",
+     "input_sha": "4be29f56f78eb51c",
+     "output_contract": "{\"timeline\":[{\"date\":\"YYYY-MM-DD\",\"event\":\"描述\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的时间线分析节点。基于给定事实构建按时间排序的事件时间线。只输出JSON。"
+    },
+    {
+     "sample_id": "TL2",
+     "source": "S2",
+     "event": "元道退",
+     "input": "{\"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"facts\": [{\"fact_key\": \"证券代码\", \"value\": \"公司证券代码为301139\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"证券代码：301139\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"证券简称\", \"value\": \"公司证券简称为*ST元道\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"证券简称：*ST元道\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"公告编号\", \"value\": \"公告编号为2026-090\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"公告编号：2026-090\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"公告主体\", \"value\": \"元道通信股份有限公司为公告主体\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"元道通信股份有限公司\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"元道通信股份有限公司\"], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"收到事先告知书日期\", \"value\": \"公司于2026年8月28日收到深圳证券交易所下发的《事先告知书》\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"于 2026 年 8\\n月 28 日收到深圳证券交易所下发的《事先告知书》\", \"normalized\": {\"dates\": [\"2026年8月28日\"], \"amounts\": [], \"entities\": [\"收到深圳证券交易所\"], \"actions\": [\"收到\"]}, \"grounded\": true}, {\"fact_key\": \"事先告知书编号\", \"value\": \"《事先告知书》编号为创业板函〔2026〕第122号\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"（创业板函〔2026〕第 122\\n号）\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"终止上市决定\", \"value\": \"深圳证券交易所拟决定终止公司股票上市交易\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"拟决定终止公司股票上市交易\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"深圳证券交易所\", \"拟决定终止公司\"], \"actions\": [\"决定\"]}, \"grounded\": true}, {\"fact_key\": \"收到行政处罚决定书日期\", \"value\": \"公司于2026年8月28日收到中国证监会作出的《行政处罚决定书》\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"2026 年 8 月 28 日，你公司收到中国证券监督管理委员会\", \"normalized\": {\"dates\": [\"2026年8月28日\"], \"amounts\": [], \"entities\": [\"日收到中国证监会\"], \"actions\": [\"收到\", \"处罚\", \"决定\"]}, \"grounded\": true}, {\"fact_key\": \"行政处罚决定书编号\", \"value\": \"《行政处罚决定书》编号为〔2026〕42号\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"（〔2026〕42 号）\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": [\"处罚\", \"决定\"]}, \"grounded\": true}], \"note\": \"来自元道退证据的证据事实\"}",
+     "input_sha": "a6f25ee8edeaf6b1",
+     "output_contract": "{\"timeline\":[{\"date\":\"YYYY-MM-DD\",\"event\":\"描述\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的时间线分析节点。基于给定事实构建按时间排序的事件时间线。只输出JSON。"
+    },
+    {
+     "sample_id": "TL3",
+     "source": "S3",
+     "event": "元道退",
+     "input": "{\"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"facts\": [{\"fact_key\": \"证券代码\", \"value\": \"元道通信证券代码为301139\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"证券代码：301139\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"证券简称\", \"value\": \"元道通信证券简称为*ST元道\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"证券简称：*ST元道\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"公告编号\", \"value\": \"该公告编号为2026-088\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"公告编号：2026-088\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"公司名称\", \"value\": \"公司名称为元道通信股份有限公司\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"元道通信股份有限公司\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"元道通信股份有限公司\"], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"公告事项\", \"value\": \"元道通信发布关于收到《行政处罚决定书》的公告\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"关于收到《行政处罚决定书》的公告\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": [\"收到\", \"处罚\", \"决定\"]}, \"grounded\": true}, {\"fact_key\": \"立案调查原因\", \"value\": \"元道通信因涉嫌证券发行文件等信息披露文件财务数据存在虚假记载等违法行为被立案调查\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"因涉嫌证券发\\n   行文件等信息披露文件财务数据存在虚假记载等违法行为\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"在虚假记载等违法行\", \"通信因涉嫌证券发行\"], \"actions\": [\"披露\", \"涉嫌\", \"虚假\"]}, \"grounded\": true}, {\"fact_key\": \"调查机构\", \"value\": \"中国证券监督管理委员会对元道通信立案调查\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"被中国证券监督管\\n   理委员会\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"证券监督管理委员会\"], \"actions\": [\"立案\"]}, \"grounded\": true}, {\"fact_key\": \"立案公告日期\", \"value\": \"元道通信于2025年7月11日披露立案告知书公告\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"于 2025 年\\n   7 月 11 日\", \"normalized\": {\"dates\": [\"2025年7月11日\"], \"amounts\": [], \"entities\": [], \"actions\": [\"披露\", \"立案\"]}, \"grounded\": true}, {\"fact_key\": \"立案公告编号\", \"value\": \"立案告知书公告编号为2025-031\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"公告编号:2025-031\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": [\"立案\"]}, \"grounded\": true}, {\"fact_key\": \"披露网站\", \"value\": \"元道通信在巨潮资讯网披露公告\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"巨潮资讯网（www.cninfo.com.cn)\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": [\"披露\"]}, \"grounded\": true}, {\"fact_key\": \"公告日期\", \"value\": \"该公告日期涉及2026年5月8日\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"2026 年 5 月 8 日\", \"normalized\": {\"dates\": [\"2026年5月8日\"], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}], \"note\": \"来自元道退证据的证据事实\"}",
+     "input_sha": "f0642128629e54df",
+     "output_contract": "{\"timeline\":[{\"date\":\"YYYY-MM-DD\",\"event\":\"描述\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的时间线分析节点。基于给定事实构建按时间排序的事件时间线。只输出JSON。"
+    },
+    {
+     "sample_id": "TL4",
+     "source": "ST1",
+     "event": "舜天",
+     "input": "{\"doc_id\": \"csrc_penalty_2024_41\", \"facts\": [], \"note\": \"来自舜天证据的证据事实\"}",
+     "input_sha": "ab4cce81994bab8b",
+     "output_contract": "{\"timeline\":[{\"date\":\"YYYY-MM-DD\",\"event\":\"描述\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的时间线分析节点。基于给定事实构建按时间排序的事件时间线。只输出JSON。"
+    },
+    {
+     "sample_id": "TL5",
+     "source": "ST2",
+     "event": "舜天",
+     "input": "{\"doc_id\": \"csrc_penalty_2024_41\", \"facts\": [{\"fact_key\": \"时间事件\", \"value\": \"应当事人江苏舜天、高松、桂生春、王重人、李焱、赵凡的要求,我会于2023年10月17日举行了听证会,听取了当事人及其代理人的陈述申辩意见\", \"doc_id\": \"csrc_penalty_2024_41\", \"quote\": \"应当事人江苏舜天、高松、桂生春、王重人、李焱、赵凡的要求,我\"}, {\"fact_key\": \"时间事件\", \"value\": \"2024年3月22日,上述当事人申请撤回听证和陈述申辩\", \"doc_id\": \"csrc_penalty_2024_41\", \"quote\": \"2024年3月22日,上述当事人申请撤回听证和陈述申辩\"}], \"note\": \"来自舜天证据的证据事实\"}",
+     "input_sha": "9e3055596ceeacf2",
+     "output_contract": "{\"timeline\":[{\"date\":\"YYYY-MM-DD\",\"event\":\"描述\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的时间线分析节点。基于给定事实构建按时间排序的事件时间线。只输出JSON。"
+    },
+    {
+     "sample_id": "TL6",
+     "source": "KD1",
+     "event": "康得新",
+     "input": "{\"doc_id\": \"kdx_penalty_2020\", \"facts\": [{\"fact_key\": \"时间事件\", \"value\": \"特别风险提示：2020年9月27日，康得新复合材料集团股份有限公司（下称：公司）及相关当事人收到中国证券监督管理委员会下发的《中国证券监督管理委员会行政处罚决定\", \"doc_id\": \"kdx_penalty_2020\", \"quote\": \"特别风险提示：2020年9月27日，康得新复合材料集团股份有\"}], \"note\": \"来自康得新证据的证据事实\"}",
+     "input_sha": "2660a4ae02d5f5d8",
+     "output_contract": "{\"timeline\":[{\"date\":\"YYYY-MM-DD\",\"event\":\"描述\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的时间线分析节点。基于给定事实构建按时间排序的事件时间线。只输出JSON。"
+    }
+   ],
+   "system_prompt": "你是调查DAG中的时间线分析节点。基于给定事实构建按时间排序的事件时间线。只输出JSON。",
+   "output_contract": "{\"timeline\":[{\"date\":\"YYYY-MM-DD\",\"event\":\"描述\",\"doc_id\":\"来源\"}]}",
+   "pilot_completed": 0
+  },
+  "entity_relations": {
+   "samples": [
+    {
+     "sample_id": "ER1",
+     "source": "S1",
+     "event": "元道退",
+     "input": "证券代码：301139         证券简称：元道通信             公告编号：2026-031\n\n\n                 元道通信股份有限公司\n\n        关于收到《行政处罚事先告知书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n   2026 年 5 月 8 日，元道通信股份有限公司（以下简称“元道通信”或“公\n司”）及相关当事人收到中国证监会出具的《行政处罚事先告知书》\n                             （处罚字【2026】\n14 号），现将相关情况公告如下：\n\n  一、《行政处罚事先告知书》的主要内容\n\n   元道通信股份有限公司、李晋先生、曹亚蕾女士、吴志锋先生：\n   元道通信股份有限公司(以下简称元道通信)涉嫌欺诈发行、信息披露违法\n违规一案，已由",
+     "input_sha": "ba965d9ccd08f5b2",
+     "output_contract": "{\"relations\":[{\"subject\":\"主体\",\"relation\":\"关系\",\"object\":\"客体\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的主体关系分析节点。从证据中提取主体间关系三元组（公司、个人、监管机构的身份/持股/任职/处罚/担保等关系）。只输出JSON。"
+    },
+    {
+     "sample_id": "ER2",
+     "source": "S2",
+     "event": "元道退",
+     "input": "证券代码：301139    证券简称：*ST元道      公告编号：2026-090\n\n\n              元道通信股份有限公司\n\n          关于收到《事先告知书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n  元道通信股份有限公司（以下简称“公司”或“元道通信”）于 2026 年 8\n月 28 日收到深圳证券交易所下发的《事先告知书》（创业板函〔2026〕第 122\n号）,拟决定终止公司股票上市交易。现将具体内容公告如下：\n\n  一、《事先告知书》的具体内容\n\n  元道通信股份有限公司：\n\n  2026 年 8 月 28 日，你公司收到中国证券监督管理委员会（以下简称证监会）\n作出的《行政处罚决定书》\n           （〔2026〕42 号）。根据《行政处罚决定书》载明的事\n实，你公司",
+     "input_sha": "db6093d037b37a6a",
+     "output_contract": "{\"relations\":[{\"subject\":\"主体\",\"relation\":\"关系\",\"object\":\"客体\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的主体关系分析节点。从证据中提取主体间关系三元组（公司、个人、监管机构的身份/持股/任职/处罚/担保等关系）。只输出JSON。"
+    },
+    {
+     "sample_id": "ER3",
+     "source": "S3",
+     "event": "元道退",
+     "input": "证券代码：301139      证券简称：*ST元道        公告编号：2026-088\n\n\n              元道通信股份有限公司\n\n         关于收到《行政处罚决定书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n   元道通信股份有限公司（以下简称“公司”或“元道通信”）因涉嫌证券发\n行文件等信息披露文件财务数据存在虚假记载等违法行为，被中国证券监督管\n理委员会（以下简称“中国证监会”）立案调查。具体内容详见公司于 2025 年\n7 月 11 日在巨潮资讯网（www.cninfo.com.cn)披露的《关于公司收到中国证券\n监督管理委员会立案告知书暨风险提示的公告》(公告编号:2025-031)。\n\n   2026 年 5 月 8 日，元道通信股份有限公司（以下简称“元道通信”或“公\n司",
+     "input_sha": "e43d7289bac0c5e9",
+     "output_contract": "{\"relations\":[{\"subject\":\"主体\",\"relation\":\"关系\",\"object\":\"客体\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的主体关系分析节点。从证据中提取主体间关系三元组（公司、个人、监管机构的身份/持股/任职/处罚/担保等关系）。只输出JSON。"
+    },
+    {
+     "sample_id": "ER4",
+     "source": "ST1",
+     "event": "舜天",
+     "input": "中国证监会行政处罚决定书（江苏舜天及其责任人员）_中国证券监督管理委员会|English移动端|微博|微信|无障碍首页机构概况新闻发布政务信息办事服务互动交流统计信息专题专栏当前位置：首页>政务信息>政府信息公开>主动公开>按主题查看>行政执法>行政处罚索引号bm56000001/2024-00007986分类发布机构发文日期名称中国证监会行政处罚决定书（江苏舜天及其责任人员）文号〔2024〕41号主题词中国证监会行政处罚决定书（江苏舜天及其责任人员）〔2024〕41号当事人:江苏舜天股份有限公司(以下简称江苏舜天),住所:江苏省南京市雨花台区。高松,男,1971年2月出生,时任江苏舜天董事、总经理、董事长等职务,住址:江苏省南京市建邺区。桂生春,男,1978年2月出生,时任江苏舜天副总经理、董事会秘书、总经理等职务,住址:江苏省南京市雨花台区。王重人,男,1973年11月出生,时任江苏舜",
+     "input_sha": "7745709c392a261d",
+     "output_contract": "{\"relations\":[{\"subject\":\"主体\",\"relation\":\"关系\",\"object\":\"客体\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的主体关系分析节点。从证据中提取主体间关系三元组（公司、个人、监管机构的身份/持股/任职/处罚/担保等关系）。只输出JSON。"
+    },
+    {
+     "sample_id": "ER5",
+     "source": "ST2",
+     "event": "舜天",
+     "input": "天财务部副经理、财务部经理、副总经理等职务,住址:江苏省南京市白下区。李焱,女,1974年12月出生,时任江苏舜天副总经理、董事会秘书,住址:江苏省南京市鼓楼区。赵凡,男,1989年8月出生,时任江苏舜天合川分公司总经理助理、副总经理等职务,住址:江苏省南京市秦淮区。依据《中华人民共和国证券法》(以下简称《证券法》)的有关规定,我会对江苏舜天信息披露违法违规行为进行了立案调查、审理,并依法向当事人告知了作出行政处罚的事实、理由、依据及当事人依法享有的权利。应当事人江苏舜天、高松、桂生春、王重人、李焱、赵凡的要求,我会于2023年10月17日举行了听证会,听取了当事人及其代理人的陈述申辩意见。2024年3月22日,上述当事人申请撤回听证和陈述申辩。本案现已调查、审理终结。经查明,江苏舜天存在以下违法事实:一、江苏舜天参与专网通信虚假自循环业务情况2009年起,江苏舜天与隋某力洽谈开展专网通信",
+     "input_sha": "0260d2e167aaff55",
+     "output_contract": "{\"relations\":[{\"subject\":\"主体\",\"relation\":\"关系\",\"object\":\"客体\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的主体关系分析节点。从证据中提取主体间关系三元组（公司、个人、监管机构的身份/持股/任职/处罚/担保等关系）。只输出JSON。"
+    },
+    {
+     "sample_id": "ER6",
+     "source": "KD1",
+     "event": "康得新",
+     "input": "证券代码：002450证券简称：*ST康得公告编号：2020-205康得新复合材料集团股份有限公司关于公司及相关当事人收到中国证券监督管理委员会《行政处罚决定书》及《市场禁入决定书》的公告本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚假记载、误导性陈述或重大遗漏。特别风险提示：2020年9月27日，康得新复合材料集团股份有限公司（下称：公司）及相关当事人收到中国证券监督管理委员会下发的《中国证券监督管理委员会行政处罚决定书》处罚字【2020】71号（以下简称：《行政处罚决定书》）及《中国证券监督管理委员会市场禁入决定书》处罚字【2020】14号（以下简称：《市场禁入决定书》）。根据《行政处罚决定书》的认定，公司可能存在触及《深圳证券交易所上市公司重大违法强制退市实施办法》第四条第（三）项规定的重大违法强制退市情形，公司股票可能被实施强制退市，深交所上市委员会可能对公司股票",
+     "input_sha": "43ce5d73291e7abb",
+     "output_contract": "{\"relations\":[{\"subject\":\"主体\",\"relation\":\"关系\",\"object\":\"客体\",\"doc_id\":\"来源\"}]}",
+     "system_prompt": "你是调查DAG中的主体关系分析节点。从证据中提取主体间关系三元组（公司、个人、监管机构的身份/持股/任职/处罚/担保等关系）。只输出JSON。"
+    }
+   ],
+   "system_prompt": "你是调查DAG中的主体关系分析节点。从证据中提取主体间关系三元组（公司、个人、监管机构的身份/持股/任职/处罚/担保等关系）。只输出JSON。",
+   "output_contract": "{\"relations\":[{\"subject\":\"主体\",\"relation\":\"关系\",\"object\":\"客体\",\"doc_id\":\"来源\"}]}",
+   "pilot_completed": 0
+  },
+  "crosssource_check": {
+   "samples": [
+    {
+     "sample_id": "XC1",
+     "source": "S1+S2",
+     "event": "元道退+元道退",
+     "input": "{\"source_a\": {\"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"facts\": [{\"fact_key\": \"元道通信_公告编号\", \"value\": \"元道通信公告编号为2026-031\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"公告编号：2026-031\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_证券代码\", \"value\": \"元道通信证券代码为301139\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"证券代码：301139\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_收到告知书日期\", \"value\": \"2026年5月8日元道通信及相关当事人收到《行政处罚事先告知书》\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"2026 年 5 月 8 日\", \"normalized\": {\"dates\": [\"2026年5月8日\"], \"amounts\": [], \"entities\": [], \"actions\": [\"收到\", \"处罚\"]}, \"grounded\": true}, {\"fact_key\": \"元道通信_处罚文号\", \"value\": \"中国证监会出具的处罚字【2026】14号告知书\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"处罚字【2026】14 号\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"中国证监会\"], \"actions\": [\"处罚\"]}, \"grounded\": true}, {\"fact_key\": \"元道通信_处罚机关\", \"value\": \"告知书由中国证监会出具\", \"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"quote\": \"中国证监会出具的\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"告知书由中国证监会\"], \"actions\": []}, \"grounded\": true}]}, \"source_b\": {\"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"facts\": [{\"fact_key\": \"元道通信_证券代码\", \"value\": \"元道通信证券代码为301139\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"证券代码：301139\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_证券简称\", \"value\": \"元道通信证券简称为*ST元道\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"证券简称：*ST元道\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_公告编号\", \"value\": \"该公告编号为2026-090\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"公告编号：2026-090\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_收到事先告知书日期\", \"value\": \"元道通信于2026年8月28日收到深圳证券交易所下发的《事先告知书》\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"于 2026 年 8 月 28 日收到深圳证券交易所下发的《事先告知书》\", \"normalized\": {\"dates\": [\"2026年8月28日\"], \"amounts\": [], \"entities\": [\"收到深圳证券交易所\"], \"actions\": [\"收到\"]}, \"grounded\": true}, {\"fact_key\": \"元道通信_事先告知书文号\", \"value\": \"《事先告知书》文号为创业板函〔2026〕第122号\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"创业板函〔2026〕第 122 号\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}]}, \"task\": \"核查两个来源的事实是否存在矛盾、遗漏或互补\"}",
+     "input_sha": "3b2ed3a8e0256e22",
+     "output_contract": "{\"verdicts\":[{\"fact\":\"描述\",\"verdict\":\"CONSISTENT|CONTRADICTORY|COMPLEMENTARY|INSUFFICIENT\",\"source_a\":\"...\",\"source_b\":\"...\"}]}",
+     "system_prompt": "你是调查DAG中的跨源核查节点。比较两个来源的事实，判断一致性/矛盾/互补/证据不足。只输出JSON。"
+    },
+    {
+     "sample_id": "XC2",
+     "source": "S2+S3",
+     "event": "元道退+元道退",
+     "input": "{\"source_a\": {\"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"facts\": [{\"fact_key\": \"元道通信_证券代码\", \"value\": \"元道通信证券代码为301139\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"证券代码：301139\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_证券简称\", \"value\": \"元道通信证券简称为*ST元道\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"证券简称：*ST元道\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_公告编号\", \"value\": \"该公告编号为2026-090\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"公告编号：2026-090\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_收到事先告知书日期\", \"value\": \"元道通信于2026年8月28日收到深圳证券交易所下发的《事先告知书》\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"于 2026 年 8 月 28 日收到深圳证券交易所下发的《事先告知书》\", \"normalized\": {\"dates\": [\"2026年8月28日\"], \"amounts\": [], \"entities\": [\"收到深圳证券交易所\"], \"actions\": [\"收到\"]}, \"grounded\": true}, {\"fact_key\": \"元道通信_事先告知书文号\", \"value\": \"《事先告知书》文号为创业板函〔2026〕第122号\", \"doc_id\": \"D2_E03-yuandao_2026-08-29\", \"quote\": \"创业板函〔2026〕第 122 号\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}]}, \"source_b\": {\"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"facts\": [{\"fact_key\": \"元道通信_证券代码\", \"value\": \"元道通信证券代码为301139，证券简称为*ST元道\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"证券代码：301139      证券简称：*ST元道\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_公告编号\", \"value\": \"该公告编号为2026-088\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"公告编号：2026-088\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_立案调查\", \"value\": \"元道通信因涉嫌信息披露文件财务数据存在虚假记载被中国证监会立案调查\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"财务数据存在虚假记载等违法行为，被中国证券监督管\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"假记载被中国证监会\"], \"actions\": [\"披露\", \"涉嫌\", \"虚假\"]}, \"grounded\": true}, {\"fact_key\": \"元道通信_立案告知书披露日期\", \"value\": \"元道通信于2025年7月11日在巨潮资讯网披露收到中国证监会立案告知书的公告（公告编号2025-031）\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"2025 年 7 月 11 日在巨潮资讯网\", \"normalized\": {\"dates\": [\"2025年7月11日\"], \"amounts\": [], \"entities\": [\"披露收到中国证监会\"], \"actions\": [\"披露\", \"收到\", \"立案\"]}, \"grounded\": true}, {\"fact_key\": \"元道通信_行政处罚决定书\", \"value\": \"2026年5月8日元道通信收到《行政处罚决定书》\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"2026 年 5 月 8 日，元道通信股份有限公司\", \"normalized\": {\"dates\": [\"2026年5月8日\"], \"amounts\": [], \"entities\": [], \"actions\": [\"收到\", \"处罚\", \"决定\"]}, \"grounded\": true}]}, \"task\": \"核查两个来源的事实是否存在矛盾、遗漏或互补\"}",
+     "input_sha": "fbecc65e0a38af14",
+     "output_contract": "{\"verdicts\":[{\"fact\":\"描述\",\"verdict\":\"CONSISTENT|CONTRADICTORY|COMPLEMENTARY|INSUFFICIENT\",\"source_a\":\"...\",\"source_b\":\"...\"}]}",
+     "system_prompt": "你是调查DAG中的跨源核查节点。比较两个来源的事实，判断一致性/矛盾/互补/证据不足。只输出JSON。"
+    },
+    {
+     "sample_id": "XC3",
+     "source": "S3+ST1",
+     "event": "元道退+舜天",
+     "input": "{\"source_a\": {\"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"facts\": [{\"fact_key\": \"元道通信_证券代码\", \"value\": \"元道通信证券代码为301139，证券简称为*ST元道\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"证券代码：301139      证券简称：*ST元道\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_公告编号\", \"value\": \"该公告编号为2026-088\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"公告编号：2026-088\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [], \"actions\": []}, \"grounded\": true}, {\"fact_key\": \"元道通信_立案调查\", \"value\": \"元道通信因涉嫌信息披露文件财务数据存在虚假记载被中国证监会立案调查\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"财务数据存在虚假记载等违法行为，被中国证券监督管\", \"normalized\": {\"dates\": [], \"amounts\": [], \"entities\": [\"假记载被中国证监会\"], \"actions\": [\"披露\", \"涉嫌\", \"虚假\"]}, \"grounded\": true}, {\"fact_key\": \"元道通信_立案告知书披露日期\", \"value\": \"元道通信于2025年7月11日在巨潮资讯网披露收到中国证监会立案告知书的公告（公告编号2025-031）\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"2025 年 7 月 11 日在巨潮资讯网\", \"normalized\": {\"dates\": [\"2025年7月11日\"], \"amounts\": [], \"entities\": [\"披露收到中国证监会\"], \"actions\": [\"披露\", \"收到\", \"立案\"]}, \"grounded\": true}, {\"fact_key\": \"元道通信_行政处罚决定书\", \"value\": \"2026年5月8日元道通信收到《行政处罚决定书》\", \"doc_id\": \"D3_E03-yuandao_2026-08-29\", \"quote\": \"2026 年 5 月 8 日，元道通信股份有限公司\", \"normalized\": {\"dates\": [\"2026年5月8日\"], \"amounts\": [], \"entities\": [], \"actions\": [\"收到\", \"处罚\", \"决定\"]}, \"grounded\": true}]}, \"source_b\": {\"doc_id\": \"csrc_penalty_2024_41\", \"facts\": [{\"fact_key\": \"事实\", \"value\": \"中国证监会行政处罚决定书（江苏舜天及其责任人员）_中国证券监督管理委员会|English移动端|微博|微信|无障碍首页机\", \"doc_id\": \"csrc_penalty_2024_41\"}, {\"fact_key\": \"事实\", \"value\": \"高松,男,1971年2月出生,时任江苏舜天董事、总经理、董事长等职务,住址:江苏省南京市建邺区\", \"doc_id\": \"csrc_penalty_2024_41\"}, {\"fact_key\": \"事实\", \"value\": \"桂生春,男,1978年2月出生,时任江苏舜天副总经理、董事会秘书、总经理等职务,住址:江苏省南京市雨花台区\", \"doc_id\": \"csrc_penalty_2024_41\"}]}, \"task\": \"核查两个来源的事实是否存在矛盾、遗漏或互补\"}",
+     "input_sha": "02bcd94bb46deaac",
+     "output_contract": "{\"verdicts\":[{\"fact\":\"描述\",\"verdict\":\"CONSISTENT|CONTRADICTORY|COMPLEMENTARY|INSUFFICIENT\",\"source_a\":\"...\",\"source_b\":\"...\"}]}",
+     "system_prompt": "你是调查DAG中的跨源核查节点。比较两个来源的事实，判断一致性/矛盾/互补/证据不足。只输出JSON。"
+    },
+    {
+     "sample_id": "XC4",
+     "source": "ST1+KD1",
+     "event": "跨源",
+     "input": "{\"source_a\": {\"doc_id\": \"csrc_penalty_2024_41\", \"text\": \"中国证监会行政处罚决定书（江苏舜天及其责任人员）_中国证券监督管理委员会|English移动端|微博|微信|无障碍首页机构概况新闻发布政务信息办事服务互动交流统计信息专题专栏当前位置：首页>政务信息>政府信息公开>主动公开>按主题查看>行政执法>行政处罚索引号bm56000001/2024-00007986分类发布机构发文日期名称中国证监会行政处罚决定书（江苏舜天及其责任人员）文号〔2024〕41\"}, \"source_b\": {\"doc_id\": \"kdx_penalty_2020\", \"text\": \"证券代码：002450证券简称：*ST康得公告编号：2020-205康得新复合材料集团股份有限公司关于公司及相关当事人收到中国证券监督管理委员会《行政处罚决定书》及《市场禁入决定书》的公告本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚假记载、误导性陈述或重大遗漏。特别风险提示：2020年9月27日，康得新复合材料集团股份有限公司（下称：公司）及相关当事人收到中国证券监督管理委员会\"}}",
+     "input_sha": "auto",
+     "output_contract": "{\"verdicts\":[{\"fact\":\"描述\",\"verdict\":\"CONSISTENT|CONTRADICTORY|COMPLEMENTARY|INSUFFICIENT\",\"source_a\":\"...\",\"source_b\":\"...\"}]}",
+     "system_prompt": "你是调查DAG中的跨源核查节点。比较两个来源的事实，判断一致性/矛盾/互补/证据不足。只输出JSON。"
+    },
+    {
+     "sample_id": "XC5",
+     "source": "ST2+S1",
+     "event": "跨源",
+     "input": "{\"source_a\": {\"doc_id\": \"csrc_penalty_2024_41\", \"text\": \"天财务部副经理、财务部经理、副总经理等职务,住址:江苏省南京市白下区。李焱,女,1974年12月出生,时任江苏舜天副总经理、董事会秘书,住址:江苏省南京市鼓楼区。赵凡,男,1989年8月出生,时任江苏舜天合川分公司总经理助理、副总经理等职务,住址:江苏省南京市秦淮区。依据《中华人民共和国证券法》(以下简称《证券法》)的有关规定,我会对江苏舜天信息披露违法违规行为进行了立案调查、审理,并依法向当事人\"}, \"source_b\": {\"doc_id\": \"D1_E03-yuandao_2026-05-08\", \"text\": \"证券代码：301139         证券简称：元道通信             公告编号：2026-031\\n\\n\\n                 元道通信股份有限公司\\n\\n        关于收到《行政处罚事先告知书》的公告\\n\\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\\n假记载、误导性陈述或重大遗漏。\\n\\n\\n   2026 年 5 月 8 日，元道通信股份有限公司（以下\"}}",
+     "input_sha": "auto",
+     "output_contract": "{\"verdicts\":[{\"fact\":\"描述\",\"verdict\":\"CONSISTENT|CONTRADICTORY|COMPLEMENTARY|INSUFFICIENT\",\"source_a\":\"...\",\"source_b\":\"...\"}]}",
+     "system_prompt": "你是调查DAG中的跨源核查节点。比较两个来源的事实，判断一致性/矛盾/互补/证据不足。只输出JSON。"
+    }
+   ],
+   "system_prompt": "你是调查DAG中的跨源核查节点。比较两个来源的事实，判断一致性/矛盾/互补/证据不足。只输出JSON。",
+   "output_contract": "{\"verdicts\":[{\"fact\":\"描述\",\"verdict\":\"CONSISTENT|CONTRADICTORY|COMPLEMENTARY|INSUFFICIENT\",\"source_a\":\"...\",\"source_b\":\"...\"}]}",
+   "pilot_completed": 0
+  }
+ },
+ "reuse": "fact_extraction/元道退 12 calls from pilot_v1 are reusable (same frozen inputs)",
+ "total_matrix_calls": 80,
+ "total_new_calls": 68,
+ "budget": {
+  "guard_cap": 100000,
+  "cash_cap_cny": 0.25,
+  "output_cap": 2048,
+  "note": "Based on pilot data: avg ~800 tok/call → 68 new calls ≈ 55K tok; DS 17×¥0.005 + Qwen 17×¥0.001 ≈ ¥0.10; conservative cap ¥0.25"
+ }
+}

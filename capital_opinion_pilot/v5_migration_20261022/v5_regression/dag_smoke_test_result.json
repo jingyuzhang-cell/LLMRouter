@@ -1,0 +1,45 @@
+{
+ "arms": {
+  "A_single": {
+   "tokens": 957,
+   "latency_s": 16.96,
+   "truncated": false,
+   "note": "GLM-5.3 one-shot"
+  },
+  "B_fixed_dag": {
+   "tokens": 2266,
+   "latency_s": 14.7,
+   "facts": 4,
+   "note": "4-node DAG all GLM-5.3"
+  },
+  "S5_fixed_recovery": {
+   "tokens": 2210,
+   "latency_s": 11.6,
+   "facts": 4,
+   "note": "fault t1→GLM-5.3, rerun all"
+  },
+  "S6_joint": {
+   "tokens": 2123,
+   "latency_s": 14.33,
+   "note": "LOCAL, pi(t1)=glm53, 440 rejected, real cap table"
+  }
+ },
+ "total": {
+  "calls": 13,
+  "tokens": 7556,
+  "cash": 0.0
+ },
+ "scoring_issue": "Q=0.0 for all arms because scoring_kdx uses 康得新 seed facts as gold; evidence is from 元道退 — WRONG gold reference. C/L data valid. Need 元道退-specific scoring (candidates in VAL_GOLD_ANNOTATION_PACKAGE).",
+ "s6_decision": {
+  "Z": "LOCAL",
+  "R": [
+   "t1",
+   "t2",
+   "t3",
+   "t4"
+  ],
+  "pi_t1": "glm53",
+  "rejected": 440,
+  "note": "DeepSeek blocked; S6 chose GLM-5.3 as best remaining"
+ }
+}

@@ -1,0 +1,41 @@
+{
+  "version": "kdx.service-preflight.v1",
+  "model_request_cap": 0,
+  "inference_token_cap": 0,
+  "wall_seconds": 300,
+  "load_seconds": 240,
+  "cleanup_seconds": 10,
+  "margin_seconds": 50,
+  "metadata_http_paths": [
+    "/health",
+    "/v1/models"
+  ],
+  "generation_paths_allowed": [],
+  "lock_path": "/root/r3_own_pool/collect/logs/local_gpu.lock",
+  "quarantine_path": "/root/r3_own_pool/collect/logs/local_gpu.lock.quarantine.json",
+  "duplicate_run_policy": "atomic run directory, no reuse",
+  "stop_before_seconds": 290,
+  "minimum_cleanup_seconds": 10,
+  "model_command": [
+    "/root/autodl-tmp/r3_venv/bin/vllm",
+    "serve",
+    "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "--tokenizer",
+    "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "--served-model-name",
+    "Qwen/Qwen2.5-7B-Instruct",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8127",
+    "--max-model-len",
+    "16384",
+    "--dtype",
+    "auto",
+    "--gpu-memory-utilization",
+    "0.85"
+  ],
+  "real_authorization": false,
+  "status": "NO-GO: no bounded metadata polling/executable orchestrator yet",
+  "runtime_failure": "persist quarantine; no further model calls; only own process group may be terminated"
+}

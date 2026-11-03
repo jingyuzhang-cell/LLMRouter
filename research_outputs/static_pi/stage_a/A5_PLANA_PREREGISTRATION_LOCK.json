@@ -1,0 +1,127 @@
+{
+ "experiment": "A5 结构实验 — Plan A（订阅端点，thinking disabled，历史 max_tokens）",
+ "locked_at": "2026-11-02 23:54:56",
+ "environment": {
+  "endpoint": "https://open.bigmodel.cn/api/anthropic/v1/messages",
+  "model": "GLM-5.3-Flash",
+  "thinking": "disabled",
+  "max_tokens": {
+   "J1": 2500,
+   "J2": 3500,
+   "SINK": 4000
+  },
+  "temperature": 0,
+  "credential": "env A5_GLM_KEY from /root/.config/a5/glm.env (600, value never logged)",
+  "runner_sha256": "0b871044b3a02e56c1cadb912dc73e8df5529da2a3f7964864a56db9360c9891",
+  "runner_sha256_at_lock": "0b871044b3a02e56c1cadb912dc73e8df5529da2a3f7964864a56db9360c9891",
+  "runner_sha256_executed": "b14b7e7bc8769579e3428cfc32abecbc46c7c5cf799ad2ca27784785c59a9bde",
+  "runner_diff_note": "锁后唯一改动：dry 模式的期望哈希从 combined 修正为 system-only，并增加 combined/中止现场对照字段；call()/提示词构建/停止规则未改动。"
+ },
+ "frozen_inputs": {
+  "E1P_E2P": {
+   "run1": {
+    "E1P": "75f991d2360ef377f4ea55a58f196ab031f207939e60a15f2af2a5542d98c0d9",
+    "E2P": "5c3ec3517d19cbf53ce299f10bb072be2cfef37b53f1550faf048b382e5f8310"
+   },
+   "run2": {
+    "E1P": "46ef0c4401a2b505e7c6d32ab8dc0f55a1f1c06c6cdf5b5d6ee8655096039692",
+    "E2P": "b42eeea26a761f6afea6546a1a250778e3afb418f52fafc886e11d0c6c357f95"
+   },
+   "run3": {
+    "E1P": "26ef5abdc70e50569bf228e3347e25d7881c509b4ceacc4779a5ece29ac07ee0",
+    "E2P": "48096f25e7c6a5d8455730813a991e7cb8a810349d3e2f2e8711978895e0007d"
+   }
+  },
+  "E3_E4": {
+   "run1": {
+    "E3": "798ad84d36e31f03220e4c8b480a40839f64cd3959ba44a66e20da61dcf55368",
+    "E4": "3b54c678c8c1cba852ec4278483e08eda83b7d677bdb61625e54d6387eb57cc7"
+   },
+   "run2": {
+    "E3": "34fe45e61a66fc13aaae7b0c056c585b13063a9990291ca9474c27619e521af4",
+    "E4": "48e343547b10e214ea1f2b5649a210b16f443e167f815de989fe6a104997a478"
+   },
+   "run3": {
+    "E3": "de1d85f007015766c47373786cf2392e9e313d1f69e3e42d4809a8edb7676877",
+    "E4": "3d2bc7f79b6c4031a3faef84f874915b6f369554548c2a5bdcf2f1afc87990ce"
+   }
+  },
+  "contract_v2_1": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234",
+  "contract_v3_draft": "ebca2492fbe8e8e5684213ebad854fb42e771fe37fc61017f8c06e72ee8c521c",
+  "scorer_terminal_quality": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+  "a5_semantic_rule": "e25d9bf2a76464c5d2f9f5032d677c97f50c8b45f1b3638785c59a268c14e19f",
+  "v3_reference_baseline": "42e2e89bc92253d9ca2ac9831f9807692e39bb668f92255eea7ac351ab289ab6"
+ },
+ "prompt_identity": {
+  "B_J1_expected_prefix": "28560bc5 (system-only sha256)",
+  "C_J1_expected_prefix": "c7384236 (system-only sha256)",
+  "note": "B=J1_SYSTEM+RELAY_ADDENDUM；C=+J1_POSITIONS_ADDENDUM；J2/SINK 提示词双臂一致",
+  "aborted_site_combined_match": {
+   "run1_B": "d13b8a22",
+   "run1_C": "419880b0"
+  }
+ },
+ "design": {
+  "samples": [
+   1,
+   2,
+   3
+  ],
+  "arms": [
+   "B",
+   "C"
+  ],
+  "nodes": [
+   "J1",
+   "J2",
+   "SINK"
+  ],
+  "calls": 18,
+  "order": {
+   "1": "B_first",
+   "2": "C_first",
+   "3": "B_first"
+  },
+  "within_arm": "J1->J2->SINK serial",
+  "across_arms": "serial",
+  "e_reuse": "X 链 E1P/E2P 冻结文本；E3/E4 历史冻结输出；唯一实验差异=J1 positions 中继"
+ },
+ "budget": {
+  "consumed_before": 13,
+  "precheck": 1,
+  "formal": 18,
+  "cumulative_cap": 32
+ },
+ "halt_rules": [
+  "HTTP 非 200",
+  "stop_reason != end_turn",
+  "JSON 解析失败",
+  "任何网络异常"
+ ],
+ "site_preservation": {
+  "aborted_site": "runs_a5/run1 保持原样，不覆盖",
+  "new_dir": "runs_a5_planA/"
+ },
+ "scoring_layers": [
+  "旧合同 v2.1（官方）",
+  "V3 候选合同（并列）",
+  "A5 语义归一规则（独立辅助，不回写、不改证据）"
+ ],
+ "claim_scope": "结构中继的 3 样本对照；不作统计显著性主张",
+ "precheck": {
+  "calls": 1,
+  "result": "FAIL",
+  "http": 400,
+  "code": "1210",
+  "message": "该模型始终思考，不支持关闭思考；请使用 low、high 或 max",
+  "request_id": "20261102235756ce41596f419b4be0",
+  "wall_s": 0.71,
+  "tokens": 0,
+  "interpretation": "key 有效（请求到达模型，非 401/429）；模型服务端已不允许 thinking disabled",
+  "action": "停止：未重试、未换端点/模型、未启动 18 次正式实验；预算 13+1=14/32",
+  "max_tokens_used": 2500,
+  "max_tokens_deviation": "预检复用 runner 的 J1 层配置 2500，而非治理记录中的 16；请求在参数校验阶段即被 1210 拒绝，未生成 token，结果与 max_tokens 无关；如实记录。"
+ },
+ "formal_calls_started": false,
+ "precheck_at": "2026-11-03 00:13:02"
+}

@@ -1,0 +1,53 @@
+{
+  "call1": {
+    "call_id": 1,
+    "ts": "2026-10-12T17:20:16",
+    "model_alias": "glm53",
+    "model": "GLM-5.3",
+    "purpose": "v3kdxrepair_A",
+    "max_tokens": 640,
+    "prompt_sha256": "f3c59abfaac7c9508b18c23c2e7d4fdc49372311c70aa2a46e493721622ae55d",
+    "prompt_chars": 3221,
+    "response_chars": 820,
+    "usage": {
+      "input_tokens": 1452,
+      "output_tokens": 518
+    },
+    "latency_s": 13.405,
+    "stop_reason": "end_turn",
+    "cumulative_settled_actual": 1970,
+    "cumulative_conservative": 2610
+  },
+  "call2": {
+    "call_id": 2,
+    "ts": "2026-10-12T17:20:28",
+    "model_alias": "glm53",
+    "model": "GLM-5.3",
+    "purpose": "v3kdxrepair_B",
+    "max_tokens": 640,
+    "prompt_sha256": "90ed862c12960d983bc8a532cc43b83b04470d95a694340676654ac852f66249",
+    "prompt_chars": 3246,
+    "response_chars": 436,
+    "usage": {
+      "input_tokens": 1486,
+      "output_tokens": 640
+    },
+    "latency_s": 11.703,
+    "stop_reason": "max_tokens",
+    "cumulative_settled_actual": 4096,
+    "cumulative_conservative": 5376
+  },
+  "first_actual": 1970,
+  "second_actual": 2126,
+  "total": 4096,
+  "overrun": 96,
+  "correct_second_reservation_if_known": 2126,
+  "correct_total_if_reserved": 4096,
+  "original_guard": "1.5*640 output-only=960; omitted input",
+  "original_dispatch_condition": 2930,
+  "current_estimator": "Character-ratio empirical estimate is NOT certified hard input bound",
+  "http_payload": "Meter._transport passes max_tokens and thinking disabled; Mock HTTP asserts actual serialized payload",
+  "server_enforcement": "No server configuration evidence; request field and usage do not prove upper bound for every future request",
+  "usage_unknown": "StrictMeter keeps entire fsynced reservation and prevents retransmitting same payload",
+  "legacy_ledger_modified": false
+}

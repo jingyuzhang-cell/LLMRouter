@@ -1,0 +1,1016 @@
+{
+ "runs": {
+  "S5Cap_r1": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 70.95,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2232,
+     "lat": 7.86,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": false,
+     "compat_ok": false,
+     "parse_layer": "L0: Unterminated string starting at: line 26 column 36 (char 4006) | L1: Unterminated string starting at: line 26 column 36 (char 4006)",
+     "in": 3945,
+     "out": 2048,
+     "lat": 26.92,
+     "truncated": true
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2870,
+     "out": 550,
+     "lat": 7.6,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2864,
+     "out": 763,
+     "lat": 13.74,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1467,
+     "out": 1157,
+     "lat": 4.48,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1296,
+     "out": 1232,
+     "lat": 17.93,
+     "truncated": false
+    }
+   ],
+   "tokens": 24276,
+   "cash_rmb": 0.0402,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "5/6",
+   "compat_rate": "5/6",
+   "deadline_success": false,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 7.86,
+     "p90": 12.8,
+     "drift": 0.61
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "lat": 26.92,
+     "p90": 27.7,
+     "drift": 0.97
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "lat": 7.6,
+     "p90": 12.6,
+     "drift": 0.6
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "lat": 13.74,
+     "p90": 21.0,
+     "drift": 0.65
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "lat": 4.48,
+     "p90": 6.4,
+     "drift": 0.7
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "lat": 17.93,
+     "p90": 19.2,
+     "drift": 0.93
+    }
+   ]
+  },
+  "S6_r1": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 73.41,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t5",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 17.6,
+     "remaining_s": 1.59
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 5.4,
+     "remaining_s": 1.59
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 8609
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2241,
+     "lat": 8.02,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": false,
+     "compat_ok": false,
+     "parse_layer": "L0: Unterminated string starting at: line 27 column 30 (char 4136) | L1: Unterminated string starting at: line 27 column 30 (char 4136)",
+     "in": 3945,
+     "out": 2048,
+     "lat": 31.55,
+     "truncated": true
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2982,
+     "out": 243,
+     "lat": 10.43,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3015,
+     "out": 2260,
+     "lat": 33.57,
+     "truncated": false
+    }
+   ],
+   "tokens": 20586,
+   "cash_rmb": 0.0357,
+   "full_set": "0/3",
+   "per_fact": {
+    "RF5": "NOT_COVERED",
+    "RF6": "NOT_COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [],
+   "reachable_chain": "0/3",
+   "strict_rate": "3/4",
+   "compat_rate": "3/4",
+   "deadline_success": false,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 8.02,
+     "p90": 12.8,
+     "drift": 0.63
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "lat": 31.55,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "lat": 10.43,
+     "p90": 4.8,
+     "drift": 2.17
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "lat": 33.57,
+     "p90": null,
+     "drift": null
+    }
+   ]
+  },
+  "S5Cap_r2": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 55.45,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t6",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 21.3,
+     "remaining_s": 19.55
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2462,
+     "lat": 8.95,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1773,
+     "lat": 17.66,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2852,
+     "out": 789,
+     "lat": 14.78,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2846,
+     "out": 2087,
+     "lat": 22.73,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2682,
+     "out": 1602,
+     "lat": 6.1,
+     "truncated": false
+    }
+   ],
+   "tokens": 24890,
+   "cash_rmb": 0.0485,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "5/5",
+   "compat_rate": "5/5",
+   "deadline_success": false,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 8.95,
+     "p90": 12.8,
+     "drift": 0.7
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "lat": 17.66,
+     "p90": 27.7,
+     "drift": 0.64
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "lat": 14.78,
+     "p90": 12.6,
+     "drift": 1.17
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "lat": 22.73,
+     "p90": 21.0,
+     "drift": 1.08
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "lat": 6.1,
+     "p90": 6.4,
+     "drift": 0.95
+    }
+   ]
+  },
+  "S6_r2": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 67.2,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 8597
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2259,
+     "lat": 8.09,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1314,
+     "lat": 17.88,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2900,
+     "out": 354,
+     "lat": 2.39,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2842,
+     "out": 1392,
+     "lat": 21.67,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1831,
+     "out": 1256,
+     "lat": 14.59,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1609,
+     "out": 1011,
+     "lat": 4.71,
+     "truncated": false
+    }
+   ],
+   "tokens": 24565,
+   "cash_rmb": 0.0487,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6",
+   "deadline_success": true,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 8.09,
+     "p90": 12.8,
+     "drift": 0.63
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "lat": 17.88,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "lat": 2.39,
+     "p90": 4.8,
+     "drift": 0.5
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "lat": 21.67,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t5",
+     "model": "glm53",
+     "lat": 14.59,
+     "p90": 17.6,
+     "drift": 0.83
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "lat": 4.71,
+     "p90": 5.4,
+     "drift": 0.87
+    }
+   ]
+  },
+  "S5Cap_r3": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 73.51,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2347,
+     "lat": 7.82,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1702,
+     "lat": 17.6,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2879,
+     "out": 539,
+     "lat": 7.47,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2873,
+     "out": 1102,
+     "lat": 12.3,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1550,
+     "out": 1357,
+     "lat": 12.69,
+     "truncated": false
+    }
+   ],
+   "tokens": 22146,
+   "cash_rmb": 0.0431,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "5/5",
+   "compat_rate": "5/5",
+   "deadline_success": false,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 7.82,
+     "p90": 12.8,
+     "drift": 0.61
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "lat": 17.6,
+     "p90": 27.7,
+     "drift": 0.64
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "lat": 7.47,
+     "p90": 12.6,
+     "drift": 0.59
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "lat": 12.3,
+     "p90": 21.0,
+     "drift": 0.59
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "lat": 12.69,
+     "p90": 6.4,
+     "drift": 1.98
+    }
+   ]
+  },
+  "S6_r3": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": false,
+   "wall_s": 64.2,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [
+    {
+     "node": "t5",
+     "model": "glm53",
+     "at": "node",
+     "reason": "deadline_preflight",
+     "predicted_s": 17.6,
+     "remaining_s": 16.37
+    }
+   ],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53flash",
+      "t3": "deepseek",
+      "t4": "glm53flash",
+      "t5": "glm53",
+      "t6": "deepseek"
+     },
+     "n_feasible": 8613
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3852,
+     "out": 2117,
+     "lat": 7.87,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 3945,
+     "out": 1818,
+     "lat": 29.34,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2852,
+     "out": 335,
+     "lat": 2.44,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 2756,
+     "out": 1468,
+     "lat": 21.17,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 1983,
+     "out": 1310,
+     "lat": 5.57,
+     "truncated": false
+    }
+   ],
+   "tokens": 22436,
+   "cash_rmb": 0.0506,
+   "full_set": "2/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "NOT_COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6"
+   ],
+   "reachable_chain": "2/3",
+   "strict_rate": "5/5",
+   "compat_rate": "5/5",
+   "deadline_success": false,
+   "lat_vs_p90_drift": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "lat": 7.87,
+     "p90": 12.8,
+     "drift": 0.61
+    },
+    {
+     "node": "t1",
+     "model": "glm53flash",
+     "lat": 29.34,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t3",
+     "model": "deepseek",
+     "lat": 2.44,
+     "p90": 4.8,
+     "drift": 0.51
+    },
+    {
+     "node": "t4",
+     "model": "glm53flash",
+     "lat": 21.17,
+     "p90": null,
+     "drift": null
+    },
+    {
+     "node": "t6",
+     "model": "deepseek",
+     "lat": 5.57,
+     "p90": 5.4,
+     "drift": 1.03
+    }
+   ]
+  }
+ },
+ "config": {
+  "stats": "capability_table_v4 era=v2 (calibrated, shared by S5Cap & S6)",
+  "deadline_s": 75.0,
+  "fault": "F7",
+  "retrieval": "frozen 10K line-split"
+ },
+ "meter": {
+  "calls": 31,
+  "tokens": 138899,
+  "cash_rmb": 0.2668
+ },
+ "preflight": {
+  "conditions": {
+   "C1_regression": true,
+   "C2_fresh_ledger": true,
+   "C3_offpeak_or_authorized": true,
+   "C4_reservation": true
+  },
+  "pricing": {
+   "in": 0.3,
+   "out": 1.2
+  },
+  "peak_authorized": true,
+  "verdict": "GO",
+  "detail": {
+   "planned_calls": 36,
+   "worst_tokens": 213120,
+   "worst_cash_rmb": 0.6647,
+   "requested_caps": {
+    "calls": 38,
+    "tokens": 223776,
+    "cash_rmb": 0.73
+   }
+  }
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "stage": "RQ2 V1 Phase 1/2 pilot",
+ "status": "zero-call; 192 real API HOLD; no GO",
+ "metric_note": "GQ/GF/GR/JOINT are split pass rates, not model accuracy; Q is absolute terminal quality",
+ "A1_dynamic_equivalence": {
+  "cases": 3072,
+  "mismatches": 0,
+  "ok": true
+ },
+ "A1_vcr_disabled": {
+  "max_term_diff": 0.0,
+  "max_cost_diff": 0.0,
+  "ok": true
+ },
+ "A3_H0": {
+  "base_params_JOINT": 1.0,
+  "conservative_params_JOINT": 0.31,
+  "verdict": "FAIL"
+ },
+ "conservative_params": {
+  "status": "frozen before conservative test",
+  "params": {
+   "sens": 0.7,
+   "spec": 0.85,
+   "p_rep": 0.5,
+   "c_rep": 0.1,
+   "l_rep": 0.1,
+   "max_rep": 2,
+   "sens_gate": 0.85
+  },
+  "source": "RQ2_VCR_AUDIT_GRID train/H0 calibration; base rejected for H0 JOINT=1.0"
+ },
+ "key_results": {
+  "FAR_stable20_20s": {
+   "dq": 0.0429,
+   "GQ": 0.04,
+   "JOINT": 0.0,
+   "MGC_proxy_dq": 0.0488
+  },
+  "FAR_stable20_20m": {
+   "dq": 0.0722,
+   "GQ": 0.39,
+   "JOINT_m": 0.32,
+   "MGC_proxy_dq": 0.0776
+  },
+  "VCR_conservative_stable20_15": {
+   "dq": 0.0918,
+   "Q": 0.5419,
+   "GQ": 0.78,
+   "GF": 0.95,
+   "GR": 1.0,
+   "JOINT": 0.76
+  },
+  "VCR_conservative_stable20_20s": {
+   "dq": 0.0918,
+   "Q": 0.5419,
+   "GQ": 0.78,
+   "GF": 0.95,
+   "GR": 1.0,
+   "JOINT": 0.76
+  },
+  "VCR_conservative_stable20_20m": {
+   "dq": 0.1186,
+   "Q": 0.5687,
+   "GQ": 0.99,
+   "GR_strict": 0.0,
+   "JOINT_strict": 0.0
+  },
+  "VCR_conservative_H0": {
+   "dq": 0.0704,
+   "Q": 0.4592,
+   "GQ": 0.31,
+   "JOINT": 0.31
+  },
+  "VCR_base_H0": {
+   "Q": 0.5506,
+   "dq": 0.1619,
+   "GQ": 1.0,
+   "JOINT": 1.0
+  }
+ },
+ "gates": {
+  "A0": "PASS",
+  "A1": "PASS",
+  "A2": "PASS",
+  "A3": "FAIL",
+  "A4": "PASS-with-caveat",
+  "A5": "PASS",
+  "A6": "PARTIAL",
+  "A7": "PASS",
+  "A8": "PASS",
+  "A9": "PARTIAL"
+ },
+ "JMO_status": "STOPPED by A3 failure",
+ "shas": {
+  "rq2_v1_far_pilot.py": "1197966c46b5ef6a028146a65c7934dca67a8b5de3aae17d1b956e759920cf8c",
+  "rq2_v1_vcr.py": "c31f74e310f87519ff496d3bb7d4a3c92d6d216dd516d67a8a51f3c067bdb3ed",
+  "RQ2_FAR_PILOT.json": "28b2b55dcc2ff0b955fbc067bffd2972da3732ff96ad05ebeffce2913b8714c8",
+  "RQ2_VCR_SENSITIVITY.json": "aa854d808d48c1f686ab1fb237d783924b7c6afb5af57a2aae5491f8529250ab",
+  "RQ2_VCR_AUDIT_GRID.json": "35e7be85b34c6970730f1f272a6d7d6fc89967ea0a2e720c38c278f9cbccfda1",
+  "RQ2_VCR_CONSERVATIVE_PARAMS.json": "012a88d75c769e034b96b5b8f67554a187e004d2f6608c2add4dd40c9d52e364",
+  "RQ2_VCR_PILOT.json": "593224534e35f0530edefb086ffc52e3147dad82a4be1209e84543eb4084dd4d",
+  "RQ2_VCR_PILOT_CONSERVATIVE.json": "21a1fe0f5f48460da46a2003865c69e4f8f7cb49adaad06a7d9f0b7773081b7a",
+  "RQ2_V1_PILOT_RESULTS.md": "806567f8b3fa03930d652a9c80b1765a6c7f4b46eba66586416577a93fdd0121"
+ }
+}

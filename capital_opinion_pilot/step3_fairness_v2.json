@@ -1,0 +1,342 @@
+{
+ "date": "2026-10-14",
+ "part_a": {
+  "calls": [
+   {
+    "purpose": "s3:1:glm53",
+    "arm": "A",
+    "node": "oneshot",
+    "model": "glm53",
+    "prompt_chars": 1300,
+    "in_tok": 758,
+    "out_tok": 519,
+    "lat_s": 8.519
+   },
+   {
+    "purpose": "s3:2:glm53",
+    "arm": "B",
+    "node": "t1",
+    "model": "glm53",
+    "prompt_chars": 752,
+    "in_tok": 447,
+    "out_tok": 569,
+    "lat_s": 8.157
+   },
+   {
+    "purpose": "s3:3:glm53",
+    "arm": "B",
+    "node": "t2",
+    "model": "glm53",
+    "prompt_chars": 752,
+    "in_tok": 406,
+    "out_tok": 324,
+    "lat_s": 4.296
+   },
+   {
+    "purpose": "s3:4:glm53",
+    "arm": "B",
+    "node": "t3",
+    "model": "glm53",
+    "prompt_chars": 2124,
+    "in_tok": 1041,
+    "out_tok": 574,
+    "lat_s": 8.753
+   },
+   {
+    "purpose": "s3:5:glm53",
+    "arm": "B",
+    "node": "t4",
+    "model": "glm53",
+    "prompt_chars": 738,
+    "in_tok": 430,
+    "out_tok": 391,
+    "lat_s": 5.836
+   },
+   {
+    "purpose": "s3:6:glm53",
+    "arm": "B",
+    "node": "t5",
+    "model": "glm53",
+    "prompt_chars": 1682,
+    "in_tok": 827,
+    "out_tok": 625,
+    "lat_s": 7.169
+   },
+   {
+    "purpose": "s3:7:glm53",
+    "arm": "B",
+    "node": "t6",
+    "model": "glm53",
+    "prompt_chars": 2062,
+    "in_tok": 1023,
+    "out_tok": 517,
+    "lat_s": 6.91
+   },
+   {
+    "purpose": "s3:8:glm53flash",
+    "arm": "S5CG",
+    "node": "t1",
+    "model": "glm53flash",
+    "prompt_chars": 752,
+    "in_tok": 447,
+    "out_tok": 368,
+    "lat_s": 6.349
+   },
+   {
+    "purpose": "s3:9:glm53",
+    "arm": "S5CG",
+    "node": "t2",
+    "model": "glm53",
+    "prompt_chars": 752,
+    "in_tok": 406,
+    "out_tok": 297,
+    "lat_s": 4.362
+   },
+   {
+    "purpose": "s3:10:glm53",
+    "arm": "S5CG",
+    "node": "t3",
+    "model": "glm53",
+    "prompt_chars": 1664,
+    "in_tok": 825,
+    "out_tok": 550,
+    "lat_s": 6.997
+   },
+   {
+    "purpose": "s3:11:glm53",
+    "arm": "S5CG",
+    "node": "t4",
+    "model": "glm53",
+    "prompt_chars": 738,
+    "in_tok": 430,
+    "out_tok": 487,
+    "lat_s": 6.383
+   },
+   {
+    "purpose": "s3:12:glm53flash",
+    "arm": "S5CG",
+    "node": "t5",
+    "model": "glm53flash",
+    "prompt_chars": 1682,
+    "in_tok": 826,
+    "out_tok": 544,
+    "lat_s": 9.424
+   },
+   {
+    "purpose": "s3:13:glm53",
+    "arm": "S5CG",
+    "node": "t6",
+    "model": "glm53",
+    "prompt_chars": 1602,
+    "in_tok": 807,
+    "out_tok": 561,
+    "lat_s": 8.45
+   },
+   {
+    "purpose": "s3:15:glm53",
+    "arm": "S6",
+    "node": "t2",
+    "model": "glm53",
+    "prompt_chars": 752,
+    "in_tok": 406,
+    "out_tok": 280,
+    "lat_s": 7.125
+   },
+   {
+    "purpose": "s3:16:glm53",
+    "arm": "S6",
+    "node": "t3",
+    "model": "glm53",
+    "prompt_chars": 2095,
+    "in_tok": 1036,
+    "out_tok": 548,
+    "lat_s": 8.544
+   },
+   {
+    "purpose": "s6fin:1:glm53",
+    "arm": "S6",
+    "node": "t4",
+    "model": "glm53",
+    "prompt_chars": 706,
+    "in_tok": 415,
+    "out_tok": 447,
+    "lat_s": 6.911
+   },
+   {
+    "purpose": "s6fin:3:glm53",
+    "arm": "S6",
+    "node": "t6",
+    "model": "glm53",
+    "prompt_chars": 768,
+    "in_tok": 374,
+    "out_tok": 393,
+    "lat_s": 6.368
+   }
+  ],
+  "evidence_verdicts": {
+   "window_design": "Step3 gate pre-registered ANSWER-DIRECTED windows: t1 = D5 chunk containing RF1 (60万元罚款), t2 = D1 chunk containing RF4 (北京银行协议), ~600c per line",
+   "F1_answer_directed_windows_leakage": true,
+   "F1_detail": "windows were chosen BY the T1 answer positions — inflates absolute T1 for ALL arms; forbidden by the v2 rule (task-term ranking only); Step3 T1 numbers must be read as input-limited, not model-quality",
+   "F2_A_extra_raw_text": "A saw the UNION of both 600c windows as raw text in one prompt (prompt_chars=1300); the DAG extraction nodes saw the same two windows separately, but DAG downstream nodes (t3-t6) saw ONLY merged facts, never raw text. So: A received no raw text beyond the extract nodes' inputs, but DID see raw evidence end-to-end — the structural single-model counterfactual.",
+   "A_prompt_chars_evidence": "A=1300c vs t1=~752c + t2=~406c templates included"
+  }
+ },
+ "part_b": {
+  "6000": {
+   "A": {
+    "calls": 1,
+    "in_tok": 7584,
+    "out_tok_est": 1200,
+    "total_tok_est": 8784,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 28.3,
+    "deadline_30s_feasible_est": true,
+    "deadline_60s_feasible_est": true
+   },
+   "B": {
+    "calls": 6,
+    "in_tok": 14870,
+    "out_tok_est": 3108,
+    "total_tok_est": 17978,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 41.4,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": true
+   },
+   "S5CG": {
+    "calls": 6,
+    "in_tok": 14870,
+    "out_tok_est": 2940,
+    "total_tok_est": 17810,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 41.4,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": true
+   },
+   "S5Cap": {
+    "calls": 6,
+    "in_tok": 14870,
+    "out_tok_est": 3060,
+    "total_tok_est": 17930,
+    "cash_rmb_est": 0.0078,
+    "wall_s_est": 35.5,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": true
+   },
+   "S6": {
+    "calls": 6,
+    "in_tok": 14870,
+    "out_tok_est": 3456,
+    "total_tok_est": 18326,
+    "cash_rmb_est": 0.0251,
+    "wall_s_est": 35.5,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": true
+   }
+  },
+  "10000": {
+   "A": {
+    "calls": 1,
+    "in_tok": 12534,
+    "out_tok_est": 1200,
+    "total_tok_est": 13734,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 44.8,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": true
+   },
+   "B": {
+    "calls": 6,
+    "in_tok": 24465,
+    "out_tok_est": 3108,
+    "total_tok_est": 27573,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 60.3,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": false
+   },
+   "S5CG": {
+    "calls": 6,
+    "in_tok": 24465,
+    "out_tok_est": 2940,
+    "total_tok_est": 27405,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 60.3,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": false
+   },
+   "S5Cap": {
+    "calls": 6,
+    "in_tok": 24465,
+    "out_tok_est": 3060,
+    "total_tok_est": 27525,
+    "cash_rmb_est": 0.0104,
+    "wall_s_est": 51.9,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": true
+   },
+   "S6": {
+    "calls": 6,
+    "in_tok": 24465,
+    "out_tok_est": 3456,
+    "total_tok_est": 27921,
+    "cash_rmb_est": 0.0329,
+    "wall_s_est": 51.9,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": true
+   }
+  },
+  "19000": {
+   "A": {
+    "calls": 1,
+    "in_tok": 23672,
+    "out_tok_est": 1200,
+    "total_tok_est": 24872,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 81.9,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": false
+   },
+   "B": {
+    "calls": 6,
+    "in_tok": 46054,
+    "out_tok_est": 3108,
+    "total_tok_est": 49162,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 102.8,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": false
+   },
+   "S5CG": {
+    "calls": 6,
+    "in_tok": 46054,
+    "out_tok_est": 2940,
+    "total_tok_est": 48994,
+    "cash_rmb_est": 0.0,
+    "wall_s_est": 102.8,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": false
+   },
+   "S5Cap": {
+    "calls": 6,
+    "in_tok": 46054,
+    "out_tok_est": 3060,
+    "total_tok_est": 49114,
+    "cash_rmb_est": 0.016,
+    "wall_s_est": 88.9,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": false
+   },
+   "S6": {
+    "calls": 6,
+    "in_tok": 46054,
+    "out_tok_est": 3456,
+    "total_tok_est": 49510,
+    "cash_rmb_est": 0.0505,
+    "wall_s_est": 88.9,
+    "deadline_30s_feasible_est": false,
+    "deadline_60s_feasible_est": false
+   }
+  }
+ }
+}

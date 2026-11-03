@@ -1,0 +1,160 @@
+{
+ "unit": "huanrui D=60s cash_cap=¥0.005",
+ "fault_clk": 30.6,
+ "cash_rem": 0.005,
+ "strategies": {
+  "STATIC": {
+   "R": "repair_sup2",
+   "pi": {
+    "n_sup2": "Flash",
+    "verify": "Flash",
+    "sink": "Flash"
+   }
+  },
+  "SD-FC": {
+   "R": "repair_sup2",
+   "pi": {
+    "n_sup2": "Flash",
+    "verify": "Flash",
+    "sink": "Flash"
+   }
+  },
+  "R-only": {
+   "R": "accept",
+   "pi": {
+    "verify": "Flash",
+    "sink": "Flash"
+   }
+  },
+  "π-only": {
+   "R": "accept",
+   "pi": {}
+  },
+  "SEQ-R→π": {
+   "R": "accept",
+   "pi": {
+    "verify": "Flash",
+    "sink": "DS"
+   }
+  },
+  "SEQ-π→R": {
+   "R": "repair_sup2",
+   "pi": {
+    "n_sup2": "DS",
+    "sink": "Flash",
+    "verify": "Flash"
+   }
+  },
+  "JOINT": {
+   "R": "repair_sup2",
+   "pi": {
+    "n_sup2": "Flash",
+    "verify": "DS",
+    "sink": "DS"
+   }
+  }
+ },
+ "rows": [
+  {
+   "arm": "STATIC",
+   "R": "repair_sup2",
+   "pi": {
+    "n_sup2": "Flash",
+    "verify": "Flash",
+    "sink": "Flash"
+   },
+   "t_q": 0.25,
+   "hits": 5,
+   "tokens": 5761,
+   "clock": 74.4,
+   "cash": 0.0,
+   "eU": -2.048
+  },
+  {
+   "arm": "SD-FC",
+   "R": "repair_sup2",
+   "pi": {
+    "n_sup2": "Flash",
+    "verify": "Flash",
+    "sink": "Flash"
+   },
+   "t_q": 0.25,
+   "hits": 5,
+   "tokens": 5761,
+   "clock": 74.4,
+   "cash": 0.0,
+   "eU": -2.048
+  },
+  {
+   "arm": "R-only",
+   "R": "accept",
+   "pi": {
+    "verify": "Flash",
+    "sink": "Flash"
+   },
+   "t_q": 0.35,
+   "hits": 7,
+   "tokens": 3626,
+   "clock": 60.3,
+   "cash": 0.0,
+   "eU": -2.0302
+  },
+  {
+   "arm": "π-only",
+   "R": "accept",
+   "pi": {},
+   "t_q": 0.3,
+   "hits": 6,
+   "tokens": 3772,
+   "clock": 67.3,
+   "cash": 0.0,
+   "eU": -2.0314
+  },
+  {
+   "arm": "SEQ-R→π",
+   "R": "accept",
+   "pi": {
+    "verify": "Flash",
+    "sink": "DS"
+   },
+   "t_q": 0.35,
+   "hits": 7,
+   "tokens": 4457,
+   "clock": 50.8,
+   "cash": 0.016508,
+   "eU": 0.3129
+  },
+  {
+   "arm": "SEQ-π→R",
+   "R": "repair_sup2",
+   "pi": {
+    "n_sup2": "DS",
+    "sink": "Flash",
+    "verify": "Flash"
+   },
+   "t_q": 0.6,
+   "hits": 12,
+   "tokens": 6638,
+   "clock": 69.3,
+   "cash": 0.007653,
+   "eU": -2.0553
+  },
+  {
+   "arm": "JOINT",
+   "R": "repair_sup2",
+   "pi": {
+    "n_sup2": "Flash",
+    "verify": "DS",
+    "sink": "DS"
+   },
+   "t_q": 0.4,
+   "hits": 8,
+   "tokens": 6457,
+   "clock": 53.6,
+   "cash": 0.023515,
+   "eU": 0.3462
+  }
+ ],
+ "attempts": 18,
+ "cash": 0.0477
+}

@@ -1,0 +1,42 @@
+{
+ "batch": "PHASE_V23A_S2_OUTCOME",
+ "status": "COMPLETE_EXECUTION / INVALID_ABLATION",
+ "execution": {
+  "cells": 48,
+  "pairs_complete": 24,
+  "errors": 0,
+  "truncated_cells": 1,
+  "used": {
+   "calls": 252,
+   "tokens": 1144375,
+   "yuan": 1.3767
+  },
+  "caps": {
+   "calls": 252,
+   "tokens": 2300000,
+   "yuan": 4.0
+  },
+  "remaining": {
+   "calls": 0,
+   "tokens": 1155625,
+   "yuan": 2.6233
+  }
+ },
+ "preregistered_verdicts": {
+  "FAIL": 7,
+  "INCONCLUSIVE": 1,
+  "PASS": 4
+ },
+ "manipulation_check": {
+  "b_cells_with_leak": 17,
+  "b_cells": 24,
+  "faithful_tasks": [
+   "E06",
+   "ZEDA",
+   "ZIJING"
+  ]
+ },
+ "faithful_subset": {},
+ "conclusion": "Prompt-level field removal does not cut the information flow; 17/24 ablated cells still contained the target values. The preregistered PASS/FAIL verdicts are not interpretable; non-substitutability is NOT established.",
+ "recommendation": "Redesign as data-flow ablation with a post-filter and a 100% fidelity gate before any new S2 run; requires new budget authorization."
+}

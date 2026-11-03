@@ -1,0 +1,155 @@
+{
+ "run_id": "SB-alloc_rule-T-D1-r1",
+ "system_id": "alloc_rule",
+ "task_id": "T-D1",
+ "config_hash": "4df576facec416f9568df7bd7c8709d50d1fc0dd255dafac7ec978667bf384f0",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0,
+  "note": "fixed assignment"
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 77,
+   "usage": {
+    "in": 118,
+    "out": 57
+   },
+   "latency_s": 2.476,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "inputs",
+     "note",
+     "status",
+     "subtask"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": [
+     "note:无检索证据注入，无法建立索引，标注UNRESOLVED",
+     "status:UNRESOLVED"
+    ]
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 78,
+   "usage": {
+    "in": 2175,
+    "out": 356
+   },
+   "latency_s": 16.499,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "subtask"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 79,
+   "usage": {
+    "in": 483,
+    "out": 307
+   },
+   "latency_s": 5.419,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "subtask"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53flash",
+   "attempt": 2,
+   "call_id": 81,
+   "usage": {
+    "in": 494,
+    "out": 277
+   },
+   "latency_s": 6.276,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "subtask"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 82,
+   "usage": {
+    "in": 1052,
+    "out": 285
+   },
+   "latency_s": 4.066,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 83,
+   "usage": {
+    "in": 472,
+    "out": 304
+   },
+   "latency_s": 4.705,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 45.759,
+ "deliverable_ref": "stage_b/SB-alloc_rule-T-D1-r1/deliverable.json",
+ "notes": "STAGE-B REAL run arm=alloc_rule; frozen graph; assignment={'f1': 'glm53flash', 'f2': 'glm53flash', 'f3': 'glm53flash', 'f4': 'glm53flash', 'f5': 'glm53', 'f6': 'glm53'}"
+}

@@ -1,0 +1,145 @@
+{
+  "status": "DESIGN_LOCKED_EXECUTION_HOLD_NOT_FINAL_EXECUTION_PROTOCOL",
+  "version": "one_round_v1",
+  "date": "2026-10-22",
+  "algorithm_sha256": {
+    "/root/capital_opinion_pilot/joint_scheduler_v5.py": "6ecf8ee901d2dbc86e129cadfb6b2a9ccbe09b35d3b7b8b1d3f331fdacc3693f",
+    "/root/capital_opinion_pilot/rule_scheduler_rl.py": "cfae23707de891ebf940ff4a476dafc28525768c23ab314841731da6a4f8cc9a",
+    "/root/capital_opinion_pilot/scheduler_common.py": "0895493027e633118241966116004cdf76ffcad17a86700a743baf6584981154",
+    "/root/capital_opinion_pilot/v5_executor.py": "d1f4b005d56ad532b16b343e59fdcc841bd4c6ce91b04d606cac873315c4a587",
+    "/root/capital_opinion_pilot/task_quality.py": "9e51988294ae19409fc0d1d5ab032dceb387ea2cfed5c686c6593339421ebec2",
+    "/root/capital_opinion_pilot/feedback_detector.py": "a2285a031738234e49c1c36d6a9ad0474523c6da1bc8022013dc697a298d1397",
+    "/root/capital_opinion_pilot/cache_lineage.py": "073a2d8ddfe029bd19261d0f443f4a414612867d30d8d83924022b125087d224",
+    "/root/capital_opinion_pilot/dag_patch.py": "cb489d55504cb4ce070df38d59a4b861f4e854b395d949b58684c21de05806a7",
+    "/root/capital_opinion_pilot/joint_scheduler.py": "4372331312eddddb0dcf364795e47de44b5463989edbd381fba126b018f1888c",
+    "/root/capital_opinion_pilot/joint_executor.py": "169448a7f42e4e60f5f5de0b9d3bdaca7210f5d7947b7968a7fb5f5a284c1017",
+    "/root/capital_opinion_pilot/execution_v2.py": "58c5cbc6f14a0d4013f75e9149cca24ec6acdb0fd02595e0a8fae9c737e4f2ea",
+    "/root/capital_opinion_pilot/pilot_node_contracts.py": "7c327a22853e466b434e484ee089aada2cc8358c8a91a52b7f5dc1dbfac4045e"
+  },
+  "arms": [
+    "V5",
+    "RL"
+  ],
+  "FL_in_primary_batch": false,
+  "unit": "independent event cluster",
+  "target_independent_events": 8,
+  "repeats_per_event": 2,
+  "strategy_executions_max": 32,
+  "initial_model_calls_per_event_max": 2,
+  "recovery_model_calls_per_arm_max": 3,
+  "initial_calls_max": 16,
+  "recovery_calls_max": 96,
+  "total_real_requests_max": 112,
+  "no_automatic_retry": true,
+  "no_replacement_after_response": true,
+  "no_sample_size_extension": true,
+  "event_id_list": null,
+  "independent_terminal_gold": null,
+  "execution_binding": null,
+  "paid_authorization": null,
+  "eligibility": [
+    "unseen independent event cluster, not used in task/prompt/policy/Gold development",
+    "natural DAG and legal action space; no added model nodes to force a difference",
+    "independently confirmed terminal reference and frozen scoring method/scope",
+    "full common input/source/cache/contract versions and metering identity",
+    "real candidates and capability uncertainty supported; no invented quality cells"
+  ],
+  "forbidden_development_events": [
+    "康得新",
+    "江苏舜天",
+    "欧菲光",
+    "宏景科技",
+    "上实发展",
+    "previous FinQA development event",
+    "any other event found in development registry; list is non-exhaustive"
+  ],
+  "arm_order": "Repeat 1: four AB and four BA, assigned by SHA256(seed + sealed event ID); repeat 2 flips order",
+  "order_seed": "V5-RL-ONE-ROUND-20261022",
+  "primary_endpoint": {
+    "name": "median event-paired utility difference",
+    "formula": "u = S * Q_terminal - 0.10 * tokens / B_tokens - 0.10 * min(L / D, 2)",
+    "S": "1 iff legal complete terminal delivery meets frozen terminal quality threshold and deadline, else 0",
+    "quality_threshold": 0.9,
+    "quality_threshold_applies_to": "independent outcome assessment; does not replace/remove any predictor-side hard quality gate",
+    "undefined_quality": "never impute a Q value; when S=0, the successful-delivery utility term is absent, not evidence Q=0",
+    "unknown_tokens_or_elapsed": "utility unidentified; no primary positive/equivalence verdict",
+    "cost_definition": "actual total tokens for primary; actual bills and per-currency estimates reported separately",
+    "event_delta": "mean of the two V5-minus-RL paired utility differences within event",
+    "effect": "median of the 8 event deltas",
+    "meaningful_margin": 0.01
+  },
+  "statistical_analysis": {
+    "primary": "one-sided exact sign test of event_delta > 0.01, alpha=0.05; exact ties at 0.01 omitted and reported",
+    "cluster_unit": "8 events, not 16 pairs or scoring atoms",
+    "interval": "distribution-free at-least-95% median sign/order-statistic confidence interval; for n=8, [min,max] is conservative (~99.21875% under continuous iid sampling)",
+    "guardrails": [
+      "aggregate valid-completion rate V5 >= RL",
+      "mean terminal Q among both-valid paired observations V5-RL >= -0.02; descriptive guard, NOT a noninferiority proof",
+      "no hard-budget/deadline/contract safety violation"
+    ],
+    "secondary": "quality, coverage, evidence, schema, full contract, abstention, token use, per-currency fees, local planning and end-to-end time; all cases retained",
+    "subgroups": "only predeclared fault/cache categories; descriptive with all group sizes; no post-hoc rule fitting",
+    "significance_not_equivalence": true
+  },
+  "result_decisions": {
+    "positive_signal": "median event_delta >0.01, sign-test p<=0.05, all guardrails; independent replication still required",
+    "conditional_signal": "predeclared states show a pattern without overall confirmation; conditional hypothesis only, no tuned policy",
+    "bounded_near_equivalence": "valid median interval entirely inside [-0.01,0.01]; narrow contribution, no added complexity",
+    "inconclusive": "no confirmation and interval not inside margin; cannot claim equivalence or superiority; no automatic extension",
+    "negative": "V5 worse or safety/quality degradation; preserve and narrow claims"
+  },
+  "stop_conditions": [
+    "before sending if task/Gold/protocol/price/input identity/authorization gate fails",
+    "no feasible action or same selected action: retain the event, do not replace it for favorable data",
+    "global request/token/time/fee threshold; unknown usage or remote completion; identity drift; unexpected credentials/network path",
+    "necessary Gold/scorer defect after outputs: preserve, stop, no answer-dependent exclusion or replacement",
+    "at completion of the single bounded batch: stop regardless of results"
+  ],
+  "missing_execution_fields": [
+    "8 event IDs and independent cluster split/custody evidence",
+    "actual DAGs, required terminal items, Gold and scoring signatures",
+    "per-task common budgets, deadlines and original quality constraints",
+    "complete common initial states, cache versions and arm-specific dispatch bodies",
+    "current prices, certified or explicitly accepted input upper bound and fee safety",
+    "executable counted binding and specific paid authorization"
+  ],
+  "budget_status": "historical-rate conditional estimate only; not current prices, actual bill or cash hard upper",
+  "conditional_budget": {
+    "historical_snapshot": "/root/r3_own_pool/ab_numeric_recovery_repeat_v1/REAL_BATCH_20261019_030355/PRICE_CHECK.json",
+    "snapshot_date": "2026-10-19",
+    "max_input_monitor_per_call": 16384,
+    "max_output_per_call": 1024,
+    "input_monitor_total": 1835008,
+    "output_limit_total": 114688,
+    "same_model_extremes": {
+      "qwen-plus": {
+        "currency": "CNY",
+        "per_request": "0.0151552",
+        "all_112_requests": "1.6973824"
+      },
+      "qwen-flash": {
+        "currency": "CNY",
+        "per_request": "0.0039936",
+        "all_112_requests": "0.4472832"
+      },
+      "deepseek-flash": {
+        "currency": "USD",
+        "per_request": "0.006144",
+        "all_112_requests": "0.688128"
+      },
+      "glm-5.3": {
+        "currency": "CNY",
+        "per_request": "0.159744",
+        "all_112_requests": "17.891328"
+      }
+    },
+    "cash_hard_upper": null,
+    "current_price_verification": false,
+    "suggested_estimate_stop_envelope_unapproved": {
+      "CNY": "20",
+      "USD": "0.80"
+    },
+    "currencies_not_offset": true,
+    "note": "Caps are design ceilings, not a dispatch authorization. Per-task feasibility is still HOLD. Prefix above 16 calls or recovery above 3 calls/arm is ineligible, not silently appended."
+  }
+}
