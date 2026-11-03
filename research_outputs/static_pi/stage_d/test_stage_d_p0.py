@@ -37,7 +37,7 @@ def fast_cfg(**over):
     return c
 
 
-def run_one(arm, sc, rep, c, cancel_effective=True):
+def run_one(arm, sc, rep, c, cancel_effective=True, settle=True):
     c = copy.deepcopy(c)
     c["s5"]["cancel_effective"] = cancel_effective
     tmp = Path(tempfile.mkdtemp(prefix="p0_"))
@@ -48,7 +48,11 @@ def run_one(arm, sc, rep, c, cancel_effective=True):
     store = E.RunStore(tmp / "state", tmp)
     ex = E.FinalExec(arm, sc, rep, c, clock, gb, slots,
                      E.MockProvider(clock, slots, c, sc, rep), store, dry_run=True)
-    return ex.run(), ex, gb, slots, tmp, clock
+    rec = ex.run()
+    if settle:
+        ex.settle()
+        rec = ex.recommit_with_settlement() or rec
+    return rec, ex, gb, slots, tmp, clock
 
 
 class P02RealProvider(unittest.TestCase):
@@ -194,6 +198,20 @@ class P05S5Boundary(unittest.TestCase):
             self.assertTrue(r["on_time"])
             r = self._calibrated_run(91.0, base)
             self.assertFalse(r["on_time"])
+
+    def test_winner_only_makespan_with_late_loser(self):
+        """S5 只按胜者计时：败者 GLM 30s 不得阻塞 J2/SINK；Simple 应显著更慢。"""
+        c = self._s5_cfg(glm=30.0, ds=3.0)
+        p, ex, gb, slots, tmp, clock = run_one("Proposed-Dynamic", "S5", 1, c,
+                                               cancel_effective=False)
+        s, *_ = run_one("Simple-Dynamic", "S5", 1, c, cancel_effective=False)
+        self.assertEqual(p["s5"]["winner"], "deepseek")
+        self.assertTrue(p["s5"]["late"])
+        self.assertGreater(s["makespan_s"] - p["makespan_s"], 10)
+        self.assertGreater(p["s5"]["late_cost_yuan"], 0)
+        self.assertEqual(len(p["raw"]["nodes"]["J2"]), 2)
+        self.assertTrue(all(not t.is_alive() for t in ex.late_threads))
+        self.assertEqual(gb.tokens, p["tokens_in"] + p["tokens_out"])
 
     def test_glm_finishes_before_slo_no_race(self):
         c = self._s5_cfg(glm=5.0, ds=6.0)

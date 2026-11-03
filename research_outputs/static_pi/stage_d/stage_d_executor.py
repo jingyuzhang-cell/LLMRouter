@@ -220,7 +220,7 @@ class CallHandle:
                 step = min(remain, 0.5)
                 self.clock.sleep(step)
                 remain -= step
-                if self.cancel_event.is_set():
+                if self.cancel_event.is_set() and self.cancel_effective:
                     break
             cancelled = self.cancel_event.is_set()
             self.t_end = self.clock.now()
@@ -380,6 +380,48 @@ class RealProvider:
                            timeout_s, temperature, self.clock, self.slots, node)
 
 
+def glm_low_call(alias, system, user, max_tokens, timeout_s, temperature=None):
+    """A1 修订：GLM 真实调用 = reasoning_effort=low，无 thinking 字段。
+
+    冻结的 transport.glm_call 固定 thinking:disabled，已被模型服务以 400/1210
+    拒绝（2026-11-02 两次独立证据）。本函数不改 transport.py（冻结共享件），
+    仅在 Stage D 真实路径内替换 GLM 分支；请求体其余字段与 transport.glm_call
+    逐字段一致。凭据只从环境变量 STAGE_D_GLM_KEY 读取，不落盘、不打印。
+    """
+    import urllib.request
+    key = os.environ.get("STAGE_D_GLM_KEY", "").strip()
+    if not key:
+        raise RuntimeError("STAGE_D_GLM_KEY not set (env-only credential)")
+    body = {"model": "GLM-5.3-Flash", "max_tokens": max_tokens,
+            "system": system,
+            "messages": [{"role": "user", "content": user}],
+            "reasoning_effort": "low"}
+    if temperature is not None:
+        body["temperature"] = temperature
+    req = urllib.request.Request(
+        "https://open.bigmodel.cn/api/anthropic/v1/messages",
+        data=json.dumps(body, ensure_ascii=False).encode("utf-8"), method="POST")
+    req.add_header("content-type", "application/json")
+    req.add_header("x-api-key", key)
+    req.add_header("authorization", "Bearer " + key)
+    req.add_header("anthropic-version", "2023-06-01")
+    t0 = time.monotonic()
+    with urllib.request.urlopen(req, timeout=timeout_s) as r:
+        d = json.loads(r.read().decode())
+    return {"text": "".join(b.get("text", "") for b in d.get("content", [])
+                            if isinstance(b, dict) and b.get("type") == "text"),
+            "in": d["usage"]["input_tokens"], "out": d["usage"]["output_tokens"],
+            "stop": d.get("stop_reason"), "lat": round(time.monotonic() - t0, 2)}
+
+
+def stage_d_real_transport(alias, system, user, max_tokens, timeout_s, temperature=None):
+    """真实模式统一入口：GLM→low 适配层；其余（deepseek）→ 冻结 transport。"""
+    if alias in ("glm53flash", "glm53"):
+        return glm_low_call(alias, system, user, max_tokens, timeout_s, temperature)
+    import transport
+    return transport.call_model(alias, system, user, max_tokens, timeout_s, temperature)
+
+
 class RunStore:
     """断点状态仓库：completed 跳过；已计成本由 GlobalBudget 持久化。"""
 
@@ -454,6 +496,15 @@ class FinalExec(D2.Exec):
         self.deadline_hit = False
         self.raw = {"nodes": {}, "calls": []}
         self.race_log = []
+        self.late_threads = []
+        self.terminal_completed_at_s = None
+        self.j2_winner_completed_at_s = None
+        self.settlement_done = threading.Event()
+        self.settlement_record = None
+        self.settlement_lock = threading.Lock()
+        self._commit_yuan = 0.0
+        self._commit_tokens_in = 0
+        self._commit_tokens_out = 0
         self.s5 = {"slo_violation": False, "race_triggered": False,
                    "winner": None, "late": False, "late_calls": 0,
                    "late_cost_yuan": 0.0, "j2_start_at": None,
@@ -671,19 +722,37 @@ class FinalExec(D2.Exec):
                 break
             self.clock.sleep(0.2)
         if winner is None:
+            for h in (glm, ds):
+                try:
+                    self._finish_call("J2", h)
+                except Exception:
+                    pass
             self.state["J2"] = "Failed"
             self.invalid_reason = "S5_BOTH_UNPARSEABLE"
             return
-        # 结算胜者与败者（败者若迟到，成本照计）
+        # 预注册语义：首个可解析结果胜出，迟到者作废但其成本/槽占用全额计入。
+        # 胜者立即完成 J2（SINK 不被败者阻塞）；败者在后台结算，finish 阶段 join。
         rh = ds if winner == "deepseek" else glm
         lh = glm if winner == "deepseek" else ds
         r = self._finish_call("J2", rh)
-        rl = self._finish_call("J2", lh)
         self.s5["winner"] = winner
-        if lh.late:
-            self.s5["late"] = True
-            self.s5["late_calls"] += 1
-            self.s5["late_cost_yuan"] = round(rl.get("accounting_yuan", 0.0), 8)
+        self.j2_winner_completed_at_s = round(self.clock.now() - self.t0, 1)
+        self._after_j2(r)
+        t = threading.Thread(target=self._settle_loser,
+                             args=(winner, lh, glm, ds), daemon=True)
+        self.late_threads.append(t)
+        t.start()
+
+    def _settle_loser(self, winner, lh, glm, ds):
+        """后台结算败者：等待真实结束/迟到响应，全额计账；不阻塞 DAG。"""
+        rl = self._finish_call("J2", lh)
+        # _finish_call 会把 model_used[J2] 设为败者；恢复胜者
+        self.model_used["J2"] = "deepseek" if winner == "deepseek" else "glm53flash"
+        with self.budget_lock:
+            if lh.late:
+                self.s5["late"] = True
+                self.s5["late_calls"] += 1
+                self.s5["late_cost_yuan"] = round(rl.get("accounting_yuan", 0.0), 8)
         self.race_log.append({
             "slo_s": self.slo_s, "j2_start_at": self.s5["j2_start_at"],
             "trigger_at": self.s5["ds_started_at"],
@@ -695,7 +764,32 @@ class FinalExec(D2.Exec):
             "loser_cost_yuan": round(rl.get("accounting_yuan", 0.0), 8),
             "glm_done": glm.done.is_set(), "ds_done": ds.done.is_set(),
         })
-        self._after_j2(r)
+        settlement = {
+            "exec_id": self.exec_id, "winner": winner,
+            "loser": ("glm53flash" if winner == "deepseek" else "deepseek"),
+            "loser_model": lh.model, "loser_late": bool(lh.late),
+            "loser_cancelled": bool((lh.result or {}).get("cancelled")),
+            "loser_cancel_state": getattr(lh, "cancel_state", "none"),
+            "loser_in": int(rl.get("in", 0)), "loser_out": int(rl.get("out", 0)),
+            "loser_accounting_yuan": round(rl.get("accounting_yuan", 0.0), 8),
+            "loser_actual_cash_yuan": round(rl.get("actual_cash_yuan", 0.0), 8),
+            "loser_error": rl.get("error"), "loser_t_end": rl.get("t_end"),
+            "j2_winner_completed_at_s": self.j2_winner_completed_at_s,
+            "terminal_completed_at_s": self.terminal_completed_at_s,
+            "settlement_completed_at_s": round(self.clock.now() - self.t0, 1),
+            "settlement_completed_at_wall": time.time(),
+        }
+        with self.settlement_lock:
+            self.settlement_record = settlement
+            self.settlement_done.set()
+            try:
+                ledger = self.store.out_dir / "S5_SETTLEMENTS.jsonl"
+                with open(ledger, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(settlement, ensure_ascii=False) + "\n")
+                    f.flush()
+                    os.fsync(f.fileno())
+            except Exception:
+                pass
 
     def _after_j2(self, r):
         text = r.get("text", "")
@@ -801,11 +895,21 @@ class FinalExec(D2.Exec):
 
     # ---------- 完成/记录 ----------
     def finish(self):
+        # 不在主路径 join 败者；makespan 已在 run() 记录。
+        self.terminal_completed_at_s = self.makespan
+        self._commit_yuan = round(self.local_yuan, 8)
+        self._commit_tokens_in = self.tokens_in
+        self._commit_tokens_out = self.tokens_out
+        pending = any(t.is_alive() for t in getattr(self, "late_threads", []))
         parsed = D2.extract_json(self.outputs.get("FMT") or "")
         rec = {"exec_id": self.exec_id, "arm": self.arm, "scenario": self.scenario,
                "rep": self.rep, "dry_run": self.dry_run, "mock": self.dry_run,
                "deadline_s": self.deadline_s,
                "makespan_s": self.makespan, "on_time": self.makespan <= self.deadline_s,
+               "terminal_completed_at_s": self.terminal_completed_at_s,
+               "j2_winner_completed_at_s": getattr(self, "j2_winner_completed_at_s", None),
+               "settlement_pending": bool(pending and not self.settlement_done.is_set()),
+               "settlement": self.settlement_record if self.settlement_done.is_set() else None,
                "status": None, "calls": self.local_calls,
                "accounting_yuan": round(self.local_yuan, 8),
                "actual_cash_yuan": 0.0,
@@ -855,6 +959,41 @@ class FinalExec(D2.Exec):
               f"race={self.s5.get('winner')}", flush=True)
         return rec
 
+
+    def settle(self):
+        """批次尾部调用：join 后台败者，不进入主执行路径。"""
+        for t in getattr(self, "late_threads", []):
+            t.join()
+        return self.settlement_record
+
+    def recommit_with_settlement(self):
+        """settle() 后把败者成本/token/结束时间合并回该 run 的已提交记录。"""
+        self.settle()
+        rec = self.store.completed(self.exec_id)
+        if not rec:
+            return None
+        s = self.settlement_record or {}
+        rec["settlement_pending"] = False
+        rec["settlement"] = s
+        rec["terminal_completed_at_s"] = self.makespan
+        rec["j2_winner_completed_at_s"] = getattr(self, "j2_winner_completed_at_s", None)
+        rec["late_accounting_yuan"] = round(self.local_yuan - self._commit_yuan, 8)
+        rec["settled_accounting_yuan"] = round(self.local_yuan, 8)
+        rec["tokens_in"] = self.tokens_in
+        rec["tokens_out"] = self.tokens_out
+        rec["actual_cash_yuan"] = round(sum(
+            c["accounting_yuan"] for c in self.raw["calls"]
+            if c["alias"] == "deepseek"), 8)
+        rec["raw"] = self.raw
+        rec["race"] = self.race_log
+        s5 = dict(rec.get("s5") or {})
+        s5.update({"late": bool(s.get("loser_late")),
+                   "late_calls": 1 if s else 0,
+                   "late_cost_yuan": s.get("loser_accounting_yuan", 0.0)})
+        rec["s5"] = s5
+        rec["global_budget"] = self.gb.left()
+        self.store.commit(rec)
+        return rec
 
 # ---------- 矩阵/顺序 ----------
 def build_order(cfg):
@@ -927,9 +1066,54 @@ def build_analysis_input(out_dir):
     return p
 
 
+def cmd_precheck(cfg):
+    """A1 受控预检：1 次真实调用，最坏节点 J2，冻结历史提示词，冻结 4000 上限。
+
+    预登记决策表（见 STAGE_D_PREREGISTRATION_AMENDMENT_A1.md）：
+      HTTP 错误/429/401/1210/超时        -> STOP
+      200 + stop=max_tokens（截断）      -> STOP（冻结上限不足；不得自动提高）
+      200 + end_turn/null + JSON 可解析  -> 按 J2 实测时延判定（>90s -> STOP，
+                                            <=90s -> 允许首批 24 次）
+    """
+    if os.environ.get("STAGE_D_REAL_CALLS_AUTHORIZED") != "1":
+        raise SystemExit("REFUSED: precheck requires STAGE_D_REAL_CALLS_AUTHORIZED=1")
+    j2 = json.loads((Path("/root/research_outputs/static_pi/stage_a/runs_x/run1/J2X.json")).read_text("utf-8"))
+    t0 = time.monotonic()
+    try:
+        r = stage_d_real_transport("glm53flash", j2["system"], j2["user"],
+                                   D2.MAXTOK["J2"], 240, 0)
+    except Exception as e:  # noqa: BLE001
+        out = {"result": "STOP", "reason": f"transport_error:{e!r}",
+               "wall_s": round(time.monotonic() - t0, 2)}
+        (HERE / "STAGE_D_PRECHECK_RESULT.json").write_text(
+            json.dumps(out, ensure_ascii=False, indent=1), "utf-8")
+        print(json.dumps(out, ensure_ascii=False))
+        return 2
+    parsed = D2.extract_json(r.get("text", ""))
+    stop = r.get("stop")
+    wall = r.get("lat")
+    if stop not in (None, "end_turn"):
+        verdict, why = "STOP", f"truncated: stop={stop}"
+    elif parsed is None:
+        verdict, why = "STOP", "json_unparseable"
+    elif wall is not None and wall > 90.0:
+        verdict, why = "STOP", f"j2_latency_{wall}s_exceeds_90s_deadline_regime_at_risk"
+    else:
+        verdict, why = "PROCEED_FIRST_BATCH_24", (f"end_turn+json, j2_lat={wall}s")
+    out = {"result": verdict, "reason": why, "stop": stop, "usage": {"in": r.get("in"), "out": r.get("out")},
+           "wall_s": wall, "json_ok": parsed is not None,
+           "prompt_sha256": hashlib.sha256((j2["system"] + "||" + j2["user"]).encode()).hexdigest(),
+           "node": "J2", "max_tokens": D2.MAXTOK["J2"], "thinking": None,
+           "reasoning_effort": "low", "calls_counted_toward_cap": 1}
+    (HERE / "STAGE_D_PRECHECK_RESULT.json").write_text(
+        json.dumps(out, ensure_ascii=False, indent=1), "utf-8")
+    print(json.dumps(out, ensure_ascii=False))
+    return 0 if verdict == "PROCEED_FIRST_BATCH_24" else 2
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["matrix", "run", "build-analysis-input"])
+    ap.add_argument("cmd", choices=["matrix", "run", "build-analysis-input", "precheck"])
     ap.add_argument("--config", default=str(CONFIG_PATH))
     ap.add_argument("--out", default=None)
     ap.add_argument("--limit", type=int, default=None)
@@ -955,7 +1139,10 @@ def main():
     if a.cmd == "build-analysis-input":
         print(build_analysis_input(out_dir))
         return 0
+    if a.cmd == "precheck":
+        return cmd_precheck(cfg)
     done = skipped = 0
+    execs = []
     for i, (arm, sc, rep) in enumerate(order):
         if a.limit is not None and done >= a.limit:
             break
@@ -964,12 +1151,17 @@ def main():
             skipped += 1
             continue
         store.begin(exec_id)
-        provider = (RealProvider(clock, slots) if a.real
+        provider = (RealProvider(clock, slots, transport_fn=stage_d_real_transport)
+                    if a.real
                     else MockProvider(clock, slots, cfg, sc, rep))
         ex = FinalExec(arm, sc, rep, cfg, clock, gb, slots, provider, store,
                        dry_run=not a.real)
         ex.run()
+        execs.append(ex)
         done += 1
+    for ex in execs:
+        ex.settle()
+        ex.recommit_with_settlement()
     print(f"BATCH DONE: executed={done} skipped={skipped} "
           f"global={gb.left()}")
     return 0

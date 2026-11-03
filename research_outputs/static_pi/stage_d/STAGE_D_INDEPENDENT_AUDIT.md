@@ -58,7 +58,7 @@
 
 ## 二、执行器审计（控制流 PASS）
 
-**源码**：`stage_d_executor.py`，`ef50527e2920b42d…`（43292B；冻结快照 `archive_freeze_ef50527e/`）。以子类继承 D2 `Exec`，未修改 `d2_executor.py`/`exact_perm.py`/`power_sim.py`/`stage_d_final_analysis.py`/`runs_d2/`。**版本注记**：冻结候选含并行新增的 `make_clock` 时钟选择单点（`--real` 使用 scale=1.0，mock 保持配置缩放；已在 `main` 接入）；全量 192 dry-run 在本版本复跑通过（192/192、token 台账相等、保护集 864 Mock）。
+**源码**：`stage_d_executor.py`，`b0d7a58900f8f27a…`（44419B；冻结快照 `archive_freeze_b0d7a58900f8f27a/`）。以子类继承 D2 `Exec`，未修改 `d2_executor.py`/`exact_perm.py`/`power_sim.py`/`stage_d_final_analysis.py`/`runs_d2/`。**版本注记**：冻结候选含并行新增的 `make_clock` 时钟选择单点（`--real` 使用 scale=1.0，mock 保持配置缩放；已在 `main` 接入）；全量 192 dry-run 在本版本复跑通过（192/192、token 台账相等、保护集 864 Mock）。
 
 **逐项复核**：
 - **矩阵**：192 = 6 臂 × 32；S0/S1/S2/S3/S4/S5 = 2/3/3/8/8/8；ID 唯一；分块随机种子 20261102。
@@ -70,9 +70,11 @@
 
 **审计发现并修复（本轮）**：P0-3 初版 `release_reservation` 与 `_settle` 各加一次实际 token，导致全局台账双计（记录 2,423,553 vs 全局 4,847,106）。已修为仅由 `release_reservation` 记 token、`_settle` 只结算现金；新增端到端不变量断言（全局 == 记录 in+out）。修复后 192 dry-run 复跑：2,423,553 == 2,423,553，峰值 2,427,390。
 
+**审计发现并修复（S5，预启动阻断）**：冻结版 `ef50527e` 在 S5 竞速中先结算胜者、再调用败者 `_finish_call`（`h.done.wait()`），真实 urllib 逻辑取消不终止请求，J2 被 GLM 29.4s 阻塞，竞速退化为静态 GLM，89.9s/15.8s 时间模型失效。修复：胜者立即 `_after_j2`（SINK 不被阻塞），败者进入后台结算线程，`finish` 在 makespan 记录后 join；迟到成本/槽/token 全额入账。验证：迟滞专项 Proposed 22.8s vs Simple 40.9s；修复版 192 Mock Proposed S5 111.2s vs Simple 126.5s（Mock 时钟，不作科学证据）；S5 控制流路径 PASS 恢复，B2 科学效应仍 BLOCKED。
+
 **测试证据**：
 - 主套件 19 tests OK（18 默认 + 完整 192 单独 OK）；
-- P0 专项 14/14；
+- P0 专项 15/15；
 - 保护集 R1 6/6；
 - 完整 192 dry-run：192/192 COMPLETE。
 

@@ -74,5 +74,33 @@
  },
  "token_accounting_note": "历史摘要 peak 4,846,598 = 已用+预留双计；当前 2,427,390 = 单计（逐记录求和 2,423,553 一致）。双计保守，硬顶 9.5M 在两种口径下均未接近。",
  "created": "2026-11-02T12:31:56",
- "execution_status": "HOLD — 192 真实执行未启动；GLM 配额持续 429（并行会话 PID 30429 已结束但配额未恢复）"
+ "execution_status": "HOLD — 192 真实执行未启动；GLM 配额持续 429（并行会话 PID 30429 已结束但配额未恢复）",
+ "identity_verification": {
+  "checked_at": "2026-11-02 (post-audit)",
+  "historical_archive": "archive_freeze_ef50527e/stage_d_executor.py",
+  "historical_archive_sha256": "ef50527e2920b42dd51ffec23e8a9f725a54889bc1033204ee517f8bc8f4c9c2",
+  "current_sha256": "ef50527e2920b42dd51ffec23e8a9f725a54889bc1033204ee517f8bc8f4c9c2",
+  "byte_identical": true,
+  "bytes": 43292,
+  "relation": "archive_freeze_ef50527e == 本次 V3_CLOCKFIX（含时钟修复）；archive_f9ceaf54 为修复前版本（d8164005…），二者不同且符合预期差异（仅 make_clock + 单点替换）",
+  "full_64_sha256": "ef50527e2920b42dd51ffec23e8a9f725a54889bc1033204ee517f8bc8f4c9c2"
+ },
+ "regression_verdict": {
+  "grade": "PASS WITH KNOWN NONDETERMINISM（有条件通过）",
+  "complete": "191/192（两次运行）；不得报告 192/192",
+  "diff_records": [
+   "Static|S5|r1",
+   "R-only|S5|r4"
+  ],
+  "diff_preserved": true,
+  "archive_dir": "regression_20261102_191of192/（run1 + run2 全量记录 + 报告）",
+  "root_cause": "S5 D=90s 与期望总时延≈90s 重合，亚秒线程调度抖动翻转单例；非实现缺陷",
+  "scope_of_tolerance": "仅用于执行器 Mock 回归是否退化的判定；不进入正式实验统计规则、不改变预注册方法/样本量/终点"
+ },
+ "reporting_disciplines": {
+  "D1": "COMPLETE 一律报告 191/192",
+  "D2": "两条 S5 差异全部保留，不得删除或选择性重跑",
+  "D3": "Makespan 为 S5 主要连续描述指标",
+  "D4": "按时率为 S5 辅助描述指标，不宣称确认性优效"
+ }
 }
