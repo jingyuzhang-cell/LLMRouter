@@ -1,0 +1,275 @@
+"""QP5-C V2.1 runner: sandwich pairing with noise calibration (authorized).
+
+Arms per (task, rep) block, arm order randomized within block:
+  C1' : cached QP4-D E -> fresh t/m/r/p   (purposes qp5c|T|C1|rN|node)
+  C2  : E-v2 (+gold-blind retry <=1/E node) -> fresh t/m/r/p
+        (qp5c|T|C2|rN|node; retry ...|R|...)
+  C0  : cached E -> fresh t/m/r/p again   (qp5c|T|C0|rN|node) on 6 preregistered cells
+
+Preflight (--audit): SHA-identity of C1' request bodies vs QP4-D (t/m/r) and
+QP5-A B2 (p) records — purpose keys must be the ONLY difference.
+"""
+import json, os, random, sys, hashlib
+sys.path.insert(0, '/root/research_outputs/static_pi/stage_d/quality_phase_v1')
+sys.path.insert(0, '/root/research_outputs/static_pi/stage_d/qp3')
+sys.path.insert(0, '/root/research_outputs/static_pi/stage_d/v2')
+sys.path.insert(0, '/root/research_outputs/static_pi/stage_d')
+import qp4_factorial as F
+import qp1_prompts as P1
+import qp2_chain as CH
+import qp3_primitives as P3
+import qp5a_pure_prep as PP
+import scorer_qp1 as Q1
+from real_provider_v22 import extract_any
+
+QP = '/root/research_outputs/static_pi/stage_d/quality_phase_v1'
+SEED = 20261103
+CAPS = dict(calls=170, tokens=3_500_000, yuan=1.00)
+RESERVE = 0.05
+C0_CELLS = {('E06', 1), ('MVR1', 2), ('KANGMEI', 1), ('GUOEN', 2), ('ZIJING', 1), ('ZEDA', 2)}
+
+EVIDENCE_CONTRACT = (
+    '证据合同（每个方面必须逐项给出）：doc（文书ID）、page（整数页码）、quote（该方面对应文书'
+    '中的连续逐字原文，禁止省略号、禁止拼接）。缺任一字段视为未完成。')
+SCHEMA_RULE = ('输出模式（强制）：只输出 JSON 对象 {"facts":[{"field":"...","value":"...",'
+               '"doc":"...","page":1,"quote":"..."}]}；不得嵌套、不得用方面名作外层键。')
+RETRY_TMPL = ('以下方面的证据不完整（缺 doc/page/quote、引文未逐字出现在所引页、或值未出现在引文中）：\n{fields}\n'
+              '请仅为这些方面重新抽取并给出完整证据，输出同模式 JSON（{{"facts":[...]}}）。')
+
+
+def load_led(path):
+    led = {}
+    if os.path.exists(path):
+        for line in open(path):
+            x = json.loads(line)
+            led[x['purpose']] = x
+    return led
+
+
+def e2_user(contract, doc_ids):
+    u = P1.e_user(contract, doc_ids, 'E1')
+    return u + '\n\n' + EVIDENCE_CONTRACT + '\n' + SCHEMA_RULE
+
+
+def gold_blind_failures(entries, contract):
+    """Fields whose entries fail schema/verbatim/self-grounding (NO gold)."""
+    bad, seen = [], {}
+    for e in entries:
+        k = e.get('field') or e.get('bucket') or e.get('predicate')
+        if k is None:
+            continue
+        v = e.get('raw') or e.get('value')
+        q = e.get('quote', '') or ''
+        pg = (contract['source_pages'].get(str(e.get('doc'))) or {}).get('pages', {}).get(str(e.get('page')))
+        ok = bool(pg and q and Q1._norm(q) in Q1._norm(pg.get('text', ''))
+                  and v not in (None, '') and Q1.value_in_quote(v, q))
+        seen[k] = seen.get(k, False) or ok
+    for k, ok in seen.items():
+        if not ok:
+            bad.append(k)
+    return bad
+
+
+def run_arm(arm, t, rep, contract, call, led4):
+    ledkey = f'qp4|{t}|D|r{rep}|'
+    if arm in ('C1', 'C0'):
+        e0 = extract_any(led4[ledkey + 'e0']['text'])
+        e1 = extract_any(led4[ledkey + 'e1']['text'])
+    else:
+        e0 = extract_any(call('e0', P1.E_SYS, e2_user(contract, docs_half(t, contract)[0]), P1.MAXTOK['E'],
+                              f'qp5c|{t}|C2|r{rep}|e0'))
+        e1 = extract_any(call('e1', P1.E_SYS, e2_user(contract, docs_half(t, contract)[1]), P1.MAXTOK['E'],
+                              f'qp5c|{t}|C2|r{rep}|e1'))
+        # gold-blind retry
+        for node, obj in (('e0', e0), ('e1', e1)):
+            entries = P3.normalize_stage(obj)
+            bad = gold_blind_failures(entries, contract)
+            if bad and bad != [None]:
+                retry_user = (P1.e_user(contract, docs_half(t, contract)[0 if node == 'e0' else 1], 'E1')
+                              + '\n\n' + EVIDENCE_CONTRACT + '\n' + SCHEMA_RULE + '\n\n'
+                              + RETRY_TMPL.format(fields='\n'.join(f'- {b}' for b in bad[:12])))
+                try:
+                    extra = extract_any(call(node, P1.E_SYS, retry_user, P1.MAXTOK['E'],
+                                             f'qp5c|{t}|C2|R|r{rep}|{node}'))
+                    merged = {'facts': (obj.get('facts') or []) + (extra.get('facts') or [])}
+                    if node == 'e0':
+                        e0 = merged
+                    else:
+                        e1 = merged
+                except Exception:
+                    pass
+    tt = extract_any(call('t', P1.M_SYS, P1.t_user(contract, e0), P1.MAXTOK['t'],
+                          f'qp5c|{t}|{arm}|r{rep}|t'))
+    mm = extract_any(call('m', P1.M_SYS, P1.m_user(contract, {'e0': e0, 'e1': e1}), P1.MAXTOK['m'],
+                          f'qp5c|{t}|{arm}|r{rep}|m'))
+    rr = extract_any(call('r', P1.R_SYS, P1.r_user(contract, mm), P1.MAXTOK['r'],
+                          f'qp5c|{t}|{arm}|r{rep}|r'))
+    entries = P3.normalize_stage(e0) + P3.normalize_stage(e1)
+    verified, _ = CH.verify_evidence(entries, contract)
+    m_facts = {}
+    for e in P3.normalize_stage(mm):
+        k = PP.fact_key(e)
+        if k and e.get('value') not in (None, ''):
+            m_facts.setdefault(k, e.get('value'))
+    ev_map = PP.match_evidence(m_facts, verified, contract)
+    p_user = PP.render(contract, rr, m_facts, ev_map, with_evidence=True)
+    pp = extract_any(call('p', P1.P_SYS, p_user, P1.MAXTOK['p'], f'qp5c|{t}|{arm}|r{rep}|p'))
+    res = Q1.score_task(contract, pp)
+    ev_keys = set(ev_map.keys())
+    gold_map = {f.get('bucket') or f['fact_id']: f['fact_id'] for f in contract['required_facts']}
+    rows_ev = [x for x in res['rows'] if gold_map.get(x['fact_id'], x['fact_id']) and
+               next((f.get('bucket') or f['fact_id'] for f in contract['required_facts']
+                     if f['fact_id'] == x['fact_id']), None) in ev_keys]
+    rows_no = [x for x in res['rows'] if x not in rows_ev]
+    return dict(task=t, rep=rep, arm=arm, q=res['q'], gate=res['critical_gate'],
+                n_verified=len(verified), ev_mapped=len(ev_map),
+                q_ev=round(sum(1 for x in rows_ev if x['status'] == 'TP') / len(rows_ev), 4) if rows_ev else None,
+                q_no=round(sum(1 for x in rows_no if x['status'] == 'TP') / len(rows_no), 4) if rows_no else None,
+                wrong_assert=sum(1 for x in res['rows'] if x['status'].startswith('VALUE')),
+                wrong_cit=sum(1 for x in res['rows'] if x['status'].startswith('C_LOC') or x['status'] == 'UNSUPPORTED'),
+                abst=sum(1 for x in res['rows'] if x['status'] == 'ABSENT'),
+                crit_tp=sum(1 for x in res['rows'] if x.get('critical') and x['status'] == 'TP'),
+                e0=e0, e1=e1, sink=pp, rows=res['rows'])
+
+
+def docs_half(t, contract):
+    docs = sorted(contract['source_pages'].keys())
+    h = (len(docs) + 1) // 2
+    return docs[:h], docs[h:] or docs[:1]
+
+
+def build_guard():
+    from stage_d_v2_transport import Ledger
+    ledger = Ledger(f'{QP}/QP5C_LEDGER.jsonl')
+    index = dict(ledger.index)
+    for path in (f'{QP}/QP1_LEDGER.jsonl', f'{QP}/QP2_LEDGER.jsonl', f'{QP}/QP4_LEDGER.jsonl',
+                 f'{QP}/QP5A_LEDGER.jsonl'):
+        if os.path.exists(path):
+            for line in open(path):
+                rec = json.loads(line)
+                index.setdefault((rec['purpose'], rec['prompt_sha256']), rec)
+    return ledger, index
+
+
+def main():
+    mode = sys.argv[1] if len(sys.argv) > 1 else 'run'
+    led4 = {}
+    for line in open(f'{QP}/QP4_LEDGER.jsonl'):
+        x = json.loads(line)
+        led4[x['purpose']] = x
+
+    if mode == '--audit':
+        # SHA-identity: C1' t/m/r bodies == QP4-D; C1' p body == QP5-A B2
+        led5a = load_led(f'{QP}/QP5A_LEDGER.jsonl')
+        ok = True
+        for t in F.TASKS:
+            for rep in (1, 2):
+                contract = F.load_contract(t)
+                e0 = extract_any(led4[f'qp4|{t}|D|r{rep}|e0']['text'])
+                e1 = extract_any(led4[f'qp4|{t}|D|r{rep}|e1']['text'])
+                m = extract_any(led4[f'qp4|{t}|D|r{rep}|m']['text'])
+                r = extract_any(led4[f'qp4|{t}|D|r{rep}|r']['text'])
+                checks = [
+                    ('t', P1.M_SYS, P1.t_user(contract, e0), P1.MAXTOK['t'], f'qp4|{t}|D|r{rep}|t'),
+                    ('m', P1.M_SYS, P1.m_user(contract, {'e0': e0, 'e1': e1}), P1.MAXTOK['m'], f'qp4|{t}|D|r{rep}|m'),
+                    ('r', P1.R_SYS, P1.r_user(contract, m), P1.MAXTOK['r'], f'qp4|{t}|D|r{rep}|r'),
+                ]
+                from stage_d_v2_transport import build_request
+                for node, sysx, userx, mt, hist_purpose in checks:
+                    body = build_request('glm53flash', sysx, userx, mt)
+                    sha = hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+                    if sha != led4[hist_purpose]['prompt_sha256']:
+                        ok = False
+                        print(f'SHA MISMATCH {t} r{rep} {node}')
+                # p vs QP5-A B2
+                entries = P3.normalize_stage(e0) + P3.normalize_stage(e1)
+                verified, _ = CH.verify_evidence(entries, contract)
+                m_facts = {}
+                for e in P3.normalize_stage(m):
+                    k = PP.fact_key(e)
+                    if k and e.get('value') not in (None, ''):
+                        m_facts.setdefault(k, e.get('value'))
+                ev_map = PP.match_evidence(m_facts, verified, contract)
+                p_user = PP.render(contract, r, m_facts, ev_map, with_evidence=True)
+                body = build_request('glm53flash', P1.P_SYS, p_user, P1.MAXTOK['p'])
+                sha = hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+                if sha != led5a[f'qp5a|{t}|B2|r{rep}|p']['prompt_sha256']:
+                    ok = False
+                    print(f'SHA MISMATCH {t} r{rep} p (vs QP5-A B2)')
+        print('SHA-IDENTITY AUDIT:', 'PASS' if ok else 'FAIL')
+        return 0 if ok else 1
+
+    ledger, index = build_guard()
+
+    def call(node, system, user, mt, purpose):
+        from stage_d_v2_transport import build_request, glm_key, MODEL_CFG
+        body = build_request('glm53flash', system, user, mt)
+        sha = hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+        hit = index.get((purpose, sha))
+        if hit is not None:
+            return hit['text']
+        if len(ledger.records) + 1 > CAPS['calls']:
+            raise RuntimeError('calls cap')
+        if ledger.cost + 0.006 > CAPS['yuan'] * (1 - RESERVE):
+            raise RuntimeError('cost cap')
+        import urllib.request, time
+        req = urllib.request.Request(MODEL_CFG['glm53flash']['url'],
+                                     data=json.dumps(body).encode(), method='POST')
+        req.add_header('content-type', 'application/json')
+        req.add_header('authorization', 'Bearer ' + glm_key())
+        t0 = time.monotonic()
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            d = json.loads(resp.read().decode())
+        ch = d['choices'][0]
+        u = d.get('usage', {})
+        c = ch.get('message', {}).get('content', '')
+        text = ''.join(x.get('text', '') for x in c if isinstance(x, dict)) if isinstance(c, list) else (c or '')
+        tin, tout = u.get('prompt_tokens', 0), u.get('completion_tokens', 0)
+        rec = dict(ts=time.strftime('%Y-%m-%dT%H:%M:%S'), purpose=purpose, prompt_sha256=sha,
+                   usage=dict(input_tokens=tin, output_tokens=tout),
+                   accounting_yuan=round(tin * 0.8e-6 + tout * 2.8e-6, 8),
+                   latency_s=round(time.monotonic() - t0, 3),
+                   stop_reason={'stop': 'end_turn', 'length': 'max_tokens'}.get(
+                       ch.get('finish_reason'), ch.get('finish_reason')),
+                   text=text)
+        ledger.add(rec)
+        index[(purpose, sha)] = {'text': text}
+        return text
+
+    blocks = []
+    for t in F.TASKS:
+        for rep in (1, 2):
+            arms = ['C1', 'C2'] + (['C0'] if (t, rep) in C0_CELLS else [])
+            random.Random(SEED + hash(t) % 100).shuffle(arms)
+            blocks.append((t, rep, arms))
+    results, status = [], 'COMPLETE'
+    for t, rep, arms in blocks:
+        contract = F.load_contract(t)
+        for arm in arms:
+            try:
+                r = run_arm(arm, t, rep, contract, call, led4)
+                e_dump = {k: r.pop(k) for k in ('e0', 'e1', 'sink') if k in r}
+                r['rows'] = e_dump and None  # store rows only in file
+                results.append(r)
+                print(f"  {t:9s} {arm} r{rep} Q={r['q']:.3f} ev={r['n_verified']:2d} "
+                      f"gate={r['gate']}", flush=True)
+            except Exception as e:
+                results.append(dict(task=t, rep=rep, arm=arm, error=str(e)[:160]))
+                status = 'INCOMPLETE' if 'cap' in str(e) else 'ERROR'
+                print(f"  {t} {arm} r{rep} ERROR {e}", flush=True)
+                break
+        if status != 'COMPLETE':
+            break
+        json.dump(dict(status=status, used=dict(calls=len(ledger.records),
+                                                yuan=round(ledger.cost, 4)), results=results),
+                  open(f'{QP}/QP5C_PROGRESS.json.tmp', 'w'), ensure_ascii=False, indent=1)
+        os.replace(f'{QP}/QP5C_PROGRESS.json.tmp', f'{QP}/QP5C_PROGRESS.json')
+    json.dump(dict(batch='QP5C_V2', status=status, caps=CAPS,
+                   used=dict(calls=len(ledger.records), tokens=ledger.tokens,
+                             yuan=round(ledger.cost, 4)), results=results),
+              open(f'{QP}/QP5C_RESULTS.json', 'w'), ensure_ascii=False, indent=1)
+    print(f"\n{status}: calls={len(ledger.records)}/{CAPS['calls']} ¥{ledger.cost:.4f}/{CAPS['yuan']}")
+
+
+if __name__ == '__main__':
+    sys.exit(main())

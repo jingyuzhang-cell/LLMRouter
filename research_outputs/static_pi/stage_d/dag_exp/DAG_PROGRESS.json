@@ -1,0 +1,4371 @@
+{
+ "status": "COMPLETE",
+ "used": {
+  "calls": 311,
+  "yuan": 1.5175
+ },
+ "results": [
+  {
+   "task": "E06",
+   "rep": 1,
+   "arm": "dynamic_pi",
+   "q": 0.647059,
+   "cost_yuan": 0.015726,
+   "latency_s": 15.56,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 4,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "E06",
+   "rep": 1,
+   "arm": "joint",
+   "q": 0.588235,
+   "cost_yuan": 0.021914,
+   "latency_s": 27.91,
+   "upgrades": 1,
+   "restructures": 1,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 2,
+   "wrong_assert": 4,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "m_split",
+     "action": "Z_split",
+     "detail": "fr=0.00"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.941,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "E06",
+   "rep": 1,
+   "arm": "static",
+   "q": 0.705882,
+   "cost_yuan": 0.017225,
+   "latency_s": 28.97,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 3,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "E06",
+   "rep": 1,
+   "arm": "single_ds",
+   "q": 0.705882,
+   "cost_yuan": 0.017945,
+   "latency_s": 18.26,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 4,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "E06",
+   "rep": 2,
+   "arm": "dynamic_pi",
+   "q": 0.647059,
+   "cost_yuan": 0.020257,
+   "latency_s": 24.66,
+   "upgrades": 1,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 3,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "E06",
+   "rep": 2,
+   "arm": "joint",
+   "q": 0.647059,
+   "cost_yuan": 0.017251,
+   "latency_s": 16.56,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 4,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "E06",
+   "rep": 2,
+   "arm": "static",
+   "q": 0.647059,
+   "cost_yuan": 0.017674,
+   "latency_s": 29.01,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 4,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "E06",
+   "rep": 2,
+   "arm": "single_ds",
+   "q": 0.705882,
+   "cost_yuan": 0.016366,
+   "latency_s": 15.24,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 3,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "MVR1",
+   "rep": 1,
+   "arm": "dynamic_pi",
+   "q": 0.1875,
+   "cost_yuan": 0.039432,
+   "latency_s": 23.07,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 12,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "MVR1",
+   "rep": 1,
+   "arm": "single_ds",
+   "q": 0.375,
+   "cost_yuan": 0.043056,
+   "latency_s": 25.06,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 2,
+   "wrong_assert": 9,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "MVR1",
+   "rep": 1,
+   "arm": "static",
+   "q": 0.375,
+   "cost_yuan": 0.039118,
+   "latency_s": 36.89,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 2,
+   "wrong_assert": 9,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "MVR1",
+   "rep": 1,
+   "arm": "joint",
+   "q": 0.1875,
+   "cost_yuan": 0.045055,
+   "latency_s": 32.18,
+   "upgrades": 1,
+   "restructures": 1,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 12,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "m_split",
+     "action": "Z_split",
+     "detail": "fr=0.00"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "MVR1",
+   "rep": 2,
+   "arm": "dynamic_pi",
+   "q": 0.375,
+   "cost_yuan": 0.049662,
+   "latency_s": 29.44,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 9,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "MVR1",
+   "rep": 2,
+   "arm": "single_ds",
+   "q": 0.0625,
+   "cost_yuan": 0.045896,
+   "latency_s": 27.13,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 12,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "MVR1",
+   "rep": 2,
+   "arm": "static",
+   "q": 0.375,
+   "cost_yuan": 0.039558,
+   "latency_s": 40.94,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 2,
+   "wrong_assert": 9,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "MVR1",
+   "rep": 2,
+   "arm": "joint",
+   "q": 0.0625,
+   "cost_yuan": 0.03581,
+   "latency_s": 19.81,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 12,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "KANGMEI",
+   "rep": 1,
+   "arm": "static",
+   "q": 0.071429,
+   "cost_yuan": 0.035563,
+   "latency_s": 35.38,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 7,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.75,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.929,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "KANGMEI",
+   "rep": 1,
+   "arm": "dynamic_pi",
+   "q": 0.071429,
+   "cost_yuan": 0.040424,
+   "latency_s": 26.64,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 6,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.929,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "KANGMEI",
+   "rep": 1,
+   "arm": "single_ds",
+   "q": 0.071429,
+   "cost_yuan": 0.037585,
+   "latency_s": 24.3,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 7,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.929,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "KANGMEI",
+   "rep": 1,
+   "arm": "joint",
+   "q": 0.071429,
+   "cost_yuan": 0.035095,
+   "latency_s": 22.15,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 6,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.5,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.929,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "KANGMEI",
+   "rep": 2,
+   "arm": "static",
+   "q": 0.0,
+   "cost_yuan": 0.037124,
+   "latency_s": 36.72,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 10,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.929,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "KANGMEI",
+   "rep": 2,
+   "arm": "dynamic_pi",
+   "q": 0.0,
+   "cost_yuan": 0.042418,
+   "latency_s": 28.22,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 9,
+   "abstentions": 2,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.857,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "KANGMEI",
+   "rep": 2,
+   "arm": "single_ds",
+   "q": 0.071429,
+   "cost_yuan": 0.037927,
+   "latency_s": 23.58,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 6,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.929,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "KANGMEI",
+   "rep": 2,
+   "arm": "joint",
+   "q": 0.071429,
+   "cost_yuan": 0.044426,
+   "latency_s": 28.12,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 11,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "GUOEN",
+   "rep": 1,
+   "arm": "joint",
+   "q": 0.0,
+   "cost_yuan": 0.031072,
+   "latency_s": 25.94,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 11,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.923,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "GUOEN",
+   "rep": 1,
+   "arm": "single_ds",
+   "q": 0.0,
+   "cost_yuan": 0.021013,
+   "latency_s": 17.96,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 4,
+   "abstentions": 8,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.385,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "GUOEN",
+   "rep": 1,
+   "arm": "static",
+   "q": 0.0,
+   "cost_yuan": 0.024102,
+   "latency_s": 33.16,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 10,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.923,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "GUOEN",
+   "rep": 1,
+   "arm": "dynamic_pi",
+   "q": 0.0,
+   "cost_yuan": 0.03783,
+   "latency_s": 38.94,
+   "upgrades": 1,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 11,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.923,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "GUOEN",
+   "rep": 2,
+   "arm": "joint",
+   "q": 0.0,
+   "cost_yuan": 0.031638,
+   "latency_s": 26.06,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 12,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.923,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "GUOEN",
+   "rep": 2,
+   "arm": "single_ds",
+   "q": 0.0,
+   "cost_yuan": 0.030324,
+   "latency_s": 25.19,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 11,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.923,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "GUOEN",
+   "rep": 2,
+   "arm": "static",
+   "q": 0.0,
+   "cost_yuan": 0.031064,
+   "latency_s": 43.62,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 13,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "GUOEN",
+   "rep": 2,
+   "arm": "dynamic_pi",
+   "q": 0.230769,
+   "cost_yuan": 0.033128,
+   "latency_s": 32.42,
+   "upgrades": 1,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 2,
+   "wrong_assert": 9,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.923,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZIJING",
+   "rep": 1,
+   "arm": "joint",
+   "q": 0.3,
+   "cost_yuan": 0.051305,
+   "latency_s": 43.53,
+   "upgrades": 1,
+   "restructures": 1,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 4,
+   "wrong_assert": 3,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "m_split",
+     "action": "Z_split",
+     "detail": "fr=0.00"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.95,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZIJING",
+   "rep": 1,
+   "arm": "dynamic_pi",
+   "q": 0.1,
+   "cost_yuan": 0.036254,
+   "latency_s": 36.42,
+   "upgrades": 1,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "GLM"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 0,
+   "abstentions": 18,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.1,
+      "threshold": 0.6
+     }
+    },
+    {
+     "node": "p",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    }
+   ]
+  },
+  {
+   "task": "ZIJING",
+   "rep": 1,
+   "arm": "single_ds",
+   "q": 0.1,
+   "cost_yuan": 0.044579,
+   "latency_s": 37.28,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 4,
+   "abstentions": 3,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.85,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZIJING",
+   "rep": 1,
+   "arm": "static",
+   "q": 0.2,
+   "cost_yuan": 0.044835,
+   "latency_s": 52.91,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 2,
+   "wrong_assert": 3,
+   "abstentions": 1,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.95,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZIJING",
+   "rep": 2,
+   "arm": "joint",
+   "q": 0.1,
+   "cost_yuan": 0.039997,
+   "latency_s": 33.74,
+   "upgrades": 1,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "GLM"
+   },
+   "crit_tp": 1,
+   "wrong_assert": 2,
+   "abstentions": 16,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.966,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.05,
+      "threshold": 0.6
+     }
+    },
+    {
+     "node": "p",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    }
+   ]
+  },
+  {
+   "task": "ZIJING",
+   "rep": 2,
+   "arm": "dynamic_pi",
+   "q": 0.4,
+   "cost_yuan": 0.057172,
+   "latency_s": 63.52,
+   "upgrades": 1,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 3,
+   "abstentions": 3,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 0.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.85,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZIJING",
+   "rep": 2,
+   "arm": "single_ds",
+   "q": 0.2,
+   "cost_yuan": 0.049747,
+   "latency_s": 32.65,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 2,
+   "wrong_assert": 3,
+   "abstentions": 2,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.9,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZIJING",
+   "rep": 2,
+   "arm": "static",
+   "q": 0.15,
+   "cost_yuan": 0.039566,
+   "latency_s": 43.05,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 2,
+   "wrong_assert": 7,
+   "abstentions": 0,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.8,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 1.0,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZEDA",
+   "rep": 1,
+   "arm": "joint",
+   "q": 0.176471,
+   "cost_yuan": 0.047614,
+   "latency_s": 33.25,
+   "upgrades": 1,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "GLM",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 2,
+   "abstentions": 4,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "e1",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.765,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZEDA",
+   "rep": 1,
+   "arm": "single_ds",
+   "q": 0.176471,
+   "cost_yuan": 0.035471,
+   "latency_s": 24.64,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 3,
+   "wrong_assert": 1,
+   "abstentions": 4,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 1.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "answer_completeness",
+      "value": 0.765,
+      "threshold": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "task": "ZEDA",
+   "rep": 1,
+   "arm": "dynamic_pi",
+   "q": 0.0,
+   "cost_yuan": 0.038291,
+   "latency_s": 25.84,
+   "upgrades": 1,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "GLM",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 0,
+   "abstentions": 17,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "e1",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null,
+     "feedback": {
+      "signal": "fact_retention",
+      "value": 1.0,
+      "threshold": 0.7
+     }
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": true,
+     "error": null
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    }
+   ]
+  },
+  {
+   "task": "ZEDA",
+   "rep": 1,
+   "arm": "static",
+   "q": 0.0,
+   "cost_yuan": 0.0,
+   "latency_s": 0.0,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 0,
+   "abstentions": 17,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    }
+   ]
+  },
+  {
+   "task": "ZEDA",
+   "rep": 2,
+   "arm": "joint",
+   "q": 0.0,
+   "cost_yuan": 0.0,
+   "latency_s": 0.0,
+   "upgrades": 2,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "GLM",
+    "e1": "GLM",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 0,
+   "abstentions": 17,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "e0",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "action": "upgrade_to_glm",
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "e1",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    }
+   ]
+  },
+  {
+   "task": "ZEDA",
+   "rep": 2,
+   "arm": "single_ds",
+   "q": 0.0,
+   "cost_yuan": 0.0,
+   "latency_s": 0.0,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 0,
+   "abstentions": 17,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    }
+   ]
+  },
+  {
+   "task": "ZEDA",
+   "rep": 2,
+   "arm": "dynamic_pi",
+   "q": 0.0,
+   "cost_yuan": 0.0,
+   "latency_s": 0.0,
+   "upgrades": 2,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "GLM",
+    "e1": "GLM",
+    "t": "DS",
+    "m": "DS",
+    "r": "DS",
+    "v": "DS",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 0,
+   "abstentions": 17,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "e0",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "action": "upgrade_to_glm",
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "e1",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "action": "upgrade_to_glm"
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "m",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "v",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    }
+   ]
+  },
+  {
+   "task": "ZEDA",
+   "rep": 2,
+   "arm": "static",
+   "q": 0.0,
+   "cost_yuan": 0.0,
+   "latency_s": 0.0,
+   "upgrades": 0,
+   "restructures": 0,
+   "reexecs": 0,
+   "final_models": {
+    "e0": "DS",
+    "e1": "DS",
+    "t": "DS",
+    "m": "GLM",
+    "r": "DS",
+    "v": "GLM",
+    "p": "DS"
+   },
+   "crit_tp": 0,
+   "wrong_assert": 0,
+   "abstentions": 17,
+   "log": [
+    {
+     "node": "e0",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "e1",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap",
+     "feedback": {
+      "signal": "evidence_completeness",
+      "value": 0.0,
+      "threshold": 0.5
+     }
+    },
+    {
+     "node": "t",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "m",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "r",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "v",
+     "model": "glm53flash",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    },
+    {
+     "node": "p",
+     "model": "deepseek",
+     "cached": false,
+     "ok": false,
+     "error": "cost cap"
+    }
+   ]
+  }
+ ]
+}

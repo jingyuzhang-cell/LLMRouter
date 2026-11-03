@@ -1,0 +1,58 @@
+{
+ "frozen_at": "2026-11-04",
+ "batch": "DAG_SCHEDULING_EXPERIMENT",
+ "status": "NULL_RESULT (no significant Q/C/L improvement from dynamic scheduling; model capability gap insufficient)",
+ "model_calls": 311,
+ "yuan": 1.5175,
+ "cap": {
+  "calls": 374,
+  "yuan": 1.6
+ },
+ "cells": {
+  "planned": 48,
+  "valid": 43,
+  "incomplete_cost_cap": 5
+ },
+ "results": {
+  "macro_Q": {
+   "single_ds": 0.224,
+   "static": 0.252,
+   "dynamic_pi": 0.242,
+   "joint": 0.2
+  },
+  "dynamic_vs_static": {
+   "dQ": 0.013,
+   "dCost": "+0.005",
+   "dLatency": "-6.2s",
+   "verdict": "no Pareto improvement"
+  },
+  "significance": "all comparisons p>0.30 at n=5 tasks",
+  "upgrades_mean": 0.5,
+  "restructures_mean": 0.1,
+  "reexecs_mean": 0.0
+ },
+ "root_cause": "model capability gap (GLM-5.3-flash vs DeepSeek-flash) too small to warrant dynamic upgrading; R5 synthetic delta=0.20 not observed in real model pair",
+ "implications": [
+  "use models with larger capability gaps",
+  "more complex DAGs needed",
+  "R5 synthetic parameters need recalibration from real measurements"
+ ],
+ "files": {
+  "dag_exp/dag_runner.py": {
+   "sha256": "c4b186187709eb583a6685611483b06b0c52245af211968db42efe50e8a1b610",
+   "bytes": 15158
+  },
+  "dag_exp/DAG_LEDGER.jsonl": {
+   "sha256": "5a33895592b7b62c9517fd9d63a676641489fa693f852b9cc2b81afa723c2329",
+   "bytes": 1106394
+  },
+  "dag_exp/DAG_RESULTS.json": {
+   "sha256": "6ebdbabd6fecf047cca330ae585da21bb315d5c6eb352961c6a9cc5cb8a456e2",
+   "bytes": 75353
+  },
+  "dag_exp/DAG_REPORT.md": {
+   "sha256": "2bcc37333ce8ae7e6628ac8f4301640062b0d540a84624c9d294e265cecc3103",
+   "bytes": 3604
+  }
+ }
+}

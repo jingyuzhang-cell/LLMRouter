@@ -1,0 +1,67 @@
+{
+ "frozen_at": "2026-11-03",
+ "batch": "QP4B_CAUSAL_AUDIT_AND_H3",
+ "model_calls": 0,
+ "status": "AUDIT_COMPLETE_QP5_DESIGNED_AWAITING_AUTHORIZATION",
+ "findings": {
+  "effects": {
+   "D_minus_A": 0.346,
+   "ci": [
+    0.2,
+    0.517
+   ],
+   "p": 0.031,
+   "H1": 0.221,
+   "H1_p": 0.031,
+   "H2": 0.125,
+   "H2_p": 0.061,
+   "interaction": 0.249,
+   "interaction_p": 0.061
+  },
+  "builder_defect": "shipped evidence-table builder accepted only flat facts lists; 15/24 H1 cells got EMPTY tables (all 12 B cells + 3 D cells); B-arm results are mechanism-dead, observed H1 is D-driven and underestimated",
+  "h3_counterfactual": {
+   "D_actual": 0.346,
+   "D_h3": 0.35,
+   "B_actual": 0.096,
+   "B_h3": 0.218,
+   "true_H1_estimate": 0.28,
+   "tp_at_risk": 1,
+   "value_collisions": "16-57 need name+value disambiguation"
+  },
+  "task_variance": "builder structure acceptance x gold-form compatibility (not model capability)",
+  "truncation": "not a failure driver (truncated cells Q 0.201 vs 0.083)",
+  "parse_fail": "A macro 0.000 under both treatments"
+ },
+ "qp5": {
+  "design": "D-mandate (cached, 0 calls) vs D-backfill (new SINK prompt only)",
+  "new_calls": 12,
+  "est_cost_yuan": "0.10-0.20",
+  "awaiting": "operator authorization"
+ },
+ "files": {
+  "quality_phase_v1/qp4_causal_audit.py": {
+   "sha256": "8522a4886e042c82116349be57c2aa2c2184a1629bfbecce059f2341053a6c8c",
+   "bytes": 8082
+  },
+  "quality_phase_v1/QP4_CAUSAL_AUDIT.json": {
+   "sha256": "c9b2ea9e4d55d4b066194c4be79357a30a6f24e380796bf98399cd6fd3c549e9",
+   "bytes": 2034
+  },
+  "quality_phase_v1/qp5_h3_counterfactual.py": {
+   "sha256": "32be2162ce7c155d318f082b633a13ff1b947d5550cdfc8272c6249cd0f8ae97",
+   "bytes": 6093
+  },
+  "quality_phase_v1/QP5_H3_COUNTERFACTUAL.json": {
+   "sha256": "32e0cea993af121c0066fd5a72244a62278ef79bd124df984c143774104af8e7",
+   "bytes": 4968
+  },
+  "quality_phase_v1/QP4B_CAUSAL_AUDIT.md": {
+   "sha256": "8427b9a567d3c3fcc9f05b8ac88620cb435faf6b31c4bad34dc326b562373081",
+   "bytes": 4749
+  },
+  "qp3/qp3_primitives.py": {
+   "sha256": "a5c41ab321c04f2b2fcf62091365a7faf3b2bb32e330ec841260995102586406",
+   "bytes": 6235
+  }
+ }
+}

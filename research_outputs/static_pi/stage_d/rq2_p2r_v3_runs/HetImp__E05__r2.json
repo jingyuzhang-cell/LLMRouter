@@ -1,0 +1,678 @@
+{
+ "exec_id": "HetImp|E05|r2",
+ "arm": "C",
+ "cell": "HetImp",
+ "task": "E05",
+ "rep": 2,
+ "nodes": [
+  {
+   "ts": 1793713340.1404676,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "ext_doc1",
+   "role": "base",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 2000,
+   "in": 2803,
+   "out": 2000,
+   "yuan": 0.0129,
+   "stop": "length",
+   "lat": 7.72,
+   "prompt_sha": "85b507d73290a08f"
+  },
+  {
+   "ts": 1793713347.9212346,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "ext_doc1",
+   "role": "reroll",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 2000,
+   "in": 2803,
+   "out": 2000,
+   "yuan": 0.0129,
+   "stop": "length",
+   "lat": 7.78,
+   "prompt_sha": "85b507d73290a08f"
+  },
+  {
+   "node_id": "ext_doc1",
+   "kind": "extract",
+   "delivery": false,
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "verifies": [],
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "score": 1,
+    "model": "deepseek",
+    "max_tokens": 2000,
+    "n_upstream_facts": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "score": 1,
+    "model": "deepseek",
+    "max_tokens": 2000
+   },
+   "adopted": "base"
+  },
+  {
+   "ts": 1793713349.2670887,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "ext_doc2",
+   "role": "base",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 2000,
+   "in": 466,
+   "out": 219,
+   "yuan": 0.0129,
+   "stop": "stop",
+   "lat": 1.34,
+   "prompt_sha": "9fb84b4eba0b5ad2"
+  },
+  {
+   "ts": 1793713352.2882433,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "ext_doc2",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 164,
+   "out": 167,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 3.02,
+   "prompt_sha": "1c719b425c7a2873"
+  },
+  {
+   "ts": 1793713355.5760093,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "ext_doc2",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 150,
+   "out": 212,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 3.23,
+   "prompt_sha": "299632d180b7c441"
+  },
+  {
+   "ts": 1793713358.327441,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "ext_doc2",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 153,
+   "out": 147,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 2.75,
+   "prompt_sha": "54db685ef526de58"
+  },
+  {
+   "node_id": "ext_doc2",
+   "kind": "extract",
+   "delivery": false,
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [
+     {
+      "fid": "filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》"
+     },
+     {
+      "fid": "filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）"
+     },
+     {
+      "fid": "filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。"
+     }
+    ],
+    "unknown": [
+     "立案涉及的具体事项细节",
+     "各次风险提示的时间线与触发条件",
+     "公司的应对措施",
+     "退市风险演变过程"
+    ],
+    "rerolled": false
+   },
+   "verifies": [
+    {
+     "fact": {
+      "fid": "filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。"
+     },
+     "supported": true,
+     "reused": false
+    }
+   ],
+   "base_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》"
+     },
+     {
+      "fid": "filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）"
+     },
+     {
+      "fid": "filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。"
+     }
+    ],
+    "unknown": [
+     "立案涉及的具体事项细节",
+     "各次风险提示的时间线与触发条件",
+     "公司的应对措施",
+     "退市风险演变过程"
+    ],
+    "score": 10,
+    "model": "deepseek",
+    "max_tokens": 2000,
+    "n_upstream_facts": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  },
+  {
+   "ts": 1793713411.8167496,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "merge",
+   "role": "base",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2450,
+   "in": 636,
+   "out": 2450,
+   "yuan": 0.04,
+   "stop": "max_tokens",
+   "lat": 53.49,
+   "prompt_sha": "eb1694e57cb87db8"
+  },
+  {
+   "ts": 1793713438.4945703,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "merge",
+   "role": "reroll",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2450,
+   "in": 636,
+   "out": 1241,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 26.68,
+   "prompt_sha": "eb1694e57cb87db8"
+  },
+  {
+   "ts": 1793713441.6149254,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "merge",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 164,
+   "out": 82,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 3.12,
+   "prompt_sha": "1c719b425c7a2873"
+  },
+  {
+   "ts": 1793713446.3209145,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "merge",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 150,
+   "out": 163,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 4.7,
+   "prompt_sha": "299632d180b7c441"
+  },
+  {
+   "ts": 1793713451.8560922,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "merge",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 153,
+   "out": 217,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 5.53,
+   "prompt_sha": "54db685ef526de58"
+  },
+  {
+   "node_id": "merge",
+   "kind": "reason",
+   "delivery": true,
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "glm53flash",
+    "facts": [
+     {
+      "fid": "merge_filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》",
+      "parent_fid": "filing_date",
+      "summary": "立案告知书收到日期"
+     },
+     {
+      "fid": "merge_filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）",
+      "parent_fid": "filing_number",
+      "summary": "立案告知书编号"
+     },
+     {
+      "fid": "merge_filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。",
+      "parent_fid": "filing_reason",
+      "summary": "立案原因为年报信披违规"
+     }
+    ],
+    "unknown": [
+     "各次退市风险提示公告的具体时间线与触发条件",
+     "公司被实施*ST（退市风险警示）的具体触发情形（如财务类指标、审计意见类型等）",
+     "公司针对立案调查的应对措施（整改、申辩、澄清公告等）",
+     "立案调查的后续进展与处理结果",
+     "是否存在因立案触发叠加退市风险的情形"
+    ],
+    "rerolled": true
+   },
+   "verifies": [
+    {
+     "fact": {
+      "fid": "merge_filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》",
+      "parent_fid": "filing_date",
+      "summary": "立案告知书收到日期"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "merge_filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）",
+      "parent_fid": "filing_number",
+      "summary": "立案告知书编号"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "merge_filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。",
+      "parent_fid": "filing_reason",
+      "summary": "立案原因为年报信披违规"
+     },
+     "supported": true,
+     "reused": false
+    }
+   ],
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "score": 1,
+    "model": "glm53flash",
+    "max_tokens": 2450,
+    "n_upstream_facts": 3
+   },
+   "reroll_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "merge_filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》",
+      "parent_fid": "filing_date",
+      "summary": "立案告知书收到日期"
+     },
+     {
+      "fid": "merge_filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）",
+      "parent_fid": "filing_number",
+      "summary": "立案告知书编号"
+     },
+     {
+      "fid": "merge_filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。",
+      "parent_fid": "filing_reason",
+      "summary": "立案原因为年报信披违规"
+     }
+    ],
+    "unknown": [
+     "各次退市风险提示公告的具体时间线与触发条件",
+     "公司被实施*ST（退市风险警示）的具体触发情形（如财务类指标、审计意见类型等）",
+     "公司针对立案调查的应对措施（整改、申辩、澄清公告等）",
+     "立案调查的后续进展与处理结果",
+     "是否存在因立案触发叠加退市风险的情形"
+    ],
+    "score": 10,
+    "model": "glm53flash",
+    "max_tokens": 2450
+   },
+   "adopted": "reroll"
+  },
+  {
+   "ts": 1793713481.3179774,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "report",
+   "role": "base",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2900,
+   "in": 899,
+   "out": 1573,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 29.46,
+   "prompt_sha": "ef7214ba7960519e"
+  },
+  {
+   "ts": 1793713490.8107831,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "report",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 164,
+   "out": 226,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 9.49,
+   "prompt_sha": "1c719b425c7a2873"
+  },
+  {
+   "ts": 1793713494.841031,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "report",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 150,
+   "out": 169,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 3.91,
+   "prompt_sha": "299632d180b7c441"
+  },
+  {
+   "ts": 1793713501.042406,
+   "arm": "C",
+   "task": "E05",
+   "rep": 2,
+   "node": "report",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 153,
+   "out": 234,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 6.2,
+   "prompt_sha": "54db685ef526de58"
+  },
+  {
+   "node_id": "report",
+   "kind": "report",
+   "delivery": true,
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "glm53flash",
+    "facts": [
+     {
+      "fid": "report_filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》",
+      "parent_fid": "merge_filing_date",
+      "summary": "立案告知书收到日期"
+     },
+     {
+      "fid": "report_filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）",
+      "parent_fid": "merge_filing_number",
+      "summary": "立案告知书编号"
+     },
+     {
+      "fid": "report_filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。",
+      "parent_fid": "merge_filing_reason",
+      "summary": "立案原因为年报信披违规"
+     }
+    ],
+    "unknown": [
+     "各次风险提示（含退市风险警示）的具体时间线与触发条件：现有文档 doc1、doc2 中未提取到相关事实，无法确认",
+     "公司针对立案调查及退市风险的应对措施：无证据文档支持，无法确认",
+     "立案调查的后续进展（如行政处罚事先告知书、正式处罚决定）：无法确认",
+     "公司被实施退市风险警示（*ST）的具体时间及触发依据：无法确认"
+    ],
+    "rerolled": false
+   },
+   "verifies": [
+    {
+     "fact": {
+      "fid": "report_filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》",
+      "parent_fid": "merge_filing_date",
+      "summary": "立案告知书收到日期"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "report_filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）",
+      "parent_fid": "merge_filing_number",
+      "summary": "立案告知书编号"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "report_filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。",
+      "parent_fid": "merge_filing_reason",
+      "summary": "立案原因为年报信披违规"
+     },
+     "supported": true,
+     "reused": false
+    }
+   ],
+   "base_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "report_filing_date",
+      "value": "2026-10-09",
+      "doc": "doc2",
+      "quote": "2026 年 10 月 9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》",
+      "parent_fid": "merge_filing_date",
+      "summary": "立案告知书收到日期"
+     },
+     {
+      "fid": "report_filing_number",
+      "value": "证监立案字 0262026012 号",
+      "doc": "doc2",
+      "quote": "《中国证券监督管理委员会立案告知书》（编号：证监立案字 0262026012 号）",
+      "parent_fid": "merge_filing_number",
+      "summary": "立案告知书编号"
+     },
+     {
+      "fid": "report_filing_reason",
+      "value": "公司 2023 年年报涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因公司 2023 年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。",
+      "parent_fid": "merge_filing_reason",
+      "summary": "立案原因为年报信披违规"
+     }
+    ],
+    "unknown": [
+     "各次风险提示（含退市风险警示）的具体时间线与触发条件：现有文档 doc1、doc2 中未提取到相关事实，无法确认",
+     "公司针对立案调查及退市风险的应对措施：无证据文档支持，无法确认",
+     "立案调查的后续进展（如行政处罚事先告知书、正式处罚决定）：无法确认",
+     "公司被实施退市风险警示（*ST）的具体时间及触发依据：无法确认"
+    ],
+    "score": 10,
+    "model": "glm53flash",
+    "max_tokens": 2900,
+    "n_upstream_facts": 6
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  }
+ ],
+ "dedup": {
+  "unique": 9,
+  "verify_calls": 9,
+  "reused": 0,
+  "cap_hits": 0
+ },
+ "budget_left": {
+  "calls_left": 615,
+  "yuan_left": 24.9523,
+  "tokens_left": 691169,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 110616
+ }
+}

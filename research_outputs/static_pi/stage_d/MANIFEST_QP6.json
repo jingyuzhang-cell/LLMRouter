@@ -1,0 +1,77 @@
+{
+ "frozen_at": "2026-11-03",
+ "batch": "QP6_PRESICIENCE",
+ "model_calls": 0,
+ "status": "DESIGN_READY_AWAITING_AUTHORIZATION",
+ "findings": {
+  "taxonomy": {
+   "A_SINGLE": 63,
+   "C_DERIVED": 14,
+   "B_MULTI": 14,
+   "A_NO_EV": 5,
+   "H_INSUFFICIENT": 4,
+   "a_single_decomposition": "43 format-equivalent + 11 substantive + 9 absent",
+   "headline": "63% of both-wrong are single-evidence with evidence already in the SINK table; format is the dominant sub-cause (43/63)"
+  },
+  "mechanism": {
+   "m1_multi_evidence": {
+    "target": 14,
+    "upper_bound_Q": 0.072
+   },
+   "m2_derived": {
+    "target": 14,
+    "upper_bound_Q": 0.072,
+    "operands_in_table": true,
+    "types": "ratios (DV3/DV4/ZEDA-B2), sums (F7/D2/D4), declaration (B5)"
+   },
+   "combined_upper_bound": 0.144,
+   "realistic_at_50pct": "ΔQ +0.07 (below original δ_min 0.10; adjusted to 0.05 with disclosure)"
+  },
+  "format_bucket": {
+   "facts": 43,
+   "share_of_all": 0.22,
+   "not_in_qp6_scope": true,
+   "note": "requires contract-level gold unit-convention declaration; largest single lever (+0.22 Q) but outside QP6"
+  },
+  "dag_connection": "M2 derived computation = multi-parent code node; experiment data directly informs DAG decomposition principles"
+ },
+ "experiment": {
+  "design": "cached sandwich G1 (B2+echo) / G2 (+derivation+joint-support) / C0",
+  "prereg": {
+   "delta_min": 0.05,
+   "positive": ">=3/6",
+   "safety": "absolute margins +2",
+   "placebo": "A_SINGLE TP unchanged"
+  },
+  "budget": {
+   "planned": "24-30",
+   "worst": 30,
+   "cap": {
+    "calls": 36,
+    "yuan": 0.25
+   }
+  }
+ },
+ "files": {
+  "quality_phase_v1/qp6_taxonomy.py": {
+   "sha256": "906818d6b098142106ebaaa7f158b8aae8b7ab47a20a936e03d1e9d81836e5b5",
+   "bytes": 6191
+  },
+  "quality_phase_v1/QP6_FAILURE_TAXONOMY.json": {
+   "sha256": "cb67fe23f39aeaf21f34de552ffb906cb8fc2a9341e8fb2a7b3acde4c704be6f",
+   "bytes": 25249
+  },
+  "quality_phase_v1/QP6_FAILURE_TAXONOMY.md": {
+   "sha256": "2c708b266ce926ff13ff111fe8bb360c6aadd29a06e77efc97a8fc306e81aaae",
+   "bytes": 3167
+  },
+  "quality_phase_v1/QP6_MECHANISM_FINDINGS.md": {
+   "sha256": "cbf5aec12c320ef9a347b4f9030d78866124f7cf527ef91889e8f8566f4526f4",
+   "bytes": 3639
+  },
+  "quality_phase_v1/QP6_MINIMAL_EXPERIMENT.md": {
+   "sha256": "8ecc40b1d7892d3fdcc1c26fcd608a87dc888a079d18ad074ccaef30076ec057",
+   "bytes": 2897
+  }
+ }
+}

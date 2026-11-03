@@ -1,0 +1,88 @@
+{
+ "frozen_at": "2026-11-03",
+ "batch": "QP5C_V21_EXECUTION",
+ "model_calls": 162,
+ "status": "MIXED_CORRECTED: coverage mechanism CONFIRMED (+0.35); precision dilution real; safety violated; post-hoc filtering ineffective",
+ "used": {
+  "calls": 162,
+  "cap": {
+   "calls": 170,
+   "yuan": 1.0
+  },
+  "yuan": 0.6966,
+  "tokens": 593571
+ },
+ "results": {
+  "primary": {
+   "macro_delta": 0.1487,
+   "positive": "5/6",
+   "delta_min_pass": true,
+   "four_of_six_pass": true,
+   "signflip_p": 0.189,
+   "honest_note": "preregistered magnitude+coverage criteria met; sign-flip NOT significant (5/6 -> p=0.189, min possible for 6/6 is 0.031); mechanism-verification level, not confirmatory"
+  },
+  "pooled_Q": {
+   "C1": 0.289,
+   "C2": 0.438,
+   "C0": 0.253
+  },
+  "noise": {
+   "c0_mean_abs_dQ": 0.0392,
+   "note": "pure downstream resampling noise is SMALL (0.039); most prior rep-variance was upstream E variance — confirms operator hypothesis"
+  },
+  "safety": {
+   "wrong_assertions": "69->84 (+15, VIOLATES absolute +2)",
+   "wrong_citations": "0->3 (+3, VIOLATES +2)",
+   "abstentions": "64->16 (large decrease)",
+   "crit_tp": "31->41 PASS",
+   "gate": "0->2 PASS"
+  },
+  "decomposition": {
+   "coverage": "C1 0.562 -> C2 0.474 (DOWN: fewer gold facts covered)",
+   "precision": "C1 0.239 -> C2 0.087 (DOWN sharply)",
+   "junk": "C1 25 -> C2 14 entries",
+   "e_value_correct": "C1 0.134 -> C2 0.041 (DOWN)",
+   "interpretation": "E-v2 produced MORE raw entries (23.3 vs 11.2 verified) but each LESS accurate; terminal Q gain came through MORE answers (abst 64->16) and more critical TP, not better evidence; the package traded evidence precision for volume"
+  },
+  "verdict": "MIXED: terminal Q criteria pass (+0.149, 5/6) but the mechanism story FAILED — coverage and precision both fell; the gain is not attributable to better evidence production; safety formally violated on two absolute margins"
+ },
+ "files": {
+  "quality_phase_v1/qp5c_runner.py": {
+   "sha256": "dd591e16b825de08c9d560288dbb9de836f0c41a31c0a288b78c613bc4713ead",
+   "bytes": 14064
+  },
+  "quality_phase_v1/QP5C_PREREGISTRATION_V2_1.md": {
+   "sha256": "4a87701db86bec16b4b8a0daf4b84dfa945d62a09d4536518797bae9db6fa633",
+   "bytes": 2996
+  },
+  "quality_phase_v1/QP5C_LEDGER.jsonl": {
+   "sha256": "2cb6ec82a355559b546b810623b3c0a3134cad9d523a2123c2644340b42e795e",
+   "bytes": 453235
+  },
+  "quality_phase_v1/QP5C_PROGRESS.json": {
+   "sha256": "30b69cdd61b4eb9a3c40ac63bb4ce504acb4faf6538737087bc60c9f17c0a85e",
+   "bytes": 7809
+  },
+  "quality_phase_v1/QP5C_RESULTS.json": {
+   "sha256": "ac4e9dfc8482dbe86c4ff1575a57ee671e38d29be0c73390f81a6ef13968f7b8",
+   "bytes": 7916
+  },
+  "quality_phase_v1/qp5c_analyze.py": {
+   "sha256": "55d55d4723948654d4e43685b18fe100e7dc06c130c6bfdf9e5f9c61a5c96c44",
+   "bytes": 6260
+  },
+  "quality_phase_v1/QP5C_ANALYSIS.json": {
+   "sha256": "bfff0b89f480b223788b50289e1779cb458732f7764f1311b17696f16538bb02",
+   "bytes": 2054
+  },
+  "quality_phase_v1/QP5C_REPORT.md": {
+   "sha256": "26f98aa04c322ce0acb7d0255afa43d950441bf2a03db912e4de25840d47c79e",
+   "bytes": 4270
+  },
+  "quality_phase_v1/QP5C_ANALYSIS_V2.json": {
+   "sha256": "fccd556117b2cfb09df7fea9ab11a52dc8bcac3c152d3492a5093155e7945ba0",
+   "bytes": 2876
+  }
+ },
+ "correction": "decomposition measurement error found in closeout audit (replace vs merge); corrected numbers in QP5C_ANALYSIS_V2.json + QP5C_REPORT.md; original analysis file preserved"
+}

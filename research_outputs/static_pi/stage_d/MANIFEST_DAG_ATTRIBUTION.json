@@ -1,0 +1,46 @@
+{
+ "frozen_at": "2026-11-04",
+ "batch": "DAG_ATTRIBUTION",
+ "model_calls": 0,
+ "root_cause": "DS E-layer outputs evidence locations (doc/page/quote) WITHOUT value field → verify_evidence rejects all → evidence table empty → SINK free-form → Q≈0.2 across ALL arms",
+ "evidence": {
+  "kangmei_single_ds": {
+   "e_entries": 33,
+   "evidence_fields_complete": "100%",
+   "verified": 0,
+   "sink_received_table": 0,
+   "terminal_tp": "1/14"
+  },
+  "ds_structure": "{bucket: [{doc,page,quote}]}",
+  "glm_structure": "{field, value, doc, page, quote}",
+  "all_four_arms_share": "DS e0,e1 → same format break → scheduling differences nullified"
+ },
+ "loss_ranking": [
+  {
+   "rank": 1,
+   "cause": "DS format incompatibility",
+   "share": "~50%",
+   "fixable": "code-level value inference from quote context"
+  },
+  {
+   "rank": 2,
+   "cause": "gold unit/text format mismatch",
+   "share": "~30%",
+   "fixable": "contract-level gold convention (operator decision)"
+  },
+  {
+   "rank": 3,
+   "cause": "derived/multi-evidence composition",
+   "share": "~10%",
+   "fixable": "partially (QP6 showed zero effect)"
+  }
+ ],
+ "historical_gap": "QP5-C Q=0.438 vs DAG Q=0.224 is NOT reasoning ability difference but format compatibility",
+ "next_experiment": "format adaptation layer (code-level value inference from DS quotes), ~24 SINK calls",
+ "files": {
+  "dag_exp/DAG_ATTRIBUTION.md": {
+   "sha256": "59eb74075ffb7a8f9ff8f35d6d54f327bc93af334731135e839024970890cd1f",
+   "bytes": 4997
+  }
+ }
+}

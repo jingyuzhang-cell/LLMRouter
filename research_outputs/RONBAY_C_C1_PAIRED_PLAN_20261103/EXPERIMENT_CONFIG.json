@@ -1,0 +1,272 @@
+{
+  "status": "DESIGN_FROZEN_EXECUTION_HOLD",
+  "new_calls_authorized": 0,
+  "new_cash_authorized_cny": 0,
+  "task": {
+    "id": "RONBAY_202601",
+    "identity": "EXPOSED_DEVELOPMENT_EVENT_EXPLORATORY",
+    "independent_events": 1,
+    "independent_Gold": false,
+    "dag_source": "/root/research_outputs/THREE_TASK_FEASIBILITY_20261101/DAG_RONBAY_202601.json",
+    "edges": [
+      [
+        "REPLY",
+        "OBLIGATIONS"
+      ],
+      [
+        "REPLY",
+        "CAPACITY"
+      ],
+      [
+        "INQUIRY",
+        "CROSSCHECK"
+      ],
+      [
+        "REPLY",
+        "CROSSCHECK"
+      ],
+      [
+        "OBLIGATIONS",
+        "CROSSCHECK"
+      ],
+      [
+        "CAPACITY",
+        "CROSSCHECK"
+      ],
+      [
+        "CROSSCHECK",
+        "FINAL"
+      ]
+    ],
+    "node_order": [
+      "INQUIRY",
+      "REPLY",
+      "OBLIGATIONS",
+      "CAPACITY",
+      "CROSSCHECK",
+      "FINAL"
+    ],
+    "evidence": [
+      {
+        "source_id": "INQUIRY",
+        "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/RONBAY_202601/INQUIRY/source.pdf",
+        "sha256": "2ea2db215154843372f5190575a7366b6c7e7af21b9dcf3bd53cd25bc3111e14",
+        "publication_date_from_archive": "2026-01-14"
+      },
+      {
+        "source_id": "REPLY",
+        "file": "/root/research_outputs/CAPITAL_PUBLIC_DATA_20261031/RONBAY_202601/REPLY/source.pdf",
+        "sha256": "5ce53a9aa23d920172ef1135b773a9cbcf8975e661e72cef4d61d32c31052366",
+        "publication_date_from_archive": "2026-01-19"
+      }
+    ]
+  },
+  "arms": {
+    "C": {
+      "INQUIRY": "deepseek",
+      "REPLY": "deepseek",
+      "OBLIGATIONS": "glm53flash",
+      "CROSSCHECK": "glm53flash",
+      "FINAL": "glm53flash"
+    },
+    "C1": {
+      "INQUIRY": "qwen",
+      "REPLY": "deepseek",
+      "OBLIGATIONS": "glm53flash",
+      "CROSSCHECK": "glm53flash",
+      "FINAL": "glm53flash"
+    }
+  },
+  "models": {
+    "glm53flash": {
+      "provider": "BigModel",
+      "model_id": "glm-5.3-flash",
+      "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "thinking": "enabled",
+      "reasoning_effort": "low"
+    },
+    "deepseek": {
+      "provider": "DeepSeek",
+      "model_id": "deepseek-flash",
+      "endpoint": "https://api.deepseek.com/chat/completions",
+      "thinking": "disabled"
+    },
+    "qwen": {
+      "provider": "DashScope Beijing",
+      "model_id": "qwen-plus-2025-12-01",
+      "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "enable_thinking": false
+    }
+  },
+  "resources": {
+    "global_concurrency": 1,
+    "slots_per_model": 1,
+    "request_timeout_seconds": 180,
+    "run_deadline_seconds": 240,
+    "batch_deadline_seconds": 2400,
+    "retry_limit": 0,
+    "max_tokens": 3072,
+    "input_token_reserve_per_call": 65536,
+    "temperature": 1.0,
+    "stream": false,
+    "response_format": "json_object",
+    "tools_enabled": false,
+    "per_run_estimate_cap_cny": 1.2
+  },
+  "schedule": [
+    {
+      "block": 1,
+      "arm": "C",
+      "max_calls": 5
+    },
+    {
+      "block": 1,
+      "arm": "C1",
+      "max_calls": 5
+    },
+    {
+      "block": 2,
+      "arm": "C1",
+      "max_calls": 5
+    },
+    {
+      "block": 2,
+      "arm": "C",
+      "max_calls": 5
+    },
+    {
+      "block": 3,
+      "arm": "C",
+      "max_calls": 5
+    },
+    {
+      "block": 3,
+      "arm": "C1",
+      "max_calls": 5
+    }
+  ],
+  "sample_units": {
+    "events": 1,
+    "tasks": 1,
+    "paired_repeats": 3,
+    "arms_executions": 6,
+    "independent_events": 1
+  },
+  "entrypoint": null,
+  "execution_binding": "Not implemented by this design-only deliverable; no fixture substitution allowed",
+  "evaluation": {
+    "rubric": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/SILVER_RUBRIC.json",
+    "formal_Q": null,
+    "reference_grade": "NON_INDEPENDENT_SILVER",
+    "primary": [
+      "terminal factual correctness",
+      "terminal semantic evidence support"
+    ],
+    "separate": [
+      "K",
+      "citation validity",
+      "completeness",
+      "UNKNOWN",
+      "omissions"
+    ],
+    "review": "Hide model/arm labels for source-based review where practicable; disclose reviewer independence, no paid judge calls",
+    "partial_accuracy": "correct/(correct+wrong), null when denominator=0; always report 6-item coverage, omissions and UNKNOWN",
+    "bounds": "For valid terminal response report [correct/6,(correct+unresolved)/6] only as ignorance bounds, not confidence intervals; omissions separately classified",
+    "terminal_missing": "completion=0, factual accuracy=null; zero supported delivered items is delivery failure, not a factual error judgment",
+    "statistics": "One event, 3 paired repeat blocks; list C-A and C-B every block, descriptive range/median; no event-level significance claim",
+    "Pareto": "Only on comparable terminal quality/evidence coverage with all execution and planning costs; incomplete Q cannot establish full-Q Pareto dominance"
+  },
+  "propagation": {
+    "claim_categories": [
+      "PRESERVED",
+      "OMITTED",
+      "CONTRADICTED",
+      "NEW_FROM_SOURCE",
+      "POSSIBLE_CORRECTION",
+      "UNKNOWN"
+    ],
+    "required_lineage": [
+      "run_id",
+      "node_id",
+      "output_hash",
+      "actual_parent_claim_ids",
+      "parent_output_hashes",
+      "evidence_ids",
+      "contract_status",
+      "semantic_review_status"
+    ],
+    "causal_limit": "Independent downstream sampling; correct child content is not proof of correction or use of parent when sources also available"
+  },
+  "budget": {
+    "max_requests": 30,
+    "by_model": {
+      "glm53flash": 18,
+      "deepseek": 9,
+      "qwen": 3
+    },
+    "input_token_reserve": 1966080,
+    "output_token_plan_limit": 92160,
+    "tariffs": "historical frozen public peak uncached scenario, account settlement UNKNOWN",
+    "fx_cny_per_usd": 8,
+    "per_request_cny": {
+      "glm53flash": "0.0610304",
+      "deepseek": "0.1867776",
+      "qwen": "0.0585728"
+    },
+    "arm_C_max_scenario_cny": "1.6699392",
+    "arm_C1_max_scenario_cny": "1.2853248",
+    "total_scenario_cny": "2.9552640",
+    "native_CNY": "1.2742656",
+    "native_USD": "0.2101248",
+    "proposed_stop_cny": 4,
+    "old_authorization_reused": false,
+    "absolute_bill_cap": false
+  },
+  "stop_rules": {
+    "retry": 0,
+    "model_contract_failure": "Retain result and block descendants, independent nodes may continue",
+    "system_exception_or_unknown_usage": "Stop whole batch, no retry",
+    "run_deadline": "End this run; mark descendants blocked/deadline, retain paired counterpart if batch conditions allow",
+    "batch_deadline_or_budget": "Stop all new dispatches; NOT_DISPATCHED is not model failure",
+    "additional_pairs": 0,
+    "automatic_dynamic": false
+  },
+  "sources": [
+    {
+      "path": "/root/research_outputs/THREE_TASK_FEASIBILITY_20261101/DAG_RONBAY_202601.json",
+      "sha256": "7b709ae8d24f8784fa613638780ae706d40ab8466cb95f2b6079ca309db40c3e"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/WIRE_CONTRACT.json",
+      "sha256": "a1440b56d6af4fb9180b95678b19b765ae1c50dc8b4602c39c0f200ee4231eb9"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/SILVER_RUBRIC.json",
+      "sha256": "3de4065e25f44931a393865f1785cf25fc3c176e5dded5c605dd5016755ee003"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/score_review.py",
+      "sha256": "2075c88e6279755e1c9bfcbdc2c8a01e07a32e46e4cc105540c760cfcc6377f8"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/EVIDENCE_REGISTRY.json",
+      "sha256": "ec96903c5f8fb016a1bfc6771472aaccf8000701fb27609eee79d5e70fd7d94c"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_FINAL_ADMISSION_20261102/MODEL_BINDINGS.json",
+      "sha256": "d8691c79f28c881a7ad3e6ce0927fc58098d097e77c9811c2da22d80177bc67d"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_CROSS_NODE_ANALYSIS_20261103/MATRIX_20.json",
+      "sha256": "88d8bafa8544fcad1377ed0475ac870358331ea7ff34b9b25879bc4770db0df7"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_CROSS_NODE_ANALYSIS_20261103/REPEAT_OBSERVATIONS_60.json",
+      "sha256": "d14ec3b1c5459802a27f937a14bdb7a5e10a95267f7b885d422570b92ed347fd"
+    },
+    {
+      "path": "/root/research_outputs/RONBAY_CANDIDATE_RECONSTRUCTION_20261103/REVIEW.md",
+      "sha256": "1e74d09b00366f6484650791d063cf2e8959204cf7c8a8ccaaf6f471a2580dfe"
+    }
+  ]
+}

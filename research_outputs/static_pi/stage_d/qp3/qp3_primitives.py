@@ -89,8 +89,9 @@ def normalize_stage(obj):
     def walk(node, path):
         if isinstance(node, dict):
             if ('doc' in node or 'quote' in node) and not any(isinstance(v, (dict, list)) for v in node.values()):
-                out.append(dict(bucket=path[0] if path else None,
+                out.append(dict(bucket=path[0] if path and path[0] not in ('facts', 'answers') else None,
                                 predicate=path[1] if len(path) > 1 else None,
+                                field=node.get('field') or node.get('fact_id'),
                                 value=node.get('value'), raw=node.get('raw'),
                                 doc=node.get('doc'), page=node.get('page'),
                                 quote=node.get('quote', '')))

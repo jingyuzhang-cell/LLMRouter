@@ -1,0 +1,517 @@
+{
+ "batch": "RQ2_P2R_V1",
+ "status": "STOPPED_NO_FURTHER_CALLS",
+ "timestamp": "2026-11-03T14:11:12",
+ "decision": {
+  "remaining_calls": 221,
+  "b8_alone_low": 221,
+  "b8_alone_high": 241,
+  "b8_c9_low": 426,
+  "b8_c12_low": 500,
+  "fits_full_design": false,
+  "reason": "Dedup-all B-remaining alone consumes the entire remaining call cap; C cannot start.",
+  "action": "Stop V1; request RQ2_P2R_V2 (800 calls / 5,000,000 tokens / CNY 40)."
+ },
+ "authorization": {
+  "v1": "批次 RQ2_P2R_V1：调用 ≤500 次；Token ≤5,000,000；费用 ≤¥30。授权执行。仅执行本批次预注册的 A/B/C 三组真实模型实验，严格遵守三重预算硬停。192 次 HOLD 额度保持不变，不得擅自追加调用。",
+  "v2": "NOT AUTHORIZED — application only: RQ2_P2R_V2 800 calls / 5,000,000 tokens / CNY 40",
+  "hold_192": "untouched",
+  "new_calls_after_stop": 0
+ },
+ "spend_reconciliation": {
+  "ledger_calls": 278,
+  "budget_state_calls": 279,
+  "completed_calls": 206,
+  "partial_calls": {
+   "B|E06|r2": 72
+  },
+  "unreconciled": 1,
+  "tokens_true": 243326,
+  "tokens_budget_state": 486652,
+  "tokens_redundant": 243326,
+  "yuan": 8.8978,
+  "remaining_calls": 221,
+  "remaining_yuan": 21.1022
+ },
+ "completed": {
+  "A": 12,
+  "B": 4,
+  "C": 0
+ },
+ "partial_execution": {
+  "exec_id": "B|E06|r2",
+  "calls": 72,
+  "base": 5,
+  "verify": 67,
+  "state": "running (no commit; outputs unavailable; sunk cost)"
+ },
+ "real_results": {
+  "A": {
+   "by_task": {
+    "E05": {
+     "n": 33,
+     "tp": 14,
+     "sup": 0,
+     "uniq_all": 18,
+     "q_main": 0.4242,
+     "q_full": null
+    },
+    "E06": {
+     "n": 36,
+     "tp": 21,
+     "sup": 0,
+     "uniq_all": 72,
+     "q_main": 0.5833,
+     "q_full": null
+    },
+    "E07": {
+     "n": 33,
+     "tp": 21,
+     "sup": 0,
+     "uniq_all": 66,
+     "q_main": 0.6364,
+     "q_full": null
+    },
+    "E08": {
+     "n": 30,
+     "tp": 24,
+     "sup": 0,
+     "uniq_all": 57,
+     "q_main": 0.8,
+     "q_full": null
+    }
+   },
+   "mean_task_q_main": 0.611,
+   "pooled_q_main": 0.6061
+  },
+  "B": {
+   "by_task": {
+    "E05": {
+     "n": 33,
+     "tp": 15,
+     "sup": 12,
+     "uniq_all": 16,
+     "q_main": 0.4545,
+     "q_full": 0.3636
+    },
+    "E06": {
+     "n": 12,
+     "tp": 7,
+     "sup": 7,
+     "uniq_all": 27,
+     "q_main": 0.5833,
+     "q_full": 0.5833
+    }
+   },
+   "mean_task_q_main": 0.5189,
+   "mean_task_q_full": 0.4735,
+   "pooled_q_main": 0.4889,
+   "pooled_q_full": 0.4222
+  },
+  "paired_B_minus_A": {
+   "pairs": [
+    {
+     "task": "E05",
+     "rep": 1,
+     "A": 0.2727,
+     "B": 0.2727,
+     "delta_pp": 0.0
+    },
+    {
+     "task": "E05",
+     "rep": 2,
+     "A": 0.7273,
+     "B": 0.2727,
+     "delta_pp": -45.45
+    },
+    {
+     "task": "E05",
+     "rep": 3,
+     "A": 0.2727,
+     "B": 0.8182,
+     "delta_pp": 54.55
+    },
+    {
+     "task": "E06",
+     "rep": 1,
+     "A": 0.5833,
+     "B": 0.5833,
+     "delta_pp": 0.0
+    }
+   ],
+   "n": 4,
+   "mean_delta_pp": 2.27,
+   "sd_pp": 40.91,
+   "se_pp": 20.45
+  },
+  "verification": {
+   "calls": 129,
+   "unique": 43,
+   "duplicates": 86,
+   "by_task": {
+    "E05": {
+     "calls": 48,
+     "unique": 16,
+     "supported": 42
+    },
+    "E06": {
+     "calls": 81,
+     "unique": 27,
+     "supported": 80
+    }
+   },
+   "supported_total": 122,
+   "supported_unique": 41
+  },
+  "anomalies": {
+   "base_nodes": 74,
+   "parse_fail": 5,
+   "prod_missing": 0,
+   "cite_missing": 0,
+   "rerolls": 3,
+   "adopted": 1
+  },
+  "latency": {
+   "A|E05|r1": {
+    "calls": 4,
+    "span_s": 7.8,
+    "sum_lat_s": 11.6,
+    "tokens": 6915,
+    "yuan": 0.0516,
+    "roles": {
+     "base": 4
+    }
+   },
+   "A|E05|r2": {
+    "calls": 4,
+    "span_s": 22.4,
+    "sum_lat_s": 22.8,
+    "tokens": 15500,
+    "yuan": 0.0516,
+    "roles": {
+     "base": 4
+    }
+   },
+   "A|E05|r3": {
+    "calls": 4,
+    "span_s": 7.6,
+    "sum_lat_s": 12.7,
+    "tokens": 7446,
+    "yuan": 0.0516,
+    "roles": {
+     "base": 4
+    }
+   },
+   "A|E06|r1": {
+    "calls": 5,
+    "span_s": 17.5,
+    "sum_lat_s": 15.0,
+    "tokens": 8053,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "A|E06|r2": {
+    "calls": 5,
+    "span_s": 33.6,
+    "sum_lat_s": 22.8,
+    "tokens": 8401,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "A|E06|r3": {
+    "calls": 5,
+    "span_s": 35.4,
+    "sum_lat_s": 23.7,
+    "tokens": 8736,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "A|E07|r1": {
+    "calls": 5,
+    "span_s": 19.4,
+    "sum_lat_s": 17.9,
+    "tokens": 9857,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "A|E07|r2": {
+    "calls": 5,
+    "span_s": 20.2,
+    "sum_lat_s": 18.4,
+    "tokens": 10338,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "A|E07|r3": {
+    "calls": 5,
+    "span_s": 20.4,
+    "sum_lat_s": 18.4,
+    "tokens": 10540,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "A|E08|r1": {
+    "calls": 5,
+    "span_s": 15.9,
+    "sum_lat_s": 14.6,
+    "tokens": 7809,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "A|E08|r2": {
+    "calls": 5,
+    "span_s": 24.9,
+    "sum_lat_s": 22.9,
+    "tokens": 8353,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "A|E08|r3": {
+    "calls": 5,
+    "span_s": 17.4,
+    "sum_lat_s": 16.3,
+    "tokens": 8473,
+    "yuan": 0.0645,
+    "roles": {
+     "base": 5
+    }
+   },
+   "B|E05|r1": {
+    "calls": 14,
+    "span_s": 86.2,
+    "sum_lat_s": 73.7,
+    "tokens": 14956,
+    "yuan": 0.4245,
+    "roles": {
+     "base": 4,
+     "reroll": 1,
+     "verify": 9
+    }
+   },
+   "B|E05|r2": {
+    "calls": 14,
+    "span_s": 64.1,
+    "sum_lat_s": 64.8,
+    "tokens": 14850,
+    "yuan": 0.4245,
+    "roles": {
+     "base": 4,
+     "reroll": 1,
+     "verify": 9
+    }
+   },
+   "B|E05|r3": {
+    "calls": 35,
+    "span_s": 231.3,
+    "sum_lat_s": 232.7,
+    "tokens": 35778,
+    "yuan": 1.2645,
+    "roles": {
+     "base": 4,
+     "reroll": 1,
+     "verify": 30
+    }
+   },
+   "B|E06|r1": {
+    "calls": 86,
+    "span_s": 442.8,
+    "sum_lat_s": 439.4,
+    "tokens": 35747,
+    "yuan": 3.3045,
+    "roles": {
+     "base": 5,
+     "verify": 81
+    }
+   },
+   "B|E06|r2": {
+    "calls": 72,
+    "span_s": 391.2,
+    "sum_lat_s": 388.4,
+    "tokens": 31574,
+    "yuan": 2.7445,
+    "roles": {
+     "base": 5,
+     "verify": 67
+    }
+   }
+  }
+ },
+ "dedup_volume": {
+  "b4_actual_old": {
+   "calls": 149,
+   "verify": 196,
+   "unique": 43
+  },
+  "b4_dedup": {
+   "execs": 4,
+   "base_calls": 17,
+   "rerolls": 3,
+   "unique_all": 43,
+   "calls": 63
+  },
+  "b_remaining": {
+   "execs": 8,
+   "base_calls": 40,
+   "unique_all": 175,
+   "unique_report": 144,
+   "oracle_tp": 59
+  },
+  "b_remaining_calls": {
+   "low": 221,
+   "high": 241,
+   "rerolls_low": 6,
+   "rerolls_high": 8,
+   "verify_low": 175,
+   "verify_high": 193
+  },
+  "c9": {
+   "execs": 9,
+   "base_calls": 42,
+   "unique_all": 156,
+   "unique_report": 132,
+   "oracle_tp": 56
+  },
+  "c9_calls": {
+   "low": 205,
+   "high": 239,
+   "rerolls_low": 7,
+   "rerolls_high": 9,
+   "verify_low": 156,
+   "verify_high": 188
+  },
+  "c12": {
+   "execs": 12,
+   "base_calls": 57,
+   "unique_all": 213,
+   "unique_report": 182,
+   "oracle_tp": 80
+  },
+  "c12_calls": {
+   "low": 279,
+   "high": 325,
+   "rerolls_low": 9,
+   "rerolls_high": 12,
+   "verify_low": 213,
+   "verify_high": 256
+  },
+  "b12_fresh_calls": {
+   "low": 284,
+   "high": 304
+  },
+  "b8_c9_calls": {
+   "low": 426,
+   "high": 480,
+   "high_plus_10": 528
+  },
+  "b8_c12_calls": {
+   "low": 500,
+   "high": 566,
+   "high_plus_10": 623
+  },
+  "b12_c9_calls": {
+   "low": 489,
+   "high": 543,
+   "high_plus_10": 598
+  },
+  "b12_c12_calls": {
+   "low": 563,
+   "high": 629,
+   "high_plus_10": 692
+  },
+  "oracle": {
+   "b8_c9": 210,
+   "b8_c12": 251,
+   "note": "oracle TP-only lower bound; uses Gold to choose facts; NOT deployable",
+   "b12_c9": 252,
+   "b12_c12": 293
+  }
+ },
+ "v1_sample": {
+  "path": "RQ2_P2R_V1_V1_SAMPLE.jsonl",
+  "unique_pairs": 43,
+  "verifier_supported": 41,
+  "human_labeled": 0,
+  "note": "V-1 human labels pending; sample is 43 unique pairs, below the >=200 target; V2 will add pairs."
+ },
+ "findings": [
+  {
+   "id": "F1",
+   "finding": "verification explosion / duplicate billing",
+   "evidence": "B4 committed: 129 verify calls, 43 unique, 86 duplicates (67%); ledger total 196 includes 67 verify in uncommitted B|E06|r2."
+  },
+  {
+   "id": "F2",
+   "finding": "cap-6 amendment invalid",
+   "evidence": "E06 single execution has 27 unique facts; cap 6 would mark 21 unsupported and artificially collapse Q_full. Dedup must not truncate; safety cap 64 non-binding."
+  },
+  {
+   "id": "F3",
+   "finding": "token double-count in budget state",
+   "evidence": "GLOBAL_BUDGET.json tokens=486,652 vs ledger true 243,326 (=2x). Runner calls release_reservation (books tokens) and settle (books again). Calls/yuan correct; token cap would be halved. Fix in V2: settle(est,0,0)."
+  },
+  {
+   "id": "F4",
+   "finding": "uncommitted partial execution",
+   "evidence": "B|E06|r2 72 calls (5 base + 67 verify), RunStore state=running, no commit, outputs unavailable; sunk cost. Stop only at execution boundaries in V2."
+  },
+  {
+   "id": "F5",
+   "finding": "279 vs 278 call accounting",
+   "evidence": "Budget ledger 279, JSONL 278; one reservation unsettled. Use 279 conservatively; remaining calls=221."
+  },
+  {
+   "id": "F6",
+   "finding": "C 9 vs C 12 inconsistency",
+   "evidence": "Frozen GO/runner define C=4 tasks x 3 reps=12; interim/operator table says C 0/9. V2 application uses 12; if C=9, one task C-B pairing is missing and cap can be 650."
+  },
+  {
+   "id": "F7",
+   "finding": "old B4 is pilot, not formal",
+   "evidence": "B4 used per-node per-fact verification (old rule). Cannot compare to new-rule C. V2 primary analysis uses B12 fresh + C12 fresh under dedup; B4 only historical/sensitivity."
+  },
+  {
+   "id": "F8",
+   "finding": "verifier unvalidated / lenient",
+   "evidence": "Committed B4: 122/129 (94.6%) and 41/43 unique (95.3%) supported. V-1 human labels (>=200 pairs, spec>=0.85, sens>=0.70) not done; Q_full must be labeled unvalidated."
+  },
+  {
+   "id": "F9",
+   "finding": "reroll mechanism has a real positive case",
+   "evidence": "3 rerolls, 1 adopted: B|E05|r3 ext_doc1 base parse failed, reroll produced 7 facts and was adopted; Q_main 81.8%. 2 rerolls not adopted. n=1, descriptive only."
+  },
+  {
+   "id": "F10",
+   "finding": "real baseline differs from synthetic",
+   "evidence": "A task-equal Q_main 61.1% vs synthetic Static 45.48%; absolute synthetic numbers are not transferable. Only mechanism directions are testable."
+  }
+ ],
+ "files_sha256": {
+  "rq2_p2r_runner.py": "3e4987ac23ed4a76a1e00560dd0524160a7c9a4bb789c6f8a290928d4fab1b4e",
+  "rq2_p2r_config.json": "db24bc4cc537159cfb088b12e8bcc544d6d992180b742fc9a8b257439cd2fa1c",
+  "ledger.jsonl": "0ee78616fabb9789338209b4e151d05c39c17187670cdf174ef8947d56ac5dd7",
+  "GLOBAL_BUDGET.json": "a7e8f455fc1052be848bb03ac099b541e738dd33f0cf4904cc5021d6a72d5023",
+  "RQ2_P2R_V1_CLOSEOUT.md": "e6a1d6c2675a2fbd60cbd1c124726dee1a9d6df5281da31ff01d2acfa6b08943",
+  "RQ2_P2R_V1_CLOSEOUT_ANALYSIS.json": "9e7a9cd8191f9bf57d283754204b0cc6bac092df88b0a44bd90f0ccd18d21118",
+  "RQ2_P2R_V2_GO_APPLICATION.md": "15dfef2e3c3c0cef6dd28d7d31ec85b1ad535e86c5db866ae1a37271683cb36f",
+  "rq2_p2r_closeout.py": "b044bb5616b9d8fd9d80f5caeb7563918d1c663d7af8af750b0b5296870efff8",
+  "RQ2_P2R_V1_V1_SAMPLE.jsonl": "dc0ec2fd806d5c090099b55b35910137363bf62e47861faa37d5b6147969dcef"
+ },
+ "new_calls_after_stop": 0,
+ "hold_192_untouched": true
+}

@@ -1,0 +1,430 @@
+{
+ "batch": "RQ2_P2R_V3",
+ "status": "COMPLETED 21/24 (boundary stop)",
+ "timestamp": "2026-11-03T23:54:04",
+ "authorization": "operator task order 2026-11-03: batch RQ2_P2R_V3, caps 700 calls / 800,000 tokens / CNY 28 (immediately advance RQ2_P2R_V3); no next batch authorized",
+ "spend": {
+  "calls": 624,
+  "calls_cap": 700,
+  "tokens": 560505,
+  "tokens_cap": 800000,
+  "yuan": 22.4952,
+  "yuan_cap": 28,
+  "calls_left": 76,
+  "breach": false
+ },
+ "completion": {
+  "HomBase": "12 (V2 frozen reuse)",
+  "HetBase": "12 (V2 frozen reuse)",
+  "HomImp": "11/12 (missing E08 r3)",
+  "HetImp": "10/12 (missing E08 r2,r3)"
+ },
+ "incidents": [
+  "transport read-timeout crash mid HetImp|E06|r3 (30 calls sunk, in ledger); checkpoint resume redid the exec",
+  "hung verify call ~11min (stalled socket, no read-timeout trigger) mid HomImp|E07|r2 (8 calls sunk); process killed, checkpoint resume",
+  "boundary stop: 76 calls left < start-guard 90; no code modified to force extra execs"
+ ],
+ "headline": {
+  "RQ1_delivery": "HomImp 62.54->69.43 (+6.89pp, gate 91.67->100%); HetImp 41.24->54.72 (+13.48pp, gate 66.67->80%)",
+  "RQ2_interaction": "mean +6.59pp, CI [-17.42,+31.16] crosses 0, signflip p=0.5; per-task 0/0/+3.03/+23.34(thin); E05 both arms +27.27 => delivery is general, not hetero-specific",
+  "RQ3_deployment": "HetImp vs HomImp: Q -14.71pp, tokens +69%, yuan +33%, latency 3.0x (643s vs 216s) => no deployment benefit",
+  "reroll_mechanism": "17 rerolls: 7 adoptions all base-parse-fail->reroll-success (scores 1->28/37/49/64); 10 non-adoptions all 1->1 double failures (all HetImp, GLM truncation); no selection bias; retry cannot fix systematic truncation",
+  "model_drift": "model_resp stable: deepseek-flash / GLM-5.3-Flash, matches request ids, no intra-batch drift; cross-batch V2 limitation stands"
+ },
+ "decision": [
+  "D1+D2 delivery improvement validated as GENERAL mechanism -> baseline execution stack",
+  "interaction ~0 and HetImp still worse on Q/C/L -> stop tuning current GLM/DS allocation; proceed to node-level real capability measurement (next phase, NOT started)"
+ ],
+ "analysis_frozen_pre_data": "rq2_p2r_v3_analyze.py sha256 b5551662f318544e4f3d60ab8dafb7080c99e2dfacb4a9861a9623fb7b0b75bd",
+ "files_sha256": {
+  "RQ2_P2R_V3_RESULTS.md": "75d532388c64f09bbfe1a7ac287857ac72be3ffc8a604edd68c3c621780c41dd",
+  "RQ2_P2R_V3_RESULTS.json": "997760c539f2e5bc55f6b20ffde7e86d0ecac2884f5ba13bcc25a8a88068c003",
+  "rq2_p2r_v3_runner.py": "9251f518d0644c9e1774cd942428e6539c533f6b35aa9f9f1ea4fef27a0e91ac",
+  "rq2_p2r_v3_config.json": "a1c50685ff2945649483ce4b8f87204c9ca90c0c4e2bb707363d13434fd4603e",
+  "MODEL_CONFIG_V3.json": "3f4efee9e68284436d0850f0ce4b11b4d9f45e5c0143b872e1471273c50c67c3",
+  "rq2_p2r_v3_runs/ledger.jsonl": "820e15c092c3c564e41db3d54c51e64f13b648d126065d2e30b5b7bd8d282aff",
+  "rq2_p2r_v3_runs/state/GLOBAL_BUDGET.json": "e9820cf0172950b88a7c78bf005ce17e08214c3bdfac7be706597372c3f1f6a8"
+ },
+ "results": {
+  "status": "partial",
+  "counts": {
+   "HomBase": 12,
+   "HetBase": 12,
+   "HomImp": 11,
+   "HetImp": 10
+  },
+  "cells": {
+   "HomBase": {
+    "by_task": {
+     "E05": {
+      "n_reps": 3,
+      "q_main": 0.5152,
+      "q_raw": 0.7273,
+      "q_full": 0.4242,
+      "gate_rate": 0.6667
+     },
+     "E06": {
+      "n_reps": 3,
+      "q_main": 0.5833,
+      "q_raw": 0.5833,
+      "q_full": 0.5833,
+      "gate_rate": 1
+     },
+     "E07": {
+      "n_reps": 3,
+      "q_main": 0.6364,
+      "q_raw": 0.6364,
+      "q_full": 0.6364,
+      "gate_rate": 1
+     },
+     "E08": {
+      "n_reps": 3,
+      "q_main": 0.7667,
+      "q_raw": 0.7667,
+      "q_full": 0.7667,
+      "gate_rate": 1
+     }
+    },
+    "pooled": {
+     "mean_task_q_main": 0.6254,
+     "mean_task_q_raw": 0.6784,
+     "mean_task_gate": 0.9167,
+     "n_execs": 12
+    }
+   },
+   "HetBase": {
+    "by_task": {
+     "E05": {
+      "n_reps": 3,
+      "q_main": 0.0909,
+      "q_raw": 0.5455,
+      "q_full": 0.0909,
+      "gate_rate": 0.3333
+     },
+     "E06": {
+      "n_reps": 3,
+      "q_main": 0.3889,
+      "q_raw": 0.5556,
+      "q_full": 0.3889,
+      "gate_rate": 0.6667
+     },
+     "E07": {
+      "n_reps": 3,
+      "q_main": 0.6364,
+      "q_raw": 0.6364,
+      "q_full": 0.6364,
+      "gate_rate": 1
+     },
+     "E08": {
+      "n_reps": 3,
+      "q_main": 0.5333,
+      "q_raw": 0.8,
+      "q_full": 0.5333,
+      "gate_rate": 0.6667
+     }
+    },
+    "pooled": {
+     "mean_task_q_main": 0.4124,
+     "mean_task_q_raw": 0.6344,
+     "mean_task_gate": 0.6667,
+     "n_execs": 12
+    }
+   },
+   "HomImp": {
+    "by_task": {
+     "E05": {
+      "n_reps": 3,
+      "q_main": 0.7879,
+      "q_raw": 0.7879,
+      "q_full": 0.5758,
+      "gate_rate": 1
+     },
+     "E06": {
+      "n_reps": 3,
+      "q_main": 0.5833,
+      "q_raw": 0.5833,
+      "q_full": 0.5833,
+      "gate_rate": 1
+     },
+     "E07": {
+      "n_reps": 3,
+      "q_main": 0.6061,
+      "q_raw": 0.6061,
+      "q_full": 0.6061,
+      "gate_rate": 1
+     },
+     "E08": {
+      "n_reps": 2,
+      "q_main": 0.8,
+      "q_raw": 0.8,
+      "q_full": 0.8,
+      "gate_rate": 1
+     }
+    },
+    "pooled": {
+     "mean_task_q_main": 0.6943,
+     "mean_task_q_raw": 0.6943,
+     "mean_task_gate": 1,
+     "n_execs": 11
+    }
+   },
+   "HetImp": {
+    "by_task": {
+     "E05": {
+      "n_reps": 3,
+      "q_main": 0.3636,
+      "q_raw": 0.6061,
+      "q_full": 0.1818,
+      "gate_rate": 0.6667
+     },
+     "E06": {
+      "n_reps": 3,
+      "q_main": 0.3889,
+      "q_raw": 0.5833,
+      "q_full": 0.3889,
+      "gate_rate": 0.6667
+     },
+     "E07": {
+      "n_reps": 3,
+      "q_main": 0.6364,
+      "q_raw": 0.6364,
+      "q_full": 0.6364,
+      "gate_rate": 1
+     },
+     "E08": {
+      "n_reps": 1,
+      "q_main": 0.8,
+      "q_raw": 0.8,
+      "q_full": 0.8,
+      "gate_rate": 1
+     }
+    },
+    "pooled": {
+     "mean_task_q_main": 0.5472,
+     "mean_task_q_raw": 0.6564,
+     "mean_task_gate": 0.8334,
+     "n_execs": 10
+    }
+   }
+  },
+  "delivery_effect_het": {
+   "E05": 0.2727,
+   "E06": 0.0,
+   "E07": 0.0,
+   "E08": 0.2667
+  },
+  "delivery_effect_hom": {
+   "E05": 0.2727,
+   "E06": 0.0,
+   "E07": -0.0303,
+   "E08": 0.0333
+  },
+  "interaction": {
+   "per_task": {
+    "E05": 0.0,
+    "E06": 0.0,
+    "E07": 3.03,
+    "E08": 23.34
+   },
+   "n_tasks": 4,
+   "mean_pp": 6.59,
+   "sd_pp": 11.26,
+   "se_pp": 5.63,
+   "signflip_p": 0.5,
+   "signflip_floor_note": "n=4 => two-sided min p = 0.125; exploratory only",
+   "cluster_bootstrap_ci95_exploratory": [
+    -17.42,
+    31.16
+   ]
+  },
+  "gates": {
+   "HomBase": {
+    "passed": 11,
+    "n": 12,
+    "rate": 0.9167
+   },
+   "HetBase": {
+    "passed": 8,
+    "n": 12,
+    "rate": 0.6667
+   },
+   "HomImp": {
+    "passed": 11,
+    "n": 11,
+    "rate": 1
+   },
+   "HetImp": {
+    "passed": 8,
+    "n": 10,
+    "rate": 0.8
+   }
+  },
+  "costs": {
+   "HomBase": {
+    "n_execs": 12,
+    "calls": 23.25,
+    "tokens": 18876.0,
+    "yuan": 0.7945,
+    "span_s": 135.1
+   },
+   "HetBase": {
+    "n_execs": 12,
+    "calls": 25.08,
+    "tokens": 21354.0,
+    "yuan": 0.9243,
+    "span_s": 237.5
+   },
+   "HomImp": {
+    "n_execs": 11,
+    "calls": 26.64,
+    "tokens": 20101,
+    "yuan": 0.925,
+    "span_s": 216.5
+   },
+   "HetImp": {
+    "n_execs": 10,
+    "calls": 32.9,
+    "tokens": 33939.0,
+    "yuan": 1.232,
+    "span_s": 643.2
+   }
+  },
+  "node_reroll": {
+   "counts": {
+    "HomImp:nodes": 52,
+    "HomImp:rerolls": 4,
+    "HomImp:adopted": 3,
+    "HetImp:nodes": 47,
+    "HetImp:rerolls": 13,
+    "HetImp:adopted": 4
+   },
+   "score_pairs": [
+    [
+     "HomImp",
+     1,
+     28,
+     true
+    ],
+    [
+     "HomImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HomImp",
+     8,
+     28,
+     true
+    ],
+    [
+     "HomImp",
+     1,
+     37,
+     true
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HetImp",
+     1,
+     10,
+     true
+    ],
+    [
+     "HetImp",
+     1,
+     49,
+     true
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HetImp",
+     1,
+     64,
+     true
+    ],
+    [
+     "HetImp",
+     1,
+     64,
+     true
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ],
+    [
+     "HetImp",
+     1,
+     1,
+     false
+    ]
+   ],
+   "note": "reroll improvement question: does reroll score > base score, and does adoption track the better output?"
+  },
+  "model_drift": {
+   "deepseek": [
+    "deepseek-flash"
+   ],
+   "glm53flash": [
+    "GLM-5.3-Flash"
+   ]
+  },
+  "h3_decomposition": {
+   "base_gap_terminal_vs_raw": [
+    -21.3,
+    -4.4
+   ],
+   "imp_gap_terminal_vs_raw": [
+    -14.71,
+    -3.79
+   ],
+   "note": "H3: under improved delivery the Het-Hom terminal gap should shrink toward the raw gap (delivery explains the difference)."
+  }
+ },
+ "new_calls_after_batch": 0,
+ "hold_192": "untouched",
+ "v2_readonly": true
+}

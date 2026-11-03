@@ -1,0 +1,53 @@
+{
+ "frozen_at": "2026-11-03T21:02:36",
+ "purpose": "RQ2_P2R_V3 model-version comparability audit (prereg v1.1 sec.5)",
+ "models": {
+  "glm53flash": {
+   "request_model_id": "GLM-5.3-Flash",
+   "endpoint": "https://open.bigmodel.cn/api/anthropic/v1/messages",
+   "request_body": {
+    "model": "GLM-5.3-Flash",
+    "max_tokens": "variable (D1 rule)",
+    "system": "variable",
+    "messages": "single user turn",
+    "reasoning_effort": "low",
+    "temperature": "OMITTED = provider default"
+   },
+   "headers": {
+    "anthropic-version": "2023-06-01",
+    "auth": "x-api-key + Bearer (env STAGE_D_GLM_KEY, never persisted)"
+   },
+   "response_model_field": "recorded per call in ledger (model_resp)"
+  },
+  "deepseek": {
+   "request_model_id": "deepseek-flash",
+   "endpoint": "https://api.deepseek.com/chat/completions",
+   "request_body": {
+    "model": "deepseek-flash",
+    "max_tokens": "variable (D1 rule)",
+    "messages": "system+user",
+    "response_format": {
+     "type": "json_object"
+    },
+    "thinking": {
+     "type": "disabled"
+    },
+    "temperature": "OMITTED = provider default"
+   },
+   "headers": {
+    "auth": "Bearer env DEEPSEEK_API_KEY"
+   },
+   "response_model_field": "recorded per call in ledger (model_resp)"
+  }
+ },
+ "v2_baseline_limitation": "V2 ledger did not record response model field; server-side snapshot for the frozen baseline cells is not retroactively verifiable. V3 results are framed as delivery effect under possible cross-batch model drift, not strict randomized causal validation.",
+ "execution": "HomImp/HetImp interleaved per (task,rep) in one session",
+ "files_sha256": {
+  "rq2_p2r_v3_runner.py": "9251f518d0644c9e1774cd942428e6539c533f6b35aa9f9f1ea4fef27a0e91ac",
+  "rq2_p2r_v3_config.json": "a1c50685ff2945649483ce4b8f87204c9ca90c0c4e2bb707363d13434fd4603e",
+  "RQ2_P2R_V3_PREREGISTRATION_V1_1.md": "5db079c9546fafe80352601c13bc259a402bcc57ee97373bdebb3d3720105f79",
+  "stage_d_executor.py": "64dea81992f9f036af783cf91079f32dbb808948210c13ea72069ddd35839f7d",
+  "transport.py (/root/capital_opinion_pilot)": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+  "rq2_p2r_runner.py (V2 runner, reused pieces)": "f29b92b8d6a0c6229954c0b4cac927429c65a84588515247f51b8bbbd885fcad"
+ }
+}
