@@ -1,0 +1,42 @@
+{
+ "actions": {
+  "A_alt": {
+   "rep1": {
+    "n6": "{\n  \"entity_graph\": {\n    \"error\": \"未提供待分析的文本或公告内容\",\n    \"entities\": [],\n    \"relationships\": []\n  }\n}",
+    "n7": "{\n  \"stages\": [],\n  \"error\": \"输入的时间线与主体信息均为空/错误占位内容，无法进行阶段复核与划分。\",\n  \"需要提供\": \"请提供有效的时间线事件列表及实体图谱/公告原文，以便划分时间线阶段。\"\n}",
+    "n8": "```json\n{\n  \"amounts_checked\": {\n    \"status\": \"failed\",\n    \"reason\": \"未提供任何输入数据，无法进行金额交叉核验。请提供包含虚增金额、罚款金额、募集资金等数据的文本。\",\n    \"sources_compared\": 0,\n    \"discrepancies\": []\n  }\n}\n```",
+    "n9": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"输入的处罚记录、时间线与金额核验结果均为占位/空内容，无可核验的事实。\",\n  \"需要提供\": \"请提供有效的处罚决定原文、时间线事件列表及金额数据来源，以便进行跨来源一致性核验并输出 verified_facts。\"\n}\n```",
+    "n10": "```json\n{\n  \"report\": {\n    \"verified_facts\": [],\n    \"error\": \"输入的处罚记录、时间线与金额核验结果均为占位/空内容，无可核验的事实。\",\n    \"需要提供\": \"请提供有效的处罚决定原文、时间线事件列表及金额数据来源，以便进行跨来源一致性核验并输出 verified_facts。\",\n    \"conclusion\": \"核验失败：无有效输入数据，无法形成任何经证实的调查结论。\"\n  }\n}\n```"
+   },
+   "rep2": {
+    "n6": "```json\n{\n  \"entity_graph\": {\n    \"companies\": [],\n    \"responsible_persons\": [],\n    \"intermediaries\": [],\n    \"relationships\": []\n  }\n}\n```\n\n说明：您尚未提供待分析的文本材料（如公告、处罚决定书、招股说明书等）。请提供具体文本，我将识别其中的公司、责任人、中介机构及其关系，并输出完整的 entity_graph JSON。",
+    "n7": "```json\n{\n  \"stages\": [],\n  \"error\": \"未提供任何事件或资料内容，无法划分时间线阶段。\",\n  \"需要提供\": \"请提供待复核的事件描述、公告、处罚决定书或调查资料，我将据此划分时间线阶段并输出完整stages JSON。\"\n}\n```",
+    "n8": "```json\n{\n  \"amounts_checked\": {\n    \"status\": \"failed\",\n    \"reason\": \"未提供任何输入数据，无法进行金额交叉核验。请提供包含虚增金额、罚款金额、募集资金等数据的文本。\",\n    \"sources_compared\": 0,\n    \"discrepancies\": []\n  }\n}\n```",
+    "n9": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"未提供任何事件、公告、处罚决定书或调查资料，无法进行跨来源核验。\",\n  \"需要提供\": \"请提供处罚决定、时间线节点、金额数据等多来源材料，我将核对处罚、时间线、金额一致性后输出verified_facts。\",\n  \"cross_source_checks\": {\n    \"penalties_checked\": 0,\n    \"timeline_stages_checked\": 0,\n    \"amounts_checked\": 0,\n    \"status\": \"failed\"\n  }\n}\n```",
+    "n10": "```json\n{\n  \"report\": {\n    \"verified_facts\": [],\n    \"error\": \"未提供任何事件、公告、处罚决定书或调查资料，无法进行跨来源核验。\",\n    \"需要提供\": \"请提供处罚决定、时间线节点、金额数据等多来源材料，我将核对处罚、时间线、金额一致性后输出verified_facts。\",\n    \"cross_source_checks\": {\n      \"penalties_checked\": 0,\n      \"timeline_stages_checked\": 0,\n      \"amounts_checked\": 0,\n      \"status\": \"failed\"\n    }\n  }\n}\n```"
+   }
+  },
+  "B_ib": {
+   "rep1": {
+    "n6": "```json\n{\n  \"entity_graph\": {\n    \"entities\": [],\n    \"relationships\": [],\n    \"note\": \"未提供案件材料或事件描述，无法识别涉事主体及关系。请提供公告、处罚决定书、新闻稿或案件描述等原始信息后再进行分析。\"\n  }\n}\n```",
+    "n7": "```json\n{\n  \"stages\": []\n}\n```",
+    "n8": "```json\n{\n  \"amounts_checked\": {\n    \"status\": \"failed\",\n    \"reason\": \"未提供任何输入数据，无法进行金额交叉核验。请提供包含虚增金额、罚款金额、募集资金等数据的文本。\",\n    \"sources_compared\": 0,\n    \"discrepancies\": []\n  }\n}\n```",
+    "n9": "```json\n{\n  \"verified_facts\": []\n}\n```\n\n说明：未提供任何待核验的实质性输入数据（处罚文本为占位符、阶段为空、核验显示无来源可比对），因此无已验证事实可输出。请提供具体的处罚决定书、公告或相关文本后重新核验。",
+    "n10": "```json\n{\n  \"report\": {\n    \"conclusion\": \"无法完成核验\",\n    \"verified_facts\": [],\n    \"reason\": \"未提供任何待核验的实质性输入数据（处罚文本为占位符、调查阶段为空、核验过程无可用来源可比对），因此不存在可确认的已验证事实。\",\n    \"recommendation\": \"请提供具体的行政处罚决定书、上市公司公告或相关监管文本（含文号、处罚对象、处罚机关、日期等要素）后重新发起核验。\",\n    \"confidence\": \"N/A\"\n  },\n  \"verified_facts\": []\n}\n```"
+   },
+   "rep2": {
+    "n6": "```json\n{\n  \"entity_graph\": {\n    \"status\": \"输入不足\",\n    \"message\": \"未提供案情文本或公告内容，无法识别涉事主体及其关系。请提供需要分析的案件材料（如处罚决定书、公告、新闻稿等）。\",\n    \"entities\": [],\n    \"relationships\": []\n  }\n}\n```",
+    "n7": "{\"stages\": []}",
+    "n8": "```json\n{\n  \"amounts_checked\": {\n    \"status\": \"failed\",\n    \"reason\": \"未提供任何输入数据，无法进行金额交叉核验。请提供包含虚增金额、罚款金额、募集资金等数据的文本。\",\n    \"sources_compared\": 0,\n    \"discrepancies\": []\n  }\n}\n```",
+    "n9": "```json\n{\n  \"verified_facts\": [],\n  \"cross_source_verification\": {\n    \"status\": \"failed\",\n    \"reason\": \"未提供任何输入数据（处罚记录、时间线、金额信息缺失），无法进行跨来源一致性核验。\",\n    \"sources_compared\": 0,\n    \"amounts_checked\": {\n      \"status\": \"failed\",\n      \"discrepancies\": []\n    },\n    \"timeline_checked\": {\n      \"status\": \"failed\",\n      \"discrepancies\": []\n    },\n    \"penalties_checked\": {\n      \"status\": \"failed\",\n      \"discrepancies\": []\n    }\n  }\n}\n```",
+    "n10": "```json\n{\n  \"report\": {\n    \"conclusion\": \"调查无法进行\",\n    \"verified_facts\": [],\n    \"cross_source_verification\": {\n      \"status\": \"failed\",\n      \"reason\": \"未提供任何输入数据（处罚记录、时间线、金额信息缺失），无法进行跨来源一致性核验。\",\n      \"sources_compared\": 0,\n      \"amounts_checked\": {\n        \"status\": \"failed\",\n        \"discrepancies\": []\n      },\n      \"timeline_checked\": {\n        \"status\": \"failed\",\n        \"discrepancies\": []\n      },\n      \"penalties_checked\": {\n        \"status\": \"failed\",\n        \"discrepancies\": []\n      }\n    },\n    \"risk_level\": \"unknown\",\n    \"recommendation\": \"请提供待核验的资本市场调查材料（如处罚决定书、涉案主体、时间线、金额明细及各来源数据），以便重新开展跨来源核验与分析。\"\n  }\n}\n```"
+   }
+  }
+ },
+ "shared": {
+  "n1": "```json\n{\n  \"doc_ex\": [\n    {\n      \"doc_id\": \"zeda_csrc_penalty_2023_29\",\n      \"主体\": [\n        {\n          \"名称\": \"泽达易盛(天津)科技股份有限公司\",\n          \"角色\": \"发行人/上市公司\"\n        },\n        {\n          \"名称\": \"林应\",\n          \"角色\": \"实际控制人、时任董事长、总经理，直接负责的主管人员\"\n        },\n        {\n          \"名称\": \"应岚\",\n          \"角色\": \"时任董事、副总经理、财务总监、董事会秘书，直接负责的主管人员\"\n        },\n        {\n          \"名称\": \"王晓亮\",\n          \"角色\": \"时任监事、内审部负责人等，其他直接责任人员\"\n        },\n        {\n          \"名称\": \"姜亚莉\",\n          \"角色\": \"时任财务经理，其他直接责任人",
+  "n2": "```json\n{\n  \"doc_ex\": [\n    {\n      \"doc_id\": \"zeda_csrc_penalty_2023_29\",\n      \"parties\": [\n        {\n          \"name\": \"泽达易盛(天津)科技股份有限公司\",\n          \"role\": \"发行人/上市公司\",\n          \"address\": \"天津市开发区\"\n        },\n        {\"name\": \"林应\", \"role\": \"实际控制人、时任董事长、总经理\", \"birth\": \"1973-01\", \"responsibility\": \"直接负责的主管人员，组织、指使实施违法行为\"},\n        {\"name\": \"应岚\", \"role\": \"时任董事、副总经理、财务总监、董事会秘书\", \"birth\": \"1974-03\", \"responsibility\": \"直接负责的主管人员\"},\n        {\"name\": \"王晓亮\", \"role\": \"时任财务行政中心主管、行政部副总监、监事、内审部负责人\", \"bi",
+  "n3": "```json\n{\n  \"error\": \"未提供任何事件或资料内容，无法生成时间线。\",\n  \"timeline\": [],\n  \"需要提供\": \"请提供待整理的事件描述、新闻、公告或调查资料。\"\n}\n```",
+  "n4": "```json\n{\n  \"amounts\": {\n    \"error\": \"未提供任何输入数据，无法汇总金额。请提供包含虚增金额、罚款金额、募集资金等数据的文本。\"\n  }\n}\n```"
+ }
+}

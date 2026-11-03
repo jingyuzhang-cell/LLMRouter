@@ -1,0 +1,33 @@
+{
+ "stage": "RQ2 real-model experiment GO application",
+ "status": "APPLICATION ONLY \u2014 no authorization, no calls, no keys read, 192 quota untouched",
+ "batch": "RQ2_P2R_V1",
+ "requested_caps": {
+  "calls": 500,
+  "tokens": 5000000,
+  "yuan": 30
+ },
+ "arms": {
+  "A": "DS static baseline",
+  "B": "DS + runtime-signal same-model re-execution",
+  "C": "heterogeneous base + heterogeneous re-execution (prereg P5-type)"
+ },
+ "tasks": "frozen V1.5 E05-E08, 19 nodes, 27 derived gold facts; 3 replications",
+ "budget_derivation": {
+  "A": 57,
+  "B_expected": 93,
+  "C_expected": 93,
+  "verify_expected": 90,
+  "V1_spot": 20,
+  "retry_reserve": 35,
+  "expected_total": 388,
+  "worst_case": 467
+ },
+ "attribution_design": "real-world H0 replaced by B arm: C-B = heterogeneity increment; B-A = model-agnostic re-execution effect",
+ "V1": "150-200 human-labeled pairs from batch outputs; spec_v>=.85 sens_v>=.70; numbers flagged until verified",
+ "positioning": "mechanism-evidence batch, NOT confirmatory for 70%; R2 confirmatory n recomputed from measured variance",
+ "reuse": "stage_d_executor call layer + budget ledger; rq1_tasks V1.5 frozen materials; V1.5 gold validators",
+ "shas": {
+  "RQ2_REAL_GO_APPLICATION.md": "b25f2cb156cff1ffd3c6cbc241852bac8246f1cad4a5d4dd54067d750249b077"
+ }
+}

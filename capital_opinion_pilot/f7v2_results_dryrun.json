@@ -1,0 +1,428 @@
+{
+ "runs": {
+  "R1_B3p_clean": {
+   "policy": "static",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [],
+   "fault_records": [],
+   "node_log": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    }
+   ],
+   "decision_latencies": [],
+   "tokens": 4800,
+   "cash_rmb": 0.0054,
+   "full_set": "3/4",
+   "per_fact": {
+    "RF1": "COVERED",
+    "RF2": "COVERED",
+    "RF3": "NOT_COVERED",
+    "RF4": "COVERED"
+   },
+   "reachable_chain": "3/3",
+   "chain_facts": [
+    "RF1",
+    "RF2",
+    "RF4"
+   ],
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "R2_S5Cap_F7": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "fault_records": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "reason": "blocked:(t1,deepseek)",
+     "at_s": 0.0
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    }
+   ],
+   "decision_latencies": [],
+   "tokens": 4800,
+   "cash_rmb": 0.0036,
+   "full_set": "3/4",
+   "per_fact": {
+    "RF1": "COVERED",
+    "RF2": "COVERED",
+    "RF3": "NOT_COVERED",
+    "RF4": "COVERED"
+   },
+   "reachable_chain": "3/3",
+   "chain_facts": [
+    "RF1",
+    "RF2",
+    "RF4"
+   ],
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "R3_S6_F7": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.2,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521
+    }
+   ],
+   "fault_records": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "reason": "blocked:(t1,deepseek)",
+     "at_s": 0.0
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    },
+    {
+     "node": "t6",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false,
+     "timeout_s": 88
+    }
+   ],
+   "decision_latencies": [
+    {
+     "node": "t1",
+     "decision_s": 0.1948
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0054,
+   "full_set": "3/4",
+   "per_fact": {
+    "RF1": "COVERED",
+    "RF2": "COVERED",
+    "RF3": "NOT_COVERED",
+    "RF4": "COVERED"
+   },
+   "reachable_chain": "3/3",
+   "chain_facts": [
+    "RF1",
+    "RF2",
+    "RF4"
+   ],
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  }
+ },
+ "meter": {
+  "calls": 18,
+  "tokens": 14400,
+  "cash_rmb": 0.0145
+ },
+ "preflight": {
+  "conditions": {
+   "C1_regression": true,
+   "C2_fresh_ledger_lock": true,
+   "C3_offpeak": true,
+   "C4_reservation": true
+  },
+  "detail": {
+   "planned_calls": 18,
+   "worst_tokens": 102930,
+   "worst_cash_rmb": 0.112,
+   "peak_now": false
+  },
+  "verdict": "GO(dry-run)"
+ }
+}

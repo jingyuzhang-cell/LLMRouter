@@ -1,0 +1,262 @@
+{
+  "event": "江苏舜天(600287)信息披露违法违规事件",
+  "information_cutoff": "2024-07-10",
+  "label_type": "silver_auto_verified (deterministic grounding + cross-model AI check; NOT human gold)",
+  "method": {
+    "candidate_authoring": "program-authored from evidence full text with verbatim quotes (revision after 2 truncated model-extraction calls, see model_call_ledger call_id 1-2)",
+    "deterministic_checks": [
+      "quote_grounded_in_full_evidence_text",
+      "answer_format",
+      "answer_dates<=cutoff",
+      "evidence_public_date<=cutoff"
+    ],
+    "independent_verification": "GLM-5.3-Flash verdict against excerpts (call_id 3)"
+  },
+  "counts": {
+    "candidates": 10,
+    "verified": 8,
+    "unresolved": 2
+  },
+  "facts": [
+    {
+      "fact_id": "F1",
+      "answer_type": "date",
+      "question": "公司收到证监会《立案告知书》的日期是哪一天？",
+      "answer": "2022-11-04",
+      "evidence_doc": "st_announce_2024_020",
+      "quote": "于2022年11月4日收到中国证券监督管理委员会下发的《立案告知书》",
+      "public_date": "2024-07-06",
+      "evidence_title": "江苏舜天临2024-020公告（2024-07-06）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "SUPPORTED",
+        "corrected_answer": null,
+        "note": "日期与公告一致",
+        "call_id": 3
+      },
+      "verification_status": "verified"
+    },
+    {
+      "fact_id": "F2",
+      "answer_type": "date",
+      "question": "公司收到《行政处罚及市场禁入事先告知书》（处罚字〔2023〕37号）的日期是哪一天？",
+      "answer": "2023-06-30",
+      "evidence_doc": "st_advance_notice_2023",
+      "quote": "2023年6月30日，公司收到中国证券监督管理委员会出具的《行政处罚及市场禁入事先告知书》",
+      "public_date": "2023-07-03",
+      "evidence_title": "江苏舜天临2023-039公告·行政处罚事先告知（2023-07-03上海证券报电子版）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "SUPPORTED",
+        "corrected_answer": null,
+        "note": "2023年6月30日一致",
+        "call_id": 3
+      },
+      "verification_status": "verified"
+    },
+    {
+      "fact_id": "F3",
+      "answer_type": "date",
+      "question": "证监会行政处罚决定书〔2024〕41号的落款（签发）日期是哪一天？",
+      "answer": "2024-04-24",
+      "evidence_doc": "csrc_penalty_2024_41",
+      "quote": "中国证监会2024年4月24日",
+      "public_date": "2024-04-25",
+      "evidence_title": "证监会行政处罚决定书〔2024〕41号（签发2024-04-24，网站发布2024-04-25）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "UNSUPPORTED",
+        "corrected_answer": null,
+        "note": "材料摘录中无落款日期",
+        "call_id": 3
+      },
+      "verification_status": "unresolved"
+    },
+    {
+      "fact_id": "F4",
+      "answer_type": "amount",
+      "question": "处罚决定书对江苏舜天股份有限公司处以的罚款金额是多少？",
+      "answer": "1,000万元",
+      "evidence_doc": "csrc_penalty_2024_41",
+      "quote": "对江苏舜天股份有限公司责令改正,给予警告,并处以1,000万元罚款",
+      "public_date": "2024-04-25",
+      "evidence_title": "证监会行政处罚决定书〔2024〕41号（签发2024-04-24，网站发布2024-04-25）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "UNSUPPORTED",
+        "corrected_answer": null,
+        "note": "摘录未含罚款金额",
+        "call_id": 3
+      },
+      "verification_status": "unresolved"
+    },
+    {
+      "fact_id": "F5",
+      "answer_type": "amount",
+      "question": "2009年至2021年年度报告共计虚增营业收入的金额是多少？",
+      "answer": "10,333,448,392.98元",
+      "evidence_doc": "csrc_penalty_2024_41",
+      "quote": "2009年至2021年年度报告共计虚增营业收入10,333,448,392.98元",
+      "public_date": "2024-04-25",
+      "evidence_title": "证监会行政处罚决定书〔2024〕41号（签发2024-04-24，网站发布2024-04-25）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "SUPPORTED",
+        "corrected_answer": null,
+        "note": "虚增金额精确一致",
+        "call_id": 3
+      },
+      "verification_status": "verified"
+    },
+    {
+      "fact_id": "F6",
+      "answer_type": "text",
+      "question": "江苏舜天参与的专网通信业务被认定为何种性质的违法业务？",
+      "answer": "隋某力主导的专网通信虚假自循环业务，无商业实质",
+      "evidence_doc": "csrc_penalty_2024_41",
+      "quote": "实质是合同、资金、票据流转构成闭环的虚假自循环业务,无商业实质",
+      "public_date": "2024-04-25",
+      "evidence_title": "证监会行政处罚决定书〔2024〕41号（签发2024-04-24，网站发布2024-04-25）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "SUPPORTED",
+        "corrected_answer": null,
+        "note": "与处罚书表述一致",
+        "call_id": 3
+      },
+      "verification_status": "verified"
+    },
+    {
+      "fact_id": "F7",
+      "answer_type": "date",
+      "question": "公司股票实施其他风险警示前的停牌日期是哪一天？",
+      "answer": "2024-07-08",
+      "evidence_doc": "st_announce_2024_021",
+      "quote": "停牌日期为2024年7月8日",
+      "public_date": "2024-07-06",
+      "evidence_title": "江苏舜天临2024-021公告（2024-07-06）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "SUPPORTED",
+        "corrected_answer": null,
+        "note": "停牌日期一致",
+        "call_id": 3
+      },
+      "verification_status": "verified"
+    },
+    {
+      "fact_id": "F8",
+      "answer_type": "date",
+      "question": "公司股票实施其他风险警示的起始日期是哪一天？",
+      "answer": "2024-07-09",
+      "evidence_doc": "st_announce_2024_021",
+      "quote": "实施其他风险警示的起始日：2024年7月9日",
+      "public_date": "2024-07-06",
+      "evidence_title": "江苏舜天临2024-021公告（2024-07-06）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "SUPPORTED",
+        "corrected_answer": null,
+        "note": "起始日一致",
+        "call_id": 3
+      },
+      "verification_status": "verified"
+    },
+    {
+      "fact_id": "F9",
+      "answer_type": "text",
+      "question": "实施其他风险警示后，公司A股股票简称变更为什麼？",
+      "answer": "ST舜天",
+      "evidence_doc": "st_announce_2024_021",
+      "quote": "A股股票简称由“江苏舜天”变更为“ST舜天”",
+      "public_date": "2024-07-06",
+      "evidence_title": "江苏舜天临2024-021公告（2024-07-06）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "SUPPORTED",
+        "corrected_answer": null,
+        "note": "简称变更为ST舜天",
+        "call_id": 3
+      },
+      "verification_status": "verified"
+    },
+    {
+      "fact_id": "F10",
+      "answer_type": "amount",
+      "question": "实施其他风险警示后股票价格的日涨跌幅限制是多少？",
+      "answer": "5%",
+      "evidence_doc": "st_announce_2024_021",
+      "quote": "实施其他风险警示后股票价格的日涨跌幅限制为5%",
+      "public_date": "2024-07-06",
+      "evidence_title": "江苏舜天临2024-021公告（2024-07-06）",
+      "deterministic_check": {
+        "quote_grounded_full_text": true,
+        "quote_grounded_excerpt": true,
+        "problems": [],
+        "pass": true
+      },
+      "independent_ai_verification": {
+        "model": "GLM-5.3-Flash",
+        "verdict": "SUPPORTED",
+        "corrected_answer": null,
+        "note": "涨跌幅限制5%一致",
+        "call_id": 3
+      },
+      "verification_status": "verified"
+    }
+  ]
+}

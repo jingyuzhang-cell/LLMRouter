@@ -1,0 +1,164 @@
+{
+ "frozen_at": "2026-11-03",
+ "batch": "QP1_QUALITY_PHASE_PREP",
+ "status": "DEV_INCOMPLETE_BUDGET_CAP",
+ "model_calls": 0,
+ "api_key_read": false,
+ "baseline": {
+  "v2_q": 0.075,
+  "s2_q": 0.0334,
+  "note": "composite Q = value AND localization AND support"
+ },
+ "experiment": {
+  "arms": [
+   "Baseline",
+   "E1_evidence_extraction",
+   "E2_per_fact_verification",
+   "E3_terminal_integration"
+  ],
+  "dev": [
+   "E06",
+   "MVR1",
+   "KANGMEI",
+   "GUOEN"
+  ],
+  "heldout": [
+   "E04",
+   "MVR2",
+   "ZHANGZIDAO",
+   "YJT"
+  ],
+  "reps": 2,
+  "gate": "macro Q >= 0.70 and Critical Gate pass >= 0.80 on held-out"
+ },
+ "budget": {
+  "calls": 448,
+  "tokens": 1172060,
+  "yuan": 1.296,
+  "hard_stop": {
+   "calls": 537,
+   "tokens": 1465076,
+   "yuan": 1.94
+  },
+  "dev_only": {
+   "calls": 224,
+   "tokens": 586030,
+   "yuan": 0.648
+  }
+ },
+ "caveat": "held-out includes 4 Silver tasks; formal 70% gate needs Gold promotion or must be labelled provisional",
+ "files": {
+  "quality_phase_v1/scorer_qp1.py": {
+   "sha256": "3506a69f13af3adaea8e75249357f71d46484693158d45d79015227ae161515b",
+   "bytes": 5717
+  },
+  "quality_phase_v1/test_scorer_qp1.py": {
+   "sha256": "d3473c861c3dd734e34e5d299b7d7dcd4f9208eb07a8df9ed7cb893da66af79f",
+   "bytes": 4854
+  },
+  "quality_phase_v1/QP1_SCORER_TESTS.json": {
+   "sha256": "299b69e5dd52066f496e469c8dbe88475ca0dc98fe02c1f46da75c15bb4669d4",
+   "bytes": 1953
+  },
+  "quality_phase_v1/attribute_qp1.py": {
+   "sha256": "06f9f927a40fa6b8c460d90e9d4f6ffb7e858d7220a5900ab2639544add8732b",
+   "bytes": 7417
+  },
+  "quality_phase_v1/QP1_ERROR_ATTRIBUTION.json": {
+   "sha256": "24c6854c28031cee6a78f65ad4e2216b41b206003a7176255b4aa60d0dc22db0",
+   "bytes": 6059
+  },
+  "quality_phase_v1/budget_qp1.py": {
+   "sha256": "a8f3ee5b70583dd4bf17a90ac8d107129177c0951d46ff976d6495c993d9e335",
+   "bytes": 2346
+  },
+  "quality_phase_v1/QP1_BUDGET_ESTIMATE.json": {
+   "sha256": "65f1fff6001d8b0992ab4cb59e5790b6dbbcb8d55d52a66fdbdc377140623214",
+   "bytes": 1933
+  },
+  "quality_phase_v1/QUALITY_PHASE_DESIGN.md": {
+   "sha256": "92a82b42581cc6d3bde22f2da5244ed8111b28599cd918baf18a4c39c8cb8c0c",
+   "bytes": 6885
+  },
+  "quality_phase_v1/qp1_prompts.py": {
+   "sha256": "80cbeacefa82d356f17476b98d3cca4cd1fd09123352febf03f118216ca735d0",
+   "bytes": 5020
+  },
+  "quality_phase_v1/qp1_runner.py": {
+   "sha256": "ab8bd9450f74b09ce265d9606fa472893e54e58eea1f1876d91ba436dee9fa31",
+   "bytes": 6561
+  },
+  "quality_phase_v1/QP1_LEDGER.jsonl": {
+   "sha256": "bdb754316adddbec907709c26fc55f31c3ee053f8dca17b4acca74a5918ff85d",
+   "bytes": 455719
+  },
+  "quality_phase_v1/QP1_DEV_PROGRESS.json": {
+   "sha256": "29e6bb44276773af3a3646b7b062592438c8c615a172f67153e22d5acc052344",
+   "bytes": 5177
+  },
+  "quality_phase_v1/QP1_DEV_RESCORED.json": {
+   "sha256": "c4a27a5399bc844ca9a6a16d2ea8a5f22aabce30eb16b274425acc70acae8588",
+   "bytes": 4293
+  },
+  "quality_phase_v1/QP1_DEV_REPORT.md": {
+   "sha256": "be6e051295a3d74a3542e6cf8ef30cf154a72a88a55bb359bc2d7dd0cfea0a83",
+   "bytes": 4969
+  },
+  "quality_phase_v1/QP1_DEV_RESULTS.json": {
+   "sha256": "50d1930ffdb1ae86b92bbaae69ea46fa3fae69362870d5cadac2018055d70860",
+   "bytes": 5284
+  },
+  "quality_phase_v1/qp1_dev.log": {
+   "sha256": "f454f94c9c964bf3963c5d2decc6b9b9315fff9114a13f07593ff76a13b83550",
+   "bytes": 1326
+  },
+  "quality_phase_v1/qp1_dev2.log": {
+   "sha256": "0cb7d5a454ec1b137ecbf6556cf5e4e226164bda1c156124bfd875e786f3e45a",
+   "bytes": 1962
+  }
+ },
+ "frozen_inputs": {
+  "/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py": {
+   "sha256": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+   "bytes": 40717
+  },
+  "rq1_v1_8_2_r4_p0_calibration.py": {
+   "sha256": "5215b6f85ee8fe865da689b0894141bdeb9b14af58c6e01bb255e4a1802bba3c",
+   "bytes": 13605
+  },
+  "rq1_v1_8_2_r5_core.py": {
+   "sha256": "c617722fb9f1312edb57cfe46bf64dee181737fe0629e8ea0caac4c5cff948a7",
+   "bytes": 12469
+  },
+  "v2/PILOT_V2_LEDGER.jsonl": {
+   "sha256": "6028892e44f299825eec3a861c04546198659a6f0523e4d0bcbb4c66ff5d887a",
+   "bytes": 1188964
+  },
+  "v23a/S2_LEDGER.jsonl": {
+   "sha256": "88958aff3436a5284360d7b42e60c8e55cf3ae82a566d140f69e4687fee84685",
+   "bytes": 948908
+  },
+  "v23a/TASK_CANDIDATES_V23A.json": {
+   "sha256": "c6a25de2016cb4d480a8d95fe45978d73076637d4a5a91c24c39191f93620b18",
+   "bytes": 27743
+  }
+ },
+ "dev_run": {
+  "status": "INCOMPLETE",
+  "calls": 138,
+  "tokens": 540658,
+  "yuan": 0.6533,
+  "authorized_yuan": 0.648,
+  "overrun_yuan": 0.0053,
+  "cells_completed": 21,
+  "cells_planned": 32,
+  "results": {
+   "Baseline": 0.0,
+   "E1": 0.223,
+   "E2": 0.214,
+   "E3": 0.254
+  },
+  "note": "macro Q over 21 completed cells (E06, MVR1, KANGEMEI partial); 70% not reached"
+ },
+ "scorer_revision_note": "scorer_qp1.py was revised once DURING round 1 (support = quote-verbatim AND value-in-quote; gold reference-span match demoted to diagnostic), before the round-1 report; QP1_DEV_REPORT.md section 2 documents both old and new results. Hashes refreshed to final state."
+}

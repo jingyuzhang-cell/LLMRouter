@@ -1,0 +1,90 @@
+{
+ "verdict": {
+  "P1_pass": true,
+  "P2_pass": false,
+  "P3_pass": false,
+  "P4_pass": false,
+  "案A_viable(P1+P2)": false,
+  "案B_viable(P3)": false,
+  "cap_16384_accepted": false,
+  "prompts": {
+   "J2_sha": "cc7939c6a26e51da1ad0e7b6807288a58e2839023e434305b674ec3ff1b8992d",
+   "SINK_sha": "bd8288687d25ad60e5fab1b042f0e0c73902983302cda6a345e6f94c600a499a"
+  },
+  "calls": 5,
+  "tokens_yuan_accounting": 0.065834,
+  "P2b_SINK_DS_pass": true,
+  "A_prime_viable(J2_DS+SINK_DS,P1+P2b)": true,
+  "P4_correction": "P4 实际 HTTP 200 + end_turn@16384 = 参数被接受；脚本 pid 判据字符串不匹配误报 fail，如实更正"
+ },
+ "records": [
+  {
+   "pid": "P1_J2_DS_4000",
+   "http": 200,
+   "stop": "stop",
+   "in": 2804,
+   "out": 1196,
+   "wall_s": 4.77,
+   "text_chars": 2906,
+   "json_ok": true,
+   "error": null,
+   "pass": true,
+   "criterion": "http200 + stop∈{end_turn,stop,None} + json_ok",
+   "tokens_accounting_yuan": 0.005592
+  },
+  {
+   "pid": "P2_SINK_GLMFLASH_LOW_8192",
+   "http": 200,
+   "stop": "max_tokens",
+   "in": 4750,
+   "out": 8192,
+   "wall_s": 132.79,
+   "text_chars": 0,
+   "json_ok": false,
+   "error": null,
+   "pass": false,
+   "criterion": "http200 + stop∈{end_turn,stop,None} + json_ok",
+   "tokens_accounting_yuan": 0.0267376
+  },
+  {
+   "pid": "P3_J2_GLM53_LOW_8192",
+   "http": 200,
+   "stop": "max_tokens",
+   "in": 2716,
+   "out": 8192,
+   "wall_s": 119.05,
+   "text_chars": 0,
+   "json_ok": false,
+   "error": null,
+   "pass": false,
+   "criterion": "http200 + stop∈{end_turn,stop,None} + json_ok",
+   "tokens_accounting_yuan": 0.0251104
+  },
+  {
+   "pid": "P4_GLMFLASH_16384_ACCEPT",
+   "http": 200,
+   "stop": "end_turn",
+   "in": 23,
+   "out": 58,
+   "wall_s": 1.64,
+   "text_chars": 2,
+   "json_ok": false,
+   "error": null,
+   "pass": false,
+   "criterion": "http200 + stop∈{end_turn,stop,None} + json_ok",
+   "tokens_accounting_yuan": 0.0001808
+  },
+  {
+   "pid": "P2b_SINK_DS_4000",
+   "http": 200,
+   "stop": "stop",
+   "in": 4873,
+   "out": 1541,
+   "wall_s": 5.56,
+   "text_chars": 3294,
+   "json_ok": true,
+   "pass": true,
+   "tokens_accounting_yuan": 0.0082132
+  }
+ ]
+}

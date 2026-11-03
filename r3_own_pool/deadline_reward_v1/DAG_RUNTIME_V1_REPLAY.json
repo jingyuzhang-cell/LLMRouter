@@ -1,0 +1,450 @@
+{
+ "checks": {
+  "C1_different_legal_DAGs": {
+   "A_ok": true,
+   "B_ok": true,
+   "A_nodes": 6,
+   "B_nodes": 6,
+   "shapes_differ": true
+  },
+  "C2_real_parallel": {
+   "A_branches": 3,
+   "B_extraction_nodes": 2,
+   "B_docs": [
+    "zeda_main",
+    "zeda_inter"
+   ]
+  },
+  "C4_z_legality": {
+   "A_options": [
+    "IDENTITY",
+    "REDUNDANT:ext"
+   ],
+   "B_options": [
+    "IDENTITY",
+    "REDUNDANT:ext1",
+    "REDUNDANT:ext2"
+   ]
+  },
+  "C5_evidence_flow": {
+   "sink_inputs": 3,
+   "real_text_inputs": 3
+  },
+  "C4_forced_Z_demo": {
+   "transform": "REDUNDANT:ext",
+   "applied": true,
+   "reasons": [],
+   "z_versions": 2,
+   "invalidations": [
+    "Z:stale:amt",
+    "Z:stale:amtc",
+    "Z:stale:pen",
+    "Z:stale:tl",
+    "Z:stale:sink"
+   ],
+   "done_preserved": 1
+  },
+  "C6_metering": "per-run q/cash/tokens/lat/met/cash_ok separated in every row",
+  "C7_baselines": "9 policies, same planner/evaluator/action space"
+ },
+ "runs": [
+  {
+   "q": 0.5767,
+   "cash": 0.011,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.4345,
+   "real_fraction": 0.83,
+   "policy": "STATIC",
+   "z": "IDENTITY",
+   "R": [],
+   "planner_evals": 0,
+   "invalidations": 0,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.665,
+   "cash": 0.011,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5228,
+   "real_fraction": 1.0,
+   "policy": "SIMPLE_DYNAMIC",
+   "z": "IDENTITY",
+   "R": [
+    "amt",
+    "amtc",
+    "sink"
+   ],
+   "planner_evals": 0,
+   "invalidations": 1,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.665,
+   "cash": 0.011,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5228,
+   "real_fraction": 1.0,
+   "policy": "R_ONLY",
+   "z": "IDENTITY",
+   "R": [
+    "amt"
+   ],
+   "planner_evals": 8,
+   "invalidations": 1,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.6817,
+   "cash": 0.017,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5395,
+   "real_fraction": 1.0,
+   "policy": "PI_ONLY",
+   "z": "IDENTITY",
+   "R": [
+    "amt",
+    "amtc",
+    "sink"
+   ],
+   "planner_evals": 21,
+   "invalidations": 1,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.6817,
+   "cash": 0.017,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5395,
+   "real_fraction": 1.0,
+   "policy": "SEQ_R_PI",
+   "z": "IDENTITY",
+   "R": [
+    "amt"
+   ],
+   "planner_evals": 29,
+   "invalidations": 1,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.6817,
+   "cash": 0.017,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5395,
+   "real_fraction": 1.0,
+   "policy": "SEQ_PI_R",
+   "z": "IDENTITY",
+   "R": [
+    "amt"
+   ],
+   "planner_evals": 29,
+   "invalidations": 1,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.6817,
+   "cash": 0.017,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5395,
+   "real_fraction": 1.0,
+   "policy": "ALTERNATING",
+   "z": "IDENTITY",
+   "R": [
+    "amt",
+    "amtc",
+    "sink"
+   ],
+   "planner_evals": 50,
+   "invalidations": 1,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.6817,
+   "cash": 0.017,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5395,
+   "real_fraction": 1.0,
+   "policy": "JOINT_R_PI",
+   "z": "IDENTITY",
+   "R": [
+    "amt",
+    "amtc",
+    "sink"
+   ],
+   "planner_evals": 50,
+   "invalidations": 1,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.6817,
+   "cash": 0.017,
+   "tokens": 17065,
+   "lat": 106.8,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5395,
+   "real_fraction": 1.0,
+   "policy": "JOINT_Z_R_PI",
+   "z": "IDENTITY",
+   "R": [
+    "amt"
+   ],
+   "planner_evals": 0,
+   "invalidations": 1,
+   "real_text_hits": 6,
+   "predicted": 0,
+   "z_versions": 1,
+   "task": "A_penalty_factcheck_jsst"
+  },
+  {
+   "q": 0.58,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.4115,
+   "real_fraction": 0.33,
+   "policy": "STATIC",
+   "z": "IDENTITY",
+   "R": [],
+   "planner_evals": 0,
+   "invalidations": 0,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  },
+  {
+   "q": 0.6883,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5199,
+   "real_fraction": 0.33,
+   "policy": "SIMPLE_DYNAMIC",
+   "z": "IDENTITY",
+   "R": [
+    "egr",
+    "ext2",
+    "mrg",
+    "sink",
+    "xc"
+   ],
+   "planner_evals": 0,
+   "invalidations": 1,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  },
+  {
+   "q": 0.6883,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5199,
+   "real_fraction": 0.33,
+   "policy": "R_ONLY",
+   "z": "IDENTITY",
+   "R": [
+    "ext2"
+   ],
+   "planner_evals": 32,
+   "invalidations": 1,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  },
+  {
+   "q": 0.6883,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5199,
+   "real_fraction": 0.33,
+   "policy": "PI_ONLY",
+   "z": "IDENTITY",
+   "R": [
+    "egr",
+    "ext2",
+    "mrg",
+    "sink",
+    "xc"
+   ],
+   "planner_evals": 11,
+   "invalidations": 1,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  },
+  {
+   "q": 0.6883,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5199,
+   "real_fraction": 0.33,
+   "policy": "SEQ_R_PI",
+   "z": "IDENTITY",
+   "R": [
+    "ext2"
+   ],
+   "planner_evals": 43,
+   "invalidations": 1,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  },
+  {
+   "q": 0.6883,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5199,
+   "real_fraction": 0.33,
+   "policy": "SEQ_PI_R",
+   "z": "IDENTITY",
+   "R": [
+    "ext2"
+   ],
+   "planner_evals": 43,
+   "invalidations": 1,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  },
+  {
+   "q": 0.6883,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5199,
+   "real_fraction": 0.33,
+   "policy": "ALTERNATING",
+   "z": "IDENTITY",
+   "R": [
+    "egr",
+    "ext2",
+    "mrg",
+    "sink",
+    "xc"
+   ],
+   "planner_evals": 54,
+   "invalidations": 1,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  },
+  {
+   "q": 0.6883,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5199,
+   "real_fraction": 0.33,
+   "policy": "JOINT_R_PI",
+   "z": "IDENTITY",
+   "R": [
+    "egr",
+    "ext2",
+    "mrg",
+    "sink",
+    "xc"
+   ],
+   "planner_evals": 54,
+   "invalidations": 1,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  },
+  {
+   "q": 0.6883,
+   "cash": 0.017,
+   "tokens": 20216,
+   "lat": 131.1,
+   "met": true,
+   "cash_ok": true,
+   "eU": 0.5199,
+   "real_fraction": 0.33,
+   "policy": "JOINT_Z_R_PI",
+   "z": "IDENTITY",
+   "R": [
+    "ext2"
+   ],
+   "planner_evals": 0,
+   "invalidations": 1,
+   "real_text_hits": 2,
+   "predicted": 4,
+   "z_versions": 1,
+   "task": "B_crossdoc_entities_zeda"
+  }
+ ]
+}

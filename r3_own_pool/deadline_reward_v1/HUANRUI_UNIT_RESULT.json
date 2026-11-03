@@ -1,0 +1,173 @@
+{
+ "unit": "huanrui F-sup2 D=25s SERIAL K=1 peak-run(user-override)",
+ "fault_clk": 31.6,
+ "feasibility": {
+  "('accept', 'Flash')": true,
+  "('accept', 'DS')": true,
+  "('targeted', 'Flash')": false,
+  "('targeted', 'DS')": true,
+  "('full', 'Flash')": false,
+  "('full', 'DS')": true
+ },
+ "strategies": {
+  "STATIC": [
+   "targeted",
+   "Flash"
+  ],
+  "SD-FC": [
+   "targeted",
+   "Flash"
+  ],
+  "R-only": [
+   "accept",
+   "Flash"
+  ],
+  "pi-only": [
+   "targeted",
+   "DS"
+  ],
+  "SEQ": [
+   "accept",
+   "Flash"
+  ],
+  "JOINT": [
+   "targeted",
+   "DS"
+  ],
+  "SINGLE-DS": [
+   "full",
+   "DS"
+  ]
+ },
+ "executions": {
+  "['targeted', 'Flash']": {
+   "t_q": 0.15,
+   "hits": 3,
+   "n_ref": 20,
+   "tokens": 5017,
+   "clock": 74.2,
+   "met": false,
+   "eU": -2.2781,
+   "shared_by": "STATIC"
+  },
+  "['accept', 'Flash']": {
+   "t_q": 0.15,
+   "hits": 3,
+   "n_ref": 20,
+   "tokens": 2691,
+   "clock": 61.3,
+   "met": false,
+   "eU": -2.0434,
+   "shared_by": "R-only"
+  },
+  "['targeted', 'DS']": {
+   "t_q": 0.85,
+   "hits": 17,
+   "n_ref": 20,
+   "tokens": 7959,
+   "clock": 52.9,
+   "met": true,
+   "eU": 0.7837,
+   "shared_by": "pi-only"
+  },
+  "['full', 'DS']": {
+   "t_q": 0.15,
+   "hits": 3,
+   "n_ref": 20,
+   "tokens": 8676,
+   "clock": 57.2,
+   "met": true,
+   "eU": 0.0777,
+   "shared_by": "SINGLE-DS"
+  }
+ },
+ "rows": [
+  {
+   "arm": "STATIC",
+   "R": "targeted",
+   "pi": "Flash",
+   "t_q": 0.15,
+   "hits": 3,
+   "n_ref": 20,
+   "tokens": 5017,
+   "clock": 74.2,
+   "met": false,
+   "eU": -2.2781
+  },
+  {
+   "arm": "SD-FC",
+   "R": "targeted",
+   "pi": "Flash",
+   "t_q": 0.15,
+   "hits": 3,
+   "n_ref": 20,
+   "tokens": 5017,
+   "clock": 74.2,
+   "met": false,
+   "eU": -2.2781
+  },
+  {
+   "arm": "R-only",
+   "R": "accept",
+   "pi": "Flash",
+   "t_q": 0.15,
+   "hits": 3,
+   "n_ref": 20,
+   "tokens": 2691,
+   "clock": 61.3,
+   "met": false,
+   "eU": -2.0434
+  },
+  {
+   "arm": "pi-only",
+   "R": "targeted",
+   "pi": "DS",
+   "t_q": 0.85,
+   "hits": 17,
+   "n_ref": 20,
+   "tokens": 7959,
+   "clock": 52.9,
+   "met": true,
+   "eU": 0.7837
+  },
+  {
+   "arm": "SEQ",
+   "R": "accept",
+   "pi": "Flash",
+   "t_q": 0.15,
+   "hits": 3,
+   "n_ref": 20,
+   "tokens": 2691,
+   "clock": 61.3,
+   "met": false,
+   "eU": -2.0434
+  },
+  {
+   "arm": "JOINT",
+   "R": "targeted",
+   "pi": "DS",
+   "t_q": 0.85,
+   "hits": 17,
+   "n_ref": 20,
+   "tokens": 7959,
+   "clock": 52.9,
+   "met": true,
+   "eU": 0.7837
+  },
+  {
+   "arm": "SINGLE-DS",
+   "R": "full",
+   "pi": "DS",
+   "t_q": 0.15,
+   "hits": 3,
+   "n_ref": 20,
+   "tokens": 8676,
+   "clock": 57.2,
+   "met": true,
+   "eU": 0.0777
+  }
+ ],
+ "attempts": 16,
+ "cash": 0.0899,
+ "pricing": "peak(user-override)"
+}

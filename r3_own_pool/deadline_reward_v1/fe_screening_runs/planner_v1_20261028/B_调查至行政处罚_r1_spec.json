@@ -1,0 +1,139 @@
+{
+ "task_id": "planned",
+ "task_class": "行政处罚全过程调查与核验",
+ "evidence": [],
+ "constraints": {
+  "D": 140.0,
+  "Ccap": 0.02
+ },
+ "nodes": [
+  {
+   "id": "n1",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts"
+    ],
+    "requires": []
+   },
+   "evidence": "zeda_csrc_penalty_2023_29"
+  },
+  {
+   "id": "n2",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts"
+    ],
+    "requires": []
+   },
+   "evidence": "zeda_csrc_penalty_2024_kangda"
+  },
+  {
+   "id": "n3",
+   "role": "timeline",
+   "inputs": [
+    "n1",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "dates"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n4",
+   "role": "entity_relations",
+   "inputs": [
+    "n1",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "entities"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n5",
+   "role": "penalties",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "penalty_items"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n6",
+   "role": "amounts_check",
+   "inputs": [
+    "n5"
+   ],
+   "contract": {
+    "produces": [
+     "amounts_checked"
+    ],
+    "requires": [
+     "penalty_items"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n7",
+   "role": "cross_check",
+   "inputs": [
+    "n3",
+    "n4",
+    "n6",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "checked"
+    ],
+    "requires": [
+     "dates",
+     "entities",
+     "amounts_checked",
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n8",
+   "role": "synthesis",
+   "inputs": [
+    "n7"
+   ],
+   "contract": {
+    "produces": [
+     "report"
+    ],
+    "requires": [
+     "checked"
+    ]
+   },
+   "evidence": null
+  }
+ ]
+}

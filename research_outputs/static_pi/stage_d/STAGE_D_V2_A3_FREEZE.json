@@ -1,0 +1,119 @@
+{
+ "batch": "STAGE_D_V2_A3_EXECUTOR",
+ "status": "CANDIDATE_FROZEN_PENDING_ADMISSION",
+ "date": "2026-11-03",
+ "files": {
+  "stage_d_v2_executor.py": {
+   "sha256": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+   "bytes": 55865,
+   "base": "stage_d_executor.py @ 64dea819…（A1 版，未覆盖）",
+   "changes": [
+    "A‴ 路由覆盖层 AROUT/AMAX（E*/J2/SINK=deepseek@4000；J1=glm53flash@8192）",
+    "S5′=J1 条件性异构重执行（替换 J2 竞速；触发=stop 异常/JSON 失败；wall>120s 有效=保留；DS 单次；成本全额；不覆盖有效结果；终端/结算分离沿用 late_threads）",
+    "SLO slo_s 占位 1e9（作废）",
+    "默认 config 指向 v2 配置"
+   ]
+  },
+  "stage_d_v2_executor_config.json": {
+   "sha256": "914f3edd4c4848e3f7063ce6c398f80afc773cf790844973638550848f543581",
+   "changes": [
+    "deadline 全场景 300s（S5′ 无 90s 特例）",
+    "tokens 12M",
+    "yuan 40",
+    "s5 块=S5PRIME 语义",
+    "race_arms 不变（π/Fixed/Proposed）"
+   ]
+  },
+  "test_stage_d_v2.py": {
+   "sha256": "d287b2b50f641d23e584baf746a947b016104c2c513e767d430c1a7864f51a0d",
+   "tests": 12,
+   "result": "10/10 OK"
+  }
+ },
+ "regression": {
+  "a1_suites": "52 passed, 1 skipped（A1 执行器未动，全部通过）",
+  "v2_suites": "test_stage_d_v2.py 10/10（路由 3 + S5′ 5 + 对称性 1 + 矩阵 1）"
+ },
+ "mock_192": {
+  "dir": "runs_v2_mock",
+  "status": "192/192 COMPLETE",
+  "calls": 1427,
+  "accounting": 2.358712,
+  "tokens": 2423553,
+  "per_arm": "各 32",
+  "s5prime_actions": {
+   "no_trigger": 48
+  },
+  "note": "默认 mock 无 J1 故障注入 → S5′ 全部 no_trigger（正确）；触发路径由 R02 单测 5 场景覆盖（有效快/慢有效/无效重执行/无恢复臂/恢复失败）"
+ },
+ "citation_audit": {
+  "doc": "STAGE_D_V2_CITATION_ADDRESSING_AUDIT.md",
+  "sha256": "4b2582d55ea7447402064da0551a04e0726922df2aa62f5c6a115af1596cfc0c",
+  "finding": "内容正确仅标签错位；quote 8/8 逐字命中映射源；A1 辅助口径 evidence 旧 0.4783/V3 0.5217；H1 属任务修改需单独授权"
+ },
+ "stage2b_preserved": {
+  "dir": "v2_pilot/stage2b",
+  "result_sha": "7b5cfc7333f83f34e87c166d927a133aeb91c07b1b310acc2345bfea8056644e",
+  "nodes": "v2_pilot/stage2b/nodes/（7 节点全文）"
+ },
+ "unchanged_frozen": [
+  "d2_executor.py",
+  "transport.py",
+  "contracts v2.1/v3/v4",
+  "terminal_quality.py",
+  "stage_d_executor.py(64dea819)",
+  "stage_d_executor_config.json",
+  "CORE-19",
+  "runs_s5fix_mock3",
+  "runs_a1_mock",
+  "全部历史 runs_*"
+ ],
+ "bugfix_20261103": {
+  "issue": "_RealHandle 缺 latency 属性 -> _finish_call 真实路径首调即 AttributeError；192 Mock（MockProvider 有 latency）与 A1 预检/stage2b（直调 transport）均未覆盖该路径",
+  "impact": "首批 24 在 S4 块 6 个执行全部失败（raw=0，响应在异常中被丢弃）；按停止纪律手动终止批次",
+  "fix": "_RealHandle 初始化 self.latency=None；传输返回后 self.latency=round(t_end-t_start,2) 且 r.setdefault(\"lat\")；纯缺陷修复，零协议语义变更（路由/参数/提示词/预算未动）",
+  "regression": "test_stage_d_v2.py R05RealHandleParity 2 项（真实句柄 _finish_call 完整走通 + 错误路径不再 AttributeError）；全套件 12/12 + 旧套件 52+1 + 192 Mock 不变（runs_v2_mock2）",
+  "executor_sha256_new": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+  "aborted_site": "runs_final_aborted_bugfix_20261103/（6 条垃圾记录保全，不删；不计入首批 24）",
+  "burned_budget": {
+   "calls_booked": 92,
+   "by_exec": [
+    {
+     "exec_id": "Fixed-Composite|S4|r8",
+     "calls": 14
+    },
+    {
+     "exec_id": "Proposed-Dynamic|S4|r8",
+     "calls": 14
+    },
+    {
+     "exec_id": "R-only|S3|r4",
+     "calls": 14
+    },
+    {
+     "exec_id": "R-only|S4|r8",
+     "calls": 14
+    },
+    {
+     "exec_id": "Simple-Dynamic|S4|r8",
+     "calls": 14
+    },
+    {
+     "exec_id": "Static|S4|r8",
+     "calls": 8
+    },
+    {
+     "exec_id": "π-only|S4|r8",
+     "calls": 14
+    }
+   ],
+   "tokens_est": "~94k（78 次 DS E 级调用 × ~1.2k tok；精确值因响应被异常丢弃不可恢复，按保守估计入账）",
+   "ds_cash_est_yuan": 0.3,
+   "remaining_caps": {
+    "calls": 2596,
+    "tokens": 11906000,
+    "yuan": 39.7
+   }
+  }
+ }
+}

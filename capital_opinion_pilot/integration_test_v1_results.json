@@ -1,0 +1,120 @@
+{
+ "ledger": [
+  {
+   "call_id": 1,
+   "model": "deepseek-flash",
+   "label": "json_contract",
+   "in": 225,
+   "out": 1081,
+   "latency_s": 5.46,
+   "stop_reason": "stop",
+   "text_chars": 636,
+   "cost_est": 0.001365,
+   "actual_id": "deepseek-flash"
+  },
+  {
+   "call_id": 2,
+   "model": "deepseek-flash",
+   "label": "long_extraction",
+   "in": 252,
+   "out": 2048,
+   "latency_s": 19.33,
+   "stop_reason": "length",
+   "text_chars": 0,
+   "cost_est": 0.002533,
+   "actual_id": "deepseek-flash"
+  },
+  {
+   "call_id": 3,
+   "model": "deepseek-flash",
+   "label": "truncation_recovery",
+   "in": 252,
+   "out": 256,
+   "latency_s": 2.29,
+   "stop_reason": "length",
+   "text_chars": 0,
+   "cost_est": 0.000383,
+   "actual_id": "deepseek-flash"
+  },
+  {
+   "call_id": 4,
+   "model": "qwen-plus",
+   "label": "json_contract",
+   "in": 225,
+   "out": 178,
+   "latency_s": 4.32,
+   "stop_reason": "stop",
+   "text_chars": 469,
+   "cost_est": 0.000536,
+   "actual_id": "qwen-plus"
+  },
+  {
+   "call_id": 5,
+   "model": "qwen-plus",
+   "label": "long_extraction",
+   "in": 256,
+   "out": 1895,
+   "latency_s": 42.09,
+   "stop_reason": "stop",
+   "text_chars": 3997,
+   "cost_est": 0.003995,
+   "actual_id": "qwen-plus"
+  },
+  {
+   "call_id": 6,
+   "model": "qwen-plus",
+   "label": "truncation_recovery",
+   "in": 256,
+   "out": 256,
+   "latency_s": 8.41,
+   "stop_reason": "length",
+   "text_chars": 518,
+   "cost_est": 0.000717,
+   "actual_id": "qwen-plus"
+  }
+ ],
+ "results": {
+  "ds": {
+   "T1_json_contract": {
+    "pass": true,
+    "n_facts": 9,
+    "stop": "stop"
+   },
+   "T2_long_output": {
+    "truncated": true,
+    "n_facts": -1,
+    "stop": "length",
+    "verdict_2048_sufficient": false
+   },
+   "T3_truncation_recovery": {
+    "deliberately_truncated": true,
+    "salvage_ok": false,
+    "salvaged_facts": -1
+   }
+  },
+  "qw": {
+   "T1_json_contract": {
+    "pass": true,
+    "n_facts": 9,
+    "stop": "stop"
+   },
+   "T2_long_output": {
+    "truncated": false,
+    "n_facts": 39,
+    "stop": "stop",
+    "verdict_2048_sufficient": true
+   },
+   "T3_truncation_recovery": {
+    "deliberately_truncated": true,
+    "salvage_ok": true,
+    "salvaged_facts": 4
+   }
+  }
+ },
+ "total": {
+  "calls": 6,
+  "tokens_in": 1466,
+  "tokens_out": 5714,
+  "cash_est": 0.009528
+ }
+}

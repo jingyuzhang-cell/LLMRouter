@@ -1,0 +1,31 @@
+{
+  "available_to": [
+    "A",
+    "B"
+  ],
+  "contract": [
+    "transformation",
+    {
+      "question": "text",
+      "facts": "facts"
+    },
+    {
+      "doc_extracts": "json"
+    }
+  ],
+  "kind": {
+    "contract": "facts_merge.v2",
+    "needs_upstream_kinds": [
+      "extracts_f"
+    ],
+    "task_fields": [
+      "question",
+      "facts"
+    ],
+    "produces": "doc_extracts",
+    "note": "程序多输入facts汇合，保留全部来源，不自动形成可信结论"
+  },
+  "binding_rule": "One or more explicitly declared extracts_f outputs, each typed facts. JSON doc_extracts is not implicitly converted; planner must explicitly select the appropriate retrieval contract.",
+  "output_trust": "Unverified evidence material; original records and provenance retained",
+  "execution_scope": "Deterministic merge adapter only; whole investigative executor not run"
+}

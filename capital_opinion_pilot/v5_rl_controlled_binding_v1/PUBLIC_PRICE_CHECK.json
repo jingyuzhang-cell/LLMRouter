@@ -1,0 +1,37 @@
+{
+  "checked_date": "2026-10-23 Asia/Shanghai",
+  "scope": "Official public list prices only, not account/region entitlements, actual bill, or enforced cash cap",
+  "sources": [
+    {
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "model": "deepseek-flash",
+      "public_version": "DeepSeek-V4.1-Flash-1017",
+      "currency": "USD",
+      "per_million_input_cache_miss_peak": "0.30",
+      "per_million_input_cache_hit_peak": "0.006",
+      "per_million_output_peak": "1.20",
+      "off_peak": "half peak; use peak for conditional reservation"
+    },
+    {
+      "url": "https://help.aliyun.com/zh/model-studio/model-pricing",
+      "model": "qwen-flash",
+      "public_alias_equivalent": "qwen-flash-2025-07-28",
+      "deployment_assumption": "Beijing, <=128K input, non-thinking",
+      "currency": "CNY",
+      "per_million_input_no_discount": "0.15",
+      "per_million_output_no_discount": "1.50",
+      "account_region_verified": false
+    }
+  ],
+  "conditional_budget": {
+    "input_monitor_per_request": 16384,
+    "output_cap_per_request": 1024,
+    "requests": 20,
+    "all_qwen_flash_CNY": "0.0798720",
+    "all_deepseek_peak_USD": "0.122880",
+    "input_upper_certified": false,
+    "cash_hard_upper": null,
+    "bill_verified": false
+  },
+  "api_calls": 0
+}

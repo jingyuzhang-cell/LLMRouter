@@ -1,0 +1,199 @@
+[
+  {
+    "node": "t1",
+    "contract": "evidence_registry.v1",
+    "bindings": [
+      {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+      },
+      {
+        "port": "ctx_table",
+        "source": "task",
+        "field": "ctx_table",
+        "node_id": null
+      }
+    ],
+    "outputs": {
+      "evidence_index": "json"
+    },
+    "dependencies": [],
+    "structural_status": "PASS",
+    "retrieval_status": "NOT_A_RETRIEVAL_NODE",
+    "execution_status": "NOT_VALIDATED",
+    "issues": [
+      "Existing execute_v2 uses Shuntian task and evidence index, not this frozen KDX manifest"
+    ]
+  },
+  {
+    "node": "t2",
+    "contract": "doc_retrieval.v1",
+    "bindings": [
+      {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+      },
+      {
+        "port": "evidence_index",
+        "source": "node",
+        "field": "evidence_index",
+        "node_id": "t1"
+      }
+    ],
+    "outputs": {
+      "doc_extracts": "json"
+    },
+    "dependencies": [
+      "t1"
+    ],
+    "structural_status": "PASS",
+    "retrieval_status": "ALL_FIVE_DOCS_DECLARED_BUT_NO_EXECUTED_QUERIES",
+    "execution_status": "NOT_VALIDATED",
+    "issues": [
+      "Five docs total exceeds3300 direct-injection limit",
+      "No executed segmented queries or evidence-location records",
+      "Existing evidence_pack injects a different task corpus"
+    ]
+  },
+  {
+    "node": "t3",
+    "contract": "timeline.v1",
+    "bindings": [
+      {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+      },
+      {
+        "port": "doc_extracts",
+        "source": "node",
+        "field": "doc_extracts",
+        "node_id": "t2"
+      }
+    ],
+    "outputs": {
+      "timeline": "json"
+    },
+    "dependencies": [
+      "t2"
+    ],
+    "structural_status": "PASS",
+    "retrieval_status": "NOT_A_RETRIEVAL_NODE",
+    "execution_status": "NOT_VALIDATED",
+    "issues": [
+      "Upstream output schema/content/size not observed",
+      "Dates and references not verified"
+    ]
+  },
+  {
+    "node": "t4",
+    "contract": "entity_facts.v1",
+    "bindings": [
+      {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+      },
+      {
+        "port": "doc_extracts",
+        "source": "node",
+        "field": "doc_extracts",
+        "node_id": "t2"
+      }
+    ],
+    "outputs": {
+      "entity_facts": "json"
+    },
+    "dependencies": [
+      "t2"
+    ],
+    "structural_status": "PASS",
+    "retrieval_status": "NOT_A_RETRIEVAL_NODE",
+    "execution_status": "NOT_VALIDATED",
+    "issues": [
+      "Conflicts and unresolved ambiguity not established without actual extracts"
+    ]
+  },
+  {
+    "node": "t5",
+    "contract": "fact_check_full.v1",
+    "bindings": [
+      {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+      },
+      {
+        "port": "doc_extracts",
+        "source": "node",
+        "field": "doc_extracts",
+        "node_id": "t2"
+      },
+      {
+        "port": "timeline",
+        "source": "node",
+        "field": "timeline",
+        "node_id": "t3"
+      },
+      {
+        "port": "entity_facts",
+        "source": "node",
+        "field": "entity_facts",
+        "node_id": "t4"
+      }
+    ],
+    "outputs": {
+      "verified_facts": "json"
+    },
+    "dependencies": [
+      "t2",
+      "t3",
+      "t4"
+    ],
+    "structural_status": "PASS",
+    "retrieval_status": "NOT_A_RETRIEVAL_NODE",
+    "execution_status": "NOT_VALIDATED",
+    "issues": [
+      "Typed JSON ports do not enforce claim-level provenance or adjudication",
+      "Semantic correctness not verified"
+    ]
+  },
+  {
+    "node": "t6",
+    "contract": "report.v1",
+    "bindings": [
+      {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+      },
+      {
+        "port": "verified_facts",
+        "source": "node",
+        "field": "verified_facts",
+        "node_id": "t5"
+      }
+    ],
+    "outputs": {
+      "report": "text"
+    },
+    "dependencies": [
+      "t5"
+    ],
+    "structural_status": "PASS",
+    "retrieval_status": "NOT_A_RETRIEVAL_NODE",
+    "execution_status": "NOT_VALIDATED",
+    "issues": [
+      "Report only sees verified_facts; supporting corpus trace must survive upstream",
+      "No final report executed"
+    ]
+  }
+]

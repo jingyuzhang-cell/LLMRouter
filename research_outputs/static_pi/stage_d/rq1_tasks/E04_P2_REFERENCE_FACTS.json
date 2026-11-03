@@ -1,0 +1,52 @@
+{
+  "file_id": "E04_P2_REFERENCE_FACTS",
+  "version": "V1.0",
+  "status": "FREEZE_CANDIDATE",
+  "task_id": "E04",
+  "created": "2026-11-01",
+  "independence": "与 M7-3D 参考事实完全独立编写；本轮在任何生成/执行调用之前冻结。",
+  "docs": {
+    "doc1": "E04-zhuoran_20260910.txt（立案调查进展暨退市风险提示公告，2026-09-10）",
+    "doc2": "E04-zhuoran_20261009.txt（重大违法强制退市第四次风险提示公告，2026-10-09）",
+    "doc3": "E04-zhuoran_20261013.txt（股价低于1元终止上市首次风险提示，2026-10-13）"
+  },
+  "normalization": "所有匹配在去除全部空白（含全角空格）后进行；数值另去千分位逗号；日期归一为 YYYY-MM-DD 后比较，'2025年12月19日' 与 '2025-12-19' 视为同一。",
+  "value_match_rules": {
+    "exact_string": "claim.value 去空白后与 expected_value 或 allowed_expressions 任一逐字相等（不计大小写）",
+    "numeric": "claim.value 抽出的数值（去千分位/单位）与 allowed_expressions 中任一数值相等",
+    "date": "claim.value 归一为 YYYY-MM-DD 后与 expected_value 相等",
+    "set": "claim.value 去空白后包含 required_elements 中全部元素（子串包含）"
+  },
+  "facts": [
+    {"fact_id": "F-A1", "category": "A_立案与告知", "expected_value": "2025-12-19", "allowed_expressions": ["2025年12月19日"], "evidence_doc": "doc2", "evidence_span": "公司于2025年12月19日收到中国证券监督管理委员会", "critical": true, "value_match_rule": "date", "note": "收到《立案告知书》日期（证监立案字0032025031/32号）"},
+    {"fact_id": "F-A2", "category": "A_立案与告知", "expected_value": "公司及实际控制人张锦红", "required_elements": ["公司", "实际控制人", "张锦红"], "evidence_doc": "doc2", "evidence_span": "中国证监会决定对公司及实际控制人张锦红立案", "critical": true, "value_match_rule": "set", "note": "立案对象"},
+    {"fact_id": "F-A3", "category": "A_立案与告知", "expected_value": "涉嫌信息披露违法违规", "required_elements": ["信息披露违法违规"], "evidence_doc": "doc2", "evidence_span": "因涉嫌信息披露违法违规等事项", "critical": true, "value_match_rule": "set", "note": "立案原因"},
+    {"fact_id": "F-A4", "category": "A_立案与告知", "expected_value": "2026-09-11", "allowed_expressions": ["2026年9月11日"], "evidence_doc": "doc2", "evidence_span": "2026年9月11日，公司收到上海证监局下发的《行政处罚事先告知书》", "critical": true, "value_match_rule": "date", "note": "收到行政处罚事先告知书日期"},
+    {"fact_id": "F-A5", "category": "A_立案与告知", "expected_value": "沪证监处罚字[2026]11号", "allowed_expressions": ["沪证监处罚字[2026]11号"], "evidence_doc": "doc2", "evidence_span": "（沪证监处罚字[2026]11号）", "critical": false, "value_match_rule": "exact_string", "note": "事先告知书文号"},
+    {"fact_id": "F-A6", "category": "A_立案与告知", "expected_value": "2025-12-20", "allowed_expressions": ["2025年12月20日"], "evidence_doc": "doc1", "evidence_span": "于2025年12月20日在上海证券交易所网站", "critical": false, "value_match_rule": "date", "note": "立案告知披露日期（公告2025-053）"},
+    {"fact_id": "F-B1", "category": "B_风险提示", "expected_value": "4次", "allowed_expressions": ["4", "4次", "四", "四次"], "evidence_doc": "doc2", "evidence_span": "关于公司股票可能被实施重大违法强制退市的第四次风险提示公告", "critical": true, "value_match_rule": "exact_string", "note": "重大违法退市风险提示截至2026-10-09共四次"},
+    {"fact_id": "F-B2", "category": "B_风险提示", "expected_value": "2026-09-12", "allowed_expressions": ["2026年9月12日"], "evidence_doc": "doc3", "evidence_span": "2026年9月12日披露了《关于公司股票可能被实施重大违法强制退市的第一次风险提示公告》", "critical": false, "value_match_rule": "date", "note": "第一次提示（公告2026-083）"},
+    {"fact_id": "F-B3", "category": "B_风险提示", "expected_value": "2026-09-18", "allowed_expressions": ["2026年9月18日"], "evidence_doc": "doc3", "evidence_span": "2026年9月18日披露了《关于公司股票可能被实施重大违法强制退市的第二次风险提示公告》", "critical": false, "value_match_rule": "date", "note": "第二次提示（公告2026-087）"},
+    {"fact_id": "F-B4", "category": "B_风险提示", "expected_value": "2026-09-25", "allowed_expressions": ["2026年9月25日"], "evidence_doc": "doc3", "evidence_span": "2026年9月25日披露了《关于公司股票可能被实施重大违法强制退市的第三次风险提示公告》", "critical": false, "value_match_rule": "date", "note": "第三次提示（公告2026-092）"},
+    {"fact_id": "F-B5", "category": "B_风险提示", "expected_value": "2026-10-09", "allowed_expressions": ["2026年10月9日"], "evidence_doc": "doc3", "evidence_span": "2026年10月9日披露了《关于公司股票可能被实施重大违法强制退市的第四次风险提示公告》（公告编号：2026-097）", "critical": false, "value_match_rule": "date", "note": "第四次提示（公告2026-097）"},
+    {"fact_id": "F-B6", "category": "B_风险提示", "expected_value": "2026-09-24", "allowed_expressions": ["2026年9月24日"], "evidence_doc": "doc3", "evidence_span": "2026年9月24日披露了《关于公司股票可能存在因市值低于3亿元而终止上市的首次风险提示", "critical": false, "value_match_rule": "date", "note": "市值类首次提示（公告2026-091）"},
+    {"fact_id": "F-C1", "category": "C_退市类型判断", "expected_value": "重大违法强制退市：可能（尚未收到正式处罚决定）", "required_elements": ["重大违法", "退市", "可能"], "evidence_doc": "doc2", "evidence_span": "公司可能触及《上海证券交易所科创板股票上市规则》第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强制退市", "critical": true, "value_match_rule": "set", "note": "判断必须含可能性表述；仅答'重大违法强制退市'不含'可能'判不匹配"},
+    {"fact_id": "F-C2", "category": "C_退市类型判断", "expected_value": "交易类强制退市：可能", "required_elements": ["交易类", "退市", "可能"], "evidence_doc": "doc3", "evidence_span": "上市公司出现连续20个交易日每日股票收盘价格均低于1元情形的，上海证券交易所将决定终止公司股票上市，属于交易类强制退市", "critical": true, "value_match_rule": "set", "note": "股价与市值两条触发路径均属交易类"},
+    {"fact_id": "F-C3", "category": "C_退市类型判断", "expected_value": "两项以上终止上市情形先触及先适用", "required_elements": ["先触及先适用"], "evidence_doc": "doc3", "evidence_span": "按照先触及先适用的原则实施终止上市", "critical": false, "value_match_rule": "set", "note": "两类并存时的适用规则（12.1.10）"},
+    {"fact_id": "F-C4", "category": "C_退市类型判断", "expected_value": "交易类强制退市不进入退市整理期", "required_elements": ["不进入退市整理期"], "evidence_doc": "doc3", "evidence_span": "交易类强制退市公司股票不进入退市整理期交易", "critical": false, "value_match_rule": "set", "note": "12.7.1"},
+    {"fact_id": "F-D1", "category": "D_财务虚增", "expected_value": "4383.65万元", "allowed_expressions": ["4383.65", "4,383.65"], "evidence_doc": "doc2", "evidence_span": "2021年年度报告虚增利润总额4,383.65万元，占当期报告记载利润总额的12.96%", "critical": true, "value_match_rule": "numeric", "note": "2021虚增利润总额"},
+    {"fact_id": "F-D2", "category": "D_财务虚增", "expected_value": "1372.33万元", "allowed_expressions": ["1372.33", "1,372.33"], "evidence_doc": "doc2", "evidence_span": "2022年年度报告虚增利润总额1,372.33万元，占当期报告记载利润总额的6.73%", "critical": false, "value_match_rule": "numeric", "note": "2022虚增利润总额"},
+    {"fact_id": "F-D3", "category": "D_财务虚增", "expected_value": "36256.34万元", "allowed_expressions": ["36256.34", "36,256.34"], "evidence_doc": "doc2", "evidence_span": "2023年年度报告虚增营业收入36,256.34万元，占当期报告记载营业收入的12.25%", "critical": true, "value_match_rule": "numeric", "note": "2023虚增营业收入"},
+    {"fact_id": "F-D4", "category": "D_财务虚增", "expected_value": "22429.51万元", "allowed_expressions": ["22429.51", "22,429.51"], "evidence_doc": "doc2", "evidence_span": "虚增利润总额22,429.51万元，占当期报告记载利润总额的148.33%", "critical": true, "value_match_rule": "numeric", "note": "2023虚增利润总额，占当期148.33%"},
+    {"fact_id": "F-D5", "category": "D_财务虚增", "expected_value": "23142.16万元", "allowed_expressions": ["23142.16", "23,142.16"], "evidence_doc": "doc2", "evidence_span": "2024年年度报告虚增营业收入23,142.16万元，占当期报告记载营业收入的8.15%", "critical": false, "value_match_rule": "numeric", "note": "2024虚增营业收入"},
+    {"fact_id": "F-D6", "category": "D_财务虚增", "expected_value": "556.72万元", "allowed_expressions": ["556.72"], "evidence_doc": "doc2", "evidence_span": "虚增利润总额556.72万元，占当期报告记载利润总额的5.13%", "critical": false, "value_match_rule": "numeric", "note": "2024虚增利润总额"},
+    {"fact_id": "F-E1", "category": "E_股价面值", "expected_value": "0.96元/股", "allowed_expressions": ["0.96"], "evidence_doc": "doc3", "evidence_span": "公司股票2026年10月12日收盘价格0.96元/股", "critical": true, "value_match_rule": "numeric", "note": "首次低于1元当日收盘价"},
+    {"fact_id": "F-E2", "category": "E_股价面值", "expected_value": "2.24亿元", "allowed_expressions": ["2.24", "22400万", "224000000"], "evidence_doc": "doc3", "evidence_span": "总市值2.24亿元", "critical": false, "value_match_rule": "numeric", "note": "2026-10-12总市值（允许单位换算表达）"},
+    {"fact_id": "F-E3", "category": "E_股价面值", "expected_value": "2026-09-23", "allowed_expressions": ["2026年9月23日"], "evidence_doc": "doc3", "evidence_span": "2026年9月23日首次出现股票收盘市值低于3亿元", "critical": false, "value_match_rule": "date", "note": "市值首次破3亿日期（当日收盘1.16元）"},
+    {"fact_id": "F-E4", "category": "E_股价面值", "expected_value": "8个交易日", "allowed_expressions": ["8"], "evidence_doc": "doc3", "evidence_span": "公司股票已连续8个交易日每日股票收盘市值低于3亿元", "critical": false, "value_match_rule": "numeric", "note": "截至2026-10-13已连续天数"},
+    {"fact_id": "F-F1", "category": "F_因果链", "expected_value": "立案调查→行政处罚事先告知书认定→可能触及重大违法强制退市", "required_elements": ["立案", "行政处罚事先告知书", "重大违法强制退市"], "evidence_doc": "doc2", "evidence_span": "根据收到的《行政处罚事先告知书》认定情况，公司可能触及", "critical": true, "value_match_rule": "set", "note": "三环节因果链须完整表述"},
+    {"fact_id": "F-F2", "category": "F_因果链", "expected_value": "收盘价首次低于1元→可能触发交易类强制退市", "required_elements": ["低于1元", "交易类"], "evidence_doc": "doc3", "evidence_span": "股票日收盘价格首次低于1元", "critical": true, "value_match_rule": "set", "note": "股价路径因果"},
+    {"fact_id": "F-F3", "category": "F_因果链", "expected_value": "年报虚增利润/营收（财务造假）是重大违法退市认定的违法事实基础", "required_elements": ["虚增", "重大违法"], "evidence_doc": "doc2", "evidence_span": "根据该事先告知书查明的涉嫌违法事实：公司2021年至2022年年度报告虚增利润总额", "critical": true, "value_match_rule": "set", "note": "财务造假→违法认定因果"}
+  ],
+  "summary": {"n_facts": 29, "n_critical": 14, "categories": ["A_立案与告知", "B_风险提示", "C_退市类型判断", "D_财务虚增", "E_股价面值", "F_因果链"]}
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAGSpec v1 (window2 Planner -> window1 JointScheduler -> runtime)",
+  "type": "object",
+  "required": ["dag_id", "task_id", "structure_version", "nodes", "provenance"],
+  "properties": {
+    "dag_id": {"type": "string"},
+    "task_id": {"type": "string"},
+    "structure_version": {"type": "integer", "minimum": 1},
+    "provenance": {"type": "object",
+      "properties": {"origin": {"type": "string"},
+                     "planner": {"type": "string"},
+                     "graph_hash": {"type": "string"},
+                     "execution_mode": {"enum": ["REAL", "REPLAY", "SYNTHETIC"]}}},
+    "nodes": {"type": "array", "items": {"type": "object",
+      "required": ["node_id", "node_type", "output_contract", "dependencies", "bindings", "state"],
+      "properties": {
+        "node_id": {"type": "string"}, "node_type": {"type": "string"},
+        "output_contract": {"type": "string"},
+        "dependencies": {"type": "array", "items": {"type": "string"}},
+        "bindings": {"type": "array", "items": {"type": "object",
+          "required": ["port", "source", "field"],
+          "properties": {"port": {"type": "string"}, "source": {"enum": ["task", "node"]},
+                         "field": {"type": "string"}, "node_id": {"type": "string"}}}},
+        "subtask": {"type": "string"},
+        "state": {"type": "object",
+          "required": ["status"],
+          "properties": {"status": {"enum": ["pending", "running", "done", "failed", "blocked"]},
+                         "model": {"type": "string"},
+                         "output": {}, "usage": {"type": "object"}, "latency_s": {"type": "number"},
+                         "attempts": {"type": "integer"}}}}}}
+  }
+}

@@ -1,0 +1,38 @@
+{
+ "stage": "RQ2_P2R_V1 preflight",
+ "status": "mock-complete; awaiting formal plaintext authorization",
+ "authorization_status": "operator replied \u6279\u51c6 (single word) \u2014 per standing discipline (authorization must contain batch name + call/token/cost caps), NOT yet accepted as executable; formal statement requested",
+ "preflight": {
+  "runner": "rq2_p2r_runner.py (reuses GlobalBudget/RunStore/transports from frozen stage_d_executor)",
+  "config": "rq2_p2r_config.json (500 calls / 5M tokens / \u00a530)",
+  "mock_result": {
+   "execs": 36,
+   "calls": 285,
+   "worst_case_with_rerolls": 399,
+   "within_caps": true,
+   "breakdown": {
+    "A_base": 57,
+    "B_base": 57,
+    "B_verify": 57,
+    "C_base": 57,
+    "C_verify": 57
+   },
+   "ledger_checkpoints": true,
+   "jsonl_ledger": true,
+   "budget_hardstops_wired": true
+  },
+  "safety_gates": [
+   "--real flag",
+   "STAGE_D_REAL_CALLS_AUTHORIZED=1 env",
+   "STAGE_D_GLM_KEY env-only (never read/written by me)",
+   "GlobalBudget triple hard-stop",
+   "RunStore no-double-charge resume"
+  ]
+ },
+ "real_mode_prerequisites": "operator sets STAGE_D_GLM_KEY in execution environment; fresh out dir",
+ "shas": {
+  "rq2_p2r_runner.py": "3e4987ac23ed4a76a1e00560dd0524160a7c9a4bb789c6f8a290928d4fab1b4e",
+  "rq2_p2r_config.json": "db24bc4cc537159cfb088b12e8bcc544d6d992180b742fc9a8b257439cd2fa1c",
+  "RQ2_REAL_GO_APPLICATION.md": "b25f2cb156cff1ffd3c6cbc241852bac8246f1cad4a5d4dd54067d750249b077"
+ }
+}

@@ -1,0 +1,65 @@
+{
+  "plan": [
+    {
+      "id": "t1",
+      "kind": "index",
+      "goal": "梳理五份证据文档结构与关键信息定位",
+      "doc_ids": [],
+      "depends": []
+    },
+    {
+      "id": "t2",
+      "kind": "extracts",
+      "goal": "提取问询回复、告知书、处罚决定书关键事实",
+      "doc_ids": [
+        "kdx_inquiry_2018",
+        "kdx_inquiry_2019",
+        "kdx_notice_2019",
+        "kdx_notice_2020",
+        "kdx_penalty_2020"
+      ],
+      "depends": [
+        "t1"
+      ]
+    },
+    {
+      "id": "t3",
+      "kind": "timeline",
+      "goal": "梳理2018-2020问询、立案、处罚时间线",
+      "doc_ids": [],
+      "depends": [
+        "t2"
+      ]
+    },
+    {
+      "id": "t4",
+      "kind": "entity_facts",
+      "goal": "梳理涉事主体及虚增利润、存款、担保事实",
+      "doc_ids": [],
+      "depends": [
+        "t2"
+      ]
+    },
+    {
+      "id": "t5",
+      "kind": "factcheck_full",
+      "goal": "核验时间线、主体及监管认定与披露一致性",
+      "doc_ids": [],
+      "depends": [
+        "t2",
+        "t3",
+        "t4"
+      ]
+    },
+    {
+      "id": "t6",
+      "kind": "report",
+      "goal": "生成带证据引用的调查报告并标注存疑",
+      "doc_ids": [],
+      "depends": [
+        "t5"
+      ]
+    }
+  ],
+  "rationale": "单线提取全部证据后构建时间线与主体事实，全面交叉核验监管认定与公司披露，最终汇聚成报告。"
+}

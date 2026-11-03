@@ -1,0 +1,105 @@
+{
+  "source_class": "HISTORICAL_CODE_CONSTANTS_ARITHMETIC_AUDIT_NOT_NEW_MEASUREMENTS",
+  "formula": {
+    "reexecuted_t2": "0.964 * 15 * 0.70",
+    "kept_t1": "15 * 0.29",
+    "total": "4.350 + 10.122"
+  },
+  "decimal": {
+    "t2": "10.12200",
+    "t1": "4.35",
+    "total": "14.472"
+  },
+  "unit": "expected_evidence_chained_fact_count_not_accuracy",
+  "rate_cells": {
+    "t2_grounding": {
+      "value": 0.964,
+      "n": 28,
+      "source": "f7v2 saved"
+    },
+    "t2_survival": {
+      "value": 0.7,
+      "n": 10,
+      "source": "RF2-signal trace"
+    },
+    "t1_survival": {
+      "value": 0.29,
+      "n": 7,
+      "source": "RF2-signal trace"
+    }
+  },
+  "observed_cached_t1": {
+    "grounded": 15,
+    "total": 22
+  },
+  "facts_per_call": {
+    "value": 15,
+    "source": "explicit plan input; not an independently calibrated output-count distribution"
+  },
+  "code_result": 14.471999999999998,
+  "identified_proxy": true,
+  "component_provenance": {
+    "t1": {
+      "formula": "observed_grounded * survival",
+      "grounded": 15,
+      "total": 22,
+      "survival": {
+        "value": 0.29,
+        "n": 7,
+        "source": "RF2-signal trace"
+      },
+      "contribution": 4.35
+    },
+    "t2": {
+      "formula": "grounding * facts * survival",
+      "grounding": {
+        "value": 0.964,
+        "n": 28,
+        "source": "f7v2 saved"
+      },
+      "facts": 15,
+      "survival": {
+        "value": 0.7,
+        "n": 10,
+        "source": "RF2-signal trace"
+      },
+      "contribution": 10.121999999999998
+    },
+    "_summary": {
+      "metric": "historical_chained_fact_proxy",
+      "formula": "sum(contributions)",
+      "identified_total": 14.471999999999998,
+      "partial_known_total": 14.471999999999998,
+      "terminal_accuracy": null
+    }
+  },
+  "downstream_v5": {
+    "q_task": null,
+    "terminal_q": null,
+    "terminal_q_identified": false,
+    "diagnostic_q_proxy": 14.471999999999998,
+    "quality_term_used": false,
+    "quality_scope": "historical_chained_fact_proxy"
+  },
+  "unknown_ev_result": [
+    null,
+    false,
+    {
+      "t1": "UNIDENTIFIED (cache obs or survival missing)",
+      "t2": "UNIDENTIFIED (grounding/survival/facts cell missing for deepseek)",
+      "_summary": {
+        "metric": "historical_chained_fact_proxy",
+        "formula": "sum(contributions)",
+        "identified_total": null,
+        "partial_known_total": 0.0,
+        "terminal_accuracy": null
+      }
+    }
+  ],
+  "source_traceability": "PARTIAL: source labels and historical correction report exist; no per-observation independent calibration is certified",
+  "warnings": [
+    "Rates are stored rounded; arithmetic does not establish calibration.",
+    "No identified normalization denominator or cross-node deduplication makes this an accuracy score.",
+    "Historical source labels do not constitute independent terminal Gold."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+ "decision_id": "DEC-REPLAY-001",
+ "dag_id": "cap_opinion_pilot_v2",
+ "from_structure_version": 1,
+ "to_structure_version": 1,
+ "source": "REPLAY",
+ "Z": {
+  "ops": [
+   {
+    "op": "identity"
+   }
+  ],
+  "semantic_guard": {
+   "validator": "collab_scheduler_v1.typed_dag_v1.protocol.validate",
+   "result": "PASS"
+  }
+ },
+ "R": {
+  "reroutes": [
+   {
+    "node_id": "t3",
+    "model": "glm53",
+    "max_attempts": 2
+   }
+  ],
+  "invalidated_closure": [
+   "t4",
+   "t5"
+  ],
+  "protected_done_outputs": [
+   "t0",
+   "t1",
+   "t2"
+  ]
+ },
+ "pi": {
+  "assignment": {
+   "t3": "glm53",
+   "t4": "glm53",
+   "t5": "glm53"
+  }
+ },
+ "rationale": "REPLAY of frozen recover_failed semantics (typed_dag_v1/execution.py): failed-node reroute only; descendant closure invalidated; done outputs protected"
+}

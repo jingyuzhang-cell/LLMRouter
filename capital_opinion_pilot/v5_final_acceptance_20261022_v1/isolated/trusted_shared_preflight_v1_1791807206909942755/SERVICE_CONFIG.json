@@ -1,0 +1,53 @@
+{
+  "command": [
+    "/root/autodl-tmp/r3_venv/bin/vllm",
+    "serve",
+    "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "--tokenizer",
+    "/root/autodl-tmp/models/Qwen2.5-7B-Instruct",
+    "--served-model-name",
+    "Qwen/Qwen2.5-7B-Instruct",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8127",
+    "--max-model-len",
+    "16384",
+    "--dtype",
+    "auto",
+    "--gpu-memory-utilization",
+    "0.85"
+  ],
+  "vllm": "0.11.0",
+  "transformers": "4.57.1",
+  "tokenizers": "0.22.0",
+  "source_hashes": {
+    "entrypoints/openai/serving_engine.py": "c7d6e59f50301a96f2cc5046dc8f6cdc3eb34d3cd86cd22340cb2119cd4af629",
+    "entrypoints/openai/serving_completion.py": "d9b751d11d391e7ce2e80e662d5a5bbd6cdb4e2593ae3e047dc8b27c5960fb34",
+    "entrypoints/openai/protocol.py": "15f1a0de9c28bfb2072a68bab6d66f3349913993118392fb37a18f2197a54eda"
+  },
+  "tokenizer_config_sha": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+  "chat_template_sha": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+  "special_tokens": {
+    "eos_token": "<|im_end|>",
+    "pad_token": "<|endoftext|>",
+    "additional_special_tokens": [
+      "<|im_start|>",
+      "<|im_end|>",
+      "<|object_ref_start|>",
+      "<|object_ref_end|>",
+      "<|box_start|>",
+      "<|box_end|>",
+      "<|quad_start|>",
+      "<|quad_end|>",
+      "<|vision_start|>",
+      "<|vision_end|>",
+      "<|vision_pad|>",
+      "<|image_pad|>",
+      "<|video_pad|>"
+    ]
+  },
+  "input_rules": "integer prompt, no truncate_prompt_tokens; no chat endpoint/template reapplication",
+  "response_usage_rule": "len(prompt_token_ids) in serving_completion",
+  "live_identity": "NOT_TESTED"
+}

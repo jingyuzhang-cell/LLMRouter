@@ -1,0 +1,195 @@
+{
+ "stage": "P2-0.5 joint cost & detection feasibility",
+ "status": "zero-call; existing data; d swept not assumed",
+ "detection": {
+  "A": {
+   "sens": 0.9610771113831089,
+   "spec": 1.0,
+   "undetected_bad_nodes": 159,
+   "total_bad_nodes": 4085,
+   "undetected_pure_FP": 159
+  },
+  "B": {
+   "sens": 0.7882496940024479,
+   "spec": 1.0,
+   "undetected_bad_nodes": 865,
+   "total_bad_nodes": 4085
+  }
+ },
+ "parent_detector": [
+  {
+   "tau": 0.25,
+   "sens": 0.14318529862174578,
+   "spec": 0.9115646258503401,
+   "fire_rate": 0.133125
+  },
+  {
+   "tau": 0.5,
+   "sens": 0.2006125574272588,
+   "spec": 0.8945578231292517,
+   "fire_rate": 0.183125
+  },
+  {
+   "tau": 0.75,
+   "sens": 0.5796324655436447,
+   "spec": 0.5680272108843537,
+   "fire_rate": 0.5525
+  },
+  {
+   "tau": 0.999,
+   "sens": 0.7649310872894334,
+   "spec": 0.4489795918367347,
+   "fire_rate": 0.725625
+  }
+ ],
+ "frontier_key": {
+  "d0.3_add0.12": {
+   "Q": 0.5084945392741668,
+   "ci": [
+    0.4395126325066334,
+    0.5775091130973273
+   ],
+   "mean_cost_add": 0.12000000000000004,
+   "full_tasks_share": 0.0
+  },
+  "d0.3_add0.50": {
+   "Q": 0.6723219010469471,
+   "ci": [
+    0.6111115035812059,
+    0.7335526914167452
+   ],
+   "mean_cost_add": 0.48656900000000003,
+   "full_tasks_share": 0.135
+  },
+  "d0.3_add0.63": {
+   "Q": 0.709041928774458,
+   "ci": [
+    0.6531892173403359,
+    0.7633651753107616
+   ],
+   "mean_cost_add": 0.5708759999999999,
+   "full_tasks_share": 0.4
+  },
+  "d0.5_add0.50": {
+   "Q": 0.7006190605426835,
+   "ci": [
+    0.6430566032997673,
+    0.7567813819009427
+   ],
+   "mean_cost_add": 0.45452,
+   "full_tasks_share": 0.4
+  },
+  "d0.5_add0.63": {
+   "Q": 0.7185765784667708,
+   "ci": [
+    0.6638647657519081,
+    0.7710317818497335
+   ],
+   "mean_cost_add": 0.48932000000000003,
+   "full_tasks_share": 1.0
+  }
+ },
+ "full_program": {
+  "d=0.0": {
+   "expected_conv_full": 3.4289955200680198,
+   "Q_full": 0.7185765784667708,
+   "mean_cost_add_full": 0.7484100000000001,
+   "budget_multiple_full": 2.24735
+  },
+  "d=0.2": {
+   "expected_conv_full": 3.4289955200680198,
+   "Q_full": 0.7185765784667708,
+   "mean_cost_add_full": 0.6447740000000001,
+   "budget_multiple_full": 2.0746233333333333
+  },
+  "d=0.3": {
+   "expected_conv_full": 3.4289955200680198,
+   "Q_full": 0.7185765784667708,
+   "mean_cost_add_full": 0.5929559999999999,
+   "budget_multiple_full": 1.98826
+  },
+  "d=0.4": {
+   "expected_conv_full": 3.4289955200680198,
+   "Q_full": 0.7185765784667708,
+   "mean_cost_add_full": 0.541138,
+   "budget_multiple_full": 1.9018966666666666
+  },
+  "d=0.5": {
+   "expected_conv_full": 3.4289955200680198,
+   "Q_full": 0.7185765784667708,
+   "mean_cost_add_full": 0.48932000000000003,
+   "budget_multiple_full": 1.8155333333333334
+  }
+ },
+ "latency": {
+  "e0": {
+   "model": "DS",
+   "lat_add": 0.75,
+   "speculative_pct": 0.0,
+   "serial_pct": 0.26315789473684204,
+   "spec_strict10": true,
+   "spec_matched20": true
+  },
+  "e1": {
+   "model": "DS",
+   "lat_add": 0.75,
+   "speculative_pct": 0.0,
+   "serial_pct": 0.26315789473684204,
+   "spec_strict10": true,
+   "spec_matched20": true
+  },
+  "t": {
+   "model": "DS",
+   "lat_add": 0.6000000000000001,
+   "speculative_pct": 0.0,
+   "serial_pct": 0.21052631578947367,
+   "spec_strict10": true,
+   "spec_matched20": true
+  },
+  "m": {
+   "model": "GLM",
+   "lat_add": 0.9,
+   "speculative_pct": 0.07894736842105265,
+   "serial_pct": 0.3157894736842104,
+   "spec_strict10": true,
+   "spec_matched20": true
+  },
+  "r": {
+   "model": "GLM",
+   "lat_add": 1.2,
+   "speculative_pct": 0.10526315789473695,
+   "serial_pct": 0.42105263157894735,
+   "spec_strict10": false,
+   "spec_matched20": true
+  },
+  "v": {
+   "model": "GLM",
+   "lat_add": 1.1,
+   "speculative_pct": 0.0964912280701753,
+   "serial_pct": 0.38596491228070184,
+   "spec_strict10": true,
+   "spec_matched20": true
+  },
+  "p": {
+   "model": "GLM",
+   "lat_add": 0.7,
+   "speculative_pct": 0.061403508771930015,
+   "serial_pct": 0.24561403508771917,
+   "spec_strict10": true,
+   "spec_matched20": true
+  }
+ },
+ "conclusion": [
+  "detection solved by observable signals (96.1/100); hidden class = evidenced FP 3.9%",
+  "latency solved by speculative parallel (<=10.5%; DS re-roll 0%); r-GLM exceeds strict by 0.5pp",
+  "cost is the only blocker: 70% needs ~1.82-2.25x depending on shared-prep discount d",
+  "frozen 10/15/20% ceiling ~48-52%"
+ ],
+ "shas": {
+  "rq2_p2_05.py": "d226c22a8e3ec93e841d244580b63e00c79751f88ffd959db3fe5df776d3fc0d",
+  "P2_05_ANALYSIS.json": "d64bcd714167da959e5bbde83c6819ef79136bd706f8f38f4a20935124df1d91",
+  "P2_05_REPORT.md": "b42b9069578982fa219d6cdbae8546025193acc0aabc5b38abda1528bf38a001",
+  "P2_1_PROTOCOL.md": "d683372088a80c887505c3dadb490e66294aeaa9448c5a91881644fc8f14d4ec",
+  "P2_05_ANALYSIS.log": "6ceb372646e0439cd449112d4c5a2ef474717686f01230ee679115254473695c"
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "arm": "A",
+ "call_id": 1,
+ "purpose": "v3kdxra_A",
+ "prompt_sha256": "ac67bc81b42edd4c5eea1afebd7ffbd9d994e042f04ab795b8a626d0696c6a74",
+ "usage": {
+  "input_tokens": 761,
+  "output_tokens": 491
+ },
+ "stop_reason": "end_turn",
+ "raw_response_sha256": "2cab43274dc3a1fddfbb5273911bef4d66ac7c87ff6da7ef33430f8a843ef391",
+ "validation_errors": [
+  "validator: Dead branch does not reach final output"
+ ],
+ "frozen": true,
+ "raw_response": "```json\n{\n  \"plan\": [\n    {\"id\": \"t1\", \"kind\": \"index\", \"goal\": \"梳理五份证据文档结构与关键信息定位\", \"doc_ids\": [], \"depends\": []},\n    {\"id\": \"t2\", \"kind\": \"extracts\", \"goal\": \"提取问询回复中虚假记载相关公司披露\", \"doc_ids\": [\"kdx_inquiry_2018\", \"kdx_inquiry_2019\"], \"depends\": [\"t1\"]},\n    {\"id\": \"t3\", \"kind\": \"extracts_f\", \"goal\": \"提取告知书与处罚决定书监管认定事实\", \"doc_ids\": [\"kdx_notice_2019\", \"kdx_notice_2020\", \"kdx_penalty_2020\"], \"depends\": [\"t1\"]},\n    {\"id\": \"t4\", \"kind\": \"timeline\", \"goal\": \"梳理2018-2020问询、立案、处罚时间线\", \"doc_ids\": [], \"depends\": [\"t2\"]},\n    {\"id\": \"t5\", \"kind\": \"entity_facts\", \"goal\": \"梳理涉事主体及虚增利润、存款、担保事实\", \"doc_ids\": [], \"depends\": [\"t2\"]},\n    {\"id\": \"t6\", \"kind\": \"yearly_recon\", \"goal\": \"逐年核对监管认定与公司披露差异\", \"doc_ids\": [], \"depends\": [\"t3\"]},\n    {\"id\": \"t7\", \"kind\": \"factcheck_full\", \"goal\": \"全面核验时间线与主体事实准确性\", \"doc_ids\": [], \"depends\": [\"t2\", \"t4\", \"t5\"]},\n    {\"id\": \"t8\", \"kind\": \"factcheck_yr\", \"goal\": \"核验跨年度监管认定数据一致性\", \"doc_ids\": [], \"depends\": [\"t3\", \"t6\"]},\n    {\"id\": \"t9\", \"kind\": \"report\", \"goal\": \"生成带证据引用的调查报告并标注存疑\", \"doc_ids\": [], \"depends\": [\"t7\"]}\n  ],\n  \"rationale\": \"双线提取公司披露与监管认定，构建时间线和主体事实，交叉核验后成报告，覆盖跨年度虚假记载全过程。\"\n}\n```"
+}

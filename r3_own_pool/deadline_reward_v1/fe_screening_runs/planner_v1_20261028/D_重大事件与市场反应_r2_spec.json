@@ -1,0 +1,177 @@
+{
+ "task_id": "planned",
+ "task_class": "欺诈退市全景调查",
+ "evidence": [],
+ "constraints": {
+  "D": 140.0,
+  "Ccap": 0.02
+ },
+ "nodes": [
+  {
+   "id": "n1",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts_zeda"
+    ],
+    "requires": []
+   },
+   "evidence": "zeda_csrc_penalty_2023_29"
+  },
+  {
+   "id": "n2",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts_kangda"
+    ],
+    "requires": []
+   },
+   "evidence": "zeda_csrc_penalty_2024_kangda"
+  },
+  {
+   "id": "n3",
+   "role": "timeline",
+   "inputs": [
+    "n1",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "dates"
+    ],
+    "requires": [
+     "facts_zeda",
+     "facts_kangda"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n4",
+   "role": "timeline_deep",
+   "inputs": [
+    "n3"
+   ],
+   "contract": {
+    "produces": [
+     "stages"
+    ],
+    "requires": [
+     "dates"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n5",
+   "role": "penalties",
+   "inputs": [
+    "n1",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "penalty_items"
+    ],
+    "requires": [
+     "facts_zeda",
+     "facts_kangda"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n6",
+   "role": "amounts",
+   "inputs": [
+    "n1",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "amounts"
+    ],
+    "requires": [
+     "facts_zeda",
+     "facts_kangda"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n7",
+   "role": "amounts_check",
+   "inputs": [
+    "n6"
+   ],
+   "contract": {
+    "produces": [
+     "amounts_checked"
+    ],
+    "requires": [
+     "amounts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n8",
+   "role": "entity_graph",
+   "inputs": [
+    "n1",
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "entity_edges"
+    ],
+    "requires": [
+     "facts_zeda",
+     "facts_kangda"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n9",
+   "role": "merge",
+   "inputs": [
+    "n4",
+    "n5",
+    "n7",
+    "n8"
+   ],
+   "contract": {
+    "produces": [
+     "merged"
+    ],
+    "requires": [
+     "stages",
+     "penalty_items",
+     "amounts_checked",
+     "entity_edges"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n10",
+   "role": "synthesis",
+   "inputs": [
+    "n9"
+   ],
+   "contract": {
+    "produces": [
+     "report"
+    ],
+    "requires": [
+     "merged"
+    ]
+   },
+   "evidence": null
+  }
+ ]
+}

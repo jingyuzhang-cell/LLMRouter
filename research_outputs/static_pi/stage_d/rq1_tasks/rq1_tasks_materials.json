@@ -1,0 +1,596 @@
+{
+ "version": "rq1-materials-v1",
+ "provenance": "Gold 来自原始公告；未由被测模型生成；证据跨度待校验",
+ "docs_dir": "/root/cap_eval_bench_v1/evidence/texts/",
+ "tasks": {
+  "E04": {
+   "company": "*ST卓然(688121)",
+   "question": "调查*ST卓然从立案调查到退市风险的完整演变：立案原因与进展、各次退市风险提示的触发条件与时间线、公司目前面临的退市类型判断",
+   "docs": [
+    {
+     "doc_id": "doc1",
+     "file": "E04-zhuoran_20260910.txt",
+     "title": "立案调查进展暨退市风险提示公告(2026-09-10)"
+    },
+    {
+     "doc_id": "doc2",
+     "file": "E04-zhuoran_20261009.txt",
+     "title": "重大违法强制退市第四次风险提示(2026-10-09)"
+    },
+    {
+     "doc_id": "doc3",
+     "file": "E04-zhuoran_20261013.txt",
+     "title": "股价低于1元终止上市首次风险提示(2026-10-13)"
+    }
+   ],
+   "gold_source": "E04_P2_REFERENCE_FACTS.json",
+   "nodes": [
+    {
+     "node_id": "fin_extract",
+     "kind": "extract",
+     "doc_refs": [
+      "doc2"
+     ],
+     "task": "提取doc2财务虚增数据",
+     "fact_ids": [
+      "F-D1",
+      "F-D2",
+      "F-D3",
+      "F-D4",
+      "F-D5",
+      "F-D6"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "reg_timeline",
+     "kind": "timeline",
+     "doc_refs": [
+      "doc1",
+      "doc2"
+     ],
+     "task": "构建立案与风险提示时间线",
+     "fact_ids": [
+      "F-A1",
+      "F-A4",
+      "F-A6",
+      "F-B1",
+      "F-B2",
+      "F-B3",
+      "F-B4",
+      "F-B5",
+      "F-B6"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "biz_risk",
+     "kind": "extract",
+     "doc_refs": [
+      "doc3"
+     ],
+     "task": "提取股价面值与交易类退市事实",
+     "fact_ids": [
+      "F-E1",
+      "F-E2",
+      "F-E3",
+      "F-E4"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "anomaly_calc",
+     "kind": "reason",
+     "doc_refs": [],
+     "task": "基于财务数据判定异常指标",
+     "fact_ids": [
+      "F-D3",
+      "F-D4"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "fin_extract"
+      ],
+      "fact_ids": [
+       "F-D1",
+       "F-D2",
+       "F-D3",
+       "F-D4",
+       "F-D5",
+       "F-D6"
+      ]
+     }
+    },
+    {
+     "node_id": "cross_verify",
+     "kind": "verification",
+     "doc_refs": [],
+     "task": "交叉核验财务异常与监管事件一致性",
+     "fact_ids": [
+      "F-C1",
+      "F-C2",
+      "F-C3",
+      "F-C4",
+      "F-F1",
+      "F-F2",
+      "F-F3"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "fin_extract",
+       "reg_timeline",
+       "biz_risk",
+       "anomaly_calc"
+      ],
+      "fact_ids": [
+       "F-A1",
+       "F-A4",
+       "F-B1",
+       "F-D4",
+       "F-E1"
+      ]
+     }
+    },
+    {
+     "node_id": "final_report",
+     "kind": "report",
+     "doc_refs": [],
+     "task": "生成终端调查报告",
+     "fact_ids": [
+      "F-C1",
+      "F-C2",
+      "F-F3"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "cross_verify",
+       "biz_risk"
+      ],
+      "fact_ids": [
+       "F-C1",
+       "F-C2",
+       "F-F1",
+       "F-F2",
+       "F-F3"
+      ]
+     }
+    }
+   ],
+   "provenance": "E04 M8-P2 冻结参考事实 29 条（29/29 证据跨度已验证）；节点映射为本轮 RQ1 新做，不改 M8 事实"
+  },
+  "E05": {
+   "company": "*ST纳川(300198)",
+   "question": "调查*ST纳川的立案调查背景与退市风险演变：立案涉及事项、各次风险提示的时间线与触发条件、公司的应对措施",
+   "docs": [
+    {
+     "doc_id": "doc1",
+     "file": "E05-nachuan_20260904.txt",
+     "title": "第五次终止上市风险提示(2026-09-04)"
+    },
+    {
+     "doc_id": "doc2",
+     "file": "E05-nachuan_20261009.txt",
+     "title": "收到立案告知书(2026-10-09)"
+    }
+   ],
+   "nodes": [
+    {
+     "node_id": "ext_doc1",
+     "kind": "extract",
+     "doc_refs": [
+      "doc1"
+     ],
+     "task": "提取退市风险触发条件、历次提示、整改措施",
+     "fact_ids": [
+      "F-E05-1",
+      "F-E05-3",
+      "F-E05-4",
+      "F-E05-5",
+      "F-E05-6",
+      "F-E05-7",
+      "F-E05-8"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "ext_doc2",
+     "kind": "extract",
+     "doc_refs": [
+      "doc2"
+     ],
+     "task": "提取立案日期、编号、原因",
+     "fact_ids": [
+      "F-E05-2",
+      "F-E05-9",
+      "F-E05-10"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "merge",
+     "kind": "reason",
+     "doc_refs": [],
+     "task": "合并立案与退市风险两条线",
+     "fact_ids": [
+      "F-E05-2",
+      "F-E05-3",
+      "F-E05-9"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "ext_doc1",
+       "ext_doc2"
+      ],
+      "fact_ids": [
+       "F-E05-2",
+       "F-E05-3",
+       "F-E05-4",
+       "F-E05-9"
+      ]
+     }
+    },
+    {
+     "node_id": "report",
+     "kind": "report",
+     "doc_refs": [],
+     "task": "生成终端报告",
+     "fact_ids": [
+      "F-E05-2",
+      "F-E05-3",
+      "F-E05-9",
+      "F-E05-11"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "merge",
+       "ext_doc1",
+       "ext_doc2"
+      ],
+      "fact_ids": [
+       "F-E05-2",
+       "F-E05-3",
+       "F-E05-9"
+      ]
+     }
+    }
+   ],
+   "provenance": "事实与证据跨度逐条取自原始公告；未使用任何模型生成"
+  },
+  "E06": {
+   "company": "欢瑞世纪(000892)",
+   "question": "调查欢瑞世纪在立案调查背景下的经营状况：立案事项、半年度业绩预告要点、投资者沟通中披露的风险因素",
+   "docs": [
+    {
+     "doc_id": "doc1",
+     "file": "E06-huanrui_20260423.txt",
+     "title": "收到立案告知书(2026-04-23)"
+    },
+    {
+     "doc_id": "doc2",
+     "file": "E06-huanrui_20260715.txt",
+     "title": "2026年半年度业绩预告(2026-07-15)"
+    },
+    {
+     "doc_id": "doc3",
+     "file": "E06-huanrui_20260919.txt",
+     "title": "投资者集体接待日暨半年度业绩说明会公告(2026-09-19)"
+    }
+   ],
+   "nodes": [
+    {
+     "node_id": "ext_doc1",
+     "kind": "extract",
+     "doc_refs": [
+      "doc1"
+     ],
+     "task": "提取立案日期、编号、原因、涉及事项",
+     "fact_ids": [
+      "F-E06-1",
+      "F-E06-2",
+      "F-E06-3",
+      "F-E06-4"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "ext_doc2",
+     "kind": "extract",
+     "doc_refs": [
+      "doc2"
+     ],
+     "task": "提取半年度业绩预告关键数据",
+     "fact_ids": [
+      "F-E06-5",
+      "F-E06-6",
+      "F-E06-7",
+      "F-E06-8",
+      "F-E06-9",
+      "F-E06-10"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "ext_doc3",
+     "kind": "extract",
+     "doc_refs": [
+      "doc3"
+     ],
+     "task": "提取投资者沟通活动信息",
+     "fact_ids": [
+      "F-E06-11"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "merge",
+     "kind": "reason",
+     "doc_refs": [],
+     "task": "合并立案、业绩、投资者三条线",
+     "fact_ids": [
+      "F-E06-1",
+      "F-E06-5",
+      "F-E06-11"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "ext_doc1",
+       "ext_doc2",
+       "ext_doc3"
+      ],
+      "fact_ids": [
+       "F-E06-1",
+       "F-E06-5",
+       "F-E06-11"
+      ]
+     }
+    },
+    {
+     "node_id": "report",
+     "kind": "report",
+     "doc_refs": [],
+     "task": "生成终端报告，风险因素未披露须标UNKNOWN",
+     "fact_ids": [
+      "F-E06-1",
+      "F-E06-5",
+      "F-E06-12"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "merge"
+      ],
+      "fact_ids": [
+       "F-E06-1",
+       "F-E06-5",
+       "F-E06-11"
+      ]
+     }
+    }
+   ],
+   "provenance": "事实与证据跨度逐条取自原始公告；doc3仅活动公告，投资者风险因素不可判定→UNKNOWN"
+  },
+  "E07": {
+   "company": "ST西王(000639)",
+   "question": "调查ST西王的风险警示叠加过程：立案事项、各项风险警示的时间线与叠加关系、公司及实控人面临的具体风险",
+   "docs": [
+    {
+     "doc_id": "doc1",
+     "file": "E07-xiwang_20260328.txt",
+     "title": "股票交易可能被实施风险警示提示(2026-03-28)"
+    },
+    {
+     "doc_id": "doc2",
+     "file": "E07-xiwang_20260429.txt",
+     "title": "公司及实控人收到立案告知书(2026-04-29)"
+    },
+    {
+     "doc_id": "doc3",
+     "file": "E07-xiwang_20260822.txt",
+     "title": "可能被叠加实施其他风险警示提示(2026-08-22)"
+    }
+   ],
+   "nodes": [
+    {
+     "node_id": "ext_doc1",
+     "kind": "extract",
+     "doc_refs": [
+      "doc1"
+     ],
+     "task": "提取审计意见风险与可能的风险警示类型",
+     "fact_ids": [
+      "F-E07-1",
+      "F-E07-2"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "ext_doc2",
+     "kind": "extract",
+     "doc_refs": [
+      "doc2"
+     ],
+     "task": "提取立案对象、编号、原因",
+     "fact_ids": [
+      "F-E07-3",
+      "F-E07-4",
+      "F-E07-5",
+      "F-E07-6"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "ext_doc3",
+     "kind": "extract",
+     "doc_refs": [
+      "doc3"
+     ],
+     "task": "提取其他风险警示、资金占用、叠加条件",
+     "fact_ids": [
+      "F-E07-7",
+      "F-E07-8",
+      "F-E07-9",
+      "F-E07-10"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "verify",
+     "kind": "verification",
+     "doc_refs": [],
+     "task": "核验风险警示时间线与叠加关系",
+     "fact_ids": [
+      "F-E07-3",
+      "F-E07-7",
+      "F-E07-9"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "ext_doc1",
+       "ext_doc2",
+       "ext_doc3"
+      ],
+      "fact_ids": [
+       "F-E07-1",
+       "F-E07-3",
+       "F-E07-7",
+       "F-E07-9"
+      ]
+     }
+    },
+    {
+     "node_id": "report",
+     "kind": "report",
+     "doc_refs": [],
+     "task": "生成终端报告",
+     "fact_ids": [
+      "F-E07-3",
+      "F-E07-7",
+      "F-E07-9",
+      "F-E07-11"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "verify"
+      ],
+      "fact_ids": [
+       "F-E07-3",
+       "F-E07-7",
+       "F-E07-9"
+      ]
+     }
+    }
+   ],
+   "provenance": "事实与证据跨度逐条取自原始公告；立案具体日期原文为近日→公告日2026-04-28，精确立案日UNKNOWN"
+  },
+  "E08": {
+   "company": "中铁装配(300374)",
+   "question": "调查中铁装配在立案调查期间的经营状况：立案事项、年度业绩预告的要点与风险提示、投资者沟通中披露的信息",
+   "docs": [
+    {
+     "doc_id": "doc1",
+     "file": "E08-zhongtie_20260129.txt",
+     "title": "2025年度业绩预告(2026-01-29)"
+    },
+    {
+     "doc_id": "doc2",
+     "file": "E08-zhongtie_20260327.txt",
+     "title": "2025年度网上业绩说明会公告(2026-03-27)"
+    },
+    {
+     "doc_id": "doc3",
+     "file": "E08-zhongtie_20260918.txt",
+     "title": "收到立案告知书(2026-09-18)"
+    }
+   ],
+   "nodes": [
+    {
+     "node_id": "ext_doc1",
+     "kind": "extract",
+     "doc_refs": [
+      "doc1"
+     ],
+     "task": "提取2025年度业绩预告关键数据",
+     "fact_ids": [
+      "F-E08-1",
+      "F-E08-2",
+      "F-E08-3",
+      "F-E08-4"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "ext_doc2",
+     "kind": "extract",
+     "doc_refs": [
+      "doc2"
+     ],
+     "task": "提取年度报告披露与业绩说明会信息",
+     "fact_ids": [
+      "F-E08-5",
+      "F-E08-6"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "ext_doc3",
+     "kind": "extract",
+     "doc_refs": [
+      "doc3"
+     ],
+     "task": "提取立案日期、编号、原因",
+     "fact_ids": [
+      "F-E08-7",
+      "F-E08-8",
+      "F-E08-9"
+     ],
+     "reference_upstream": null
+    },
+    {
+     "node_id": "merge",
+     "kind": "reason",
+     "doc_refs": [],
+     "task": "合并业绩、投资者沟通、立案三条线",
+     "fact_ids": [
+      "F-E08-1",
+      "F-E08-7",
+      "F-E08-9"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "ext_doc1",
+       "ext_doc2",
+       "ext_doc3"
+      ],
+      "fact_ids": [
+       "F-E08-1",
+       "F-E08-5",
+       "F-E08-7",
+       "F-E08-9"
+      ]
+     }
+    },
+    {
+     "node_id": "report",
+     "kind": "report",
+     "doc_refs": [],
+     "task": "生成终端报告，投资者风险因素未披露须标UNKNOWN",
+     "fact_ids": [
+      "F-E08-1",
+      "F-E08-7",
+      "F-E08-10"
+     ],
+     "reference_upstream": {
+      "from_nodes": [
+       "merge"
+      ],
+      "fact_ids": [
+       "F-E08-1",
+       "F-E08-7",
+       "F-E08-9"
+      ]
+     }
+    }
+   ],
+   "provenance": "事实与证据跨度逐条取自原始公告；doc2仅说明会公告，投资者沟通内容不可判定→UNKNOWN"
+  }
+ }
+}

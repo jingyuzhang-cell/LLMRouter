@@ -1,0 +1,151 @@
+{
+ "unit": "S1-b0-fault | DONE{n0,b2} FAILED{b0} PENDING{5} | D=80 B_tok=30K",
+ "root_cov": 0.311,
+ "predictions": {
+  "accept|Flash": {
+   "lat_pred": 73.1,
+   "tok_pred": 15000,
+   "u_hat": 0.26
+  },
+  "accept|DS3": {
+   "lat_pred": 30.2,
+   "tok_pred": 16000,
+   "u_hat": 0.2517
+  },
+  "targeted|Flash": {
+   "lat_pred": 84.3,
+   "tok_pred": 20000,
+   "u_hat": -2.1667
+  },
+  "targeted|DS3": {
+   "lat_pred": 41.4,
+   "tok_pred": 20000,
+   "u_hat": 0.4873
+  },
+  "full|Flash": {
+   "lat_pred": 90.7,
+   "tok_pred": 24000,
+   "u_hat": -2.2
+  },
+  "full|DS3": {
+   "lat_pred": 47.8,
+   "tok_pred": 24000,
+   "u_hat": 0.377
+  }
+ },
+ "plans": {
+  "STATIC": [
+   "targeted",
+   "Flash"
+  ],
+  "SD-FC": [
+   "targeted",
+   "Flash"
+  ],
+  "R-only": [
+   "accept",
+   "Flash"
+  ],
+  "pi-only": [
+   "targeted",
+   "DS3"
+  ],
+  "SEQ": [
+   "accept",
+   "Flash"
+  ],
+  "JOINT": [
+   "targeted",
+   "DS3"
+  ]
+ },
+ "results": [
+  {
+   "arm": "STATIC",
+   "R": "targeted",
+   "pi": "Flash",
+   "t_q": 0.6154,
+   "hits": 8,
+   "n_ref": 13,
+   "tokens": 13418,
+   "clock": 91.4,
+   "met": false,
+   "eU": 0.5036,
+   "ds_used": 0,
+   "eU_D80": -2.2543
+  },
+  {
+   "arm": "SD-FC",
+   "R": "targeted",
+   "pi": "Flash",
+   "t_q": 0.6154,
+   "hits": 8,
+   "n_ref": 13,
+   "tokens": 13000,
+   "clock": 97.6,
+   "met": false,
+   "eU": 0.5071,
+   "ds_used": 0,
+   "eU_D80": -2.3283
+  },
+  {
+   "arm": "R-only",
+   "R": "accept",
+   "pi": "Flash",
+   "t_q": 0.5385,
+   "hits": 7,
+   "n_ref": 13,
+   "tokens": 9911,
+   "clock": 71.8,
+   "met": true,
+   "eU": 0.4559,
+   "ds_used": 0,
+   "eU_D80": 0.4559
+  },
+  {
+   "arm": "pi-only",
+   "R": "targeted",
+   "pi": "DS3",
+   "t_q": 0.6154,
+   "hits": 8,
+   "n_ref": 13,
+   "tokens": 14701,
+   "clock": 52.3,
+   "met": true,
+   "eU": 0.4929,
+   "ds_used": 3,
+   "eU_D80": 0.4929
+  },
+  {
+   "arm": "SEQ",
+   "R": "accept",
+   "pi": "Flash",
+   "t_q": 0.5385,
+   "hits": 7,
+   "n_ref": 13,
+   "tokens": 9362,
+   "clock": 77.0,
+   "met": true,
+   "eU": 0.4605,
+   "ds_used": 0,
+   "eU_D80": 0.4605
+  },
+  {
+   "arm": "JOINT",
+   "R": "targeted",
+   "pi": "DS3",
+   "t_q": 0.6923,
+   "hits": 9,
+   "n_ref": 13,
+   "tokens": 13778,
+   "clock": 47.0,
+   "met": true,
+   "eU": 0.5775,
+   "ds_used": 3,
+   "eU_D80": 0.5775
+  }
+ ],
+ "attempts": 38,
+ "cash": 0.0926,
+ "eU_correction": "log eU used imported utility with D=350 (module global); corrected here with pre-registered D=80 (deterministic recompute from recorded t_q/tokens/clock)"
+}

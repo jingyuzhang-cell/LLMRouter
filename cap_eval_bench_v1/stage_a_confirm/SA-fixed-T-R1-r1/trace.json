@@ -1,0 +1,110 @@
+{
+ "run_id": "SA-fixed-T-R1-r1",
+ "system_id": "fixed_graph",
+ "task_id": "T-R1",
+ "config_hash": "72df6ef016933891cce253e3e798154576c6d85827e1a9863116f2a3c862989e",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 2,
+   "usage": {
+    "in": 316,
+    "out": 305
+   },
+   "latency_s": 7.476,
+   "parse_status": "OK",
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53",
+   "attempt": 2,
+   "call_id": 4,
+   "usage": {
+    "in": 1571,
+    "out": 404
+   },
+   "latency_s": 5.497,
+   "parse_status": "OK",
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 5,
+   "usage": {
+    "in": 588,
+    "out": 261
+   },
+   "latency_s": 5.162,
+   "parse_status": "OK",
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 6,
+   "usage": {
+    "in": 609,
+    "out": 273
+   },
+   "latency_s": 12.969,
+   "parse_status": "OK",
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 7,
+   "usage": {
+    "in": 1120,
+    "out": 265
+   },
+   "latency_s": 5.41,
+   "parse_status": "OK",
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 8,
+   "usage": {
+    "in": 521,
+    "out": 347
+   },
+   "latency_s": 5.339,
+   "parse_status": "OK",
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 41.853,
+ "deliverable_ref": "stage_a/SA-fixed-T-R1-r1/deliverable.json",
+ "notes": "STAGE-A REAL run arm=fixed_graph; fair terminal contract + canonical assembler"
+}

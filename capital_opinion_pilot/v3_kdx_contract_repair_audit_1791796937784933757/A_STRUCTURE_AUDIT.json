@@ -1,0 +1,856 @@
+{
+  "before": {
+    "plan": {
+      "plan": [
+        {
+          "id": "t1",
+          "kind": "index",
+          "goal": "梳理五份证据文档结构与关键信息定位",
+          "doc_ids": [],
+          "depends": []
+        },
+        {
+          "id": "t2",
+          "kind": "extracts",
+          "goal": "提取问询回复中虚假记载相关公司披露",
+          "doc_ids": [
+            "kdx_inquiry_2018",
+            "kdx_inquiry_2019"
+          ],
+          "depends": [
+            "t1"
+          ]
+        },
+        {
+          "id": "t3",
+          "kind": "extracts_f",
+          "goal": "提取告知书与处罚决定书监管认定事实",
+          "doc_ids": [
+            "kdx_notice_2019",
+            "kdx_notice_2020",
+            "kdx_penalty_2020"
+          ],
+          "depends": [
+            "t1"
+          ]
+        },
+        {
+          "id": "t4",
+          "kind": "timeline",
+          "goal": "梳理2018-2020问询、立案、处罚时间线",
+          "doc_ids": [],
+          "depends": [
+            "t2"
+          ]
+        },
+        {
+          "id": "t5",
+          "kind": "entity_facts",
+          "goal": "梳理涉事主体及虚增利润、存款、担保事实",
+          "doc_ids": [],
+          "depends": [
+            "t2"
+          ]
+        },
+        {
+          "id": "t6",
+          "kind": "yearly_recon",
+          "goal": "逐年核对监管认定与公司披露差异",
+          "doc_ids": [],
+          "depends": [
+            "t3"
+          ]
+        },
+        {
+          "id": "t7",
+          "kind": "factcheck_full",
+          "goal": "全面核验时间线与主体事实准确性",
+          "doc_ids": [],
+          "depends": [
+            "t2",
+            "t4",
+            "t5"
+          ]
+        },
+        {
+          "id": "t8",
+          "kind": "factcheck_yr",
+          "goal": "核验跨年度监管认定数据一致性",
+          "doc_ids": [],
+          "depends": [
+            "t3",
+            "t6"
+          ]
+        },
+        {
+          "id": "t9",
+          "kind": "report",
+          "goal": "生成带证据引用的调查报告并标注存疑",
+          "doc_ids": [],
+          "depends": [
+            "t7"
+          ]
+        }
+      ],
+      "rationale": "双线提取公司披露与监管认定，构建时间线和主体事实，交叉核验后成报告，覆盖跨年度虚假记载全过程。"
+    },
+    "semantic_validation": [],
+    "typed_validation": [
+      "validator: Dead branch does not reach final output"
+    ],
+    "status": "INVALID",
+    "dead_nodes": [
+      "t3",
+      "t6",
+      "t8"
+    ],
+    "planned_docs": [
+      "kdx_inquiry_2018",
+      "kdx_inquiry_2019",
+      "kdx_notice_2019",
+      "kdx_notice_2020",
+      "kdx_penalty_2020"
+    ],
+    "final_chain_docs": [
+      "kdx_inquiry_2018",
+      "kdx_inquiry_2019"
+    ],
+    "overlap_risk": [],
+    "edges": [
+      {
+        "producer": "t1",
+        "consumer": "t2"
+      },
+      {
+        "producer": "t1",
+        "consumer": "t3"
+      },
+      {
+        "producer": "t2",
+        "consumer": "t4"
+      },
+      {
+        "producer": "t2",
+        "consumer": "t5"
+      },
+      {
+        "producer": "t3",
+        "consumer": "t6"
+      },
+      {
+        "producer": "t2",
+        "consumer": "t7"
+      },
+      {
+        "producer": "t4",
+        "consumer": "t7"
+      },
+      {
+        "producer": "t5",
+        "consumer": "t7"
+      },
+      {
+        "producer": "t3",
+        "consumer": "t8"
+      },
+      {
+        "producer": "t6",
+        "consumer": "t8"
+      },
+      {
+        "producer": "t7",
+        "consumer": "t9"
+      }
+    ],
+    "feasibility": {
+      "per_extracts_node": [
+        {
+          "node": "t2",
+          "docs": [
+            "kdx_inquiry_2018",
+            "kdx_inquiry_2019"
+          ],
+          "need_chars": 97817,
+          "direct_injection_feasible": false,
+          "declares_segmented_strategy": false
+        },
+        {
+          "node": "t3",
+          "docs": [
+            "kdx_notice_2019",
+            "kdx_notice_2020",
+            "kdx_penalty_2020"
+          ],
+          "need_chars": 29781,
+          "direct_injection_feasible": false,
+          "declares_segmented_strategy": false
+        }
+      ],
+      "docs_planned": [
+        "kdx_inquiry_2018",
+        "kdx_inquiry_2019",
+        "kdx_notice_2019",
+        "kdx_notice_2020",
+        "kdx_penalty_2020"
+      ],
+      "all_docs_planned": true,
+      "cross_year_planned": true
+    },
+    "missing_necessary_information": "NOT_ESTABLISHED_BY_STRUCTURE",
+    "execution": "NOT_RUN",
+    "node_feasibility": [
+      {
+        "node": "t1",
+        "kind": "index",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "DECLARED_SEGMENTED",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t2",
+        "kind": "extracts",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t3",
+        "kind": "extracts_f",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t4",
+        "kind": "timeline",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t5",
+        "kind": "entity_facts",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t6",
+        "kind": "yearly_recon",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t7",
+        "kind": "factcheck_full",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t8",
+        "kind": "factcheck_yr",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t9",
+        "kind": "report",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      }
+    ]
+  },
+  "after": {
+    "plan": {
+      "plan": [
+        {
+          "id": "t1",
+          "kind": "index",
+          "goal": "梳理五份证据文档结构与关键信息定位",
+          "doc_ids": [],
+          "depends": []
+        },
+        {
+          "id": "t2",
+          "kind": "extracts",
+          "goal": "提取问询回复、告知书、处罚决定书关键事实",
+          "doc_ids": [
+            "kdx_inquiry_2018",
+            "kdx_inquiry_2019",
+            "kdx_notice_2019",
+            "kdx_notice_2020",
+            "kdx_penalty_2020"
+          ],
+          "depends": [
+            "t1"
+          ]
+        },
+        {
+          "id": "t3",
+          "kind": "timeline",
+          "goal": "梳理2018-2020问询、立案、处罚时间线",
+          "doc_ids": [],
+          "depends": [
+            "t2"
+          ]
+        },
+        {
+          "id": "t4",
+          "kind": "entity_facts",
+          "goal": "梳理涉事主体及虚增利润、存款、担保事实",
+          "doc_ids": [],
+          "depends": [
+            "t2"
+          ]
+        },
+        {
+          "id": "t5",
+          "kind": "factcheck_full",
+          "goal": "核验时间线、主体及监管认定与披露一致性",
+          "doc_ids": [],
+          "depends": [
+            "t2",
+            "t3",
+            "t4"
+          ]
+        },
+        {
+          "id": "t6",
+          "kind": "report",
+          "goal": "生成带证据引用的调查报告并标注存疑",
+          "doc_ids": [],
+          "depends": [
+            "t5"
+          ]
+        }
+      ],
+      "rationale": "单线提取全部证据后构建时间线与主体事实，全面交叉核验监管认定与公司披露，最终汇聚成报告。"
+    },
+    "semantic_validation": [],
+    "typed_validation": [],
+    "status": "STRUCTURE_VALID",
+    "dead_nodes": [],
+    "planned_docs": [
+      "kdx_inquiry_2018",
+      "kdx_inquiry_2019",
+      "kdx_notice_2019",
+      "kdx_notice_2020",
+      "kdx_penalty_2020"
+    ],
+    "final_chain_docs": [
+      "kdx_inquiry_2018",
+      "kdx_inquiry_2019",
+      "kdx_notice_2019",
+      "kdx_notice_2020",
+      "kdx_penalty_2020"
+    ],
+    "overlap_risk": [],
+    "edges": [
+      {
+        "producer": "t1",
+        "consumer": "t2"
+      },
+      {
+        "producer": "t2",
+        "consumer": "t3"
+      },
+      {
+        "producer": "t2",
+        "consumer": "t4"
+      },
+      {
+        "producer": "t2",
+        "consumer": "t5"
+      },
+      {
+        "producer": "t3",
+        "consumer": "t5"
+      },
+      {
+        "producer": "t4",
+        "consumer": "t5"
+      },
+      {
+        "producer": "t5",
+        "consumer": "t6"
+      }
+    ],
+    "feasibility": {
+      "per_extracts_node": [
+        {
+          "node": "t2",
+          "docs": [
+            "kdx_inquiry_2018",
+            "kdx_inquiry_2019",
+            "kdx_notice_2019",
+            "kdx_notice_2020",
+            "kdx_penalty_2020"
+          ],
+          "need_chars": 127598,
+          "direct_injection_feasible": false,
+          "declares_segmented_strategy": false
+        }
+      ],
+      "docs_planned": [
+        "kdx_inquiry_2018",
+        "kdx_inquiry_2019",
+        "kdx_notice_2019",
+        "kdx_notice_2020",
+        "kdx_penalty_2020"
+      ],
+      "all_docs_planned": true,
+      "cross_year_planned": true
+    },
+    "missing_necessary_information": "NOT_ESTABLISHED_BY_STRUCTURE",
+    "execution": "NOT_RUN",
+    "node_feasibility": [
+      {
+        "node": "t1",
+        "kind": "index",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "DECLARED_SEGMENTED",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t2",
+        "kind": "extracts",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t3",
+        "kind": "timeline",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t4",
+        "kind": "entity_facts",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t5",
+        "kind": "factcheck_full",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t6",
+        "kind": "report",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      }
+    ],
+    "graph": {
+      "graph_id": "cap_opinion_pilot_v2",
+      "schema_version": "typed-dag.v1",
+      "graph_version": 1,
+      "task_id": "kdx_002450_resource_planning_v3",
+      "nodes": [
+        {
+          "node_id": "t1",
+          "node_type": "extraction",
+          "subtask": "梳理五份证据文档结构与关键信息定位",
+          "inputs": [
+            {
+              "port": "question",
+              "source": "task",
+              "field": "question",
+              "node_id": null
+            },
+            {
+              "port": "ctx_table",
+              "source": "task",
+              "field": "ctx_table",
+              "node_id": null
+            }
+          ],
+          "output_contract": "evidence_registry.v1",
+          "dependencies": [],
+          "success_contract": "schema.v1"
+        },
+        {
+          "node_id": "t2",
+          "node_type": "extraction",
+          "subtask": "提取问询回复、告知书、处罚决定书关键事实；需要原文doc_id: kdx_inquiry_2018,kdx_inquiry_2019,kdx_notice_2019,kdx_notice_2020,kdx_penalty_2020",
+          "inputs": [
+            {
+              "port": "question",
+              "source": "task",
+              "field": "question",
+              "node_id": null
+            },
+            {
+              "port": "evidence_index",
+              "source": "node",
+              "field": "evidence_index",
+              "node_id": "t1"
+            }
+          ],
+          "output_contract": "doc_retrieval.v1",
+          "dependencies": [
+            "t1"
+          ],
+          "success_contract": "schema.v1"
+        },
+        {
+          "node_id": "t3",
+          "node_type": "reasoning",
+          "subtask": "梳理2018-2020问询、立案、处罚时间线",
+          "inputs": [
+            {
+              "port": "question",
+              "source": "task",
+              "field": "question",
+              "node_id": null
+            },
+            {
+              "port": "doc_extracts",
+              "source": "node",
+              "field": "doc_extracts",
+              "node_id": "t2"
+            }
+          ],
+          "output_contract": "timeline.v1",
+          "dependencies": [
+            "t2"
+          ],
+          "success_contract": "schema.v1"
+        },
+        {
+          "node_id": "t4",
+          "node_type": "extraction",
+          "subtask": "梳理涉事主体及虚增利润、存款、担保事实",
+          "inputs": [
+            {
+              "port": "question",
+              "source": "task",
+              "field": "question",
+              "node_id": null
+            },
+            {
+              "port": "doc_extracts",
+              "source": "node",
+              "field": "doc_extracts",
+              "node_id": "t2"
+            }
+          ],
+          "output_contract": "entity_facts.v1",
+          "dependencies": [
+            "t2"
+          ],
+          "success_contract": "schema.v1"
+        },
+        {
+          "node_id": "t5",
+          "node_type": "verification",
+          "subtask": "核验时间线、主体及监管认定与披露一致性",
+          "inputs": [
+            {
+              "port": "question",
+              "source": "task",
+              "field": "question",
+              "node_id": null
+            },
+            {
+              "port": "doc_extracts",
+              "source": "node",
+              "field": "doc_extracts",
+              "node_id": "t2"
+            },
+            {
+              "port": "timeline",
+              "source": "node",
+              "field": "timeline",
+              "node_id": "t3"
+            },
+            {
+              "port": "entity_facts",
+              "source": "node",
+              "field": "entity_facts",
+              "node_id": "t4"
+            }
+          ],
+          "output_contract": "fact_check_full.v1",
+          "dependencies": [
+            "t2",
+            "t3",
+            "t4"
+          ],
+          "success_contract": "schema.v1"
+        },
+        {
+          "node_id": "t6",
+          "node_type": "reasoning",
+          "subtask": "生成带证据引用的调查报告并标注存疑",
+          "inputs": [
+            {
+              "port": "question",
+              "source": "task",
+              "field": "question",
+              "node_id": null
+            },
+            {
+              "port": "verified_facts",
+              "source": "node",
+              "field": "verified_facts",
+              "node_id": "t5"
+            }
+          ],
+          "output_contract": "report.v1",
+          "dependencies": [
+            "t5"
+          ],
+          "success_contract": "schema.v1"
+        }
+      ],
+      "final_outputs": [
+        {
+          "name": "investigation_report",
+          "node_id": "t6",
+          "port": "report"
+        }
+      ],
+      "provenance": {
+        "origin": "llm_semantic_plan + deterministic_assembly",
+        "plan": {
+          "plan": [
+            {
+              "id": "t1",
+              "kind": "index",
+              "goal": "梳理五份证据文档结构与关键信息定位",
+              "doc_ids": [],
+              "depends": []
+            },
+            {
+              "id": "t2",
+              "kind": "extracts",
+              "goal": "提取问询回复、告知书、处罚决定书关键事实",
+              "doc_ids": [
+                "kdx_inquiry_2018",
+                "kdx_inquiry_2019",
+                "kdx_notice_2019",
+                "kdx_notice_2020",
+                "kdx_penalty_2020"
+              ],
+              "depends": [
+                "t1"
+              ]
+            },
+            {
+              "id": "t3",
+              "kind": "timeline",
+              "goal": "梳理2018-2020问询、立案、处罚时间线",
+              "doc_ids": [],
+              "depends": [
+                "t2"
+              ]
+            },
+            {
+              "id": "t4",
+              "kind": "entity_facts",
+              "goal": "梳理涉事主体及虚增利润、存款、担保事实",
+              "doc_ids": [],
+              "depends": [
+                "t2"
+              ]
+            },
+            {
+              "id": "t5",
+              "kind": "factcheck_full",
+              "goal": "核验时间线、主体及监管认定与披露一致性",
+              "doc_ids": [],
+              "depends": [
+                "t2",
+                "t3",
+                "t4"
+              ]
+            },
+            {
+              "id": "t6",
+              "kind": "report",
+              "goal": "生成带证据引用的调查报告并标注存疑",
+              "doc_ids": [],
+              "depends": [
+                "t5"
+              ]
+            }
+          ],
+          "rationale": "单线提取全部证据后构建时间线与主体事实，全面交叉核验监管认定与公司披露，最终汇聚成报告。"
+        },
+        "assembler": "assemble_dag.py (contract mapping + typed binding wiring)"
+      }
+    },
+    "layers": [
+      [
+        "t1"
+      ],
+      [
+        "t2"
+      ],
+      [
+        "t3",
+        "t4"
+      ],
+      [
+        "t5"
+      ],
+      [
+        "t6"
+      ]
+    ],
+    "critical_path_node_count": 5,
+    "max_layer_parallel_width": 2,
+    "parallelism_kind": "Topological layer width, not measured concurrency or maximum antichain",
+    "contracts": [
+      {
+        "node": "t1",
+        "contract": "evidence_registry.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "ctx_table",
+            "source": "task",
+            "field": "ctx_table",
+            "node_id": null
+          }
+        ],
+        "dependencies": []
+      },
+      {
+        "node": "t2",
+        "contract": "doc_retrieval.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "evidence_index",
+            "source": "node",
+            "field": "evidence_index",
+            "node_id": "t1"
+          }
+        ],
+        "dependencies": [
+          "t1"
+        ]
+      },
+      {
+        "node": "t3",
+        "contract": "timeline.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "t2"
+          }
+        ],
+        "dependencies": [
+          "t2"
+        ]
+      },
+      {
+        "node": "t4",
+        "contract": "entity_facts.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "t2"
+          }
+        ],
+        "dependencies": [
+          "t2"
+        ]
+      },
+      {
+        "node": "t5",
+        "contract": "fact_check_full.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "t2"
+          },
+          {
+            "port": "timeline",
+            "source": "node",
+            "field": "timeline",
+            "node_id": "t3"
+          },
+          {
+            "port": "entity_facts",
+            "source": "node",
+            "field": "entity_facts",
+            "node_id": "t4"
+          }
+        ],
+        "dependencies": [
+          "t2",
+          "t3",
+          "t4"
+        ]
+      },
+      {
+        "node": "t6",
+        "contract": "report.v1",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "verified_facts",
+            "source": "node",
+            "field": "verified_facts",
+            "node_id": "t5"
+          }
+        ],
+        "dependencies": [
+          "t5"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,209 @@
+--- before_final_acceptance/joint_scheduler_v5.py
++++ after_final_acceptance/joint_scheduler_v5.py
+@@ -8,11 +8,19 @@
+ stable scope/model tie breaks; unknown-only candidates minimize token/time.
+ All rejected and feasible candidates remain in the decision audit.
+ """
+-from scheduler_common import closure, descendants, assignments, estimates, topological
++from scheduler_common import closure, descendants, assignments, estimates, topological, affected_vertices
+ 
+ W_C, W_L = 2e-5, 0.01
+ CLASSES = {'NONE': 'KEEP', 'LOCAL': 'REEXEC_LOCAL', 'EXPAND': 'REEXEC_EXPAND',
+            'FULL': 'REEXEC_FULL', 'VERIFY': 'VERIFY'}
++
++
++def normalize_state(state):
++    """One observable-feedback interpretation shared by planning and execution."""
++    if 'feedback_records' not in state:
++        return dict(state)
++    from feedback_detector import recovery_feedback
++    return {**state, 'feedback': recovery_feedback(state['feedback_records'])}
+ 
+ 
+ def invalidation_closure(fault_node, children_map, model_nodes):
+@@ -46,19 +54,21 @@
+ 
+ 
+ def scope_specs(state):
+-    topological(state['children_map'], state['model_nodes'])
++    order, _ = topological(state['children_map'], state['model_nodes'])
+     fb = state.get('feedback', {})
+     hard = required_roots(state)
+     model_nodes = set(state['model_nodes'])
+-    if not hard <= model_nodes:
+-        raise ValueError('invalid root outside model graph')
+-    base = closure(hard | set(fb.get('confirmed', ())), state['children_map'], model_nodes)
++    roots = hard | set(fb.get('confirmed', ()))
++    if not roots <= set(order):
++        raise ValueError('invalid root outside DAG')
++    base_vertices = affected_vertices(roots, state['children_map'])
++    base = base_vertices & model_nodes
+     evidence = cache_evidence_nodes(fb)
+-    evidence &= model_nodes
++    evidence &= set(order)
+     specs = [('NONE', set(), 'ok' if not hard and not state.get('verification_required') else 'missing_invalid_or_pending_verification', set())]
+-    if base:
++    if base or hard:
+         specs.append(('LOCAL', base, 'ok', set()))
+-    extras = sorted(evidence - base)
++    extras = sorted(evidence - base_vertices)
+     if len(extras) > state.get('max_extra_nodes', 12):
+         raise ValueError('expansion_search_limit')
+     for mask in range(1, 1 << len(extras)):
+@@ -76,6 +86,10 @@
+ def enumerate_actions(state):
+     cands = []
+     for z, scope, reason, extras in scope_specs(state):
++        roots = set(scope) | set(extras)
++        if z not in ('NONE', 'VERIFY'):
++            roots |= required_roots(state) | set(state.get('feedback', {}).get('confirmed', ()))
++        tools = affected_vertices(roots, state['children_map']) - set(state['model_nodes'])
+         combos = assignments(scope, state) if reason == 'ok' else []
+         if not combos:
+             combos = [{}]
+@@ -83,7 +97,7 @@
+                 reason = 'no_available_compatible_assignment'
+         for pi in combos:
+             c = {'Z': z, 'class': CLASSES[z], 'R': sorted(scope), 'pi': pi,
+-                 'reexec': pi, 'annotations': [], 'extras': sorted(extras),
++                 'reexec': pi, 'annotations': [], 'extras': sorted(extras), 'tools': sorted(tools),
+                  'legality': 'ok' if reason == 'ok' else 'ILLEGAL_' + reason,
+                  'why': reason, 'actual_execution': None}
+             cands.append(c)
+@@ -94,6 +108,7 @@
+         scope = {'verify_' + target}
+         for pi in assignments(scope, state) or [{}]:
+             cands.append({'Z': 'VERIFY', 'class': 'VERIFY', 'R': [], 'pi': pi,
++                          'tools': [],
+                           'reexec': {}, 'annotations': [target], 'extras': [],
+                           'legality': 'ok' if pi and not required_roots(state) and fb.get('verify_conflicts', {}).get(target, {}).get('evidence_ref') else 'ILLEGAL_verify_without_supported_conflict_or_repair',
+                           'why': 'supported_conflict_annotation', 'actual_execution': None})
+@@ -108,6 +123,7 @@
+     future = {**state.get('pending_assignment', {}), **c['reexec']}
+     keep = {n: m for n, m in state.get('cache_model', {}).items() if n not in c['R'] and n not in future}
+     plan = {'keep': keep, 'reexec': future, 'annotations': c['annotations'],
++            'recompute_tools': c.get('tools', []),
+             'facts_per_call': state.get('facts_per_call', {}),
+             'invalid_cache': sorted(required_roots(state)),
+             'downstream_changed': sorted(set(c['R']) - set(getattr(estimator, 'required_nodes', ())))}
+@@ -129,7 +145,7 @@
+         remaining = {n: m for n, m in state.get('pending_assignment', {}).items() if n not in c['reexec']}
+         full_pi = {**remaining, **c['pi']}
+         scope = set(c['reexec']) | set(remaining) | set(c['pi'] if c['Z'] == 'VERIFY' else ())
+-        tokens, latency, cash = estimates(scope, full_pi, state)
++        tokens, latency, cash = estimates(scope, full_pi, {**state, 'execution_tools': c.get('tools', [])})
+     except ValueError as e:
+         tokens, latency, cash = None, None, None
+         reasons.append(str(e))
+@@ -192,9 +208,7 @@
+ 
+ 
+ def choose(state):
+-    if 'feedback_records' in state:
+-        from feedback_detector import recovery_feedback
+-        state = {**state, 'feedback': recovery_feedback(state['feedback_records'])}
++    state = normalize_state(state)
+     scored = score_actions(enumerate_actions(state), state)
+     front = [c for c in scored if c['feasible'] and c['pareto']]
+     return (min(front, key=_rank) if front else None), scored
+--- before_final_acceptance/rule_scheduler_rl.py
++++ after_final_acceptance/rule_scheduler_rl.py
+@@ -5,13 +5,11 @@
+ conflicts only with usable caches. Per-node minimum token assignment, retry a
+ fastest-per-node assignment if infeasible. No joint utility search.
+ """
+-from joint_scheduler_v5 import enumerate_actions, score_actions
++from joint_scheduler_v5 import enumerate_actions, score_actions, normalize_state
+ 
+ 
+ def choose(state):
+-    if 'feedback_records' in state:
+-        from feedback_detector import recovery_feedback
+-        state = {**state, 'feedback': recovery_feedback(state['feedback_records'])}
++    state = normalize_state(state)
+     scored = score_actions(enumerate_actions(state), state)
+     fb = state.get('feedback', {})
+     severe = set(fb.get('cache_anomalies', {}))
+--- before_final_acceptance/scheduler_common.py
++++ after_final_acceptance/scheduler_common.py
+@@ -17,6 +17,11 @@
+ def closure(roots, children, model_nodes):
+     # Walk ALL vertices, including deterministic joins, before filtering.
+     return (set(roots) | set().union(*(descendants(n, children) for n in roots))) & set(model_nodes)
++
++
++def affected_vertices(roots, children):
++    """All affected vertices, including deterministic tools and joins."""
++    return set(roots) | set().union(*(descendants(n, children) for n in roots))
+ 
+ 
+ def topological(children, nodes):
+@@ -83,7 +88,7 @@
+     for n, seconds in state.get('deterministic_latency', {}).items():
+         if not finite_nonnegative(seconds):
+             raise ValueError('invalid_deterministic_latency')
+-        if any(n in descendants(u, state['children_map']) for u in scope):
++        if n in state.get('execution_tools', ()) or any(n in descendants(u, state['children_map']) for u in scope):
+             duration[n] = seconds
+     finish = {}
+     for n in order:
+--- before_final_acceptance/v5_executor.py
++++ after_final_acceptance/v5_executor.py
+@@ -8,7 +8,7 @@
+ from copy import deepcopy
+ import time
+ from scheduler_common import finite_nonnegative
+-from scheduler_common import topological, descendants
++from scheduler_common import topological, descendants, affected_vertices
+ from cache_lineage import fingerprint
+ import joint_scheduler_v5
+ import rule_scheduler_rl
+@@ -18,12 +18,17 @@
+     def __init__(self, state, outputs, call, strategy='V5'):
+         if strategy not in ('V5', 'RL'):
+             raise ValueError('unknown strategy')
+-        self.state = dict(state)
++        self.state = joint_scheduler_v5.normalize_state(state)
+         self.state["allow_proxy_objective"] = False  # production never optimizes a historical proxy
+         self.state.setdefault("resource_limit", 1)  # this injected executor is serial
+         self.outputs = deepcopy(outputs)
+         missing_cache = set(self.state.get('cache_model', {})) - set(self.outputs)
+         self.state['missing_outputs'] = sorted(set(self.state.get('missing_outputs', ())) | missing_cache)
++        self.raw_cache_snapshot = deepcopy(self.outputs)
++        self.invalidated_before = affected_vertices(joint_scheduler_v5.required_roots(self.state),
++                                                    self.state['children_map'])
++        for node in self.invalidated_before:
++            self.outputs.pop(node, None)
+         self.call = call
+         self.strategy = strategy
+ 
+@@ -35,7 +40,10 @@
+         self.state['deadline_remaining_s'] = self.state.get('deadline_remaining_s', float('inf')) - planning_s
+         if best is None:
+             return {'status': 'REFUSED', 'selected': None, 'candidates': audit,
+-                    'outputs': self.outputs, 'actual': []}
++                    'outputs': self.outputs, 'actual': [], 'actual_tokens': 0,
++                    'actual_execution_s': 0, 'actual_cash': {}, 'usage_identified': True,
++                    'actual_planning_s': planning_s, 'actual_total_s': planning_s,
++                    'invalidated_before': sorted(self.invalidated_before)}
+         actual = []
+         usage_unknown = False
+         post_planning = joint_scheduler_v5.evaluate_candidate(best, self.state)
+@@ -82,14 +90,14 @@
+                     'actual_execution_s':None if usage_unknown else wall,'actual_cash':None if usage_unknown else cash,
+                     'known_settled_tokens':tokens,'known_settled_cash':cash,'usage_identified':not usage_unknown,
+                     'actual_planning_s':planning_s}
+-        invalidated = set(best['R'])
+-        for n in best['R']:
++        invalidated = set(best['R']) | set(best.get('tools', ()))
++        for n in tuple(invalidated):
+             invalidated.update(descendants(n, self.state['children_map']))
+         for n in invalidated:
+             self.outputs.pop(n, None)
+         order, parents = topological(self.state['children_map'], self.state['model_nodes'])
+         required = set(best['R']) | set(self.state.get('pending_assignment', {}))
+-        tools = invalidated - set(self.state['model_nodes'])
++        tools = (invalidated - set(self.state['model_nodes'])) | set(best.get('tools', ()))
+         status = 'COMPLETE'
+         tokens, wall, cash = 0, 0, {}
+         for n in order:

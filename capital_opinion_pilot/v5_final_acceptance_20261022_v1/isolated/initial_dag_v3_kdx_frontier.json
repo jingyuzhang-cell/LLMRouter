@@ -1,0 +1,485 @@
+{
+ "status": "COMPILED (salvage + type adaptation)",
+ "llm_plan": {
+  "plan": [
+   {
+    "id": "t0",
+    "kind": "index",
+    "goal": "建立5份证据文档的检索索引",
+    "doc_ids": [
+     "kdx_inquiry_2018",
+     "kdx_notice_2019",
+     "kdx_notice_2020",
+     "kdx_penalty_2020",
+     "kdx_inquiry_2019"
+    ],
+    "depends": []
+   },
+   {
+    "id": "t1",
+    "kind": "extracts",
+    "goal": "限预算检索处罚/告知书认定段（虚增利润、存款、担保、禁入）",
+    "doc_ids": [
+     "kdx_penalty_2020",
+     "kdx_notice_2019",
+     "kdx_notice_2020"
+    ],
+    "depends": [
+     "t0"
+    ]
+   },
+   {
+    "id": "t2",
+    "kind": "extracts",
+    "goal": "限预算检索两份年报问询回复关键段（存款、关联、担保问询）",
+    "doc_ids": [
+     "kdx_inquiry_2018",
+     "kdx_inquiry_2019"
+    ],
+    "depends": [
+     "t0"
+    ]
+   },
+   {
+    "id": "t3",
+    "kind": "timeline",
+    "goal": "梳理2018问询至2020处罚禁入的关键时间节点",
+    "doc_ids": [],
+    "depends": [
+     "t1",
+     "t2"
+    ]
+   },
+   {
+    "id": "t4",
+    "kind": "entity_facts",
+    "goal": "归集监管认定vs公司披露的主体事实及矛盾与未确认项",
+    "doc_ids": [],
+    "depends": [
+     "t1",
+     "t2"
+    ]
+   },
+   {
+    "id": "t5",
+    "kind": "factcheck_full",
+    "goal": "交叉核验时间线与主体事实，标注无法确认事项",
+    "doc_ids": [],
+    "depends": [
+     "t1",
+     "t2",
+     "t3",
+     "t4"
+    ]
+   },
+   {
+    "id": "t6",
+    "kind": "report",
+    "goal": "生成带准确证据引用的调查报告",
+    "doc_ids": [],
+    "depends": [
+     "t5"
+    ]
+   }
+  ],
+  "rationale": "(truncated; salvaged)"
+ },
+ "type_adaptation": {
+  "type_adaptation": {
+   "coerced_to_extracts_f": [
+    "t1",
+    "t2"
+   ],
+   "inserted_mechanical_node": "m_auto_facts_merge",
+   "rewired_consumers": [
+    "t3",
+    "t4",
+    "t5"
+   ],
+   "principle": "LLM task set / goals / dependency semantics preserved; compiler performs type wiring only (advisor-sanctioned constrained compilation)"
+  }
+ },
+ "graph": {
+  "graph_id": "cap_opinion_pilot_v2",
+  "schema_version": "typed-dag.v1",
+  "graph_version": 1,
+  "task_id": "jsst_600287_disclosure_pilot_v2",
+  "nodes": [
+   {
+    "node_id": "t0",
+    "node_type": "extraction",
+    "subtask": "建立5份证据文档的检索索引；需要原文doc_id: kdx_inquiry_2018,kdx_notice_2019,kdx_notice_2020,kdx_penalty_2020,kdx_inquiry_2019",
+    "inputs": [
+     {
+      "port": "question",
+      "source": "task",
+      "field": "question",
+      "node_id": null
+     },
+     {
+      "port": "ctx_table",
+      "source": "task",
+      "field": "ctx_table",
+      "node_id": null
+     }
+    ],
+    "output_contract": "evidence_registry.v1",
+    "dependencies": [],
+    "success_contract": "schema.v1"
+   },
+   {
+    "node_id": "t1",
+    "node_type": "extraction",
+    "subtask": "限预算检索处罚/告知书认定段（虚增利润、存款、担保、禁入）；需要原文doc_id: kdx_penalty_2020,kdx_notice_2019,kdx_notice_2020",
+    "inputs": [
+     {
+      "port": "question",
+      "source": "task",
+      "field": "question",
+      "node_id": null
+     },
+     {
+      "port": "evidence_index",
+      "source": "node",
+      "field": "evidence_index",
+      "node_id": "t0"
+     }
+    ],
+    "output_contract": "doc_retrieval_facts.v1",
+    "dependencies": [
+     "t0"
+    ],
+    "success_contract": "schema.v1"
+   },
+   {
+    "node_id": "t2",
+    "node_type": "extraction",
+    "subtask": "限预算检索两份年报问询回复关键段（存款、关联、担保问询）；需要原文doc_id: kdx_inquiry_2018,kdx_inquiry_2019",
+    "inputs": [
+     {
+      "port": "question",
+      "source": "task",
+      "field": "question",
+      "node_id": null
+     },
+     {
+      "port": "evidence_index",
+      "source": "node",
+      "field": "evidence_index",
+      "node_id": "t0"
+     }
+    ],
+    "output_contract": "doc_retrieval_facts.v1",
+    "dependencies": [
+     "t0"
+    ],
+    "success_contract": "schema.v1"
+   },
+   {
+    "node_id": "t3",
+    "node_type": "reasoning",
+    "subtask": "梳理2018问询至2020处罚禁入的关键时间节点",
+    "inputs": [
+     {
+      "port": "question",
+      "source": "task",
+      "field": "question",
+      "node_id": null
+     },
+     {
+      "port": "doc_extracts",
+      "source": "node",
+      "field": "doc_extracts",
+      "node_id": "m_auto_facts_merge"
+     }
+    ],
+    "output_contract": "timeline.v1",
+    "dependencies": [
+     "m_auto_facts_merge"
+    ],
+    "success_contract": "schema.v1"
+   },
+   {
+    "node_id": "t4",
+    "node_type": "extraction",
+    "subtask": "归集监管认定vs公司披露的主体事实及矛盾与未确认项",
+    "inputs": [
+     {
+      "port": "question",
+      "source": "task",
+      "field": "question",
+      "node_id": null
+     },
+     {
+      "port": "doc_extracts",
+      "source": "node",
+      "field": "doc_extracts",
+      "node_id": "m_auto_facts_merge"
+     }
+    ],
+    "output_contract": "entity_facts.v1",
+    "dependencies": [
+     "m_auto_facts_merge"
+    ],
+    "success_contract": "schema.v1"
+   },
+   {
+    "node_id": "t5",
+    "node_type": "verification",
+    "subtask": "交叉核验时间线与主体事实，标注无法确认事项",
+    "inputs": [
+     {
+      "port": "question",
+      "source": "task",
+      "field": "question",
+      "node_id": null
+     },
+     {
+      "port": "timeline",
+      "source": "node",
+      "field": "timeline",
+      "node_id": "t3"
+     },
+     {
+      "port": "entity_facts",
+      "source": "node",
+      "field": "entity_facts",
+      "node_id": "t4"
+     },
+     {
+      "port": "doc_extracts",
+      "source": "node",
+      "field": "doc_extracts",
+      "node_id": "m_auto_facts_merge"
+     }
+    ],
+    "output_contract": "fact_check_full.v1",
+    "dependencies": [
+     "t3",
+     "t4",
+     "m_auto_facts_merge"
+    ],
+    "success_contract": "schema.v1"
+   },
+   {
+    "node_id": "t6",
+    "node_type": "reasoning",
+    "subtask": "生成带准确证据引用的调查报告",
+    "inputs": [
+     {
+      "port": "question",
+      "source": "task",
+      "field": "question",
+      "node_id": null
+     },
+     {
+      "port": "verified_facts",
+      "source": "node",
+      "field": "verified_facts",
+      "node_id": "t5"
+     }
+    ],
+    "output_contract": "report.v1",
+    "dependencies": [
+     "t5"
+    ],
+    "success_contract": "schema.v1"
+   },
+   {
+    "node_id": "m_auto_facts_merge",
+    "node_type": "transformation",
+    "subtask": "（编译器类型适配节点）多源检索结果汇合，保留出处与冲突标记",
+    "inputs": [
+     {
+      "port": "question",
+      "source": "task",
+      "field": "question",
+      "node_id": null
+     },
+     {
+      "port": "facts",
+      "source": "node",
+      "field": "facts",
+      "node_id": "t1"
+     },
+     {
+      "port": "facts",
+      "source": "node",
+      "field": "facts",
+      "node_id": "t2"
+     }
+    ],
+    "output_contract": "facts_merge.v1",
+    "dependencies": [
+     "t1",
+     "t2"
+    ],
+    "success_contract": "schema.v1"
+   }
+  ],
+  "final_outputs": [
+   {
+    "name": "investigation_report",
+    "node_id": "t6",
+    "port": "report"
+   }
+  ],
+  "provenance": {
+   "origin": "llm_semantic_plan + deterministic_assembly",
+   "plan": {
+    "plan": [
+     {
+      "id": "t0",
+      "kind": "index",
+      "goal": "建立5份证据文档的检索索引",
+      "doc_ids": [
+       "kdx_inquiry_2018",
+       "kdx_notice_2019",
+       "kdx_notice_2020",
+       "kdx_penalty_2020",
+       "kdx_inquiry_2019"
+      ],
+      "depends": []
+     },
+     {
+      "id": "t1",
+      "kind": "extracts_f",
+      "goal": "限预算检索处罚/告知书认定段（虚增利润、存款、担保、禁入）",
+      "doc_ids": [
+       "kdx_penalty_2020",
+       "kdx_notice_2019",
+       "kdx_notice_2020"
+      ],
+      "depends": [
+       "t0"
+      ]
+     },
+     {
+      "id": "t2",
+      "kind": "extracts_f",
+      "goal": "限预算检索两份年报问询回复关键段（存款、关联、担保问询）",
+      "doc_ids": [
+       "kdx_inquiry_2018",
+       "kdx_inquiry_2019"
+      ],
+      "depends": [
+       "t0"
+      ]
+     },
+     {
+      "id": "t3",
+      "kind": "timeline",
+      "goal": "梳理2018问询至2020处罚禁入的关键时间节点",
+      "doc_ids": [],
+      "depends": [
+       "m_auto_facts_merge"
+      ]
+     },
+     {
+      "id": "t4",
+      "kind": "entity_facts",
+      "goal": "归集监管认定vs公司披露的主体事实及矛盾与未确认项",
+      "doc_ids": [],
+      "depends": [
+       "m_auto_facts_merge"
+      ]
+     },
+     {
+      "id": "t5",
+      "kind": "factcheck_full",
+      "goal": "交叉核验时间线与主体事实，标注无法确认事项",
+      "doc_ids": [],
+      "depends": [
+       "t3",
+       "t4",
+       "m_auto_facts_merge"
+      ]
+     },
+     {
+      "id": "t6",
+      "kind": "report",
+      "goal": "生成带准确证据引用的调查报告",
+      "doc_ids": [],
+      "depends": [
+       "t5"
+      ]
+     },
+     {
+      "id": "m_auto_facts_merge",
+      "kind": "facts_merge",
+      "goal": "（编译器类型适配节点）多源检索结果汇合，保留出处与冲突标记",
+      "doc_ids": [],
+      "depends": [
+       "t1",
+       "t2"
+      ]
+     }
+    ],
+    "rationale": "(truncated; salvaged)"
+   },
+   "assembler": "assemble_dag.py (contract mapping + typed binding wiring)"
+  }
+ },
+ "validation": {
+  "status": "PASS",
+  "graph_hash": "e5b7c9e231f90e1bf896f1babf71e3e9feb8628a0b6e7b48f706cd6e911ee223",
+  "layers": [
+   [
+    "t0"
+   ],
+   [
+    "t1",
+    "t2"
+   ],
+   [
+    "m_auto_facts_merge"
+   ],
+   [
+    "t3",
+    "t4"
+   ],
+   [
+    "t5"
+   ],
+   [
+    "t6"
+   ]
+  ]
+ },
+ "executability_probe": [
+  {
+   "node": "t1",
+   "docs": [
+    "kdx_penalty_2020",
+    "kdx_notice_2019",
+    "kdx_notice_2020"
+   ],
+   "chunks": 7,
+   "chars": 3150,
+   "coverage": "2/7",
+   "covered": [
+    "A1",
+    "A2"
+   ]
+  },
+  {
+   "node": "t2",
+   "docs": [
+    "kdx_inquiry_2018",
+    "kdx_inquiry_2019"
+   ],
+   "chunks": 7,
+   "chars": 3150,
+   "coverage": "0/7",
+   "covered": []
+  }
+ ],
+ "union_coverage": "2/7",
+ "budget": {
+  "n_calls": 2,
+  "actual": 3954,
+  "authorized": 5000,
+  "both_calls_stop": "max_tokens"
+ },
+ "provenance": "tasks=LLM(+deterministic salvage of truncated rationale only); merge node=compiler type adaptation (recorded, not LLM-authored)"
+}

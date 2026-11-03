@@ -1,0 +1,304 @@
+{
+  "status": "ASSEMBLED",
+  "planner": {
+    "model": "GLM-5.3",
+    "attempts": [
+      {
+        "phase": "initial",
+        "call_id": 1,
+        "issues": [
+          "t1: depends引用不存在或自依赖",
+          "t1: kind=extracts 缺少所需上游kind=index"
+        ]
+      },
+      {
+        "phase": "repair",
+        "call_id": 2,
+        "issues": []
+      }
+    ]
+  },
+  "graph": {
+    "graph_id": "cap_opinion_pilot_v2",
+    "schema_version": "typed-dag.v1",
+    "graph_version": 1,
+    "task_id": "jsst_600287_disclosure_pilot_v2",
+    "nodes": [
+      {
+        "node_id": "t0",
+        "node_type": "extraction",
+        "subtask": "建立证据索引，映射四份文档的角色与覆盖范围；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020,st_announce_2024_021,st_advance_notice_2023",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "ctx_table",
+            "source": "task",
+            "field": "ctx_table",
+            "node_id": null
+          }
+        ],
+        "output_contract": "evidence_registry.v1",
+        "dependencies": [],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "t1",
+        "node_type": "extraction",
+        "subtask": "提取处罚决定书与公告中的关键事实片段；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020,st_announce_2024_021,st_advance_notice_2023",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "evidence_index",
+            "source": "node",
+            "field": "evidence_index",
+            "node_id": "t0"
+          }
+        ],
+        "output_contract": "doc_retrieval.v1",
+        "dependencies": [
+          "t0"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "t2",
+        "node_type": "reasoning",
+        "subtask": "梳理从事先告知到处罚及风险警示的时间节点；需要原文doc_id: st_advance_notice_2023,csrc_penalty_2024_41,st_announce_2024_020",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "t1"
+          }
+        ],
+        "output_contract": "timeline.v1",
+        "dependencies": [
+          "t1"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "t3",
+        "node_type": "extraction",
+        "subtask": "梳理涉及主体、违法事实与处罚结果；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "t1"
+          }
+        ],
+        "output_contract": "entity_facts.v1",
+        "dependencies": [
+          "t1"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "t4",
+        "node_type": "verification",
+        "subtask": "交叉核实时间线与主体事实，标注存疑项；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020,st_advance_notice_2023",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "t1"
+          },
+          {
+            "port": "timeline",
+            "source": "node",
+            "field": "timeline",
+            "node_id": "t2"
+          },
+          {
+            "port": "entity_facts",
+            "source": "node",
+            "field": "entity_facts",
+            "node_id": "t3"
+          }
+        ],
+        "output_contract": "fact_check_full.v1",
+        "dependencies": [
+          "t1",
+          "t2",
+          "t3"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "t5",
+        "node_type": "reasoning",
+        "subtask": "生成含证据引用的调查报告，未确认事项明确标注；需要原文doc_id: csrc_penalty_2024_41,st_announce_2024_020,st_announce_2024_021,st_advance_notice_2023",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "verified_facts",
+            "source": "node",
+            "field": "verified_facts",
+            "node_id": "t4"
+          }
+        ],
+        "output_contract": "report.v1",
+        "dependencies": [
+          "t4"
+        ],
+        "success_contract": "schema.v1"
+      }
+    ],
+    "final_outputs": [
+      {
+        "name": "investigation_report",
+        "node_id": "t5",
+        "port": "report"
+      }
+    ],
+    "provenance": {
+      "origin": "llm_semantic_plan + deterministic_assembly",
+      "plan": {
+        "plan": [
+          {
+            "id": "t0",
+            "kind": "index",
+            "goal": "建立证据索引，映射四份文档的角色与覆盖范围",
+            "doc_ids": [
+              "csrc_penalty_2024_41",
+              "st_announce_2024_020",
+              "st_announce_2024_021",
+              "st_advance_notice_2023"
+            ],
+            "depends": []
+          },
+          {
+            "id": "t1",
+            "kind": "extracts",
+            "goal": "提取处罚决定书与公告中的关键事实片段",
+            "doc_ids": [
+              "csrc_penalty_2024_41",
+              "st_announce_2024_020",
+              "st_announce_2024_021",
+              "st_advance_notice_2023"
+            ],
+            "depends": [
+              "t0"
+            ]
+          },
+          {
+            "id": "t2",
+            "kind": "timeline",
+            "goal": "梳理从事先告知到处罚及风险警示的时间节点",
+            "doc_ids": [
+              "st_advance_notice_2023",
+              "csrc_penalty_2024_41",
+              "st_announce_2024_020"
+            ],
+            "depends": [
+              "t1"
+            ]
+          },
+          {
+            "id": "t3",
+            "kind": "entity_facts",
+            "goal": "梳理涉及主体、违法事实与处罚结果",
+            "doc_ids": [
+              "csrc_penalty_2024_41",
+              "st_announce_2024_020"
+            ],
+            "depends": [
+              "t1"
+            ]
+          },
+          {
+            "id": "t4",
+            "kind": "factcheck_full",
+            "goal": "交叉核实时间线与主体事实，标注存疑项",
+            "doc_ids": [
+              "csrc_penalty_2024_41",
+              "st_announce_2024_020",
+              "st_advance_notice_2023"
+            ],
+            "depends": [
+              "t1",
+              "t2",
+              "t3"
+            ]
+          },
+          {
+            "id": "t5",
+            "kind": "report",
+            "goal": "生成含证据引用的调查报告，未确认事项明确标注",
+            "doc_ids": [
+              "csrc_penalty_2024_41",
+              "st_announce_2024_020",
+              "st_announce_2024_021",
+              "st_advance_notice_2023"
+            ],
+            "depends": [
+              "t4"
+            ]
+          }
+        ],
+        "rationale": "以监管处罚书为核心，公告佐证，先抽事实再建时间线与主体事实，全量核验后成稿。"
+      },
+      "assembler": "assemble_dag.py (contract mapping + typed binding wiring)"
+    }
+  },
+  "validation": {
+    "status": "PASS",
+    "graph_hash": "79b84f421bec7ff868c86c37a57d462ea5967aa491a81e6a5b9eaae9860da8ce",
+    "layers": [
+      [
+        "t0"
+      ],
+      [
+        "t1"
+      ],
+      [
+        "t2",
+        "t3"
+      ],
+      [
+        "t4"
+      ],
+      [
+        "t5"
+      ]
+    ]
+  },
+  "graph_origin": "llm_semantic_plan + deterministic_assembly (no template)"
+}

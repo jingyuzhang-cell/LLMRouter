@@ -1,0 +1,903 @@
+{
+ "runs": {
+  "ST_clean_r1": {
+   "policy": "static",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [],
+   "node_log": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0109,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S5Cap_F7_r1": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0072,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S5Cap_F7_r2": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0072,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S5Cap_F7_r3": {
+   "policy": "s5cap",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.0,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0072,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S6_F7_r1": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.24,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0109,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S6_F7_r2": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.23,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0109,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  },
+  "ST_S6_F7_r3": {
+   "policy": "s6",
+   "pi0": {
+    "t1": "deepseek",
+    "t2": "deepseek",
+    "t3": "glm53",
+    "t4": "glm53",
+    "t5": "deepseek",
+    "t6": "glm53"
+   },
+   "blocked": [
+    [
+     "t1",
+     "deepseek"
+    ]
+   ],
+   "complete": true,
+   "wall_s": 0.22,
+   "deadline_met": true,
+   "violation_s": 0.0,
+   "skips": [],
+   "decisions": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521
+    }
+   ],
+   "node_log": [
+    {
+     "node": "t2",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t1",
+     "model": "glm53",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t3",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    },
+    {
+     "node": "t6",
+     "model": "glm53flash",
+     "strict_ok": true,
+     "compat_ok": true,
+     "parse_layer": "L0_strict",
+     "in": 500,
+     "out": 300,
+     "lat": 1.0,
+     "truncated": false
+    }
+   ],
+   "tokens": 4800,
+   "cash_rmb": 0.0109,
+   "full_set": "3/3",
+   "per_fact": {
+    "RF5": "COVERED",
+    "RF6": "COVERED",
+    "RF7": "COVERED"
+   },
+   "chain_facts": [
+    "RF5",
+    "RF6",
+    "RF7"
+   ],
+   "reachable_chain": "3/3",
+   "strict_rate": "6/6",
+   "compat_rate": "6/6"
+  }
+ },
+ "meter": {
+  "calls": 42,
+  "tokens": 33600,
+  "cash_rmb": 0.0652
+ },
+ "preflight": {
+  "conditions": {
+   "C1_regression": true,
+   "C2_fresh_ledger": true,
+   "C3_offpeak_or_authorized": true,
+   "C4_reservation": true
+  },
+  "pricing": {
+   "in": 0.3,
+   "out": 1.2
+  },
+  "peak_authorized": true,
+  "verdict": "GO(dry-run)",
+  "detail": {
+   "planned_calls": 42,
+   "worst_tokens": 244266,
+   "worst_cash_rmb": 0.5233,
+   "requested_caps": {
+    "calls": 44,
+    "tokens": 256479,
+    "cash_rmb": 0.58
+   }
+  }
+ }
+}

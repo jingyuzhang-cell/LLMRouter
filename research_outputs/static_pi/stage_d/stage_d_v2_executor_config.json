@@ -1,0 +1,70 @@
+{
+ "batch": "STAGE_D_CONFIRM_V1",
+ "seed": 20261102,
+ "arms": [
+  "Static",
+  "R-only",
+  "π-only",
+  "Simple-Dynamic",
+  "Fixed-Composite",
+  "Proposed-Dynamic"
+ ],
+ "blocks": {
+  "S0": 2,
+  "S1": 3,
+  "S2": 3,
+  "S3": 8,
+  "S4": 8,
+  "S5": 8
+ },
+ "per_exec": {
+  "calls": 14,
+  "yuan": 0.18
+ },
+ "global": {
+  "calls": 2688,
+  "yuan": 40.0,
+  "tokens": 12000000,
+  "tokens_note": "V2.0 12M hard cap (A‴ estimate ≈4.0M)"
+ },
+ "deadline_s": {
+  "default": 300
+ },
+ "slots": {
+  "glm53flash": 2,
+  "deepseek": 1
+ },
+ "s5": {
+  "mode": "S5PRIME_conditional_reexec_J1",
+  "race_arms": [
+   "π-only",
+   "Fixed-Composite",
+   "Proposed-Dynamic"
+  ],
+  "note": "S5′=J1 GLM 故障条件性 DS 单次重执行；触发=stop 异常/JSON 失败；wall>120s 有效=保留；六臂统一路由 AROUT",
+  "cancel_effective": true
+ },
+ "mock": {
+  "scale": 1000,
+  "overhead_s": 10,
+  "latency_s": {
+   "default": {
+    "E1": 14.45,
+    "E2": 14.45,
+    "E3": 14.45,
+    "E4": 14.45,
+    "J1": 11.4,
+    "J2": 8.0,
+    "SINK": 23.8
+   },
+   "S5": {
+    "J2": {
+     "glm53flash": 29.4,
+     "deepseek": 6.3
+    }
+   }
+  }
+ },
+ "output_dir": "runs_final_dryrun",
+ "arms_note": "六臂默认路由 A‴ 对称：E*/J2/SINK=DS@4000, J1=GLM-low@8192"
+}

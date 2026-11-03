@@ -1,0 +1,146 @@
+{
+ "run_id": "SA-fixed-T-D1-r2",
+ "system_id": "fixed_graph",
+ "task_id": "T-D1",
+ "config_hash": "3f5af011be65a89fd28d5ad0303246a9f49cc84ba807e142b252b56a5e5632b5",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 99,
+   "usage": {
+    "in": 414,
+    "out": 299
+   },
+   "latency_s": 7.157,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 100,
+   "usage": {
+    "in": 2562,
+    "out": 427
+   },
+   "latency_s": 7.286,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "unknown"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": [
+     "unknown:[\"2024处罚认定的虚增年度范围是否完全对应2009-2020更正区间：部分覆盖（2014-2017可见，其余UNKN"
+    ]
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 101,
+   "usage": {
+    "in": 578,
+    "out": 341
+   },
+   "latency_s": 9.115,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "relation"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53",
+   "attempt": 2,
+   "call_id": 103,
+   "usage": {
+    "in": 609,
+    "out": 333
+   },
+   "latency_s": 6.863,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 104,
+   "usage": {
+    "in": 1171,
+    "out": 386
+   },
+   "latency_s": 7.649,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 105,
+   "usage": {
+    "in": 723,
+    "out": 442
+   },
+   "latency_s": 8.526,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 46.596,
+ "deliverable_ref": "stage_a/SA-fixed-T-D1-r2/deliverable.json",
+ "notes": "STAGE-A REAL run arm=fixed_graph; fair terminal contract + canonical assembler"
+}

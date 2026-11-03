@@ -1,0 +1,241 @@
+{
+  "before": {
+    "plan": {
+      "plan": [
+        {
+          "id": "t1",
+          "kind": "index",
+          "goal": "为5份文档建立分段索引与关键词映射",
+          "doc_ids": [
+            "kdx_inquiry_2018",
+            "kdx_notice_2019",
+            "kdx_notice_2020",
+            "kdx_penalty_2020",
+            "kdx_inquiry_2019"
+          ],
+          "depends": []
+        },
+        {
+          "id": "t2",
+          "kind": "extracts",
+          "goal": "提取立案、处罚、禁入过程的关键事实片段",
+          "doc_ids": [
+            "kdx_notice_2019",
+            "kdx_notice_2020",
+            "kdx_penalty_2020"
+          ],
+          "depends": [
+            "t1"
+          ]
+        },
+        {
+          "id": "t3",
+          "kind": "extracts",
+          "goal": "提取2018/2019年报问询中虚假记载相关披露片段",
+          "doc_ids": [
+            "kdx_inquiry_2018",
+            "kdx_inquiry_2019"
+          ],
+          "depends": [
+            "t1"
+          ]
+        },
+        {
+          "id": "t4",
+          "kind": "timeline",
+          "goal": "梳理问询-立案-告知-处罚关键时间节点",
+          "doc_ids": [],
+          "depends": [
+            "t2",
+            "t3"
+          ]
+        },
+        {
+          "id": "t5",
+          "kind": "entity_facts",
+          "goal": "梳理涉及主体及虚增利润、存款、关联担保认定",
+          "doc_ids": [],
+          "depends": [
+            "t2",
+            "t3"
+          ]
+        },
+        {
+          "id": "t6",
+          "kind": "factcheck_full",
+          "goal": "交叉核实监管认定与公司披露一致性",
+          "doc_ids": [],
+          "depends": [
+            "t4",
+            "t5"
+          ]
+        },
+        {
+          "id": "t7",
+          "kind": "report",
+          "goal": "生成带证据引用的调查报告，标注存疑事项",
+          "doc_ids": [],
+          "depends": [
+            "t6"
+          ]
+        }
+      ],
+      "rationale": "语料大而注入受限，故用index+分段定位，两路extracts分别覆盖处罚链与问询披露，再做时间线与主体事实后全面核验成文。"
+    },
+    "semantic_validation": [
+      "t6: kind=factcheck_full 缺少所需上游kind=extracts"
+    ],
+    "typed_validation": [
+      "validator: Duplicate scalar input"
+    ],
+    "status": "INVALID",
+    "dead_nodes": [],
+    "planned_docs": [
+      "kdx_inquiry_2018",
+      "kdx_inquiry_2019",
+      "kdx_notice_2019",
+      "kdx_notice_2020",
+      "kdx_penalty_2020"
+    ],
+    "final_chain_docs": [
+      "kdx_inquiry_2018",
+      "kdx_inquiry_2019",
+      "kdx_notice_2019",
+      "kdx_notice_2020",
+      "kdx_penalty_2020"
+    ],
+    "overlap_risk": [],
+    "edges": [
+      {
+        "producer": "t1",
+        "consumer": "t2"
+      },
+      {
+        "producer": "t1",
+        "consumer": "t3"
+      },
+      {
+        "producer": "t2",
+        "consumer": "t4"
+      },
+      {
+        "producer": "t3",
+        "consumer": "t4"
+      },
+      {
+        "producer": "t2",
+        "consumer": "t5"
+      },
+      {
+        "producer": "t3",
+        "consumer": "t5"
+      },
+      {
+        "producer": "t4",
+        "consumer": "t6"
+      },
+      {
+        "producer": "t5",
+        "consumer": "t6"
+      },
+      {
+        "producer": "t6",
+        "consumer": "t7"
+      }
+    ],
+    "feasibility": {
+      "per_extracts_node": [
+        {
+          "node": "t2",
+          "docs": [
+            "kdx_notice_2019",
+            "kdx_notice_2020",
+            "kdx_penalty_2020"
+          ],
+          "need_chars": 29781,
+          "direct_injection_feasible": false,
+          "declares_segmented_strategy": false
+        },
+        {
+          "node": "t3",
+          "docs": [
+            "kdx_inquiry_2018",
+            "kdx_inquiry_2019"
+          ],
+          "need_chars": 97817,
+          "direct_injection_feasible": false,
+          "declares_segmented_strategy": false
+        }
+      ],
+      "docs_planned": [
+        "kdx_inquiry_2018",
+        "kdx_inquiry_2019",
+        "kdx_notice_2019",
+        "kdx_notice_2020",
+        "kdx_penalty_2020"
+      ],
+      "all_docs_planned": true,
+      "cross_year_planned": true
+    },
+    "missing_necessary_information": "NOT_ESTABLISHED_BY_STRUCTURE",
+    "execution": "NOT_RUN",
+    "node_feasibility": [
+      {
+        "node": "t1",
+        "kind": "index",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "DECLARED_SEGMENTED",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t2",
+        "kind": "extracts",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t3",
+        "kind": "extracts",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t4",
+        "kind": "timeline",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t5",
+        "kind": "entity_facts",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t6",
+        "kind": "factcheck_full",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      },
+      {
+        "node": "t7",
+        "kind": "report",
+        "known_tools": "Original execute_v2 main is wired to a different task/evidence set; new merge program adapter tested independently; whole KDX adapter not executed",
+        "retrieval_strategy": "NOT_EXPLICIT",
+        "context_semantics": "3300 characters is direct-injection limit; full document coverage and downstream input sizes unverified"
+      }
+    ]
+  },
+  "after": {
+    "status": "INVALID",
+    "graph": null,
+    "error": "Provider finish_reason=max_tokens; response truncated, not a complete repaired plan",
+    "raw_response": "```json\n{\"plan\":[\n{\"id\":\"t1\",\"kind\":\"index\",\"goal\":\"为5份文档建立分段索引与关键词映射\",\"doc_ids\":[\"kdx_inquiry_2018\",\"kdx_notice_2019\",\"kdx_notice_2020\",\"kdx_penalty_2020\",\"kdx_inquiry_2019\"],\"depends\":[]},\n{\"id\":\"t2\",\"kind\":\"extracts\",\"goal\":\"提取立案、处罚、禁入过程的关键事实片段\",\"doc_ids\":[\"kdx_notice_2019\",\"kdx_notice_2020\",\"kdx_penalty_2020\"],\"depends\":[\"t1\"]},\n{\"id\":\"t3\",\"kind\":\"extracts_f\",\"goal\":\"检索2018/2019年报问询中虚假记载相关披露片段\",\"doc_ids\":[\"kdx_inquiry_2018\",\"kdx",
+    "execution": "NOT_RUN"
+  }
+}

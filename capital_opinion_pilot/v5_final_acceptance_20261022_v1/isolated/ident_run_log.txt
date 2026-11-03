@@ -1,0 +1,37 @@
+  [chain] B1_flash_r1
+Traceback (most recent call last):
+  File "/root/capital_opinion_pilot/identifiability_supplement.py", line 325, in <module>
+    main(dry_run=a.dry_run)
+  File "/root/capital_opinion_pilot/identifiability_supplement.py", line 261, in main
+    ok, log, outputs = run_chain(meter, rid, model, state)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/capital_opinion_pilot/identifiability_supplement.py", line 187, in run_chain
+    raw = meter.call(run_id, 't1', t1_model, *prompt_for('t1', state, outputs))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/capital_opinion_pilot/identifiability_supplement.py", line 116, in call
+    raw = transport.call_model(model, system, user, cap, timeout_s)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/capital_opinion_pilot/transport.py", line 71, in call_model
+    return glm_call(alias, system, user, max_tokens, timeout_s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/capital_opinion_pilot/transport.py", line 36, in glm_call
+    with urllib.request.urlopen(req, timeout=timeout_s) as r:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 429: Too Many Requests

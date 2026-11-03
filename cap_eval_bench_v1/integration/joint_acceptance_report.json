@@ -1,0 +1,73 @@
+{
+ "verdict": "ACCEPT",
+ "zero_pay": true,
+ "run_id": "JOINT-ACC-RUN-001",
+ "proofs": {
+  "1_data_flow": {
+   "pass": true,
+   "nodes": 6,
+   "edges": 7,
+   "graph_hash": "79b84f421bec7ff868c86c37a57d462ea5967aa491a81e6a5b9eaae9860da8ce",
+   "mechanical_conversion": true,
+   "validator": "PASS"
+  },
+  "2_recovery_legality": {
+   "pass": true,
+   "R_reroute_only_failed": true,
+   "R_closure_exact": true,
+   "R_done_protected": true,
+   "Z_semantic_guard_reproven": true,
+   "pi_covers_remaining": true,
+   "recovery_scope": [
+    "t3",
+    "t4",
+    "t5"
+   ]
+  },
+  "3_eval_independence": {
+   "pass": true,
+   "isolation_gate": "CLEAN",
+   "real_replay_labels": {
+    "dagspec.json": "REAL",
+    "anomaly.json": null,
+    "decision.json": "REPLAY"
+   },
+   "no_eval_metric_feedback_into_systems": true
+  },
+  "4_attribution": {
+   "pass": true,
+   "arm_tag": "dyn_Joint_R_pi (REPLAY)",
+   "layers": {
+    "A_structure": "auto_graph (REAL planner) vs fixed_graph — not in this run",
+    "B_static_alloc": "not in this run",
+    "C_dynamic": "dyn_Joint_R_pi replay vs dyn_Static — not in this run"
+   },
+   "single_run_no_claims": true,
+   "scenario": "single replayed joint run; attribution slots registered, no claims"
+  }
+ },
+ "terminal_scoring": {
+  "Q_v1": 0.5754,
+  "coverage": 0.8125,
+  "citation_presence_v1": 0.7143,
+  "unified_C_total_tokens": 11502,
+  "unified_L_service_s": 68.352,
+  "E_evidence_support_rate": 0.7143,
+  "E_evidence_self_sufficiency": "5/8",
+  "verdict": "COMPLETE"
+ },
+ "labels": {
+  "REAL": [
+   "planner graph",
+   "node outputs/usage/latency (A2)",
+   "anomaly (glm53flash contract failures)",
+   "planner usage"
+  ],
+  "REPLAY": [
+   "(Z,R,pi) decision record",
+   "post-recovery reuse",
+   "wall_s"
+  ],
+  "SYNTHETIC": []
+ }
+}

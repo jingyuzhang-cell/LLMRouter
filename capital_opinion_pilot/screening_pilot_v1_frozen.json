@@ -1,0 +1,98 @@
+{
+ "version": "v1_frozen",
+ "frozen_at": "2026-10-13T15:51:20",
+ "event": "元道退(301139) VAL",
+ "node_type": "fact_extraction",
+ "gold_status": "PENDING",
+ "atom_fact_definition": {
+  "definition": "一个可独立核验的陈述，包含恰好一个主体+一个行为/属性+（如适用）一个数值或日期",
+  "evidence_requirement": "每条事实必须附quote(<=30字逐字引文)与doc_id",
+  "no_fabrication": "证据不足时停止提取，不得凑数编造",
+  "quantity": "不设上限；报告原子数/去重数/证据支持率三个独立指标",
+  "evaluation_note": "覆盖率以独立核验参考为分母(PENDING); 证据支持率=有逐字引文且在证据中/总数"
+ },
+ "system_prompt": "你是资本市场调查DAG中的证据事实提取节点。从给定证据片段中提取原子事实。\n原子事实定义：一个可独立核验的陈述，包含恰好一个主体+一个行为/属性+（如适用）一个数值或日期。\n每条事实必须附：quote（≤30字逐字引文，必须能在证据中找到）、doc_id（来源文档ID）。\n证据不足以支持更多事实时停止提取，不得编造。\n只输出JSON：{\"facts\":[{\"fact_key\":\"主题\",\"value\":\"事实描述\",\"doc_id\":\"来源\",\"quote\":\"逐字引文\"}]}",
+ "snippets": [
+  {
+   "snippet_id": "S1",
+   "doc_id": "D1_E03-yuandao_2026-05-08",
+   "text": "证券代码：301139         证券简称：元道通信             公告编号：2026-031\n\n\n                 元道通信股份有限公司\n\n        关于收到《行政处罚事先告知书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n   2026 年 5 月 8 日，元道通信股份有限公司（以下简称“元道通信”或“公\n司”）及相关当事人收到中国证监会出具的《行政处罚事先告知书》\n                             （处罚字【2026】\n14 号），现将相关情况公告如下：\n\n  一、《行政处罚事先告知书》的主要内容\n\n   元道通信股份有限公司、李晋先生、曹亚蕾女士、吴志锋先生：\n   元道通信股份有限公司(以下简称元道通信)涉嫌欺诈发行、信息披露违法\n违规一案，已由",
+   "chars": 400,
+   "keyword_score": 0,
+   "sha256": "ba965d9ccd08f5b2"
+  },
+  {
+   "snippet_id": "S2",
+   "doc_id": "D2_E03-yuandao_2026-08-29",
+   "text": "证券代码：301139    证券简称：*ST元道      公告编号：2026-090\n\n\n              元道通信股份有限公司\n\n          关于收到《事先告知书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n  元道通信股份有限公司（以下简称“公司”或“元道通信”）于 2026 年 8\n月 28 日收到深圳证券交易所下发的《事先告知书》（创业板函〔2026〕第 122\n号）,拟决定终止公司股票上市交易。现将具体内容公告如下：\n\n  一、《事先告知书》的具体内容\n\n  元道通信股份有限公司：\n\n  2026 年 8 月 28 日，你公司收到中国证券监督管理委员会（以下简称证监会）\n作出的《行政处罚决定书》\n           （〔2026〕42 号）。根据《行政处罚决定书》载明的事\n实，你公司",
+   "chars": 400,
+   "keyword_score": 0,
+   "sha256": "db6093d037b37a6a"
+  },
+  {
+   "snippet_id": "S3",
+   "doc_id": "D3_E03-yuandao_2026-08-29",
+   "text": "证券代码：301139      证券简称：*ST元道        公告编号：2026-088\n\n\n              元道通信股份有限公司\n\n         关于收到《行政处罚决定书》的公告\n\n   本公司及董事会全体成员保证信息披露的内容真实、准确、完整，没有虚\n假记载、误导性陈述或重大遗漏。\n\n\n   元道通信股份有限公司（以下简称“公司”或“元道通信”）因涉嫌证券发\n行文件等信息披露文件财务数据存在虚假记载等违法行为，被中国证券监督管\n理委员会（以下简称“中国证监会”）立案调查。具体内容详见公司于 2025 年\n7 月 11 日在巨潮资讯网（www.cninfo.com.cn)披露的《关于公司收到中国证券\n监督管理委员会立案告知书暨风险提示的公告》(公告编号:2025-031)。\n\n   2026 年 5 月 8 日，元道通信股份有限公司（以下简称“元道通信”或“公\n司",
+   "chars": 400,
+   "keyword_score": 0,
+   "sha256": "e43d7289bac0c5e9"
+  }
+ ],
+ "models": [
+  {
+   "alias": "glm53",
+   "model_id": "glm-5.3",
+   "family": "GLM",
+   "endpoint": "subscription",
+   "thinking": "default",
+   "output_cap": 2048
+  },
+  {
+   "alias": "glm53flash",
+   "model_id": "glm-5.3-flash",
+   "family": "GLM",
+   "endpoint": "subscription",
+   "thinking": "default",
+   "output_cap": 2048
+  },
+  {
+   "alias": "deepseek",
+   "model_id": "deepseek-flash",
+   "family": "DeepSeek",
+   "endpoint": "api.deepseek.com",
+   "thinking": "disabled",
+   "output_cap": 2048
+  },
+  {
+   "alias": "qwen",
+   "model_id": "qwen-plus",
+   "family": "Qwen",
+   "endpoint": "dashscope",
+   "thinking": "non-thinking",
+   "output_cap": 2048
+  }
+ ],
+ "budget": {
+  "calls": 12,
+  "guard_cap": 36000,
+  "cash_cap_cny": 0.2,
+  "per_call_output_cap": 2048,
+  "estimated_actual_tokens": "14900",
+  "estimated_cash": "0.027"
+ },
+ "evaluation": {
+  "metrics": [
+   "atom_fact_count",
+   "dedup_count",
+   "evidence_support_rate",
+   "coverage_vs_reference",
+   "json_contract_rate",
+   "task_completion_rate",
+   "cost_tokens",
+   "cost_cash",
+   "latency_s"
+  ],
+  "note": "coverage vs PENDING reference = exploratory silver only"
+ },
+ "fairness": "identical prompts per snippet; identical output_cap=2048; identical evidence; no adjustment based on outputs"
+}

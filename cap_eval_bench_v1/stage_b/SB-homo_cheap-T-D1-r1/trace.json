@@ -1,0 +1,151 @@
+{
+ "run_id": "SB-homo_cheap-T-D1-r1",
+ "system_id": "homo_cheap",
+ "task_id": "T-D1",
+ "config_hash": "150df6ea8ed4bdefe3594f81197fb4893ea28d1b2dda905e38131578665e6fd9",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0,
+  "note": "fixed assignment"
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 70,
+   "usage": {
+    "in": 118,
+    "out": 65
+   },
+   "latency_s": 2.28,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "subtask"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 71,
+   "usage": {
+    "in": 2211,
+    "out": 465
+   },
+   "latency_s": 8.479,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "subtask"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 72,
+   "usage": {
+    "in": 552,
+    "out": 292
+   },
+   "latency_s": 5.289,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53flash",
+   "attempt": 2,
+   "call_id": 74,
+   "usage": {
+    "in": 563,
+    "out": 250
+   },
+   "latency_s": 6.649,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 75,
+   "usage": {
+    "in": 1098,
+    "out": 292
+   },
+   "latency_s": 5.646,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "conflicts",
+     "subtask",
+     "unresolved"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": [
+     "conflicts:[\"更正公告称对利润无影响，与证监会认定的2015/2016虚增存在口径矛盾，UNRESOLVED\"]"
+    ]
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53flash",
+   "attempt": 1,
+   "call_id": 76,
+   "usage": {
+    "in": 418,
+    "out": 294
+   },
+   "latency_s": 7.704,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 42.287,
+ "deliverable_ref": "stage_b/SB-homo_cheap-T-D1-r1/deliverable.json",
+ "notes": "STAGE-B REAL run arm=homo_cheap; frozen graph; assignment={'f1': 'glm53flash', 'f2': 'glm53flash', 'f3': 'glm53flash', 'f4': 'glm53flash', 'f5': 'glm53flash', 'f6': 'glm53flash'}"
+}

@@ -1,0 +1,125 @@
+{
+ "task_id": "planned",
+ "task_class": "关联交易与资金流调查",
+ "evidence": [],
+ "constraints": {
+  "D": 140.0,
+  "Ccap": 0.02
+ },
+ "nodes": [
+  {
+   "id": "n1",
+   "role": "extraction",
+   "inputs": [],
+   "contract": {
+    "produces": [
+     "facts"
+    ],
+    "requires": []
+   },
+   "evidence": "jsst"
+  },
+  {
+   "id": "n2",
+   "role": "entity_relations",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "entities",
+     "relations"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n3",
+   "role": "entity_graph",
+   "inputs": [
+    "n2"
+   ],
+   "contract": {
+    "produces": [
+     "entity_edges"
+    ],
+    "requires": [
+     "entities",
+     "relations"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n4",
+   "role": "amounts",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "amounts"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n5",
+   "role": "penalties",
+   "inputs": [
+    "n1"
+   ],
+   "contract": {
+    "produces": [
+     "penalty_items"
+    ],
+    "requires": [
+     "facts"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n6",
+   "role": "cross_check",
+   "inputs": [
+    "n3",
+    "n4",
+    "n5"
+   ],
+   "contract": {
+    "produces": [
+     "checked"
+    ],
+    "requires": [
+     "entity_edges",
+     "amounts",
+     "penalty_items"
+    ]
+   },
+   "evidence": null
+  },
+  {
+   "id": "n7",
+   "role": "synthesis",
+   "inputs": [
+    "n6"
+   ],
+   "contract": {
+    "produces": [
+     "report"
+    ],
+    "requires": [
+     "checked"
+    ]
+   },
+   "evidence": null
+  }
+ ]
+}

@@ -1,0 +1,143 @@
+{
+ "stage": "P2-1 preregistration v1.0",
+ "status": "frozen before formal run; zero API; 192 HOLD",
+ "fidelity_fixes": [
+  {
+   "bug": "node-level q vs per-fact q",
+   "fix": "per-fact q"
+  },
+  {
+   "bug": "module-level RATES for copies (H0 twin not pure-null)",
+   "fix": "per-task P[i] rates"
+  }
+ ],
+ "fidelity_verification": "empty-spec joint_run == run_fast bitwise on stable AND H0, 800 tasks, max|diff|=0.0",
+ "arms": {
+  "P2": {
+   "Q": 0.7065,
+   "C_mult": 1.87,
+   "L": 1.079,
+   "dHet_pp": 2.14
+  },
+  "P5": {
+   "Q": 0.6952,
+   "C_mult": 1.79,
+   "L": 1.079,
+   "dHet_pp": 5.41
+  },
+  "Static": {
+   "Q": 0.4548
+  },
+  "ShamP2": {
+   "Q": 0.4717
+  }
+ },
+ "gates": {
+  "E1_primary": "paired superiority CI>0 AND mean>=0.70",
+  "E1_confirmatory": "CI-lower>0.70 (n=1874 at current mean; n=131 at 72.5%)",
+  "E2_primary": "dHet CI>0 AND point>=5pp (P5: n=68; Holm 102)",
+  "E2_confirmatory": "registered infeasible, CI reported only",
+  "E3": "P2-P5 paired, Holm-3"
+ },
+ "V1_verifier_realism": "prerequisite gate; >=200 human-labeled pairs; spec_v>=.85 sens_v>=.70; replaces perfect-verifier assumption; sham-verify control",
+ "power": {
+  "P2arm": {
+   "mean_Q": 0.7065384615384616,
+   "sd": 0.14442666648916305,
+   "n_gap5bp": 3205.286902118772,
+   "n_gap10bp": 801.321725529693,
+   "n_gap15bp": 356.14298912430803,
+   "n_gap20bp": 200.33043138242326,
+   "n_gap25bp": 128.2114760847509,
+   "n_at_own_mean_vs_70": 1874.3719254604207,
+   "attribution": {
+    "dHet_pp": 2.144230769230768,
+    "sd_ds": 0.17264116169219165,
+    "sd_dh": 0.16834906783079495,
+    "se_n1": 0.24113560365472175,
+    "n_CIlower>margin0.0": 485.8383269178782,
+    "n_CIlower>margin0.05": null
+   }
+  },
+  "P5arm": {
+   "mean_Q": 0.6951923076923078,
+   "sd": 0.14652036858097942,
+   "n_gap5bp": 3298.8923136168733,
+   "n_gap10bp": 824.7230784042183,
+   "n_gap15bp": 366.5435904018749,
+   "n_gap20bp": 206.18076960105458,
+   "n_gap25bp": 131.95569254467492,
+   "n_at_own_mean_vs_70": null,
+   "attribution": {
+    "dHet_pp": 5.413461538461539,
+    "sd_ds": 0.1674344744491772,
+    "sd_dh": 0.15324419517049306,
+    "se_n1": 0.2269759603736139,
+    "n_CIlower>margin0.0": 67.5338884748034,
+    "n_CIlower>margin0.05": 11577.149321779294
+   }
+  },
+  "P2_vs_P5_paired": {
+   "mean_diff_pp": 1.1346153846153846,
+   "sd_diff": 0.09413624048922188,
+   "n_detect_1pp_80pct": 695.5461601027318
+  },
+  "holm3_z": 2.394,
+  "holm3_n_inflation": 1.491887755102041
+ },
+ "qclr": {
+  "Static": {
+   "Q": 0.45480769230769236,
+   "C_mult": 0.9999999999999998,
+   "L_ratio": 1.0,
+   "C_H0_mult": 0.9999999999999998,
+   "verify": false
+  },
+  "ShamP2": {
+   "Q": 0.4717307692307692,
+   "C_mult": 1.8095238095238095,
+   "L_ratio": 1.0789473684210524,
+   "C_H0_mult": 1.8095238095238095,
+   "verify": false
+  },
+  "P2arm": {
+   "Q": 0.7065384615384616,
+   "C_mult": 1.867098214285714,
+   "L_ratio": 1.0789473684210524,
+   "C_H0_mult": 1.8486011904761905,
+   "verify": true,
+   "cost_items": {
+    "base": 0.6,
+    "copies_family0": 0.17999999999999997,
+    "copies_family1": 0.21999999999999997,
+    "copies_family2": 0.08571428571428572,
+    "verify": 0.03521428571428571,
+    "total": 1.1209285714285713,
+    "mult": 1.8682142857142856
+   }
+  },
+  "P5arm": {
+   "Q": 0.6951923076923078,
+   "C_mult": 1.7864583333333333,
+   "L_ratio": 1.0789473684210524,
+   "C_H0_mult": 1.7703422619047615,
+   "verify": true,
+   "cost_items": {
+    "base": 0.6571428571428571,
+    "copies_family0": 0.17999999999999997,
+    "copies_family1": 0.12,
+    "copies_family2": 0.08571428571428572,
+    "verify": 0.03521428571428571,
+    "total": 1.0780714285714283,
+    "mult": 1.796785714285714
+   }
+  }
+ },
+ "shas": {
+  "P2_1_PREREGISTRATION.md": "b9568942fa0acb403b6bcd49731bd4ef58d27540c585991ec9cb42e00bda850a",
+  "rq2_p2_07.py": "aba35be12f7ff95ff5bdc9bcd73d44c8773f2351844d5b3eaaa8f1768c3e0c9d",
+  "rq2_p2_1_prep.py": "fea6b218d4951ec550eb9a391c9b5ceae82aa4ca0f03843300a79ec4577477ea",
+  "P2_1_POWER_AUDIT.json": "a996f4ecbbeedaa6764d4171e7969c9d847499ea1bebfbe2a1009f1f15b989a4",
+  "P2_07_ANALYSIS.json": "4fe40ef3abb09462c9de74fa815ea44f5f266471193b6328b3e939243d92efb8"
+ }
+}

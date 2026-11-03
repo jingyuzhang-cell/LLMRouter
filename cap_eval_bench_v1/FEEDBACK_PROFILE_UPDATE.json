@@ -1,0 +1,44 @@
+{
+ "real_cost": {
+  "glm53": {
+   "avg_tokens": 950,
+   "avg_lat_s": 5.8
+  },
+  "glm53flash": {
+   "avg_tokens": 1430,
+   "avg_lat_s": 7.0
+  }
+ },
+ "real_quality_by_arm": {
+  "homo_strong": {
+   "Q_med": 0.23,
+   "cite_med": 0.75,
+   "n": 4
+  },
+  "homo_cheap": {
+   "Q_med": 0.23,
+   "cite_med": 0.25,
+   "n": 4
+  },
+  "static_opt": {
+   "Q_med": 0.304,
+   "cite_med": 1.0,
+   "n": 4
+  },
+  "alloc_rule": {
+   "Q_med": 0.164,
+   "cite_med": 0.5,
+   "n": 4
+  },
+  "alloc_router": {
+   "Q_med": 0.129,
+   "cite_med": 0.0,
+   "n": 4
+  }
+ },
+ "key_insight": {
+  "flash_vs_glm": "Flash avg_tokens 1.5x GLM, avg_lat 1.2x GLM — Flash is NOT cheaper/faster on these tasks; frozen profile assumption violated",
+  "mixed_allocation": "Static-Opt (mixed GLM+Flash) achieves highest Q AND lowest tokens — portfolio effect real",
+  "citation": "GLM nodes have higher citation_accuracy; Flash nodes contribute to lower citation rates"
+ }
+}

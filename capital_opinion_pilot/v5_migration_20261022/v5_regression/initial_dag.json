@@ -1,0 +1,305 @@
+{
+  "planner": {
+    "model": "GLM-5.3",
+    "max_requests": 2,
+    "request_timeout_s": 60,
+    "planner_inputs": [
+      "investigation_task",
+      "contract_registry",
+      "public_evidence_index(ctx_table)",
+      "domain_background"
+    ],
+    "planner_isolated_from": [
+      "facts_silver.json (answers)",
+      "evidence full text"
+    ],
+    "attempts": [
+      {
+        "call_id": 4,
+        "phase": "initial",
+        "parse_error": "Unterminated string starting at: line 56 column 18 (char 2578)",
+        "prompt_sha256": "7ccba219d353f888718d0c4c226e7dc11313ab0c316e6d88c308e5f41bb0bfb9"
+      },
+      {
+        "call_id": 5,
+        "phase": "repair",
+        "parse_error": "Unterminated string starting at: line 59 column 18 (char 2651)",
+        "structural_status": "FAIL"
+      }
+    ]
+  },
+  "contract_extension": {
+    "source": "collab_scheduler_v1.typed_dag_v1.protocol.CONTRACTS (in-process extension)",
+    "added": {
+      "evidence_registry.v1": [
+        "extraction",
+        {
+          "question": "text",
+          "ctx_table": "text"
+        },
+        {
+          "evidence_index": "json"
+        }
+      ],
+      "doc_retrieval.v1": [
+        "extraction",
+        {
+          "question": "text",
+          "ctx_table": "text"
+        },
+        {
+          "doc_extracts": "json"
+        }
+      ],
+      "timeline.v1": [
+        "reasoning",
+        {
+          "question": "text",
+          "doc_extracts": "json"
+        },
+        {
+          "timeline": "json"
+        }
+      ],
+      "entity_facts.v1": [
+        "extraction",
+        {
+          "question": "text",
+          "doc_extracts": "json"
+        },
+        {
+          "entity_facts": "json"
+        }
+      ],
+      "fact_check.v1": [
+        "verification",
+        {
+          "question": "text",
+          "timeline": "json",
+          "doc_extracts": "json"
+        },
+        {
+          "verified_facts": "json"
+        }
+      ],
+      "report.v1": [
+        "reasoning",
+        {
+          "question": "text",
+          "verified_facts": "json"
+        },
+        {
+          "report": "text"
+        }
+      ]
+    }
+  },
+  "validation": {
+    "validator": "typed_dag_v1.protocol.validate (reused)",
+    "required_outputs": [
+      "investigation_report"
+    ],
+    "limits": {
+      "max_nodes": 7,
+      "max_depth": 5,
+      "max_llm_calls": 7
+    },
+    "structural_status": "PASS",
+    "graph_hash": "870f58e0c419a84b8af890e7e7b290a0a0567289d56a75bd4e5f0c0bcd368a6d",
+    "layers": [
+      [
+        "doc_index"
+      ],
+      [
+        "doc_retrieval"
+      ],
+      [
+        "entity_facts",
+        "timeline"
+      ],
+      [
+        "fact_check"
+      ],
+      [
+        "report"
+      ]
+    ]
+  },
+  "graph": {
+    "graph_id": "cap_opinion_pilot_v1",
+    "schema_version": "typed-dag.v1",
+    "graph_version": 1,
+    "task_id": "jsst_600287_disclosure_pilot",
+    "nodes": [
+      {
+        "node_id": "doc_index",
+        "node_type": "extraction",
+        "subtask": "整理证据索引：阅读ctx_table中的证据文档清单（doc_id、标题、URL、公开日期、哈希、字符数），按监管文书/公司公告分类，标注每份文档在调查中的角色与公开日期，输出evidence_index。",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "ctx_table",
+            "source": "task",
+            "field": "ctx_table",
+            "node_id": null
+          }
+        ],
+        "output_contract": "evidence_registry.v1",
+        "dependencies": [],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "doc_retrieval",
+        "node_type": "extraction",
+        "subtask": "原文检索与摘录：依据evidence_index与调查任务，从执行器注入的证据摘录中定位关键段落：csrc_penalty_2024_41（违法事实、处罚决定、落款日期）、st_announce_2024_020（立案与收到文书披露）、st_announce_2024_021（停牌与风险警示安排）、st_advance_notice_2023（事先告知）。输出doc_extracts：每条含doc_id、要点、逐字引文（<=40字）、公开日期。",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "evidence_index",
+            "source": "node",
+            "field": "evidence_index",
+            "node_id": "doc_index"
+          }
+        ],
+        "output_contract": "doc_retrieval.v1",
+        "dependencies": [
+          "doc_index"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "timeline",
+        "node_type": "reasoning",
+        "subtask": "事件时间线梳理：基于doc_extracts构建调查过程时间线（立案、事先告知、听证、处罚决定、公司公告、停牌与风险警示实施），每项含日期(YYYY-MM-DD)、事件描述、证据doc_id。",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "doc_retrieval"
+          }
+        ],
+        "output_contract": "timeline.v1",
+        "dependencies": [
+          "doc_retrieval"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "entity_facts",
+        "node_type": "extraction",
+        "subtask": "主体与处罚事实抽取：基于doc_extracts抽取涉及主体（公司、责任人员、业务对手方）、处罚决定（罚款金额、警告、市场禁入）与虚增金额等原子事实，每条含事实陈述、数值/日期、证据doc_id。",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "doc_retrieval"
+          }
+        ],
+        "output_contract": "entity_facts.v1",
+        "dependencies": [
+          "doc_retrieval"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "fact_check",
+        "node_type": "verification",
+        "subtask": "交叉核查：将timeline与entity_facts逐条对照doc_extracts中的引文核查（日期、金额、主体名称），输出verified_facts：每条含事实、核查结论(SUPPORTED/UNSUPPORTED)、证据doc_id；无法确认的明确标注UNRESOLVED。",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "timeline",
+            "source": "node",
+            "field": "timeline",
+            "node_id": "timeline"
+          },
+          {
+            "port": "entity_facts",
+            "source": "node",
+            "field": "entity_facts",
+            "node_id": "entity_facts"
+          },
+          {
+            "port": "doc_extracts",
+            "source": "node",
+            "field": "doc_extracts",
+            "node_id": "doc_retrieval"
+          }
+        ],
+        "output_contract": "fact_check.v1",
+        "dependencies": [
+          "doc_retrieval",
+          "timeline",
+          "entity_facts"
+        ],
+        "success_contract": "schema.v1"
+      },
+      {
+        "node_id": "report",
+        "node_type": "reasoning",
+        "subtask": "调查报告整合：基于verified_facts撰写不超过500字的调查报告，涵盖调查过程时间线、涉及主体、处罚结论、风险警示安排，每个关键结论标注证据doc_id；无法确认事项单独标注。输出report文本。",
+        "inputs": [
+          {
+            "port": "question",
+            "source": "task",
+            "field": "question",
+            "node_id": null
+          },
+          {
+            "port": "verified_facts",
+            "source": "node",
+            "field": "verified_facts",
+            "node_id": "fact_check"
+          }
+        ],
+        "output_contract": "report.v1",
+        "dependencies": [
+          "fact_check"
+        ],
+        "success_contract": "schema.v1"
+      }
+    ],
+    "final_outputs": [
+      {
+        "name": "investigation_report",
+        "node_id": "report",
+        "port": "report"
+      }
+    ],
+    "provenance": {
+      "origin": "registered_domain_template_fallback",
+      "reason": "planner LLM envelope (2 requests) exhausted with truncated outputs; typed_dag_v1 documented fallback pattern applied",
+      "planner_attempts_ref": "initial_dag.json planner.attempts (call_id 4,5)"
+    }
+  },
+  "graph_origin": "registered_domain_template_fallback (planner envelope exhausted; see planner.attempts)"
+}

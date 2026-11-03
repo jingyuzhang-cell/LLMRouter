@@ -1,0 +1,179 @@
+{
+ "version": "v4_era_split_2026-10-14",
+ "eras": {
+  "v2": "protocol v2+ (f7v2: caps 2048/2560/4096, layered parse)",
+  "legacy-1536caps": "f7min round (mid cap 1536 -> t5 systematic truncation)",
+  "mixed-8kline-v2-valid-subset": "e4 ledger (v1-invalid + v2-valid mixed; use with care)"
+ },
+ "cells": {
+  "crosssource_check|deepseek": {
+   "model": "deepseek-flash",
+   "legacy-1536caps": {
+    "n": 5,
+    "avg_tokens": 3382.6,
+    "avg_lat_s": 5.04,
+    "truncation_rate": 0.8
+   },
+   "mixed-8kline-v2-valid-subset": {
+    "n": 9,
+    "avg_tokens": 1650.2,
+    "avg_lat_s": 2.85,
+    "truncation_rate": 0.0
+   },
+   "v2": {
+    "n": 13,
+    "avg_tokens": 4435.1,
+    "avg_lat_s": 6.29,
+    "truncation_rate": 0.0
+   }
+  },
+  "crosssource_check|glm53": {
+   "model": "GLM-5.3",
+   "legacy-1536caps": {
+    "n": 1,
+    "avg_tokens": 4035.0,
+    "avg_lat_s": 17.6,
+    "truncation_rate": 1.0
+   },
+   "mixed-8kline-v2-valid-subset": {
+    "n": 3,
+    "avg_tokens": 1142.3,
+    "avg_lat_s": 4.05,
+    "truncation_rate": 0.0
+   }
+  },
+  "entity_relations|deepseek": {
+   "model": "deepseek-flash",
+   "legacy-1536caps": {
+    "n": 1,
+    "avg_tokens": 4620.0,
+    "avg_lat_s": 5.26,
+    "truncation_rate": 1.0
+   },
+   "mixed-8kline-v2-valid-subset": {
+    "n": 2,
+    "avg_tokens": 5926.0,
+    "avg_lat_s": 5.69,
+    "truncation_rate": 1.0
+   },
+   "v2": {
+    "n": 5,
+    "avg_tokens": 4628.4,
+    "avg_lat_s": 6.38,
+    "truncation_rate": 0.0
+   }
+  },
+  "entity_relations|glm53": {
+   "model": "GLM-5.3",
+   "legacy-1536caps": {
+    "n": 5,
+    "avg_tokens": 4054.6,
+    "avg_lat_s": 17.98,
+    "truncation_rate": 0.2
+   },
+   "mixed-8kline-v2-valid-subset": {
+    "n": 12,
+    "avg_tokens": 3973.5,
+    "avg_lat_s": 10.24,
+    "truncation_rate": 0.583
+   },
+   "v2": {
+    "n": 8,
+    "avg_tokens": 4730.9,
+    "avg_lat_s": 18.05,
+    "truncation_rate": 0.0
+   }
+  },
+  "fact_extraction|deepseek": {
+   "model": "deepseek-flash",
+   "legacy-1536caps": {
+    "n": 5,
+    "avg_tokens": 5327.4,
+    "avg_lat_s": 6.3,
+    "truncation_rate": 0.0
+   },
+   "mixed-8kline-v2-valid-subset": {
+    "n": 19,
+    "avg_tokens": 13145.2,
+    "avg_lat_s": 10.35,
+    "truncation_rate": 0.0
+   },
+   "v2": {
+    "n": 16,
+    "avg_tokens": 5867.6,
+    "avg_lat_s": 7.87,
+    "truncation_rate": 0.188
+   }
+  },
+  "fact_extraction|glm53": {
+   "model": "GLM-5.3",
+   "legacy-1536caps": {
+    "n": 2,
+    "avg_tokens": 5362.5,
+    "avg_lat_s": 19.49,
+    "truncation_rate": 0.0
+   },
+   "mixed-8kline-v2-valid-subset": {
+    "n": 6,
+    "avg_tokens": 9880.8,
+    "avg_lat_s": 18.25,
+    "truncation_rate": 0.667
+   },
+   "v2": {
+    "n": 12,
+    "avg_tokens": 5520.3,
+    "avg_lat_s": 18.93,
+    "truncation_rate": 0.0
+   }
+  },
+  "timeline|deepseek": {
+   "model": "deepseek-flash",
+   "mixed-8kline-v2-valid-subset": {
+    "n": 6,
+    "avg_tokens": 3411.2,
+    "avg_lat_s": 3.85,
+    "truncation_rate": 0.0
+   }
+  },
+  "timeline|glm53": {
+   "model": "GLM-5.3",
+   "legacy-1536caps": {
+    "n": 7,
+    "avg_tokens": 3224.9,
+    "avg_lat_s": 13.09,
+    "truncation_rate": 0.0
+   },
+   "mixed-8kline-v2-valid-subset": {
+    "n": 22,
+    "avg_tokens": 2833.8,
+    "avg_lat_s": 11.42,
+    "truncation_rate": 0.227
+   },
+   "v2": {
+    "n": 16,
+    "avg_tokens": 3493.9,
+    "avg_lat_s": 13.29,
+    "truncation_rate": 0.0
+   }
+  },
+  "timeline|glm53flash": {
+   "model": "GLM-5.3-Flash",
+   "legacy-1536caps": {
+    "n": 1,
+    "avg_tokens": 3969.0,
+    "avg_lat_s": 16.34,
+    "truncation_rate": 0.0
+   },
+   "v2": {
+    "n": 10,
+    "avg_tokens": 3422.7,
+    "avg_lat_s": 16.03,
+    "truncation_rate": 0.0
+   }
+  }
+ },
+ "usage": "scheduler stats should prefer era=v2 cells; legacy cells document cap-sensitivity",
+ "source_ledgers": [
+  "stv2_ledger.jsonl"
+ ]
+}

@@ -1,0 +1,381 @@
+{
+ "batch": "RQ2_H21_OFFLINE_CHECKS",
+ "model_calls": 0,
+ "concurrency": {
+  "results": {
+   "A": {
+    "makespan": 1.2414,
+    "overlap": 0,
+    "nodes": [
+     "e0",
+     "e1",
+     "m",
+     "p",
+     "r",
+     "t",
+     "v"
+    ],
+    "windows": {
+     "p": [
+      34344365.5908,
+      34344365.7409
+     ],
+     "v": [
+      34344365.0268,
+      34344365.4019
+     ],
+     "e0": [
+      34344364.5,
+      34344364.7251
+     ],
+     "e1": [
+      34344364.5003,
+      34344364.7254
+     ],
+     "m": [
+      34344364.7255,
+      34344365.0257
+     ],
+     "t": [
+      34344364.7255,
+      34344364.8756
+     ],
+     "r": [
+      34344365.4024,
+      34344365.59
+     ]
+    }
+   },
+   "B": {
+    "makespan": 1.4652,
+    "overlap": 0,
+    "nodes": [
+     "e0",
+     "e1",
+     "m",
+     "p",
+     "r",
+     "t",
+     "v"
+    ],
+    "windows": {
+     "p": [
+      34344367.0563,
+      34344367.2064
+     ],
+     "v": [
+      34344366.3677,
+      34344366.8678
+     ],
+     "e0": [
+      34344365.7416,
+      34344365.9667
+     ],
+     "e1": [
+      34344365.7418,
+      34344365.9669
+     ],
+     "m": [
+      34344365.9672,
+      34344366.3673
+     ],
+     "t": [
+      34344365.9671,
+      34344366.1172
+     ],
+     "r": [
+      34344366.8683,
+      34344367.0559
+     ]
+    }
+   },
+   "C": {
+    "makespan": 1.0277,
+    "overlap": 0.2001,
+    "nodes": [
+     "e0",
+     "e1",
+     "m",
+     "p",
+     "r",
+     "t",
+     "v_post",
+     "v_pre"
+    ],
+    "windows": {
+     "p": [
+      34344368.0842,
+      34344368.2343
+     ],
+     "v_post": [
+      34344367.8337,
+      34344368.0838
+     ],
+     "e0": [
+      34344367.207,
+      34344367.4321
+     ],
+     "e1": [
+      34344367.2072,
+      34344367.4323
+     ],
+     "m": [
+      34344367.4328,
+      34344367.8329
+     ],
+     "v_pre": [
+      34344367.5835,
+      34344367.7836
+     ],
+     "t": [
+      34344367.4325,
+      34344367.5826
+     ],
+     "r": [
+      34344367.8334,
+      34344368.021
+     ]
+    }
+   }
+  },
+  "concurrent": true,
+  "note": "mock latencies; C must overlap v_pre with m and beat B on makespan"
+ },
+ "dependency": {
+  "vpre_whitelist": [
+   "e0",
+   "e1",
+   "t"
+  ],
+  "vpre_reads_m": false,
+  "vpost_inputs": [
+   "m",
+   "v_pre"
+  ],
+  "vpost_direct_parents": [
+   "m"
+  ],
+  "vpost_transitive_coverage": [
+   "e0",
+   "e1",
+   "m",
+   "t"
+  ],
+  "vpost_covers_original_parents": true,
+  "v_outputs_preserved": false,
+  "legal": true,
+  "note": "v_pre is restricted to e0/e1/t; v_post consumes m directly and t transitively via v_pre; v_post emits all original v facts"
+ },
+ "r4_compat": {
+  "score_signature": "(out, loc, sup, exec_ok)",
+  "decidable_slots": 13,
+  "critical_slots": [
+   [
+    5,
+    0
+   ],
+   [
+    5,
+    1
+   ],
+   [
+    6,
+    0
+   ]
+  ],
+  "real_task_fact_counts": {
+   "E05": 11,
+   "E06": 12,
+   "E07": 11,
+   "E08": 10
+  },
+  "mismatch": "R4 score() consumes a 7x2 outcome matrix (TP/FP/UNKNOWN + loc + sup + exec_ok); it cannot ingest model text. Selected real tasks carry 10-12 facts, not the 13 decidable slots the frozen scorer requires.",
+  "direct_ingest_works": false,
+  "probe_error": "TypeError: 'NoneType' object is not subscriptable",
+  "verdict": "BLOCKED"
+ },
+ "budget": {
+  "tasks": {
+   "E05": {
+    "docs": 2,
+    "chars": 12667
+   },
+   "E06": {
+    "docs": 3,
+    "chars": 4825
+   },
+   "E07": {
+    "docs": 3,
+    "chars": 10302
+   },
+   "E08": {
+    "docs": 3,
+    "chars": 5490
+   }
+  },
+  "executions": 24,
+  "calls_per_execution": 7,
+  "estimated_calls": 168,
+  "estimated_in_tokens": 508622,
+  "estimated_out_tokens": 84000,
+  "estimated_tokens": 592622,
+  "estimated_cost_yuan": 0.642,
+  "hard_stop": {
+   "calls": 193,
+   "tokens": 711146,
+   "yuan": 0.8
+  },
+  "note": "estimates only; hard stops are ceilings, not budgets"
+ },
+ "randomization": {
+  "seed": 20261103,
+  "n_cells": 24,
+  "order": [
+   {
+    "task": "E05",
+    "rep": 1,
+    "arm": "B",
+    "position": 1
+   },
+   {
+    "task": "E05",
+    "rep": 1,
+    "arm": "C",
+    "position": 2
+   },
+   {
+    "task": "E05",
+    "rep": 1,
+    "arm": "A",
+    "position": 3
+   },
+   {
+    "task": "E05",
+    "rep": 2,
+    "arm": "B",
+    "position": 4
+   },
+   {
+    "task": "E05",
+    "rep": 2,
+    "arm": "C",
+    "position": 5
+   },
+   {
+    "task": "E05",
+    "rep": 2,
+    "arm": "A",
+    "position": 6
+   },
+   {
+    "task": "E06",
+    "rep": 1,
+    "arm": "B",
+    "position": 7
+   },
+   {
+    "task": "E06",
+    "rep": 1,
+    "arm": "C",
+    "position": 8
+   },
+   {
+    "task": "E06",
+    "rep": 1,
+    "arm": "A",
+    "position": 9
+   },
+   {
+    "task": "E06",
+    "rep": 2,
+    "arm": "C",
+    "position": 10
+   },
+   {
+    "task": "E06",
+    "rep": 2,
+    "arm": "B",
+    "position": 11
+   },
+   {
+    "task": "E06",
+    "rep": 2,
+    "arm": "A",
+    "position": 12
+   },
+   {
+    "task": "E07",
+    "rep": 1,
+    "arm": "B",
+    "position": 13
+   },
+   {
+    "task": "E07",
+    "rep": 1,
+    "arm": "A",
+    "position": 14
+   },
+   {
+    "task": "E07",
+    "rep": 1,
+    "arm": "C",
+    "position": 15
+   },
+   {
+    "task": "E07",
+    "rep": 2,
+    "arm": "C",
+    "position": 16
+   },
+   {
+    "task": "E07",
+    "rep": 2,
+    "arm": "B",
+    "position": 17
+   },
+   {
+    "task": "E07",
+    "rep": 2,
+    "arm": "A",
+    "position": 18
+   },
+   {
+    "task": "E08",
+    "rep": 1,
+    "arm": "C",
+    "position": 19
+   },
+   {
+    "task": "E08",
+    "rep": 1,
+    "arm": "B",
+    "position": 20
+   },
+   {
+    "task": "E08",
+    "rep": 1,
+    "arm": "A",
+    "position": 21
+   },
+   {
+    "task": "E08",
+    "rep": 2,
+    "arm": "B",
+    "position": 22
+   },
+   {
+    "task": "E08",
+    "rep": 2,
+    "arm": "A",
+    "position": 23
+   },
+   {
+    "task": "E08",
+    "rep": 2,
+    "arm": "C",
+    "position": 24
+   }
+  ],
+  "unit": "independent task; repeats are not independent samples"
+ }
+}

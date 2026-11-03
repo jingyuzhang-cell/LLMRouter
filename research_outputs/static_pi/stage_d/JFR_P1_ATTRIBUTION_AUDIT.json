@@ -1,0 +1,95 @@
+{
+ "stage": "JFR-P1 attribution (zero-call measurement)",
+ "status": "no new mechanism; no API; 192 HOLD",
+ "consistency": {
+  "pilot_D_stable_20m": 0.5726923076923077,
+  "here_stable_20m": 0.5726923076923077,
+  "pilot_D_H0_20m": 0.5096153846153847,
+  "here_H0_20m": 0.5096153846153847
+ },
+ "stable_20m": {
+  "Q": 0.5726923076923077,
+  "base_Q": 0.4526923076923077,
+  "stage_rates": {
+   "fact": 0.7388362652232747,
+   "loc": 0.7158322056833559,
+   "sup": 0.7442489851150202,
+   "sup_given_fact": 0.7710622710622711,
+   "joint": 0.40730717185385656,
+   "naive_product": 0.3429999999999999
+  },
+  "attempts_per_task": 2.86,
+  "conversions_per_task": 1.505,
+  "missed_bad_facts_per_task": 3.335,
+  "ev_recoverable_per_task": 1.025,
+  "needed_total": 3.214999999999999,
+  "deficit_classes": {
+   "(1, 1, 1)": {
+    "n": 579,
+    "joint": 193,
+    "rate": 0.3333333333333333
+   },
+   "(0, 0, 1)": {
+    "n": 51,
+    "joint": 33,
+    "rate": 0.6470588235294118
+   },
+   "(1, 0, 0)": {
+    "n": 46,
+    "joint": 35,
+    "rate": 0.7608695652173914
+   },
+   "(0, 1, 0)": {
+    "n": 51,
+    "joint": 34,
+    "rate": 0.6666666666666666
+   },
+   "(1, 0, 1)": {
+    "n": 5,
+    "joint": 3,
+    "rate": 0.6
+   },
+   "(0, 1, 1)": {
+    "n": 4,
+    "joint": 2,
+    "rate": 0.5
+   },
+   "(1, 1, 0)": {
+    "n": 3,
+    "joint": 1,
+    "rate": 0.3333333333333333
+   }
+  }
+ },
+ "H0_20m": {
+  "Q": 0.5096153846153847,
+  "base_Q": 0.3761538461538461,
+  "stage_rates": {
+   "fact": 0.7660972404730617,
+   "loc": 0.7293035479632063,
+   "sup": 0.7424441524310118,
+   "sup_given_fact": 0.7547169811320755,
+   "joint": 0.42706964520367935,
+   "naive_product": 0.3429999999999999
+  },
+  "conversions_per_task": 1.625,
+  "missed_bad_facts_per_task": 3.985,
+  "needed_total": 4.21
+ },
+ "fp_attempted_nodes_per_task": 0.16,
+ "true_bad_attempted_nodes_per_task": 2.7,
+ "fp_budget_blocked_per_task": 0.1,
+ "key_findings": [
+  "78.3% of attempted bad facts are all-three-deficit (FN => loc/sup never set); joint success pinned at .70^3=.333",
+  "aggregate joint 40.7% vs naive 34.3%; margins equal (.716-.744); no single weak stage",
+  "bad facts ~7.0/task; only 3.70 attempted; 1.50 converted; 70% needs 3.21",
+  "shared-evidence pool 1.02/task (e0/e1/t); perfect repair ceiling +7.9pp => 65.2% < 70%",
+  "H0 gain larger because base worse (more bad facts), stage rates identical; attribution fix = capability-linked repair (GLM re-execution of bad nodes)"
+ ],
+ "shas": {
+  "rq2_jfr_p1_attribution.py": "8a4c4695e681b55ed810b5a31f14c4846a9585abc34ea620ac0ba8296038f6f5",
+  "JFR_P1_ATTRIBUTION.json": "306034eaf8b9bb07b19f0f53ce1a48fbad19e55ac733e6fd23a73d8b6089a77a",
+  "JFR_P1_ATTRIBUTION.md": "98072e7cb1a63b33886ecefedafe1e53161531f37067d7c912ed053758e78617",
+  "JFR_P1_ATTRIBUTION.log": "f3529fc8386b140e6a4de7a62c2daaeb8845d20a630fe5908abcfb9a870f9b2b"
+ }
+}

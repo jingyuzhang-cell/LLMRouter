@@ -1,0 +1,1 @@
+首次报告序列化因冻结场景中的tuple键不能直接写JSON而退出1，未修改算法或历史数据。保留未完成输出为V5_ZERO_CALL_OUTCOME_AUDIT.INCOMPLETE_FIRST_SERIALIZATION.json；仅修复本轮审计序列化器，使用__items__/__tuple__/__set__保留类型。已有成功重建文件按内容核对后复用，没有覆盖。

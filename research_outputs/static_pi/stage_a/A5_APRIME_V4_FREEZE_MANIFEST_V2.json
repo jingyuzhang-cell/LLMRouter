@@ -1,0 +1,81 @@
+{
+ "status": "GO",
+ "frozen_at": "2026-11-03 09:27:16",
+ "version": "A′ V2 corrected schema (reasoning_effort=low; no thinking field)",
+ "config": {
+  "endpoint": "https://open.bigmodel.cn/api/anthropic/v1/messages",
+  "model": "GLM-5.3-Flash",
+  "reasoning_effort": "low",
+  "thinking_field": null,
+  "max_tokens": 8192,
+  "temperature": 0,
+  "credential": "env A5_GLM_KEY from /root/.config/a5/glm.env (600; value never logged)"
+ },
+ "modes": {
+  "formal_recommended": {
+   "calls": 6,
+   "sequence": [
+    "run1-C J1/J2/SINK",
+    "run1-B J1/J2/SINK"
+   ],
+   "cumulative_after": 21,
+   "cap": 32,
+   "note": "跳过单独 C0-P；首个 J1 验证 schema，run1 SINK 为预算 sentinel",
+   "approved": true
+  },
+  "all_with_c0p": {
+   "calls": 7,
+   "sequence": [
+    "C0-P (run3-SINK real prompt)",
+    "run1-C J1/J2/SINK",
+    "run1-B J1/J2/SINK"
+   ],
+   "cumulative_after": 22,
+   "cap": 32,
+   "note": "额外 1 次最坏 SINK 预算探针"
+  }
+ },
+ "basis": {
+  "failed_c0p": "runs_a5_planAPrime/c0p/C0P_SINK.json: HTTP 400/1210, 0 token, 0.52s (thinking={\"type\":\"low\"} 被当作关闭思考)",
+  "correct_schema_evidence": [
+   "r3_own_pool/deadline_reward_v1/full_dag_executor.py: real_call 构造 reasoning_effort，断言无 thinking 字段",
+   "r3_own_pool/deadline_reward_v1/fe_screening_runs/param_recovery_20261013_220629/PR_LEDGER.jsonl: GLM-5.3-Flash low@8192 2/2 end_turn",
+   "178 条 GLM-5.3 low@8192 记录: 138 end_turn / 40 max_tokens; Flash low@8192 3/3 end_turn (小样本)"
+  ],
+  "budget_evidence": "低推理@2048: 2/2 截断；@4000 无本地记录；@8192 已接受但非保证。4000 仅留 1191–1464 reasoning 余量，风险高。"
+ },
+ "instruments": {
+  "v4": "c313326798158af7a22dcdf881f419b4e8991c4147dfe8c0f47e2d7dccc9538b",
+  "v2_1": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234",
+  "v3": "ebca2492fbe8e8e5684213ebad854fb42e771fe37fc61017f8c06e72ee8c521c",
+  "scorer": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+  "a5_rule": "e25d9bf2a76464c5d2f9f5032d677c97f50c8b45f1b3638785c59a268c14e19f",
+  "runner": "87fbbc1994ff2687957ccf44271e71df99d4a9ee78c3a3d05781df1921eba41b"
+ },
+ "stop_rules": [
+  "HTTP 非 200",
+  "429/401/1210",
+  "stop_reason 非 end_turn 且非 null",
+  "JSON 解析失败",
+  "网络异常",
+  "freeze sha mismatch"
+ ],
+ "site": {
+  "failed_c0p": "runs_a5_planAPrime/c0p/ read-only",
+  "new": "runs_a5_planAPrime_v2/",
+  "old_j1": "runs_a5/run1/ read-only"
+ },
+ "rules": [
+  "不追加 V4 白名单",
+  "V4 分差=交付编码，不称能力提升",
+  "Evidence 仅在 citation 合法时报告",
+  "不补跑、不重试、不换端点/模型"
+ ],
+ "runner_sha256": "87fbbc1994ff2687957ccf44271e71df99d4a9ee78c3a3d05781df1921eba41b",
+ "go_authorized_at": "2026-11-03 09:30:41",
+ "amendment": {
+  "path": "/root/q_foundation/A5_PRIME_PREREGISTRATION_V2_1_AMENDMENT.md",
+  "sha256": "73d4ca129396c5cdd6b4be5666a86e6512e9af9a9e9b8d25549e990ca661d52a"
+ },
+ "approved_mode": "formal_recommended"
+}

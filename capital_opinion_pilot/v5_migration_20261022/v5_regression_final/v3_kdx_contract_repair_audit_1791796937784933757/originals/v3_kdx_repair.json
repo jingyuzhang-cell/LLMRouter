@@ -1,0 +1,397 @@
+{
+ "arms": [
+  {
+   "arm": "A",
+   "call_id": 1,
+   "usage": {
+    "input_tokens": 1452,
+    "output_tokens": 518
+   },
+   "raw_response": "```json\n{\n  \"plan\": [\n    {\"id\": \"t1\", \"kind\": \"index\", \"goal\": \"梳理五份证据文档结构与关键信息定位\", \"doc_ids\": [], \"depends\": []},\n    {\"id\": \"t2\", \"kind\": \"extracts\", \"goal\": \"提取问询回复、告知书、处罚决定书关键事实\", \"doc_ids\": [\"kdx_inquiry_2018\", \"kdx_inquiry_2019\", \"kdx_notice_2019\", \"kdx_notice_2020\", \"kdx_penalty_2020\"], \"depends\": [\"t1\"]},\n    {\"id\": \"t3\", \"kind\": \"timeline\", \"goal\": \"梳理2018-2020问询、立案、处罚时间线\", \"doc_ids\": [], \"depends\": [\"t2\"]},\n    {\"id\": \"t4\", \"kind\": \"entity_facts\", \"goal\": \"梳理涉事主体及虚增利润、存款、担保事实\", \"doc_ids\": [], \"depends\": [\"t2\"]},\n    {\"id\": \"t5\", \"kind\": \"factcheck_full\", \"goal\": \"核验时间线、主体及监管认定与披露一致性\", \"doc_ids\": [], \"depends\": [\"t2\", \"t3\", \"t4\"]},\n    {\"id\": \"t6\", \"kind\": \"report\", \"goal\": \"生成带证据引用的调查报告并标注存疑\", \"doc_ids\": [], \"depends\": [\"t5\"]}\n  ],\n  \"rationale\": \"单线提取全部证据后构建时间线与主体事实，全面交叉核验监管认定与公司披露，最终汇聚成报告。\"\n}\n```",
+   "repair_directive": "【修复要求】你的计划",
+   "issues": [],
+   "status": "REPAIRED",
+   "plan": {
+    "plan": [
+     {
+      "id": "t1",
+      "kind": "index",
+      "goal": "梳理五份证据文档结构与关键信息定位",
+      "doc_ids": [],
+      "depends": []
+     },
+     {
+      "id": "t2",
+      "kind": "extracts",
+      "goal": "提取问询回复、告知书、处罚决定书关键事实",
+      "doc_ids": [
+       "kdx_inquiry_2018",
+       "kdx_inquiry_2019",
+       "kdx_notice_2019",
+       "kdx_notice_2020",
+       "kdx_penalty_2020"
+      ],
+      "depends": [
+       "t1"
+      ]
+     },
+     {
+      "id": "t3",
+      "kind": "timeline",
+      "goal": "梳理2018-2020问询、立案、处罚时间线",
+      "doc_ids": [],
+      "depends": [
+       "t2"
+      ]
+     },
+     {
+      "id": "t4",
+      "kind": "entity_facts",
+      "goal": "梳理涉事主体及虚增利润、存款、担保事实",
+      "doc_ids": [],
+      "depends": [
+       "t2"
+      ]
+     },
+     {
+      "id": "t5",
+      "kind": "factcheck_full",
+      "goal": "核验时间线、主体及监管认定与披露一致性",
+      "doc_ids": [],
+      "depends": [
+       "t2",
+       "t3",
+       "t4"
+      ]
+     },
+     {
+      "id": "t6",
+      "kind": "report",
+      "goal": "生成带证据引用的调查报告并标注存疑",
+      "doc_ids": [],
+      "depends": [
+       "t5"
+      ]
+     }
+    ],
+    "rationale": "单线提取全部证据后构建时间线与主体事实，全面交叉核验监管认定与公司披露，最终汇聚成报告。"
+   },
+   "graph": {
+    "graph_id": "cap_opinion_pilot_v2",
+    "schema_version": "typed-dag.v1",
+    "graph_version": 1,
+    "task_id": "jsst_600287_disclosure_pilot_v2",
+    "nodes": [
+     {
+      "node_id": "t1",
+      "node_type": "extraction",
+      "subtask": "梳理五份证据文档结构与关键信息定位",
+      "inputs": [
+       {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+       },
+       {
+        "port": "ctx_table",
+        "source": "task",
+        "field": "ctx_table",
+        "node_id": null
+       }
+      ],
+      "output_contract": "evidence_registry.v1",
+      "dependencies": [],
+      "success_contract": "schema.v1"
+     },
+     {
+      "node_id": "t2",
+      "node_type": "extraction",
+      "subtask": "提取问询回复、告知书、处罚决定书关键事实；需要原文doc_id: kdx_inquiry_2018,kdx_inquiry_2019,kdx_notice_2019,kdx_notice_2020,kdx_penalty_2020",
+      "inputs": [
+       {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+       },
+       {
+        "port": "evidence_index",
+        "source": "node",
+        "field": "evidence_index",
+        "node_id": "t1"
+       }
+      ],
+      "output_contract": "doc_retrieval.v1",
+      "dependencies": [
+       "t1"
+      ],
+      "success_contract": "schema.v1"
+     },
+     {
+      "node_id": "t3",
+      "node_type": "reasoning",
+      "subtask": "梳理2018-2020问询、立案、处罚时间线",
+      "inputs": [
+       {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+       },
+       {
+        "port": "doc_extracts",
+        "source": "node",
+        "field": "doc_extracts",
+        "node_id": "t2"
+       }
+      ],
+      "output_contract": "timeline.v1",
+      "dependencies": [
+       "t2"
+      ],
+      "success_contract": "schema.v1"
+     },
+     {
+      "node_id": "t4",
+      "node_type": "extraction",
+      "subtask": "梳理涉事主体及虚增利润、存款、担保事实",
+      "inputs": [
+       {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+       },
+       {
+        "port": "doc_extracts",
+        "source": "node",
+        "field": "doc_extracts",
+        "node_id": "t2"
+       }
+      ],
+      "output_contract": "entity_facts.v1",
+      "dependencies": [
+       "t2"
+      ],
+      "success_contract": "schema.v1"
+     },
+     {
+      "node_id": "t5",
+      "node_type": "verification",
+      "subtask": "核验时间线、主体及监管认定与披露一致性",
+      "inputs": [
+       {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+       },
+       {
+        "port": "doc_extracts",
+        "source": "node",
+        "field": "doc_extracts",
+        "node_id": "t2"
+       },
+       {
+        "port": "timeline",
+        "source": "node",
+        "field": "timeline",
+        "node_id": "t3"
+       },
+       {
+        "port": "entity_facts",
+        "source": "node",
+        "field": "entity_facts",
+        "node_id": "t4"
+       }
+      ],
+      "output_contract": "fact_check_full.v1",
+      "dependencies": [
+       "t2",
+       "t3",
+       "t4"
+      ],
+      "success_contract": "schema.v1"
+     },
+     {
+      "node_id": "t6",
+      "node_type": "reasoning",
+      "subtask": "生成带证据引用的调查报告并标注存疑",
+      "inputs": [
+       {
+        "port": "question",
+        "source": "task",
+        "field": "question",
+        "node_id": null
+       },
+       {
+        "port": "verified_facts",
+        "source": "node",
+        "field": "verified_facts",
+        "node_id": "t5"
+       }
+      ],
+      "output_contract": "report.v1",
+      "dependencies": [
+       "t5"
+      ],
+      "success_contract": "schema.v1"
+     }
+    ],
+    "final_outputs": [
+     {
+      "name": "investigation_report",
+      "node_id": "t6",
+      "port": "report"
+     }
+    ],
+    "provenance": {
+     "origin": "llm_semantic_plan + deterministic_assembly",
+     "plan": {
+      "plan": [
+       {
+        "id": "t1",
+        "kind": "index",
+        "goal": "梳理五份证据文档结构与关键信息定位",
+        "doc_ids": [],
+        "depends": []
+       },
+       {
+        "id": "t2",
+        "kind": "extracts",
+        "goal": "提取问询回复、告知书、处罚决定书关键事实",
+        "doc_ids": [
+         "kdx_inquiry_2018",
+         "kdx_inquiry_2019",
+         "kdx_notice_2019",
+         "kdx_notice_2020",
+         "kdx_penalty_2020"
+        ],
+        "depends": [
+         "t1"
+        ]
+       },
+       {
+        "id": "t3",
+        "kind": "timeline",
+        "goal": "梳理2018-2020问询、立案、处罚时间线",
+        "doc_ids": [],
+        "depends": [
+         "t2"
+        ]
+       },
+       {
+        "id": "t4",
+        "kind": "entity_facts",
+        "goal": "梳理涉事主体及虚增利润、存款、担保事实",
+        "doc_ids": [],
+        "depends": [
+         "t2"
+        ]
+       },
+       {
+        "id": "t5",
+        "kind": "factcheck_full",
+        "goal": "核验时间线、主体及监管认定与披露一致性",
+        "doc_ids": [],
+        "depends": [
+         "t2",
+         "t3",
+         "t4"
+        ]
+       },
+       {
+        "id": "t6",
+        "kind": "report",
+        "goal": "生成带证据引用的调查报告并标注存疑",
+        "doc_ids": [],
+        "depends": [
+         "t5"
+        ]
+       }
+      ],
+      "rationale": "单线提取全部证据后构建时间线与主体事实，全面交叉核验监管认定与公司披露，最终汇聚成报告。"
+     },
+     "assembler": "assemble_dag.py (contract mapping + typed binding wiring)"
+    }
+   },
+   "layers": [
+    [
+     "t1"
+    ],
+    [
+     "t2"
+    ],
+    [
+     "t3",
+     "t4"
+    ],
+    [
+     "t5"
+    ],
+    [
+     "t6"
+    ]
+   ],
+   "graph_hash": "c4c56e53582630a85150f3f08da45beb054346c5ee1ababca663d934a731ad87",
+   "feasibility": {
+    "per_extracts_node": [
+     {
+      "node": "t2",
+      "docs": [
+       "kdx_inquiry_2018",
+       "kdx_inquiry_2019",
+       "kdx_notice_2019",
+       "kdx_notice_2020",
+       "kdx_penalty_2020"
+      ],
+      "need_chars": 127598,
+      "direct_injection_feasible": false,
+      "declares_segmented_strategy": false
+     }
+    ],
+    "docs_planned": [
+     "kdx_inquiry_2018",
+     "kdx_inquiry_2019",
+     "kdx_notice_2019",
+     "kdx_notice_2020",
+     "kdx_penalty_2020"
+    ],
+    "all_docs_planned": true,
+    "cross_year_planned": true
+   }
+  },
+  {
+   "arm": "B",
+   "call_id": 2,
+   "usage": {
+    "input_tokens": 1486,
+    "output_tokens": 640
+   },
+   "raw_response": "```json\n{\"plan\":[\n{\"id\":\"t1\",\"kind\":\"index\",\"goal\":\"为5份文档建立分段索引与关键词映射\",\"doc_ids\":[\"kdx_inquiry_2018\",\"kdx_notice_2019\",\"kdx_notice_2020\",\"kdx_penalty_2020\",\"kdx_inquiry_2019\"],\"depends\":[]},\n{\"id\":\"t2\",\"kind\":\"extracts\",\"goal\":\"提取立案、处罚、禁入过程的关键事实片段\",\"doc_ids\":[\"kdx_notice_2019\",\"kdx_notice_2020\",\"kdx_penalty_2020\"],\"depends\":[\"t1\"]},\n{\"id\":\"t3\",\"kind\":\"extracts_f\",\"goal\":\"检索2018/2019年报问询中虚假记载相关披露片段\",\"doc_ids\":[\"kdx_inquiry_2018\",\"kdx",
+   "repair_directive": "【修复要求】你的核查",
+   "issues": [
+    "parse:Unterminated string starting at: line 4 column 98 (char 424)"
+   ],
+   "status": "PLAN_INVALID"
+  }
+ ],
+ "budget": {
+  "n_calls": 2,
+  "settled_actual_tokens": 4096,
+  "conservative_actual_plus_sum_max": 5376,
+  "caps": {
+   "calls": 2,
+   "guaranteed_settle": 4000
+  },
+  "per_model": {
+   "glm53": {
+    "calls": 2,
+    "in": 2938,
+    "out": 1158,
+    "lat_s": 25.107999999999997
+   }
+  }
+ }
+}

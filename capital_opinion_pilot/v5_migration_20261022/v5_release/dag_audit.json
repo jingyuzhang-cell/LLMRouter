@@ -1,0 +1,121 @@
+{
+  "graph_identity": {
+    "graph_id": "cap_opinion_pilot_v1",
+    "task_id": "jsst_600287_disclosure_pilot",
+    "graph_hash": "870f58e0c419a84b8af890e7e7b290a0a0567289d56a75bd4e5f0c0bcd368a6d",
+    "schema_version": "typed-dag.v1"
+  },
+  "structural_validation": {
+    "validator": "collab_scheduler_v1.typed_dag_v1.protocol.validate (reused verbatim, unmodified; CONTRACTS extended in-process with 6 investigation contracts)",
+    "checks_covered": [
+      "id syntax",
+      "duplicate nodes",
+      "contract registration",
+      "contract/type match",
+      "dependency endpoints",
+      "binding<->dependency agreement",
+      "port type compatibility",
+      "required input coverage",
+      "acyclicity + layering (static_dag_v0.core.topology)",
+      "depth bound",
+      "final-output terminality",
+      "dead-branch reachability"
+    ],
+    "status": "PASS",
+    "layers": [
+      [
+        "doc_index"
+      ],
+      [
+        "doc_retrieval"
+      ],
+      [
+        "entity_facts",
+        "timeline"
+      ],
+      [
+        "fact_check"
+      ],
+      [
+        "report"
+      ]
+    ],
+    "max_depth": 5,
+    "parallel_width_max": 2
+  },
+  "complexity_stats": {
+    "nodes": 6,
+    "node_types": {
+      "extraction": 3,
+      "reasoning": 2,
+      "verification": 1,
+      "transformation": 0
+    },
+    "llm_nodes": 6,
+    "dependency_edges": 7,
+    "parallelisable_layers": [
+      [
+        "entity_facts",
+        "timeline"
+      ]
+    ],
+    "honesty_note": "complexity reflects the template actually used for execution; not inflated"
+  },
+  "semantic_review": {
+    "dependency_edges": [
+      {
+        "edge": "doc_index->doc_retrieval",
+        "carries_binding": true,
+        "consumed_port": "evidence_index<-evidence_index"
+      },
+      {
+        "edge": "doc_retrieval->timeline",
+        "carries_binding": true,
+        "consumed_port": "doc_extracts<-doc_extracts"
+      },
+      {
+        "edge": "doc_retrieval->entity_facts",
+        "carries_binding": true,
+        "consumed_port": "doc_extracts<-doc_extracts"
+      },
+      {
+        "edge": "doc_retrieval->fact_check",
+        "carries_binding": true,
+        "consumed_port": "doc_extracts<-doc_extracts"
+      },
+      {
+        "edge": "timeline->fact_check",
+        "carries_binding": true,
+        "consumed_port": "timeline<-timeline"
+      },
+      {
+        "edge": "entity_facts->fact_check",
+        "carries_binding": true,
+        "consumed_port": "entity_facts<-entity_facts"
+      },
+      {
+        "edge": "fact_check->report",
+        "carries_binding": true,
+        "consumed_port": "verified_facts<-verified_facts"
+      }
+    ],
+    "all_edges_carry_explicit_dataflow": true,
+    "binding_dependency_bijection_enforced_by": "typed_dag_v1.protocol.validate (\"Dependency without explicit input\"/\"Binding lacks dependency\")",
+    "duplicate_subtasks": false,
+    "issues": [],
+    "semantic_status": "HEURISTIC_PASS (declared semantic coverage NOT certified)"
+  },
+  "planner_isolation": {
+    "planner_llm_generation_within_envelope": "FAIL (2/2 requests truncated at output-token cap)",
+    "fallback": "registered investigation domain template (deterministic, zero model calls), labelled as FALLBACK — NOT counted as successful LLM generation",
+    "facts_silver_sha256": "ffdb4caaf321f1daafb70369849a2b2c53c7d873f752b1267d5cd19cbe1d6fe5",
+    "facts_file_in_planner_inputs": false,
+    "evidence_full_text_in_planner_inputs": false,
+    "planner_saw": [
+      "investigation task",
+      "contract registry",
+      "public evidence index (ids/titles/dates/hashes)",
+      "domain background"
+    ]
+  }
+}

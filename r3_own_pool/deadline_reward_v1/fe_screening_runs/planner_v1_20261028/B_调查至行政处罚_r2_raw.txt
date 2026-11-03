@@ -1,0 +1,12 @@
+{"task_class":"证券违法处罚全过程调查",
+ "nodes":[
+  {"id":"n1","role":"extraction","inputs":[],"contract":{"produces":["facts","violation_findings","responsible_parties"],"requires":[]},"evidence":"zeda_csrc_penalty_2023_29"},
+  {"id":"n2","role":"extraction","inputs":[],"contract":{"produces":["facts_intermediary"],"requires":[]},"evidence":"zeda_csrc_penalty_2024_kangda"},
+  {"id":"n3","role":"timeline","inputs":["n1","n2"],"contract":{"produces":["dates"],"requires":["facts","facts_intermediary"]},"evidence":null},
+  {"id":"n4","role":"penalties","inputs":["n1","n2"],"contract":{"produces":["penalty_items"],"requires":["facts","facts_intermediary"]},"evidence":null},
+  {"id":"n5","role":"amounts","inputs":["n1"],"contract":{"produces":["amounts"],"requires":["facts"]},"evidence":null},
+  {"id":"n6","role":"entity_relations","inputs":["n1","n2"],"contract":{"produces":["entities"],"requires":["responsible_parties","facts_intermediary"]},"evidence":null},
+  {"id":"n7","role":"cross_check","inputs":["n3","n4","n5","n6"],"contract":{"produces":["checked"],"requires":["dates","penalty_items","amounts","entities"]},"evidence":null},
+  {"id":"n8","role":"synthesis","inputs":["n7"],"contract":{"produces":["report"],"requires":["checked"]},"evidence":null}
+ ],
+ "rationale":"双线并行抽取两份处罚决定书（主案与中介机构）原子事实，再分别经时间线、处罚梳理、金额核算、主体关系四条分析支路加工，交由 cross_check 对关键认定与处罚金额做跨节点一致性核验（对应'核验文件一致'要求），终节点 synthesis 汇总为全过程报告。成本上仅两个抽取节点绑定文档，分析节点基于中间事实，可用低成本模型，满足预算与时限。"}

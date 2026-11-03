@@ -1,0 +1,10 @@
+{"task_class": "证券欺诈退市全景调查","nodes":[
+ {"id":"n1","role":"extraction","inputs":[],"contract":{"produces":["facts"],"requires":[]},"evidence":"zeda_csrc_penalty_2023_29"},
+ {"id":"n2","role":"extraction","inputs":[],"contract":{"produces":["facts"],"requires":[]},"evidence":"zeda_csrc_penalty_2024_kangda"},
+ {"id":"n3","role":"merge","inputs":["n1","n2"],"contract":{"produces":["merged"],"requires":["facts"]},"evidence":null},
+ {"id":"n4","role":"timeline_deep","inputs":["n3"],"contract":{"produces":["stages"],"requires":["merged"]},"evidence":null},
+ {"id":"n5","role":"penalties","inputs":["n3"],"contract":{"produces":["penalty_items"],"requires":["merged"]},"evidence":null},
+ {"id":"n6","role":"amounts_check","inputs":["n3"],"contract":{"produces":["amounts_checked"],"requires":["merged"]},"evidence":null},
+ {"id":"n7","role":"entity_graph","inputs":["n3"],"contract":{"produces":["entity_edges"],"requires":["merged"]},"evidence":null},
+ {"id":"n8","role":"synthesis","inputs":["n4","n5","n6","n7"],"contract":{"produces":["report"],"requires":["stages","penalty_items","amounts_checked","entity_edges"]},"evidence":null}
+],"rationale":"仅两份泽达相关证据可绑定，故并行抽取证监会处罚决定书与康达律所处罚文书事实，合并后四路展开：时间线阶段复核（事件时间线）、处罚梳理（监管处理过程）、金额交叉复核（赔付/罚款金额）、主体关系图谱（发行人/中介/监管关系），最终由synthesis单节点整合产出含市场警示意义的调查报告。节点数8，预算内以少量付费节点保证质量。"}

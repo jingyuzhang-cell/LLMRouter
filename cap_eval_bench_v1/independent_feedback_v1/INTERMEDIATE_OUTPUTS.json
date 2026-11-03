@@ -1,0 +1,496 @@
+{
+ "IF-frozen-tran-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的原始材料，请提供事件描述、公告或新闻内容后再生成时间线。\"\n}\n```"
+ },
+ "IF-frozen-tran-Static-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的原始材料，无法生成时间线。请提供相关文本或事件描述。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本或案件材料，无法识别涉事主体\",\n    \"requirement\": \"请提供公告、新闻、处罚决定书或其他需调查的文本内容\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"未提供任何原始材料（时间线与主体信息均为空，且源数据返回错误），无法进行交叉核验。\",\n    \"consistency_check\": null,\n    \"conflicts\": [],\n    \"requirement\": \"请提供待核验的时间线与主体材料，或相关公告、新闻、处罚决定书等文本。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-SimpleDyn-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"error\": \"未提供需要整理时间线的原始材料\",\n  \"hint\": \"请提供新闻、公告、聊天记录或其他文本内容，以便生成 timeline 字段。\",\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"cross_check_summary\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"时间线材料与主体材料均为空（error提示未提供原始材料，entity_facts为空数组），无任何可供交叉核验的事实条目。\",\n    \"suggestion\": \"请提供包含具体事件的时间线数据和主体事实数据后重新提交核验。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-R_only-E04-zhuoran-r1": {
+  "f3": "{\n  \"timeline\": []\n}\n\n请提供需要整理的资本市场调查材料（新闻、公告、事件描述等），我将据此生成 timeline 字段（建议每项包含 date、event、source 等子字段）。",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"no_input\",\n    \"error\": \"未提供待分析的文本或材料，无法识别涉事主体\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"no_input\",\n    \"message\": \"未提供待交叉核验的资本市场调查材料，无法生成已核验事实\",\n    \"timeline\": [],\n    \"entities\": [],\n    \"cross_check_notes\": [],\n    \"confidence\": null\n  }\n}\n```"
+ },
+ "IF-frozen-tran-pi_only-E04-zhuoran-r1": {
+  "f3": "{\"error\": \"缺少必要信息\", \"message\": \"请提供需要整理时间线的具体内容或事件主题\", \"required_fields\": [\"事件主题或原始材料\"], \"output_format\": {\"timeline\": [{\"date\": \"YYYY-MM-DD\", \"event\": \"事件描述\", \"source\": \"信息来源（可选）\"}]}}",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"status\": \"missing_input\",\n  \"message\": \"未提供待分析的案件材料。请提供公告、新闻、处罚决定书或其他文本，以便识别涉事主体。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"missing_input\",\n  \"message\": \"上游时间线与主体识别均因缺少原始材料而失败，无可交叉核验的事实。\",\n  \"cross_check_summary\": {\n    \"timeline_status\": \"missing_input\",\n    \"entity_status\": \"missing_input\",\n    \"verified_count\": 0,\n    \"conflicts\": [],\n    \"unverifiable_items\": []\n  },\n  \"next_step\": \"请提供公告、新闻、处罚决定书或其他待分析的原始文本材料，以便进行时间线整理、主体识别与交叉核验。\"\n}\n```"
+ },
+ "IF-frozen-tran-Joint_R_pi-E04-zhuoran-r1": {
+  "f3": "{\"timeline\": [], \"note\": \"未提供需要整理的事件材料，请提供文本、日期或事件列表以便生成时间线。\"}",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"note\": \"未提供待分析的文本或事件描述，无法识别涉事主体。请提供相关材料。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"verified_facts\": [],\n    \"cross_check_notes\": \"时间线为空，主体信息为空（未提供任何事件或文本材料），无可交叉核验的事实。\",\n    \"action_required\": \"请提供待核验的事件材料、日期、主体或文本列表。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-Joint_Z_R_pi-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"请提供需要整理的事件材料或时间节点信息。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": []\n}\n```"
+ },
+ "IF-frozen-tran-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```"
+ },
+ "IF-frozen-tran-Static-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理时间线的原始材料，无法生成时间线。请提供相关文本或事件描述。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"涉事主体\": [],\n    \"说明\": \"未提供待分析文本，无法识别涉事主体。请提供公告、新闻或调查材料原文。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"交叉核验结果\": [],\n    \"结论\": \"未提供任何原始材料（时间线与主体分析均无输入），无法进行交叉核验。请提供公告、新闻或调查材料原文。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-SimpleDyn-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供任何需要整理时间线的原始材料（如新闻、公告、事件列表等）。请提供资料后再进行时间线整理。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析文本或事件描述，无法识别涉事主体\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"failed\",\n    \"reason\": \"上游交叉核验模块均返回错误：时间线整理与主体识别均缺少原始材料，无可核验事实\",\n    \"timeline_check\": \"无数据\",\n    \"entity_check\": \"无数据\",\n    \"verified_items\": [],\n    \"conflicts\": [],\n    \"recommendation\": \"请提供原始材料（新闻、公告、事件列表等）后重新执行交叉核验流程\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-R_only-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供待分析的文本或调查材料，无法识别涉事主体。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"时间线与主体材料均为空，无事实可供交叉核验。\"\n}\n```"
+ },
+ "IF-frozen-tran-pi_only-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"缺少涉事文本材料\",\n    \"message\": \"未提供需要分析的公告、新闻或案件文本，无法识别涉事主体。请提供原始材料后再进行实体识别。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"error\": \"无法进行交叉核验\",\n    \"message\": \"时间线为空且缺少涉事主体文本材料，无可用事实供核验。请提供原始公告、新闻或案件材料后重新执行。\",\n    \"verified\": [],\n    \"sources_checked\": 0\n  }\n}\n```"
+ },
+ "IF-frozen-tran-Joint_R_pi-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"error\": \"未提供需要整理时间线的原始材料（如新闻、公告、事件列表等），无法生成时间线。请提供具体内容。\",\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"输入不足\",\n    \"message\": \"未提供待分析的文本或案件材料，无法识别涉事主体。请提供相关文本。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"无法交叉核验\",\n  \"reason\": \"时间线与主体两个输入均为空（原始材料未提供），无可比对的事实条目。\",\n  \"action_required\": \"请提供原始材料（新闻、公告、事件列表等）以供核验。\"\n}\n```"
+ },
+ "IF-frozen-tran-Joint_Z_R_pi-E04-zhuoran-r2": {
+  "f3": "{\"timeline\": [], \"note\": \"未提供待整理的原始文本或事件信息，请提供需要整理成时间线的资料。\"}",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"status\": \"输入不足\",\n    \"message\": \"未提供待分析的案情文本或公告材料，无法识别涉事主体。请提供相关文本后重试。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"输入不足\",\n    \"entities\": [],\n    \"timeline\": [],\n    \"cross_check_results\": [],\n    \"confidence\": null,\n    \"message\": \"时间线与主体材料均为空，无可交叉核验的事实。请提供待核验的原文资料后重试。\",\n    \"note\": \"本输出不构成投资建议或法律意见。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"incomplete\",\n  \"message\": \"未提供需要整理时间线的原始材料（新闻、公告、调查报告等）。请提供文本内容后，我将提取事件并按时间顺序整理为 timeline。\"\n}\n```"
+ },
+ "IF-frozen-tran-Static-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何事件或资料内容，无法生成时间线。请提供需要整理的文本或事件列表。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"note\": \"未提供待分析的文本或案件材料，无法识别涉事主体。请提供相关公告、新闻或调查文本。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"cross_verified\": [],\n    \"conflicts\": [],\n    \"note\": \"时间线与主体信息均为空，无任何可交叉核验的事实。请提供待核验的事件材料。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-SimpleDyn-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本或事件描述\",\n    \"涉事主体\": [],\n    \"说明\": \"请提供新闻报道、公告或事件文本，以便识别涉事主体（公司、机构、个人等）。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"timeline\": [],\n    \"entity_facts\": {\n      \"涉事主体\": [],\n      \"说明\": \"未提供任何文本、事件或数据可供交叉核验，无法识别涉事主体或验证事实。\"\n    },\n    \"核验结论\": \"输入内容为空，无法进行交叉核验。请提供新闻报道、公告或事件描述文本。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-R_only-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```\n\n未提供待整理的事件材料，故 `timeline` 为空数组。如需整理，请提供相关事件描述（含日期、事件内容等）。",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供待分析的文本或案件材料，无法识别涉事主体。\",\n    \"entities\": [],\n    \"required_input\": \"请提供资本市场事件的原文、公告、新闻报道或调查材料，以便识别并列出涉事主体（如上市公司、股东、董监高、中介机构、监管机构等）及其事实信息。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供任何待交叉核验的事件材料，无法进行核验。\",\n    \"timeline\": [],\n    \"entities\": [],\n    \"cross_check_conclusion\": null,\n    \"required_input\": \"请提供资本市场事件的原文、公告、新闻报道或调查材料（含时间、主体、事件内容等），以便进行时间线与主体事实的交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-pi_only-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"status\": \"failed\",\n    \"reason\": \"未提供待分析的文本或公告内容，无法识别涉事主体\",\n    \"required_input\": \"请提供需要调查的文本材料（如公告、新闻、监管文件等）\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"cannot_verify\",\n    \"reason\": \"时间线与主体信息均为空/失败，无可用事实进行交叉核验\",\n    \"verified_items\": [],\n    \"required_input\": \"请提供需要核验的文本材料及待核验的事实列表\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-Joint_R_pi-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何事件信息，无法生成时间线。请提供需要整理的事件内容（如公告、日期、事项等）。\"\n}\n```",
+  "f4": "{\"entity_facts\": []}",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线与主体信息均为空，无任何事件或实体事实可供交叉核验，verified_facts 为空列表。\"\n}\n```"
+ },
+ "IF-frozen-tran-Joint_Z_R_pi-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理时间线的原始材料，请提供事件描述、公告、新闻或时间点信息。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"notes\": \"时间线与主体材料均为空或仅含错误提示，无可用事实进行交叉核验。\",\n  \"confidence\": 0\n}\n```"
+ },
+ "IF-frozen-evid-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供需要整理的资本市场事件材料，请补充原始信息（如新闻、公告、交易记录及对应日期）以便生成时间线。\"\n}\n```"
+ },
+ "IF-frozen-evid-Static-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本内容\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"输入的时间线和主体数据均为空，未提供可交叉核验的事实内容\",\n    \"timeline_count\": 0,\n    \"entity_count\": 0,\n    \"cross_verified\": [],\n    \"conflicts\": [],\n    \"unverified\": []\n  }\n}\n```"
+ },
+ "IF-frozen-evid-SimpleDyn-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供需要整理的事件资料，请提供原始信息后再生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```\n\n（未提供待分析文本，无法识别涉事主体。请提供新闻、公告或调查材料原文。）",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"未提供任何待核验的原始材料（新闻、公告、时间线或主体信息均为空），无法进行交叉核验或提取已证实事实。请提供原始资料后重试。\"\n}\n```"
+ },
+ "IF-frozen-evid-R_only-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```\n\n说明：您尚未提供需要分析的文本材料。请提供待调查的新闻、公告或报告原文，我将从中提取涉事主体并以如下结构输出：\n\n```json\n{\n  \"entity_facts\": [\n    {\n      \"entity_name\": \"主体名称\",\n      \"entity_type\": \"公司/个人/监管机构/中介机构等\",\n      \"ticker_or_code\": \"股票代码或统一社会信用代码（如有）\",\n      \"role\": \"在事件中的角色（如涉事方、调查对象、关联方等）\",\n      \"key_facts\": [\"与该主体相关的关键事实\"],\n      \"evidence\": [\"支持上述事实的原文摘录\"]\n    }\n  ]\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"输入的时间线与主体事实均为空，且未提供待交叉核验的原始文本材料，无可核验内容。\"\n}\n```"
+ },
+ "IF-frozen-evid-pi_only-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供需要整理时间线的原始材料，请提供相关文本或事件信息。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"涉事主体\": [],\n    \"说明\": \"未提供具体案件或文本内容，无法识别涉事主体。请提供待分析的调查材料。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"时间线与主体信息均为空/未提供原始材料，无可交叉核验的事实。\"\n}\n```"
+ },
+ "IF-frozen-evid-Joint_R_pi-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供任何事件或时间信息，无法整理时间线。请提供需要整理的事件内容（如：日期、事件描述、来源等）。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本或案件材料，无法识别涉事主体\",\n    \"required_input\": \"请提供公告、新闻、处罚决定书或其他需要分析的文本内容\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"输入的时间线和主体数据均为空或仅包含错误提示，无可核验的事实信息\",\n  \"required_input\": \"请提供待核验的事件内容（日期、事件描述、来源）及涉事主体信息（公告、处罚决定书等文本）\",\n  \"conclusion\": \"无法进行交叉核验\"\n}\n```"
+ },
+ "IF-frozen-evid-Joint_Z_R_pi-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供待整理的原始资料或事件信息，无法生成时间线。请提供新闻、公告或事件描述等文本。\"\n}\n```",
+  "f4": "```json\n{\n  \"error\": \"缺少输入文本\",\n  \"message\": \"请提供需要分析的公告、新闻或调查材料原文，我才能识别涉事主体并输出 entity_facts。\",\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"cross_check_result\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"时间线与主体输入均为空（两个模块均返回'缺少输入文本/资料'的错误信息），没有任何待交叉核验的事实数据。\",\n    \"timeline_input\": \"空（error: 未提供原始资料）\",\n    \"entity_input\": \"空（error: 缺少输入文本）\"\n  },\n  \"notes\": \"请提供新闻、公告、调查材料的原文，以便生成时间线和主体事实并进行交叉核验。\"\n}\n```"
+ },
+ "IF-frozen-evid-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供需要整理时间线的原始资料，请补充事件描述、公告或新闻文本后重试。\"\n}\n```"
+ },
+ "IF-frozen-evid-Static-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供待整理的事件内容或资料，无法生成时间线。请提供相关文本、事件列表或调查材料。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```\n\n未提供待分析的文本内容，无法识别涉事主体。请提供需要调查的文本材料。",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供待核验的文本或资料，无法进行交叉核验，也无法提取任何已证实的事实。\"\n}\n```"
+ },
+ "IF-frozen-evid-SimpleDyn-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供任何事件或时间点信息，无法生成时间线。请提供需要整理的事件内容（例如：日期、事件描述、来源等）。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本材料\",\n    \"message\": \"请提供需要识别涉事主体的原文（如公告、新闻、裁判文书等），我将从中提取涉事主体及其相关事实。\",\n    \"entity_facts\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"交叉核验失败：时间线与主体识别均未提供任何可核验的源材料（事件、日期、涉事主体、原文等），无法进行事实比对。请提供需要核验的原文材料。\"\n}\n```"
+ },
+ "IF-frozen-evid-R_only-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何待整理的事件信息。请提供公司名称、公告、交易或监管动作等资料，以便生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供待分析的文本或公告内容，无法识别涉事主体\",\n    \"entities\": [],\n    \"request\": \"请提供需要分析的公告、新闻、交易记录或调查材料原文\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"时间线与主体信息均为空，无可交叉核验的内容\",\n    \"verified_facts\": [],\n    \"timeline\": [],\n    \"entities\": [],\n    \"request\": \"请提供公司名称、公告、交易或监管动作等原文材料，以便进行交叉核验并输出verified_facts\"\n  }\n}\n```"
+ },
+ "IF-frozen-evid-pi_only-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"note\": \"未提供待分析的文本或事件描述，无法识别涉事主体。请提供相关公告、新闻或调查材料。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线与主体数据均为空，无可用事实进行交叉核验。请提供待分析的文本或事件描述。\"\n}\n```"
+ },
+ "IF-frozen-evid-Joint_R_pi-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"error\",\n  \"message\": \"未提供任何事件或时间信息，无法生成时间线。请提供需要整理的事件内容。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本内容，无法识别涉事主体\",\n    \"entities\": [],\n    \"instruction\": \"请提供新闻、公告或调查报告原文，以便提取涉事主体（公司、机构、个人等）\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_data\",\n    \"timeline\": [],\n    \"entities\": [],\n    \"message\": \"输入的时间线与主体数据均为错误占位输出，均未包含任何事件、时间或主体信息，无可交叉核验的内容。\",\n    \"verification_result\": null,\n    \"instruction\": \"请提供新闻、公告或调查报告原文，或包含事件与主体的有效JSON数据，以便进行交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-frozen-evid-Joint_Z_R_pi-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供任何事件、日期或来源信息，无法整理时间线。请提供需要整理的事件内容。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"error\": \"未提供待分析的文本材料，无法识别涉事主体。请提供公告、新闻或调查文本。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"两份输入材料均无实际事件、日期、来源或文本内容（均仅含error提示），无可供交叉核验的事实。无法得出任何已验证结论。\",\n  \"verification_status\": \"无法核验：输入数据缺失\",\n  \"recommendation\": \"请提供待核验的公告、新闻或调查文本，以及相关时间线与主体信息后重新提交。\"\n}\n```"
+ },
+ "IF-frozen-evid-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供待整理的原始材料，无法生成时间线。请提供新闻、公告或事件文本。\"\n}\n```"
+ },
+ "IF-frozen-evid-Static-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"error\": \"未提供任何资料或事件内容，无法整理时间线。\",\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"note\": \"未提供待分析的文本内容，无法识别涉事主体。请提供相关材料。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"时间线与主体分析结果均为空，未提供任何资料或事件内容，无事实可供交叉核验。\",\n    \"verified_items\": [],\n    \"conflicts\": [],\n    \"unverified_items\": []\n  }\n}\n```"
+ },
+ "IF-frozen-evid-SimpleDyn-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"涉事主体\": [],\n    \"说明\": \"未提供待分析的文本内容，无法识别涉事主体。请提供相关公告、报道或调查材料。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"交叉核验结果\": [],\n    \"说明\": \"时间线与主体信息均为空，无内容可供交叉核验。请提供待核验的公告、报道或调查材料。\"\n  }\n}\n```"
+ },
+ "IF-frozen-evid-R_only-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何事件素材，无法整理时间线。请提供需要整理的资本市场事件信息（事件描述、日期等）。\"\n}\n```",
+  "f4": "{\n  \"entity_facts\": [],\n  \"error\": \"未提供待分析的文本或调查材料，无法识别涉事主体\",\n  \"required_input\": \"请提供需要分析的公告、新闻、研报或其他文本材料\"\n}",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线与主体材料均为空，无可交叉核验的事实。\",\n  \"status\": \"insufficient_input\",\n  \"required_input\": \"请提供至少一份包含事件描述、日期或主体信息的文本材料，以便进行交叉核验。\"\n}\n```"
+ },
+ "IF-frozen-evid-pi_only-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供具体事件、公司或时间范围信息，无法生成时间线。请提供需要整理的事件内容（如公司名称、公告、交易、监管动态及其日期）。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线为空，主体信息为空，无可交叉核验的事实。无法输出 verified_facts。请提供具体事件、主体及日期。\"\n}\n```"
+ },
+ "IF-frozen-evid-Joint_R_pi-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```\n\n请提供需要整理的事件内容（如公司公告、新闻、日期等），我将按时间顺序整理为 timeline 输出。",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供具体案件或事件描述，无法识别涉事主体。请提供公告、新闻、处罚决定书或事件文本。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供任何事件文本、公告、新闻或处罚决定内容，无法进行交叉核验。\",\n    \"cross_check\": {\n      \"timeline_events\": 0,\n      \"identified_entities\": 0,\n      \"verified_items\": []\n    },\n    \"conclusion\": \"输入的时间线为空数组，主体识别结果为 insufficient_input，无可核验事实。请提供具体事件文本后重新核验。\"\n  }\n}\n```"
+ },
+ "IF-frozen-evid-Joint_Z_R_pi-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供待整理的原始资料。请提供新闻、公告或其他文本内容，以便生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析文本或案件材料\",\n    \"涉事主体\": [],\n    \"说明\": \"请提供公告、新闻或调查材料，以便识别涉事主体\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"输入的时间线与主体材料均为空（仅含错误提示：未提供原始资料）。无可交叉核验的事实。\",\n  \"status\": \"insufficient_input\",\n  \"说明\": \"请提供新闻、公告或调查材料的原文，以便进行事实提取与交叉核验。\"\n}\n```"
+ },
+ "IF-feedback-tran-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供任何事件材料或文本，无法整理时间线。请提供需要整理的资本市场相关事件描述、新闻或公告内容。\"\n}\n```"
+ },
+ "IF-feedback-tran-Static-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"note\": \"未收到待分析的文本内容。请提供涉及资本市场违规、调查或事件的原始材料（如新闻稿、处罚决定书、公告等），以便识别涉事主体。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线与主体信息均为空，未收到可供交叉核验的原始材料或事实条目。请提供待核验的文本内容（新闻稿、处罚决定书、公告等）及相关事实声明，以便进行交叉核验。\"\n}\n```"
+ },
+ "IF-feedback-tran-SimpleDyn-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何事件、日期或来源数据，无法生成时间线。请提供需要整理的原始材料。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```\n\n（提示：未检测到可供识别涉事主体的输入文本，请提供需要分析的原文内容。）",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"未检测到任何可供交叉核验的原文、事件或来源数据，无法产出已验证事实。请提供需要核验的原始材料（涉事主体、事件描述、日期及来源）。\"\n}\n```"
+ },
+ "IF-feedback-tran-R_only-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```\n\n请提供需要整理的资本市场事件信息（如公告、交易、监管动态等），我将为您生成结构化的时间线 JSON。",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"error\": \"未提供待分析的文本或材料，无法识别涉事主体。请提供目标文本后重试。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"未提供待交叉核验的文本或材料，时间线与主体信息均为空，无可核验事实。请提供目标文本后重试。\"\n}\n```"
+ },
+ "IF-feedback-tran-pi_only-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的时间线原文，请粘贴相关事件、公告或新闻内容。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本或案件材料，无法识别涉事主体\",\n    \"entity_facts\": [],\n    \"hint\": \"请提供公告、新闻、处罚决定书或调查材料原文，以便提取涉事主体（如上市公司、控股股东、实际控制人、高管、中介机构等）\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"时间线与主体材料均为空，未提供任何可交叉核验的原文内容\",\n    \"cross_check\": {\n      \"timeline\": [],\n      \"entity_facts\": [],\n      \"consistencies\": [],\n      \"contradictions\": [],\n      \"unverified_items\": []\n    },\n    \"hint\": \"请提供待核验的时间线事件与涉事主体材料（公告、新闻、处罚决定书等原文），以便进行交叉核验\"\n  }\n}\n```"
+ },
+ "IF-feedback-tran-Joint_R_pi-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本内容\",\n    \"message\": \"请提供需要识别涉事主体的文本（如新闻、公告、调查报告等），我将从中提取涉事主体及其相关事实。\",\n    \"entity_facts\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"verification_summary\": \"时间线为空，主体信息缺失（error: 未提供待分析的文本内容），无内容可供交叉核验。\"\n}\n```"
+ },
+ "IF-feedback-tran-Joint_Z_R_pi-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"missing_input\",\n    \"message\": \"未提供待分析的案情、公告、新闻或调查材料，无法识别涉事主体。请提供相关文本内容。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_evidence\",\n    \"message\": \"交叉核验失败：时间线为空，主体材料状态为 missing_input，未提供任何可核验的事实来源（公告、新闻、调查材料等）。无法进行事实比对，也无法确认或否定任何涉事主体的信息。\",\n    \"timeline_consistency\": null,\n    \"entity_verification\": null,\n    \"verified_items\": [],\n    \"contradictions\": [],\n    \"unverified_claims\": [],\n    \"recommendation\": \"请提供待核验的案情文本、公告、新闻报道或调查材料，以便完成时间线一致性与主体事实的交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-feedback-tran-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供需要整理的事件或资料，无法生成时间线。请提供相关文本、事件列表或调查材料。\"\n}\n```"
+ },
+ "IF-feedback-tran-Static-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"error\": \"未提供需要整理时间线的原始资料（如新闻、公告、事件列表等），无法生成时间线。请提供相关文本内容。\",\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"涉事主体\": [],\n    \"说明\": \"未提供待分析的文本或事件信息，无法识别涉事主体。请提供相关材料。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"verification_note\": \"两个输入源均返回错误/空结果：时间线源未提供原始资料，主体源也未提供可分析文本。没有任何可交叉核验的事实，故 verified_facts 为空。请先提供原始资料（新闻、公告、事件列表等）后再进行核验。\"\n}\n```"
+ },
+ "IF-feedback-tran-SimpleDyn-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"insufficient_input\",\n  \"note\": \"未提供需要整理的事件或资料，无法生成时间线。请提供相关事件描述、日期或文档内容。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"note\": \"时间线为空且主体事实为空，无内容可交叉核验。请提供时间线事件及主体相关事实资料。\"\n}\n```"
+ },
+ "IF-feedback-tran-R_only-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何事件内容，无法整理时间线。请提供待整理的事件文本。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供待分析的文本或资料，无法识别涉事主体。请提供待调查的公告、新闻或报告内容。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"时间线与主体均为空，无任何事件或主体信息可供交叉核验，无法输出已验证事实。请提供待核验的公告、新闻或报告文本。\"\n}\n```"
+ },
+ "IF-feedback-tran-pi_only-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析文本\",\n    \"message\": \"请提供需要识别涉事主体的原始文本内容\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"时间线为空且未提供主体分析文本，无法进行交叉核验\",\n    \"timeline_count\": 0,\n    \"entity_count\": 0,\n    \"cross_checks\": [],\n    \"conclusion\": \"输入数据不足，无法生成已核验事实\"\n  }\n}\n```"
+ },
+ "IF-feedback-tran-Joint_R_pi-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的时间线内容，请提供原始事件文本。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"input_missing\",\n    \"entities\": [],\n    \"note\": \"未提供待分析的文本或文档，无法识别涉事主体。请提供相关资料。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"input_missing\",\n    \"facts\": [],\n    \"cross_check\": {\n      \"timeline_input\": \"为空，无事件文本可核验\",\n      \"entity_input\": \"为空，无主体信息可核验\"\n    },\n    \"note\": \"时间线与主体两份输入均为空（分别返回input_missing/未提供内容错误），无法进行交叉核验或提取任何已验证事实。请提供原始事件文本及涉事主体资料。\"\n  }\n}\n```"
+ },
+ "IF-feedback-tran-Joint_Z_R_pi-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的时间线原始资料，请补充事件、日期等具体内容后重试。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"错误\": \"未提供待分析的文本材料，无法识别涉事主体\",\n    \"提示\": \"请提供公告、新闻或调查文本，以便提取涉事主体及其相关事实\",\n    \"涉事主体\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"cross_check_result\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"时间线与主体两份输入材料均返回错误信息，未包含任何可交叉核验的事实内容\",\n    \"details\": {\n      \"timeline_input\": \"错误：未提供时间线原始资料\",\n      \"entity_input\": \"错误：未提供待分析文本材料\"\n    },\n    \"suggestion\": \"请补充包含具体事件、日期、涉事主体的原始资料（如公告、新闻或调查文本）后重新提交核验\"\n  }\n}\n```"
+ },
+ "IF-feedback-tran-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供任何事件内容，无法整理时间线。请提供需要整理的事件描述或文本。\"\n}\n```"
+ },
+ "IF-feedback-tran-Static-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"error\": \"未提供待分析的文本材料，无法识别涉事主体。请提供公告、新闻或调查文本。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"时间线为空，主体识别亦失败（无待分析文本材料），不存在可交叉核验的事实。\",\n    \"timeline_entries_checked\": 0,\n    \"entity_facts_checked\": 0,\n    \"confirmed\": [],\n    \"contradictions\": [],\n    \"unverified\": [],\n    \"error\": \"未提供任何公告、新闻或调查文本，无法执行交叉核验。请提供待分析材料。\"\n  }\n}\n```"
+ },
+ "IF-feedback-tran-SimpleDyn-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"error\": \"未提供待整理的事件内容\",\n  \"timeline\": [],\n  \"请提供\": \"包含日期与事件描述的原始文本，例如公告、新闻或交易记录\"\n}\n```",
+  "f4": "```json\n{\n  \"error\": \"未提供待分析的文本或案件材料，无法识别涉事主体。请提供相关公告、新闻报道或调查文件。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"两份输入均为错误占位信息（error响应），未包含任何实际时间线事件或主体相关材料，无事实可供交叉核验。\",\n    \"timeline_input\": {\n      \"is_valid\": false,\n      \"content\": \"仅含错误提示：未提供待整理的事件内容，timeline为空数组\"\n    },\n    \"subject_input\": {\n      \"is_valid\": false,\n      \"content\": \"仅含错误提示：未提供待分析的文本或案件材料，未识别任何涉事主体\"\n    },\n    \"verified_events\": [],\n    \"verified_subjects\": [],\n    \"contradictions\": [],\n    \"required_materials\": [\n      \"包含日期与事件描述的原始文本（公告、新闻或交易记录）\",\n      \"可识别涉事主体的公告、新闻报道或调查文件\"\n    ]\n  }\n}\n```"
+ },
+ "IF-feedback-tran-R_only-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"missing_input\",\n    \"message\": \"未提供待分析的文本或材料，无法识别涉事主体。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"missing_input\",\n    \"message\": \"时间线与主体信息均为空，无可用事实进行交叉核验。\",\n    \"verified_facts\": [],\n    \"confidence\": null,\n    \"notes\": \"请提供待核验的时间线数据与主体事实材料后重新执行交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-feedback-tran-pi_only-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理时间线的原始资料或事件信息，无法生成时间线。请提供相关文本、事件列表或调查材料。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"note\": \"未提供待分析的文本内容，无法识别涉事主体。请提供相关文本以进行主体识别。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"facts\": [],\n    \"cross_check_result\": \"交叉核验失败：时间线与主体识别结果均为空（上游输入缺失），无可比对的事实，无法完成交叉核验。\",\n    \"missing_inputs\": [\n      \"原始资料/事件文本（用于生成时间线）\",\n      \"待分析的文本内容（用于主体识别）\"\n    ],\n    \"recommendation\": \"请提供相关调查材料后重新执行时间线整理、主体识别及交叉核验流程。\"\n  }\n}\n```"
+ },
+ "IF-feedback-tran-Joint_R_pi-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的资料内容，请提供新闻、公告或事件文本以便生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析文本\",\n    \"entities\": [],\n    \"message\": \"请提供公告、新闻或调查材料原文，以便识别涉事主体\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"verified\": [],\n    \"conflicts\": [],\n    \"unverified\": [],\n    \"error\": \"上游时间线与主体识别均未返回有效内容（无待分析文本），无事实可交叉核验。请提供公告、新闻或调查材料原文。\",\n    \"sources\": []\n  }\n}\n```"
+ },
+ "IF-feedback-tran-Joint_Z_R_pi-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"error\": \"缺少待整理的资料内容\",\n  \"message\": \"请提供需要整理成时间线的原始材料（如公告、新闻、事件描述等），我将按时间顺序输出 timeline。\",\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本内容\",\n    \"message\": \"请提供需要识别涉事主体的资本市场相关文本，例如新闻、公告或调查材料。\",\n    \"entity_facts\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"两个输入均为错误提示信息（缺少原始材料），不含任何可交叉核验的事实内容。\",\n    \"details\": [\n      {\n        \"source\": \"时间线输入\",\n        \"content_summary\": \"错误消息：缺少待整理的资料内容，timeline为空\",\n        \"usable\": false\n      },\n      {\n        \"source\": \"主体输入\",\n        \"content_summary\": \"错误消息：未提供待分析的文本内容，entity_facts为空\",\n        \"usable\": false\n      }\n    ],\n    \"verified\": [],\n    \"message\": \"请提供实际的资本市场相关材料（公告、新闻、事件描述等）后再进行交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-feedback-evid-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理时间线的原始资料，请提供文本后重试。\"\n}\n```"
+ },
+ "IF-feedback-evid-Static-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理时间线的原始资料，无法生成时间线。请提供事件描述、公告或文本内容。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"input_missing\",\n    \"message\": \"未提供待分析的文本内容或案件材料，无法识别涉事主体。请提供相关文本。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"verification_failed\",\n    \"reason\": \"交叉核验所需的输入材料为空：时间线与主体分析均返回 input_missing / error，无任何可核验的事实、日期或实体信息。\",\n    \"message\": \"未提供任何原始资料（公告、事件描述或案件文本），时间线与主体识别均无法生成，因此不存在可交叉核验的事实。请提供相关文本材料后重新执行。\",\n    \"timeline_facts\": [],\n    \"entity_facts\": [],\n    \"cross_check_results\": [],\n    \"confidence\": null\n  }\n}\n```"
+ },
+ "IF-feedback-evid-SimpleDyn-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何事件、日期或文本资料，无法整理时间线。请提供需要整理的原始内容。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"未提供任何待核验的事实、时间线或主体资料，无法进行交叉核验。请提供原始内容。\"\n}\n```"
+ },
+ "IF-feedback-evid-R_only-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何待整理的资本市场调查材料，无法生成时间线。请提供新闻稿、公告、监管处罚决定书、媒体报道等原始文本。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供待分析的文本或材料，无法识别涉事主体。请提供需要调查的公告、新闻或报告内容。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"时间线与主体材料均为空，无可交叉核验的事实。请提供待核验的原始文本。\",\n    \"verified_facts\": []\n  }\n}\n```"
+ },
+ "IF-feedback-evid-pi_only-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供待整理的原始材料。请提供资本市场相关的新闻、公告或事件文本，以便生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的案情文本，无法识别涉事主体\",\n    \"entities\": [],\n    \"note\": \"请提供相关案情、公告或报道内容后重试\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"verified\": [],\n    \"conflicts\": [],\n    \"error\": \"交叉核验失败：时间线与主体识别模块均未提供有效材料（输入为空），无法进行事实比对与核验。\",\n    \"note\": \"请提供资本市场相关的原始文本材料后重试，以便各模块生成可交叉核验的事实。\"\n  }\n}\n```"
+ },
+ "IF-feedback-evid-Joint_R_pi-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供待整理的原始材料或事件内容，无法生成时间线。请提供相关文本、事件列表或调查资料。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"note\": \"未提供任何涉事事件文本或描述，无法识别涉事主体。请提供需要分析的文本内容。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线与主体信息均为空，无原始材料可供交叉核验，未发现可确认的事实。请提供待核验的调查资料。\"\n}\n```"
+ },
+ "IF-feedback-evid-Joint_Z_R_pi-E04-zhuoran-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供待整理的原始材料，无法生成时间线。请提供事件、日期及相关文本。\"\n}\n```",
+  "f4": "```json\n{\n  \"error\": \"未提供待调查的事件或文本，无法识别涉事主体\",\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"cross_check_result\": {\n    \"status\": \"failed\",\n    \"reason\": \"时间线与主体识别结果均为空（上游返回错误：未提供原始材料），无可交叉核验的事实。\",\n    \"details\": {\n      \"timeline_input\": {\n        \"timeline\": [],\n        \"error\": \"未提供待整理的原始材料，无法生成时间线。\"\n      },\n      \"entity_input\": {\n        \"error\": \"未提供待调查的事件或文本，无法识别涉事主体\",\n        \"entity_facts\": []\n      }\n    }\n  },\n  \"recommendation\": \"请提供待核验的原始事件文本、日期及相关材料，以便进行时间线与主体的交叉核验。\"\n}\n```"
+ },
+ "IF-feedback-evid-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```"
+ },
+ "IF-feedback-evid-Static-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```\n\n未收到具体事件材料，无法生成时间线。请提供需要整理的事件内容（如日期、事件描述等），我将按时间顺序整理为 JSON 格式输出。",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"缺少输入材料\",\n    \"message\": \"未提供需要分析的案情文本或事件描述，无法识别涉事主体。请提供相关资本市场事件的原始材料（如公告、新闻、处罚决定书等）。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"error\": \"缺少输入材料\",\n    \"message\": \"未提供任何可供交叉核验的事件材料、时间线或主体信息，无法进行事实核验。请提供相关原始材料（如公告、新闻、处罚决定书、时间线或主体描述等）。\",\n    \"facts\": [],\n    \"entities\": [],\n    \"timeline\": [],\n    \"sources\": [],\n    \"confidence\": null\n  }\n}\n```"
+ },
+ "IF-feedback-evid-SimpleDyn-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```\n\n说明：您尚未提供任何事件、日期或背景资料，无法生成时间线内容。请提供需要整理的具体信息（如公司事件、公告日期、交易记录等），我将按时间顺序整理并输出。",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": []\n}\n```\n\n说明：输入的时间线与主体事实均为空，未提供任何可交叉核验的信息，因此无法输出已核验事实。请提供具体事件、公告或交易记录后重试。"
+ },
+ "IF-feedback-evid-R_only-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```\n\n说明：您尚未提供需要分析的具体文本（如公告、新闻、研报等），因此无法识别涉事主体。请提供待调查的原文内容，我将从中提取主体信息并输出 `entity_facts` 字段。",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"verification_notes\": \"输入的时间线与主体数据均为空，无可交叉核验的事实。请提供待调查的原始文本（如公告、新闻、研报等）以进行核验分析。\"\n}\n```"
+ },
+ "IF-feedback-evid-pi_only-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```\n\n说明：当前请求未提供任何案件背景材料（如公告、新闻、处罚决定书等文本），无法识别涉事主体。请提供待分析文本后，我将严格输出包含 `entity_facts` 字段的 JSON 结果。",
+  "f5": "```json\n{\n  \"verified_facts\": []\n}\n```"
+ },
+ "IF-feedback-evid-Joint_R_pi-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供待整理的时间线原始材料，无法生成时间线。请提供事件、日期及相关背景信息。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"缺少待分析的案卷、公告或新闻文本\",\n    \"message\": \"请提供涉事材料（如处罚决定书、公司公告、新闻报道等），以便识别涉事主体及其角色。\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"cross_check_failed\",\n    \"reason\": \"两份输入材料均无实质内容：时间线与主体信息均返回错误，说明原始材料缺失，无可交叉核验的事实。\",\n    \"message\": \"请提供待核验的原始材料（事件时间线、处罚决定书、公告或新闻报道等）后再进行交叉核验。\",\n    \"facts\": [],\n    \"confidence\": null\n  }\n}\n```"
+ },
+ "IF-feedback-evid-Joint_Z_R_pi-E04-zhuoran-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供需要整理的事件或资料，无法生成时间线。请提供具体的文本、事件列表或调查材料。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```\n\n（未检测到涉事主体：当前输入中未包含可供识别涉事主体的文本内容。请提供需要分析的公告、新闻或调查材料原文。）",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"未提供任何可供交叉核验的材料（时间线与主体信息均为空）。无法产出经核验的事实。请提供具体的公告、新闻或调查材料原文。\"\n}\n```"
+ },
+ "IF-feedback-evid-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供任何事件信息。请提供需要整理成时间线的资本市场监管处罚、重组上市、收购兼并等事件要素（公司名称、事件、日期、来源），我才能整理输出。\"\n}\n```"
+ },
+ "IF-feedback-evid-Static-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的事件或资料内容，无法生成时间线。请提供原始文本、事件列表或调查材料。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"涉事主体\": [],\n    \"说明\": \"未提供具体案件或文本内容，无法识别涉事主体。请提供待分析的事件描述、公告或新闻报道。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"已核实事实\": [],\n    \"交叉核验结论\": \"无事实可核验\",\n    \"说明\": \"两条输入均为空数据及错误提示信息：时间线输入未提供事件或资料内容，主体输入未提供案件或文本内容。不存在可交叉核验的事实、时间点或主体信息。\",\n    \"一致性检查\": {\n      \"时间线与主体信息一致\": true,\n      \"备注\": \"两份输入均为空结果且错误说明一致（均提示缺少原始材料），逻辑上无矛盾。\"\n    },\n    \"建议\": \"请提供原始调查材料（如公告、新闻、事件描述），以便进行时间线整理与涉事主体识别后再行交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-feedback-evid-SimpleDyn-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何事件内容，无法整理时间线。请提供需要整理的事件描述、日期及相关信息。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线与主体信息均为空，无内容可供交叉核验。请提供事件描述及相关主体信息。\"\n}\n```"
+ },
+ "IF-feedback-evid-R_only-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "{\"entity_facts\": [], \"error\": \"未提供待分析的文本，无法识别涉事主体。请提供资本市场事件相关文本。\"}",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"输入的时间线为空数组，且主体数据中亦无实体事实；未提供任何待交叉核验的资本市场信息。\",\n  \"notes\": \"请提供包含事件时间线及涉事主体的事实文本，以便进行核验并输出 verified_facts。\"\n}\n```"
+ },
+ "IF-feedback-evid-pi_only-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何事件、时间点或原始材料，无法整理时间线。请提供需要整理的文本、事件列表或调查材料。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线与主体事实均为空，无可交叉核验的来源。请提供原始材料（公告、新闻稿、监管文件、庭审记录等）以进行交叉核验。\"\n}\n```"
+ },
+ "IF-feedback-evid-Joint_R_pi-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供待整理的原始材料，无法生成时间线。请提供相关文本内容。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"输入信息不足：未提供待分析的案件或文本内容，无法识别涉事主体。\",\n    \"entities\": [],\n    \"instruction\": \"请提供需要调查分析的文本、公告、新闻或案件材料。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"conclusion\": \"交叉核验无法进行：时间线与主体信息均为空，未提供任何可核验的原始材料。\",\n    \"timeline_count\": 0,\n    \"entity_count\": 0,\n    \"cross_check_results\": [],\n    \"instruction\": \"请提供待核验的时间线、主体事实及对应的原始文本材料（公告、新闻、案件材料等），以便完成交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-feedback-evid-Joint_Z_R_pi-E04-zhuoran-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的资料或事件内容，无法生成时间线。请提供相关文本、事件列表或调查材料。\"\n}\n```",
+  "f4": "```json\n{\n  \"error\": \"缺少待分析的涉事文本\",\n  \"message\": \"请提供需要识别涉事主体的原始材料（如新闻、公告、舆情内容），我才能提取 entity_facts。\",\n  \"entity_facts\": []\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"交叉核验失败：时间线与主体识别结果均为空（返回错误信息），无任何可核验的事实数据。\",\n  \"message\": \"两条输入链路均未提供原始材料，无法执行交叉核验。请提供：1) 待整理的原始事件材料（用于时间线）；2) 涉事文本（用于主体识别），方可进行事实交叉比对。\",\n  \"cross_check_summary\": {\n    \"timeline_available\": false,\n    \"entity_facts_available\": false,\n    \"consistency\": \"无法评估\",\n    \"confidence\": 0\n  }\n}\n```"
+ },
+ "IF-frozen-tran-E07-xiwang-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```"
+ },
+ "IF-frozen-tran-Static-E07-xiwang-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供需要整理的原始材料（新闻、公告、事件等）。请提供文本或事件列表以便生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": []\n}\n```\n未提供待分析文本，无法识别涉事主体。请提供需要调查的具体文本内容。",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供任何可交叉核验的原始材料（时间线为空、主体事实为空）。无法执行交叉核验。请提供新闻、公告或其他待核验文本。\"\n}\n```"
+ },
+ "IF-frozen-tran-SimpleDyn-E07-xiwang-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供待整理的事件材料。请提供新闻、公告、聊天记录或其他文本内容，以便提取并按时间顺序整理时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待识别的文本内容，无法识别涉事主体。\",\n    \"instruction\": \"请提供需要分析的公告、新闻或调查文本。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供任何待交叉核验的事实材料或时间线内容，无法进行核验。请提供公告、新闻、聊天记录等原始文本。\"\n}\n```"
+ },
+ "IF-frozen-tran-R_only-E07-xiwang-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供待分析的文本或公告内容，无法识别涉事主体\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"时间线与主体信息均为空，无可交叉核验的事实，无法输出verified_facts\"\n}\n```"
+ },
+ "IF-frozen-tran-pi_only-E07-xiwang-r1": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本或案件材料\",\n    \"涉事主体\": [],\n    \"说明\": \"请提供公告、新闻、处罚决定书或其他文本内容，以便识别涉事主体（如公司、个人、中介机构等）及其角色。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"时间线为空且未提供任何主体事实材料，无可交叉核验的内容。\",\n    \"timeline_verification\": {\n      \"input_events\": 0,\n      \"verified_events\": 0,\n      \"conflicts\": []\n    },\n    \"entity_verification\": {\n      \"input_entities\": 0,\n      \"verified_entities\": [],\n      \"conflicts\": []\n    },\n    \"conclusion\": \"两份输入均无有效数据，无法进行交叉核验。请提供待分析的公告、新闻、处罚决定书或其他文本材料。\",\n    \"data_quality\": {\n      \"timeline_provided\": false,\n      \"entity_facts_provided\": false,\n      \"cross_check_feasible\": false\n    }\n  }\n}\n```"
+ },
+ "IF-frozen-tran-Joint_R_pi-E07-xiwang-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供待整理的时间线内容，请提供原始资料\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"note\": \"未提供待分析的调查文本或事件材料，无法识别涉事主体。请提供相关资料后重试。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"未提供任何待交叉核验的时间线或主体材料，无法进行核验。请提供原始资料后重试。\"\n}\n```"
+ },
+ "IF-frozen-tran-Joint_Z_R_pi-E07-xiwang-r1": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供待整理的原始材料，请提供新闻、公告或事件文本以便生成时间线。\"\n}\n```",
+  "f4": "{\"entity_facts\": [], \"note\": \"未提供待分析的文本内容，无法识别涉事主体。请提供需要调查的文本。\"}",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"note\": \"时间线与主体输入均为空，无可交叉核验的事实。请提供新闻、公告或事件文本以生成时间线、识别主体并输出核验结果。\"\n}\n```"
+ },
+ "IF-frozen-tran-E07-xiwang-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供任何事件材料，无法整理时间线。请提供需要整理的原始文本或事件列表。\"\n}\n```"
+ },
+ "IF-frozen-tran-Static-E07-xiwang-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未收到任何待整理的事件、文本或资料，无法生成时间线。请提供需要整理的内容。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的案卷或事件文本\",\n    \"entities\": [],\n    \"note\": \"请提供调查材料（新闻、公告、处罚决定书等），以便识别涉事主体。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"failed\",\n    \"verified\": [],\n    \"conflicts\": [],\n    \"note\": \"时间线与主体分析模块均返回空结果，无可交叉核验的事实。请提供待核验的调查材料。\",\n    \"checks_performed\": 0\n  }\n}\n```"
+ },
+ "IF-frozen-tran-SimpleDyn-E07-xiwang-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的资料内容。请提供时间线相关的原始文本（如事件、日期、公告等），以便生成结构化时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的事件文本或公告内容，无法识别涉事主体\",\n    \"required_input\": \"请提供事件描述、公告原文或相关报道文本\",\n    \"identified_entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"failed\",\n    \"error\": \"时间线与主体识别结果均为空，且未提供任何原始资料，无法进行交叉核验。\",\n    \"verified\": [],\n    \"conflicts\": [],\n    \"unverified\": []\n  }\n}\n```"
+ },
+ "IF-frozen-tran-R_only-E07-xiwang-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"incomplete_input\",\n  \"message\": \"未提供待整理的事件素材，无法生成时间线。请提供相关文本、公告或事件描述。\"\n}\n```",
+  "f4": "{\"entity_facts\": {\"status\": \"insufficient_input\", \"message\": \"未提供待分析的文本内容，请提供需要识别涉事主体的新闻或公告原文。\", \"entities\": []}}",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供可交叉核验的事件素材（时间线与主体均为空/占位结果），无法执行交叉核验。请提供待核验的文本、公告或事件描述。\",\n    \"verified_facts\": [],\n    \"cross_check_summary\": {\n      \"timeline_status\": \"incomplete_input\",\n      \"entity_status\": \"insufficient_input\",\n      \"consistency_check\": \"not_performed\"\n    }\n  }\n}\n```"
+ },
+ "IF-frozen-tran-pi_only-E07-xiwang-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理时间线的原始资料，请输入事件描述、公告或新闻内容后再试。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"note\": \"未提供待分析的文本内容，无法识别涉事主体。请提供调查相关文本。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"未提供可交叉核验的原始资料，无法进行时间线与主体信息的交叉验证。请输入事件描述、公告或新闻内容后再试。\"\n}\n```"
+ },
+ "IF-frozen-tran-Joint_R_pi-E07-xiwang-r2": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的资料内容，请输入文本以生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供案情文本或涉事主体描述，无法识别涉事主体\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"error\": \"交叉核验失败：时间线与主体输入均为空（均返回'未提供资料'错误），无可用事实进行交叉验证。\",\n  \"input_status\": {\n    \"timeline\": \"empty_or_error\",\n    \"entities\": \"empty_or_error\"\n  },\n  \"action_required\": \"请提供案情文本或调查资料，以便生成时间线、识别主体并执行交叉核验。\"\n}\n```"
+ },
+ "IF-frozen-tran-Joint_Z_R_pi-E07-xiwang-r2": {
+  "f3": "```json\n{\n  \"error\": \"未提供需要整理的原始材料\",\n  \"timeline\": [],\n  \"message\": \"请提供事件相关的文本、公告或资料，以便整理为时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"note\": \"未提供待识别的文本或案件材料，无法识别涉事主体。请提供相关公告、新闻或调查文本。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法交叉核验\",\n    \"reason\": \"时间线与主体材料均为空/错误占位，无任何待核验事实。\",\n    \"timeline\": [],\n    \"entities\": [],\n    \"cross_check_result\": [],\n    \"message\": \"请提供实际的公告、新闻或调查文本，以便进行时间线与主体的事实的交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-E07-xiwang-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"status\": \"insufficient_input\",\n  \"message\": \"未提供任何事件、日期或背景资料，无法生成时间线。请提供需要整理的事件列表或文本。\"\n}\n```"
+ },
+ "IF-frozen-tran-Static-E07-xiwang-r3": {
+  "f3": "```json\n{\n  \"error\": \"缺少待整理的时间线内容\",\n  \"timeline\": [],\n  \"message\": \"请提供需要整理的事件信息（如日期、事件描述、来源等），我将按时间顺序整理并输出。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的案件材料或文本内容，无法识别涉事主体\",\n    \"required_input\": \"请提供公告、新闻、处罚决定书或其他待调查文本\",\n    \"entities\": []\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"无法核验\",\n    \"reason\": \"提供的两个输入均为空结果/错误信息，不包含任何事实性内容（无时间线事件、无主体信息、无原始材料）\",\n    \"cross_check\": {\n      \"timeline_input\": {\n        \"usable\": false,\n        \"note\": \"输入为错误提示，timeline为空数组\"\n      },\n      \"entity_input\": {\n        \"usable\": false,\n        \"note\": \"输入为错误提示，entities为空数组\"\n      },\n      \"consistency\": \"无可比较内容，无法进行交叉核验\"\n    },\n    \"facts\": [],\n    \"message\": \"请提供包含具体事实的原始材料（公告、处罚决定书、新闻、事件日期与描述等）后再进行交叉核验。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-SimpleDyn-E07-xiwang-r3": {
+  "f3": "```json\n{\n  \"error\": \"缺少待整理的原始资料或事件内容，无法生成时间线\",\n  \"timeline\": [],\n  \"required_input\": \"请提供需要整理成时间线的原始文本、事件列表或资料\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"entities\": [],\n    \"note\": \"未提供待分析的文本内容，无法识别涉事主体。请提供需要调查的文本材料。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": {\n    \"status\": \"insufficient_input\",\n    \"verified\": [],\n    \"conflicts\": [],\n    \"unverified\": [],\n    \"note\": \"时间线与主体核验模块均返回缺少原始资料，无可用事实进行交叉核验。请提供待调查的原始文本、事件列表或资料后再行验证。\"\n  }\n}\n```"
+ },
+ "IF-frozen-tran-R_only-E07-xiwang-r3": {
+  "f3": "```json\n{\n  \"timeline\": []\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"error\": \"未提供待分析的文本内容\",\n    \"instruction\": \"请提供需要识别涉事主体的文本，才能提取实体信息\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"verification_summary\": \"无待核验内容\",\n  \"details\": {\n    \"timeline_provided\": false,\n    \"entity_facts_provided\": false,\n    \"error\": \"时间线为空数组，主体信息为错误提示（未提供待分析的文本内容），无法执行交叉核验\"\n  },\n  \"instruction\": \"请提供需要核验的时间线和主体事实数据\"\n}\n```"
+ },
+ "IF-frozen-tran-pi_only-E07-xiwang-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"error\": \"未提供需要整理的原始资料，请输入事件内容后再进行时间线整理。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"涉事主体\": [],\n    \"说明\": \"未提供待分析的案件文本或公告内容，无法识别涉事主体。请提供相关文本以便进行主体识别。\"\n  }\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"说明\": \"未能交叉核验任何事实：时间线与主体资料均为空或错误提示（未提供原始资料）。请输入待核验的事件文本、时间线及主体信息后重试。\"\n}\n```"
+ },
+ "IF-frozen-tran-Joint_R_pi-E07-xiwang-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供待整理的原始材料，请提供事件、日期等文本内容以便生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": [],\n  \"error\": \"未提供待分析的文本材料\",\n  \"message\": \"请提供需要识别涉事主体的资本市场相关文本（如新闻稿、公告、处罚决定书、研报等），以便提取涉事主体及事实。\"\n}\n```",
+  "f5": "```json\n{\n  \"verified_facts\": [],\n  \"status\": \"无法交叉核验\",\n  \"reason\": \"时间线与主体输入均为空/占位提示，未提供待核验的原始材料\",\n  \"required_input\": \"请提供需要交叉核验的资本市场相关文本（如公告、新闻稿、处罚决定书、研报等）\",\n  \"cross_check_result\": null\n}\n```"
+ },
+ "IF-frozen-tran-Joint_Z_R_pi-E07-xiwang-r3": {
+  "f3": "```json\n{\n  \"timeline\": [],\n  \"note\": \"未提供任何需要整理的时间线内容或事件资料。请提供具体的文本、事件列表或调查材料，以便生成时间线。\"\n}\n```",
+  "f4": "```json\n{\n  \"entity_facts\": {\n    \"status\": \"insufficient_input\",\n    \"message\": \"未提供待分析的文本材料，无法识别涉事主体。请提供相关公告、新闻报道或调查文本。\",\n    \"entities\": []\n  }\n}\n```"
+ }
+}

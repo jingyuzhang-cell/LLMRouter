@@ -1,0 +1,173 @@
+{
+ "dimensions": {
+  "D1_fact_correctness": {
+   "score": 1.0,
+   "checks": [
+    {
+     "item": "公司主体与证券代码",
+     "verdict": "CONSISTENT",
+     "facts_checked": 2,
+     "correct": 2,
+     "errors": []
+    },
+    {
+     "item": "公告编号",
+     "verdict": "COMPLEMENT",
+     "facts_checked": 0,
+     "correct": 0,
+     "errors": []
+    },
+    {
+     "item": "披露时间线",
+     "verdict": "COMPLEMENT",
+     "facts_checked": 0,
+     "correct": 0,
+     "errors": []
+    },
+    {
+     "item": "立案调查风险状态",
+     "verdict": "COMPLEMENT",
+     "facts_checked": 0,
+     "correct": 0,
+     "errors": []
+    },
+    {
+     "item": "经营状态表述",
+     "verdict": "COMPLEMENT",
+     "facts_checked": 0,
+     "correct": 0,
+     "errors": []
+    },
+    {
+     "item": "信息披露违规潜在财务影响",
+     "verdict": "UNRESOLVED",
+     "facts_checked": 0,
+     "correct": 0,
+     "errors": []
+    },
+    {
+     "item": "监管机构",
+     "verdict": "CONSISTENT",
+     "facts_checked": 2,
+     "correct": 2,
+     "errors": []
+    }
+   ]
+  },
+  "D2_cross_doc_judgment": {
+   "score": 1.0,
+   "assessments": [
+    {
+     "item": "公司主体与证券代码",
+     "verdict": "CONSISTENT",
+     "appropriate": true,
+     "reason": "三份公告确实使用相同公司名/代码"
+    },
+    {
+     "item": "公告编号",
+     "verdict": "COMPLEMENT",
+     "appropriate": true,
+     "reason": "不同公告事项编号不同是正常的"
+    },
+    {
+     "item": "披露时间线",
+     "verdict": "COMPLEMENT",
+     "appropriate": true,
+     "reason": "立案→业绩预告→说明会时间线确实递进"
+    },
+    {
+     "item": "立案调查风险状态",
+     "verdict": "COMPLEMENT",
+     "appropriate": true,
+     "reason": "确实只有main提及立案，其他公告不涉及"
+    },
+    {
+     "item": "经营状态表述",
+     "verdict": "COMPLEMENT",
+     "appropriate": true,
+     "reason": "合规vs财务是不同维度，COMPLEMENT合理"
+    },
+    {
+     "item": "信息披露违规潜在财务影响",
+     "verdict": "UNRESOLVED",
+     "appropriate": true,
+     "reason": "确实无法从三份公告判断立案对损益的影响"
+    },
+    {
+     "item": "监管机构",
+     "verdict": "CONSISTENT",
+     "appropriate": true,
+     "reason": "不同监管职能场景，不构成矛盾"
+    }
+   ]
+  },
+  "D3_traceability": {
+   "score": 0.286,
+   "issues": [
+    {
+     "item": "公司主体与证券代码",
+     "has_doc_ref": true,
+     "has_specific_fact": false,
+     "traceable": false
+    },
+    {
+     "item": "公告编号",
+     "has_doc_ref": true,
+     "has_specific_fact": false,
+     "traceable": false
+    },
+    {
+     "item": "披露时间线",
+     "has_doc_ref": true,
+     "has_specific_fact": true,
+     "traceable": true
+    },
+    {
+     "item": "立案调查风险状态",
+     "has_doc_ref": true,
+     "has_specific_fact": true,
+     "traceable": true
+    },
+    {
+     "item": "经营状态表述",
+     "has_doc_ref": true,
+     "has_specific_fact": false,
+     "traceable": false
+    },
+    {
+     "item": "信息披露违规潜在财务影响",
+     "has_doc_ref": false,
+     "has_specific_fact": true,
+     "traceable": false
+    },
+    {
+     "item": "监管机构",
+     "has_doc_ref": false,
+     "has_specific_fact": true,
+     "traceable": false
+    }
+   ]
+  },
+  "D4_downstream_effectiveness": {
+   "score": 0.1,
+   "facts_in_verify": 2,
+   "facts_total": 20,
+   "missing": [
+    "2026年4月21日",
+    "2026年4月22日",
+    "2026年9月18日",
+    "2026年9月23日",
+    "2026年1月1日",
+    "2026年6月30日",
+    "2026年7月14日",
+    "12,500.00万元",
+    "12,300.00万元",
+    "19,804.88万元"
+   ]
+  }
+ },
+ "verify_q_overall": 0.596,
+ "silver_flash": 0.15,
+ "silver_ds": 0.85,
+ "divergence": "Flash verify-Q is HIGH but Silver is LOW — verify quality does not translate to terminal fact coverage"
+}

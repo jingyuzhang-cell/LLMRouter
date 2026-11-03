@@ -1,0 +1,112 @@
+{
+ "run_id": "JOINT-ACC-RUN-001",
+ "system_id": "dynamic_joint",
+ "task_id": "T-P1",
+ "config_hash": "eba9e5fe653ee66b5cf2a8d959bdbaba43d998890e42dd697d8ed945ccc2a7f8",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 2,
+  "latency_s": 28.178,
+  "usage": {
+   "in": 1907,
+   "out": 671
+  }
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3150
+ },
+ "nodes": [
+  {
+   "node_id": "t0",
+   "kind": "extraction",
+   "model": "glm53",
+   "attempt": 2,
+   "usage": {
+    "in": 693,
+    "out": 255
+   },
+   "latency_s": 6.405,
+   "parse_status": "OK"
+  },
+  {
+   "node_id": "t1",
+   "kind": "extraction",
+   "model": "glm53",
+   "attempt": 1,
+   "usage": {
+    "in": 2229,
+    "out": 400
+   },
+   "latency_s": 6.685,
+   "parse_status": "OK"
+  },
+  {
+   "node_id": "t2",
+   "kind": "reasoning",
+   "model": "glm53",
+   "attempt": 1,
+   "usage": {
+    "in": 656,
+    "out": 313
+   },
+   "latency_s": 6.039,
+   "parse_status": "OK"
+  },
+  {
+   "node_id": "t3",
+   "kind": "extraction",
+   "model": "glm53",
+   "attempt": 1,
+   "usage": {
+    "in": 652,
+    "out": 330
+   },
+   "latency_s": 5.82,
+   "parse_status": "OK"
+  },
+  {
+   "node_id": "t4",
+   "kind": "verification",
+   "model": "glm53",
+   "attempt": 1,
+   "usage": {
+    "in": 1231,
+    "out": 291
+   },
+   "latency_s": 5.092,
+   "parse_status": "OK"
+  },
+  {
+   "node_id": "t5",
+   "kind": "reasoning",
+   "model": "glm53",
+   "attempt": 1,
+   "usage": {
+    "in": 535,
+    "out": 338
+   },
+   "latency_s": 4.888,
+   "parse_status": "OK"
+  },
+  {
+   "node_id": "t3#recovery",
+   "kind": "recovery_reroute",
+   "model": "glm53",
+   "attempt": 1,
+   "usage": {
+    "in": 652,
+    "out": 349
+   },
+   "latency_s": 5.245,
+   "parse_status": "OK",
+   "repair_of": "t3",
+   "reused_real_v2_comparison_output": true
+  }
+ ],
+ "reuse_events": 1,
+ "program_ms": 4.0,
+ "wall_s": 70.0,
+ "deliverable_ref": "integration/exchange/deliverable.json",
+ "notes": "JOINT ACCEPTANCE REPLAY: graph/anomaly/outputs REAL from frozen V2; (Z,R,pi) decision REPLAY of frozen recover_failed semantics; recovery node reuses REAL glm53 output (usage charged at real values)"
+}

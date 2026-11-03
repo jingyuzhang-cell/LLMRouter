@@ -1,0 +1,16 @@
+```json
+{
+  "task_class": "财务造假跨年度事实调查",
+  "nodes": [
+    {"id": "n1", "role": "extraction", "inputs": [], "contract": {"produces": ["facts"], "requires": []}, "evidence": "jsst"},
+    {"id": "n2", "role": "timeline", "inputs": ["n1"], "contract": {"produces": ["dates"], "requires": ["facts"]}, "evidence": null},
+    {"id": "n3", "role": "amounts", "inputs": ["n1"], "contract": {"produces": ["amounts"], "requires": ["facts"]}, "evidence": null},
+    {"id": "n4", "role": "penalties", "inputs": ["n1"], "contract": {"produces": ["penalty_items"], "requires": ["facts"]}, "evidence": null},
+    {"id": "n5", "role": "amounts_check", "inputs": ["n3", "n1"], "contract": {"produces": ["amounts_checked"], "requires": ["amounts", "facts"]}, "evidence": null},
+    {"id": "n6", "role": "timeline_deep", "inputs": ["n2", "n1"], "contract": {"produces": ["stages"], "requires": ["dates", "facts"]}, "evidence": null},
+    {"id": "n7", "role": "merge", "inputs": ["n5", "n6", "n4"], "contract": {"produces": ["merged"], "requires": ["amounts_checked", "stages", "penalty_items"]}, "evidence": null},
+    {"id": "n8", "role": "synthesis", "inputs": ["n7"], "contract": {"produces": ["report"], "requires": ["merged"]}, "evidence": null}
+  ],
+  "rationale": "本案证据集中于单一权威文档 jsst（证监会处罚文书/公告），故仅绑定该证据源做一次抽取，避免虚构来源；随后并行开展逐年时间线（timeline→timeline_deep 阶段复核）、逐年虚增收入/利润金额核算（amounts→amounts_check 交叉复核）及处罚事实梳理三条支线，覆盖用户要求的'逐年变化、具体金额、官方处罚依据'三要素；merge 汇合形成跨年度对比结构，synthesis 作为唯一终节点输出含 2018-2021 逐年对比与处罚依据的最终调查报告。全程付费节点仅用于复核与汇总，控制在预算与 140s 时限内。"
+}
+```

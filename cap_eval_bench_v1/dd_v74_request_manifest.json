@@ -1,0 +1,260 @@
+{
+ "batch_name": "dd_v74_n5_paired",
+ "max_calls": 23,
+ "max_tokens": 35000,
+ "per_model_quota": {
+  "glm53": {
+   "calls": 8,
+   "tokens": 8800
+  },
+  "glm53flash": {
+   "calls": 15,
+   "tokens": 16400
+  }
+ },
+ "max_cash": 0,
+ "allowed_models": [
+  "glm53",
+  "glm53flash"
+ ],
+ "tasks": [
+  "D_r1-n5-IB-vs-Alt-2rep"
+ ],
+ "issued_by": "PENDING",
+ "created": "2026-10-30",
+ "manifest": [
+  {
+   "req_id": "R01",
+   "node": "n1",
+   "role": "extraction",
+   "model": "glm53",
+   "purpose": "V74-shared:n1",
+   "shared": "all",
+   "rep": null,
+   "action": null
+  },
+  {
+   "req_id": "R02",
+   "node": "n2",
+   "role": "extraction",
+   "model": "glm53",
+   "purpose": "V74-shared:n2",
+   "shared": "all",
+   "rep": null,
+   "action": null
+  },
+  {
+   "req_id": "R03",
+   "node": "n3",
+   "role": "timeline",
+   "model": "glm53",
+   "purpose": "V74-shared:n3",
+   "shared": "all",
+   "rep": null,
+   "action": null
+  },
+  {
+   "req_id": "R04",
+   "node": "n4",
+   "role": "amounts",
+   "model": "glm53",
+   "purpose": "V74-shared:n4",
+   "shared": "all",
+   "rep": null,
+   "action": null
+  },
+  {
+   "req_id": "R05",
+   "node": "n5",
+   "role": "penalties",
+   "model": "flash",
+   "purpose": "V74-fault:n5:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "fault_inject"
+  },
+  {
+   "req_id": "R06",
+   "node": "n5",
+   "role": "penalties",
+   "model": "flash",
+   "purpose": "V74-fault:n5:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "fault_inject"
+  },
+  {
+   "req_id": "R07",
+   "node": "n8",
+   "role": "amounts_check",
+   "model": "flash",
+   "purpose": "V74-shared:n8",
+   "shared": "all",
+   "rep": null,
+   "action": null
+  },
+  {
+   "req_id": "R08",
+   "node": "n6",
+   "role": "entity_graph",
+   "model": "flash",
+   "purpose": "V74-A_alt:n6:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "A_alt"
+  },
+  {
+   "req_id": "R09",
+   "node": "n6",
+   "role": "entity_graph",
+   "model": "flash",
+   "purpose": "V74-A_alt:n6:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "A_alt"
+  },
+  {
+   "req_id": "R10",
+   "node": "n6",
+   "role": "entity_graph",
+   "model": "glm53",
+   "purpose": "V74-B_ib:n6:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "B_ib"
+  },
+  {
+   "req_id": "R11",
+   "node": "n6",
+   "role": "entity_graph",
+   "model": "glm53",
+   "purpose": "V74-B_ib:n6:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "B_ib"
+  },
+  {
+   "req_id": "R12",
+   "node": "n7",
+   "role": "timeline_deep",
+   "model": "flash",
+   "purpose": "V74-A_alt:n7:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "A_alt"
+  },
+  {
+   "req_id": "R13",
+   "node": "n7",
+   "role": "timeline_deep",
+   "model": "flash",
+   "purpose": "V74-A_alt:n7:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "A_alt"
+  },
+  {
+   "req_id": "R14",
+   "node": "n7",
+   "role": "timeline_deep",
+   "model": "glm53",
+   "purpose": "V74-B_ib:n7:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "B_ib"
+  },
+  {
+   "req_id": "R15",
+   "node": "n7",
+   "role": "timeline_deep",
+   "model": "glm53",
+   "purpose": "V74-B_ib:n7:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "B_ib"
+  },
+  {
+   "req_id": "R16",
+   "node": "n9",
+   "role": "cross_check",
+   "model": "flash",
+   "purpose": "V74-A_alt:n9:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "A_alt"
+  },
+  {
+   "req_id": "R17",
+   "node": "n9",
+   "role": "cross_check",
+   "model": "flash",
+   "purpose": "V74-A_alt:n9:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "A_alt"
+  },
+  {
+   "req_id": "R18",
+   "node": "n9",
+   "role": "cross_check",
+   "model": "flash",
+   "purpose": "V74-B_ib:n9:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "B_ib"
+  },
+  {
+   "req_id": "R19",
+   "node": "n9",
+   "role": "cross_check",
+   "model": "flash",
+   "purpose": "V74-B_ib:n9:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "B_ib"
+  },
+  {
+   "req_id": "R20",
+   "node": "n10",
+   "role": "synthesis",
+   "model": "flash",
+   "purpose": "V74-A_alt:n10:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "A_alt"
+  },
+  {
+   "req_id": "R21",
+   "node": "n10",
+   "role": "synthesis",
+   "model": "flash",
+   "purpose": "V74-A_alt:n10:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "A_alt"
+  },
+  {
+   "req_id": "R22",
+   "node": "n10",
+   "role": "synthesis",
+   "model": "flash",
+   "purpose": "V74-B_ib:n10:rep1",
+   "shared": "none",
+   "rep": 1,
+   "action": "B_ib"
+  },
+  {
+   "req_id": "R23",
+   "node": "n10",
+   "role": "synthesis",
+   "model": "flash",
+   "purpose": "V74-B_ib:n10:rep2",
+   "shared": "none",
+   "rep": 2,
+   "action": "B_ib"
+  }
+ ],
+ "scorer_independent": true,
+ "scorer_extra_calls": 0,
+ "fail_stop": true
+}

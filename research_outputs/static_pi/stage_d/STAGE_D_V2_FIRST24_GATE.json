@@ -1,0 +1,65 @@
+{
+ "batch": "STAGE_D_V2_FIRST24_GATE",
+ "date": "2026-11-03",
+ "verdict": "PASS — 全部门禁通过，按授权继续剩余 168",
+ "precheck": {
+  "http": 200,
+  "health": "PASS",
+  "note": "最小探针 text 判据不适用（thinking 模型 64tok 内无法出文本）；能力由 stage2b 7/7 证明"
+ },
+ "incident": {
+  "issue": "_RealHandle.latency 缺失 → 真实路径首调即崩",
+  "action": "停止批次→根因→bugfix→回归测试 R05×2→重冻结 e80fe6a3",
+  "aborted_site": "runs_final_aborted_bugfix_20261103/（6 条保全）",
+  "burned": {
+   "calls": 92,
+   "tokens_est": 94000,
+   "ds_cash_est": 0.3
+  }
+ },
+ "first24": {
+  "records": 24,
+  "status": "24/24 COMPLETE",
+  "on_time": "24/24",
+  "raw_calls": 184,
+  "r1": {
+   "verdict": "PASS",
+   "regressions": 0,
+   "slot_runs": 144
+  },
+  "truncation_errors": 0,
+  "late": 0,
+  "routing_symmetric": true,
+  "s5prime": {
+   "natural_triggers": [
+    "π-only|S5|r8",
+    "Fixed-Composite|S5|r8"
+   ],
+   "recovery": "2/2 成功（DS 单次，TP=14）",
+   "no_trigger": [
+    "Static",
+    "R-only",
+    "Simple",
+    "Proposed（本 rep GLM J1 健康）"
+   ]
+  },
+  "tp_snapshot": {
+   "S1": "全臂 14",
+   "S3": "12-14",
+   "S4": "Static/R/π/Simple=8, Fixed=13, Proposed=12",
+   "S5": "13-14"
+  },
+  "budget": {
+   "calls_used_total": 276,
+   "cap": 2688,
+   "yuan_used_est": 1.4,
+   "yuan_cap": 40,
+   "tokens_used_est": 700000.0,
+   "tokens_cap": 12000000.0
+  }
+ },
+ "executor_in_use": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+ "files": {
+  "gate_manifest_sha": null
+ }
+}

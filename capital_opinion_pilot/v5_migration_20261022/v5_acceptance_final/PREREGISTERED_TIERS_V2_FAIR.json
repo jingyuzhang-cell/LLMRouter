@@ -1,0 +1,142 @@
+{
+ "tiers": {
+  "wide": {
+   "budget": 60000,
+   "deadline": 180.0,
+   "spent_at_fault": 8000
+  },
+  "mid": {
+   "budget": 20000,
+   "deadline": 60.0,
+   "spent_at_fault": 8000
+  },
+  "tight": {
+   "budget": 12000,
+   "deadline": 25.0,
+   "spent_at_fault": 8000
+  }
+ },
+ "fair_enumeration_v2": {
+  "t2@wide": {
+   "S5": {
+    "Z": "LOCAL",
+    "R": [
+     "t2",
+     "t3",
+     "t4",
+     "t5"
+    ],
+    "cost": 5615,
+    "lat": 25.5
+   },
+   "S6": {
+    "Z": "LOCAL",
+    "R": [
+     "t2",
+     "t3",
+     "t4",
+     "t5"
+    ]
+   },
+   "both_refuse": false,
+   "actions_differ": false
+  },
+  "t2@mid": {
+   "S5": {
+    "Z": "LOCAL",
+    "R": [
+     "t2",
+     "t3",
+     "t4",
+     "t5"
+    ],
+    "cost": 5615,
+    "lat": 25.5
+   },
+   "S6": {
+    "Z": "LOCAL",
+    "R": [
+     "t2",
+     "t3",
+     "t4",
+     "t5"
+    ]
+   },
+   "both_refuse": false,
+   "actions_differ": false
+  },
+  "t2@tight": {
+   "S5": {
+    "Z": "ABSTAIN",
+    "why": "budget"
+   },
+   "S6": {
+    "Z": "NONE",
+    "R": []
+   },
+   "both_refuse": true,
+   "actions_differ": true
+  },
+  "t4@wide": {
+   "S5": {
+    "Z": "LOCAL",
+    "R": [
+     "t4",
+     "t5"
+    ],
+    "cost": 3970,
+    "lat": 19.9
+   },
+   "S6": {
+    "Z": "LOCAL",
+    "R": [
+     "t4",
+     "t5"
+    ]
+   },
+   "both_refuse": false,
+   "actions_differ": false
+  },
+  "t4@mid": {
+   "S5": {
+    "Z": "LOCAL",
+    "R": [
+     "t4",
+     "t5"
+    ],
+    "cost": 3970,
+    "lat": 19.9
+   },
+   "S6": {
+    "Z": "LOCAL",
+    "R": [
+     "t4",
+     "t5"
+    ]
+   },
+   "both_refuse": false,
+   "actions_differ": false
+  },
+  "t4@tight": {
+   "S5": {
+    "Z": "LOCAL",
+    "R": [
+     "t4",
+     "t5"
+    ],
+    "cost": 3970,
+    "lat": 19.9
+   },
+   "S6": {
+    "Z": "LOCAL",
+    "R": [
+     "t4",
+     "t5"
+    ]
+   },
+   "both_refuse": false,
+   "actions_differ": false
+  }
+ },
+ "fairness_rule": "all strategies under identical hard guards; infeasible fixed action = ABSTAIN (never over-budget execution)"
+}

@@ -1,0 +1,66 @@
+{
+ "freeze": "CROSS_EVENT_DESIGN_FREEZE_v1",
+ "date": "2026-10-27",
+ "zero_call": true,
+ "erratum_E1": {
+  "what": "theta=0.42 ROOT-cov gate used wrong probe (regex vs doc_atoms)",
+  "disposition": "validity claim revoked; cross-event scheduling uses per-branch input-derived coverage (no cross-state threshold); terminal eval uses independent key_facts"
+ },
+ "events": {
+  "huanrui": {
+   "docs": [
+    "main 566c(2026-023 liAn)",
+    "sup1 461c(2026-046 investor day)",
+    "sup2 846c(2026-041 H1 forecast)"
+   ],
+   "unique_facts": "75% only in sup2; main only 12%",
+   "business": "cross-announcement timeline + consistency + completeness",
+   "dag": "n_main||n_sup1||n_sup2 -> merge -> verify -> sink (7 nodes, 6 model)"
+  },
+  "zhuoran": {
+   "docs": [
+    "main 691c(2026-080)",
+    "sup1 3272c(2026-098)",
+    "sup2 2626c(2026-097)"
+   ],
+   "unique_facts": "72% single-line-missing",
+   "business": "risk-warning evolution + amount-consistency across 4 warnings",
+   "dag": "same structure, larger extraction inputs"
+  }
+ },
+ "strategies": [
+  "STATIC",
+  "SD-FC",
+  "R-only(no-threshold)",
+  "pi-only",
+  "SEQ",
+  "JOINT",
+  "SINGLE-DS(reference)"
+ ],
+ "scoring": {
+  "terminal": "CONFIRMATORY_TASK_SET scoring_ref key_facts (PRE_ANNOTATED, human review pending)",
+  "scheduling_signal": "per-branch input-derived coverage (independent of eval set)"
+ },
+ "deadline": {
+  "tight": "P90(flash-path)x1.15 -> flash infeasible, DS feasible (event-specific, NOT inherited)",
+  "loose": "x2.0 all feasible (conditionality-disappearance direction)",
+  "caveat": "P90x1.15 is exploratory margin, not calibrated probability"
+ },
+ "repeats": "2 reps x 2 D-tiers x 7 strategies = 28 arms/event, 56 total; shared-exec for same-action",
+ "criteria": {
+  "primary": "JOINT eU > max(SEQ,pi-only,R-only,SD-FC,STATIC) in tight tier BOTH events, margin >= same-action variance band",
+  "mechanism": "JOINT action != SEQ action >=1 state/event (R-flip enabled by pi, cross-event)",
+  "reference": "JOINT vs SINGLE-DS: if <= in no-fault, joint value = fault-robustness only (honest)",
+  "boundary": "loose tier: JOINT advantage expected to collapse (cross-event sensitivity check)"
+ },
+ "budget": {
+  "ds_calibration_prereq": "12 calls ~Y0.10 (huanrui+zhuoran x 6 node-roles, needs separate auth)",
+  "main": "~250 calls, Y0.84-1.30 cap (off-peak preferred), 60-90min",
+  "hard_caps": {
+   "attempts": 260,
+   "cash_rmb": 1.5
+  },
+  "fail_stop": "anomaly -> halt unit, no retry"
+ },
+ "ruling": "GO (design frozen); execution HOLD pending DS calibration + main authorization"
+}

@@ -1,0 +1,3711 @@
+{
+  "version": "final_matrix_v1",
+  "source_class": "SYNTHETIC_TEST_ONLY",
+  "cases": [
+    {
+      "id": "S00",
+      "dimension": "全部缓存健康／NONE",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "a": "cheap",
+          "b": "cheap",
+          "out": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [],
+        "missing_outputs": [],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 2,
+        "b": 3,
+        "join": 5,
+        "out": 10
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S01",
+      "dimension": "上游输出合同失效",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "b": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "a"
+          }
+        ],
+        "missing_outputs": [
+          "a"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 999,
+        "b": 3,
+        "join": 1002,
+        "out": 2004
+      },
+      "detector_inputs": {
+        "a": "not-json"
+      },
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S02",
+      "dimension": "汇合节点自身失效",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "a": "cheap",
+          "b": "cheap",
+          "out": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "join"
+          }
+        ],
+        "missing_outputs": [
+          "join"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 2,
+        "b": 3,
+        "join": 999,
+        "out": 1998
+      },
+      "detector_inputs": {
+        "join": "not-json"
+      },
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S03",
+      "dimension": "独立分支缓存指纹异常",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_fingerprints": {
+          "b": {
+            "current": "8e21e9e1d75e3a59",
+            "stored": "a58392963813c5c6"
+          }
+        },
+        "cache_model": {
+          "a": "cheap",
+          "b": "cheap",
+          "out": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [],
+        "lineage_valid": {
+          "b": false
+        },
+        "missing_outputs": [],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 2,
+        "b": 30,
+        "join": 32,
+        "out": 64
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S04",
+      "dimension": "模型不可用",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "availability": {
+          "fast": false
+        },
+        "cache_model": {
+          "b": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "a"
+          }
+        ],
+        "missing_outputs": [
+          "a"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 999,
+        "b": 3,
+        "join": 1002,
+        "out": 2004
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S05",
+      "dimension": "Token预算紧张但可行",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "b": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "a"
+          }
+        ],
+        "missing_outputs": [
+          "a"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 20
+      },
+      "outputs": {
+        "a": 999,
+        "b": 3,
+        "join": 1002,
+        "out": 2004
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S06",
+      "dimension": "Token预算不足／拒绝",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "b": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "a"
+          }
+        ],
+        "missing_outputs": [
+          "a"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 19
+      },
+      "outputs": {
+        "a": 999,
+        "b": 3,
+        "join": 1002,
+        "out": 2004
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S07",
+      "dimension": "截止期紧张但可行",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "b": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 3,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "a"
+          }
+        ],
+        "missing_outputs": [
+          "a"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 999,
+        "b": 3,
+        "join": 1002,
+        "out": 2004
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S08",
+      "dimension": "截止期不足／拒绝",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "b": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 1,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "a"
+          }
+        ],
+        "missing_outputs": [
+          "a"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 999,
+        "b": 3,
+        "join": 1002,
+        "out": 2004
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S09",
+      "dimension": "质量未知且要求终端质量下限",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "b": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "a"
+          }
+        ],
+        "missing_outputs": [
+          "a"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "terminal_q_min": 0.8,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 999,
+        "b": 3,
+        "join": 1002,
+        "out": 2004
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S10",
+      "dimension": "有依据的缓存怀疑／扩大范围候选",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "b": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "CONFIRMED-INVALID",
+            "detail": "L0: Expecting value: line 1 column 1 (char 0) | L1: Expecting value: line 1 column 1 (char 0)",
+            "kind": "contract_violation",
+            "node": "a"
+          },
+          {
+            "class": "SEMANTIC-SUSPICIOUS",
+            "flagged": [
+              {
+                "fact_key": "",
+                "idx": 1,
+                "quote": "不存在的句子甲甲甲甲",
+                "why": "quote_not_in_own_pack"
+              },
+              {
+                "fact_key": "",
+                "idx": 2,
+                "quote": "不存在的句子乙乙乙乙",
+                "why": "quote_not_in_own_pack"
+              }
+            ],
+            "grounded": 1,
+            "kind": "ungrounded_extraction_facts",
+            "node": "b",
+            "rate": 0.333,
+            "total": 3
+          }
+        ],
+        "missing_outputs": [
+          "a"
+        ],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100
+      },
+      "outputs": {
+        "a": 999,
+        "b": 3,
+        "join": 1002,
+        "out": 2004
+      },
+      "detector_inputs": {
+        "raw_b": "{\"facts\": [{\"quote\": \"b等于三，数值口径保持一致\"}, {\"quote\": \"不存在的句子甲甲甲甲\"}, {\"quote\": \"不存在的句子乙乙乙乙\"}]}",
+        "pack_b": "官方证据原文：b等于三，数值口径保持一致。"
+      },
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S11",
+      "dimension": "有证据VERIFY，不改变健康缓存",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "a": "cheap",
+          "b": "cheap",
+          "out": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {},
+        "feedback_records": [
+          {
+            "class": "SEMANTIC-SUSPICIOUS",
+            "evidence_ref": "SYN:a488b95a51606cdade78b9f55b01dda37f8d9310f7da6a76dba2eda43e5e9bcb",
+            "items": [
+              {
+                "doc_id": "SYN:E_B",
+                "fact": "b引用待核验",
+                "verdict": "UNRESOLVED"
+              }
+            ],
+            "kind": "cross_source_conflicts",
+            "n": 1,
+            "node": "verify_source",
+            "target": "b"
+          }
+        ],
+        "missing_outputs": [],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100,
+        "verification_required": [
+          "b"
+        ]
+      },
+      "outputs": {
+        "a": 2,
+        "b": 3,
+        "join": 5,
+        "out": 10
+      },
+      "detector_inputs": {
+        "raw_verdict": "{\"verdicts\": [{\"fact\": \"b引用待核验\", \"verdict\": \"UNRESOLVED\", \"doc_id\": \"SYN:E_B\"}]}",
+        "target_link": {
+          "verify_source": "b"
+        }
+      },
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    },
+    {
+      "id": "S12",
+      "dimension": "无冲突依据的VERIFY请求／拒绝",
+      "source_class": "SYNTHETIC_TEST",
+      "state": {
+        "cache_model": {
+          "a": "cheap",
+          "b": "cheap",
+          "out": "cheap"
+        },
+        "cash_budget": {
+          "CNY": 1
+        },
+        "cash_cost": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "CNY": 0.01
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "CNY": 0.02
+              }
+            ]
+          ]
+        },
+        "children_map": {
+          "a": [
+            "join"
+          ],
+          "b": [
+            "join"
+          ],
+          "join": [
+            "out"
+          ]
+        },
+        "cost_lat": {
+          "__items__": [
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "a",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "out",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "cheap"
+                ]
+              },
+              {
+                "__tuple__": [
+                  10,
+                  4
+                ]
+              }
+            ],
+            [
+              {
+                "__tuple__": [
+                  "verify_b",
+                  "fast"
+                ]
+              },
+              {
+                "__tuple__": [
+                  20,
+                  1
+                ]
+              }
+            ]
+          ]
+        },
+        "deadline_remaining_s": 30,
+        "deterministic_latency": {
+          "join": 0.1
+        },
+        "ev": "SYNTHETIC_FINAL",
+        "feedback": {
+          "verify_targets": [
+            "b"
+          ]
+        },
+        "missing_outputs": [],
+        "model_nodes": {
+          "__set__": [
+            "a",
+            "b",
+            "out"
+          ]
+        },
+        "pools": {
+          "*": [
+            "cheap",
+            "fast"
+          ]
+        },
+        "resource_limit": 1,
+        "token_budget_remaining": 100,
+        "verification_required": [
+          "b"
+        ]
+      },
+      "outputs": {
+        "a": 2,
+        "b": 3,
+        "join": 5,
+        "out": 10
+      },
+      "detector_inputs": null,
+      "quality_reference": {
+        "kind": "SYNTHETIC_TERMINAL_EXACT_MATCH",
+        "expected_out": 10,
+        "source_facts": {
+          "a": 2,
+          "b": 3
+        },
+        "formula": "2 * (a+b)",
+        "independent_real_gold": false
+      }
+    }
+  ],
+  "comparison": {
+    "shared": "prepared state, detector, capabilities, constraints, meter and final fixture",
+    "quality_scope": "no calibrated real-model terminal prediction",
+    "benefit_rule": "no real benefit claim; synthetic Q-known pairs report cost/latency tradeoffs only",
+    "no_post_result_parameter_changes": true
+  }
+}

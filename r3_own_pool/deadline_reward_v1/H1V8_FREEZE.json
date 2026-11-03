@@ -1,0 +1,67 @@
+{
+ "version": "H1V8_FREEZE",
+ "purpose": "independent-task gating validation: cov vs FLR vs P_STRUCT",
+ "authorization": "operator conditional-GO 2026-10-27: <=150 request attempts, <=¥0.10 cash, batch admission, fail-stop",
+ "event": "zeda (泽达易盛 688555) — absent from all historical tuning",
+ "scenario_matrix": [
+  [
+   "Z",
+   "b0",
+   2
+  ],
+  [
+   "Z",
+   "x0",
+   2
+  ],
+  [
+   "Z",
+   "b1",
+   2
+  ],
+  [
+   "Z",
+   "b2",
+   1
+  ],
+  [
+   "Z",
+   null,
+   1
+  ],
+  [
+   "I",
+   "b0",
+   1
+  ]
+ ],
+ "policies": {
+  "P_ACCEPT": "never repair",
+  "P_TARGETED": "repair closure on detection",
+  "FLR": "repair iff fault in timeline chain {b0,x0} (role-semantic generalization of v7 archive b0->rep, b2->acc); instantiated by P_TARGETED/P_ACCEPT; alternative reading {b0,x0,b1,x1} reported alongside",
+  "ONLINE_V8": "repair iff detection AND cov<0.318 (theta FROZEN from v7, no refit)",
+  "P_STRUCT": "repair iff detection AND degrade_signal(sink) (pre-existing v6 observable, no refit)"
+ },
+ "utility": {
+  "D": 350.0,
+  "C0_tokens": 60000,
+  "model": "GLM-5.3-Flash subscription ¥0/call",
+  "out_caps": "OUT_CAP 3072"
+ },
+ "caps": {
+  "requests": 150,
+  "cash_cny": 0.1,
+  "wall_s": 5400
+ },
+ "criteria": {
+  "V1": "ONLINE eU >= FLR eU on every divergent scenario-rep (primary: does runtime state beat position rule where they disagree)",
+  "V2": "ONLINE mean eU >= all other policies",
+  "V3": "no-fault control: ONLINE repairs 0/1",
+  "V4": "same-position/different-doc action report (b0 on Z vs I)",
+  "V5": "descriptive action alignment with ex-post optimum"
+ },
+ "reporting": "full pool AND divergent subsets; n=2/scenario descriptive; single event = single cluster; no significance claims",
+ "evaluator_sha256": "473b7c661f80ef79998d9128a4a85eabcc2b345a289977d7bae77bbaf66e7941",
+ "docs_sha256": "408d49bed4ff4891be163114686d8647fecc029638abddca0bd0ad25a97b60f9",
+ "runner_sha256": "7234411f18b8d79f9d425eefe0f5dc644565f2066dae8b7ad1f65a449245fa0b"
+}

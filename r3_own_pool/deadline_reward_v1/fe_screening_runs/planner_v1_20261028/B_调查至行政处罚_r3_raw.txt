@@ -1,0 +1,12 @@
+{"task_class":"证券执法全过程调查","nodes":[
+{"id":"n1","role":"extraction","inputs":[],"contract":{"produces":["facts"],"requires":[]},"evidence":"zeda_csrc_penalty_2023_29"},
+{"id":"n2","role":"extraction","inputs":[],"contract":{"produces":["facts"],"requires":[]},"evidence":"zeda_csrc_penalty_2024_kangda"},
+{"id":"n3","role":"timeline","inputs":["n1"],"contract":{"produces":["dates"],"requires":["facts"]},"evidence":null},
+{"id":"n4","role":"entity_relations","inputs":["n1"],"contract":{"produces":["entities"],"requires":["facts"]},"evidence":null},
+{"id":"n5","role":"penalties","inputs":["n1"],"contract":{"produces":["penalty_items"],"requires":["facts"]},"evidence":null},
+{"id":"n6","role":"cross_check","inputs":["n1","n2","n5"],"contract":{"produces":["checked"],"requires":["facts","penalty_items"]},"evidence":null},
+{"id":"n7","role":"timeline_deep","inputs":["n3","n6"],"contract":{"produces":["stages"],"requires":["dates","checked"]},"evidence":null},
+{"id":"n8","role":"amounts_check","inputs":["n5","n6"],"contract":{"produces":["amounts_checked"],"requires":["penalty_items","checked"]},"evidence":null},
+{"id":"n9","role":"synthesis","inputs":["n4","n7","n8"],"contract":{"produces":["report"],"requires":["entities","stages","amounts_checked"]},"evidence":null}
+],
+"rationale":"主文书(2023年29号决定书)承载违法事实、责任主体与处罚核心内容，由n1抽取后分别驱动时间线、主体关系、处罚梳理三条主线；康达所处罚决定书作为独立来源用于跨文书核验关键认定与处罚金额的一致性（n6），再做时间线阶段复核与金额交叉复核，最终由synthesis节点合并产出全过程报告。两个extraction节点免费使用Flash即可，核验节点用DS保证质量，控制在预算与时限内。"}

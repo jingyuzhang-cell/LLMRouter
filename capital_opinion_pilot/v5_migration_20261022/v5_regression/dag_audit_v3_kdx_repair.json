@@ -1,0 +1,154 @@
+{
+ "graph_identity": {
+  "graph_id": "cap_opinion_pilot_v2",
+  "task_id": "jsst_600287_disclosure_pilot_v2",
+  "graph_hash": "c4c56e53582630a85150f3f08da45beb054346c5ee1ababca663d934a731ad87"
+ },
+ "generation_path": {
+  "planner": "GLM-5.3 compact semantic plan (<=500字)",
+  "assembler": "deterministic contract assembly (assemble_dag.py)",
+  "planner_attempts": [
+   {
+    "phase": "original_invalid",
+    "errors": [
+     "validator: Dead branch does not reach final output"
+    ]
+   },
+   {
+    "phase": "repair",
+    "call_id": 1,
+    "issues": []
+   }
+  ],
+  "llm_decides": [
+   "task count",
+   "task goals",
+   "analysis branches",
+   "dependency structure"
+  ],
+  "program_decides": [
+   "contract mapping",
+   "binding wiring",
+   "id/typing/format"
+  ],
+  "fallback_template_used": false
+ },
+ "structural_validation": {
+  "validator": "typed_dag_v1.protocol.validate (reused, unmodified)",
+  "status": "PASS",
+  "layers": [
+   [
+    "t1"
+   ],
+   [
+    "t2"
+   ],
+   [
+    "t3",
+    "t4"
+   ],
+   [
+    "t5"
+   ],
+   [
+    "t6"
+   ]
+  ],
+  "max_depth": 5,
+  "parallel_width_max": 2
+ },
+ "authenticity": {
+  "nodes": 6,
+  "dependency_edges": 7,
+  "all_edges_carry_typed_dataflow": true,
+  "parallel_branches": [
+   [
+    "t3",
+    "t4"
+   ]
+  ],
+  "node_provenance": {
+   "t1": {
+    "kind": "index",
+    "goal": "梳理五份证据文档结构与关键信息定位"
+   },
+   "t2": {
+    "kind": "extracts",
+    "goal": "提取问询回复、告知书、处罚决定书关键事实"
+   },
+   "t3": {
+    "kind": "timeline",
+    "goal": "梳理2018-2020问询、立案、处罚时间线"
+   },
+   "t4": {
+    "kind": "entity_facts",
+    "goal": "梳理涉事主体及虚增利润、存款、担保事实"
+   },
+   "t5": {
+    "kind": "factcheck_full",
+    "goal": "核验时间线、主体及监管认定与披露一致性"
+   },
+   "t6": {
+    "kind": "report",
+    "goal": "生成带证据引用的调查报告并标注存疑"
+   }
+  },
+  "planner_isolation": {
+   "facts_silver_sha256": "ffdb4caaf321f1daafb70369849a2b2c53c7d873f752b1267d5cd19cbe1d6fe5",
+   "facts_file_in_planner_inputs": false,
+   "evidence_full_text_in_planner_inputs": false
+  }
+ },
+ "repair_summary": {
+  "A": {
+   "original": "9 nodes: dual retrieval lines + yearly_recon + 2nd factcheck (dead branch, INVALID)",
+   "repaired": "6 nodes canonical [1,1,2,1,1] — planner chose DELETION of unnecessary nodes per directive",
+   "facts_merge_used": false
+  },
+  "B": {
+   "original": "7 nodes: index(分段索引)+dual extracts+single-line consumers (wiring INVALID)",
+   "repair_attempt": "output truncated at 640 max_tokens -> PLAN_INVALID; envelope exhausted, no retry",
+   "facts_merge_used": null
+  }
+ },
+ "audit_items": {
+  "1_nodes_edges": {
+   "A": "6 nodes / 7 edges (valid)",
+   "B": "INVALID (no graph)"
+  },
+  "2_contracts_deps": "all edges typed; binding<->dependency bijection enforced by reused validator",
+  "3_dead_fake_dup": {
+   "A": "no dead branch, no decorative deps (validator-enforced); t3/t4 sibling overlap risk exists but untested (no execution)",
+   "B": "n/a"
+  },
+  "4_key_path": {
+   "A": "critical path length 5; max parallel width 2"
+  },
+  "5_doc_coverage": {
+   "A": [
+    "kdx_inquiry_2018",
+    "kdx_inquiry_2019",
+    "kdx_notice_2019",
+    "kdx_notice_2020",
+    "kdx_penalty_2020"
+   ],
+   "B": "n/a"
+  },
+  "6_executability": {
+   "A": "t2 (single extracts node) references ALL 5 docs = 127,598 chars vs ~3,300 direct injection budget -> NOT directly injectable; segmented strategy NOT declared in goal (declares_segmented_strategy=false)",
+   "B": "n/a"
+  },
+  "7_before_after": {
+   "A": "9-node ambitious dual-line (dead branch) -> repaired to canonical 6-node via deletion",
+   "B": "invalid -> invalid (truncation)"
+  },
+  "8_budget": {
+   "calls": 2,
+   "actual": 4096,
+   "authorized_cap": 4000,
+   "overage": 96,
+   "overage_mechanism": "repair prompt embeds the original plan -> input grew (B in=1,486); the output-only reserve (1.5x max_tokens) did not cover input size",
+   "guard_fix": "reserve = 0.9*prompt_chars + 1.5*max_tokens; regression T8; all suites re-green"
+  }
+ }
+}

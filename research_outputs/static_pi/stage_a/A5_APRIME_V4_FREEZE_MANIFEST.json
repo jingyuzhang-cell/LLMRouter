@@ -1,0 +1,104 @@
+{
+ "status": "FROZEN_PENDING_GO",
+ "frozen_at": "2026-11-03 09:22:54",
+ "experiment": "A5 A′ 7 次分阶段先导（thinking=low；max_tokens=4000）",
+ "instruments": {
+  "v4_contract": "c313326798158af7a22dcdf881f419b4e8991c4147dfe8c0f47e2d7dccc9538b",
+  "v2_1_contract_unchanged": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234",
+  "v3_contract_unchanged": "ebca2492fbe8e8e5684213ebad854fb42e771fe37fc61017f8c06e72ee8c521c",
+  "scorer_unchanged": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+  "a5_rule": "e25d9bf2a76464c5d2f9f5032d677c97f50c8b45f1b3638785c59a268c14e19f",
+  "prereg_v2": "00ea8601e450aa01ce24842babdc465fd8f343190539e453a1c50de8299402b2",
+  "v4_review": "a1fefb84e852b094b85f7ff09aabf2a20914626136cf540b29e119b80bd7f004",
+  "runner": "9357e2964a28faf83cf1b978f48a2d3a39a5baca247c0f7a58c9497729d576e4"
+ },
+ "config": {
+  "endpoint": "https://open.bigmodel.cn/api/anthropic/v1/messages",
+  "model": "GLM-5.3-Flash",
+  "thinking": "low",
+  "max_tokens": 4000,
+  "temperature": 0,
+  "credential": "env A5_GLM_KEY from /root/.config/a5/glm.env (600; value never logged)"
+ },
+ "sequence": [
+  {
+   "n": 1,
+   "stage": "C0-P",
+   "node": "C0P_SINK",
+   "source": "runs_x/run3/SINK.json (historical real prompt)",
+   "prompt_sha256": "bd8288687d25ad60e5fab1b042f0e0c73902983302cda6a345e6f94c600a499a",
+   "purpose": "参数兼容 + 历史规模预算代理"
+  },
+  {
+   "n": 2,
+   "stage": "run1-C",
+   "node": "run1/C/J1",
+   "prompt_sha256": "419880b0... (combined, pre-registered)"
+  },
+  {
+   "n": 3,
+   "stage": "run1-C",
+   "node": "run1/C/J2",
+   "prompt_sha256": "runtime (J1 output dependent)"
+  },
+  {
+   "n": 4,
+   "stage": "run1-C",
+   "node": "run1/C/SINK",
+   "prompt_sha256": "runtime (J1+J2 output dependent)"
+  },
+  {
+   "n": 5,
+   "stage": "run1-B",
+   "node": "run1/B/J1",
+   "prompt_sha256": "d13b8a22... (combined, pre-registered)"
+  },
+  {
+   "n": 6,
+   "stage": "run1-B",
+   "node": "run1/B/J2",
+   "prompt_sha256": "runtime (J1 output dependent)"
+  },
+  {
+   "n": 7,
+   "stage": "run1-B",
+   "node": "run1/B/SINK",
+   "prompt_sha256": "runtime (J1+J2 output dependent)"
+  }
+ ],
+ "prereg_hashes": {
+  "B_J1_system": "28560bc565f40d85",
+  "C_J1_system": "c7384236807cb9b0",
+  "run1_B_J1_combined": "d13b8a229c60fcb8",
+  "run1_C_J1_combined": "419880b0c7788037"
+ },
+ "budget": {
+  "new_calls": 7,
+  "consumed_before": 14,
+  "cumulative_after": 21,
+  "cap": 32,
+  "cap_change": 0
+ },
+ "stop_rules": [
+  "HTTP 非 200",
+  "429/401/1210",
+  "stop_reason 非 end_turn 且非 null",
+  "JSON 解析失败",
+  "任何网络异常",
+  "freeze sha mismatch"
+ ],
+ "site": {
+  "old": "runs_a5/run1/ (4 files; 2 valid J1) read-only",
+  "new": "runs_a5_planAPrime/"
+ },
+ "go_gate": "A5PRIME_GO=1 python3 a5_aprime_runner.py all --go",
+ "rules": [
+  "V4 仅作并行仪器；旧/V3/V4 并列",
+  "V4 白名单 GO 前冻结；结果后禁止追加",
+  "V4 分差 = 交付编码，不称能力提升",
+  "Evidence 仅在 citation 合法时报告",
+  "不补跑、不重试、不换端点/模型/thinking 档位、不提高到 8000"
+ ],
+ "runner_sha256": "9357e2964a28faf83cf1b978f48a2d3a39a5baca247c0f7a58c9497729d576e4",
+ "stop_semantics_note": "历史 Anthropic 端点成功响应可能返回 stop_reason=null；null+完整 JSON 视为成功，max_tokens/length 视为截断"
+}

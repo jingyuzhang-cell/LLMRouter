@@ -1,0 +1,98 @@
+{
+ "arm": "C static heterogeneous (t3/t4=Flash+salvage; t5/t6=GLM-5.3; extraction layer reused)",
+ "nodes": [
+  {
+   "node": "t3",
+   "model": "GLM-5.3-Flash",
+   "usage": {
+    "input_tokens": 1969,
+    "output_tokens": 413
+   },
+   "latency_s": 5.953,
+   "truncated": false,
+   "status": "OK",
+   "salvaged": false,
+   "Q_content_raw": 0.2857
+  },
+  {
+   "node": "t4",
+   "model": "GLM-5.3-Flash",
+   "usage": {
+    "input_tokens": 1959,
+    "output_tokens": 757
+   },
+   "latency_s": 10.684,
+   "truncated": false,
+   "status": "OK",
+   "salvaged": false,
+   "Q_content_raw": 0.4286
+  },
+  {
+   "node": "t5",
+   "model": "GLM-5.3",
+   "usage": {
+    "input_tokens": 1407,
+    "output_tokens": 474
+   },
+   "latency_s": 5.734,
+   "truncated": false,
+   "status": "OK",
+   "salvaged": false,
+   "Q_content_raw": 0.2857
+  },
+  {
+   "node": "t6",
+   "model": "GLM-5.3",
+   "usage": {
+    "input_tokens": 643,
+    "output_tokens": 460
+   },
+   "latency_s": 7.321,
+   "truncated": false,
+   "status": "OK",
+   "salvaged": false,
+   "Q_content_raw": 0.2857
+  }
+ ],
+ "wall_s": 29.76,
+ "end_to_end": {
+  "Q": 0.4286,
+  "covered": [
+   "A1",
+   "A3",
+   "A5"
+  ],
+  "cite": 0.6667,
+  "marks_unresolved": true
+ },
+ "report": "康得新复合材料集团涉嫌信息披露违法违规调查报告：一、立案调查：2019-01-22，公司收到证监会《调查通知书》（苏证调字2019003号）立案调查（kdx_penalty_2020）。2020-06-09再次收到证监会《调查通知书》（kdx_inquiry_2019）。二、问询与回复：2019-05-14收到深交所问询函【2019】第143号，2019-05-31回复（kdx_inquiry_2018）；2020-07-06收到深交所问询函【2020】第364号，2020-07-22发布回复（kdx_inquiry_2019）。三、行政处罚进程：2019-07-05收到处罚字【2019】90号事先告知书，认定2015-2018年虚增利润23.81亿元，占同期利润总额144.65%等（kdx_notice_2019）；2020-06-28公司及钟玉收到处罚字【2020】56号事先告知书，认定虚增利润2,242,745,642.37元，占比136.22%等（kdx_notice_2020）；2020-09-27收到处罚字【2020】71号《行政处罚决定书》及【2020】14号《市场禁入决定书》（kdx_penalty_2020）。四、事实认定差异：两次事先告知书对虚增利润认定金额不一致，应以后续【2020】56号告知书及71号决定书认定为准（kdx_notice_2019;kdx_notice_2020）。五、UNRESOLVED事项：（1）公告编号2019-143、2020-128、2020-153的公告原文及发布日期无法从材料中逐字核实（kdx_notice_2019）；（2）2020-06-09《调查通知书》的具体调查事由未在材料中披露（kdx_inquiry_2019）。以上事实均经核查SUPPORTED，引文出自注入材料，信息截止2021-06-30。",
+ "vs_armB": {
+  "Q_B": 0.4286,
+  "cite_B": 0.3333,
+  "tokens_B_downstream": 8034,
+  "note": "identical inputs/contracts/caps; only t3/t4 model differs"
+ },
+ "budget": {
+  "n_calls": 4,
+  "settled_actual_tokens": 8082,
+  "conservative_actual_plus_sum_max": 11922,
+  "caps": {
+   "calls": 8,
+   "guaranteed_settle": 18000
+  },
+  "per_model": {
+   "glm53flash": {
+    "calls": 2,
+    "in": 3928,
+    "out": 1170,
+    "lat_s": 16.637
+   },
+   "glm53": {
+    "calls": 2,
+    "in": 2050,
+    "out": 934,
+    "lat_s": 13.055
+   }
+  }
+ }
+}

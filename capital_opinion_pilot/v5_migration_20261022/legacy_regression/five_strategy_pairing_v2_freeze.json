@@ -1,0 +1,95 @@
+{
+ "version": "v2_freeze_2026-10-14",
+ "arms": {
+  "A": {
+   "policy": "single glm53, union pack one-shot"
+  },
+  "B": {
+   "policy": "fixed DAG all glm53",
+   "clean_calls": 6,
+   "F5_calls": 4
+  },
+  "S5CG": {
+   "policy": "fixed local recovery to glm53flash + closure gate"
+  },
+  "S5Cap": {
+   "policy": "fixed recovery scope + Q/C/L table lookup",
+   "F5_pi": {
+    "t1": "glm53flash",
+    "t5": "deepseek"
+   }
+  },
+  "S6": {
+   "policy": "joint (Z,R,pi) dynamic",
+   "static_pi": {
+    "t1": "deepseek",
+    "t5": "deepseek"
+   }
+  }
+ },
+ "clean_degeneracy": "S5CG and S5Cap identical to B by construction under clean (zero-call reuse, disclosed)",
+ "evidence": {
+  "packer": "evidence_packer.py v2",
+  "window_chars": 10000,
+  "line_split": "50/50",
+  "window_rule": "smallest of {6000,10000,19000} with official-retrieval T1 anchor coverage >= 3/4",
+  "measured": {
+   "6000": "2/4",
+   "10000": "3/4",
+   "19000": "3/4"
+  },
+  "A_input": "union of both line packs (same total chars as the two extraction nodes combined)"
+ },
+ "faults": {
+  "clean": [],
+  "F5": [
+   [
+    "t1",
+    "glm53"
+   ],
+   [
+    "t5",
+    "glm53"
+   ]
+  ],
+  "F7": [
+   [
+    "t1",
+    "deepseek"
+   ]
+  ],
+  "preregistration": [
+   "STEP3_EXECUTION_GATE.md",
+   "DAG_OPTIMIZATION_EXPERIMENT_RESULT.md"
+  ]
+ },
+ "R_counting_rule": "R counts MODEL-CALL re-executed nodes only; program nodes re-execute deterministically at zero cost and are never counted for any strategy",
+ "guard": {
+  "per_run_tokens": 40000,
+  "deadline_s": 90
+ },
+ "scoring": {
+  "primary": "KDX 4-fact v1 T1 set (Step3-comparable)",
+  "secondary": "v2 8-fact set"
+ },
+ "budget_primary_kdx": {
+  "calls_est": 61,
+  "calls_cap": 75,
+  "tokens_est": 310000,
+  "tokens_cap": 400000,
+  "cash_rmb_est": 0.14,
+  "cash_cap": 0.25,
+  "serial_wall_min_est": "25-35 min",
+  "per_run_wall_est": {
+   "A": "45s",
+   "DAG": "52-60s"
+  }
+ },
+ "budget_optional_st": {
+  "calls_est": 61,
+  "tokens_est": 310000,
+  "cash_rmb_est": 0.14,
+  "note": "separately authorized only"
+ },
+ "no_cherry_picking": "events/faults/window/scoring frozen before any run; deviations need new freeze + authorization"
+}

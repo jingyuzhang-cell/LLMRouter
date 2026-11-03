@@ -1,0 +1,330 @@
+[
+ {
+  "task_id": "SC-E1",
+  "event": "E1_zhangzidao",
+  "name": "獐子岛信息披露违法违规调查",
+  "type": "regulatory_penalty",
+  "cutoff": "2020-12-31",
+  "question": "调查獐子岛（002069）信息披露违法违规事件：追溯事先告知到行政处罚的过程，核实违法事实（虚假记载的年度、虚增利润金额、底播虾夷扇贝业务问题）、处罚决定（罚款金额、责任人员）及关键日期。输出结构化调查结论并引用证据文档；无法确认的事项标注UNKNOWN。",
+  "doc_ids": [
+   "zzd_penalty_2020",
+   "zzd_notice_2019"
+  ],
+  "unknown_boundary": [
+   "2017年度虚增利润的具体金额"
+  ],
+  "dag": {
+   "nodes": [
+    {
+     "id": "e1_idx",
+     "kind": "index",
+     "subtask": "索引两份文书：处罚决定书(zzd_penalty)与事先告知书(zzd_notice)",
+     "deps": []
+    },
+    {
+     "id": "e1_ext_pen",
+     "kind": "extracts",
+     "subtask": "从处罚决定书抽取违法事实：虚假记载年度、虚增利润、罚款金额",
+     "deps": [
+      "e1_idx"
+     ]
+    },
+    {
+     "id": "e1_ext_proc",
+     "kind": "extracts",
+     "subtask": "从事先告知书抽取调查过程：告知日期、当事人权利",
+     "deps": [
+      "e1_idx"
+     ]
+    },
+    {
+     "id": "e1_fin",
+     "kind": "reasoning",
+     "subtask": "核验财务数据：2016年虚增利润13114.77万元与告知书口径是否一致",
+     "deps": [
+      "e1_ext_pen",
+      "e1_ext_proc"
+     ]
+    },
+    {
+     "id": "e1_tl",
+     "kind": "timeline",
+     "subtask": "合并两线时间线：告知(2019-07)→处罚(2020-06)",
+     "deps": [
+      "e1_ext_pen",
+      "e1_ext_proc"
+     ]
+    },
+    {
+     "id": "e1_chk",
+     "kind": "verification",
+     "subtask": "交叉核查时间线与财务核验结果，标注UNRESOLVED",
+     "deps": [
+      "e1_fin",
+      "e1_tl"
+     ]
+    },
+    {
+     "id": "e1_rpt",
+     "kind": "report",
+     "subtask": "综合报告",
+     "deps": [
+      "e1_chk"
+     ]
+    }
+   ],
+   "structural_stats": {
+    "nodes": 7,
+    "edges": 9,
+    "depth": 5,
+    "max_parallel_width": 2,
+    "cross_doc_merge_points": 2,
+    "distinct_node_kinds": 5
+   }
+  },
+  "dag_type": "event_specific"
+ },
+ {
+  "task_id": "SC-E2",
+  "event": "E2_kangmei",
+  "name": "康美药业财务造假行政处罚调查",
+  "type": "regulatory_penalty",
+  "cutoff": "2021-06-30",
+  "question": "调查康美药业（600518）财务造假行政处罚事件：追溯事先告知到处罚决定的过程，核实虚增货币资金的年度与金额、造假手段、处罚决定（公司罚款、责任人罚款与市场禁入）及关键日期。输出结构化调查结论并引用证据文档；无法确认的事项标注UNKNOWN。",
+  "doc_ids": [
+   "km_penalty_2020",
+   "km_notice_2019"
+  ],
+  "unknown_boundary": [
+   "累计虚增货币资金总额的精确数值"
+  ],
+  "dag": {
+   "nodes": [
+    {
+     "id": "e2_idx",
+     "kind": "index",
+     "subtask": "索引处罚决定书与告知书",
+     "deps": []
+    },
+    {
+     "id": "e2_ext_fraud",
+     "kind": "extracts",
+     "subtask": "抽取造假事实：虚增货币资金年份、金额(89.99亿)、手段",
+     "deps": [
+      "e2_idx"
+     ]
+    },
+    {
+     "id": "e2_ext_pen",
+     "kind": "extracts",
+     "subtask": "抽取处罚决定：公司罚款60万、个人罚款、市场禁入",
+     "deps": [
+      "e2_idx"
+     ]
+    },
+    {
+     "id": "e2_amount",
+     "kind": "reasoning",
+     "subtask": "金额口径核验：处罚决定书与告知书的虚增金额是否一致",
+     "deps": [
+      "e2_ext_fraud"
+     ]
+    },
+    {
+     "id": "e2_entity_map",
+     "kind": "reasoning",
+     "subtask": "主体映射：马兴田等人的处罚与其角色的对应",
+     "deps": [
+      "e2_ext_pen"
+     ]
+    },
+    {
+     "id": "e2_chk",
+     "kind": "verification",
+     "subtask": "交叉核查金额+主体+时间线",
+     "deps": [
+      "e2_amount",
+      "e2_entity_map"
+     ]
+    },
+    {
+     "id": "e2_rpt",
+     "kind": "report",
+     "subtask": "综合报告",
+     "deps": [
+      "e2_chk"
+     ]
+    }
+   ],
+   "structural_stats": {
+    "nodes": 7,
+    "edges": 8,
+    "depth": 5,
+    "max_parallel_width": 2,
+    "cross_doc_merge_points": 1,
+    "distinct_node_kinds": 5
+   }
+  },
+  "dag_type": "event_specific"
+ },
+ {
+  "task_id": "SC-E3",
+  "event": "E3_chinaship",
+  "name": "中国船舶吸收合并中国重工过程调查",
+  "type": "ma_restructuring",
+  "cutoff": "2025-12-31",
+  "question": "调查中国船舶（600150）换股吸收合并中国重工的全过程：换股比例、新增股份数量、上市日期、被合并方终止上市安排及关键时间节点。输出结构化结论并引用证据文档；无法确认标注UNKNOWN。",
+  "doc_ids": [
+   "cs_listing_2025",
+   "cs_plan_summary_2024"
+  ],
+  "unknown_boundary": [
+   "吸合后总股本的精确数值"
+  ],
+  "dag": {
+   "nodes": [
+    {
+     "id": "e3_idx",
+     "kind": "index",
+     "subtask": "索引方案摘要(cs_plan)与实施公告(cs_listing)",
+     "deps": []
+    },
+    {
+     "id": "e3_ext_plan",
+     "kind": "extracts",
+     "subtask": "从方案抽取设计参数：换股比例1:0.1339、换股价格",
+     "deps": [
+      "e3_idx"
+     ]
+    },
+    {
+     "id": "e3_ext_impl",
+     "kind": "extracts",
+     "subtask": "从实施公告抽取结果：新增股份数量、上市日期、终止上市",
+     "deps": [
+      "e3_idx"
+     ]
+    },
+    {
+     "id": "e3_param_check",
+     "kind": "reasoning",
+     "subtask": "参数一致性：方案设计比例与实施结果是否匹配",
+     "deps": [
+      "e3_ext_plan",
+      "e3_ext_impl"
+     ]
+    },
+    {
+     "id": "e3_timeline",
+     "kind": "timeline",
+     "subtask": "并购时间线：方案→审批→实施→上市→终止",
+     "deps": [
+      "e3_ext_plan",
+      "e3_ext_impl"
+     ]
+    },
+    {
+     "id": "e3_chk",
+     "kind": "verification",
+     "subtask": "交叉核查参数+时间线",
+     "deps": [
+      "e3_param_check",
+      "e3_timeline"
+     ]
+    },
+    {
+     "id": "e3_rpt",
+     "kind": "report",
+     "subtask": "综合报告",
+     "deps": [
+      "e3_chk"
+     ]
+    }
+   ],
+   "structural_stats": {
+    "nodes": 7,
+    "edges": 9,
+    "depth": 5,
+    "max_parallel_width": 2,
+    "cross_doc_merge_points": 2,
+    "distinct_node_kinds": 4
+   }
+  },
+  "dag_type": "event_specific"
+ },
+ {
+  "task_id": "SC-E4",
+  "event": "E4_leshi",
+  "name": "乐视网退市整理期与终止上市调查",
+  "type": "disclosure_market",
+  "cutoff": "2020-08-31",
+  "question": "调查乐视网（300104）退市整理期安排：终止上市决定日期、退市整理期起始与最后交易日、交易日数、公司简称变更及投资者相关安排。输出结构化结论并引用证据文档；无法确认标注UNKNOWN。",
+  "doc_ids": [
+   "ls_delist_2020",
+   "ls_terminate_2020"
+  ],
+  "unknown_boundary": [
+   "退市整理期期间的实际成交量与股价走势"
+  ],
+  "dag": {
+   "nodes": [
+    {
+     "id": "e4_idx",
+     "kind": "index",
+     "subtask": "索引终止上市公告与退市整理期公告",
+     "deps": []
+    },
+    {
+     "id": "e4_ext_term",
+     "kind": "extracts",
+     "subtask": "从终止公告抽取：交易所决定日期、终止原因",
+     "deps": [
+      "e4_idx"
+     ]
+    },
+    {
+     "id": "e4_ext_period",
+     "kind": "extracts",
+     "subtask": "从整理期公告抽取：交易日数(30天)、首末日、简称变更",
+     "deps": [
+      "e4_idx"
+     ]
+    },
+    {
+     "id": "e4_seq",
+     "kind": "reasoning",
+     "subtask": "时序推理：决定日(05-14)→起始日→末日(06-05)→终止",
+     "deps": [
+      "e4_ext_term",
+      "e4_ext_period"
+     ]
+    },
+    {
+     "id": "e4_chk",
+     "kind": "verification",
+     "subtask": "核查时序一致性与投资者安排",
+     "deps": [
+      "e4_seq"
+     ]
+    },
+    {
+     "id": "e4_rpt",
+     "kind": "report",
+     "subtask": "综合报告",
+     "deps": [
+      "e4_chk"
+     ]
+    }
+   ],
+   "structural_stats": {
+    "nodes": 6,
+    "edges": 7,
+    "depth": 5,
+    "max_parallel_width": 2,
+    "cross_doc_merge_points": 1,
+    "distinct_node_kinds": 4
+   }
+  },
+  "dag_type": "event_specific"
+ }
+]

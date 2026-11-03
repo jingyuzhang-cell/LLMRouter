@@ -1,0 +1,323 @@
+{
+ "reachable_set": [
+  "RF1",
+  "RF2"
+ ],
+ "note": "coverage counts only evidence-chain-valid facts; reachable set computed from the frozen 10K line-split packer, independent of run outputs",
+ "rows": [
+  {
+   "run": "R1_B3p_clean",
+   "label": "B3' clean",
+   "policy": "static",
+   "complete": false,
+   "wall_s": 41.43,
+   "deadline_met": true,
+   "full_set_coverage": "0/4",
+   "reachable_coverage": "0/2",
+   "chain_broken_hits": [],
+   "raw_t1_covered": [],
+   "tokens": 25393,
+   "cash_rmb": 0.0301,
+   "facts_t1": 13,
+   "facts_t2": 17,
+   "recovery": [],
+   "fault_records": [
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "reason": "contract_fail",
+     "policy": "static_no_recovery"
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "reason": "contract_fail",
+     "policy": "static_no_recovery"
+    }
+   ]
+  },
+  {
+   "run": "R2_B3p_F7",
+   "label": "B3' F7 (no recovery)",
+   "policy": "static",
+   "complete": false,
+   "wall_s": 37.59,
+   "deadline_met": true,
+   "full_set_coverage": "0/4",
+   "reachable_coverage": "0/2",
+   "chain_broken_hits": [],
+   "raw_t1_covered": [],
+   "tokens": 15185,
+   "cash_rmb": 0.0145,
+   "facts_t1": 0,
+   "facts_t2": 14,
+   "recovery": [],
+   "fault_records": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "reason": "blocked:(t1,deepseek)",
+     "policy": "static_no_recovery"
+    }
+   ]
+  },
+  {
+   "run": "R3_S5Cap_F7",
+   "label": "S5+Capability F7",
+   "policy": "s5cap",
+   "complete": false,
+   "wall_s": 98.35,
+   "deadline_met": false,
+   "full_set_coverage": "1/4",
+   "reachable_coverage": "1/2",
+   "chain_broken_hits": [],
+   "raw_t1_covered": [
+    "RF1"
+   ],
+   "tokens": 33534,
+   "cash_rmb": 0.0294,
+   "facts_t1": 15,
+   "facts_t2": 16,
+   "recovery": [
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53"
+     }
+    },
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t4",
+      "glm53"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {}
+    },
+    {
+     "policy": "s5cap",
+     "fault": [
+      "t5",
+      "deepseek"
+     ],
+     "Z": "LOCAL_fixed",
+     "R": [
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {}
+    }
+   ],
+   "fault_records": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "reason": "blocked:(t1,deepseek)",
+     "at_s": 7.8
+    },
+    {
+     "node": "t4",
+     "model": "glm53",
+     "reason": "contract_fail",
+     "at_s": 48.03
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "reason": "contract_fail",
+     "at_s": 73.49
+    }
+   ]
+  },
+  {
+   "run": "R4_S6_F7",
+   "label": "S6 Joint F7",
+   "policy": "s6",
+   "complete": false,
+   "wall_s": 101.69,
+   "deadline_met": false,
+   "full_set_coverage": "0/4",
+   "reachable_coverage": "0/2",
+   "chain_broken_hits": [],
+   "raw_t1_covered": [],
+   "tokens": 35634,
+   "cash_rmb": 0.0281,
+   "facts_t1": 19,
+   "facts_t2": 12,
+   "recovery": [
+    {
+     "policy": "s6",
+     "fault": [
+      "t1",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t1",
+      "t3",
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t1": "glm53",
+      "t3": "glm53flash",
+      "t4": "deepseek",
+      "t6": "glm53flash"
+     },
+     "n_feasible": 11521,
+     "n_candidates": 20481
+    },
+    {
+     "policy": "s6",
+     "fault": [
+      "t4",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t4",
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t4": "glm53",
+      "t6": "glm53"
+     },
+     "n_feasible": 6177,
+     "n_candidates": 16449
+    },
+    {
+     "policy": "s6",
+     "fault": [
+      "t5",
+      "deepseek"
+     ],
+     "Z": "LOCAL",
+     "R": [
+      "t5",
+      "t6"
+     ],
+     "pi_changes": {
+      "t5": "glm53"
+     },
+     "n_feasible": 13,
+     "n_candidates": 16401
+    },
+    {
+     "policy": "s6",
+     "fault": [
+      "t6",
+      "glm53"
+     ],
+     "Z": "NONE",
+     "R": [],
+     "pi_changes": {},
+     "n_feasible": 0,
+     "n_candidates": 16389
+    }
+   ],
+   "fault_records": [
+    {
+     "node": "t1",
+     "model": "deepseek",
+     "reason": "blocked:(t1,deepseek)",
+     "at_s": 4.52
+    },
+    {
+     "node": "t4",
+     "model": "deepseek",
+     "reason": "contract_fail",
+     "at_s": 44.0
+    },
+    {
+     "node": "t5",
+     "model": "deepseek",
+     "reason": "contract_fail",
+     "at_s": 65.86
+    },
+    {
+     "node": "t6",
+     "model": "glm53",
+     "reason": "contract_fail",
+     "at_s": 101.52
+    }
+   ]
+  }
+ ],
+ "meter": {
+  "calls": 27,
+  "tokens": 109746,
+  "cash_rmb": 0.1021,
+  "caps": {
+   "calls": 30,
+   "tokens": 160000,
+   "cash_rmb": 0.12
+  }
+ },
+ "contrasts": {
+  "F7_static_quality_loss": {
+   "clean_full": "0/4",
+   "fault_full": "0/4",
+   "clean_reach": "0/2",
+   "fault_reach": "0/2"
+  },
+  "S5Cap_recovery": {
+   "full": "1/4",
+   "reach": "1/2",
+   "wall_s": 98.35,
+   "tokens": 33534,
+   "cash": 0.0294
+  },
+  "S6_recovery": {
+   "full": "0/4",
+   "reach": "0/2",
+   "wall_s": 101.69,
+   "tokens": 35634,
+   "cash": 0.0281
+  },
+  "S6_vs_S5Cap": {
+   "same_quality": false,
+   "S6_changed_Z_or_R": {
+    "policy": "s6",
+    "fault": [
+     "t1",
+     "deepseek"
+    ],
+    "Z": "LOCAL",
+    "R": [
+     "t1",
+     "t3",
+     "t4",
+     "t5",
+     "t6"
+    ],
+    "pi_changes": {
+     "t1": "glm53",
+     "t3": "glm53flash",
+     "t4": "deepseek",
+     "t6": "glm53flash"
+    },
+    "n_feasible": 11521,
+    "n_candidates": 20481
+   }
+  }
+ }
+}

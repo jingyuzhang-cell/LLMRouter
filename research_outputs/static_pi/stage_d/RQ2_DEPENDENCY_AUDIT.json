@@ -1,0 +1,139 @@
+{
+ "batch": "RQ2_DEPENDENCY_AUDIT",
+ "model_calls": 0,
+ "v_split": {
+  "v_parents": [
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    3,
+    1
+   ]
+  ],
+  "v_pre_inputs": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ]
+  ],
+  "v_pre_reads_merge": false,
+  "v_pre_subset_of_original": false,
+  "v_post_consumes_all_original": true,
+  "v_outputs_preserved": true,
+  "legal": true,
+  "note": "v_pre is restricted to e/t; v_post consumes m and reproduces (v,0),(v,1)"
+ },
+ "r0_scopes": {
+  "e0": {
+   "closure": [
+    "e0",
+    "t",
+    "m",
+    "r",
+    "v",
+    "p"
+   ],
+   "size": 6,
+   "ds_retry_units": 3.6,
+   "full_retry_units": 4.2,
+   "savings": 0.6
+  },
+  "e1": {
+   "closure": [
+    "e1",
+    "m",
+    "r",
+    "v",
+    "p"
+   ],
+   "size": 5,
+   "ds_retry_units": 3.0,
+   "full_retry_units": 4.2,
+   "savings": 1.2
+  },
+  "t": {
+   "closure": [
+    "t",
+    "v",
+    "p"
+   ],
+   "size": 3,
+   "ds_retry_units": 1.8,
+   "full_retry_units": 4.2,
+   "savings": 2.4
+  },
+  "m": {
+   "closure": [
+    "m",
+    "r",
+    "v",
+    "p"
+   ],
+   "size": 4,
+   "ds_retry_units": 2.4,
+   "full_retry_units": 4.2,
+   "savings": 1.8
+  },
+  "r": {
+   "closure": [
+    "r",
+    "p"
+   ],
+   "size": 2,
+   "ds_retry_units": 1.2,
+   "full_retry_units": 4.2,
+   "savings": 3.0
+  },
+  "v": {
+   "closure": [
+    "v",
+    "p"
+   ],
+   "size": 2,
+   "ds_retry_units": 1.2,
+   "full_retry_units": 4.2,
+   "savings": 3.0
+  },
+  "p": {
+   "closure": [
+    "p"
+   ],
+   "size": 1,
+   "ds_retry_units": 0.6,
+   "full_retry_units": 4.2,
+   "savings": 3.6
+  }
+ },
+ "r0_mean_scope": 3.29,
+ "r0_note": "R0 closure is a strict subset for every node except the report ancestors; the cheapest recoverable unit is v (v,p) = 2 nodes"
+}

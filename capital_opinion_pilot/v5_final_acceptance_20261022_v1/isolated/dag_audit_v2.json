@@ -1,0 +1,124 @@
+{
+  "graph_identity": {
+    "graph_id": "cap_opinion_pilot_v2",
+    "task_id": "jsst_600287_disclosure_pilot_v2",
+    "graph_hash": "79b84f421bec7ff868c86c37a57d462ea5967aa491a81e6a5b9eaae9860da8ce"
+  },
+  "generation_path": {
+    "planner": "GLM-5.3 compact semantic plan (<=500字)",
+    "assembler": "deterministic contract assembly (assemble_dag.py)",
+    "planner_attempts": [
+      {
+        "phase": "initial",
+        "call_id": 1,
+        "issues": [
+          "t1: depends引用不存在或自依赖",
+          "t1: kind=extracts 缺少所需上游kind=index"
+        ]
+      },
+      {
+        "phase": "repair",
+        "call_id": 2,
+        "issues": []
+      }
+    ],
+    "llm_decides": [
+      "task count",
+      "task goals",
+      "analysis branches",
+      "dependency structure"
+    ],
+    "program_decides": [
+      "contract mapping",
+      "binding wiring",
+      "id/typing/format"
+    ],
+    "fallback_template_used": false
+  },
+  "structural_validation": {
+    "validator": "typed_dag_v1.protocol.validate (reused, unmodified)",
+    "status": "PASS",
+    "layers": [
+      [
+        "t0"
+      ],
+      [
+        "t1"
+      ],
+      [
+        "t2",
+        "t3"
+      ],
+      [
+        "t4"
+      ],
+      [
+        "t5"
+      ]
+    ],
+    "max_depth": 5,
+    "parallel_width_max": 2
+  },
+  "authenticity": {
+    "nodes": 6,
+    "dependency_edges": 7,
+    "all_edges_carry_typed_dataflow": true,
+    "parallel_branches": [
+      [
+        "t2",
+        "t3"
+      ]
+    ],
+    "node_provenance": {
+      "t0": {
+        "kind": "index",
+        "goal": "建立证据索引，映射四份文档的角色与覆盖范围"
+      },
+      "t1": {
+        "kind": "extracts",
+        "goal": "提取处罚决定书与公告中的关键事实片段"
+      },
+      "t2": {
+        "kind": "timeline",
+        "goal": "梳理从事先告知到处罚及风险警示的时间节点"
+      },
+      "t3": {
+        "kind": "entity_facts",
+        "goal": "梳理涉及主体、违法事实与处罚结果"
+      },
+      "t4": {
+        "kind": "factcheck_full",
+        "goal": "交叉核实时间线与主体事实，标注存疑项"
+      },
+      "t5": {
+        "kind": "report",
+        "goal": "生成含证据引用的调查报告，未确认事项明确标注"
+      }
+    },
+    "planner_isolation": {
+      "facts_silver_sha256": "ffdb4caaf321f1daafb70369849a2b2c53c7d873f752b1267d5cd19cbe1d6fe5",
+      "facts_file_in_planner_inputs": false,
+      "evidence_full_text_in_planner_inputs": false
+    }
+  },
+  "post_execution_redundancy": {
+    "overlaps": [
+      {
+        "nodes": [
+          "t2",
+          "t3"
+        ],
+        "overlapping_fact_ids": [
+          "F1",
+          "F10",
+          "F2",
+          "F7",
+          "F8",
+          "F9"
+        ],
+        "flag": "possible_redundant_coverage"
+      }
+    ],
+    "note": "overlap between parallel siblings is a flag, not proof of redundancy"
+  }
+}

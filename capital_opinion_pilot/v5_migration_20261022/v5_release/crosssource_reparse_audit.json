@@ -1,0 +1,308 @@
+{
+ "schema": {
+  "name": "crosssource_check_v2",
+  "description": "跨来源事实核查：比较两个来源的事实，判断一致性/矛盾/互补/证据不足",
+  "output_schema": {
+   "type": "object",
+   "required": [
+    "verdicts"
+   ],
+   "properties": {
+    "verdicts": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "fact",
+       "verdict",
+       "source_a",
+       "source_b"
+      ],
+      "properties": {
+       "fact": {
+        "type": "string",
+        "description": "被比较的事实描述"
+       },
+       "verdict": {
+        "type": "string",
+        "enum": [
+         "CONSISTENT",
+         "CONTRADICTORY",
+         "COMPLEMENTARY",
+         "INSUFFICIENT"
+        ]
+       },
+       "source_a": {
+        "type": "string",
+        "description": "来源A的表述或数值"
+       },
+       "source_b": {
+        "type": "string",
+        "description": "来源B的表述或数值"
+       },
+       "quote_a": {
+        "type": "string",
+        "description": "来源A的逐字引文≤30字"
+       },
+       "quote_b": {
+        "type": "string",
+        "description": "来源B的逐字引文≤30字"
+       }
+      }
+     }
+    }
+   }
+  },
+  "system_prompt": "你是调查DAG中的跨来源事实核查节点。比较两个来源关于同一事实的表述。\n只输出一个JSON对象，必须使用\"verdicts\"作为唯一的顶层键名。\n格式：{\"verdicts\":[{\"fact\":\"事实描述\",\"verdict\":\"CONSISTENT|CONTRADICTORY|COMPLEMENTARY|INSUFFICIENT\",\"source_a\":\"来源A表述\",\"source_b\":\"来源B表述\",\"quote_a\":\"≤30字引文\",\"quote_b\":\"≤30字引文\"}]}\n注意：verdicts 是顶层数组键名，不是嵌套在其他对象内。不输出其他文字。"
+ },
+ "adapter_keys": [
+  "verdicts",
+  "comparison_result",
+  "analysis",
+  "consistency",
+  "comparisons",
+  "detail"
+ ],
+ "audit": [
+  {
+   "call_id": 49,
+   "sample": "XC1",
+   "model": "glm53",
+   "orig_count": 6,
+   "orig_json_valid": true,
+   "reparse_status": "standard_contract",
+   "reparse_items": 6,
+   "has_substance": true,
+   "cause": "ORIGINALLY_PARSED",
+   "raw_chars": 1171
+  },
+  {
+   "call_id": 50,
+   "sample": "XC1",
+   "model": "glm53flash",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "adapter_parsed",
+   "reparse_items": 5,
+   "has_substance": true,
+   "cause": "PARSER_MISMATCH",
+   "raw_chars": 1191
+  },
+  {
+   "call_id": 51,
+   "sample": "XC1",
+   "model": "deepseek",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "adapter_parsed",
+   "reparse_items": 6,
+   "has_substance": true,
+   "cause": "PARSER_MISMATCH",
+   "raw_chars": 1227
+  },
+  {
+   "call_id": 52,
+   "sample": "XC1",
+   "model": "qwen",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "adapter_parsed",
+   "reparse_items": 1,
+   "has_substance": true,
+   "cause": "PARSER_MISMATCH",
+   "raw_chars": 2014
+  },
+  {
+   "call_id": 53,
+   "sample": "XC2",
+   "model": "glm53",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "adapter_parsed",
+   "reparse_items": 7,
+   "has_substance": true,
+   "cause": "PARSER_MISMATCH",
+   "raw_chars": 1169
+  },
+  {
+   "call_id": 54,
+   "sample": "XC2",
+   "model": "glm53flash",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 1193
+  },
+  {
+   "call_id": 55,
+   "sample": "XC2",
+   "model": "deepseek",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 1651
+  },
+  {
+   "call_id": 56,
+   "sample": "XC2",
+   "model": "qwen",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "adapter_parsed",
+   "reparse_items": 8,
+   "has_substance": true,
+   "cause": "PARSER_MISMATCH",
+   "raw_chars": 1710
+  },
+  {
+   "call_id": 57,
+   "sample": "XC3",
+   "model": "glm53",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 254
+  },
+  {
+   "call_id": 58,
+   "sample": "XC3",
+   "model": "glm53flash",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 398
+  },
+  {
+   "call_id": 59,
+   "sample": "XC3",
+   "model": "deepseek",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 440
+  },
+  {
+   "call_id": 60,
+   "sample": "XC3",
+   "model": "qwen",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 327
+  },
+  {
+   "call_id": 61,
+   "sample": "XC4",
+   "model": "glm53",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 311
+  },
+  {
+   "call_id": 62,
+   "sample": "XC4",
+   "model": "glm53flash",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 384
+  },
+  {
+   "call_id": 63,
+   "sample": "XC4",
+   "model": "deepseek",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 120
+  },
+  {
+   "call_id": 64,
+   "sample": "XC4",
+   "model": "qwen",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 194
+  },
+  {
+   "call_id": 65,
+   "sample": "XC5",
+   "model": "glm53",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 213
+  },
+  {
+   "call_id": 66,
+   "sample": "XC5",
+   "model": "glm53flash",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 279
+  },
+  {
+   "call_id": 67,
+   "sample": "XC5",
+   "model": "deepseek",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 513
+  },
+  {
+   "call_id": 68,
+   "sample": "XC5",
+   "model": "qwen",
+   "orig_count": 0,
+   "orig_json_valid": true,
+   "reparse_status": "no_recoverable_items",
+   "reparse_items": 0,
+   "has_substance": true,
+   "cause": "STRUCTURE_MISMATCH",
+   "raw_chars": 121
+  }
+ ]
+}

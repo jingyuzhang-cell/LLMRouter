@@ -1,0 +1,148 @@
+{
+ "run_id": "SA-fixed-T-P1-r2",
+ "system_id": "fixed_graph",
+ "task_id": "T-P1",
+ "config_hash": "3f5af011be65a89fd28d5ad0303246a9f49cc84ba807e142b252b56a5e5632b5",
+ "status": "COMPLETE",
+ "planning": {
+  "calls": 0,
+  "usage": {
+   "in": 0,
+   "out": 0
+  },
+  "latency_s": 0.0
+ },
+ "retrieval": {
+  "calls": 1,
+  "chars_injected": 3200
+ },
+ "nodes": [
+  {
+   "node_id": "f1",
+   "kind": "index",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 71,
+   "usage": {
+    "in": 426,
+    "out": 274
+   },
+   "latency_s": 3.937,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "gaps"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": [
+     "gaps:[\"立案调查公告日期：UNKNOWN（证据未覆盖）\"]"
+    ]
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f2",
+   "kind": "extracts",
+   "model": "glm53",
+   "attempt": 2,
+   "call_id": 73,
+   "usage": {
+    "in": 2468,
+    "out": 513
+   },
+   "latency_s": 9.099,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f3",
+   "kind": "timeline",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 74,
+   "usage": {
+    "in": 705,
+    "out": 344
+   },
+   "latency_s": 5.118,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [
+     "unknown_items"
+    ],
+    "salvaged_syntax": false,
+    "uncertainty_carried": [
+     "unknown_items:[\"停牌日（实施风险警示前停牌安排）证据未覆盖，UNKNOWN\", \"处罚决定书送达/落款具体日期未提供，UNKNOWN"
+    ]
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f4",
+   "kind": "entity_facts",
+   "model": "glm53",
+   "attempt": 2,
+   "call_id": 76,
+   "usage": {
+    "in": 737,
+    "out": 202
+   },
+   "latency_s": 2.771,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f5",
+   "kind": "factcheck_full",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 77,
+   "usage": {
+    "in": 1212,
+    "out": 239
+   },
+   "latency_s": 6.761,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  },
+  {
+   "node_id": "f6",
+   "kind": "report",
+   "model": "glm53",
+   "attempt": 1,
+   "call_id": 78,
+   "usage": {
+    "in": 594,
+    "out": 457
+   },
+   "latency_s": 7.735,
+   "parse_status": "OK",
+   "contract_normalization": {
+    "extra_keys_dropped": [],
+    "salvaged_syntax": false,
+    "uncertainty_carried": []
+   },
+   "truncated": false
+  }
+ ],
+ "reuse_events": 0,
+ "program_ms": 0.0,
+ "wall_s": 35.421,
+ "deliverable_ref": "stage_a/SA-fixed-T-P1-r2/deliverable.json",
+ "notes": "STAGE-A REAL run arm=fixed_graph; fair terminal contract + canonical assembler"
+}

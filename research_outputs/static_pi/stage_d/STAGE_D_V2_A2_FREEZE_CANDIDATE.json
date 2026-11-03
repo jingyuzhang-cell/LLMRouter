@@ -1,0 +1,148 @@
+{
+ "candidate": "STAGE_D_V2_A2",
+ "status": "FROZEN_CANDIDATE_PENDING_STAGE2 (operator approved architecture 2026-11-03; 192-run NOT authorized)",
+ "frozen_at": "2026-11-03 10:54:16",
+ "default_routing": {
+  "E1": {
+   "model": "GLM-5.3-Flash",
+   "mode": "reasoning_effort=low",
+   "max_tokens": 8192
+  },
+  "E2": {
+   "model": "GLM-5.3-Flash",
+   "mode": "reasoning_effort=low",
+   "max_tokens": 8192
+  },
+  "E3": {
+   "model": "GLM-5.3-Flash",
+   "mode": "reasoning_effort=low",
+   "max_tokens": 8192
+  },
+  "E4": {
+   "model": "GLM-5.3-Flash",
+   "mode": "reasoning_effort=low",
+   "max_tokens": 8192
+  },
+  "J1": {
+   "model": "GLM-5.3-Flash",
+   "mode": "reasoning_effort=low",
+   "max_tokens": 8192
+  },
+  "J2": {
+   "model": "deepseek-flash",
+   "mode": "thinking=disabled",
+   "max_tokens": 4000
+  },
+  "SINK": {
+   "model": "deepseek-flash",
+   "mode": "thinking=disabled",
+   "max_tokens": 4000
+  },
+  "FMT": {
+   "model": "local-deterministic",
+   "mode": "-",
+   "max_tokens": 0
+  }
+ },
+ "deadline_s": {
+  "default": 300,
+  "note": "模型化推导 P95≈203s+50%余量；未经完整 DAG 实测，Stage 2 集成先导实测后方可作实"
+ },
+ "budget": {
+  "calls": 2688,
+  "tokens": 12000000,
+  "yuan": 40.0,
+  "ds_actual_cash_est_192": "¥7-8",
+  "glm_marginal": "¥0(订阅；额度容量未核验)"
+ },
+ "slo": "9.5s 作废（GLM-low 节点 ≥37s 恒慢）",
+ "s5_prime": {
+  "definition": "J1 条件性异构重执行（非并行竞速）",
+  "steps": [
+   "J1 首选 GLM-low",
+   "触发条件：J1 wall>120s 或 stop 异常或 JSON 不可解析",
+   "原执行结果有效性判定（已完成且可解析=保留，不重复调用）",
+   "无效时以 DS(disabled@4000) 合法重执行（单次，不竞速）",
+   "比较恢复前后 Q/C/L（质量、核算成本、时延）"
+  ],
+  "precondition": "DS-J1 合同能力必须先经 Stage 2 P-J1DS 验证；未通过则 S5′ 降级为 J1 故障下无模型恢复（如实报告动作空间限制）"
+ },
+ "action_space_symmetry": {
+  "uniform_across_arms": "同一默认路由/同一故障表/同一动作库(R/π)/同一预算",
+  "pi_swap_actions": {
+   "E:GLM→DS": {
+    "evidence": "间接（screening 17/17 类 E 任务）",
+    "status": "可用"
+   },
+   "J1:GLM→DS": {
+    "evidence": "零（本任务 J1 未测 DS）",
+    "status": "待 P-J1DS 验证"
+   },
+   "J2:DS→GLM": {
+    "evidence": "负（GLM-thinking J2 0/4 截断）",
+    "status": "依证据排除，六臂一致"
+   },
+   "SINK:DS→GLM": {
+    "evidence": "负（GLM-thinking SINK 0/2 截断）",
+    "status": "依证据排除，六臂一致"
+   }
+  },
+  "note": "排除是证据驱动且对称的，不是给某臂减资源"
+ },
+ "stage2_integration_pilot": {
+  "goal": "真实完整 DAG 链（动态构造下游输入，非重放）+ DS-J1 能力验证",
+  "calls": {
+   "core": 8,
+   "optional_repeat": 7,
+   "cap": 15
+  },
+  "sequence": [
+   "E1-E4(GLM-low@8192)×4 动态",
+   "J1(GLM-low@8192) 消费真实 E1/E2",
+   "J2(DS@4000) 消费真实 J1+E3/E4",
+   "SINK(DS@4000) 消费真实 J1+J2",
+   "FMT 本地",
+   "终端评分 旧合同+V3 并列+完全正确率",
+   "P-J1DS：冻结基础 J1 提示词(runs/run1/J1.json)→DS@4000"
+  ],
+  "hard_gates": [
+   "链上全部节点 end_turn/stop + JSON 合法",
+   "总执行 wall < 300s",
+   "GLM 订阅额度未耗尽"
+  ],
+  "soft_gates": [
+   "fact_correctness ≥0.5（历史 X 链 V3 口径 0.71；低于则调查不自动停止）",
+   "证据引用完整性抽检",
+   "J2/SINK 对真实上游输入的解析成功"
+  ],
+  "not_gates": [
+   "TP 具体数值不作硬门（避免任意阈值）"
+  ]
+ },
+ "prompt_dependencies": {
+  "E*": "静态冻结（E_SYSTEM+e_user(D_doc)，无上游）",
+  "J1": "j1_user(真实 E1,E2 输出)——动态",
+  "J2": "j2_user(真实 J1,E3,E4 输出)——动态",
+  "SINK": "sink_user(真实 J1,J2 输出)——动态",
+  "FMT": "本地确定性(SINK 输出)"
+ },
+ "evidence_hashes": {
+  "pilot_results": "586d4aa075156bbfb7ae0dbbeda2fde620c31a694a9f5df60ca7bdae57b7f4e8",
+  "pilot_report": "d13d930ace9d4536b481050b1acd90ade1f642ab2efaab87131aae0b3e4b57f4",
+  "v2_draft": "9b4b0044a9300db45219bf528a8d27bb826f4753b57961c837136ef6d58c64d8",
+  "executor_current": "64dea81992f9f036af783cf91079f32dbb808948210c13ea72069ddd35839f7d",
+  "contract_v2_1": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234",
+  "contract_v3": "ebca2492fbe8e8e5684213ebad854fb42e771fe37fc61017f8c06e72ee8c521c",
+  "scorer": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+  "j1_base_prompt_sha": "system 6c61979d5ccdb938… / user 5aa644d753fadbbd… (runs/run1/J1.json)"
+ },
+ "unchanged": [
+  "六臂名称与策略逻辑",
+  "任务/Gold/提示词模板",
+  "评分器",
+  "R1 规格(8槽×1152,首批24,真实唯一)",
+  "exact_perm 统计框架",
+  "Mock 不作证据"
+ ],
+ "incompatible_with_history": "与 disabled 时代绝对分不可直接比较；六臂内部相对比较有效"
+}

@@ -1,0 +1,88 @@
+{
+ "frozen_at": "2026-11-03",
+ "batch": "QP3_SCIENTIFIC_DECISION",
+ "model_calls": 0,
+ "status": "CONDITIONAL_GO (audit-verified: value-expression specialization headroom +0.60; awaiting authorization)",
+ "key_findings": {
+  "amount_format_loss": "221/334 fact-instances (66.2%) — value info present, strict comparison rejects",
+  "marginal_localization_e1": 0.94,
+  "e_evidence_complete_e1": 0.889,
+  "h2_ceiling_macro": 0.889,
+  "h1_ceiling_macro": 0.92,
+  "residual_hard_errors": "21/334 (6.3%)",
+  "joint_vs_marginal_note": "round-1 reported localization 0.22 was the JOINT rate; marginal is 0.94"
+ },
+ "recommendation": {
+  "design": "2x2 (evidence retention x amount specialization)",
+  "min": "192 calls ~¥0.90",
+  "recommended": "288 calls ~¥1.35 hard-stop ¥1.70",
+  "confirmatory_70": "held-out E04/MVR2/ZHANGZIDAO/YJT, best arm, ~¥0.35, separate authorization"
+ },
+ "files": {
+  "qp3/qp3_rebuild.py": {
+   "sha256": "3d4bd79d001170650ad251375477a68f722034527720f15ad2a9149e7f6bbf61",
+   "bytes": 2539
+  },
+  "qp3/qp3_primitives.py": {
+   "sha256": "d9b7900ab2c238988a2e2b54203c97ddad31fe4bc4ae06d9005528531e903f74",
+   "bytes": 6115
+  },
+  "qp3/qp3_analysis.py": {
+   "sha256": "d442c8903668641d1f9150449cdafdb2d6ab3111fd6141353749d5f4877188e8",
+   "bytes": 12222
+  },
+  "qp3/QP3_MATRIX.json": {
+   "sha256": "cc0f2bb9d32cee0c295f0e5ccf22da7eaf8a12293d55cc40cbe5dcb5c182b5be",
+   "bytes": 12492
+  },
+  "qp3/QP3_FACT_ATTRIBUTION.json": {
+   "sha256": "282fd1fcbc0000262fe59ee2a1bd41451e2f2298a920a9b81faf53e73e5850bd",
+   "bytes": 79407
+  },
+  "qp3/QP3_RECOVERABILITY.json": {
+   "sha256": "24b59275c36d2e83154a93269a77058c51d3ef2518fbdc95bd0b20b7920c89f9",
+   "bytes": 6883
+  },
+  "qp3/QP3_SCIENTIFIC_DECISION_REPORT.md": {
+   "sha256": "1ecaa0ec5b0ad5210315bd8a5ec7342058665b48b33c7c9e8f296287b99de272",
+   "bytes": 9223
+  },
+  "qp3/QP3B_UNIQUE_FORMAT_CASES.json": {
+   "sha256": "b584cad11f453b1397cda15765b3e634e8b90352364e2775dbc6e491cba7a72f",
+   "bytes": 34355
+  },
+  "qp3/QP3B_AMOUNT_AUDIT_CASES.json": {
+   "sha256": "5329c4d32bf2b806c0047cec3e123b884841703bab8c4cd91491279b9d261f3e",
+   "bytes": 56920
+  },
+  "qp3/QP3B_AMOUNT_AUDIT.json": {
+   "sha256": "c5bc77dbc862f01a7a712c95abb7ec53509682fc019abdd843659781e8ac85f5",
+   "bytes": 59681
+  },
+  "qp3/QP3B_H2_AUDITED.json": {
+   "sha256": "3cf42caae8a9417fc607247811c3713b3dbe3cf99e237cff3a661441bd8f44d7",
+   "bytes": 2115
+  },
+  "qp3/QP3B_AMOUNT_AUDIT.md": {
+   "sha256": "f533b415c8bc54666ee1dae42efd0cddae451f6d2143462d738a972ebc792738",
+   "bytes": 4674
+  }
+ },
+ "audit_addendum": {
+  "human_audited_unique_cases": 124,
+  "equivalent": 122,
+  "non_equivalent": 2,
+  "instances": 221,
+  "genuinely_equivalent": 218,
+  "h2_ceiling_tolerant_estimate": 0.889,
+  "h2_ceiling_audited": 0.822,
+  "ceiling_reconciliation": {
+   "qp2_0851_scope": "4 tasks incl GUOEN, mock verifier answerability",
+   "qp3_0920_scope": "3 real tasks, real-E evidence presence",
+   "same_3_tasks": {
+    "qp2": 0.853,
+    "qp3": 0.92
+   }
+  }
+ }
+}

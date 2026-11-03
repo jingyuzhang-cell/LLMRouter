@@ -1,0 +1,43 @@
+{
+ "design": "PHASE2_R_PI_JOINT_DESIGN.md",
+ "date": "2026-10-26",
+ "zero_call": true,
+ "decision_point": "post-fault, pre-successors; pi scope = all PENDING (faulted node closure + un-run siblings + sink)",
+ "strategies": [
+  "STATIC",
+  "SD-FC(fault-position conditional: b0->targeted,b2->accept)",
+  "R-only(cov-gated)",
+  "pi-only(fixed targeted + per-node Q/C/L)",
+  "JOINT"
+ ],
+ "model_data": {
+  "glm53_flash": "sufficient (H1v7 92 calls)",
+  "second_model": "priors only; minimal calibration 8 roles x 2 = 16 calls (~Y0.02 DS)"
+ },
+ "binding_axes": {
+  "D": [
+   100,
+   160
+  ],
+  "C0_tokens": [
+   18000,
+   60000
+  ]
+ },
+ "matrix": {
+  "arms": 40,
+  "planned_calls": 268,
+  "cap_calls": 300,
+  "cap_cny": 0.4,
+  "wall_cap_s": 7200,
+  "prereq_calibration": 16,
+  "total_cap_calls": 320,
+  "total_cap_cny": 0.45
+ },
+ "prereg_criteria": {
+  "primary": "JOINT mean eU > max(SD-FC,R-only,pi-only) under binding tier, per-scenario noninferior -0.05",
+  "interaction": ">=2 states where optimal R flips with pi-availability or optimal pi flips with R (per-decision divergence table)",
+  "ablation": "decompose R/pi/interaction if JOINT wins"
+ },
+ "ruling": "GO(design freeze); execution blocked on calibration + main authorization"
+}

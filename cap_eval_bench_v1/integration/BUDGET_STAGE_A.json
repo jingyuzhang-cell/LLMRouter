@@ -1,0 +1,73 @@
+{
+ "per_call_actuals_source": "phase1 ledger (real)",
+ "calls": {
+  "single_per_run": 1,
+  "graph_per_run": 6,
+  "planner_per_task_envelope": 2,
+  "repair_reserve_pct": 15
+ },
+ "per_task_tokens": {
+  "T-R1": {
+   "class": "short",
+   "single": 4000,
+   "fixed_graph": 13100,
+   "auto_graph": 15400,
+   "est_calls": 29
+  },
+  "T-R2": {
+   "class": "short",
+   "single": 4000,
+   "fixed_graph": 13100,
+   "auto_graph": 15400,
+   "est_calls": 29
+  },
+  "T-P1": {
+   "class": "medium",
+   "single": 5600,
+   "fixed_graph": 15100,
+   "auto_graph": 17400,
+   "est_calls": 29
+  },
+  "T-D1": {
+   "class": "medium",
+   "single": 5600,
+   "fixed_graph": 15100,
+   "auto_graph": 17400,
+   "est_calls": 29
+  },
+  "T-P2": {
+   "class": "long",
+   "single": 6200,
+   "fixed_graph": 15800,
+   "auto_graph": 18100,
+   "est_calls": 29
+  },
+  "T-M1": {
+   "class": "long",
+   "single": 6200,
+   "fixed_graph": 15800,
+   "auto_graph": 18100,
+   "est_calls": 29
+  }
+ },
+ "totals": {
+  "tokens_estimated": 221400,
+  "tokens_cap_guaranteed_settle": 290000,
+  "calls_estimated": 180,
+  "calls_cap_incl_repair_reserve": 200,
+  "cash": {
+   "CNY_marginal": 0,
+   "USD_marginal": 0,
+   "basis": "coding-plan subscription: zero per-call cash; risk is plan QUOTA (token-denominated), not monetary",
+   "quota_warn_at_actual_tokens": 235000,
+   "quota_hard_stop": 290000
+  },
+  "wall": {
+   "per_request_timeout_s": 60,
+   "per_run_service_expected_s": "10-45",
+   "batch_sequential_expected_min": "35-70",
+   "batch_stop": "any hard cap or per-task 3 consecutive contract failures -> stop and report"
+  },
+  "f2_total_cost_rule": "fairness = identical per-call caps by node type + same terminal contract; TOTAL tokens/cost/truncation reported per arm side-by-side (DAG spending more total is a MEASURED difference, not a parity claim)"
+ }
+}
