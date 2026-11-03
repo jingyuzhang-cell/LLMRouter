@@ -1,0 +1,1409 @@
+{
+ "exec_id": "HomImp|E07|r3",
+ "arm": "B",
+ "cell": "HomImp",
+ "task": "E07",
+ "rep": 3,
+ "nodes": [
+  {
+   "ts": 1793720003.3732722,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc1",
+   "role": "base",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 2000,
+   "in": 1036,
+   "out": 431,
+   "yuan": 0.0129,
+   "stop": "stop",
+   "lat": 2.62,
+   "prompt_sha": "8602f2b91029a678"
+  },
+  {
+   "ts": 1793720010.1564236,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc1",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 211,
+   "out": 245,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 6.78,
+   "prompt_sha": "1e1d46fb9c028420"
+  },
+  {
+   "ts": 1793720017.908248,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc1",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 151,
+   "out": 208,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 7.75,
+   "prompt_sha": "68ce08e31da14a5e"
+  },
+  {
+   "ts": 1793720024.55086,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc1",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 192,
+   "out": 244,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 6.64,
+   "prompt_sha": "e6d9aab6a34576e4"
+  },
+  {
+   "ts": 1793720029.647332,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc1",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 200,
+   "out": 291,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 5.09,
+   "prompt_sha": "f6c6851317278d48"
+  },
+  {
+   "node_id": "ext_doc1",
+   "kind": "extract",
+   "delivery": false,
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [
+     {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定"
+     },
+     {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见"
+     },
+     {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示"
+     },
+     {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示"
+     }
+    ],
+    "unknown": [
+     "最终审计意见类型（以正式出具的审计报告为准）",
+     "立案事项及立案时间",
+     "各项风险警示的实际实施时间与叠加关系",
+     "公司及实控人面临的具体风险"
+    ],
+    "rerolled": false
+   },
+   "verifies": [
+    {
+     "fact": {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示"
+     },
+     "supported": true,
+     "reused": false
+    }
+   ],
+   "base_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定"
+     },
+     {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见"
+     },
+     {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示"
+     },
+     {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示"
+     }
+    ],
+    "unknown": [
+     "最终审计意见类型（以正式出具的审计报告为准）",
+     "立案事项及立案时间",
+     "各项风险警示的实际实施时间与叠加关系",
+     "公司及实控人面临的具体风险"
+    ],
+    "score": 13,
+    "model": "deepseek",
+    "max_tokens": 2000,
+    "n_upstream_facts": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  },
+  {
+   "ts": 1793720031.1980684,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc2",
+   "role": "base",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 2000,
+   "in": 489,
+   "out": 218,
+   "yuan": 0.0129,
+   "stop": "stop",
+   "lat": 1.55,
+   "prompt_sha": "e233a1ab38020f43"
+  },
+  {
+   "ts": 1793720037.5690708,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc2",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 147,
+   "out": 313,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 6.37,
+   "prompt_sha": "c8bf265f187ab8b8"
+  },
+  {
+   "ts": 1793720065.512838,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc2",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 169,
+   "out": 1181,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 27.94,
+   "prompt_sha": "0136255da6705272"
+  },
+  {
+   "ts": 1793720069.243449,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc2",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 147,
+   "out": 167,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 3.73,
+   "prompt_sha": "ff0c4fff32ca9047"
+  },
+  {
+   "node_id": "ext_doc2",
+   "kind": "extract",
+   "delivery": false,
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [
+     {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》"
+     },
+     {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号"
+     },
+     {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查"
+     }
+    ],
+    "unknown": [
+     "立案告知书的具体送达日期（公告称“近日”收到）",
+     "风险警示各项的具体时间线与叠加关系",
+     "公司及实控人面临的具体风险内容"
+    ],
+    "rerolled": false
+   },
+   "verifies": [
+    {
+     "fact": {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查"
+     },
+     "supported": true,
+     "reused": false
+    }
+   ],
+   "base_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》"
+     },
+     {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号"
+     },
+     {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查"
+     }
+    ],
+    "unknown": [
+     "立案告知书的具体送达日期（公告称“近日”收到）",
+     "风险警示各项的具体时间线与叠加关系",
+     "公司及实控人面临的具体风险内容"
+    ],
+    "score": 10,
+    "model": "deepseek",
+    "max_tokens": 2000,
+    "n_upstream_facts": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  },
+  {
+   "ts": 1793720071.8486369,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc3",
+   "role": "base",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 2000,
+   "in": 1194,
+   "out": 534,
+   "yuan": 0.0129,
+   "stop": "stop",
+   "lat": 2.6,
+   "prompt_sha": "e69acb89a8fe7283"
+  },
+  {
+   "ts": 1793720078.634017,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc3",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 221,
+   "out": 269,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 6.78,
+   "prompt_sha": "e174e88e509f2522"
+  },
+  {
+   "ts": 1793720085.4327304,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc3",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 174,
+   "out": 311,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 6.8,
+   "prompt_sha": "1075688989dfd2c9"
+  },
+  {
+   "ts": 1793720089.251946,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc3",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 169,
+   "out": 204,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 3.82,
+   "prompt_sha": "bbe33974a4f15bc6"
+  },
+  {
+   "ts": 1793720092.2315855,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc3",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 221,
+   "out": 162,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 2.98,
+   "prompt_sha": "83b1f06462ae9ad6"
+  },
+  {
+   "ts": 1793720094.7153184,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "ext_doc3",
+   "role": "verify",
+   "model": "glm53flash",
+   "model_resp": "GLM-5.3-Flash",
+   "max_tokens": 2000,
+   "in": 161,
+   "out": 103,
+   "yuan": 0.04,
+   "stop": "end_turn",
+   "lat": 2.48,
+   "prompt_sha": "9c55827d6c34dee1"
+  },
+  {
+   "node_id": "ext_doc3",
+   "kind": "extract",
+   "delivery": false,
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [
+     {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。"
+     },
+     {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。"
+     },
+     {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。"
+     },
+     {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。"
+     },
+     {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。"
+     }
+    ],
+    "unknown": [
+     "立案事项的具体内容、立案时间及立案机关",
+     "公司及实控人面临的具体风险细节（如行政处罚、刑事责任等）",
+     "风险警示叠加关系的完整时间线（其他警示事件的先后顺序与生效日期）"
+    ],
+    "rerolled": false
+   },
+   "verifies": [
+    {
+     "fact": {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。"
+     },
+     "supported": true,
+     "reused": false
+    },
+    {
+     "fact": {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。"
+     },
+     "supported": true,
+     "reused": false
+    }
+   ],
+   "base_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。"
+     },
+     {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。"
+     },
+     {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。"
+     },
+     {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。"
+     },
+     {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。"
+     }
+    ],
+    "unknown": [
+     "立案事项的具体内容、立案时间及立案机关",
+     "公司及实控人面临的具体风险细节（如行政处罚、刑事责任等）",
+     "风险警示叠加关系的完整时间线（其他警示事件的先后顺序与生效日期）"
+    ],
+    "score": 16,
+    "model": "deepseek",
+    "max_tokens": 2000,
+    "n_upstream_facts": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  },
+  {
+   "ts": 1793720096.1382194,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "verify",
+   "role": "base",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 3800,
+   "in": 1584,
+   "out": 93,
+   "yuan": 0.0129,
+   "stop": "stop",
+   "lat": 1.42,
+   "prompt_sha": "2e283f6669503a6d"
+  },
+  {
+   "ts": 1793720100.8457227,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "verify",
+   "role": "reroll",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 3800,
+   "in": 1584,
+   "out": 1227,
+   "yuan": 0.0129,
+   "stop": "stop",
+   "lat": 4.71,
+   "prompt_sha": "2e283f6669503a6d"
+  },
+  {
+   "node_id": "verify",
+   "kind": "verification",
+   "delivery": true,
+   "signals": {
+    "exec": false,
+    "prod": true,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [
+     {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定",
+      "parent_fid": "audit_non_standard"
+     },
+     {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见",
+      "parent_fid": "internal_control_disclaimer"
+     },
+     {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示",
+      "parent_fid": "other_risk_warning_trigger"
+     },
+     {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示",
+      "parent_fid": "delisting_risk_warning_trigger"
+     },
+     {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》",
+      "parent_fid": "filing_targets"
+     },
+     {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号",
+      "parent_fid": "filing_numbers"
+     },
+     {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查",
+      "parent_fid": "filing_reason"
+     },
+     {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。",
+      "parent_fid": "other_risk_warning_implemented"
+     },
+     {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。",
+      "parent_fid": "fund_occupation_amount"
+     },
+     {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。",
+      "parent_fid": "fund_occupation_cause"
+     },
+     {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。",
+      "parent_fid": "overlay_condition"
+     },
+     {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。",
+      "parent_fid": "repayment_commitment"
+     }
+    ],
+    "unknown": [
+     "退市风险警示是否已实际实施及具体实施日期",
+     "资金占用事项是否已在一个月内解决、其他风险警示是否已被叠加实施",
+     "立案调查的进展及结论",
+     "实控人被立案对公司控制权及经营的具体影响"
+    ],
+    "rerolled": true
+   },
+   "verifies": [
+    {
+     "fact": {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定",
+      "parent_fid": "audit_non_standard"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见",
+      "parent_fid": "internal_control_disclaimer"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示",
+      "parent_fid": "other_risk_warning_trigger"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示",
+      "parent_fid": "delisting_risk_warning_trigger"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》",
+      "parent_fid": "filing_targets"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号",
+      "parent_fid": "filing_numbers"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查",
+      "parent_fid": "filing_reason"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。",
+      "parent_fid": "other_risk_warning_implemented"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。",
+      "parent_fid": "fund_occupation_amount"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。",
+      "parent_fid": "fund_occupation_cause"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。",
+      "parent_fid": "overlay_condition"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。",
+      "parent_fid": "repayment_commitment"
+     },
+     "supported": true,
+     "reused": true
+    }
+   ],
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "无法确认2025年度审计报告最终意见类型是否已正式出具及出具日期",
+     "无法确认退市风险警示是否已实际实施及其起始日期",
+     "无法确认资金占用事项在一个月期限内是否已解决",
+     "无法确认关联方以资抵债还款承诺是否实际履行",
+     "无法确认立案调查的进展（是否已收到行政处罚决定）",
+     "无法确认各项风险警示叠加的最终完成时点"
+    ],
+    "score": 1,
+    "model": "deepseek",
+    "max_tokens": 3800,
+    "n_upstream_facts": 12
+   },
+   "reroll_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定",
+      "parent_fid": "audit_non_standard"
+     },
+     {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见",
+      "parent_fid": "internal_control_disclaimer"
+     },
+     {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示",
+      "parent_fid": "other_risk_warning_trigger"
+     },
+     {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示",
+      "parent_fid": "delisting_risk_warning_trigger"
+     },
+     {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》",
+      "parent_fid": "filing_targets"
+     },
+     {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号",
+      "parent_fid": "filing_numbers"
+     },
+     {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查",
+      "parent_fid": "filing_reason"
+     },
+     {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。",
+      "parent_fid": "other_risk_warning_implemented"
+     },
+     {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。",
+      "parent_fid": "fund_occupation_amount"
+     },
+     {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。",
+      "parent_fid": "fund_occupation_cause"
+     },
+     {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。",
+      "parent_fid": "overlay_condition"
+     },
+     {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。",
+      "parent_fid": "repayment_commitment"
+     }
+    ],
+    "unknown": [
+     "退市风险警示是否已实际实施及具体实施日期",
+     "资金占用事项是否已在一个月内解决、其他风险警示是否已被叠加实施",
+     "立案调查的进展及结论",
+     "实控人被立案对公司控制权及经营的具体影响"
+    ],
+    "score": 37,
+    "model": "deepseek",
+    "max_tokens": 3800
+   },
+   "adopted": "reroll"
+  },
+  {
+   "ts": 1793720111.016488,
+   "arm": "B",
+   "task": "E07",
+   "rep": 3,
+   "node": "report",
+   "role": "base",
+   "model": "deepseek",
+   "model_resp": "deepseek-flash",
+   "max_tokens": 3800,
+   "in": 1701,
+   "out": 1267,
+   "yuan": 0.0129,
+   "stop": "stop",
+   "lat": 10.17,
+   "prompt_sha": "b2ee92927a14cf14"
+  },
+  {
+   "node_id": "report",
+   "kind": "report",
+   "delivery": true,
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [
+     {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定",
+      "parent_fid": "audit_non_standard"
+     },
+     {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见",
+      "parent_fid": "internal_control_disclaimer"
+     },
+     {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示",
+      "parent_fid": "other_risk_warning_trigger"
+     },
+     {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示",
+      "parent_fid": "delisting_risk_warning_trigger"
+     },
+     {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》",
+      "parent_fid": "filing_targets"
+     },
+     {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号",
+      "parent_fid": "filing_numbers"
+     },
+     {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查",
+      "parent_fid": "filing_reason"
+     },
+     {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。",
+      "parent_fid": "other_risk_warning_implemented"
+     },
+     {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。",
+      "parent_fid": "fund_occupation_amount"
+     },
+     {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。",
+      "parent_fid": "fund_occupation_cause"
+     },
+     {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。",
+      "parent_fid": "overlay_condition"
+     },
+     {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。",
+      "parent_fid": "repayment_commitment"
+     }
+    ],
+    "unknown": [
+     "公司因涉嫌信息披露违法违规被立案调查的具体违规事实与涉嫌违反的具体信息披露条款",
+     "立案调查与资金占用事项之间是否存在因果关系",
+     "2025年度审计报告最终意见类型及退市风险警示是否实际已被实施",
+     "资金占用事项是否已在一个月期限内解决及是否已叠加实施其他风险警示",
+     "实际控制人王勇因立案调查及资金占用事项面临的具体责任类型（如行政处罚、市场禁入等）"
+    ],
+    "rerolled": false
+   },
+   "verifies": [
+    {
+     "fact": {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定",
+      "parent_fid": "audit_non_standard"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见",
+      "parent_fid": "internal_control_disclaimer"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示",
+      "parent_fid": "other_risk_warning_trigger"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示",
+      "parent_fid": "delisting_risk_warning_trigger"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》",
+      "parent_fid": "filing_targets"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号",
+      "parent_fid": "filing_numbers"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查",
+      "parent_fid": "filing_reason"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。",
+      "parent_fid": "other_risk_warning_implemented"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。",
+      "parent_fid": "fund_occupation_amount"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。",
+      "parent_fid": "fund_occupation_cause"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。",
+      "parent_fid": "overlay_condition"
+     },
+     "supported": true,
+     "reused": true
+    },
+    {
+     "fact": {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。",
+      "parent_fid": "repayment_commitment"
+     },
+     "supported": true,
+     "reused": true
+    }
+   ],
+   "base_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "audit_non_standard",
+      "value": "审计机构中名国成认为公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型根据审计报告日实施必要审计程序、获取充分适当审计证据的基础上确定",
+      "doc": "doc1",
+      "quote": "公司未能提供充分、适当的审计证据，将导致公司财务报表出具非无保留意见的审计报告，最终审计报告意见类型，根据审计报告日在实施必要的审计程序、获取充分适当审计证据的基础上确定",
+      "parent_fid": "audit_non_standard"
+     },
+     {
+      "fid": "internal_control_disclaimer",
+      "value": "审计机构对公司2025年12月31日的财务报告内部控制有效性发表否定意见",
+      "doc": "doc1",
+      "quote": "对公司 2025 年 12 月 31 日的财务报告内部控制有效性发表否定意见",
+      "parent_fid": "internal_control_disclaimer"
+     },
+     {
+      "fid": "other_risk_warning_trigger",
+      "value": "若2025年度内部控制审计报告被出具否定意见，公司股票交易将在2025年度报告披露后被实施其他风险警示（依据深交所股票上市规则2025年修订第9.8.1条第四项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示",
+      "parent_fid": "other_risk_warning_trigger"
+     },
+     {
+      "fid": "delisting_risk_warning_trigger",
+      "value": "若2025年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在2025年度报告披露后被实施退市风险警示（依据深交所股票上市规则2025年修订第9.3.1条第三项）",
+      "doc": "doc1",
+      "quote": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示",
+      "parent_fid": "delisting_risk_warning_trigger"
+     },
+     {
+      "fid": "filing_targets",
+      "value": "公司、实际控制人王勇先生",
+      "doc": "doc2",
+      "quote": "中国证监会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》",
+      "parent_fid": "filing_targets"
+     },
+     {
+      "fid": "filing_numbers",
+      "value": "证监立案字0042026002号（公司）、证监立案字0042026003号（王勇）",
+      "doc": "doc2",
+      "quote": "告知书编号分别为：证监立案字 0042026002 号、证监立案字 0042026003 号",
+      "parent_fid": "filing_numbers"
+     },
+     {
+      "fid": "filing_reason",
+      "value": "涉嫌信息披露违法违规",
+      "doc": "doc2",
+      "quote": "因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查",
+      "parent_fid": "filing_reason"
+     },
+     {
+      "fid": "other_risk_warning_implemented",
+      "value": "公司股票已于2026年4月29日起被实施其他风险警示，原因是2025年度内部控制审计报告被出具否定意见，依据《深圳证券交易所股票上市规则》第9.8.1条第（四）款",
+      "doc": "doc3",
+      "quote": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》。根据《深圳证券交易所股票上市规则》第 9.8.1 条第（四）款的规定，公司股票已于 2026 年 4 月 29 日起被实施其他风险警示。",
+      "parent_fid": "other_risk_warning_implemented"
+     },
+     {
+      "fid": "fund_occupation_amount",
+      "value": "截至2026年8月22日公告披露日，关联方西王淀粉有限公司非经营性资金占用余额为13,000万元",
+      "doc": "doc3",
+      "quote": "截至本公告披露日，关联方西王淀粉有限公司（以下简称“西王淀粉”）非经营性资金占用余额 13,000 万元。",
+      "parent_fid": "fund_occupation_amount"
+     },
+     {
+      "fid": "fund_occupation_cause",
+      "value": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形",
+      "doc": "doc3",
+      "quote": "公司下属公司山东西王粮油贸易有限公司超过正常经营性预付需求向西王淀粉支付款项，导致出现占用上市公司资金的情形。",
+      "parent_fid": "fund_occupation_cause"
+     },
+     {
+      "fid": "overlay_condition",
+      "value": "依据《深圳证券交易所股票上市规则》第9.8.1条（一）及第9.8.2条，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+      "doc": "doc3",
+      "quote": "根据《深圳证券交易所股票上市规则》第 9.8.1 条（一）及第 9.8.2 条的规定，若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示，请投资者注意风险。",
+      "parent_fid": "overlay_condition"
+     },
+     {
+      "fid": "repayment_commitment",
+      "value": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金",
+      "doc": "doc3",
+      "quote": "西王淀粉承诺一个月内通过以资抵债方式归还被占用的资金，以消除对公司的影响，维护公司及公司股东的合法权益。",
+      "parent_fid": "repayment_commitment"
+     }
+    ],
+    "unknown": [
+     "公司因涉嫌信息披露违法违规被立案调查的具体违规事实与涉嫌违反的具体信息披露条款",
+     "立案调查与资金占用事项之间是否存在因果关系",
+     "2025年度审计报告最终意见类型及退市风险警示是否实际已被实施",
+     "资金占用事项是否已在一个月期限内解决及是否已叠加实施其他风险警示",
+     "实际控制人王勇因立案调查及资金占用事项面临的具体责任类型（如行政处罚、市场禁入等）"
+    ],
+    "score": 37,
+    "model": "deepseek",
+    "max_tokens": 3800,
+    "n_upstream_facts": 12
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  }
+ ],
+ "dedup": {
+  "unique": 12,
+  "verify_calls": 12,
+  "reused": 24,
+  "cap_hits": 0
+ },
+ "budget_left": {
+  "calls_left": 165,
+  "yuan_left": 8.6312,
+  "tokens_left": 317785,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 485939
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "stage": "RQ2_P2R_V3 execution readiness (prereg v1.1)",
+ "timestamp": "2026-11-03T21:22:36",
+ "status": "READY — runner + analysis frozen pre-data; awaiting operator final admission review + plaintext authorization; zero real calls made",
+ "authorization": "NOT granted. Requested caps: 700 calls / 800,000 tokens / CNY 28. V2 leftover 220 not transferable; 192 HOLD untouched.",
+ "implementation": {
+  "runner": "rq2_p2r_v3_runner.py (new file; reuses V2 runner pieces; frozen files untouched)",
+  "d1": "delivery kinds {reason,verification,report,merge}: max_tokens=2000+150*n_upstream_facts (fid-deduped, serialized-into-prompt), cap 6000; actual per-node max_tokens recorded",
+  "d2": "evidence-faithful contract appended for delivery kinds only; sha-verified present in delivery prompts and absent from extract prompts",
+  "instrumentation": "base_output AND reroll_output both persisted with scores + adopted decision (node-level before/after pairing)",
+  "interleave": "HomImp/HetImp executed per (task,rep) in one session",
+  "model_metadata": "v3_real_transport records server-returned model field per call (model_resp); request bodies copied verbatim from frozen transports",
+  "safety": "--real requires STAGE_D_REAL_CALLS_AUTHORIZED=1 + STAGE_D_GLM_KEY; triple hard caps; execution-boundary stop guard (>=90 calls left)"
+ },
+ "mock_validation": {
+  "partial": "4 execs; D1 2300/2450 on merge/report, 2000 on extract; delivery flag correct; dual outputs present",
+  "full_24_execs": "228 calls / 127,470 tokens / CNY 6.68 (mock outputs smaller than real); interleaved order verified; no cap breach; budget state == ledger tokens (single-count)",
+  "prompt_sha": "extract rows match SYS_COMMON; delivery rows match SYS_COMMON+D2_CONTRACT (byte-verified)"
+ },
+ "budget_projection_real": {
+  "calls": "~600 (24 execs x ~25) + 10% reserve = 660 <= 700",
+  "tokens": "~530k <= 800,000",
+  "yuan": "~21.1 + reserve <= 28",
+  "note": "D2 removes the 60-char cap; quotes may lengthen outputs; cap has headroom"
+ },
+ "v1_human_recheck": {
+  "sheet": "RQ2_P2R_V1_HUMAN_SHEET.csv (200 rows; ai_label/ai_reason prefilled; human_label empty)"
+ },
+ "files_sha256": {
+  "rq2_p2r_v3_runner.py": "9251f518d0644c9e1774cd942428e6539c533f6b35aa9f9f1ea4fef27a0e91ac",
+  "rq2_p2r_v3_config.json": "a1c50685ff2945649483ce4b8f87204c9ca90c0c4e2bb707363d13434fd4603e",
+  "MODEL_CONFIG_V3.json": "3f4efee9e68284436d0850f0ce4b11b4d9f45e5c0143b872e1471273c50c67c3",
+  "RQ2_P2R_V3_PREREGISTRATION_V1_1.md": "5db079c9546fafe80352601c13bc259a402bcc57ee97373bdebb3d3720105f79",
+  "RQ2_P2R_V1_HUMAN_SHEET.csv": "777e1a78b78a1f8ca0aab1baf39e228a8683136d638d9649fafda2a32b6e4451",
+  "rq2_p2r_runner.py": "f29b92b8d6a0c6229954c0b4cac927429c65a84588515247f51b8bbbd885fcad",
+  "rq2_p2r_v3_analyze.py": "b5551662f318544e4f3d60ab8dafb7080c99e2dfacb4a9861a9623fb7b0b75bd"
+ },
+ "analysis_frozen_pre_data": {
+  "script": "rq2_p2r_v3_analyze.py",
+  "validated_on": "24-exec mock V3 data (/tmp/rq2_p2r_v3_mock2) BEFORE any real execution; mock RESULTS file discarded",
+  "bugs_found_and_fixed_in_mock_validation": [
+   "interaction/delivery indexing by bare task key vs (task,rep) tuple keys",
+   "cost mapping of V3 ledger arms B/C to cell names"
+  ],
+  "mechanics_check": "mock interaction reproduces the mirror of the frozen V2 C-B per-task gaps (42.43/19.44/0/23.33), confirming the contrast implementation against known numbers",
+  "implements": "prereg v1.1 sec.3-4: per-task interaction (mandatory), cluster bootstrap CI (exploratory), sign-flip p with 0.125 floor note, gate rates, Q/C/L per cell, node-level base-vs-reroll pairing, model_resp drift audit, H3 decomposition",
+  "sha256": "b5551662f318544e4f3d60ab8dafb7080c99e2dfacb4a9861a9623fb7b0b75bd"
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "frozen_at": "2026-11-03",
+ "batch": "QP5A_CLOSEOUT_AND_QP5C_PREREG",
+ "model_calls": 0,
+ "status": "QP5C_PREREGISTERED_AWAITING_AUTHORIZATION",
+ "audit": {
+  "metric_reconciliation": "cell-mean 0.284 vs task-paired 0.271; +0.013 gap fully from MVR1 single firing rep",
+  "rescore_verification": "24/24 cells deterministically identical",
+  "placebo": "104 evidence-slot vs 74 non-evidence fact-instances, identical grouping both arms",
+  "DV3": "error stage = DERIVED-FACT SUPPORT (value 19.55 not in any document; operands quoted verbatim; gold itself cannot satisfy single-quote support); safety exception preserved unchanged"
+ },
+ "diagnosis": {
+  "macro": {
+   "produced": 0.501,
+   "addressable": 0.364,
+   "structural": 0.135
+  },
+  "MVR1_vs_ZEDA": "produced 0.156 vs 0.794; MVR1 addressable 0.719 — task gap is mechanism-addressable",
+  "runtime_gold_blind": "C2 verification uses schema/verbatim/self-grounding only"
+ },
+ "qp5c": {
+  "arms": "C1 cached (0 calls) vs C2 E-v2 package (72+24 calls)",
+  "delta_min": 0.1,
+  "positive": ">=4/6 tasks",
+  "mechanism_endpoints": "coverage AND precision (quantity!=quality guard)",
+  "safety": "absolute margins (wrong citations +<=2 instances)",
+  "placebo": "structural slots delta ~0",
+  "budget": {
+   "planned": 72,
+   "retry_allowance": 24,
+   "est_yuan_worst": 0.45,
+   "cap": {
+    "calls": 96,
+    "yuan": 0.7
+   }
+  }
+ },
+ "review": {
+  "R1_qp5a_audit": "PASS (all numbers reproduced; exception preserved)",
+  "R2_diagnosis": "PASS (fact-level, gold-blind runtime mechanism)",
+  "R3_design_purity": "PASS (downstream frozen verbatim; only upstream package varies)",
+  "R4_quantity_vs_quality_guard": "PASS (precision endpoint preregistered)",
+  "R5_safety_margins": "PASS (absolute margins fix base-1 degeneracy)",
+  "R6_statistics": "PASS (6 units, sign-flip, mechanism-verification scope)"
+ },
+ "overall": "PASS — awaiting authorization: 72 planned calls (worst-case 96), est ¥0.34-0.45, cap ¥0.70",
+ "files": {
+  "quality_phase_v1/QP5A_FINAL_AUDIT.md": {
+   "sha256": "47bdca0ba8746249da07e79f76241a739fa20c33d27be21a0f598117034fef79",
+   "bytes": 2847
+  },
+  "quality_phase_v1/qp5c_diagnosis.py": {
+   "sha256": "fc49638ae6a502533a0f0bfeef7d2b5132e4acab6e4c35a685aae0cfe6895dcd",
+   "bytes": 4873
+  },
+  "quality_phase_v1/QP5C_EVIDENCE_DIAGNOSIS.json": {
+   "sha256": "07ca098df4c0c12a614ca555dd77a990128a72e82aea4e78798536ef662edc0e",
+   "bytes": 15476
+  },
+  "quality_phase_v1/QP5C_PREREGISTRATION.md": {
+   "sha256": "060b3eee797d2b35de259305b54694b6b76baeda1c8af1042a854ef17055b93b",
+   "bytes": 5092
+  }
+ }
+}

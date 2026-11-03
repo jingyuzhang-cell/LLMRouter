@@ -1,0 +1,41 @@
+{
+ "annotator": "AI (assistant GLM-5.3), NOT independent human; verifier model glm53flash shares model family (disclosed)",
+ "labeling_rules": [
+  "all dates/numbers/ids asserted in value must appear in quote (ISO-vs-Chinese date formats treated equal)",
+  "added conclusions beyond quote (audit opinions, warning statuses, rule attributions, enumerated lists) => unsupported",
+  "meta-quotes (model notes, not document spans) => unsupported",
+  "anaphora resolvable from the citing document (本公告 date) acceptable; legal rule-number attributions require grounding in quote"
+ ],
+ "rows": 200,
+ "unique_pairs": 182,
+ "confusion": {
+  "verifier_sup_annot_sup(TP)": 164,
+  "verifier_sup_annot_unsup(FP)": 16,
+  "verifier_unsup_annot_sup(FN)": 2,
+  "verifier_unsup_annot_unsup(TN)": 18
+ },
+ "sensitivity": 0.988,
+ "sensitivity_ci95": [
+  0.9571,
+  0.9967
+ ],
+ "specificity": 0.5294,
+ "specificity_ci95": [
+  0.3674,
+  0.6855
+ ],
+ "accuracy": 0.91,
+ "prevalence_unsupported": 0.17,
+ "fp_major": 6,
+ "fp_minor": 10,
+ "fn_rows": [
+  "V2-019",
+  "V2-041"
+ ],
+ "span_found_rows": 180,
+ "prereg_gate": {
+  "spec_v": ">=0.85",
+  "sens_v": ">=0.70"
+ },
+ "gate_result": "sens PASS (0.982>=0.70); spec FAIL (0.529<0.85) => Q_full remains UNVALIDATED; primary metric stays Q_main"
+}

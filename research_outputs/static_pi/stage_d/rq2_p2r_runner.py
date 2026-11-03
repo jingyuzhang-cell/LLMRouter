@@ -28,6 +28,8 @@ HETERO_GLM_KINDS = {'reason', 'verification', 'report'}
 REROLL_GLM_KINDS = {'reason', 'verification', 'report'}
 YUAN_PER_CALL = {'glm53flash': 0.04, 'deepseek': 0.0129}
 MAXTOK = 2000
+DEDUP_CAP = 64          # safety valve only; observed max unique/exec = 27, never binds
+MIN_CALLS_PER_EXEC = 90  # stop at execution boundary, never mid-execution
 
 SYS_COMMON = ("你是资本市场调查助理。只输出一个 JSON 对象，不要输出其他文字。"
               "输出格式：{\"facts\":[{\"fid\":\"...\",\"value\":\"...\",\"doc\":\"doc1\","
@@ -109,7 +111,7 @@ class Runner:
                               ensure_ascii=False)
             tin, tout, stop, lat = len(user), 64, 'end_turn', 0.01
         self.gb.release_reservation(need, tin, tout)
-        self.gb.settle(est, tin, tout)
+        self.gb.settle(est, 0, 0)
         rec = {'ts': time.time(), 'arm': arm, 'task': task, 'rep': rep, 'node': node_id,
                'role': role, 'model': model, 'in': tin, 'out': tout, 'yuan': est,
                'stop': stop, 'lat': lat,
@@ -128,6 +130,8 @@ class Runner:
         t = MATS['tasks'][task]
         upstream = {}
         node_recs = []
+        verify_map = {}   # exact (fid,value,doc,quote) -> verdict, per execution
+        dedup_stats = {'unique': 0, 'verify_calls': 0, 'reused': 0, 'cap_hits': 0}
         for node in t['nodes']:
             kind = node['kind']
             base_model = ('glm53flash' if (arm == 'C' and kind in HETERO_GLM_KINDS)
@@ -136,6 +140,7 @@ class Runner:
             userp = node_prompt(task, node, upstream)
             text, rec = self.call(arm, task, rep, node['node_id'], 'base',
                                   base_model, sysp, userp)
+            node_recs.append(rec)
             ok, facts, unk = parse_facts(text)
             sig = signals(node, ok, facts)
             chosen = {'model': base_model, 'facts': facts, 'unknown': unk, 'rerolled': False}
@@ -151,32 +156,48 @@ class Runner:
                     chosen = {'model': rr_model, 'facts': facts2, 'unknown': unk2,
                               'rerolled': True}
                 node_recs.append(rec2)
-            # verification calls for cited facts (arms B/C)
+            # dedup verification for cited facts (arms B/C): first occurrence pays,
+            # later identical (fid,value,doc,quote) tuples reuse the first verdict.
             verifies = []
             if arm in ('B', 'C'):
                 for f in chosen['facts']:
                     if not isinstance(f, dict) or not f.get('quote'):
                         continue
+                    key = (str(f.get('fid', '')), str(f.get('value', '')),
+                           str(f.get('doc', '')), str(f.get('quote', '')))
+                    if key in verify_map:
+                        verifies.append({'fact': f, 'supported': verify_map[key],
+                                         'reused': True})
+                        dedup_stats['reused'] += 1
+                        continue
+                    if len(verify_map) >= DEDUP_CAP:
+                        verify_map[key] = False
+                        verifies.append({'fact': f, 'supported': False,
+                                         'reused': False, 'cap_hit': True})
+                        dedup_stats['cap_hits'] += 1
+                        continue
                     vt, vrec = self.call(arm, task, rep, node['node_id'], 'verify',
                                          'glm53flash', SYS_COMMON,
                                          verify_prompt(str(f.get('value', f.get('fid', ''))),
                                                        str(f['quote']), str(f.get('doc', ''))))
-                    okv, _, _ = parse_facts(vt)
                     try:
                         verdict = json.loads(vt[vt.find('{'):vt.rfind('}') + 1]).get(
                             'supported', False)
                     except Exception:
                         verdict = False
-                    verifies.append({'fact': f, 'supported': bool(verdict)})
+                    verify_map[key] = bool(verdict)
+                    dedup_stats['verify_calls'] += 1
+                    verifies.append({'fact': f, 'supported': bool(verdict),
+                                     'reused': False})
                     node_recs.append(vrec)
+            dedup_stats['unique'] = len(verify_map)
             upstream[node['node_id']] = chosen['facts']
-            node_recs.insert(len(node_recs) - len(verifies), rec) if False else None
             node_out = {'node_id': node['node_id'], 'kind': kind, 'signals': sig,
                         'chosen': chosen, 'verifies': verifies}
             node_recs.append(node_out)
-        report_exec = all(nr.get('role') != 'base' or True for nr in node_recs)
         record = {'exec_id': exec_id, 'arm': arm, 'task': task, 'rep': rep,
-                  'nodes': node_recs, 'budget_left': self.gb.left()}
+                  'nodes': node_recs, 'dedup': dedup_stats,
+                  'budget_left': self.gb.left()}
         self.store.commit(record)
         return record
 
@@ -187,8 +208,15 @@ def main():
     ap.add_argument('--out', default=str(HERE / 'rq2_p2r_runs'))
     ap.add_argument('--real', action='store_true')
     ap.add_argument('--limit', type=int, default=None)
+    ap.add_argument('--arms', default=None,
+                    help='comma-separated subset of A,B,C (default: config arms)')
     a = ap.parse_args()
     cfg = json.load(open(a.config))
+    arm_list = [x.strip() for x in (a.arms or ','.join(cfg.get('arms', ARMS))).split(',')
+                if x.strip()]
+    bad = [x for x in arm_list if x not in ARMS]
+    if bad:
+        raise SystemExit(f'REFUSED: unknown arms {bad}; valid={ARMS}')
     if a.real:
         if os.environ.get('STAGE_D_REAL_CALLS_AUTHORIZED') != '1':
             raise SystemExit('REFUSED: real mode requires STAGE_D_REAL_CALLS_AUTHORIZED=1')
@@ -199,18 +227,33 @@ def main():
         print('MOCK MODE — zero real calls')
     r = Runner(cfg, a.out, a.real)
     done = skipped = 0
-    for arm in ARMS:
+    stopped = False
+    for arm in arm_list:
         for task in TASKS:
             for rep in range(1, REPS + 1):
                 if a.limit is not None and done >= a.limit:
+                    stopped = True
                     break
+                exec_id = f"{arm}|{task}|r{rep}"
+                if not r.store.completed(exec_id):
+                    left = r.gb.left()
+                    if left['calls_left'] < MIN_CALLS_PER_EXEC:
+                        print(f"STOP before {exec_id}: calls_left={left['calls_left']} "
+                              f"< {MIN_CALLS_PER_EXEC} (execution-boundary guard)")
+                        stopped = True
+                        break
                 rec = r.run_exec(arm, task, rep)
                 if rec is None:
                     skipped += 1
                 else:
                     done += 1
-                    print(f"  {arm}|{task}|r{rep} done, calls_left={r.gb.left()['calls_left']}")
-    print(f"BATCH DONE: executed={done} skipped={skipped} budget={r.gb.left()}")
+                    print(f"  {exec_id} done, calls_left={r.gb.left()['calls_left']}")
+            if stopped:
+                break
+        if stopped:
+            break
+    print(f"BATCH DONE: executed={done} skipped={skipped} stopped_early={stopped} "
+          f"budget={r.gb.left()}")
 
 
 if __name__ == '__main__':

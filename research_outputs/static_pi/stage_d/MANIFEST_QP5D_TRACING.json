@@ -1,0 +1,52 @@
+{
+ "frozen_at": "2026-11-03",
+ "batch": "QP5D_TRACING_AND_D6_RULING",
+ "model_calls": 0,
+ "status": "D6_RULING_COMPLETE (minimal carry-forward only; no new experiment warranted)",
+ "findings": {
+  "grid": {
+   "both_TP": 67,
+   "d5_broke": 19,
+   "d5_fixed": 8,
+   "both_wrong": 100
+  },
+  "broke_cause": "retry collateral damage (whole-replacement rewrote correct slots) + quote truncation; VALUES were identical to F1",
+  "fixed_cause": "unit normalization on numeric slots (8/8)",
+  "counterfactual_on_real_outputs": {
+   "echo_rule_only": {
+    "macro_Q": 0.4512,
+    "paired_dQ": 0.0346,
+    "positive": "9/12 cells"
+   },
+   "echo_whole_retry": {
+    "macro_Q": 0.3636,
+    "paired_dQ": -0.053
+   },
+   "echo_surgical_retry": {
+    "macro_Q": 0.3883,
+    "paired_dQ": -0.0283
+   },
+   "conclusion": "negative result is 100% attributable to the corrective retry; echo alone is +0.035 (below C0 noise 0.0497 and delta_min 0.10)"
+  },
+  "d6_ruling": "D6-min = keep echo rule (free, mildly positive) as part of QP6 terminal contract; NO standalone D6 experiment (unfalsifiable at +0.035); NO batch-rewrite retry until response quality proven",
+  "qp6_entry": "both-wrong facts = 100/194 (52%) are the remaining headroom: composite/derived/no-single-evidence"
+ },
+ "files": {
+  "quality_phase_v1/qp5d_tracing.py": {
+   "sha256": "472e5fcbcc73aeca6b1a67ef66c81e017b4ce863ff61196c1bac85de5eb83d20",
+   "bytes": 5893
+  },
+  "quality_phase_v1/QP5D_NEGATIVE_TRACING.json": {
+   "sha256": "06f909bbe0afeb5c6a02425b56b635035ed244ee7530c6a38db40a5b6849f8a3",
+   "bytes": 6870
+  },
+  "quality_phase_v1/QP5D_D6_COUNTERFACTUAL.json": {
+   "sha256": "45f5874711f033ac7a778c29a204ba9db4d61cf2cd8ea420ccf46f2925612f4b",
+   "bytes": 1211
+  },
+  "quality_phase_v1/QP5D_TRACING_AND_D6_RULING.md": {
+   "sha256": "df1e46b3ca1c44655b8008447d52691bc68ac662fc9c500a808b5ab83d9d4db7",
+   "bytes": 3829
+  }
+ }
+}

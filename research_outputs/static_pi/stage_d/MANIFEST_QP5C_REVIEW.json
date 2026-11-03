@@ -1,0 +1,41 @@
+{
+ "frozen_at": "2026-11-03",
+ "batch": "QP5C_CAUSAL_DESIGN_REVIEW",
+ "model_calls": 0,
+ "status": "QP5A_SEALED_QP5C_V2_READY_AWAITING_AUTHORIZATION",
+ "noise_quantization": {
+  "downstream_plus_value_path": "QP5-A B1 rep |dQ| mean 0.072",
+  "evidence_amplified_upstream": "QP5-A B2 rep |dQ| mean 0.355 (coverage 16 vs 7 entries)",
+  "full_pipeline": "QP4 D rep |dQ| mean 0.314",
+  "pure_downstream": "not measurable from existing data -> C0 calibration arm added"
+ },
+ "design_v2": {
+  "arms": "C1' fresh downstream on cached E (48) / C2 E-v2 full (72+24 retry) / C0 noise calibration (24)",
+  "estimand": "upstream evidence-production package effect; downstream frozen verbatim; both arms fresh, same-session, randomized within block",
+  "thresholds": "unchanged: macro >= +0.10, >=4/6 tasks; power disclosed (MDE ~0.15 at 80%, delta_min 0.10 at ~60%)"
+ },
+ "budget": {
+  "planned": 144,
+  "worst": 168,
+  "est_yuan": "0.72-0.84",
+  "cap": {
+   "calls": 170,
+   "yuan": 1.0
+  }
+ },
+ "review": {
+  "R1_downstream_randomness": "BLOCKED original -> PASS V2",
+  "R2_value_confounds": "PASS (package estimand + E-level decomposition)",
+  "R3_denominators": "PASS (dual denominators + junk rate)",
+  "R4_structural_isolation": "PASS (terminal inaccessibility holds; entry monitoring)",
+  "R5_budget_nodes": "PASS (original BLOCKED -> V2 full coverage)",
+  "R6_upstream_downstream_separation": "PASS (sandwich + C0 noise ruler)"
+ },
+ "qp5a": "SEALED: SUPPORTED WITH ONE MARGINAL SAFETY EXCEPTION; no rerun, no threshold change",
+ "files": {
+  "quality_phase_v1/QP5C_CAUSAL_DESIGN_REVIEW.md": {
+   "sha256": "f117e21c7eb08a209e0ae79bfa594bfcf090c404f2386842913f657915a87ea5",
+   "bytes": 6025
+  }
+ }
+}

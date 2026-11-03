@@ -1,0 +1,34 @@
+{
+ "timestamp": "2026-11-03T16:37:59",
+ "revision": "prereg v1.0 -> v1.1 + V-1 weighted addendum, per operator admission review",
+ "operator_blocking_items": {
+  "B1_D2_evidence_field": "FIXED: quote=verbatim span only (no identifiers, no truncation, no length cap; split-or-unknown rule); parent_fid separate field for upstream linkage; upstream restatement copies value/doc/quote verbatim; original values never compressed",
+  "B2_power_statement": "FIXED: 34.5pp relabeled as normal-approximation sensitivity reference, NOT exact-test 80% power; exploratory status explicit; per-task interaction effects mandatory; bootstrap CI exploratory-only; >=6 tasks needed for sign-flip to possibly reach 0.05",
+  "B3_baseline_comparability": "ADDRESSED: request-side model ids/endpoints/params documented (GLM-5.3-Flash reasoning_effort=low, deepseek-flash json_object, both temperature-omitted=server default); MODEL_CONFIG_V3.json freeze + response model-field recording (zero extra calls) + interleaved HomImp/HetImp execution; V2 ledger lacks response model field => cross-batch drift listed as mandatory limitation; results framed as delivery effect under possible model drift, NOT strict randomized causal validation"
+ },
+ "nonblocking_additions": {
+  "D1_counting": "n_upstream_facts = fid-deduped facts actually serialized into node input prompt; per-node actual max_tokens recorded",
+  "D1D2_bundle": "H1/H2 conclusions attribute to the combined mechanism only; decomposition requires a separate design"
+ },
+ "v1_weighted_reanalysis": {
+  "population": 403,
+  "sample": 200,
+  "strata": "16 strata task x arm x verdict; all rejection strata fully sampled (weight 1.000); supported strata weights 1.261-2.957",
+  "weighted_sensitivity": 0.9944,
+  "weighted_specificity": 0.3862,
+  "unweighted_specificity": 0.5294,
+  "verdict": "spec FAILS 0.85 gate under weighting; Q_full stays UNVALIDATED; both numbers framed as AI co-review observations (annotator GLM-5.3 same family as verifier glm53flash), pending human re-check"
+ },
+ "instrumentation": "base and reroll outputs both persisted for node-level before/after pairing (reroll-improvement question)",
+ "authorization": "NOT granted; awaiting final admission review; zero new calls; V2 leftover 220 not transferable; 192 HOLD untouched",
+ "files_sha256": {
+  "RQ2_P2R_V3_PREREGISTRATION_V1_1.md": "5db079c9546fafe80352601c13bc259a402bcc57ee97373bdebb3d3720105f79",
+  "RQ2_P2R_V3_PREREGISTRATION.md": "44a1da11756368174373dc8af3dab7ad77167708418a3c9ca02e27e2521c6332",
+  "RQ2_V1_VERIFIER_ADDENDUM.md": "e731138e9c1e3a1f9a7be84e785f994401078c13da8e406bfbb431ca03889591",
+  "RQ2_P2R_V1_V1_METRICS_WEIGHTED.json": "730257d2143a088d3481329cefd68821d67c963fcf473eee2d147cd556a41348",
+  "RQ2_P2R_V1_V1_METRICS.json": "5377001ece53f475c06c1ce6be8113aa5f488b7c6c94426214817f8a4c4af645",
+  "RQ2_P2R_V2_V1_LABELED.jsonl": "951490d1f61b411f3f9cb0c2aa7bbcf1ebc90d014f1540fd1149e0cefa844172",
+  "stage_d_executor.py": "64dea81992f9f036af783cf91079f32dbb808948210c13ea72069ddd35839f7d",
+  "/root/capital_opinion_pilot/transport.py": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482"
+ }
+}
