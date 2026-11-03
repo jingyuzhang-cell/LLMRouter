@@ -9,13 +9,13 @@
 | 核心 19 | **19/19 校验通过**（含审计证据替代记录；V1.3.2=A `1001da54`） |
 | 完整交付清单 | 逐项哈希校验通过（含执行器/P0/验收材料/历史归档） |
 | 执行器 SHA 清单 | 逐项校验通过 |
-| 冻结清单 | 11/11 文件校验通过；执行器不可变快照 `archive_freeze_ef50527e/` |
-| 独立审计报告 | `STAGE_D_INDEPENDENT_AUDIT.md` `e4669c67…`（审计证据替代，非原始恢复） |
+| 冻结清单 | 11/11 文件校验通过；执行器不可变快照 `archive_freeze_b0d7a58900f8f27a/` |
+| 独立审计报告 | `STAGE_D_INDEPENDENT_AUDIT.md` `8b104790…`（审计证据替代，非原始恢复） |
 
 ## 二、审计发现与处置
 
 1. **Token 双计（已修复）**：`release_reservation` 与 `_settle` 各加一次实际 token；修复后全局 2,423,553 == 记录 in+out，峰值 2,427,390 ≤ 9.5M；新增不变量断言。
-2. **执行器冻结候选版本**：`ef50527e…`/43,292B，含 `make_clock` 时钟选择单点（`--real` scale=1.0，mock 不变）并已在 `main` 接入；192 dry-run 在本版本复跑通过。
+2. **执行器冻结版本**：`b0d7a589…`/44,419B，含 `make_clock` 时钟选择单点（`--real` scale=1.0，mock 不变）并已在 `main` 接入；**S5 败者等待已修复**（胜者即时完成、败者后台结算、finish join）；192 dry-run 在本版本复跑通过。
 3. **支撑审计文档**：原 `STAGE_D_SOURCE_AUDIT.md` 被并行覆盖、无干净副本；经操作员批准，以 `STAGE_D_INDEPENDENT_AUDIT.md` 作为 **AUDIT_EVIDENCE_REPLACEMENT** 替代；污染版归档，历史记录保留。
 4. **`stage_d_final_analysis.py` 版本注记**：当前 `037fa446…`/9,490B 含严格输入校验（bool 拒绝、TP∈[0,23]）与 bool 自检；统计逻辑与判定措辞未变。
 

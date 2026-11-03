@@ -55,7 +55,7 @@
 | B2 S5 时延 | **工程验证完成；科学结论待真实实验** | `test_stage_d_p0.py` P05S5Boundary：边界谓词 89.9/90.0/90.1 精确；端到端两次校准法（抖动实测 0.3s → 自动降级 ±1.0 档：88.9→True、91.0→False，如实记录）；GLM 先完成/DS 先完成/双超时/取消后迟到四路径全过；Mock 不进科学统计 |
 | B6 清单冲突 | **材料齐备，待操作员选 A/B** | `STAGE_D_VERSION_DIFF_V1_3_2.md`：4 处并行改动逐行归属；回退后哈希恰回 `1001da54…`（字节级恢复证明）；原版存档 `archive_1001da54/`；双层清单：`MANIFEST_STAGE_D_CORE_19.json`（锚 1001da54）+ 26 项现状；18 项共享哈希一致，唯一分叉 V1.3.2；`power_sim_v23.py` 为 `power_sim.py` 别名重复（标注不删除） |
 
-P0 专项测试：`test_stage_d_p0.py` 14/14 通过；主套件 19 项回归 OK；完整 192 dry-run（9.5M 硬顶）192/192 COMPLETE。
+P0 专项测试：`test_stage_d_p0.py` 15/15 通过；主套件 19 项回归 OK；完整 192 dry-run（9.5M 硬顶）192/192 COMPLETE。**预启动发现并修复 S5 败者等待**：胜者即时完成、败者后台结算、finish join；迟滞专项 Proposed 22.8s vs Simple 40.9s；修复版冻结 `b0d7a589`。
 
 ## 四、PASS / FAIL / BLOCKED
 

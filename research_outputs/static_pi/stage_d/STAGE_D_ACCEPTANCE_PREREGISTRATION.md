@@ -22,7 +22,7 @@
 ## 三、支撑审计文档替代（AUDIT_EVIDENCE_REPLACEMENT）
 
 - 被替代：`STAGE_D_SOURCE_AUDIT.md`（并行覆盖，当前 `47254278`/17,941B；锚 `d75c053d`/15,937B；无干净副本）。
-- 替代：`STAGE_D_INDEPENDENT_AUDIT.md`（`e4669c67…`/10,488B）。
+- 替代：`STAGE_D_INDEPENDENT_AUDIT.md`（`8b104790…`/11,173B）。
 - 性质：**审计证据替代，不是原始文件恢复**；污染版完整归档，替代关系与哈希记录在核心清单 `replacement_record`。
 - 未改：V1.3.2（A）、R1、统计方法、判定标准。
 - 独立复核：由独立命令（测试、哈希、192 dry-run、D2 反演、R1 枚举、tiktoken）复核，不采信执行器自报；**非第三方人工审计**。

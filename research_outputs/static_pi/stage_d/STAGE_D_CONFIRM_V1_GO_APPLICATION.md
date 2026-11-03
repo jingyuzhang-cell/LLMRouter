@@ -2,7 +2,7 @@
 
 **提交日期**：2026-11-02  
 **状态**：待操作员签发。本文件是 GO 申请材料，**不是真实调用授权**；在操作员明文 GO 之前，不启动任何模型请求。  
-**冻结引用**：`STAGE_D_EXECUTOR_FREEZE.json`（SHA `56f03ab7…`，11/11）；执行器 `ef50527e…`（43,292B，快照 `archive_freeze_ef50527e/`）；核心 19 `c39cbe79…`；独立审计 `e4669c67…`。
+**冻结引用**：`STAGE_D_EXECUTOR_FREEZE.json`（SHA `b52cd7e9…`，11/11）；执行器 `b0d7a589…`（44,419B，快照 `archive_freeze_b0d7a58900f8f27a/`）；核心 19 `89f41525…`；独立审计 `8b104790…`。
 
 ## 一、批次与规模
 
@@ -28,7 +28,7 @@
 ## 三、前置条件（全部满足才可启动）
 
 1. 操作员对三份验收报告 PASS：预注册、执行器、独立审计。
-2. `STAGE_D_EXECUTOR_FREEZE.json` 11/11 哈希校验通过；工作区 `stage_d_executor.py` 必须等于 `ef50527e…`（否则停止）。
+2. `STAGE_D_EXECUTOR_FREEZE.json` 11/11 哈希校验通过；工作区 `stage_d_executor.py` 必须等于 `b0d7a589…`（否则停止）。
 3. `MANIFEST_STAGE_D_CORE_19.json` 19/19 校验通过。
 4. 启动前无任何代码/配置修改；运行中缺陷按预登记纪律计入统计，不得修复后选择性重跑。
 5. 本 GO 申请经操作员明文签署（批次名/调用上限/token 上限/现金上限）。

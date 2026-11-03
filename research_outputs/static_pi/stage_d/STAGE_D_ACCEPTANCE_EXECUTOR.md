@@ -7,7 +7,7 @@
 | 项 | 值 |
 |---|---|
 | 冻结清单 | `STAGE_D_EXECUTOR_FREEZE.json`（11/11 文件校验通过） |
-| 执行器 | `stage_d_executor.py` `ef50527e2920b42d…`，43,292B；不可变快照 `archive_freeze_ef50527e/stage_d_executor.py` |
+| 执行器 | `stage_d_executor.py` `b0d7a58900f8f27a…`，44,419B；不可变快照 `archive_freeze_b0d7a58900f8f27a/stage_d_executor.py` |
 | 配置 | `stage_d_executor_config.json` `11e520323ecf94a3…` |
 | 正式分析 | `stage_d_final_analysis.py` `037fa446…` |
 | 检验/功效 | `exact_perm.py` `09468d24…`；`power_sim.py` `4eb9d3c5…` |
@@ -18,9 +18,9 @@
 ## 二、验证证据
 
 - **矩阵**：192 = 6 臂 × 32；S0/S1/S2/S3/S4/S5 = 2/3/3/8/8/8；ID 唯一；种子 20261102。
-- **测试**：主套件 19（18 默认 + 完整 192 单独 OK）；P0 14/14；保护集 R1 6/6。
+- **测试**：主套件 19（18 默认 + 完整 192 单独 OK）；P0 15/15；保护集 R1 6/6。
 - **完整 dry-run**：192/192 COMPLETE；1,451 调用；核算 ¥2.358712；全局 token **2,423,553 == 记录 in+out**（审计修复了 release+settle 双计）；峰值 used+reserved **2,427,390 ≤ 9.5M**；结束预留归零。
-- **S5**：π/Fixed/Proposed 各 8 次竞速，Static/R-only/Simple 0 次；GLM 先行、SLO=9.5s 在途触发、DS 胜出；取消三态与迟到全额计账（P0 测试）。
+- **S5**：π/Fixed/Proposed 各 8 次竞速，Static/R-only/Simple 0 次；GLM 先行、SLO=9.5s 在途触发、DS 胜出；**胜者即时完成 J2，败者后台结算（不阻塞 SINK）**；迟滞专项 Proposed 22.8s vs Simple 40.9s；修复版 192 Mock Proposed 111.2s vs Simple 126.5s；取消三态与迟到全额计账（P0 测试）。
 - **槽位**：最大并发 glm=2 / ds=1，无超额。
 - **恢复**：二次 CLI 运行 `skipped=1`；无重复计账。
 - **记录**：`raw`/`score` 分层；异常/动作/决策/竞速日志齐全；六臂配对基础输出 0 差异。

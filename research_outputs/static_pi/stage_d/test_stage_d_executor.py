@@ -40,7 +40,7 @@ def fast_cfg(**over):
     return c
 
 
-def run_one(arm, sc, rep, c=None, cancel_effective=True, provider_cls=None):
+def run_one(arm, sc, rep, c=None, cancel_effective=True, provider_cls=None, settle=True):
     c = copy.deepcopy(c or fast_cfg())
     c["s5"]["cancel_effective"] = cancel_effective
     tmp = Path(tempfile.mkdtemp(prefix="sd_exec_"))
@@ -53,6 +53,9 @@ def run_one(arm, sc, rep, c=None, cancel_effective=True, provider_cls=None):
     prov = P(clock, slots, c, sc, rep)
     ex = E.FinalExec(arm, sc, rep, c, clock, gb, slots, prov, store, dry_run=True)
     rec = ex.run()
+    if settle:
+        ex.settle()
+        rec = ex.recommit_with_settlement() or rec
     return rec, ex, gb, slots, tmp
 
 
@@ -101,6 +104,70 @@ class T03S5Late(unittest.TestCase):
         self.assertEqual(rec["s5"]["late_calls"], 1)
         self.assertGreater(rec["s5"]["late_cost_yuan"], 0)
         self.assertTrue(rec["race"][0]["loser_late"])
+
+
+class T07S5Settlement(unittest.TestCase):
+    def _late_cfg(self):
+        c = fast_cfg()
+        c["mock"]["scale"] = 10
+        c["mock"]["latency_s"]["default"] = {
+            "E1": 0.1, "E2": 0.1, "E3": 0.1, "E4": 0.1,
+            "J1": 0.1, "J2": 0.1, "SINK": 0.1}
+        c["mock"]["latency_s"]["S5"] = {"J2": {"glm53flash": 30.0, "deepseek": 3.0}}
+        return c
+
+    def test_finish_returns_before_late_loser(self):
+        c = self._late_cfg()
+        rec, ex, gb, slots, tmp = run_one(
+            "Proposed-Dynamic", "S5", 1, c, cancel_effective=False, settle=False)
+        self.assertTrue(rec.get("settlement_pending"), rec.get("settlement_pending"))
+        self.assertEqual(rec["terminal_completed_at_s"], rec["makespan_s"])
+        self.assertLess(rec["makespan_s"], 30.0)
+        self.assertLess(rec["makespan_s"], rec["j2_winner_completed_at_s"] + 20.0)
+        rec2 = ex.recommit_with_settlement()
+        self.assertFalse(rec2.get("settlement_pending"))
+        s = rec2.get("settlement") or {}
+        self.assertTrue(s.get("loser_late"))
+        self.assertGreater(s.get("settlement_completed_at_s"), rec2["terminal_completed_at_s"])
+        self.assertGreater(rec2.get("late_accounting_yuan", 0), 0)
+
+    def test_loser_does_not_override_winner(self):
+        c = self._late_cfg()
+        rec, ex, gb, slots, tmp = run_one(
+            "Proposed-Dynamic", "S5", 1, c, cancel_effective=False, settle=False)
+        winner_text = ex.raw["nodes"]["J2"][0]["text"]
+        score_before = json.loads(json.dumps(rec.get("score")))
+        ex.settle()
+        rec2 = ex.recommit_with_settlement()
+        self.assertEqual(ex.state["J2"], "Completed")
+        self.assertEqual(ex.outputs["J2"], winner_text)
+        self.assertEqual(rec2.get("score"), score_before)
+        self.assertEqual(rec2.get("status"), rec.get("status"))
+
+    def test_both_branch_costs_counted(self):
+        c = self._late_cfg()
+        rec, ex, gb, slots, tmp = run_one(
+            "Proposed-Dynamic", "S5", 1, c, cancel_effective=False, settle=False)
+        ex.settle()
+        rec2 = ex.recommit_with_settlement()
+        raw_sum = round(sum(c["accounting_yuan"] for c in rec2["raw"]["calls"]), 8)
+        self.assertAlmostEqual(rec2["settled_accounting_yuan"], raw_sum, places=8)
+        self.assertGreater(rec2["late_accounting_yuan"], 0)
+        self.assertGreaterEqual(rec2["settled_accounting_yuan"],
+                                rec2["accounting_yuan"])
+
+    def test_both_unparseable_fallback(self):
+        class BadJ2(E.MockProvider):
+            def _response(self, node, alias, system):
+                if node == "J2":
+                    return {"text": "not json"}
+                return super()._response(node, alias, system)
+        rec, ex, gb, slots, tmp = run_one(
+            "Proposed-Dynamic", "S5", 1, provider_cls=BadJ2)
+        self.assertEqual(rec["invalid_reason"], "S5_BOTH_UNPARSEABLE")
+        self.assertIsNone(rec["s5"].get("winner"))
+        self.assertEqual(rec["s5"].get("race_triggered"), True)
+        self.assertFalse(rec.get("settlement"))
 
 
 class T04Slots(unittest.TestCase):
