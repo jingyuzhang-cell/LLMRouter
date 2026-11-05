@@ -1,0 +1,69 @@
+{
+ "batch": "RQ2_CAP_V1",
+ "status": "COMPLETED 380/380 rows",
+ "timestamp": "2026-11-04T10:22:13",
+ "authorization": "批次 RQ2_CAP_V1：调用 ≤450 次；Token ≤2,000,000；费用 ≤¥25。授权执行 4 模型 × 19 节点 × 5 重复的节点级真实能力测量。",
+ "spend": {
+  "calls": 385,
+  "calls_cap": 450,
+  "tokens": 1159870,
+  "tokens_cap": 2000000,
+  "yuan": 16.6655,
+  "yuan_cap": 25,
+  "breach": false,
+  "note": "382 planned + 2 probe re-sends after crash-resume + 1 unsettled reservation"
+ },
+ "incidents": [
+  "one transport crash at 224 rows (~7.5h wall gap before resume); checkpoint resume completed the batch"
+ ],
+ "design": {
+  "models": [
+   "glm53flash(GLM-5.3-Flash)",
+   "glm53(GLM-5.3)",
+   "deepseek(deepseek-flash)",
+   "qwen(qwen-plus)"
+  ],
+  "nodes": 19,
+  "frozen_inputs": "V3 HomImp refs E05r1/E06r1/E07r2/E08r1, byte-identical prompts across models (prompt_sha logged)",
+  "max_tokens": "6000 uniform",
+  "reps": 5,
+  "model_resp_confirmed": {
+   "glm53": "GLM-5.3",
+   "glm53flash": "GLM-5.3-Flash",
+   "deepseek": "deepseek-flash",
+   "qwen": "qwen-plus"
+  },
+  "intra_batch_drift": "none"
+ },
+ "headline": {
+  "type_advantages_C1": {
+   "reason": "qwen +28.15pp CI[7.41,48.15] stab .92 -> ONLY confirmed",
+   "extract": "glm53 +6.39pp CI crosses 0 -> not confirmed",
+   "report": "qwen +7.78pp CI crosses 0 -> not confirmed",
+   "verification": "descriptive only (1 node): qwen .667 > ds .400 > GLM .000"
+  },
+  "delivery": {
+   "deepseek": "0% trunc, 2.8s med",
+   "qwen": "0% trunc, 7.3s med",
+   "glm53": "20% trunc incl reason parse 33%",
+   "glm53flash": "23% trunc"
+  },
+  "C2": "oracle .7121 vs best single qwen .6061 => +10.61pp BUT CI [-8.55,+29.42] crosses 0 => NOT met",
+  "C3": "oracle cost 3.24x cheapest single => NOT met; oracle lat 599s vs 64s fastest",
+  "verdict": "NO usable complementarity in current pool (per frozen rules); qwen-on-reason recorded as confirmed TYPE-level fact; type-level qwen-reason+ds-rest flagged as candidate hypothesis for a future preregistered test, NOT a conclusion",
+  "operating_point": "homogeneous deepseek + D1D2 delivery (single-model .600, 0% truncation, cheapest, fastest); qwen equivalent-quality alternative"
+ },
+ "files_sha256": {
+  "RQ2_CAP_V1_RESULTS.md": "3bcc79f51c04e9b36dca6aeb9ae4b21c9993aab12252f67759c21d35dab64f88",
+  "RQ2_CAP_V1_RESULTS.json": "cac4682c9af196bef4d98181e7f66fcf5543d48b98e651f2081e1a88f304ed7d",
+  "rq2_cap_v1_runner.py": "b601d1a7301a7359a8cc16f856ee6f7268fc16569d0a820438825609c67ee5e2",
+  "rq2_cap_v1_analyze.py": "3a44133a44f903fdaa60bad400921b8cddfce0f8961a9b49233b694d3f4ca884",
+  "rq2_cap_v1_config.json": "f714e82214afdb88a73d8477434692916127b1f105affcc98ea33527e0dbba79",
+  "rq2_cap_v1_runs/results.jsonl": "049a7e19226c1f45e77b16edca4b6fe00a6d111bdfeeb8d90801bbd98f14db75",
+  "rq2_cap_v1_runs/ledger.jsonl": "e5abcf4742981ee02a4b8f91920737defa877a28137ae7ec44b0b0666572569d",
+  "rq2_cap_v1_runs/state/GLOBAL_BUDGET.json": "2447ff44cfdc19b088b5881ea0c4246a6fa01ad26d9e2863d2e39b602dd6e187"
+ },
+ "new_calls_after_batch": 0,
+ "hold_192": "untouched",
+ "v1_v3_readonly": true
+}

@@ -1,0 +1,204 @@
+{
+ "exec_id": "DYN|S4|C_sjzg|r1",
+ "cell": "DYN",
+ "task": "C_sjzg",
+ "rep": 1,
+ "nodes": [
+  {
+   "node_id": "ext_suspend",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_abnormal",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_resume",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "merge",
+   "kind": "reason",
+   "signals": {
+    "exec": false,
+    "prod": true,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "举报/约谈的具体时间与主体",
+     "暂停服务的时间与范围",
+     "股价异动的时间与幅度",
+     "行政处罚的作出机关、时间与内容",
+     "恢复服务的时间与方式",
+     "三方回应链的具体主体与表述"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "举报/约谈的具体时间与主体",
+     "暂停服务的时间与范围",
+     "股价异动的时间与幅度",
+     "行政处罚的作出机关、时间与内容",
+     "恢复服务的时间与方式",
+     "三方回应链的具体主体与表述"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  },
+  {
+   "node_id": "report",
+   "kind": "report",
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "视觉中国黑洞照片舆情事件的多方回应链",
+     "视觉中国黑洞照片舆情事件的市场反应",
+     "视觉中国黑洞照片舆情事件的整改过程"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "视觉中国黑洞照片舆情事件的多方回应链",
+     "视觉中国黑洞照片舆情事件的市场反应",
+     "视觉中国黑洞照片舆情事件的整改过程"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  }
+ ],
+ "actions": [
+  {
+   "action": "R",
+   "node": "ext_suspend",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_abnormal",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_resume",
+   "outcome": "failed"
+  },
+  {
+   "action": "Z3",
+   "node": "merge",
+   "outcome": "degraded-no-recovery"
+  },
+  {
+   "action": "Z3",
+   "node": "report",
+   "outcome": "degraded-no-recovery"
+  }
+ ],
+ "budget_left": {
+  "calls_left": 201,
+  "yuan_left": 4.1261,
+  "tokens_left": 234276,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 1567377
+ }
+}

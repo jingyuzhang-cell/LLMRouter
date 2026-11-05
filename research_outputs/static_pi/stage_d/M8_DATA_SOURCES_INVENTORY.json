@@ -1,0 +1,107 @@
+[
+ {
+  "source": "Stage D 192-run",
+  "task": "PHASE2B",
+  "contract": "v2_1 (f92090b0)",
+  "scorer": "terminal_quality v1.2.3",
+  "execution": "A‴ routing (E/J2/SINK=DS@4000, J1=GLM-low@8192)",
+  "n_recs": 192,
+  "arms": [
+   "Fixed-Composite",
+   "Proposed-Dynamic",
+   "R-only",
+   "Simple-Dynamic",
+   "Static",
+   "π-only"
+  ],
+  "has_Q": true,
+  "has_C": true,
+  "has_L": true,
+  "C_fields": [
+   "accounting_yuan",
+   "actual_cash_yuan",
+   "calls",
+   "tokens_in",
+   "tokens_out"
+  ],
+  "L_fields": [
+   "makespan_s",
+   "on_time",
+   "deadline_s"
+  ]
+ },
+ {
+  "source": "Stage C 108-exec",
+  "task": "MVR2+P11+PHASE2B",
+  "contract": "task-specific",
+  "scorer": "task-specific (terminal_quality for PHASE2B, state_scorer for P11, norm for MVR2)",
+  "execution": "A‴ routing per task",
+  "n_recs": 108,
+  "arms": [
+   "A0_noswap",
+   "A1_blind",
+   "A2_diag",
+   "Best-Single",
+   "H2_mismatched",
+   "H3_terminal",
+   "H3_upstream",
+   "Proposed",
+   "Static"
+  ],
+  "has_Q": true,
+  "has_C": true,
+  "has_L": true,
+  "C_fields": [
+   "accounting_yuan",
+   "n_calls"
+  ],
+  "L_fields": [
+   "wall_s"
+  ]
+ },
+ {
+  "source": "Stage B B-4",
+  "task": "PHASE2B",
+  "contract": "v2_1",
+  "scorer": "terminal_quality",
+  "execution": "A‴ + B-1 guard + B-2 swap",
+  "n_recs": 48,
+  "arms": [
+   "A0",
+   "A1",
+   "A2",
+   "A3",
+   "B3"
+  ],
+  "has_Q": true,
+  "has_C": true,
+  "has_L": true,
+  "C_fields": [
+   "accounting_yuan",
+   "n_calls"
+  ],
+  "L_fields": [
+   "wall_s"
+  ]
+ },
+ {
+  "source": "D2 (disabled era)",
+  "task": "PHASE2B",
+  "contract": "v2_1",
+  "scorer": "terminal_quality",
+  "execution": "GLM disabled (历史模式，不可比)",
+  "n_recs": 108,
+  "arms": [
+   "Static",
+   "R-only",
+   "π-only",
+   "Simple",
+   "Fixed",
+   "Proposed"
+  ],
+  "has_Q": true,
+  "has_C": true,
+  "has_L": true,
+  "comparable": false
+ }
+]

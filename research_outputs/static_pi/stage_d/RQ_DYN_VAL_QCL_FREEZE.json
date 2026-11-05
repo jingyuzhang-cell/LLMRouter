@@ -1,0 +1,42 @@
+{
+ "batch": "RQ_DYN_VAL_QCL",
+ "frozen_at": "2026-11-04T23:18:59",
+ "gold": {
+  "E03": {
+   "file": "E03_GOLD_CANDIDATES.json",
+   "sha256": "24521943baf0027b4bac4227080a63f729f04cfb04034ac8442363ed377d8cd6",
+   "slots": 18,
+   "status": "FROZEN (dual-AI-annotator adjudication applied; 18/18 span_check)"
+  },
+  "E04": {
+   "file": "/root/capital_opinion_pilot/VAL_GOLD_ANNOTATION_PACKAGE/e04_candidates_atomic_facts.json",
+   "sha256": "a9159060c9649f6076b69bca6525398b3f7da88581a871e9efa31eed9fcfca51",
+   "slots": 11,
+   "status": "FROZEN (dual-AI-annotator adjudication applied; 11/11 span_check)"
+  },
+  "total_slots": 29
+ },
+ "experiment": {
+  "design": "node-level Q/C/L/Reliability measurement",
+  "dag": "extract(3) + merge(1) + verify(1) + report(1) per event",
+  "models": [
+   "deepseek",
+   "qwen"
+  ],
+  "reps": 3,
+  "events": {
+   "E03": "dev/calibration (39 screening calls disclosed)",
+   "E04": "independent VAL"
+  },
+  "total_calls": 72,
+  "scoring": "per-slot Gold match + doc localization + report gate"
+ },
+ "next_phase": {
+  "after_capability_matrix": "3-arm paired experiment (StaticHetero vs FixedRecovery vs JointDynamic) on independent TEST events",
+  "note": "72 calls = capability measurement only, NOT joint scheduling benefit verification"
+ },
+ "authorization": {
+  "status": "PENDING",
+  "request": "72 calls / 800,000 tokens / CNY 3"
+ }
+}

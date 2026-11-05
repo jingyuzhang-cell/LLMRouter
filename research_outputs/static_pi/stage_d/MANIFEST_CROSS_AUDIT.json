@@ -1,0 +1,41 @@
+{
+ "frozen_at": "2026-11-04",
+ "batch": "CROSS_EXPERIMENT_PROMPT_AUDIT",
+ "model_calls": 0,
+ "status": "ROOT_CAUSE_CONFIRMED: EVIDENCE_REQ duplicated in system prompt across QP7+QP8",
+ "findings": {
+  "value_rate": {
+   "QP4": "98.8%",
+   "QP5C": "100% (cached from QP4)",
+   "QP7": "9.1%",
+   "QP8": "13.4%"
+  },
+  "root_cause": "E_SYSTEM = P1.E_SYS + EVIDENCE_REQ (duplicate; already in user prompt via e_user E1)",
+  "effect": "GLM and DS both switch from flat {facts:[{field,value,doc,page,quote}]} to nested {bucket:{sub:{doc,page,quote}}} without values",
+  "downstream": "verify_evidence rejects valueless entries → evidence table empty → SINK no evidence → Q drops from 0.38-0.44 to 0.13-0.24",
+  "affected_experiments": [
+   "QP7 (all 4 arms, all tasks)",
+   "QP8 (all 3 arms)"
+  ],
+  "unaffected_experiments": [
+   "QP4",
+   "QP5-A",
+   "QP5-C",
+   "QP5-D",
+   "QP6 (all used cached QP4 E outputs)"
+  ],
+  "qp7_reclassification": "5 \"intractable\" tasks are prompt-contaminated, not model-incapable",
+  "qp8_reclassification": "\"E upgrade ineffective\" is prompt-contaminated, not evidence of GLM inability",
+  "fix": "remove EVIDENCE_REQ from E_SYSTEM (single line)"
+ },
+ "files": {
+  "qp8/CROSS_EXPERIMENT_AUDIT.md": {
+   "sha256": "cf9c98bb21c5a7486df9b5445b90b2642b7def47ee1bd4f5a724b9682d6c46da",
+   "bytes": 3797
+  },
+  "qp8/QP4_QP8_ROOT_CAUSE.md": {
+   "sha256": "b32fd750cc873530473855fd92d52a523ef106dd3e5f86cd153898c4e0756037",
+   "bytes": 2895
+  }
+ }
+}

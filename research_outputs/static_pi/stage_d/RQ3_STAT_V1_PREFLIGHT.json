@@ -1,0 +1,25 @@
+{
+ "batch": "RQ3_STAT_V1",
+ "timestamp": "2026-11-04T10:40:22",
+ "status": "READY — awaiting plaintext authorization; zero real calls made",
+ "design": "A HomDS (deepseek all) vs B HetQR (qwen on reason nodes only: E05/E06/E08 merge); D1+D2 delivery (verbatim V3); reroll same-model-as-base; NO verification calls; 4 tasks x 5 reps x 2 cells = 40 execs, interleaved; E07 = preregistered internal null task",
+ "budget_derivation": "V3 HomImp real ledger: base+reroll 5.2 calls/exec (max 6), 11.6k tokens/exec, CNY 0.067/exec; CAP reason node: qwen lat_med 27.5s vs ds 3.6s, out_med 1185 vs 734",
+ "caps": {
+  "calls": 280,
+  "tokens": 800000,
+  "yuan": 8
+ },
+ "mock_validation": "40 execs; HetQR model composition verified (merge->qwen only); zero verify calls; resume skips all; frozen analysis validated end-to-end on mock (reason slots, cost deltas, criteria logic)",
+ "analysis_frozen_pre_data": "rq3_stat_v1_analyze.py — paired task deltas, cluster bootstrap, reason-slot decomposition, delivery rates, cost/latency, prereg criteria + verdict rules",
+ "files_sha256": {
+  "RQ3_STAT_V1_PREREGISTRATION.md": "611ba29cdcf4442ee5566306aeaecad9bc7fea292de4d05027f686bd89f52d8e",
+  "rq3_stat_v1_runner.py": "54e7db447ed0e0ca38c10392f818572b615e360fa6a4af170938506cf38e87a6",
+  "rq3_stat_v1_analyze.py": "512c7f219c05b8538db4088d344de3b2998c0b0510bf4d5cee1e7feeb3e1113d",
+  "rq3_stat_v1_config.json": "28ddf035da678798ce9e74a09f9d2e6c9ef735b4b9874c1a09d8c4f524230e05"
+ },
+ "admission_review_fixes": {
+  "naming": "A = HomDS cost-efficiency-first homogeneous baseline (qwen pooled .6061 >= ds .6000; ds wins cost/latency only); B victory wording bounded accordingly",
+  "latency_derivation": "CORRECTED: 1 reason node per exec (E05/E06/E08; E07 none); qwen-vs-ds reason median +23.9s (p90 +53.8s) -> mean +17.9s/exec over 4 tasks; earlier 60-80s figure mistakenly multiplied by 3 nodes; reroll on reason rare (1/33 in V3 same-condition)",
+  "historical_disclosure": "added sec.0.5: M4 Stage-B static hetero (static_opt Q .298>homo 0); Oct-26 Qwen+DS fixed-DAG 6-pair trial (equal quality, hetero cheaper, +112% latency); RQ3 is NOT the first Qwen+DS end-to-end test — it is the first CAP-profile-directed type allocation test on E05-E08 with reason-slot decomposition and null-task control"
+ }
+}

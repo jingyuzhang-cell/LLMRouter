@@ -1,0 +1,208 @@
+{
+ "exec_id": "HomDS|S4|B_yjt|r2",
+ "cell": "HomDS",
+ "task": "B_yjt",
+ "rep": 2,
+ "nodes": [
+  {
+   "node_id": "ext_notice",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_occ",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_replies",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "merge",
+   "kind": "reason",
+   "signals": {
+    "exec": false,
+    "prod": true,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "多监管方关联：上游节点 ext_notice 未提供任何事实，无法确认豫金刚石涉及哪些监管方及其关联关系",
+     "跨年审核一致性：上游节点 ext_replies 与 ext_notice 均未提供任何事实，无法确认各年度审核意见是否一致",
+     "资金占用延续：上游节点 ext_occ 未提供任何事实，无法确认资金占用是否跨年度延续",
+     "违规担保：上游节点未提供任何事实，无法确认违规担保的具体情况",
+     "合并三线所需的事实基础全部缺失，无法形成任何可验证结论"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "多监管方关联：上游节点 ext_notice 未提供任何事实，无法确认豫金刚石涉及哪些监管方及其关联关系",
+     "跨年审核一致性：上游节点 ext_replies 与 ext_notice 均未提供任何事实，无法确认各年度审核意见是否一致",
+     "资金占用延续：上游节点 ext_occ 未提供任何事实，无法确认资金占用是否跨年度延续",
+     "违规担保：上游节点未提供任何事实，无法确认违规担保的具体情况",
+     "合并三线所需的事实基础全部缺失，无法形成任何可验证结论"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "豫金刚石多主体资金占用与违规担保的具体事实",
+     "涉及的监管方及各监管方出具的监管文件内容",
+     "跨年度审核的一致性或差异情况",
+     "资金占用延续的时间范围与金额",
+     "上游节点 ext_notice、ext_occ、ext_replies 均未提供任何事实，无法合并三线"
+    ],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "report",
+   "kind": "report",
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "豫金刚石多主体资金占用与违规担保的具体事实",
+     "多监管方及跨年审核的相关事实",
+     "资金占用延续的具体事实"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "豫金刚石多主体资金占用与违规担保的具体事实",
+     "多监管方及跨年审核的相关事实",
+     "资金占用延续的具体事实"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  }
+ ],
+ "actions": [
+  {
+   "action": "R",
+   "node": "ext_notice",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_occ",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_replies",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "merge",
+   "outcome": "failed"
+  }
+ ],
+ "budget_left": {
+  "calls_left": 243,
+  "yuan_left": 4.6679,
+  "tokens_left": 450431,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 1351221
+ }
+}

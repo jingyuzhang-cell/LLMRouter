@@ -1,0 +1,202 @@
+{
+ "exec_id": "DYN|S4|B_yjt|r3",
+ "cell": "DYN",
+ "task": "B_yjt",
+ "rep": 3,
+ "nodes": [
+  {
+   "node_id": "ext_notice",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_occ",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_replies",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "merge",
+   "kind": "reason",
+   "signals": {
+    "exec": false,
+    "prod": true,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "豫金刚石多主体资金占用与违规担保的多监管方关联情况（上游三线事实均为空，无证据支持）",
+     "跨年审核一致性结论（上游 ext_replies 无事实输出）",
+     "资金占用延续的具体事实（上游 ext_occ 无事实输出）",
+     "未提供任何文档（doc1 等）可供引用，无法核实相关结论"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "豫金刚石多主体资金占用与违规担保的多监管方关联情况（上游三线事实均为空，无证据支持）",
+     "跨年审核一致性结论（上游 ext_replies 无事实输出）",
+     "资金占用延续的具体事实（上游 ext_occ 无事实输出）",
+     "未提供任何文档（doc1 等）可供引用，无法核实相关结论"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  },
+  {
+   "node_id": "report",
+   "kind": "report",
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "豫金刚石多主体资金占用与违规担保的具体事实无法确认：未提供任何证据文档（doc1 等）或上游事实，无法核实资金占用主体、金额、发生时间及延续情况",
+     "多监管方（如证监会、交易所等）对豫金刚石的监管措施及处罚内容无法确认：无相关公告、问询函或处罚决定书可供引用",
+     "跨年审核的具体范围、年度及审核结论无法确认：缺少年报问询、审计报告或审核意见等证据",
+     "资金占用延续的时间跨度、各年度占用余额及清偿进展无法确认：缺少定期报告或专项说明原文"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "豫金刚石多主体资金占用与违规担保的具体事实无法确认：未提供任何证据文档（doc1 等）或上游事实，无法核实资金占用主体、金额、发生时间及延续情况",
+     "多监管方（如证监会、交易所等）对豫金刚石的监管措施及处罚内容无法确认：无相关公告、问询函或处罚决定书可供引用",
+     "跨年审核的具体范围、年度及审核结论无法确认：缺少年报问询、审计报告或审核意见等证据",
+     "资金占用延续的时间跨度、各年度占用余额及清偿进展无法确认：缺少定期报告或专项说明原文"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  }
+ ],
+ "actions": [
+  {
+   "action": "R",
+   "node": "ext_notice",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_occ",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_replies",
+   "outcome": "failed"
+  },
+  {
+   "action": "Z3",
+   "node": "merge",
+   "outcome": "degraded-no-recovery"
+  },
+  {
+   "action": "Z3",
+   "node": "report",
+   "outcome": "degraded-no-recovery"
+  }
+ ],
+ "budget_left": {
+  "calls_left": 218,
+  "yuan_left": 4.3454,
+  "tokens_left": 253036,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 1548515
+ }
+}

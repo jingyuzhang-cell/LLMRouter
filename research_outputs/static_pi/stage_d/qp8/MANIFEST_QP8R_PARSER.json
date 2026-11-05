@@ -1,0 +1,36 @@
+{
+ "frozen_at": "2026-11-04",
+ "batch": "QP8R_PARSER_RECOVERY",
+ "model_calls": 0,
+ "status": "NEEDS FIX (gold coverage unchanged despite value recovery)",
+ "tests": "19/19 PASS",
+ "offline": {
+  "value_recovery": {
+   "old": 48,
+   "new": 111,
+   "delta": 63
+  },
+  "verified": {
+   "old": 44,
+   "new": 68,
+   "delta": 24
+  },
+  "gold_coverage": {
+   "old": "94/94",
+   "new": "94/94",
+   "delta": 0
+  }
+ },
+ "issue": "Gold coverage was already 94/94 with OLD parser (via name_matches fallback which does not require values). New parser recovers +63 values and +24 verified entries but gold coverage is UNCHANGED. The recovered values lack evidence metadata (nested string outputs do not include doc/page/quote), so verify_evidence cannot confirm them.",
+ "verdict": "NEEDS FIX: new parser recovers values (48 to 111, +132 pct) and verified entries (44 to 68, +55 pct), but gold fact coverage unchanged at 94/94. The actual quality bottleneck is value-to-evidence binding, not gold fact coverage.",
+ "files": {
+  "qp3/parser_v2.py": {
+   "sha256": "8c8148dec67cd588e0596c45406bd30a7fdc5ed29e795e30a658c6858179a0e9",
+   "bytes": 4411
+  },
+  "qp3/test_parser_v2.py": {
+   "sha256": "b10ec589099c863057cf61029d44367fc1002bccf2b4ee95c6601b5eb0f6e2bf",
+   "bytes": 5191
+  }
+ }
+}

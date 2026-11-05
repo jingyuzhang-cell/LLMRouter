@@ -71,15 +71,21 @@ def node_docs(nid):
                        f'not present in evidence store')
     return {e: ev[e]}
 
-OUT_CAP = {'extraction': 1536}          # F3; default for all other roles:
+OUT_CAP = {'extraction': 2048}  # FIX: 1536 was marginal with full 7967-char doc          # F3; default for all other roles:
 OUT_DEFAULT = 768
 PER_PARENT_CAP = 3800                   # >= max extraction output (1536 tok x ~2.4 ch/tok)
+# PROXY / UNCALIBRATED: entity_graph capability q_glm=0.80, q_flash=0.58
+#   derived from entity_relations mapping, NOT real calibration.
+#   50% of IB-vs-Alt action differences depend on these proxy values.
+#   Results must disclose this uncertainty; do NOT interpret as verified capability.
+PROXY_NODES = {'n6': {'type': 'entity_graph', 'q_glm': 0.80, 'q_flash': 0.58, 'calibrated': False}}
 GARBAGE = '[{"fact":"占位","evidence_doc_id":"?"}]'
 
 # ---- FAIL-CLOSED evidence loading with semantic gate (unchanged from v2) ----
 zeda_store = json.load(open('/root/r3_own_pool/deadline_reward_v1/'
                             'h1v8_docs/zeda_docs.json'))
-ev = {d['doc_id']: d['text'][:6000] for d in zeda_store['docs']}
+# FIX 2026-11-04: full document (was [:6000], missing 25 facts at offsets 6247-9223)
+ev = {d['doc_id']: d['text'] for d in zeda_store['docs']}
 
 
 def semantic_gate():
@@ -117,8 +123,18 @@ def parse_json_text(text):
 
 
 def _norm(s):
-    return re.sub(r'[\s,，年月日/.-]', '', str(s))
-
+    """Canonical comparison: dates → YYYY-MM-DD (no leading-zero ambiguity),
+    amounts → digits+unit (no separators). Handles 中文/ISO/slash formats."""
+    t = str(s)
+    # Date patterns: try to extract Y/M/D from various formats BEFORE stripping
+    dm = (re.fullmatch(r'(\d{4})[-/年](\d{1,2})[-/月](\d{1,2})日?', t.strip())
+          or re.fullmatch(r'(\d{4})(\d{2})(\d{2})', t.strip()))
+    if dm:
+        y, m, d = int(dm.group(1)), int(dm.group(2)), int(dm.group(3))
+        if 1 <= m <= 12 and 1 <= d <= 31:
+            return f'{y:04d}-{m:02d}-{d:02d}'
+    # Fallback: strip separators (for amounts and non-date strings)
+    return re.sub(r'[\s,，年月日/.-]', '', t)
 
 # input-derived probes per extraction node: thresholds come ONLY from what
 # the node's own evidence slice actually contains (never from scoring keys)
@@ -179,8 +195,14 @@ def parent_ctx(nid, ud):
     for p in DEPS[nid]:
         t = str(ud.get(p, '') or '').strip()
         prod = '/'.join(PRODUCES[p]) or ROLES[p]
+        # FIX 2026-11-04: Fail-Closed truncation guard (was silent [:PER_PARENT_CAP])
+        if len(t) > PER_PARENT_CAP:
+            raise RuntimeError(
+                f'FAIL-CLOSED: node {nid} parent {p} output {len(t)} chars '
+                f'exceeds PER_PARENT_CAP={PER_PARENT_CAP}; '
+                f'refusing to silently truncate (was V7.7 check2 FAIL)')
         parts.append(f'## 上游 {p}（{ROLES[p]} → {prod}）输出\n'
-                     f'{t[:PER_PARENT_CAP]}')
+                     f'{t}')
     return '\n\n'.join(parts)
 
 
@@ -343,7 +365,7 @@ def main(out_dir):
         rec, text = meter.call(r['model'], '', prompt,
                                OUT_CAP.get(role, OUT_DEFAULT),
                                purpose=r['purpose'])
-        if r['action'] == 'fault_inject':
+        if r.get('action', '') == 'fault_inject':
             text = GARBAGE                  # b2 fault replaces output
         upstream[nid] = text
         results['shared'].setdefault(nid, text[:500])
@@ -353,8 +375,8 @@ def main(out_dir):
         if not g['ok']:
             fail_stop('stage2', rec, g)
 
-        if r['action']:
-            key = f"{r['action']}_rep{r['rep']}"
+        if r.get('action', ''):
+            key = f"{r.get('action', '')}_rep{r.get('rep', 0)}"
             results['actions'].setdefault(key, {})[nid] = text
 
     (out/'RESULTS_RAW.json').write_text(json.dumps(results, ensure_ascii=False,

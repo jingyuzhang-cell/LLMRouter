@@ -1,0 +1,139 @@
+{
+ "counts": {
+  "HomDS": 20,
+  "HetQR": 20
+ },
+ "cells": {
+  "HomDS": {
+   "n_execs": 20,
+   "mean_task_q": 0.6681,
+   "per_task": {
+    "E05": 0.6727,
+    "E06": 0.5833,
+    "E07": 0.6364,
+    "E08": 0.78
+   },
+   "gate_rate": 1
+  },
+  "HetQR": {
+   "n_execs": 20,
+   "mean_task_q": 0.6313,
+   "per_task": {
+    "E05": 0.5636,
+    "E06": 0.5833,
+    "E07": 0.6182,
+    "E08": 0.76
+   },
+   "gate_rate": 1
+  }
+ },
+ "paired": {
+  "per_task": {
+   "E05": -10.91,
+   "E06": 0.0,
+   "E07": -1.82,
+   "E08": -2.0
+  },
+  "mean_pp": -3.68,
+  "sd_pp": 4.9,
+  "signflip_p": 0.25,
+  "signflip_floor": "n=4 tasks => min two-sided p=0.125; exploratory",
+  "cluster_bootstrap_ci95": [
+   -15.05,
+   5.0
+  ]
+ },
+ "reason_slots": {
+  "per_task": {
+   "E05": {
+    "reason_slots": [
+     "F-E05-2",
+     "F-E05-3",
+     "F-E05-9"
+    ],
+    "A_reason_rate": 0.8667,
+    "B_reason_rate": 0.8667,
+    "A_other_rate": 0.6,
+    "B_other_rate": 0.45
+   },
+   "E06": {
+    "reason_slots": [
+     "F-E06-1",
+     "F-E06-11",
+     "F-E06-5"
+    ],
+    "A_reason_rate": 0.6667,
+    "B_reason_rate": 0.6667,
+    "A_other_rate": 0.5556,
+    "B_other_rate": 0.5556
+   },
+   "E07": {
+    "reason_slots": [],
+    "A_reason_rate": null,
+    "B_reason_rate": null,
+    "A_other_rate": 0.6364,
+    "B_other_rate": 0.6182
+   },
+   "E08": {
+    "reason_slots": [
+     "F-E08-1",
+     "F-E08-7",
+     "F-E08-9"
+    ],
+    "A_reason_rate": 0.6,
+    "B_reason_rate": 0.5333,
+    "A_other_rate": 0.8571,
+    "B_other_rate": 0.8571
+   }
+  },
+  "pooled": {
+   "A_reason": 0.7111,
+   "B_reason": 0.6889
+  }
+ },
+ "delivery": {
+  "HomDS": {
+   "nodes": 95,
+   "base_parse_fail": 1,
+   "rerolls": 3,
+   "reroll_adopted": 2
+  },
+  "HetQR": {
+   "nodes": 95,
+   "base_parse_fail": 2,
+   "rerolls": 2,
+   "reroll_adopted": 0
+  }
+ },
+ "cost_latency": {
+  "HomDS": {
+   "n": 20,
+   "calls": 4.9,
+   "tokens": 9215.0,
+   "yuan": 0.0632,
+   "span": 17.7
+  },
+  "HetQR": {
+   "n": 20,
+   "calls": 4.85,
+   "tokens": 9876.0,
+   "yuan": 0.0679,
+   "span": 49.6
+  },
+  "delta_pct": {
+   "yuan": 7.4,
+   "span": 180.2,
+   "calls": -1.0
+  },
+  "truncation_by_model": {
+   "deepseek": "6/180",
+   "qwen": "0/15"
+  }
+ },
+ "criteria": {
+  "quality": false,
+  "cost": true,
+  "latency": false
+ },
+ "verdict": "NO terminal gain from node-type allocation (record layer decomposition)"
+}

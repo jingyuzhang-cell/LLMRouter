@@ -1,0 +1,171 @@
+{
+  "status": "DESIGN_ONLY_EXECUTION_HOLD",
+  "new_api_authorization": 0,
+  "new_cash_authorization_cny": 0,
+  "states": [
+    {
+      "task": "MVR1",
+      "rep": 2,
+      "affected": [
+        "e0"
+      ],
+      "guard_eligible_cache": [
+        "e1"
+      ],
+      "details": {
+        "e0": {
+          "index": 45,
+          "purpose": "qp5c|MVR1|C2|r2|e0",
+          "response_sha": "312a00b6f286d3d7d3534cb9293f6e253b09ce91a65efbde3e86674b636cdf8b",
+          "guard_failed_fields": [
+            "罚款合计",
+            "高松市场禁入"
+          ],
+          "failed_entries": [
+            {
+              "field": "罚款合计",
+              "value": "1430万元",
+              "location_valid": true,
+              "unknown_literal": false,
+              "quote": "对王重人、李焱、赵凡给予警告,并分别处以60万元罚款"
+            },
+            {
+              "field": "高松市场禁入",
+              "value": "3年证券市场禁入（事先告知书拟决定；处罚决定书未载明）",
+              "location_valid": true,
+              "unknown_literal": false,
+              "quote": "本案现已调查、审理终结"
+            }
+          ],
+          "entry_count": 19,
+          "cost": 0.0116464,
+          "seconds": 13.937
+        },
+        "e1": {
+          "index": 46,
+          "purpose": "qp5c|MVR1|C2|r2|e1",
+          "response_sha": "1c8b272f9d3264cfc966cbfb71de977b6e06b9b3110dbe2e1a6455c2d0d4de9a",
+          "guard_failed_fields": [],
+          "failed_entries": [
+            {
+              "field": "江苏舜天处罚案",
+              "value": "合计罚款1,400万元",
+              "location_valid": true,
+              "unknown_literal": false,
+              "quote": "一、对江苏舜天股份有限公司责令改正，给予警告，并处以1,000 万元罚款； 二、对高松给予警告，并处以150 万元罚款； 三、对桂生春给予警告，并处以100 万元罚款； 四、对王重人、李焱、赵凡给予警告，并分别处以60 万元罚款"
+            }
+          ],
+          "entry_count": 14,
+          "cost": 0.0107304,
+          "seconds": 12.418
+        }
+      },
+      "stage": "AFTER_E_PAIR_BEFORE_REPAIR_DOWNSTREAM_NOT_EXECUTED",
+      "actual_single_defect": true,
+      "local_future_calls": 5,
+      "full_calls": 6,
+      "semantic_cache_health": "UNKNOWN_NO_INDEPENDENT_CERTIFICATION"
+    },
+    {
+      "task": "KANGMEI",
+      "rep": 1,
+      "affected": [
+        "e1"
+      ],
+      "guard_eligible_cache": [
+        "e0"
+      ],
+      "details": {
+        "e0": {
+          "index": 64,
+          "purpose": "qp5c|KANGMEI|C2|r1|e0",
+          "response_sha": "141b9e8732b877dafd90944ebf28bc7704e74cdf03891ce3f01c564afebd7a00",
+          "guard_failed_fields": [],
+          "failed_entries": [],
+          "entry_count": 15,
+          "cost": 0.0056364,
+          "seconds": 13.191
+        },
+        "e1": {
+          "index": 65,
+          "purpose": "qp5c|KANGMEI|C2|r1|e1",
+          "response_sha": "86c321e8d89f49a7485d003f5732a572ec5ee841bc8c582861ca231e02285342",
+          "guard_failed_fields": [
+            "立案调查通知书编号"
+          ],
+          "failed_entries": [
+            {
+              "field": "立案调查通知书编号",
+              "value": "粤证调查通字180199号",
+              "location_valid": false,
+              "unknown_literal": false,
+              "quote": "收到中国证券监督管理委员会（以下简称\"证监会\"）《调查通知书》（编号：粤证调查通字 180199 号）"
+            }
+          ],
+          "entry_count": 20,
+          "cost": 0.013902,
+          "seconds": 27.786
+        }
+      },
+      "stage": "AFTER_E_PAIR_BEFORE_REPAIR_DOWNSTREAM_NOT_EXECUTED",
+      "actual_single_defect": true,
+      "local_future_calls": 5,
+      "full_calls": 6,
+      "semantic_cache_health": "UNKNOWN_NO_INDEPENDENT_CERTIFICATION"
+    }
+  ],
+  "model": "glm-5.3-flash",
+  "thinking": "enabled",
+  "reasoning_effort": "low",
+  "temperature": "provider default as existing transport; not explicitly set",
+  "repair": "same E-v2 full-node regeneration, replacement, no supplemental extraction",
+  "arms": {
+    "Local": "regenerate marked E; reuse other E; run t,m,r,p",
+    "Full": "regenerate e0,e1; run t,m,r,p"
+  },
+  "pairs_per_state": 3,
+  "max_calls": 66,
+  "node_call_counts": {
+    "E": 18,
+    "t": 12,
+    "m": 12,
+    "r": 12,
+    "p": 12
+  },
+  "max_output_tokens": {
+    "E": 2000,
+    "t": 1500,
+    "m": 2500,
+    "r": 2000,
+    "p": 4000
+  },
+  "input_token_reserve_per_call": 65536,
+  "input_token_reserve_total": 4325376,
+  "output_token_plan_total": 156000,
+  "historical_price_scenario": {
+    "input_cny_per_million": 0.8,
+    "output_cny_per_million": 2.8,
+    "total_cny": "3.8971008",
+    "account_certification": false,
+    "absolute_bill_cap": false
+  },
+  "proposed_estimate_stop_cny": 4.5,
+  "reserve_fraction": 0.05,
+  "limits": {
+    "global_concurrency": 1,
+    "model_slots": 1,
+    "request_timeout_seconds": 180,
+    "arm_deadline_seconds": 1080,
+    "batch_deadline_seconds": 14400,
+    "retry": 0,
+    "extra_samples": 0
+  },
+  "scoring": "unchanged QP1-final; separate value/location/support; incomplete remains UNKNOWN",
+  "entrypoint": "/root/research_outputs/static_pi/stage_d/quality_phase_v1/qp5c_runner.py --local-full",
+  "external_conditions": [
+    "new fee authorization",
+    "account tariff and billed output limit confirmation"
+  ],
+  "implementation_condition": "Minimal branch and isolated batch records implemented; offline branch check only; no live verification",
+  "no_QP6": true
+}

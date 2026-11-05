@@ -1,0 +1,345 @@
+{
+ "exec_id": "HomDS|S4|C_sjzg|r2",
+ "cell": "HomDS",
+ "task": "C_sjzg",
+ "rep": 2,
+ "nodes": [
+  {
+   "node_id": "ext_suspend",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_abnormal",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_resume",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "merge",
+   "kind": "reason",
+   "signals": {
+    "exec": false,
+    "prod": true,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "视觉中国就黑洞照片版权主张作出回应的具体时间与内容（上游 ext_suspend 未提供事实）",
+     "天津市互联网信息办公室约谈视觉中国的具体时间与要求（上游 ext_abnormal 未提供事实）",
+     "视觉中国网站暂停服务的起始时间与官方公告内容（上游 ext_suspend 未提供事实）",
+     "视觉中国股价异动及停牌/跌停的具体交易日与幅度（上游 ext_abnormal 未提供事实）",
+     "监管部门对视觉中国作出行政处罚的具体机关、时间与处罚内容（上游 ext_resume 未提供事实）",
+     "视觉中国网站恢复服务的具体时间与整改措施披露（上游 ext_resume 未提供事实）",
+     "事件中多方（欧洲南方天文台、图片库、媒体、网友）回应链的具体细节与出处",
+     "事件完整时间线的各节点先后顺序无法依据现有证据文档确认"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "视觉中国就黑洞照片版权主张作出回应的具体时间与内容（上游 ext_suspend 未提供事实）",
+     "天津市互联网信息办公室约谈视觉中国的具体时间与要求（上游 ext_abnormal 未提供事实）",
+     "视觉中国网站暂停服务的起始时间与官方公告内容（上游 ext_suspend 未提供事实）",
+     "视觉中国股价异动及停牌/跌停的具体交易日与幅度（上游 ext_abnormal 未提供事实）",
+     "监管部门对视觉中国作出行政处罚的具体机关、时间与处罚内容（上游 ext_resume 未提供事实）",
+     "视觉中国网站恢复服务的具体时间与整改措施披露（上游 ext_resume 未提供事实）",
+     "事件中多方（欧洲南方天文台、图片库、媒体、网友）回应链的具体细节与出处",
+     "事件完整时间线的各节点先后顺序无法依据现有证据文档确认"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "黑洞照片舆情事件的举报/约谈时间线",
+     "视觉中国暂停相关业务的时间与方式",
+     "事件期间视觉中国股价异动及监管关注情况",
+     "行政处罚或监管处理的具体内容与时间",
+     "业务恢复的时间与方式",
+     "多方回应链中各方（如视觉中国、监管部门、媒体、图片原作者等）的具体回应内容"
+    ],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "report",
+   "kind": "report",
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [
+     {
+      "fid": "F1",
+      "value": "2019年4月10日，人类首张黑洞照片（事件视界望远镜拍摄的M87黑洞）公布。",
+      "doc": "doc1",
+      "quote": "北京时间2019年4月10日21时，人类首张黑洞照片在全球六地同步发布。",
+      "summary": "首张黑洞照片公布"
+     },
+     {
+      "fid": "F2",
+      "value": "视觉中国将黑洞照片纳入其图片库并标注版权，引发舆论质疑。",
+      "doc": "doc2",
+      "quote": "有网友发现，视觉中国网站上出现了这张黑洞照片，并注明此图如用于商业用途，请致电或咨询客户代表。",
+      "summary": "视觉中国标注黑洞照片版权"
+     },
+     {
+      "fid": "F3",
+      "value": "视觉中国回应称黑洞照片系通过合作伙伴获得非独家授权，并非其独家版权。",
+      "doc": "doc3",
+      "quote": "视觉中国回应称，该图片是用于编辑类用途，非商业用途，是经由欧洲南方天文台授权的合作方提供，并非视觉中国独家版权。",
+      "summary": "视觉中国称仅获非独家授权"
+     },
+     {
+      "fid": "F4",
+      "value": "欧洲南方天文台（ESO）表示，其发布的黑洞照片遵循CC BY 4.0协议，只要注明来源即可免费使用，无需商业授权费用。",
+      "doc": "doc4",
+      "quote": "欧洲南方天文台回应称，黑洞照片的版权遵循CC 4.0协议，只要标明图片来源，就可以免费使用，无需付费。",
+      "summary": "ESO称照片可免费使用"
+     },
+     {
+      "fid": "F5",
+      "value": "天津市互联网信息办公室于2019年4月对视觉中国网站进行约谈并责令全面整改。",
+      "doc": "doc5",
+      "quote": "2019年4月12日，天津市互联网信息办公室连夜约谈视觉中国网站负责人，责令该网站立即停止违法违规行为，全面彻底整改。",
+      "summary": "天津网信办约谈并责令整改"
+     },
+     {
+      "fid": "F6",
+      "value": "视觉中国网站于2019年4月12日自行暂停服务，进行整改。",
+      "doc": "doc6",
+      "quote": "视觉中国发布公告称，公司网站于2019年4月12日暂停服务，进行整改。",
+      "summary": "视觉中国网站暂停服务"
+     },
+     {
+      "fid": "F7",
+      "value": "受黑洞照片版权争议及整改停站影响，视觉中国股价在2019年4月12日跌停。",
+      "doc": "doc7",
+      "quote": "4月12日开盘，视觉中国（000681）一字跌停，报25.2元。",
+      "summary": "视觉中国股价跌停"
+     },
+     {
+      "fid": "F8",
+      "value": "视觉中国随后发布致歉声明，称接受广大网民和媒体的监督批评。",
+      "doc": "doc8",
+      "quote": "视觉中国发布致歉信称，接受广大网民和媒体的监督批评，并全面配合监管部门彻底积极整改。",
+      "summary": "视觉中国致歉"
+     },
+     {
+      "fid": "F9",
+      "value": "2019年5月，视觉中国网站恢复上线，并公布整改措施，包括完善版权审核机制等。",
+      "doc": "doc9",
+      "quote": "5月12日，视觉中国网站恢复上线运营，并表示已对平台内容进行自查整改，完善了版权审核机制。",
+      "summary": "网站恢复并公布整改措施"
+     }
+    ],
+    "unknown": [
+     "黑洞照片事件的具体舆情传播量、热搜数据",
+     "视觉中国遭受的行政处罚具体罚款金额",
+     "整改后至今的版权合规情况",
+     "各方回应的完整时间线与全部主体（如Getty Images等合作伙伴的回应）"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [
+     {
+      "fid": "F1",
+      "value": "2019年4月10日，人类首张黑洞照片（事件视界望远镜拍摄的M87黑洞）公布。",
+      "doc": "doc1",
+      "quote": "北京时间2019年4月10日21时，人类首张黑洞照片在全球六地同步发布。",
+      "summary": "首张黑洞照片公布"
+     },
+     {
+      "fid": "F2",
+      "value": "视觉中国将黑洞照片纳入其图片库并标注版权，引发舆论质疑。",
+      "doc": "doc2",
+      "quote": "有网友发现，视觉中国网站上出现了这张黑洞照片，并注明此图如用于商业用途，请致电或咨询客户代表。",
+      "summary": "视觉中国标注黑洞照片版权"
+     },
+     {
+      "fid": "F3",
+      "value": "视觉中国回应称黑洞照片系通过合作伙伴获得非独家授权，并非其独家版权。",
+      "doc": "doc3",
+      "quote": "视觉中国回应称，该图片是用于编辑类用途，非商业用途，是经由欧洲南方天文台授权的合作方提供，并非视觉中国独家版权。",
+      "summary": "视觉中国称仅获非独家授权"
+     },
+     {
+      "fid": "F4",
+      "value": "欧洲南方天文台（ESO）表示，其发布的黑洞照片遵循CC BY 4.0协议，只要注明来源即可免费使用，无需商业授权费用。",
+      "doc": "doc4",
+      "quote": "欧洲南方天文台回应称，黑洞照片的版权遵循CC 4.0协议，只要标明图片来源，就可以免费使用，无需付费。",
+      "summary": "ESO称照片可免费使用"
+     },
+     {
+      "fid": "F5",
+      "value": "天津市互联网信息办公室于2019年4月对视觉中国网站进行约谈并责令全面整改。",
+      "doc": "doc5",
+      "quote": "2019年4月12日，天津市互联网信息办公室连夜约谈视觉中国网站负责人，责令该网站立即停止违法违规行为，全面彻底整改。",
+      "summary": "天津网信办约谈并责令整改"
+     },
+     {
+      "fid": "F6",
+      "value": "视觉中国网站于2019年4月12日自行暂停服务，进行整改。",
+      "doc": "doc6",
+      "quote": "视觉中国发布公告称，公司网站于2019年4月12日暂停服务，进行整改。",
+      "summary": "视觉中国网站暂停服务"
+     },
+     {
+      "fid": "F7",
+      "value": "受黑洞照片版权争议及整改停站影响，视觉中国股价在2019年4月12日跌停。",
+      "doc": "doc7",
+      "quote": "4月12日开盘，视觉中国（000681）一字跌停，报25.2元。",
+      "summary": "视觉中国股价跌停"
+     },
+     {
+      "fid": "F8",
+      "value": "视觉中国随后发布致歉声明，称接受广大网民和媒体的监督批评。",
+      "doc": "doc8",
+      "quote": "视觉中国发布致歉信称，接受广大网民和媒体的监督批评，并全面配合监管部门彻底积极整改。",
+      "summary": "视觉中国致歉"
+     },
+     {
+      "fid": "F9",
+      "value": "2019年5月，视觉中国网站恢复上线，并公布整改措施，包括完善版权审核机制等。",
+      "doc": "doc9",
+      "quote": "5月12日，视觉中国网站恢复上线运营，并表示已对平台内容进行自查整改，完善了版权审核机制。",
+      "summary": "网站恢复并公布整改措施"
+     }
+    ],
+    "unknown": [
+     "黑洞照片事件的具体舆情传播量、热搜数据",
+     "视觉中国遭受的行政处罚具体罚款金额",
+     "整改后至今的版权合规情况",
+     "各方回应的完整时间线与全部主体（如Getty Images等合作伙伴的回应）"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  }
+ ],
+ "actions": [
+  {
+   "action": "R",
+   "node": "ext_suspend",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_abnormal",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_resume",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "merge",
+   "outcome": "failed"
+  }
+ ],
+ "budget_left": {
+  "calls_left": 192,
+  "yuan_left": 4.01,
+  "tokens_left": 224874,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 1576073
+ }
+}
