@@ -154,5 +154,35 @@ class G04Regression(unittest.TestCase):
         self.assertEqual(E.AROUT["J2"], "deepseek")
 
 
+
+
+class G05FailureAwareDegrade(unittest.TestCase):
+    """Stage C 前置：修复/重跑路径守卫触发 → 降级单次换模（J1→DS）而非传递失败。"""
+
+    def test_degrade_on_repair_path_failure(self):
+        # S3 结构故障：J1 首次输出合法但缺 relay（D2 异常，守卫不触发）
+        # → structure_repair 重跑（GLM）时契约失败 → 降级 DS → 链完成
+        class RepairFailsGLM(E.MockProvider):
+            def _response(self, n, alias, system):
+                if n == "J1" and alias == "glm53flash":
+                    if "dates_relay" in (system or ""):
+                        return {"text": ""}      # 修复重跑（带 relay 的 spec）失效
+                    return {"text": '{"judgments": [{"kind": "person_identity", '
+                                   '"verdict": "SAME_PERSON"}]}'}   # 合法但结构缺陷
+                return super()._response(n, alias, system)
+        rec, *_ = run_one("Proposed-Dynamic", "S3", 1, provider_cls=RepairFailsGLM)
+        kinds = [a["kind"] for a in rec["actions"]]
+        self.assertIn("structure_repair", kinds)
+        self.assertIn("failure_aware_degrade_swap", kinds)
+        j1_models = [c["alias"] for c in rec["raw"]["calls"] if c["node"] == "J1"]
+        self.assertIn("deepseek", j1_models)
+        self.assertEqual(rec["status"], "COMPLETE")
+
+    def test_healthy_unaffected_and_single_degrade_only(self):
+        # 健康执行零降级；降级最多一次（不循环）
+        rec, *_ = run_one("Proposed-Dynamic", "S3", 1)
+        self.assertNotIn("failure_aware_degrade_swap", [a["kind"] for a in rec["actions"]])
+        self.assertEqual(rec["guard_log"], [])
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)

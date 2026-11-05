@@ -1,0 +1,208 @@
+{
+ "exec_id": "DYN|S4|C_sjzg|r2",
+ "cell": "DYN",
+ "task": "C_sjzg",
+ "rep": 2,
+ "nodes": [
+  {
+   "node_id": "ext_suspend",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_abnormal",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "ext_resume",
+   "kind": "extract",
+   "signals": {
+    "exec": true,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": {
+    "ok": false,
+    "facts": [],
+    "unknown": [],
+    "model": "deepseek"
+   },
+   "adopted": "base"
+  },
+  {
+   "node_id": "merge",
+   "kind": "reason",
+   "signals": {
+    "exec": false,
+    "prod": true,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "视觉中国就黑洞照片版权声明引发舆情的具体时间点",
+     "举报或约谈主体的身份及约谈时间",
+     "网站或服务暂停的具体起止时间",
+     "股价及市场反应的具体数据",
+     "行政处罚的具体内容与作出时间",
+     "整改后恢复运营的具体时间与方式"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "视觉中国就黑洞照片版权声明引发舆情的具体时间点",
+     "举报或约谈主体的身份及约谈时间",
+     "网站或服务暂停的具体起止时间",
+     "股价及市场反应的具体数据",
+     "行政处罚的具体内容与作出时间",
+     "整改后恢复运营的具体时间与方式"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  },
+  {
+   "node_id": "report",
+   "kind": "report",
+   "signals": {
+    "exec": false,
+    "prod": false,
+    "cite": false
+   },
+   "chosen": {
+    "model": "deepseek",
+    "facts": [],
+    "unknown": [
+     "视觉中国黑洞照片舆情事件的舆情起点与时间线",
+     "视觉中国、图片原作者、事件相关方等多方回应链的具体内容与出处",
+     "事件期间视觉中国股价等市场反应的具体数据与出处",
+     "监管部门约谈、处罚等整改要求的具体内容与出处",
+     "视觉中国后续整改措施及落实情况的具体内容与出处"
+    ],
+    "rerolled": false
+   },
+   "base_output": {
+    "ok": true,
+    "facts": [],
+    "unknown": [
+     "视觉中国黑洞照片舆情事件的舆情起点与时间线",
+     "视觉中国、图片原作者、事件相关方等多方回应链的具体内容与出处",
+     "事件期间视觉中国股价等市场反应的具体数据与出处",
+     "监管部门约谈、处罚等整改要求的具体内容与出处",
+     "视觉中国后续整改措施及落实情况的具体内容与出处"
+    ],
+    "model": "deepseek",
+    "mt": 2000,
+    "nup": 0
+   },
+   "reroll_output": null,
+   "adopted": "base"
+  }
+ ],
+ "actions": [
+  {
+   "action": "R",
+   "node": "ext_suspend",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_abnormal",
+   "outcome": "failed"
+  },
+  {
+   "action": "R",
+   "node": "ext_resume",
+   "outcome": "failed"
+  },
+  {
+   "action": "Z3",
+   "node": "merge",
+   "outcome": "degraded-no-recovery"
+  },
+  {
+   "action": "Z3",
+   "node": "report",
+   "outcome": "degraded-no-recovery"
+  }
+ ],
+ "budget_left": {
+  "calls_left": 184,
+  "yuan_left": 3.9068,
+  "tokens_left": 216515,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 1585099
+ }
+}

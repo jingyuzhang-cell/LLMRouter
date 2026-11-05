@@ -1,0 +1,40 @@
+{
+ "frozen_at": "2026-11-04",
+ "batch": "QP8R_P3_ATTRIBUTION",
+ "model_calls": 0,
+ "status": "SUPPORTED: primary cause is period-missing (46.8%), recoverable from bucket names; 28 UNIQUE correct values form safe subset",
+ "results": {
+  "primary_cause": {
+   "period_missing": 52,
+   "pct": "46.8%",
+   "detail": "model outputs metric name without period; period is in bucket name but not extracted"
+  },
+  "unique_safety": {
+   "total": 37,
+   "correct": 28,
+   "precision": "75.7%",
+   "wrong": 9,
+   "wrong_breakdown": {
+    "genuinely_wrong": 7,
+    "subject_mismatch": 2
+   }
+  },
+  "theoretical_q_improvement": "28/47 gold facts = +59.6% max",
+  "recoverable": {
+   "ambiguous_recoverable": 52,
+   "method": "extract period from bucket name",
+   "no_new_calls": true
+  },
+  "recommendation": "Proceed with terminal quality experiment using 28 safe UNIQUE bindings as SINK input; ~12-24 SINK-only calls"
+ },
+ "files": {
+  "qp8/QP8R_P3_ATTRIBUTION.json": {
+   "sha256": "4587587807c8692863dba5237601dbe4cc6a57415358038736fe69a0677c72a6",
+   "bytes": 39552
+  },
+  "qp8/QP8R_P3_REPORT.md": {
+   "sha256": "7241e93372a3246f93abc5dd509824b018944d5569ea3191b3501fe78a663036",
+   "bytes": 3637
+  }
+ }
+}

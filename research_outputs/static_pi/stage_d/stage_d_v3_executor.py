@@ -933,6 +933,22 @@ class FinalExec(D2.Exec):
                     if attempt == 1:
                         self.clock.sleep(2)
                         continue
+                    # 失败感知修复（Stage C 前置最小实现）：修复/重跑路径上模型输出仍失效
+                    # 且存在合法替代模型时，降级单次换模而非传递失败。
+                    degrade = getattr(self, "_degrade_count", {})
+                    if (node == "J1" and self.versions.get(node, 0) > 0
+                            and self.arm in ("π-only", "Fixed-Composite", "Proposed-Dynamic")
+                            and self.model_override.get(node) != "deepseek"
+                            and degrade.get(node, 0) < 1):
+                        degrade[node] = degrade.get(node, 0) + 1
+                        self._degrade_count = degrade
+                        self.actions.append({"kind": "failure_aware_degrade_swap", "node": node,
+                                             "guard": guard_reason,
+                                             "t": round(self.clock.now() - self.t0, 1)})
+                        self.model_override[node] = "deepseek"
+                        self.versions[node] = self.versions.get(node, 0) + 1
+                        self.state[node] = "Ready"
+                        return
                     self.state[node] = "Failed"
                     self.anomalies.append({"node": node, "sig": {"D1": "model_suspect"},
                                            "guard": guard_reason,

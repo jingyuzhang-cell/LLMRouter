@@ -1,0 +1,54 @@
+{
+ "frozen_at": "2026-11-04",
+ "batch": "QP7_DAG_SCHEDULING",
+ "model_calls": 500,
+ "yuan": 2.6312,
+ "status": "DIRECTIONAL_POSITIVE (Dynamic-π +0.075 vs Static, 5/7 tasks, p=0.38; not significant at n=7)",
+ "results": {
+  "tractable": 7,
+  "intractable": 5,
+  "intractable_cause": "DS model cannot handle gold-frozen tasks (MVR2/E04/E08 all-facts-abstained)",
+  "macro_tractable": {
+   "single_ds": 0.208,
+   "static": 0.167,
+   "dynamic_pi": 0.242,
+   "joint": 0.211
+  },
+  "dynamic_vs_static": {
+   "dQ": 0.075,
+   "positive": "5/7",
+   "p": 0.38,
+   "dCost": "+0.003",
+   "dLatency": "-4.4s"
+  },
+  "joint_vs_dynamic": {
+   "dQ": -0.03,
+   "conclusion": "Joint adds no benefit; Z/R rarely trigger at low coverage"
+  },
+  "gate": {
+   "open": 3,
+   "closed": 11,
+   "threshold": 0.4
+  },
+  "heterogeneity": "E06 +0.38, ZIJING +0.30 vs GUOEN -0.19, ZHANGZIDAO -0.13"
+ },
+ "recommendation": "Retain Dynamic-π as core strategy; drop Joint; expand tractable task set or change model pair",
+ "files": {
+  "qp7/qp7_runner.py": {
+   "sha256": "18845be8d6a85542aaa8d7bd6f8964a96d5f6f1043cd25c1457b50eefc8cc5fa",
+   "bytes": 14937
+  },
+  "qp7/QP7_LEDGER.jsonl": {
+   "sha256": "f62fd731fe3485704204125ea00b8f11bcfb04d0cff8aa0a7a9d93231ff7942a",
+   "bytes": 1721331
+  },
+  "qp7/QP7_RESULTS.json": {
+   "sha256": "c88ec0a7a32e12e6c476a0fbbd0262d7801680c8e7dcb9cb948523980f2ac913",
+   "bytes": 42763
+  },
+  "qp7/QP7_REPORT.md": {
+   "sha256": "001ebdcdd64954d1d7ade063952172a34b8d375170959da58abeb4df2830b427",
+   "bytes": 4434
+  }
+ }
+}

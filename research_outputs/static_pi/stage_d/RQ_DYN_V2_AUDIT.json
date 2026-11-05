@@ -1,0 +1,49 @@
+{
+ "batch": "RQ_DYN_V2",
+ "status": "COMPLETED 48/48",
+ "spend": {
+  "calls": 333,
+  "calls_cap": 500,
+  "tokens": 1600901,
+  "tokens_cap": 1800000,
+  "yuan": 4.3125,
+  "yuan_cap": 8,
+  "breach": false
+ },
+ "incidents": [
+  "exec_id collision bug: run_exec used non-scenario exec_id → S2-S4 silently skipped in first run; fixed to include scenario; S1 data preserved (12 legacy files), S2-S4 re-executed",
+  "injector AttributeError on conflict_fid (missing init); fixed with default values",
+  "two crash-resume cycles during S3/S4"
+ ],
+ "key_findings": {
+  "R": "effective, 3rd independent validation (17 triggers HomDS, 16 DYN, most recovered)",
+  "pi": "UNPROVEN: S3 injection was node-level (truncated Qwen too) — 6/6 failed; needs model-specific injection for proper testing",
+  "Z1": "NOT TRIGGERED: injected fid (C-01/B-02) did not match model-named fids in merge output; needs input-layer injection fix",
+  "Z2": "NOT TRIGGERED: code path bug — pi failure did not route to Z2 branch",
+  "Z3": "TRIGGERED 12x, SAFETY BENEFIT REAL: correct UNKNOWN output, zero-to-low error assertions, ~11% call savings vs HomDS",
+  "s4_error_assertions": {
+   "HomDS": 25,
+   "DYN": 10
+  },
+  "s4_unknowns": {
+   "HomDS": 62,
+   "DYN": 56
+  },
+  "joint_q": "no positive terminal quality gain (overall −2.79pp); S4 Q_main drop is expected (Z3 correctly refuses to fabricate)"
+ },
+ "limitations": [
+  "AI-only Gold (no human certification)",
+  "π/Z1/Z2 not properly tested due to design/code issues",
+  "2 events only",
+  "Z1 fid mismatch is a design flaw not a mechanism failure"
+ ],
+ "files_sha256": {
+  "RQ_DYN_V2_RESULTS.md": "6d04112201c83f542e5efe8257e9491ca209cbbe48aafbfd5c2a23d25f386354",
+  "rq_dyn_v2_runner.py": "64779533346e567f27dc6d2327733b5a498d1e440149940159708c9e119521ea",
+  "rq_dyn_v2_injector.py": "b63f603d06e6f74801a664f776f85a80b9774152e0cef5b7094b98e8a2a8d83b",
+  "rq_dyn_v2_runs/ledger.jsonl": "30c67d5671a75f1ac33f962b1169213f0e99b83d9d51b3759a95f8f88ec15e40",
+  "rq_dyn_v2_runs/injection_ledger.jsonl": "be1f50a02688eb51cb08c0d5587ccd9ca54a8dcd21e2c7f54af49bafee2a7236"
+ },
+ "new_calls": 0,
+ "hold_192": "untouched"
+}

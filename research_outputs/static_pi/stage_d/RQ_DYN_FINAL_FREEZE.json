@@ -1,0 +1,80 @@
+{
+ "batch": "RQ_DYN_FINAL",
+ "frozen_at": "2026-11-06T00:47:25",
+ "experiment": "StaticHetero vs JointDynamic, E04 卓然, merge fault injection, 5 reps",
+ "design": {
+  "fault": "merge node truncation (both arms, same condition)",
+  "static": "same-model reroll only (also truncated)",
+  "dynamic": "R(same-model, truncated) -> pi(model-switch to non-injected) -> recovery",
+  "alloc": "extract=deepseek, merge/verify/report=qwen (from capability matrix)",
+  "node_fixes": "all 4 applied (extract 6-category, merge lossless, verify annotate, report dual-input)"
+ },
+ "results": {
+  "StaticHetero": {
+   "Q_mean": 0.0,
+   "Q_reps": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "report_facts": 0,
+   "mechanism": "merge truncated + reroll truncated -> zero facts -> total failure"
+  },
+  "JointDynamic": {
+   "Q_mean": 0.545,
+   "Q_reps": [
+    0.455,
+    0.636,
+    0.455,
+    0.636,
+    0.545
+   ],
+   "report_facts": "18-22",
+   "mechanism": "pi(model-switch) recovered all 5/5 reps"
+  },
+  "paired_delta": {
+   "mean_pp": 54.5,
+   "per_rep": [
+    45.5,
+    63.6,
+    45.5,
+    63.6,
+    54.5
+   ],
+   "positive": 5,
+   "negative": 0,
+   "interpretation": "binary difference: complete failure vs substantial recovery"
+  }
+ },
+ "cost": {
+  "StaticHetero": {
+   "calls": 35,
+   "yuan": 0.594,
+   "med_lat": 5.7
+  },
+  "JointDynamic": {
+   "calls": 40,
+   "yuan": 0.658,
+   "med_lat": 11.9
+  },
+  "premium": "+14% calls, +11% yuan, +109% latency"
+ },
+ "significance": {
+  "level": "exploratory (n=5 reps, 1 event, 1 fault type)",
+  "strength": "5/5 positive, binary outcome (0 vs 0.545), mechanism attributable to pi",
+  "limitations": [
+   "single fault type (merge truncation)",
+   "single event (E04, has prior VAL contact)",
+   "pi was the ONLY mechanism that triggered (no Z1/Z2/Z3)",
+   "fault was injected, not natural"
+  ]
+ },
+ "files_sha256": {
+  "rq_dyn_final_runner.py": "322b33163351021fd09434ef13bd16778c237bcf2d9babc14061ad8e08d16aa9",
+  "rq_dyn_final_config.json": "482886f65117a530e3a7e568d32e8f8a1d55b51527f547e2ba4fab46cdd8f2be",
+  "rq_dyn_final_runs/ledger.jsonl": "8d8e28fbbc3b3309e410e170f195dc29fce9083553199c66835a4671dca69587",
+  "rq_dyn_final_runs/outputs.jsonl": "9d5764a5cff4aab51d943adfa9d25638b9b57d7b35121d874f08bf71fdb99183"
+ }
+}

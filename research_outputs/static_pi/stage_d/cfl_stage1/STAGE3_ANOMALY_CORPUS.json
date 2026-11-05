@@ -1,0 +1,107 @@
+{
+ "events": [
+  {
+   "id": "A1",
+   "task": "KANGMEI",
+   "node": "SINK",
+   "type": "组织错误-弃答崩塌",
+   "frozen_state": "CFL2 C_S2 r1: answers=0, 15/15 abstain (prompt sha in CFL2_LEDGER)",
+   "correct_action_map": "LOCAL(R/π) with grounding feedback failed historically (CFL-2); Z would route UPSTREAM (evidence-table empty)",
+   "ledger": "CFL2_LEDGER.jsonl"
+  },
+  {
+   "id": "A2",
+   "task": "KANGMEI",
+   "node": "SINK",
+   "type": "组织错误-弃答崩塌",
+   "frozen_state": "TS-3M GLM r2: abst=14/14",
+   "ledger": "TS3M_LEDGER.jsonl"
+  },
+  {
+   "id": "A3",
+   "task": "ZEDA",
+   "node": "SINK",
+   "type": "组织错误-弃答增多",
+   "frozen_state": "CrossTask B_new r2: abst=11/17 (vs A_old 6)",
+   "ledger": "CFL3_CROSSTASK_LEDGER.jsonl"
+  },
+  {
+   "id": "A4",
+   "task": "KANGMEI",
+   "node": "E+V",
+   "type": "信息坍缩-证据表空",
+   "frozen_state": "QP8R DS pool verify 0/21 → empty evidence table → SINK Q=0 (QP9 A_static)",
+   "correct_action_map": "UPSTREAM 定向重抽 (CFL-3-MIN 已验证真实修复 +0.21)",
+   "ledger": "QP8R_STAGE1_LEDGER.jsonl"
+  },
+  {
+   "id": "A5",
+   "task": "E06",
+   "node": "J",
+   "type": "关系绑定-同名误绑",
+   "frozen_state": "Stage-1 r1/r2: H1/H2 answered 2026-07-14 (wrong date, name-matched row)",
+   "correct_action_map": "J 谓词感知重绑失败则 UNKNOWN（本轮冻结 J=∅）",
+   "ledger": "STAGE1_E06_LEDGER.jsonl"
+  },
+  {
+   "id": "A6",
+   "task": "E06",
+   "node": "SINK",
+   "type": "事实缺失-违纪错答",
+   "frozen_state": "Stage-1 r2: H3 (uncoverable) asserted 公告编号",
+   "ledger": "STAGE1_E06_LEDGER.jsonl"
+  },
+  {
+   "id": "A7",
+   "task": "KANGMEI",
+   "node": "SINK",
+   "type": "执行失败-JSON 解析",
+   "frozen_state": "MIN-B B_new r2: malformed JSON page field, extract_any→empty",
+   "ledger": "CFL3_MIN_B_LEDGER.jsonl"
+  },
+  {
+   "id": "A8",
+   "task": "MVR1",
+   "node": "SINK",
+   "type": "执行失败-JSON 解析（同型）",
+   "frozen_state": "TS-2 时代观测的 malformed JSON 模式（跨线 1/35 频率）",
+   "ledger": "-"
+  },
+  {
+   "id": "A9",
+   "task": "ZEDA",
+   "node": "E",
+   "type": "事实缺失-覆盖缺口",
+   "frozen_state": "pool 5/17 coverable; quote-cov 10/17 (15 金值不在文书为 ZIJING 型，ZEDA 为抽取缺口)",
+   "correct_action_map": "UPSTREAM E 重抽试验 vs NONE 降级",
+   "ledger": "CFL3_CROSSTASK_FEASIBILITY.json"
+  },
+  {
+   "id": "A10",
+   "task": "ZIJING",
+   "node": "E",
+   "type": "事实缺失-文档级",
+   "frozen_state": "15/20 金值不在文书（CFL-1 定案）",
+   "correct_action_map": "NONE/诚实降级（任何恢复都不应调用）",
+   "ledger": "CFL_STAGE1_SIGNALS.json"
+  }
+ ],
+ "counts": {
+  "events": 10,
+  "by_type": {
+   "组织错误": 3,
+   "信息坍缩": 1,
+   "关系绑定": 1,
+   "事实缺失": 3,
+   "执行失败": 2
+  },
+  "by_task": {
+   "KANGMEI": 4,
+   "MVR1": 1,
+   "E06": 2,
+   "ZEDA": 2,
+   "ZIJING": 1
+  }
+ },
+ "exclusion_note": "格式彩票事件（TS-4/Phase-B F8-F10）在 v2+源文金标终口径下已非错误——不列为异常事件（避免'恢复不存在的问题'质疑）"
+}

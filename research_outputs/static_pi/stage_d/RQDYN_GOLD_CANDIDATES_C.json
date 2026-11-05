@@ -1,0 +1,463 @@
+[
+ {
+  "fact_id": "C-01",
+  "node_type": "extract",
+  "value": "2019-04-11 经网友举报，公司发现网站图片包含敏感有害信息标注",
+  "entities": "视觉中国;天津市互联网信息办公室",
+  "time": "2019-04-11",
+  "evidence_doc": "suspend",
+  "evidence_span": "2019 年 4 月 11 日，经网友举报",
+  "relations": "C-02同时;先于C-07；同日网信办约谈见C-02（同文档下句\"当天\"衔接）",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  },
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-02",
+  "node_type": "extract",
+  "value": "天津市互联网信息办公室（责令整改+约谈主体）",
+  "entities": "天津市互联网信息办公室",
+  "time": "2019-04-11",
+  "evidence_doc": "suspend",
+  "evidence_span": "天津市互联网信息办公室依法约谈公司网站负责人，责令公司网站全面彻底整改并在此期间暂时关闭网站",
+  "relations": "责令整改对象=公司网站",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  },
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-03",
+  "node_type": "market_reaction",
+  "value": "2019-04-15、2019-04-16 两交易日跌幅偏离值累计达到20%以上；公司接到深交所通知（认定依据见C-14）",
+  "entities": "视觉中国(000681);深交所",
+  "time": "2019-04-15/16",
+  "evidence_doc": "abnormal",
+  "evidence_span": "连续两个交易日内（2019 年 4 月 15 日、4 月 16 日）跌幅偏离值累计达到 20%以上，公司接到深交所通知",
+  "relations": "异常波动晚于C-07暂停公告",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact (market reaction, exchange-recognized)",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "exchange-recognized fact; no causal layer",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "manual confirmation: date grounded in elided-year / Chinese-numeral form within span",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "C-03: date 4-16 grounded via year-elided form \"（2019年4月15日、4月16日）\" in span — comparator lacks elided-year handling"
+  },
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-04",
+  "node_type": "extract",
+  "value": "罚款三十万元（已全额缴纳）",
+  "entities": "汉华易美(天津)图像技术有限公司",
+  "time": "2019-04-19披露",
+  "evidence_doc": "resume",
+  "evidence_span": "接受罚款三十万元的行政处罚，并已全额缴纳罚款",
+  "relations": "处罚主体=C-05子公司",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  },
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-05",
+  "node_type": "extract",
+  "value": "汉华易美(天津)图像技术有限公司（全资子公司，处罚对象）",
+  "entities": "视觉中国;汉华易美",
+  "time": "2019-04-19披露",
+  "evidence_doc": "resume",
+  "evidence_span": "公司全资子公司汉华易美(天津)图像技术有限公司收到天津市互联网信息办公室行政处罚决定书",
+  "relations": "处罚机关=C-02同一主体",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  }
+ },
+ {
+  "fact_id": "C-06",
+  "node_type": "extract",
+  "value": "津网信罚决字【2019】第1号",
+  "entities": "汉华易美",
+  "time": "2019",
+  "evidence_doc": "resume",
+  "evidence_span": "《津网信罚决字【2019】第 1 号》",
+  "relations": "",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  }
+ },
+ {
+  "fact_id": "C-07",
+  "node_type": "extract",
+  "value": "2019-04-12 披露网站暂停服务公告（2019-005），主动暂时关闭网站",
+  "entities": "视觉中国",
+  "time": "2019-04-12",
+  "evidence_doc": "suspend",
+  "evidence_span": "证券代码：000681 证券简称：视觉中国 公告编号：2019-005",
+  "relations": "公告编号2019-005；resume公告交叉引用；披露日=落款；主动暂停见C-02扩展跨度；编号=文档头行",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "manual confirmation: date grounded in elided-year / Chinese-numeral form within span",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "C-07: date grounded via Chinese-numeral form \"二○一九年四月十二日\" in span — comparator lacks numeral conversion"
+  },
+  "secondary_spans": [
+   {
+    "doc": "suspend",
+    "span": "二○一九年四月十二日",
+    "check": true
+   },
+   {
+    "doc": "suspend",
+    "span": "关于公司网站暂停服务的公告",
+    "check": true
+   }
+  ],
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-08",
+  "node_type": "timeline",
+  "value": "事件链时序：举报/约谈(4-11)→暂停公告(4-12)→异常波动(4-15/16)→子公司处罚披露(4-19)→恢复上线(5-12)",
+  "entities": "多方",
+  "time": "2019-04-11~05-12",
+  "evidence_doc": "resume",
+  "evidence_span": "2019 年 5 月 12 日零点开始恢复网站上线运营",
+  "relations": "由C-01/03/04/07/10构成；五环节各含独立同文档跨度（见secondary_spans）",
+  "flags": "synthesis",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "timeline_synthesis_of_official_facts (no causal claim)",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "synthesis of 5 grounded official facts; temporal order only, no causal claim",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  },
+  "secondary_spans": [
+   {
+    "doc": "suspend",
+    "span": "2019 年 4 月 11 日，经网友举报",
+    "check": true
+   },
+   {
+    "doc": "suspend",
+    "span": "二○一九年四月十二日",
+    "check": true
+   },
+   {
+    "doc": "abnormal",
+    "span": "连续两个交易日内（2019 年 4 月 15 日、4 月 16 日）跌幅偏离值累计达到 20%以上",
+    "check": true
+   },
+   {
+    "doc": "resume",
+    "span": "2019 年 4 月 19 日，公司披露了《关于子公司收到天津市互联网信息办公室行政处罚的公告》",
+    "check": true
+   },
+   {
+    "doc": "resume",
+    "span": "2019 年 5 月 12 日零点开始恢复网站上线运营",
+    "check": true
+   }
+  ],
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-09",
+  "node_type": "correlation",
+  "value": "公司核实：除公共传媒对\"上述事项\"进行转载报道外，未发现近期公共传媒报道可能或已经对公司股票交易价格产生较大影响的未公开重大信息",
+  "entities": "视觉中国",
+  "time": "2019-04-17",
+  "evidence_doc": "abnormal",
+  "evidence_span": "除公共传媒对上述事项进行转载报道外，公司未发现近期公共传媒报道了可能或已经对公司股票交易价格产生较大影响的未公开重大信息",
+  "relations": "指代消解（操作者审计确认）：\"上述事项\"回指本公告核实情况第2项=网站暂停服务/整改事项；层=company_verification_statement；禁止推导\"媒体报道→股价下跌\"因果",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "company_verification_statement (official fact about media coverage; NOT causal)",
+  "adjudication_pass1": {
+   "verdict": "修订",
+   "revised_value": "公司核实：除公共传媒对\"上述事项\"进行转载报道外，未发现近期公共传媒报道可能或已经对公司股票交易价格产生较大影响的未公开重大信息",
+   "note": "操作者审计采纳：指代经转载原文核验（第2项↔第3项）；值保持逐字级，指代解释移入relations；不构成独立媒体监测事实",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED) + OPERATOR AUDIT (C-09: PASS with caveats)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  },
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-10",
+  "node_type": "extract",
+  "value": "2019-05-12 零点恢复网站上线运营",
+  "entities": "视觉中国",
+  "time": "2019-05-12",
+  "evidence_doc": "resume",
+  "evidence_span": "2019 年 5 月 12 日零点开始恢复网站上线运营",
+  "relations": "恢复公告落款2019-05-12",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  }
+ },
+ {
+  "fact_id": "C-11",
+  "node_type": "verification",
+  "value": "异常波动期间控股股东、实际控制人未买卖公司股票（公司自查）",
+  "entities": "控股股东;实际控制人",
+  "time": "异常波动期间（期间定义见C-03）",
+  "evidence_doc": "abnormal",
+  "evidence_span": "公司股票异常波动期间，控股股东、实际控制人未买卖公司股票",
+  "relations": "一致性核验槽",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "company_verification_statement",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "层更正：company_verification_statement（公司自查），非 official_fact",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  },
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-12",
+  "node_type": "extract",
+  "value": "专项工作组+两周多用户测试后整改达标",
+  "entities": "视觉中国",
+  "time": "2019-05",
+  "evidence_doc": "resume",
+  "evidence_span": "公司成立了专项工作组",
+  "relations": "工作组成立+测试达标两跨度并读",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "company_verification_statement",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "层更正：company_verification_statement",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  },
+  "secondary_spans": [
+   {
+    "doc": "resume",
+    "span": "经过两周多的用户测试，整改已达到预期目标",
+    "check": true
+   }
+  ],
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ },
+ {
+  "fact_id": "C-13",
+  "node_type": "unknown",
+  "value": "暂停公告时无法预计整改完成并恢复服务的时间（as-of 2019-04-12 视角的 UNKNOWN 槽）",
+  "entities": "视觉中国",
+  "time": "2019-04-12",
+  "evidence_doc": "suspend",
+  "evidence_span": "公司尚不能准确预计整改完成并恢复服务的时间",
+  "relations": "消解事件见 C-10（resume 文档 2019-05-12 恢复公告）",
+  "flags": "unknown_slot",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "unknown_slot",
+  "adjudication_pass1": {
+   "verdict": "修订",
+   "revised_value": "暂停公告时无法预计整改完成并恢复服务的时间（as-of 2019-04-12 视角的 UNKNOWN 槽）",
+   "note": "原值括注的 2019-05-12 属跨文档（resume）信息，从值中移除、保留于 relations；槽保持单文档接地",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "value now single-doc grounded; cross-doc resolution moved to relations",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)"
+  }
+ },
+ {
+  "fact_id": "C-14",
+  "node_type": "market_reaction",
+  "value": "异常波动认定依据：《深圳证券交易所交易规则》+深交所通知",
+  "entities": "深交所",
+  "time": "2019-04-17",
+  "evidence_doc": "abnormal",
+  "evidence_span": "公司接到深交所通知,根据《深圳证券交易所交易规则》的相关规定，公司股票交易属于异常波动",
+  "relations": "与C-03构成完整异动认定",
+  "flags": "",
+  "mechanical_span_check": true,
+  "human_adjudication": null,
+  "reviewer2": null,
+  "human_note": "",
+  "layer": "official_fact",
+  "adjudication_pass1": {
+   "verdict": "1",
+   "revised_value": null,
+   "note": "exchange-recognized fact",
+   "adjudicator": "AI pass-1 (GLM-5.3, DISCLOSED — not human)"
+  },
+  "reviewer_pass2": {
+   "verdict": "1",
+   "issues": [],
+   "criteria": "corrected comparator: NFKC+whitespace+comma-normalized span-in-doc; ISO/Chinese date equivalence; numeric grounding in span or doc",
+   "reviewer": "AI pass-2 (GLM-5.3, DISCLOSED — not human)",
+   "artifact_note": "earlier 11 flags were comparator artifacts (5 span false-miss from pass-2 script bug, 6 ISO-vs-Chinese date format), disproven by direct containment check"
+  },
+  "operator_adjudication": "REVISE-applied (2026-11-04)"
+ }
+]

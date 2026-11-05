@@ -1,0 +1,46 @@
+{
+ "batch": "RQ3_STAT_V1",
+ "status": "COMPLETED 40/40",
+ "timestamp": "2026-11-04T11:00:14",
+ "authorization": "operator \"即可执行\" in direct response to the RQ3_STAT_V1 request line (280 calls / 800,000 tokens / CNY 8)",
+ "spend": {
+  "calls": 195,
+  "calls_cap": 280,
+  "tokens": 381822,
+  "tokens_cap": 800000,
+  "yuan": 2.622,
+  "yuan_cap": 8,
+  "breach": false
+ },
+ "labeling": "per RQ3_NODE_TYPE_RECHECK.md: nodes are MERGE type (materials kind=reason was a label error); all reporting uses merge wording",
+ "headline": {
+  "quality": "HomDS .6681 vs HetQR .6313 => dQ -3.68pp (CI [-15.05,+5.00], signflip p=.25); per-task E05 -10.91 / E06 0 / E07 -1.82 (null-task noise ~2pp) / E08 -2.00",
+  "merge_slots": "A .7111 vs B .6889 pooled => CAP_V1 frozen-input advantage (+28.15pp) did NOT transfer to live upstream inputs",
+  "interface_penalty": "E05 non-merge slots A .600 vs B .450 (-15pp): DS report consumes qwen merge output worse than DS output — cross-model handoff loss, first direct measurement",
+  "delivery": "gates 100% both cells; parse fail 1/95 vs 2/95; trunc ds 6/180, qwen 0/15",
+  "cost": "yuan +7.4% (<=10% pass); calls -1%",
+  "latency": "span 17.7s vs 49.6s => +180.2% (>>20% fail); qwen merge on critical path",
+  "criteria": {
+   "quality": false,
+   "cost": true,
+   "latency": false
+  },
+  "verdict": "NO terminal gain; stop tuning Qwen/DeepSeek allocation per operator preset rule; operating point stays homogeneous deepseek + D1D2",
+  "methodological_yields": [
+   "capability profiles must be revalidated on live upstream distributions before allocation",
+   "cross-model interface penalty is real (-15pp class) and must be priced in heterogeneous DAG scheduling",
+   "single slow node on critical path multiplies makespan (3x)"
+  ]
+ },
+ "files_sha256": {
+  "RQ3_STAT_V1_RESULTS.md": "b07bfaaa5dc74a75d8fbe3536083fbfb74b05ba7d7b211eecee8dabda38971d9",
+  "RQ3_STAT_V1_RESULTS.json": "6e7ec3ef67b40cba5a83cf04e2d4c6a23f286655cdbc00c0d86c97a5057aac18",
+  "rq3_stat_v1_runner.py": "54e7db447ed0e0ca38c10392f818572b615e360fa6a4af170938506cf38e87a6",
+  "rq3_stat_v1_analyze.py": "512c7f219c05b8538db4088d344de3b2998c0b0510bf4d5cee1e7feeb3e1113d",
+  "rq3_stat_v1_runs/ledger.jsonl": "c171ac2b511d6607996390b891421cce29b618126fdfc446405f1b494fd7e79e",
+  "rq3_stat_v1_runs/state/GLOBAL_BUDGET.json": "45053359fe259cb6c11a5ab2aafe00a507cd3c3eb0b6da3f35b0093de2be7b46",
+  "RQ3_NODE_TYPE_RECHECK.md": "cea389761d3104564e7d8215ceea6d15d8259909f98502d467411811284afdc7"
+ },
+ "new_calls_after_batch": 0,
+ "hold_192": "untouched"
+}

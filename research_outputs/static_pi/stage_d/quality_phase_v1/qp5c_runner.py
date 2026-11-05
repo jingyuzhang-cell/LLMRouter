@@ -394,6 +394,12 @@ def local_full_main(argv):
                             if not isinstance(text,str): raise ValueError('NON_TEXT_RESPONSE')
                             return text
                         except (StopBatch,StopArm): raise
+                        except urllib.error.HTTPError as e:
+                            error_body = e.read().decode('utf-8', errors='replace').replace(key, '[REDACTED]')
+                            (target/f'{ident}.error.txt').write_text(error_body)
+                            append(dict(event='SYSTEM_FAILURE',id=ident,error_type='HTTPError',
+                                        http_status=e.code,actual_settlement='UNKNOWN'))
+                            raise StopBatch('HTTP_ERROR_'+str(e.code)) from None
                         except Exception as e:
                             append(dict(event='SYSTEM_FAILURE',id=ident,error_type=type(e).__name__,actual_settlement='UNKNOWN'))
                             raise StopBatch('TRANSPORT_OR_PROVIDER_FAILURE') from None
