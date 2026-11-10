@@ -79,11 +79,11 @@ specs.append(dict(
       F('F2','俞乃奋','拟处罚款金额','三万元','amount','拟',['D1'],[('D1','对俞乃奋给予警告，并处以三万元的罚款')]),
       F('F3','李冬青','拟处罚款金额','三万元','amount','拟',['D1'],[('D1','对李冬青给予警告，并处以三万元的罚款')]),
       F('F4','上海证监局','事先告知书文号','处罚字【2019】3号','docno','拟',['D1'],[('D1','处罚字【2019】3号')],meta=True),
-      F('F5','绿庭投资','收到事先告知书日期','2019年8月14日','date','拟',['D1'],[('D1','2019年8月14日公司及原董事长')],meta=True),
+      F('F5','绿庭投资','收到事先告知书日期','2019年8月14日','date','拟',['D1'],[('D1','2019年8月14日公司及原董事长')],meta=True,note='2019-08-14=收到《行政处罚事先告知书》事件日期（裁决明确：与2019-09-16收到决定书为两个独立日期事实，不得合并）'),
       F('F6','绿庭投资','终局处罚款金额','三十万元','amount','终',['D2'],[('D2','（1）对绿庭投资给予警告，并处以三十万元的罚款')],note='D2明文“决定维持事先告知的处罚”+（1）编号+汉字金额（两文书格式一致）'),
       F('F7','俞乃奋','终局处罚款金额','三万元','amount','终',['D2'],[('D2','对俞乃奋给予警告，并处以三万元的罚款')],note='同值'),
       F('F8','李冬青','终局处罚款金额','三万元','amount','终',['D2'],[('D2','对李冬青给予警告，并处以三万元的罚款')],note='同值'),
-      F('F9','绿庭投资','收到处罚决定书日期','2019年9月16日','date','终',['D2'],[('D2','2019年9月16日，本公司及原董事长')],meta=True,note='D2公告未载决定书文号（无终侧文号槽）'),
+      F('F9','绿庭投资','收到处罚决定书日期','2019年9月16日','date','终',['D2'],[('D2','2019年9月16日，本公司及原董事长')],meta=True,note='2019-09-16=收到《行政处罚决定书》事件日期；D2公告未载决定书文号（无终侧文号槽）'),
     ],
     docs=files))
 
@@ -104,13 +104,13 @@ specs.append(dict(
       F('F8','张宝田','终局处罚款金额（直接负责的主管人员）','20万元','amount','终',['D2'],[('D2','对直接负责的主管人员张宝田给予警告，并处以20万元罚款')],note='同值'),
       F('F9','温萍等13人','终局处罚组构成（各3万元组）','3万元/组','amount','终',['D2'],[('D2',AZ13D2)],note='组构成与拟一致；D1“其他直接责任人员”→D2“其他直接责任人”——措辞差异（人员→人）；组槽计为1个群组事实'),
       F('F10','中国证监会','事先告知书文号','处罚字【2017】31号','docno','拟',['D2'],[('D2','处罚字【2017】31号')],meta=True,note='事件阶段=拟；证据来源=D2（D1未载文号）——事件阶段与证据来源分离（宜华F34模式）'),
-      F('F11','鞍重股份','收到处罚决定书日期','2017年4月27日','date','终',['D2'],[('D2','2017年4月27日，公司及杨永柱')],meta=True,note='D2公告未载决定书文号（无终侧文号槽）'),
+      F('F11','鞍重股份','收到处罚决定书日期','2017年4月27日','date','终',['D2'],[('D2','2017年4月27日，公司及杨永柱')],meta=True,note='2019-09-16=收到《行政处罚决定书》事件日期；D2公告未载决定书文号（无终侧文号槽）'),
     ],
     docs=files))
 
 # ============ 构建 ============
 out_dir = HERE / 'contracts'; out_dir.mkdir(exist_ok=True)
-sheet = ['# G7 批11 Gold 合同草案核验单（v0.1，待操作员裁决：保千里/绿庭投资/鞍重股份）', '',
+sheet = ['# G7 批11 Gold 合同 v1.0（终裁签收）', '',
          '来源：cninfo 官方公告 PDF；逐事实逐字证据跨度已程序化校验。UNKNOWN=终局未载明（不倒推）。', '']
 cls_tot, grand = {}, 0
 for spec in specs:
@@ -121,7 +121,7 @@ for spec in specs:
     cls = Counter(f['fact_class'] for f in facts)
     doc_sha = {d: hashlib.sha256((HERE / 'raw' / f).read_bytes()).hexdigest()[:16] for d, f in spec['docs'].items()}
     contract = dict(task=spec['task'], company=spec['company'], code=spec['code'],
-                    schema='G7-V03-spanlevel-v0.1-draft',
+                    schema='G7-V03-spanlevel-v1.0', adjudicated='2026-11-10 操作员批11裁决（六案终裁PASS：LT两日期事件分立明确标注）',
                     source_pages={d: dict(file=spec['docs'][d], sha256_16=doc_sha[d],
                         chars=len(load_doc(spec['docs'][d])['stripped'])) for d in spec['docs']},
                     required_facts=facts,
@@ -129,7 +129,7 @@ for spec in specs:
                                n_d1_only=sum(1 for f in facts if f['allowed_docs'] == ['D1']),
                                n_d2_only=sum(1 for f in facts if f['allowed_docs'] == ['D2']),
                                spans_verified=sum(len(f['stage_evidence']) for f in facts)))
-    (out_dir / f"TASK_CONTRACT_{spec['task']}_v0.1.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
+    (out_dir / f"TASK_CONTRACT_{spec['task']}_v1.0.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
     sheet += [f"## {spec['task']} {spec['company']}（{spec['code']}）", '',
               '| # | 主体 | 谓词 | 值 | 阶段 | 分类 | 允许 | 备注 |', '|---|---|---|---|---|---|---|---|']
     for f in facts:

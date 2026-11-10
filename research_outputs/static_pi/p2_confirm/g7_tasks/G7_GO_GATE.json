@@ -1,0 +1,53 @@
+{
+ "submitted_at": "2026-11-10",
+ "status": "GO_GATE_SUBMITTED__AWAITING_OPERATOR_AUTHORIZATION",
+ "components": {
+  "prereg": {
+   "file": "../P2C_G7_PREREG_FROZEN.md",
+   "sha256": "5fd6569ff26402b156fabda2c8f5e01838a093b4163732447986305f9ef09853"
+  },
+  "base_runner": {
+   "file": "../p2c_runner.py",
+   "sha256": "7396f432007f768bf4705ef0959c868e1f193c49a70682683f3b9fb061742d66",
+   "note": "P2-C冻结G6管线；G6-M=逐字沿用+阶段元数据输入（预注册§3）；G7=G6-M+R1-R3约束+重锚定（§4）"
+  },
+  "taskset": {
+   "file": "G7_TASKSET_FREEZE.json",
+   "manifest_sha256": "467c53a9a7bc35b48dd6d848ee2d112851754683b5767ff430eec150f8abb967",
+   "counts": {
+    "facts_total": 863,
+    "single_doc_slots": 778,
+    "multi_doc_facts": 85,
+    "unknown_boundary": 37,
+    "known_value_single_doc": 741,
+    "fact_class_breakdown": {
+     "stage_content": 600,
+     "doc_metadata": 150,
+     "background": 76,
+     "unknown_boundary": 37
+    }
+   }
+  },
+  "randomization": {
+   "file": "G7_RANDOMIZATION_TABLE.json",
+   "sha256": "05ef9983e08b37f7df51f1128c33b093b78c74b6a418c730c4243bf57b41f39d",
+   "seed": 1182553001
+  },
+  "verifier_prompt": {
+   "authority": "预注册§4.2方案A全文为提示词规范来源",
+   "note": "运行时按§4.2逐字实例化；实例化sha256于首次调用前登记运行台账（kind=manifest，零成本），未登记不得调用"
+  },
+  "arm_prompts": {
+   "authority": "预注册§3臂定义+§4.1 R1-R3",
+   "note": "G6-M/G7提示词增量按预注册逐字实例化，同上预登记"
+  }
+ },
+ "design_summary": "n=40任务×2重复=80配对区组；G6-M vs G7；三条件联合（错配率单侧精确符号翻转α=0.05；召回非劣-0.05；Q_all非劣-0.05）；预算≤1000调用/8M/¥15",
+ "consistency_check": "PASS：40公司唯一；80文书三schema（批1-4内嵌pages/批5自带normalized已更正文本/批6+文件sha16逐份零差异）全量跨度复验907条全部命中；全部v1.0；fact_id无重复",
+ "pledge": "未获GO授权不发起任何模型调用；结果如实报告（含失败与不可判定敏感性）",
+ "text_corrections_runtime_rule": "文档文本解析优先级=合同normalized字段（批5，含给子→给予等长更正）→内嵌pages（批1-4）→raw文件+strip_pageno规范化+text_corrections等长更正（批6+：YB进入→禁入file键）；SWS/LJ之给子/子以为印刷原文不做更正；JT合同raw_sha256保留原文本层",
+ "consistency_check_detail": {
+  "span_recheck_pass": 904,
+  "span_recheck_total": 907
+ }
+}
