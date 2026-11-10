@@ -17,6 +17,43 @@ def doc_text(sp, d):
 
 SPECS = [('CY', 'TASK_CONTRACT_CY_600525_v1.json'), ('SL', 'TASK_CONTRACT_SL_002766_v1.json'),
          ('ZQ', 'TASK_CONTRACT_ZQ_300526_v1.json')]
+
+# 拟阶段补充事实（操作员批3裁决：选项二；四规则——优先罚款金额/拟终独立计分/逐人依据"分别"/保留UNKNOWN）
+def _swm(raw):
+    out, idx = [], []
+    for i, ch in enumerate(raw):
+        if not ch.isspace():
+            out.append(ch); idx.append(i)
+    return ''.join(out), idx
+
+ADDITIONS = {
+ 'CY': [
+  ('F24','长园集团','拟处罚款金额','50','amount','拟',[('D1', r'对长园集团给予警告,并处以50万元的罚款')]),
+  ('F25','尹智勇','拟处罚款金额','30','amount','拟',[('D1', r'对尹智勇给予警告,并处以30万元罚款')]),
+  ('F26','史忻、刘瑞、许晓文、鲁尔兵、黄永维、倪昭华（6人）','拟单人行政处罚罚款金额','20','amount','拟',[('D1', r'对史忻、刘瑞、许晓文、鲁尔兵、黄永维、倪昭华给予警告,并分别处以20万元罚款')]),
+  ('F27','徐成斌','拟处罚款金额','10','amount','拟',[('D1', r'对徐成斌给予警告,并处以10万元罚款')]),
+  ('F28','隋淑静、姚太平、贺勇（3人）','拟单人行政处罚罚款金额','3','amount','拟',[('D1', r'对隋淑静、姚太平、贺勇给予警告，并分别处以3万元罚款')]),
+  ('F29','尹智勇','拟采取市场禁入措施','10年','ban','拟',[('D1', r'对尹智勇采取10年证券市场禁入措施')]),
+  ('F30','史忻、刘瑞（2人）','拟单人市场禁入年限','5年','ban','拟',[('D1', r'对史忻、刘瑞分别采取5年证券市场禁入措施')]),
+ ],
+ 'SL': [
+  ('F24','深圳市索菱实业股份有限公司','拟处罚款金额','60','amount','拟',[('D1', r'责令索菱股份改正,给予警告,并处以60万元的罚款')]),
+  ('F25','肖行亦','拟处罚款金额','90','amount','拟',[('D1', r'对肖行亦给予警告,并处以90万元的罚款')]),
+  ('F26','叶玉娟、钟贵荣、王大威（3人）','拟单人行政处罚罚款金额','30','amount','拟',[('D1', r'对叶玉娟、钟贵荣、王大威给予警告，并分别处以30万元的罚款')]),
+  ('F27','郭小宝、黄子龙、童方义（3人）','拟单人行政处罚罚款金额','20','amount','拟',[('D1', r'对郭小宝、黄子龙、童方义给予警告，并分别处以20万元的罚款')]),
+  ('F28','吴文兴、邓庆明、郑晓明、苏奇木、林晓罡、魏丙奎（6人）','拟单人行政处罚罚款金额','15','amount','拟',[('D1', r'对吴文兴、邓庆明、郑晓明、苏奇木、林晓罡、魏丙奎给予警告，并分别处以15万元的罚款')]),
+  ('F29','邓先海、蔡春喜、谌勇超（3人）','拟单人行政处罚罚款金额','8','amount','拟',[('D1', r'对邓先海、蔡春喜、谌勇超给予警告,并分别处以8万元的罚款')]),
+  ('F30','肖行亦','拟采取市场禁入措施','终身','ban','拟',[('D1', r'对肖行亦采取终身市场禁入措施')]),
+ ],
+ 'ZQ': [
+  ('F24','中潜股份有限公司','拟处罚款金额','350','amount','拟',[('D1', r'对中潜股份责令改正，给予警告,并处以350万元罚款')]),
+  ('F25','张顺、仰智慧（2人）','拟单人行政处罚罚款金额','200','amount','拟',[('D1', r'对张顺、仰智慧给予警告，并分别处以200万元罚款')]),
+  ('F26','郭建兵、明小燕（2人）','拟单人行政处罚罚款金额','150','amount','拟',[('D1', r'对郭建兵、明小燕给予警告，并分别处以150万元罚款')]),
+  ('F27','卓泽鹏、张继红（2人）','拟单人行政处罚罚款金额','70','amount','拟',[('D1', r'对卓泽鹏、张继红给予警告，并分别处以70万元罚款')]),
+  ('F28','徐志宏、孙昌兴、鲍群、鲍金红、冯小燕、代利、李志慧（7人）','拟单人行政处罚罚款金额','50','amount','拟',[('D1', r'对徐志宏、孙昌兴、鲍群、鲍金红、冯小燕、代利、李志慧给予警告，并分别处以50万元罚款')]),
+ ],
+}
+
 out = HERE / 'contracts'
 sheet = ['# G7 批3（回收升级）Gold 合同草案核验单（v0.1，待操作员裁决）', '',
          '来源：P2-PILOT 已裁决合同（事实集与逐字quote均为当年人工裁决产物），本升级仅做阶段/分类标注与跨度复验，不重写事实。', '']
@@ -32,8 +69,33 @@ for code, fname in SPECS:
     sheet += [f"## {task} {company}", '',
               '| # | 主体 | 谓词 | 值 | 阶段 | 分类 | 允许 | 证据跨度（截选） |',
               '|---|---|---|---|---|---|---|---|']
-    for f in c['required_facts']:
-        allowed = f.get('allowed_citation_docs') or []
+    docs_idx = {d: _swm(docs[d]) for d in ('D1', 'D2')}
+    new_rows = []
+    for fid, subj, pred, val, kind, stage, ev in ADDITIONS.get(code, []):
+        entries = []
+        for d, pat in ev:
+            m = re.search(re.sub(r'\s+', '', pat), docs_idx[d][0])
+            assert m, f'{task} 新增{fid} span未找到'
+            i, j = m.span()
+            entries.append(dict(document_id=d, evidence_span=docs_idx[d][0][i:j],
+                                raw_evidence_span=docs[d][docs_idx[d][1][i]:docs_idx[d][1][j-1]+1],
+                                evidence_stage=stage, support_status='supports'))
+        new_rows.append(dict(fact_id=fid, subject=subj, predicate=pred, value=val, kind=kind,
+                             critical=True, fact_stage=stage, fact_class='stage_content',
+                             allowed_citation_docs=[d for d, _ in ev], stage_evidence=entries,
+                             unknown_basis=None, origin='批3拟阶段补充（操作员选项二裁决）'))
+    for f in list(c['required_facts']) + new_rows:
+        if f.get('origin'):
+            allowed = f['allowed_citation_docs']
+        else:
+            allowed = f.get('allowed_citation_docs') or []
+        if f.get('origin'):
+            facts.append(f)
+            ev0 = f['stage_evidence'][0]
+            show = (ev0['evidence_span'][:22] + '…') if len(ev0['evidence_span']) > 22 else ev0['evidence_span']
+            sheet.append(f"| {f['fact_id']} | {f['subject']} | {f['predicate']} | {f['value']} | {f['fact_stage']} | {f['fact_class']} | "
+                         f"{'/'.join(f['allowed_citation_docs'])} | {show}({'+'.join(e['document_id'] for e in f['stage_evidence'])}) |")
+            continue
         stage = '拟' if allowed == ['D1'] else '终' if allowed == ['D2'] else '中性'
         val = f.get('value')
         is_unk = 'UNKNOWN' in str(val)
@@ -59,7 +121,7 @@ for code, fname in SPECS:
     cls = Counter(x['fact_class'] for x in facts)
     totals.update(cls)
     contract = dict(task=task, company=company,
-                    code=task.split('_')[-1], schema='G7-V03-spanlevel-v0.1-draft-recycled',
+                    code=task.split('_')[-1], schema='G7-V03-spanlevel-v0.2-draft-recycled-enriched',
                     origin=f'P2-PILOT {fname}（操作员已裁决事实集，本版仅升级标注）',
                     source_pages={d: dict(pages={'1': docs[d]}, normalized=stripped[d],
                                           raw_sha256=c['source_pages'][d]['raw_sha256'],
