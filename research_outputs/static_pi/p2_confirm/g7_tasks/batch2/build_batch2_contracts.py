@@ -32,7 +32,8 @@ SHUNTTIAN = dict(
     task='ST_600287', company='江苏舜天股份有限公司', code='600287',
     docs={'D1': '../batch1/raw/shuntian_D1_notice.txt', 'D2': '../batch1/raw/shuntian_D2_csrc.txt'},
     meta_facts={'F8', 'F9', 'F17', 'F18'},
-    unknown_basis={'F16': 'D2"我会决定"部分仅载罚款事项，未载明市场禁入措施；未载明≠未采取'},
+    unknown_basis={'F16': '本任务输入的〔2024〕41号处罚决定书"我会决定"部分仅载罚款事项，未载明市场禁入措施（本文书范围内UNKNOWN，未载明≠未采取）。'
+                          '审计备注：另有《市场禁入决定书》〔2024〕10号对高松采取3年证券市场禁入，但不属于本任务输入文书，不得作为作答依据'}, 
     facts=[
         ('F1', '江苏舜天', '拟处罚款金额', '1,000万元', 'amount', '拟', ['D1'],
          [('D1', r'对江苏舜天责令改正，给予警告，并处以 1,000 万元罚款')]),
@@ -64,7 +65,7 @@ SHUNTTIAN = dict(
          [('D2', r'对王重人、李焱、赵凡给予警告,并分别处以60万元罚款')]),
         ('F15', '赵凡', '终局处罚款金额', '60万元', 'amount', '终', ['D2'],
          [('D2', r'对王重人、李焱、赵凡给予警告,并分别处以60万元罚款')]),
-        ('F16', '高松', '终局市场禁入措施', 'UNKNOWN', 'ban', '终', ['D2'], []),
+        ('F16', '高松', '〔2024〕41号处罚决定书所载终局市场禁入措施', 'UNKNOWN', 'ban', '终', ['D2'], []),
         ('F17', '中国证监会', '处罚决定书文号', '〔2024〕41号', 'docno', '终', ['D2'],
          [('D2', r'〔2024〕41号')]),
         ('F18', '中国证监会', '处罚决定书作出日期', '2024年4月24日', 'date', '终', ['D2'],
@@ -164,7 +165,7 @@ ZHUOJIN = dict(
     ])
 
 out_dir = HERE / 'contracts'; out_dir.mkdir(exist_ok=True)
-sheet = ['# G7 批2 Gold 合同草案核验单（v0.1，待操作员裁决）', '',
+sheet = ['# G7 批2 Gold 合同 v1.0（操作员裁决后定稿：0 DROP；舜天F16限定输入文书范围并附〔2024〕10号审计备注）', '',
          '管线与批1 v1.0 一致（跨度级标注/分类/UNKNOWN依据/三套可追溯）。', '']
 totals = Counter()
 for spec in (SHUNTTIAN, JINGLAN, ZHUOJIN):
@@ -197,16 +198,16 @@ for spec in (SHUNTTIAN, JINGLAN, ZHUOJIN):
     cls = Counter(f['fact_class'] for f in facts)
     totals.update(cls)
     contract = dict(task=spec['task'], company=spec['company'], code=spec['code'],
-                    schema='G7-V03-spanlevel-v0.1-draft',
+                    schema='G7-V03-spanlevel-v1.0', adjudicated='2026-11-10 操作员批2裁决（0 DROP; 舜天F16限定文书范围+审计备注）',
                     source_pages={d: dict(pages={'1': docs[d]['raw']}, normalized=docs[d]['stripped'],
                                           raw_sha256=doc_sha[d], file=spec['docs'][d]) for d in spec['docs']},
                     required_facts=facts,
                     stats=dict(n_facts=len(facts), **{f'n_{k}': v for k, v in cls.items()},
                                n_d1_only=sum(1 for f in facts if f['fact_stage'] == '拟' and f['fact_class'] != 'doc_metadata'),
                                n_d2_only=sum(1 for f in facts if f['fact_stage'] == '终' and f['fact_class'] != 'doc_metadata')))
-    (out_dir / f"TASK_CONTRACT_{spec['task']}_v0.1.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
+    (out_dir / f"TASK_CONTRACT_{spec['task']}_v1.0.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
     sheet += ['', f"合计 {len(facts)}：阶段内容 {cls['stage_content']}｜UNKNOWN {cls['unknown_boundary']}｜元数据 {cls['doc_metadata']}｜背景 {cls['background']}", '']
 sheet += [f"**批2总计 {sum(totals.values())}：阶段内容 {totals['stage_content']}｜UNKNOWN {totals['unknown_boundary']}｜元数据 {totals['doc_metadata']}｜背景 {totals['background']}**"]
-(HERE / 'FACT_SHEET_BATCH2.md').write_text('\n'.join(sheet) + '\n')
+(HERE / 'FACT_SHEET_BATCH2_V1.md').write_text('\n'.join(sheet) + '\n')
 print('batch-2 drafts written:', sorted(p.name for p in out_dir.glob('*.json')))
 print('批2分类总计:', dict(totals))
