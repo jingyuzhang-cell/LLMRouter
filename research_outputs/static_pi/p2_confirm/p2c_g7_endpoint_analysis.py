@@ -101,7 +101,9 @@ for t in sorted(meta):
                     st_l.append(rowstat[a].get(f))
             mm[a] = c
             mmst[a] = st_l
-        task_rec[rep] = dict(state='ok', mismatch=mm, mm_status=mmst,
+        rec = {a: sum(1 for f, sen_ in stage_sensitive.items() if sen_ and rowstat[a].get(f) == 'TP')
+               for a in outs}
+        task_rec[rep] = dict(state='ok', mismatch=mm, mm_status=mmst, recall_num=rec,
                              n_stage_sensitive=sum(stage_sensitive.values()), N=len(allowed))
         if t in LOSS_TASKS:
             for f in rowstat['G2']:
