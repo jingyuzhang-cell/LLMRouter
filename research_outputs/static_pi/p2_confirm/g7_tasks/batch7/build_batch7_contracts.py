@@ -35,7 +35,7 @@ def span_of(doc, pattern):
     return dict(evidence_span=doc['stripped'][i:j],
                 raw_evidence_span=doc['raw'][doc['idx'][i]:doc['idx'][j-1]+1])
 
-def F(fid, subj, pred, val, kind, stage, allowed, ev, note=None, meta=False, cls=None):
+def F(fid, subj, pred, val, kind, stage, allowed, ev, note=None, meta=False, cls=None, det=None):
     d = dict(fact_id=fid, subject=subj, predicate=pred, value=val, value_kind=kind,
              fact_stage=stage, allowed_docs=allowed,
              stage_evidence=[dict(document_id=dd, **span_of(load_doc(files[dd]), pp)) for dd, pp in ev])
@@ -43,6 +43,8 @@ def F(fid, subj, pred, val, kind, stage, allowed, ev, note=None, meta=False, cls
     elif meta: d['fact_class'] = 'doc_metadata'
     else: d['fact_class'] = 'stage_content'
     if note: d['note'] = note
+    if det:
+        d['determination_status'] = det  # 逐文书认定状态：引用D1不得表述为已确认事实
     return d
 
 specs = []
@@ -123,12 +125,12 @@ specs.append(dict(
       F('F7','帅放文、刘爱军（2人）','终局单人处罚款金额（直接负责的主管人员）','30万元','amount','终',['D2'],[('D2','对直接负责的主管人员帅放文、刘爱军给予警告，并分别处以30万元罚款')],note='共用组跨度'),
       F('F8','王向峰、杨海明、帅友文、帅瑞文、高振亚、张曲曲（6人）','终局单人处罚款金额','10万元','amount','终',['D2'],[('D2',EK3D2)],note='共用组跨度；罗琅移出——组构成变化，留守6人值同'),
       F('F9','罗琅','终局处罚款金额','3万元','amount','终',['D2'],[('D2',EK4D2)],note='拟10万（7人组）→终3万（移入另一组）——值变10→3；D2载其申辩被部分采纳；D2组内顿号变逗号（左田芳，罗琅）'),
-      F('F10','王健、许中缘、左田芳、罗琅、周伏军、陈文献、李义国（7人）','终局单人处罚款金额','3万元','amount','终',['D2'],[('D2',EK4D2)],note='共用组跨度（罗琅另立个人槽）；评分映射：本组槽计为1个群组事实'),
+      F('F10','王健、许中缘、左田芳、罗琅、周伏军、陈文献、李义国（7人）','终局处罚组构成（各3万元组）','3万元/组','amount','终',['D2'],[('D2',EK4D2)],note='评分重点=成员构成（原6人组+罗琅=7人），考查组别变化；各3万元仅作组别定义；罗琅个人罚款仅在F9计分，本槽不得对罗琅同一笔3万元重复奖励；组槽计为1个群组事实'),
       F('F11','尔康制药','收到处罚决定书日期','2018年6月13日','date','终',['D2'],[('D2','2018年6月13日，公司收到')],meta=True),
-      F('F12','尔康制药2015年度','营业收入金额','18,058,880.00元','amount','中性',['D1','D2'],[('D1','虚增营业收入18,058,880.00元'),('D2','确认营业收入18,058,880.00元')],cls='background',note='同值异措辞：D1"涉嫌虚增营业收入"、D2"尔康香港确认营业收入"——中性背景事实，值不变'),
-      F('F13','尔康制药2015年度','利润金额','15,859,735.04元','amount','中性',['D1','D2'],[('D1','虚增利润15,859,735.04元'),('D2','确认净利润15,859,735.04元')],cls='background',note='同值异措辞：D1"虚增利润"、D2"确认净利润"'),
-      F('F14','尔康制药2016年度','虚增营业收入','255,075,191.84元','amount','中性',['D1','D2'],[('D1','虚增营业收入255,075,191.84元'),('D2','虚增营业收入255,075,191.84元')],cls='background'),
-      F('F15','尔康制药2016年度','虚增净利润','232,254,448.80元','amount','中性',['D1','D2'],[('D1','虚增净利润232,254,448.80元'),('D2','虚增净利润232,254,448.80元')],cls='background'),
+      F('F12','尔康制药2015年度','营业收入金额','18,058,880.00元','amount','中性',['D1','D2'],[('D1','虚增营业收入18,058,880.00元'),('D2','确认营业收入18,058,880.00元')],cls='background',note='同值异措辞——中性背景事实，值不变',det={'D1':'涉嫌虚增（拟阶段指控措辞）','D2':'确认（终局认定措辞，尔康香港确认营业收入）'}),
+      F('F13','尔康制药2015年度','利润金额','15,859,735.04元','amount','中性',['D1','D2'],[('D1','虚增利润15,859,735.04元'),('D2','确认净利润15,859,735.04元')],cls='background',note='同值异措辞——中性背景事实，值不变',det={'D1':'涉嫌虚增利润（指控措辞）','D2':'确认净利润（认定措辞）'}),
+      F('F14','尔康制药2016年度','虚增营业收入','255,075,191.84元','amount','中性',['D1','D2'],[('D1','虚增营业收入255,075,191.84元'),('D2','虚增营业收入255,075,191.84元')],cls='background',det={'D1':'涉嫌虚增（指控措辞）','D2':'认定虚增（终局措辞）'}),
+      F('F15','尔康制药2016年度','虚增净利润','232,254,448.80元','amount','中性',['D1','D2'],[('D1','虚增净利润232,254,448.80元'),('D2','虚增净利润232,254,448.80元')],cls='background',det={'D1':'涉嫌虚增（指控措辞）','D2':'认定虚增（终局措辞）'}),
     ],
     docs=files))
 
@@ -162,7 +164,7 @@ specs.append(dict(
 
 # ============ 构建 ============
 out_dir = HERE / 'contracts'; out_dir.mkdir(exist_ok=True)
-sheet = ['# G7 批7 Gold 合同草案核验单（v0.1，待操作员裁决：榕泰2023/天翔环境/尔康制药/亿阳信通）',
+sheet = ['# G7 批7 Gold 合同 v1.0（裁决后定稿：榕泰/天翔/亿阳PASS；尔康F9/F10分考查对象+F12-F15认定状态分离）',
          '', '来源：cninfo 官方公告 PDF（静态页直取）；逐事实逐字证据跨度已程序化校验为文书原文子串。',
          '阶段敏感 = 允许文书单份（拟→D1、终→D2）。同值陷阱=值同而允许文书不同。', '']
 cls_tot, grand = {}, 0
@@ -174,7 +176,7 @@ for spec in specs:
     cls = Counter(f['fact_class'] for f in facts)
     doc_sha = {d: hashlib.sha256((HERE / 'raw' / f).read_bytes()).hexdigest()[:16] for d, f in spec['docs'].items()}
     contract = dict(task=spec['task'], company=spec['company'], code=spec['code'],
-                    schema='G7-V03-spanlevel-v0.1-draft',
+                    schema='G7-V03-spanlevel-v1.0', adjudicated='2026-11-10 操作员批7裁决（榕泰/天翔/亿阳PASS；尔康F10改组构成槽防重复计分+F12-F15逐文书认定状态字段）',
                     source_pages={d: dict(file=spec['docs'][d], sha256_16=doc_sha[d],
                         chars=len(load_doc(spec['docs'][d])['stripped'])) for d in spec['docs']},
                     required_facts=facts,
@@ -182,7 +184,7 @@ for spec in specs:
                                n_d1_only=sum(1 for f in facts if f['allowed_docs'] == ['D1']),
                                n_d2_only=sum(1 for f in facts if f['allowed_docs'] == ['D2']),
                                spans_verified=sum(len(f['stage_evidence']) for f in facts)))
-    (out_dir / f"TASK_CONTRACT_{spec['task']}_v0.1.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
+    (out_dir / f"TASK_CONTRACT_{spec['task']}_v1.0.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
     d1o = contract['stats']['n_d1_only']; d2o = contract['stats']['n_d2_only']
     sheet += [f"## {spec['task']} {spec['company']}（{spec['code']}）", '',
               '| # | 主体 | 谓词 | 值 | 阶段 | 分类 | 允许 | 备注 |', '|---|---|---|---|---|---|---|---|']
