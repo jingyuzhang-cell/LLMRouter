@@ -1,0 +1,95 @@
+{
+ "name": "P2-C Gold baseline (P2C_GOLD_BASELINE_B45_PART2)",
+ "date": "2026-11-08",
+ "n_tasks": 5,
+ "rules": [
+  "冻结后不修改Gold；事实错误走正式版本修订(v1.1+)，不覆盖v1",
+  "D2未记载≠终罚为零；D2未出现某人≠法律意义上的撤销",
+  "文书未明确收到日期，不以公告日期替代（UNKNOWN）",
+  "摘要未披露金额，不得由终罚倒推拟罚",
+  "UNKNOWN槽不计入N、不计入critical、不得计为0",
+  "扫描表数值仅用于初筛，不作Gold依据"
+ ],
+ "builders": [
+  "build_contracts_batch4.py",
+  "build_contracts_batch5.py",
+  "p2c_gold_common.py"
+ ],
+ "contracts": {
+  "WL_300367": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_WL_300367_v1.json",
+   "sha256": "98d8f0250d7bf4d488e6bac70e434c9cefe923dab89fa86fabea3f662c3fcee5",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED_AFTER_REVISION",
+   "note": "操作员终审通过；r1：F13日期跨度含《行政处罚事先告知书》；F10注明同一文书两跨度；F9零变化限定为D1、D2所载文书并补逐组证据；汇总槽补组成依赖",
+   "draft_sha256": "f1b101d1c830d229e65ee1ae824bfe12f9723a2b85917ed121927eb2a749ce7a",
+   "task_id": "P2_WL_300367_PENALTY",
+   "slots": 15,
+   "critical": 11,
+   "unknown": [],
+   "scored_N": 15
+  },
+  "RY_002193": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_RY_002193_v1.json",
+   "sha256": "2fdf5891137bda2dad178a7e21f37ec36b0665a17455158979915022c1dcef67",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED_AFTER_REVISION",
+   "note": "操作员终审通过；r1：F17日期跨度含原文《立案告知书》；汇总槽补逐组证据与组成依赖；F11保持\"D2未再载明对应处罚\"",
+   "draft_sha256": "a6b0bbd265952f7bdff3ea08f950ac13dc4d0b2b19adb5cf9fd287e2fd1b305f",
+   "task_id": "P2_RY_002193_PENALTY",
+   "slots": 20,
+   "critical": 15,
+   "unknown": [],
+   "scored_N": 20
+  },
+  "FH_002743": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_FH_002743_v1.json",
+   "sha256": "7c3a71a8e8ba4e470228d2b2b4ef9d4e736bac0ce70e64ea4b82e4d015d1e6c3",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED",
+   "note": "操作员终审通过；r1仅补零变化逐组D1/D2证据与汇总槽组成依赖，事实值不变；F12/F13日期跨度经全文核对完整",
+   "draft_sha256": "95a04d7ceffce95ade572eeb2a6b9d7d50a9f4a0d6755908a5f742a50fe7ca07",
+   "task_id": "P2_FH_002743_PENALTY",
+   "slots": 14,
+   "critical": 12,
+   "unknown": [],
+   "scored_N": 14
+  },
+  "RSK_603803": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_RSK_603803_v1.json",
+   "sha256": "56c5610c0b0cbd833dc0e242a3b0573dcf821e22383317ceea7eb02d9367f2d9",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED",
+   "note": "操作员终审通过；r1仅补零变化逐组D1/D2证据与汇总槽组成依赖，事实值不变；F11立案文书名完整",
+   "draft_sha256": "f7dc343d3daede21336fe2a30c0bd75f9af54add2b4652a11672fc7391df3a60",
+   "task_id": "P2_RSK_603803_PENALTY",
+   "slots": 14,
+   "critical": 10,
+   "unknown": [],
+   "scored_N": 14
+  },
+  "HY_002700": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_HY_002700_v1.json",
+   "sha256": "d5f55b9decff0c9dc2fd536a43c954ae449e02d5567a218f05e1c38243925711",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED_AFTER_REVISION",
+   "note": "操作员终审通过；r1：F9引文补主体\"当事人周举东\"；F12 UNKNOWN不变（申辩不予采纳≠终局禁入已作出）",
+   "draft_sha256": "4d686684c6a5a85f7694358bff7f9645eaf223eb6dd53b9aa4e6e4717ff47550",
+   "task_id": "P2_HY_002700_PENALTY",
+   "slots": 17,
+   "critical": 14,
+   "unknown": [
+    "F12"
+   ],
+   "scored_N": 16
+  }
+ },
+ "prior_baselines": [
+  "/root/research_outputs/static_pi/p2_confirm/P2C_GOLD_BASELINE_B1B2.json"
+ ]
+}

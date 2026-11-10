@@ -4,7 +4,7 @@ Endpoints: ① mismatch superiority (one-sided exact sign-flip, MITM, α=0.05, t
            ② stage-sensitive recall non-inferiority (paired percentile bootstrap 1e4, one-sided 95% LB ≥ −0.05)
            ③ Q_all non-inferiority (same, −0.05 main / −0.032 sensitivity)
 Sensitivities: undecidable-worst (all → mismatch), S1 zero / S2 worst-bound imputation for shared-failed tasks."""
-import json, re, sys
+import json, re, sys, unicodedata
 from pathlib import Path
 from collections import defaultdict
 
@@ -71,7 +71,7 @@ def values_equal(a, b):
     return ca is not None and ca == cb
 
 def norm_quote(q):
-    return re.sub(r'\s+', '', fw2hw(q or ''))
+    return re.sub(r'\s+', '', unicodedata.normalize('NFKC', str(q or '')))
 
 def load_contracts():
     ts = json.loads(FREEZE.read_text('utf-8'))
@@ -92,7 +92,7 @@ def load_contracts():
                     if corr.get('file') == Path(meta['file']).name or corr.get('doc') == d:
                         pos = txt.find(corr['text_layer'])
                         if pos >= 0: txt = txt[:pos] + corr['printed'] + txt[pos+len(corr['text_layer']):]
-            docs_norm[d] = re.sub(r'\s+', '', txt)
+            docs_norm[d] = re.sub(r'\s+', '', unicodedata.normalize('NFKC', txt))
         facts = {}
         for f in c['required_facts']:
             ad = f.get('allowed_docs') or f.get('allowed_citation_docs') or []

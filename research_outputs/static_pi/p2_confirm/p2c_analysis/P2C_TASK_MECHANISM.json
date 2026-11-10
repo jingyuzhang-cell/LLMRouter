@@ -1,0 +1,1774 @@
+{
+ "aggregate_transitions": {
+  "ABSENT->TP": 24,
+  "LOC_WRONG->TP": 52,
+  "ABSENT->UNSUPPORTED": 2,
+  "LOC_WRONG->UNSUPPORTED": 4,
+  "TP->lost": 13,
+  "VALUE_WRONG->LOC_WRONG": 2,
+  "VALUE_WRONG->TP": 3,
+  "ABSENT->LOC_WRONG": 3,
+  "ABSENT->VALUE_WRONG": 8,
+  "UNSUPPORTED->ABSENT": 6,
+  "UNKNOWN_OK->UNKNOWN_ASSERTED": 1,
+  "LOC_WRONG->ABSENT": 2,
+  "LOC_WRONG->VALUE_WRONG": 1,
+  "UNSUPPORTED->LOC_WRONG": 1
+ },
+ "tasks": [
+  {
+   "task": "BQ_600074",
+   "N": 17,
+   "docs": 2,
+   "H2": 0.1176,
+   "H4": 0.0588,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 7,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 2,
+    "tokens": 11439,
+    "yuan": 0.0126,
+    "yuan_marg": 0.0126
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 11458,
+    "yuan": 0.0124,
+    "yuan_marg": 0.0124
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 4,
+      "value_wrong": 0,
+      "cite_wrong": 4,
+      "tp": 9
+     },
+     "transitions": {
+      "ABSENT->TP": [
+       "F6",
+       "F7"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.529412,
+     "Q6": 0.529412,
+     "Q4": 0.588235
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 2,
+      "S2": 0,
+      "S3": 0,
+      "targets": 2
+     },
+     "defects": {
+      "ABSENT": 6,
+      "value_wrong": 0,
+      "cite_wrong": 6,
+      "tp": 5
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F1",
+       "F2",
+       "F3",
+       "F5",
+       "F6"
+      ],
+      "ABSENT->UNSUPPORTED": [
+       "F15"
+      ],
+      "LOC_WRONG->UNSUPPORTED": [
+       "F16"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.235294,
+     "Q6": 0.470588,
+     "Q4": 0.294118
+    }
+   }
+  },
+  {
+   "task": "DG_002715",
+   "N": 19,
+   "docs": 2,
+   "H2": 0.0,
+   "H4": 0.0,
+   "mechanism": "无恢复机会（共享失效/无目标）",
+   "gains": 0,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 0,
+    "tokens": 0,
+    "yuan": 0,
+    "yuan_marg": 0
+   },
+   "g2": {
+    "calls": 1,
+    "tokens": 7015,
+    "yuan": 0.0083,
+    "yuan_marg": 0.0083
+   },
+   "reps": {
+    "1": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "no_target",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "DY_002086",
+   "N": 20,
+   "docs": 2,
+   "H2": 0.25,
+   "H4": 0.25,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 10,
+   "losses": 1,
+   "stage_flips": 1,
+   "g6": {
+    "calls": 2,
+    "tokens": 17716,
+    "yuan": 0.0262,
+    "yuan_marg": 0.0109
+   },
+   "g2": {
+    "calls": 1,
+    "tokens": 10689,
+    "yuan": 0.0112,
+    "yuan_marg": 0.0112
+   },
+   "reps": {
+    "1": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 0,
+      "S2": 2,
+      "S3": 0,
+      "targets": 2
+     },
+     "defects": {
+      "ABSENT": 1,
+      "value_wrong": 1,
+      "cite_wrong": 11,
+      "tp": 7
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F1",
+       "F2",
+       "F3",
+       "F4",
+       "F5",
+       "F6",
+       "F7",
+       "F8",
+       "F9",
+       "F10"
+      ],
+      "TP->lost": [
+       "F14"
+      ]
+     },
+     "stage_flip_losses": [
+      "F14"
+     ],
+     "Q2": 0.3,
+     "Q6": 0.8,
+     "Q4": 0.3
+    }
+   }
+  },
+  {
+   "task": "FG_600399",
+   "N": 25,
+   "docs": 2,
+   "H2": 0.0,
+   "H4": 0.0,
+   "mechanism": "无恢复机会（共享失效/无目标）",
+   "gains": 0,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 0,
+    "tokens": 0,
+    "yuan": 0,
+    "yuan_marg": 0
+   },
+   "g2": {
+    "calls": 0,
+    "tokens": 0,
+    "yuan": 0,
+    "yuan_marg": 0
+   },
+   "reps": {
+    "1": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "FH_002743",
+   "N": 14,
+   "docs": 2,
+   "H2": 0.0357,
+   "H4": 0.0,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 2,
+   "losses": 1,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 4,
+    "tokens": 26926,
+    "yuan": 0.0535,
+    "yuan_marg": 0.0088
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 7547,
+    "yuan": 0.009,
+    "yuan_marg": 0.009
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 1,
+      "S2": 1,
+      "S3": 0,
+      "targets": 2
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 3,
+      "cite_wrong": 6,
+      "tp": 3
+     },
+     "transitions": {
+      "VALUE_WRONG->LOC_WRONG": [
+       "F6"
+      ],
+      "VALUE_WRONG->TP": [
+       "F7",
+       "F14"
+      ],
+      "TP->lost": [
+       "F8"
+      ],
+      "ABSENT->LOC_WRONG": [
+       "F9"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.142857,
+     "Q6": 0.214286,
+     "Q4": 0.214286
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 1,
+      "S2": 5,
+      "S3": 0,
+      "targets": 6
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 0,
+      "cite_wrong": 7,
+      "tp": 5
+     },
+     "transitions": {
+      "ABSENT->VALUE_WRONG": [
+       "F9"
+      ],
+      "UNSUPPORTED->ABSENT": [
+       "F11"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.214286,
+     "Q6": 0.214286,
+     "Q4": 0.214286
+    }
+   }
+  },
+  {
+   "task": "FR_600781",
+   "N": 20,
+   "docs": 2,
+   "H2": 0.225,
+   "H4": 0.025,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 9,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 2,
+    "tokens": 14482,
+    "yuan": 0.0167,
+    "yuan_marg": 0.0167
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 14145,
+    "yuan": 0.0159,
+    "yuan_marg": 0.0159
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 1,
+      "cite_wrong": 10,
+      "tp": 7
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F1",
+       "F4",
+       "F5",
+       "F6",
+       "F7",
+       "F8",
+       "F11"
+      ],
+      "ABSENT->TP": [
+       "F16"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.35,
+     "Q6": 0.75,
+     "Q4": 0.75
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 1,
+      "cite_wrong": 2,
+      "tp": 15
+     },
+     "transitions": {
+      "ABSENT->TP": [
+       "F16"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.75,
+     "Q6": 0.8,
+     "Q4": 0.75
+    }
+   }
+  },
+  {
+   "task": "GD_839680",
+   "N": 16,
+   "docs": 2,
+   "H2": 0.125,
+   "H4": 0.125,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 5,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 2,
+    "tokens": 20304,
+    "yuan": 0.0419,
+    "yuan_marg": 0.0049
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 8361,
+    "yuan": 0.0101,
+    "yuan_marg": 0.0101
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovery_truncated",
+     "action": "upstream_J2R+SINK",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 1,
+      "value_wrong": 1,
+      "cite_wrong": 9,
+      "tp": 5
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F1",
+       "F2",
+       "F3",
+       "F4",
+       "F7"
+      ],
+      "LOC_WRONG->UNSUPPORTED": [
+       "F14"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.1875,
+     "Q6": 0.4375,
+     "Q4": 0.1875
+    }
+   }
+  },
+  {
+   "task": "HW_600360",
+   "N": 19,
+   "docs": 2,
+   "H2": 0.5,
+   "H4": 0.2105,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 19,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 4,
+    "tokens": 40451,
+    "yuan": 0.0728,
+    "yuan_marg": 0.0154
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 12631,
+    "yuan": 0.0142,
+    "yuan_marg": 0.0142
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 0,
+      "S2": 8,
+      "S3": 0,
+      "targets": 8
+     },
+     "defects": {
+      "ABSENT": 1,
+      "value_wrong": 0,
+      "cite_wrong": 9,
+      "tp": 9
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F1",
+       "F2",
+       "F3",
+       "F4",
+       "F5",
+       "F6",
+       "F7",
+       "F8"
+      ],
+      "UNKNOWN_OK->UNKNOWN_ASSERTED": [
+       "F13"
+      ],
+      "ABSENT->TP": [
+       "F18"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.263158,
+     "Q6": 0.842105,
+     "Q4": 0.421053
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 0,
+      "S2": 1,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 0,
+      "cite_wrong": 10,
+      "tp": 7
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F1",
+       "F2",
+       "F3",
+       "F4",
+       "F5",
+       "F6",
+       "F7",
+       "F8"
+      ],
+      "LOC_WRONG->UNSUPPORTED": [
+       "F9"
+      ],
+      "ABSENT->TP": [
+       "F17",
+       "F18"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.263158,
+     "Q6": 0.684211,
+     "Q4": 0.684211
+    }
+   }
+  },
+  {
+   "task": "HX_300427",
+   "N": 19,
+   "docs": 2,
+   "H2": 0.0263,
+   "H4": -0.0263,
+   "mechanism": "信息找回型（含锚定损失）",
+   "gains": 2,
+   "losses": 1,
+   "stage_flips": 1,
+   "g6": {
+    "calls": 2,
+    "tokens": 18088,
+    "yuan": 0.033,
+    "yuan_marg": 0.0062
+   },
+   "g2": {
+    "calls": 1,
+    "tokens": 4759,
+    "yuan": 0.0058,
+    "yuan_marg": 0.0058
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 1,
+      "S2": 8,
+      "S3": 0,
+      "targets": 9
+     },
+     "defects": {
+      "ABSENT": 3,
+      "value_wrong": 0,
+      "cite_wrong": 2,
+      "tp": 14
+     },
+     "transitions": {
+      "TP->lost": [
+       "F1"
+      ],
+      "ABSENT->TP": [
+       "F14",
+       "F16"
+      ],
+      "ABSENT->UNSUPPORTED": [
+       "F15"
+      ],
+      "LOC_WRONG->ABSENT": [
+       "F19"
+      ]
+     },
+     "stage_flip_losses": [
+      "F1"
+     ],
+     "Q2": 0.684211,
+     "Q6": 0.736842,
+     "Q4": 0.789474
+    },
+    "2": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "HY_002700",
+   "N": 16,
+   "docs": 2,
+   "H2": 0.125,
+   "H4": 0.125,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 1,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 2,
+    "tokens": 16923,
+    "yuan": 0.0331,
+    "yuan_marg": 0.0067
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 10766,
+    "yuan": 0.013,
+    "yuan_marg": 0.013
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 0,
+      "S2": 5,
+      "S3": 0,
+      "targets": 5
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 0,
+      "cite_wrong": 6,
+      "tp": 8
+     },
+     "transitions": {
+      "LOC_WRONG->VALUE_WRONG": [
+       "F2"
+      ],
+      "ABSENT->TP": [
+       "F14"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.25,
+     "Q6": 0.5,
+     "Q4": 0.25
+    },
+    "2": {
+     "outcome": "no_target",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "HZE_000693",
+   "N": 17,
+   "docs": 2,
+   "H2": 0.0294,
+   "H4": 0.1176,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 1,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 3,
+    "tokens": 25656,
+    "yuan": 0.0456,
+    "yuan_marg": 0.013
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 11576,
+    "yuan": 0.0128,
+    "yuan_marg": 0.0128
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 0,
+      "S2": 1,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 4,
+      "value_wrong": 1,
+      "cite_wrong": 10,
+      "tp": 2
+     },
+     "transitions": {
+      "UNSUPPORTED->LOC_WRONG": [
+       "F8"
+      ],
+      "ABSENT->VALUE_WRONG": [
+       "F16"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.117647,
+     "Q6": 0.117647,
+     "Q4": 0.117647
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 2,
+      "S2": 0,
+      "S3": 0,
+      "targets": 2
+     },
+     "defects": {
+      "ABSENT": 6,
+      "value_wrong": 2,
+      "cite_wrong": 4,
+      "tp": 5
+     },
+     "transitions": {
+      "VALUE_WRONG->LOC_WRONG": [
+       "F2"
+      ],
+      "ABSENT->VALUE_WRONG": [
+       "F16"
+      ],
+      "ABSENT->TP": [
+       "F19"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.294118,
+     "Q6": 0.352941,
+     "Q4": 0.117647
+    }
+   }
+  },
+  {
+   "task": "HZ_002122",
+   "N": 17,
+   "docs": 2,
+   "H2": 0.0588,
+   "H4": 0.0588,
+   "mechanism": "信息找回型",
+   "gains": 2,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 2,
+    "tokens": 22218,
+    "yuan": 0.0415,
+    "yuan_marg": 0.0076
+   },
+   "g2": {
+    "calls": 1,
+    "tokens": 6110,
+    "yuan": 0.0066,
+    "yuan_marg": 0.0066
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 0,
+      "S2": 6,
+      "S3": 0,
+      "targets": 6
+     },
+     "defects": {
+      "ABSENT": 3,
+      "value_wrong": 2,
+      "cite_wrong": 1,
+      "tp": 11
+     },
+     "transitions": {
+      "ABSENT->TP": [
+       "F11",
+       "F12"
+      ],
+      "ABSENT->VALUE_WRONG": [
+       "F14"
+      ],
+      "UNSUPPORTED->ABSENT": [
+       "F17"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.529412,
+     "Q6": 0.647059,
+     "Q4": 0.529412
+    },
+    "2": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "JB_600609",
+   "N": 18,
+   "docs": 2,
+   "H2": 0.0,
+   "H4": 0.0,
+   "mechanism": "净损失型",
+   "gains": 0,
+   "losses": 1,
+   "stage_flips": 1,
+   "g6": {
+    "calls": 1,
+    "tokens": 5425,
+    "yuan": 0.0065,
+    "yuan_marg": 0.0065
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 10484,
+    "yuan": 0.013,
+    "yuan_marg": 0.013
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 3,
+      "value_wrong": 1,
+      "cite_wrong": 0,
+      "tp": 14
+     },
+     "transitions": {
+      "TP->lost": [
+       "F11"
+      ]
+     },
+     "stage_flip_losses": [
+      "F11"
+     ],
+     "Q2": 0.666667,
+     "Q6": 0.666667,
+     "Q4": 0.666667
+    },
+    "2": {
+     "outcome": "no_target",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "JD_000922",
+   "N": 17,
+   "docs": 2,
+   "H2": 0.0588,
+   "H4": 0.0,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 4,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 3,
+    "tokens": 18889,
+    "yuan": 0.0309,
+    "yuan_marg": 0.0094
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 7607,
+    "yuan": 0.009,
+    "yuan_marg": 0.009
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 4,
+      "value_wrong": 0,
+      "cite_wrong": 11,
+      "tp": 2
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F10"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.117647,
+     "Q6": 0.117647,
+     "Q4": 0.117647
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 1,
+      "S2": 5,
+      "S3": 0,
+      "targets": 6
+     },
+     "defects": {
+      "ABSENT": 4,
+      "value_wrong": 0,
+      "cite_wrong": 11,
+      "tp": 2
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F10"
+      ],
+      "ABSENT->TP": [
+       "F11",
+       "F12"
+      ],
+      "ABSENT->VALUE_WRONG": [
+       "F14",
+       "F15"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.117647,
+     "Q6": 0.235294,
+     "Q4": 0.235294
+    }
+   }
+  },
+  {
+   "task": "JG_300093",
+   "N": 16,
+   "docs": 2,
+   "H2": 0.0312,
+   "H4": 0.0625,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 2,
+   "losses": 1,
+   "stage_flips": 1,
+   "g6": {
+    "calls": 2,
+    "tokens": 19027,
+    "yuan": 0.0315,
+    "yuan_marg": 0.006
+   },
+   "g2": {
+    "calls": 1,
+    "tokens": 6406,
+    "yuan": 0.0069,
+    "yuan_marg": 0.0069
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 1,
+      "S2": 6,
+      "S3": 0,
+      "targets": 7
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 1,
+      "cite_wrong": 10,
+      "tp": 3
+     },
+     "transitions": {
+      "TP->lost": [
+       "F4"
+      ],
+      "LOC_WRONG->TP": [
+       "F11",
+       "F12"
+      ],
+      "UNSUPPORTED->ABSENT": [
+       "F18"
+      ]
+     },
+     "stage_flip_losses": [
+      "F4"
+     ],
+     "Q2": 0.1875,
+     "Q6": 0.25,
+     "Q4": 0.125
+    },
+    "2": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "JZ_002470",
+   "N": 19,
+   "docs": 2,
+   "H2": 0.0526,
+   "H4": 0.0263,
+   "mechanism": "信息找回型（含锚定损失）",
+   "gains": 2,
+   "losses": 1,
+   "stage_flips": 1,
+   "g6": {
+    "calls": 3,
+    "tokens": 26947,
+    "yuan": 0.0407,
+    "yuan_marg": 0.0161
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 14385,
+    "yuan": 0.0154,
+    "yuan_marg": 0.0154
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 0,
+      "S2": 5,
+      "S3": 0,
+      "targets": 5
+     },
+     "defects": {
+      "ABSENT": 3,
+      "value_wrong": 1,
+      "cite_wrong": 7,
+      "tp": 8
+     },
+     "transitions": {
+      "TP->lost": [
+       "F7"
+      ],
+      "ABSENT->TP": [
+       "F15"
+      ],
+      "ABSENT->VALUE_WRONG": [
+       "F16"
+      ]
+     },
+     "stage_flip_losses": [
+      "F7"
+     ],
+     "Q2": 0.368421,
+     "Q6": 0.421053,
+     "Q4": 0.421053
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 3,
+      "value_wrong": 1,
+      "cite_wrong": 7,
+      "tp": 8
+     },
+     "transitions": {
+      "ABSENT->TP": [
+       "F15"
+      ],
+      "LOC_WRONG->UNSUPPORTED": [
+       "F19"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.368421,
+     "Q6": 0.421053,
+     "Q4": 0.368421
+    }
+   }
+  },
+  {
+   "task": "KJ_600806",
+   "N": 20,
+   "docs": 2,
+   "H2": 0.0,
+   "H4": 0.0,
+   "mechanism": "无恢复机会（共享失效/无目标）",
+   "gains": 0,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 0,
+    "tokens": 0,
+    "yuan": 0,
+    "yuan_marg": 0
+   },
+   "g2": {
+    "calls": 0,
+    "tokens": 0,
+    "yuan": 0,
+    "yuan_marg": 0
+   },
+   "reps": {
+    "1": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "KR_002072",
+   "N": 20,
+   "docs": 2,
+   "H2": 0.0,
+   "H4": 0.0,
+   "mechanism": "无恢复机会（共享失效/无目标）",
+   "gains": 0,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 0,
+    "tokens": 0,
+    "yuan": 0,
+    "yuan_marg": 0
+   },
+   "g2": {
+    "calls": 1,
+    "tokens": 6619,
+    "yuan": 0.0079,
+    "yuan_marg": 0.0079
+   },
+   "reps": {
+    "1": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "no_target",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "RSK_603803",
+   "N": 14,
+   "docs": 2,
+   "H2": -0.1786,
+   "H4": 0.0357,
+   "mechanism": "证据错误锚定型",
+   "gains": 2,
+   "losses": 6,
+   "stage_flips": 6,
+   "g6": {
+    "calls": 3,
+    "tokens": 17612,
+    "yuan": 0.0314,
+    "yuan_marg": 0.009
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 7471,
+    "yuan": 0.009,
+    "yuan_marg": 0.009
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 1,
+      "S2": 4,
+      "S3": 0,
+      "targets": 5
+     },
+     "defects": {
+      "ABSENT": 1,
+      "value_wrong": 1,
+      "cite_wrong": 4,
+      "tp": 8
+     },
+     "transitions": {
+      "TP->lost": [
+       "F1",
+       "F2",
+       "F3",
+       "F4",
+       "F5"
+      ],
+      "LOC_WRONG->TP": [
+       "F7"
+      ],
+      "ABSENT->LOC_WRONG": [
+       "F9"
+      ],
+      "UNSUPPORTED->ABSENT": [
+       "F13"
+      ]
+     },
+     "stage_flip_losses": [
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5"
+     ],
+     "Q2": 0.428571,
+     "Q6": 0.071429,
+     "Q4": 0.071429
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 2,
+      "S2": 0,
+      "S3": 0,
+      "targets": 2
+     },
+     "defects": {
+      "ABSENT": 3,
+      "value_wrong": 1,
+      "cite_wrong": 8,
+      "tp": 2
+     },
+     "transitions": {
+      "TP->lost": [
+       "F7"
+      ],
+      "ABSENT->TP": [
+       "F9"
+      ]
+     },
+     "stage_flip_losses": [
+      "F7"
+     ],
+     "Q2": 0.142857,
+     "Q6": 0.142857,
+     "Q4": 0.071429
+    }
+   }
+  },
+  {
+   "task": "RY_002193",
+   "N": 20,
+   "docs": 2,
+   "H2": 0.025,
+   "H4": 0.025,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 1,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 1,
+    "tokens": 5254,
+    "yuan": 0.0067,
+    "yuan_marg": 0.0067
+   },
+   "g2": {
+    "calls": 1,
+    "tokens": 5153,
+    "yuan": 0.0063,
+    "yuan_marg": 0.0063
+   },
+   "reps": {
+    "1": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 3,
+      "value_wrong": 0,
+      "cite_wrong": 8,
+      "tp": 9
+     },
+     "transitions": {
+      "ABSENT->TP": [
+       "F15"
+      ],
+      "ABSENT->LOC_WRONG": [
+       "F19"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.3,
+     "Q6": 0.35,
+     "Q4": 0.3
+    }
+   }
+  },
+  {
+   "task": "SK_002278",
+   "N": 13,
+   "docs": 2,
+   "H2": 0.0,
+   "H4": 0.0,
+   "mechanism": "动作无净变化",
+   "gains": 0,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 1,
+    "tokens": 3362,
+    "yuan": 0.0042,
+    "yuan_marg": 0.0042
+   },
+   "g2": {
+    "calls": 1,
+    "tokens": 3384,
+    "yuan": 0.0043,
+    "yuan_marg": 0.0043
+   },
+   "reps": {
+    "1": {
+     "outcome": "shared_fail",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 3,
+      "value_wrong": 2,
+      "cite_wrong": 4,
+      "tp": 4
+     },
+     "transitions": {},
+     "stage_flip_losses": [],
+     "Q2": 0.230769,
+     "Q6": 0.230769,
+     "Q4": 0.230769
+    }
+   }
+  },
+  {
+   "task": "SW_000755",
+   "N": 14,
+   "docs": 2,
+   "H2": 0.0,
+   "H4": 0.0,
+   "mechanism": "无恢复机会（共享失效/无目标）",
+   "gains": 0,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 0,
+    "tokens": 0,
+    "yuan": 0,
+    "yuan_marg": 0
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 8365,
+    "yuan": 0.0101,
+    "yuan_marg": 0.0101
+   },
+   "reps": {
+    "1": {
+     "outcome": "no_target",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "no_target",
+     "action": "no_action",
+     "defects": null,
+     "transitions": null
+    }
+   }
+  },
+  {
+   "task": "TX_000070",
+   "N": 16,
+   "docs": 2,
+   "H2": 0.0938,
+   "H4": 0.0938,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 3,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 2,
+    "tokens": 9046,
+    "yuan": 0.0123,
+    "yuan_marg": 0.0123
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 8488,
+    "yuan": 0.0108,
+    "yuan_marg": 0.0108
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 1,
+      "value_wrong": 1,
+      "cite_wrong": 9,
+      "tp": 5
+     },
+     "transitions": {
+      "ABSENT->TP": [
+       "F13"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.3125,
+     "Q6": 0.375,
+     "Q4": 0.1875
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 1,
+      "value_wrong": 1,
+      "cite_wrong": 12,
+      "tp": 2
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F8"
+      ],
+      "ABSENT->TP": [
+       "F13"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.125,
+     "Q6": 0.25,
+     "Q4": 0.25
+    }
+   }
+  },
+  {
+   "task": "WC_300089",
+   "N": 18,
+   "docs": 2,
+   "H2": 0.0278,
+   "H4": 0.0278,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 3,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 2,
+    "tokens": 12491,
+    "yuan": 0.0155,
+    "yuan_marg": 0.0155
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 12555,
+    "yuan": 0.0154,
+    "yuan_marg": 0.0154
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 1,
+      "cite_wrong": 10,
+      "tp": 5
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F11",
+       "F12"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.277778,
+     "Q6": 0.277778,
+     "Q4": 0.388889
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 0,
+      "cite_wrong": 9,
+      "tp": 7
+     },
+     "transitions": {
+      "ABSENT->TP": [
+       "F13"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.388889,
+     "Q6": 0.444444,
+     "Q4": 0.277778
+    }
+   }
+  },
+  {
+   "task": "WL_300367",
+   "N": 15,
+   "docs": 2,
+   "H2": 0.0333,
+   "H4": 0.2333,
+   "mechanism": "信息找回型",
+   "gains": 2,
+   "losses": 1,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 3,
+    "tokens": 24126,
+    "yuan": 0.0435,
+    "yuan_marg": 0.0121
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 10583,
+    "yuan": 0.012,
+    "yuan_marg": 0.012
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovered",
+     "action": "upstream_J2R+SINK",
+     "anomaly": {
+      "S1": 0,
+      "S2": 8,
+      "S3": 0,
+      "targets": 8
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 0,
+      "cite_wrong": 10,
+      "tp": 3
+     },
+     "transitions": {
+      "TP->lost": [
+       "F9"
+      ],
+      "ABSENT->TP": [
+       "F10",
+       "F11"
+      ],
+      "UNSUPPORTED->ABSENT": [
+       "F14"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.133333,
+     "Q6": 0.2,
+     "Q4": 0.133333
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 1,
+      "cite_wrong": 4,
+      "tp": 8
+     },
+     "transitions": {},
+     "stage_flip_losses": [],
+     "Q2": 0.533333,
+     "Q6": 0.533333,
+     "Q4": 0.133333
+    }
+   }
+  },
+  {
+   "task": "YS_300376",
+   "N": 18,
+   "docs": 2,
+   "H2": 0.0278,
+   "H4": 0.0,
+   "mechanism": "证据/数值纠偏型",
+   "gains": 2,
+   "losses": 0,
+   "stage_flips": 0,
+   "g6": {
+    "calls": 2,
+    "tokens": 25866,
+    "yuan": 0.0468,
+    "yuan_marg": 0.0081
+   },
+   "g2": {
+    "calls": 2,
+    "tokens": 15545,
+    "yuan": 0.017,
+    "yuan_marg": 0.017
+   },
+   "reps": {
+    "1": {
+     "outcome": "recovery_truncated",
+     "action": "upstream_J2R+SINK",
+     "defects": null,
+     "transitions": null
+    },
+    "2": {
+     "outcome": "recovered",
+     "action": "terminal_SINK_only",
+     "anomaly": {
+      "S1": 1,
+      "S2": 0,
+      "S3": 0,
+      "targets": 1
+     },
+     "defects": {
+      "ABSENT": 2,
+      "value_wrong": 1,
+      "cite_wrong": 10,
+      "tp": 5
+     },
+     "transitions": {
+      "LOC_WRONG->TP": [
+       "F6"
+      ],
+      "VALUE_WRONG->TP": [
+       "F8"
+      ],
+      "ABSENT->VALUE_WRONG": [
+       "F13"
+      ],
+      "LOC_WRONG->ABSENT": [
+       "F15"
+      ],
+      "UNSUPPORTED->ABSENT": [
+       "F16"
+      ]
+     },
+     "stage_flip_losses": [],
+     "Q2": 0.166667,
+     "Q6": 0.222222,
+     "Q4": 0.222222
+    }
+   }
+  }
+ ]
+}

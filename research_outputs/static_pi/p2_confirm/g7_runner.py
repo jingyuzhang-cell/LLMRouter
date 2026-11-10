@@ -50,7 +50,7 @@ def resolve_docs(contract, batch_dir):
                     if pos >= 0:
                         txt = txt[:pos] + corr['printed'] + txt[pos + len(corr['text_layer']):]
         docs[d] = txt
-        docs_norm[d] = re.sub(r'\s+', '', txt)
+        docs_norm[d] = R.SC.norm_text(txt)   # 冻结管线规范化（NFKC+去空白）——与evidence_rows引文检查同口径
     return docs, docs_norm
 
 class Env:
