@@ -1,24 +1,41 @@
 #!/usr/bin/env python3
-"""G7 batch-1 Gold contract drafts (V03 span-level schema), zero model calls.
-Facts are authored from the collected public documents; each evidence span is located
-by regex in the raw text and stored whitespace-normalized; every span is verified as a
-substring of the normalized document. Output: contracts/*.json + FACT_SHEET_BATCH1.md."""
+"""G7 batch-1 Gold contracts v1.0 (operator-adjudicated 2026-11-10), zero model calls.
+v1.0 changes: +10 adjudicated facts; REVISE fixes (ZD F9 full span, F24 predicate,
+UNKNOWN bases documented, GR F7/F13 calibers); fact_class taxonomy
+(stage_content / unknown_boundary / doc_metadata / background); triple traceability
+(raw page text + raw span + normalized span with unique mapping)."""
 import hashlib, json, re
+from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).parent
-norm = lambda s: re.sub(r'\s+', '', s)
-strip_pageno = lambda s: re.sub(r'\n\s*\d{1,3}\s*\n', '\n', s)  # 剥离独立页码行
+strip_pageno = lambda s: re.sub(r'\n\s*\d{1,3}\s*\n', '\n', s)
 
-def find_span(doc_stripped, pattern):
+
+def strip_with_map(raw):
+    out, idx = [], []
+    for i, ch in enumerate(raw):
+        if not ch.isspace():
+            out.append(ch)
+            idx.append(i)
+    return ''.join(out), idx
+
+
+def span_of(doc, pattern):
     pat = re.sub(r'\s+', '', pattern)
-    m = re.search(pat, doc_stripped)
+    m = re.search(pat, doc['stripped'])
     assert m, f'span not found: {pattern[:60]}'
-    return m.group(0)
+    i, j = m.span()
+    return dict(evidence_span=doc['stripped'][i:j],
+                raw_evidence_span=doc['raw'][doc['idx'][i]:doc['idx'][j - 1] + 1])
 
-# fact = (fact_id, subject, predicate, value, kind, stage, allowed, evidence:[(doc, regex)])
 ZEDA = dict(
     task='ZD_688555', company='泽达易盛（天津）科技股份有限公司', code='688555',
+    meta_facts={'F9', 'F10', 'F17', 'F18'},
+    unknown_basis={'F16': 'D2明示"对于当事人刘某松、雷某锋,我会将另行依法处理"——终局状态未在本决定书作出，不解释为零、不推断拟罚已执行',
+                   'F27': 'D2明示"对于当事人刘某松、雷某锋,我会将另行依法处理"——终局状态未在本决定书作出',
+                   'F28': 'D2"我会决定"部分仅载罚款事项，未载明市场禁入措施；未载明≠未采取',
+                   'F29': 'D2"我会决定"部分仅载罚款事项，未载明市场禁入措施；未载明≠未采取'},
     docs={'D1': 'raw/zeda_D1_notice.txt', 'D2': 'raw/zeda_D2_csrc.txt'},
     facts=[
         ('F1', '泽达易盛', '拟处罚款合计金额', '86,000,440元', 'amount', '拟', ['D1'],
@@ -38,7 +55,7 @@ ZEDA = dict(
         ('F8', '刘雪松', '拟采取市场禁入措施', '5年证券市场禁入', 'ban', '拟', ['D1'],
          [('D1', r'对刘雪松采取5年证券市场禁入措施')]),
         ('F9', '泽达易盛', '收到事先告知书日期', '2022年11月18日', 'date', '拟', ['D1'],
-         [('D1', r'于2022年11月18日收到中国证券会')]),
+         [('D1', r'于2022年11月18日收到中国证券会《行政处罚及市场禁入事先告知书》')]),
         ('F10', '泽达易盛', '事先告知书文号', '处罚字[2022]164号', 'docno', '拟', ['D1'],
          [('D1', r'处罚字\[2022\]164号')]),
         ('F11', '泽达易盛', '终局处罚款合计金额', '86,000,440元', 'amount', '终', ['D2'],
@@ -66,14 +83,21 @@ ZEDA = dict(
          [('D1', r'虚增营\s*业 收 入 71,043,475.95'), ('D2', r'虚增营业收入71,043,475.95元')]),
         ('F23', '泽达易盛', '2021年虚增在建工程金额', '36,320,600.00元', 'amount', '中性', ['D1', 'D2'],
          [('D1', r'虚增在建工程36,320,600.00元'), ('D2', r'虚增在建工程36,320,600.00元')]),
-        ('F24', '隋田力', '未披露代持合计股数', '870万股', 'amount', '中性', ['D1', 'D2'],
+        ('F24', '隋田力', '代持股份合计数', '870万股', 'amount', '中性', ['D1', 'D2'],
          [('D1', r'合计持有870万股'), ('D2', r'合计持有870万股')]),
         ('F25', '泽达易盛', '科创板上市日期', '2020年6月23日', 'date', '中性', ['D1', 'D2'],
          [('D1', r'6月23\s*日，泽达易盛在科创板上市'), ('D2', r'6月23日,泽达易盛在科创板上市')]),
+        ('F26', '应岚', '拟采取市场禁入措施', '终身证券市场禁入', 'ban', '拟', ['D1'],
+         [('D1', r'对林应、应岚分别采取终身\s*证券市场禁入措施')]),
+        ('F27', '雷志锋', '终局处罚款合计金额', 'UNKNOWN', 'amount', '终', ['D2'], []),
+        ('F28', '林应', '终局市场禁入措施', 'UNKNOWN', 'ban', '终', ['D2'], []),
+        ('F29', '应岚', '终局市场禁入措施', 'UNKNOWN', 'ban', '终', ['D2'], []),
     ])
 
 LANGQI = dict(
     task='LQ_000523', company='广州市浪奇实业股份有限公司', code='000523',
+    meta_facts={'F10', 'F19'},
+    unknown_basis={'F16': 'D2"我局决定"部分仅载两项罚款，未载明市场禁入措施；未载明≠未采取'},
     docs={'D1': 'raw/langqi_D1_notice.txt', 'D2': 'raw/langqi_D2_penalty.txt'},
     facts=[
         ('F1', '广州浪奇', '拟处罚款金额', '450万元', 'amount', '拟', ['D1'],
@@ -113,6 +137,12 @@ LANGQI = dict(
          [('D2', r'时任广州浪奇商务拓展部总监')]),
         ('F19', '广东证监局', '行政处罚决定书文号', '〔2021〕21号', 'docno', '终', ['D2'],
          [('D2', r'〔2021〕21 号')]),
+        ('F26', '陈建斌', '终局处罚款金额', '150万元', 'amount', '终', ['D2'],
+         [('D2', r'对陈建斌、王志刚、邓煜、黄健彬给予警告，并分别处以 150 万')]),
+        ('F27', '王志刚', '终局处罚款金额', '150万元', 'amount', '终', ['D2'],
+         [('D2', r'对陈建斌、王志刚、邓煜、黄健彬给予警告，并分别处以 150 万')]),
+        ('F28', '黄健彬', '终局处罚款金额', '150万元', 'amount', '终', ['D2'],
+         [('D2', r'对陈建斌、王志刚、邓煜、黄健彬给予警告，并分别处以 150 万')]),
         ('F20', '广州浪奇', '2018年年报虚增营业收入', '6,234,322,859.99元', 'amount', '中性', ['D1', 'D2'],
          [('D1', r'虚增营业收入 6,234,322,859.99 元'), ('D2', r'虚增营业收入 6,234,322,859.99 元')]),
         ('F21', '广州浪奇', '2019年年报虚增营业收入', '6,651,448,598.32元', 'amount', '中性', ['D1', 'D2'],
@@ -129,6 +159,12 @@ LANGQI = dict(
 
 GUORUI = dict(
     task='GR_300600', company='常熟市国瑞科技股份有限公司', code='300600',
+    meta_facts={'F8', 'F9', 'F14'},
+    background_overrides={'F15'},  # 裁决：曾用名=普通身份信息，不充作阶段敏感槽
+    calibers={'F7': dict(统计期间='2020年度', 分子='2020年年报虚增营业收入225,875,443.97元',
+                         指标名称='占当年披露营业收入比例', 比例='58.72%', 分母绝对值='文书未披露', 禁止反推分母=True),
+              'F13': dict(统计期间='2020年度', 分子='2020年年报虚增营业收入225,875,443.97元',
+                          指标名称='占当年披露营业收入比例', 比例='39.61%', 分母绝对值='文书未披露', 禁止反推分母=True)},
     docs={'D1': 'raw/guorui_D1_clean.txt', 'D2': 'raw/guorui_D2_csrc.txt'},
     facts=[
         ('F1', '国瑞科技', '拟处罚款金额', '200万元', 'amount', '拟', ['D1'],
@@ -161,6 +197,12 @@ GUORUI = dict(
          [('D2', r'2024年4月24日')]),
         ('F15', '国瑞科技', '决定书所载公司曾用名', '常熟瑞特电气股份有限公司', 'text', '终', ['D2'],
          [('D2', r'原常熟瑞特电气股份有限公司')]),
+        ('F20', '龚瑞良', '终局处罚款金额', '60万元', 'amount', '终', ['D2'],
+         [('D2', r'对郦几宁、龚瑞良、陆国良给予警告,并分别处以60万元罚款')]),
+        ('F21', '陆国良', '终局处罚款金额', '60万元', 'amount', '终', ['D2'],
+         [('D2', r'对郦几宁、龚瑞良、陆国良给予警告,并分别处以60万元罚款')]),
+        ('F22', '任增强', '终局处罚款金额', '50万元', 'amount', '终', ['D2'],
+         [('D2', r'对王东、任增强给予警告,并分别处以50万元罚款')]),
         ('F16', '国瑞科技', '2020年年报虚增营业收入', '225,875,443.97元', 'amount', '中性', ['D1', 'D2'],
          [('D1', r'虚增营业收入225,875,443.97元'), ('D2', r'虚增营业收入225,875,443.97元')]),
         ('F17', '国瑞科技', '2020年年报虚增利润总额', '40,257,715.37元', 'amount', '中性', ['D1', 'D2'],
@@ -171,43 +213,54 @@ GUORUI = dict(
          [('D1', r'郦几宁2020年9月至2022年9月任国瑞科技董事长'), ('D2', r'郦几宁2020年9月至2022年9月任国瑞科技董事长')]),
     ])
 
-out_dir = HERE / 'contracts'; out_dir.mkdir(exist_ok=True)
-sheet = ['# G7 批1 Gold 合同草案核验单（v0.1，待操作员裁决）', '',
-         '每份合同含逐事实：阶段（拟/终/中性）、允许文书、值、逐字证据跨度（已程序化校验为文书原文子串）。',
-         '阶段敏感事实 = 允许文书为单份（拟→D1、终→D2）。UNKNOWN = 终局文书未载明（不倒推）。', '']
+
+out_dir = HERE / 'contracts'
+sheet = ['# G7 批1 Gold 合同 v1.0（操作员逐项裁决后定稿：0 DROP / 10 新增 / REVISE 已落实）', '',
+         '分类：stage_content=有证据跨度的阶段敏感内容事实；unknown_boundary=UNKNOWN边界（无证据跨度，仅记录依据）；'
+         'doc_metadata=文书元数据；background=普通背景事实。跨度列=规范化形态（合同内另有原始跨度与原始页文本）。', '']
+totals = Counter()
 for spec in (ZEDA, LANGQI, GUORUI):
-    raw = {d: strip_pageno(open(HERE / f, encoding='utf-8', errors='ignore').read()) for d, f in spec['docs'].items()}
-    stripped = {d: norm(t) for d, t in raw.items()}  # 全空白剥离（含断行），合同文本与跨度同口径
+    docs = {}
+    for d, f in spec['docs'].items():
+        t = strip_pageno(open(HERE / f, encoding='utf-8', errors='ignore').read())
+        st, idx = strip_with_map(t)
+        docs[d] = dict(raw=t, stripped=st, idx=idx)
     doc_sha = {d: hashlib.sha256((HERE / f).read_bytes()).hexdigest() for d, f in spec['docs'].items()}
+    META, UNK, CAL = spec.get('meta_facts', set()), spec.get('unknown_basis', {}), spec.get('calibers', {})
     facts = []
-    sheet += [f"## {spec['task']} {spec['company']}（{spec['code']}）",
-              '', f"| # | 主体 | 谓词 | 值 | 阶段 | 允许 | 证据跨度（截选） |", '|---|---|---|---|---|---|---|']
+    sheet += [f"## {spec['task']} {spec['company']}（{spec['code']}）", '',
+              '| # | 主体 | 谓词 | 值 | 阶段 | 分类 | 允许 | 证据跨度（截选） |',
+              '|---|---|---|---|---|---|---|---|']
     for fid, subj, pred, val, kind, stage, allowed, ev in spec['facts']:
-        entries = []
-        for doc, pat in ev:
-            span = find_span(stripped[doc], pat)
-            assert span in stripped[doc], f'{fid} span not substring after norm'
-            entries.append(dict(document_id=doc, evidence_span=span, evidence_stage=stage,
-                                support_status='supports'))
+        entries = [dict(document_id=d, evidence_stage=stage, support_status='supports',
+                        **span_of(docs[d], pat)) for d, pat in ev]
+        fclass = ('background' if fid in spec.get('background_overrides', set())
+                  else 'doc_metadata' if fid in META else 'unknown_boundary' if val == 'UNKNOWN'
+                  else 'stage_content' if stage != '中性' else 'background')
         facts.append(dict(fact_id=fid, subject=subj, predicate=pred, value=val, kind=kind,
-                          critical=stage != '中性', fact_stage=stage, allowed_citation_docs=allowed,
-                          stage_evidence=entries,
-                          note='终局未载明，不得倒推' if val == 'UNKNOWN' else ''))
-        evshow = entries[0]['evidence_span'][:26] + ('…' if entries and len(entries[0]['evidence_span']) > 26 else '') if entries else '（未载明）'
-        docs = '+'.join(e['document_id'] for e in entries) if entries else '—'
-        sheet.append(f"| {fid} | {subj} | {pred} | {val} | {stage} | {'/'.join(allowed)} | {evshow}({docs}) |")
-    n_sens = sum(1 for f in facts if f['fact_stage'] != '中性')
+                          critical=fclass == 'stage_content', fact_stage=stage, fact_class=fclass,
+                          allowed_citation_docs=allowed, stage_evidence=entries,
+                          unknown_basis=(UNK.get(fid, '终局未载明，不得倒推；不以未提及推定处罚不存在或拟罚已执行')
+                                         if val == 'UNKNOWN' else None),
+                          caliber=CAL.get(fid)))
+        ev0 = entries[0] if entries else None
+        show = (ev0['evidence_span'][:24] + '…') if ev0 and len(ev0['evidence_span']) > 24 else (
+            ev0['evidence_span'] if ev0 else '（未载明）')
+        srclist = '+'.join(e['document_id'] for e in entries) if entries else '—'
+        sheet.append(f"| {fid} | {subj} | {pred} | {val} | {stage} | {fclass} | {'/'.join(allowed)} | {show}({srclist}) |")
+    cls = Counter(f['fact_class'] for f in facts)
+    totals.update(cls)
     contract = dict(task=spec['task'], company=spec['company'], code=spec['code'],
-                    schema='G7-V03-spanlevel-v0.1',
-                    source_pages={d: dict(pages={'1': stripped[d]}, raw_sha256=doc_sha[d],
-                                          file=spec['docs'][d]) for d in spec['docs']},
+                    schema='G7-V03-spanlevel-v1.0', adjudicated='2026-11-10 操作员批1逐项裁决（0 DROP, +10, REVISE已落实）',
+                    source_pages={d: dict(pages={'1': docs[d]['raw']}, normalized=docs[d]['stripped'],
+                                          raw_sha256=doc_sha[d], file=spec['docs'][d]) for d in spec['docs']},
                     required_facts=facts,
-                    stats=dict(n_facts=len(facts), n_stage_sensitive=n_sens,
-                               n_d1_only=sum(1 for f in facts if f['fact_stage'] == '拟'),
-                               n_d2_only=sum(1 for f in facts if f['fact_stage'] == '终')))
-    (out_dir / f"TASK_CONTRACT_{spec['task']}_v0.1.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
-    sheet += ['', f"事实合计 {len(facts)}；阶段敏感 {n_sens}（拟 {contract['stats']['n_d1_only']} / 终 {contract['stats']['n_d2_only']}）；跨度校验全部通过。", '']
-(HERE / 'FACT_SHEET_BATCH1.md').write_text('\n'.join(sheet))
-print('contracts written:', [p.name for p in out_dir.iterdir()])
-for spec in (ZEDA, LANGQI, GUORUI):
-    print(spec['task'], 'facts:', len(spec['facts']))
+                    stats=dict(n_facts=len(facts), **{f'n_{k}': v for k, v in cls.items()},
+                               n_d1_only=sum(1 for f in facts if f['fact_stage'] == '拟' and f['fact_class'] != 'doc_metadata'),
+                               n_d2_only=sum(1 for f in facts if f['fact_stage'] == '终' and f['fact_class'] != 'doc_metadata')))
+    (out_dir / f"TASK_CONTRACT_{spec['task']}_v1.0.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
+    sheet += ['', f"合计 {len(facts)}：阶段内容 {cls['stage_content']}｜UNKNOWN {cls['unknown_boundary']}｜元数据 {cls['doc_metadata']}｜背景 {cls['background']}", '']
+sheet += [f"**三任务总计 {sum(totals.values())}：阶段内容 {totals['stage_content']}｜UNKNOWN {totals['unknown_boundary']}｜元数据 {totals['doc_metadata']}｜背景 {totals['background']}**"]
+(HERE / 'FACT_SHEET_BATCH1_V1.md').write_text('\n'.join(sheet) + '\n')
+print('v1.0 contracts written:', sorted(p.name for p in out_dir.glob('*_v1.0.json')))
+print('三任务分类总计:', dict(totals))
