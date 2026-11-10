@@ -44,7 +44,7 @@ def span_of(doc, pattern):
     return dict(evidence_span=doc['stripped'][i:j],
                 raw_evidence_span=doc['raw'][doc['idx'][i]:doc['idx'][j-1]+1])
 
-def F(fid, subj, pred, val, kind, stage, allowed, ev, note=None, meta=False, cls=None, basis=None):
+def F(fid, subj, pred, val, kind, stage, allowed, ev, note=None, meta=False, cls=None, basis=None, alloc=None):
     d = dict(fact_id=fid, subject=subj, predicate=pred, value=val, value_kind=kind,
              fact_stage=stage, allowed_docs=allowed,
              stage_evidence=[dict(document_id=dd, **span_of(load_doc(files[dd]), pp)) for dd, pp in ev] if ev else [])
@@ -54,6 +54,7 @@ def F(fid, subj, pred, val, kind, stage, allowed, ev, note=None, meta=False, cls
     else: d['fact_class'] = 'stage_content'
     if note: d['note'] = note
     if basis: d['unknown_basis'] = basis
+    if alloc: d['allocation'] = alloc
     return d
 
 specs = []
@@ -141,7 +142,7 @@ specs.append(dict(
       F('F3','江昌政','拟处罚款金额（实际控制人）','60万元','amount','拟',['D1'],[('D1','其中作为实际控制人罚款60万元')],note='双身份拆槽'),
       F('F4','江昌政','拟处罚款金额（直接负责的主管人员）','30万元','amount','拟',['D1'],[('D1','作为直接负责的主管人员罚款30万元')],note='双身份拆槽'),
       F('F5','江山、江昌浩（2人）','拟单人处罚款金额','30万元','amount','拟',['D1'],[('D1','对江山、江昌浩给予警告，并分别处以30万元罚款')],note='共用组跨度'),
-      F('F6','龙何平、向中华（2人）','拟处罚款金额','3万元','amount','拟',['D1'],[('D1','对龙何平、向中华给予警告，并处以3万元罚款')],note='原文该条无“分别”字样（2人条目共用3万元表述），按原文原样建槽，不作人均/合计推断'),
+      F('F6','龙何平、向中华（2人）','处罚条款列示罚款金额','3万元','amount','拟',['D1'],[('D1','对龙何平、向中华给予警告，并处以3万元罚款')],alloc='未明确',note='裁决修订：原文无“分别”“各”或合计表述——分配方式未明确；评分仅核验条款金额3万元及关联人员，不核验每人金额或两人合计金额'),
       F('F7','四川证监局','事先告知书文号','处罚字【2019】4号','docno','拟',['D1'],[('D1','处罚字【2019】4号')],meta=True,note='全角括号【】'),
       F('F8','升达林业','收到事先告知书日期','2019年5月13日','date','拟',['D1'],[('D1','2019年5月13日收到中国证券监督管理委员会四川监管局下发的')],meta=True),
       F('F9','升达林业','终局处罚款金额','60万元','amount','终',['D2'],[('D2','对升达林业责令改正，给予警告，并处以60万元罚款')],note='同值'),
@@ -149,7 +150,7 @@ specs.append(dict(
       F('F11','江昌政','终局处罚款金额（实际控制人）','60万元','amount','终',['D2'],[('D2','其中作为实际控制人罚款60万元')],note='双身份拆槽'),
       F('F12','江昌政','终局处罚款金额（直接负责的主管人员）','30万元','amount','终',['D2'],[('D2','作为直接负责的主管人员罚款30万元')],note='双身份拆槽'),
       F('F13','江山、江昌浩（2人）','终局单人处罚款金额','30万元','amount','终',['D2'],[('D2','对江山、江昌浩给予警告，并分别处以30万元罚款')],note='同值；共用组跨度'),
-      F('F14','龙何平、向中华（2人）','终局处罚款金额','3万元','amount','终',['D2'],[('D2','对龙何平、向中华给予警告，并处以3万元罚款')],note='同值；原文无“分别”'),
+      F('F14','龙何平、向中华（2人）','终局处罚条款列示罚款金额','3万元','amount','终',['D2'],[('D2','对龙何平、向中华给予警告，并处以3万元罚款')],alloc='未明确',note='同值；原文无“分别”；口径同F6——不核验每人/合计金额'),
     ],
     docs=files))
 
@@ -176,7 +177,7 @@ specs.append(dict(task='DR_600719', company='大连热电股份有限公司', co
 
 # ============ 构建 ============
 out_dir = HERE / 'contracts'; out_dir.mkdir(exist_ok=True)
-sheet = ['# G7 批10 Gold 合同草案核验单（v0.1，待操作员裁决：雅百特/抚顺特钢R2/升达林业/大连热电）',
+sheet = ['# G7 批10 Gold 合同 v1.0（裁决后定稿：四案签收；升达F6/F14分配方式未明确口径）',
          '', '来源：cninfo 官方公告 PDF（静态页直取）；逐事实逐字证据跨度已程序化校验为文书原文子串。',
          '阶段敏感 = 允许文书单份（拟→D1、终→D2）。UNKNOWN = 终局文书未载明（不倒推）。', '']
 cls_tot, grand = {}, 0
@@ -188,7 +189,7 @@ for spec in specs:
     cls = Counter(f['fact_class'] for f in facts)
     doc_sha = {d: hashlib.sha256((HERE / 'raw' / f).read_bytes()).hexdigest()[:16] for d, f in spec['docs'].items()}
     contract = dict(task=spec['task'], company=spec['company'], code=spec['code'],
-                    schema='G7-V03-spanlevel-v0.1-draft',
+                    schema='G7-V03-spanlevel-v1.0', adjudicated='2026-11-10 操作员批10裁决（升达F6/F14条款列示口径+分配未明确；雅百特7 UNKNOWN保留并限定同一文书缺失不作独立样本；抚顺个人/组槽并立沿用尔康风华口径）',
                     text_corrections=[c for c in CORR_LOG if c['file'] in spec['docs'].values()],
                     source_pages={d: dict(file=spec['docs'][d], sha256_16=doc_sha[d],
                         chars=len(load_doc(spec['docs'][d])['stripped'])) for d in spec['docs']},
@@ -197,7 +198,7 @@ for spec in specs:
                                n_d1_only=sum(1 for f in facts if f['allowed_docs'] == ['D1']),
                                n_d2_only=sum(1 for f in facts if f['allowed_docs'] == ['D2']),
                                spans_verified=sum(len(f['stage_evidence']) for f in facts)))
-    (out_dir / f"TASK_CONTRACT_{spec['task']}_v0.1.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
+    (out_dir / f"TASK_CONTRACT_{spec['task']}_v1.0.json").write_text(json.dumps(contract, ensure_ascii=False, indent=1))
     d1o = contract['stats']['n_d1_only']; d2o = contract['stats']['n_d2_only']
     sheet += [f"## {spec['task']} {spec['company']}（{spec['code']}）", '',
               '| # | 主体 | 谓词 | 值 | 阶段 | 分类 | 允许 | 备注 |', '|---|---|---|---|---|---|---|---|']
