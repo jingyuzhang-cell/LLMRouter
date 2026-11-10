@@ -91,15 +91,17 @@ for t in sorted(meta):
         sc = {a: S.score(outs[a], ct) for a in outs}
         rowstat = {a: {x['fact_id']: x['status'] for x in sc[a]['rows']} for a in outs}
         ans = {a: {x.get('fact_id'): x for x in outs[a].get('answers', []) if isinstance(x, dict)} for a in outs}
-        mm = {}
+        mm, mmst = {}, {}
         for a in outs:
-            c = 0
+            c, st_l = 0, []
             for f, sensitive in stage_sensitive.items():
                 d = ans[a].get(f, {}).get('doc')
                 if sensitive and d in ('D1', 'D2') and d not in allowed[f]:
                     c += 1
+                    st_l.append(rowstat[a].get(f))
             mm[a] = c
-        task_rec[rep] = dict(state='ok', mismatch=mm,
+            mmst[a] = st_l
+        task_rec[rep] = dict(state='ok', mismatch=mm, mm_status=mmst,
                              n_stage_sensitive=sum(stage_sensitive.values()), N=len(allowed))
         if t in LOSS_TASKS:
             for f in rowstat['G2']:
