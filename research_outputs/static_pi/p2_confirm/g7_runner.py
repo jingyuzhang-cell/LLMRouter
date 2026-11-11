@@ -287,7 +287,9 @@ def main():
         try:
             o = run_block(tag, rep, ct, env, prompts, arm_first)
             results[key] = dict(seq=blk['seq'], arm_first=arm_first, shared_fault=o['shared_fault'],
-                                states=o['states'], targets=o['targets'], arms=o['arms'], audit=o['audit'])
+                                states=o.get('states') or {}, targets=o.get('targets') or [],
+                                arms=o.get('arms') or {a: None for a in ARMS},
+                                audit=o.get('audit') or {a: dict(shared_fault=o['shared_fault']) for a in ARMS})
         except Stop as s:
             results[key] = dict(seq=blk['seq'], arm_first=arm_first, stopped=str(s))
             (OUT / 'G7_RESULTS.json').write_text(json.dumps(results, ensure_ascii=False, indent=1), 'utf-8')
