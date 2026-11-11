@@ -333,3 +333,70 @@ def prompt_xc_verify(doc_id, facts_tl, facts_er, located):
         '## 输出要求\n- 输出格式：JSON数组，每条含 claim, source_a, source_b, '
         'verdict(SUPPORTED/UNSUPPORTED/CONFLICT)\n- 输出契约：fact_check.v2\n\n'
         '请严格按照输出要求完成任务。')
+
+
+# ===== 双文档 DAG 适配（2026-11-11 操作员批准；零架构扩展）=====
+# 结构：fe(D1)→tl；er(D2)；{tl,er}→xc / loc→ver（机制B）。
+# 五条冻结约束：(1) 两臂同 D1/D2 原文；(2) 两臂同父输出；(3) 同注入位置/值/次数；
+# (4) Gold 不入任何输入；(5) 端到端总预算按实际 token 记账（含重复输入）。
+
+def prompt_fe_dual(doc_id, text):
+    return prompt_fe(doc_id, text)
+
+def prompt_tl_dual(d1_id, facts_json, d1_text_head):
+    return prompt_tl(d1_id, facts_json, d1_text_head)
+
+def prompt_er_dual(d2_id, d2_text):
+    return prompt_er(d2_id, d2_text)
+
+def prompt_xc_dual(d1_id, d2_id, facts_tl, facts_er, d1_text, d2_text):
+    """Z=0：双文档汇合，单次完成冲突定位与裁决（与单文档版同输出合同 fact_check.v2）。"""
+    return (
+        '你是一个资本市场事件调查助手。\n\n'
+        '## 任务类型：cross_verification\n'
+        f'## 来源A doc_id：{d1_id}\n## 来源B doc_id：{d2_id}\n'
+        '## 任务描述\n将来源A（事先告知书类）与来源B（处罚决定书类）两路输出逐条对照，'
+        '定位相互冲突的字段（同主体、同谓词、同阶段/时间、同口径且不能同时成立者），'
+        '依据两份原始文书正文裁决正确值；正常阶段差异（拟处罚 vs 终局处罚）不是冲突，'
+        '按阶段分别记录。\n\n'
+        f'## 来源A事实 [{d1_id}]\n{facts_tl}\n\n'
+        f'## 来源B事实 [{d2_id}]\n{facts_er}\n\n'
+        f'## 原始文书A [{d1_id}]\n{d1_text}\n\n'
+        f'## 原始文书B [{d2_id}]\n{d2_text}\n\n'
+        '## 输出要求\n- 输出格式：JSON数组，每条含 claim, source_a, source_b, '
+        'verdict(SUPPORTED/UNSUPPORTED/CONFLICT), resolved_value, evidence_doc_id\n'
+        '- 输出契约：fact_check.v2\n\n请严格按照输出要求完成任务。')
+
+def prompt_loc_dual(d1_id, d2_id, facts_tl, facts_er, d1_text, d2_text):
+    """Z=1 第一步：仅定位冲突字段与原始证据（与 Z=0 相同的输入信息；无 Gold）。"""
+    return (
+        '你是一个资本市场事件调查助手。\n\n'
+        '## 任务类型：cross_verification_locate\n'
+        f'## 来源A doc_id：{d1_id}\n## 来源B doc_id：{d2_id}\n'
+        '## 任务描述\n对照两路输出，逐字段列出需要裁决的冲突（同主体、同谓词、同阶段/时间、'
+        '同口径且不能同时成立），并为每个冲突在原始文书中定位证据位置。正常阶段差异'
+        '（拟 vs 终局）不是冲突。只使用两路输出与两份原始文书，不引入外部信息。\n\n'
+        f'## 来源A事实 [{d1_id}]\n{facts_tl}\n\n'
+        f'## 来源B事实 [{d2_id}]\n{facts_er}\n\n'
+        f'## 原始文书A [{d1_id}]\n{d1_text}\n\n'
+        f'## 原始文书B [{d2_id}]\n{d2_text}\n\n'
+        '## 输出要求\n- 输出格式：JSON数组，元素含 field, tl_item, er_item, '
+        'evidence_doc_id, evidence_span\n- 输出契约：xc_locate.v1\n\n'
+        '请严格按照输出要求完成任务。')
+
+def prompt_ver_dual(d1_id, d2_id, located, facts_tl, facts_er, d1_text, d2_text):
+    """Z=1 第二步：逐字段验证与裁决（输出合同仍 fact_check.v2）。"""
+    return (
+        '你是一个资本市场事件调查助手。\n\n'
+        '## 任务类型：cross_verification\n'
+        f'## 来源A doc_id：{d1_id}\n## 来源B doc_id：{d2_id}\n'
+        '## 任务描述\n基于已定位的冲突字段，逐条核验并依据原始文书裁决正确值。'
+        '不得引入定位证据之外的来源。\n\n'
+        f'## 已定位字段证据\n{located}\n\n'
+        f'## 来源A事实 [{d1_id}]\n{facts_tl}\n\n'
+        f'## 来源B事实 [{d2_id}]\n{facts_er}\n\n'
+        f'## 原始文书A [{d1_id}]\n{d1_text}\n\n'
+        f'## 原始文书B [{d2_id}]\n{d2_text}\n\n'
+        '## 输出要求\n- 输出格式：JSON数组，每条含 claim, source_a, source_b, '
+        'verdict(SUPPORTED/UNSUPPORTED/CONFLICT), resolved_value, evidence_doc_id\n'
+        '- 输出契约：fact_check.v2\n\n请严格按照输出要求完成任务。')

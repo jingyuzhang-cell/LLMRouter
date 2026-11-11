@@ -67,7 +67,8 @@ CAPS = dict(attempts=320, tokens=450000, cash=0.80, wall=5400.0)
 
 # ---- DAG structure helpers ------------------------------------------------
 def topo_order():
-    """Kahn topological order over the REAL edges, deterministic."""
+    """Kahn topological order over the REAL edges, deterministic.
+    双文档 Z=1 时由 RealRunner 在 xc 之前分流 loc->ver（topo 仍返回四节点）。"""
     edges = full_dag_tasks.EDGES
     nodes = ['fe', 'er', 'tl', 'xc']
     indeg = {n: 0 for n in nodes}
@@ -258,9 +259,10 @@ class DagChain:
     and record the sha of each upstream answer consumed; repairs
     write back and invalidate stale downstream."""
 
-    def __init__(self, task, docs_text):
+    def __init__(self, task, docs_text, z_split=False):
         self.task = task
         self.docs_text = docs_text
+        self.z_split = z_split
         self.state = {}        # node -> dict(current, versions[...])
         self.prompt_meta = {}  # node -> {upstream: sha}
 
@@ -277,6 +279,36 @@ class DagChain:
 
     def build_prompt(self, node):
         t = self.task
+        # 双文档适配（2026-11-11）：task['dual_docs'] = {D1:{doc_id,text}, D2:{...}}
+        dual = t.get('dual_docs')
+        if dual:
+            from deadline_reward_v1.full_dag_tasks import (
+                prompt_fe_dual, prompt_tl_dual, prompt_er_dual, prompt_xc_dual,
+                prompt_loc_dual, prompt_ver_dual)
+            d1, d2 = dual['D1'], dual['D2']
+            consumed = {}
+            if node == 'fe':
+                return prompt_fe_dual(d1['doc_id'], d1['text']), consumed
+            if node == 'er':
+                return prompt_er_dual(d2['doc_id'], d2['text']), consumed
+            a = (self.current('fe') or {}).get('answer', '')
+            if node == 'tl':
+                consumed['fe'] = sha(a)
+                return prompt_tl_dual(d1['doc_id'], a[:4000],
+                                      d1['text'][:1200]), consumed
+            b = (self.current('er') or {}).get('answer', '')
+            consumed['er'] = sha(b)
+            if node == 'loc':
+                consumed['tl'] = sha(a)
+                return prompt_loc_dual(d1['doc_id'], d2['doc_id'], a[:4000],
+                                       b[:4000], d1['text'], d2['text']), consumed
+            if node == 'xc' and self.z_split:
+                loc_ans = (self.current('loc') or {}).get('answer', '')
+                consumed['tl'] = sha(a); consumed['loc'] = sha(loc_ans)
+                return prompt_ver_dual(d1['doc_id'], d2['doc_id'], loc_ans[:4000],
+                                       a[:4000], b[:4000], d1['text'], d2['text']), consumed
+            return prompt_xc_dual(d1['doc_id'], d2['doc_id'], a[:4000], b[:4000],
+                                  d1['text'], d2['text']), consumed
         doc_id = t['doc_id']
         consumed = {}
         if node == 'fe':
@@ -425,8 +457,9 @@ class RealRunner:
             f.flush()
             os.fsync(f.fileno())
 
-    def _exec(self, chain, clock, node, model, theta, tag, inject=None):
-        if node == 'xc' and self.z_split:
+    def _exec(self, chain, clock, node, model, theta, tag, inject=None,
+              _no_split=False):
+        if node == 'xc' and self.z_split and not _no_split:
             return self._exec_xc_split(chain, clock, model, theta, tag,
                                        inject=inject)
         prompt, consumed = chain.build_prompt(node)
@@ -475,61 +508,13 @@ class RealRunner:
 
     def _exec_xc_split(self, chain, clock, model, theta, tag, inject=None):
         """Z=1：xc -> locate + per-field verify（两臂同一 DAG/合同/上限）。
-        故障注入作用于该节点的第一次子调用（与 Z=0 单调用同条件）；
-        两次调用均如实计入成本与账本。"""
-        from deadline_reward_v1.full_dag_tasks import (
-            prompt_xc_locate, prompt_xc_verify)
-        doc_id = chain.task['doc_id']
-        a = (chain.current('tl') or {}).get('answer', '')
-        b = (chain.current('er') or {}).get('answer', '')
-        consumed = {'tl': sha(a), 'er': sha(b)}
-        first = not any(r['node'] == 'xc' for r in self.records)
-
-        def _call(prompt, sub, apply_inject):
-            est_in = est_in_tokens(prompt)
-            est_out = theta.get('max_tokens') or 2048
-            self.budget.pre_check(est_in, est_out,
-                                  cash_reserve(model, est_in, est_out))
-            force = 64 if (apply_inject == 'F_TRUNCATED' and first
-                           and tag == 'planned') else None
-            o = dict(self.transport(model, theta, prompt, self.creds,
-                                    force_max_tokens=force))
-            injected = bool(apply_inject and first and tag == 'planned')
-            if apply_inject == 'F_JSON' and injected:
-                o = dict(o, answer='[{"fact":"占位","evidence_doc_id":"?"}]',
-                         injected='output_replaced')
-            self.budget.settle(o)
-            clock.add('xc', o['latency_s'], f'{tag}:{sub}')
-            entry = dict(task=self.task_id, node='xc', sub=sub,
-                         z_split=True, model=model,
-                         theta={k: v for k, v in theta.items() if v},
-                         tag=tag, arm=self.arm,
-                         finish_reason=o['finish_reason'],
-                         usage=dict(prompt_tokens=o['tokens_in'],
-                                    completion_tokens=o['tokens_out']),
-                         cash_cny=o['cash_cny'], latency_s=o['latency_s'],
-                         answer=o['answer'], prompt_sha256=sha(prompt),
-                         consumed_upstream=consumed, injected=injected,
-                         task_t_s=round(clock.t, 3), deadline_s=clock.D,
-                         timestamp=time.strftime('%Y-%m-%dT%H:%M:%S'))
-            self._log(entry)
-            self.records.append(dict(node='xc', tag=tag, model=model,
-                                     injected=injected, theta=dict(theta),
-                                     tokens=o['tokens_in'] + o['tokens_out'],
-                                     cash=o['cash_cny'],
-                                     latency=o['latency_s'],
-                                     service_lat=o['latency_s'],
-                                     answer=o['answer'],
-                                     finish=o['finish_reason'],
-                                     z_split=True, sub=sub))
-            return o
-
-        loc_p = prompt_xc_locate(doc_id, a[:4000], b[:4000])
-        loc = _call(loc_p, 'locate', inject)
-        ver_p = prompt_xc_verify(doc_id, a[:4000], b[:4000],
-                                 (loc.get('answer') or '')[:4000])
-        o = _call(ver_p, 'verify', None)
-        chain.set_output('xc', o, tag)
+        故障注入作用于第一次子调用（与 Z=0 单调用同条件）；两次调用均如实记账。"""
+        first = not any(r['node'] in ('xc', 'loc') for r in self.records)
+        inject_target = 'loc' if inject else None
+        o_loc = self._exec(chain, clock, 'loc',
+                           model, theta, tag, inject=inject if first else None)
+        chain.set_output('loc', o_loc, tag + ':loc')
+        o = self._exec(chain, clock, 'xc', model, theta, tag, _no_split=True)
         return o
 
     def task_totals(self):
@@ -640,7 +625,7 @@ class RealRunner:
         self._task_seq += 1
         self.last_dd_decision = None   # stale decision must not
         self.last_dd_seed = None       # leak into the next task
-        chain = DagChain(task, docs_text)
+        chain = DagChain(task, docs_text, z_split=self.z_split)
         clock = TaskClock(task['deadline_s'])
         for node in topo_order():
             model = task['planned_pi'][node]
