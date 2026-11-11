@@ -88,7 +88,7 @@ class Env:
                 parsed = R.OLD.extract_json(text)
                 fault = None if (isinstance(parsed, dict) and 'stages' in parsed) else 'schema_invalid'
         else:
-            fault, parsed = R.guard('SINK' if node == 'REANCHOR' else node, res)
+            fault, parsed = R.guard({'J2R': 'J2', 'REANCHOR': 'SINK'}.get(node, node), res)
         self.l.write({**rec, 'phase': 'done', 'raw_response': res.get('raw_response'),
                       'response_model': res.get('response_model'), 'text': res.get('text', ''),
                       'stop': res.get('stop'), 'in': res['in'], 'out': res['out'],
