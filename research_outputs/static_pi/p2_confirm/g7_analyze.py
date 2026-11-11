@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""G7 one-shot analysis (pre-registered P2C_G7_PREREG_FROZEN §5.2/§6/§7; scoring rules in G7_PROMPTS_FROZEN.json).
-Endpoints: ① mismatch superiority (one-sided exact sign-flip, MITM, α=0.05, task as cluster)
-           ② stage-sensitive recall non-inferiority (paired percentile bootstrap 1e4, one-sided 95% LB ≥ −0.05)
-           ③ Q_all non-inferiority (same, −0.05 main / −0.032 sensitivity)
-Sensitivities: undecidable-worst (all → mismatch), S1 zero / S2 worst-bound imputation for shared-failed tasks."""
+"""G7 one-shot analysis (预注册 P2C_G7_PREREG_FROZEN §5.2/§6/§7)。
+一次性执行：不因中间结果调整任务/提示词/评分/统计方法。
+§6.5 缺失处理按任务簇：单重复可评价→用该重复率；双重复均失效→主分析剔除并计数，S1零效应/S2最不利边界两种敏感性。
+终点：①错配率（任务簇单侧精确符号翻转，MITM）②召回非劣（配对百分位bootstrap 1e4，单侧95%下界≥−0.05）
+     ③Q_all非劣（同上；−0.05主界+−0.032敏感性）；C/L成本时延描述；不可判定三规则+最劣敏感性。"""
 import json, re, sys, unicodedata
 from pathlib import Path
 from collections import defaultdict
@@ -11,6 +11,7 @@ from collections import defaultdict
 HERE = Path(__file__).resolve().parent
 RUN = HERE / 'g7_runs' / 'G7_RESULTS.json'
 FREEZE = HERE / 'g7_tasks' / 'G7_TASKSET_FREEZE.json'
+ARMS = ('G6-M', 'G7')
 
 CN_NUM = {'零':0,'一':1,'二':2,'两':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,
           '壹':1,'贰':2,'叁':3,'肆':4,'伍':5,'陆':6,'柒':7,'捌':8,'玖':9}
@@ -20,46 +21,34 @@ def fw2hw(s):
                                                         '0123456789%,.()[]')})
 
 def parse_cn_number(s):
-    """汉字数字串→数值（含十百千万亿）；失败返回 None。"""
     s = s.strip()
     if not s: return None
     if re.fullmatch(r'[0-9]+(\.[0-9]+)?', s): return float(s)
     units = {'十':10,'百':100,'千':1000}
     total, section, num, got = 0, 0, 0, False
     for ch in s:
-        if ch in CN_NUM:
-            num = CN_NUM[ch]; got = True
-        elif ch in units:
-            section += (num or 1) * units[ch]; num = 0; got = True
-        elif ch == '万':
-            section = (section + num) * 10000; total += section; section = 0; num = 0; got = True
-        elif ch == '亿':
-            section = (section + num) * 100000000; total += section; section = 0; num = 0; got = True
+        if ch in CN_NUM: num = CN_NUM[ch]; got = True
+        elif ch in units: section += (num or 1) * units[ch]; num = 0; got = True
+        elif ch == '万': section = (section + num) * 10000; total += section; section = 0; num = 0; got = True
+        elif ch == '亿': section = (section + num) * 100000000; total += section; section = 0; num = 0; got = True
         elif ch in '点．.':
             frac = s[s.index(ch)+1:]
             if re.fullmatch(r'[0-9]+', frac) or all(c in CN_NUM for c in frac):
-                ip = total + section + num
-                fp = 0
-                scale = 0.1
-                for c in frac:
-                    fp += (CN_NUM.get(c, int(c) if c.isdigit() else 0)) * scale; scale /= 10
+                ip = total + section + num; fp = 0; scale = 0.1
+                for c in frac: fp += (CN_NUM.get(c, int(c) if c.isdigit() else 0)) * scale; scale /= 10
                 return ip + fp
             return None
-        else:
-            return None
+        else: return None
     return total + section + num if got else None
 
 def canon_value(v):
-    """预登记值规范化：去空白/全半角/汉字数字等值/金额后缀容差。"""
     if v is None: return None
     s = fw2hw(str(v)).strip()
     s = re.sub(r'[\s，、；]', '', s)
-    s = re.sub(r'[（(]([^）)]*)[）)]', r'\1', s)   # 去括号保留内容
-    m = re.match(r'^(?:对)?(?:不少于|不超过)?([0-9.,]+|[零一二两三四五六七八九十百千万亿.]+)(万元|元|万|千|百万)?(?:的?罚款|罚款)?$',
-                 s)
+    s = re.sub(r'[（(]([^）)]*)[）)]', r'\1', s)
+    m = re.match(r'^(?:对)?(?:不少于|不超过)?([0-9.,]+|[零一二两三四五六七八九十百千万亿.]+)(万元|元|万|千|百万)?(?:的?罚款|罚款)?$', s)
     if m:
-        n = m.group(1).replace(',', '')
-        unit = m.group(2) or ''
+        n = m.group(1).replace(',', ''); unit = m.group(2) or ''
         val = parse_cn_number(n)
         if val is not None:
             mult = {'万': 1, '万元': 1, '千': 0.1, '百万': 100}.get(unit, 0.0001 if unit == '元' else 1)
@@ -74,19 +63,18 @@ def norm_quote(q):
     return re.sub(r'\s+', '', unicodedata.normalize('NFKC', str(q or '')))
 
 def load_contracts():
-    ts = json.loads(FREEZE.read_text('utf-8'))
-    out = {}
+    ts = json.loads(FREEZE.read_text('utf-8')); out = {}
     for t in ts['tasks']:
         c = json.loads((HERE / 'g7_tasks' / f"batch{t['batch']}" / 'contracts' /
                         f"TASK_CONTRACT_{t['task']}_v1.0.json").read_text('utf-8'))
         docs_norm = {}
+        def strip_pageno(x): return re.sub(r'\n\s*\d+\s*(?=\n|$)', '', x)
         for d, meta in c['source_pages'].items():
             if 'normalized' in meta: txt = meta['normalized']
             elif 'pages' in meta: txt = ''.join(meta['pages'].values())
             else:
                 fp = HERE / 'g7_tasks' / f"batch{t['batch']}" / meta['file']
                 if not fp.exists(): fp = HERE / 'g7_tasks' / f"batch{t['batch']}" / 'raw' / Path(meta['file']).name
-                def strip_pageno(x): return re.sub(r'\n\s*\d+\s*(?=\n|$)', '', x)
                 txt = strip_pageno(fp.read_text(errors='ignore'))
                 for corr in c.get('text_corrections', []):
                     if corr.get('file') == Path(meta['file']).name or corr.get('doc') == d:
@@ -99,208 +87,244 @@ def load_contracts():
             evs = []
             for e in f.get('stage_evidence', []):
                 evs.append(dict(doc=e['document_id'], span=norm_quote(e['evidence_span']),
-                                estage=e.get('evidence_stage') or (e['document_id'] and None)))
-            facts[f['fact_id']] = dict(
-                stage=f['fact_stage'], value=f['value'],
-                single=(len(ad) == 1), allowed=ad,
-                unknown=(f.get('fact_class') == 'unknown_boundary'), evs=evs)
-        # evidence_stage 推导：跨度所在文书的标注——合同V03以evidence_stage字段或按文书阶段标注；
-        # G7合同（批1-12）阶段敏感槽的跨度按其事实阶段所在文书；中性槽不参与错配。
-        for fid, f in facts.items():
-            if not f['single']:
-                continue
-            for e in f['evs']:
-                if e['estage'] is None:
-                    e['estage'] = f['stage']   # 单文书槽：跨度支持阶段=事实阶段（Gold构造规则）
+                                estage=e.get('evidence_stage')))
+            single = (len(ad) == 1)
+            if single:
+                for e in evs:
+                    if e['estage'] is None: e['estage'] = f['fact_stage']
+            facts[f['fact_id']] = dict(stage=f['fact_stage'], value=f['value'], single=single,
+                                       allowed=ad, unknown=(f.get('fact_class') == 'unknown_boundary'), evs=evs)
         out[t['task']] = dict(facts=facts, docs_norm=docs_norm)
     return out
 
-def match_span(quote_norm, doc, facts_entry):
-    """终端引文→Gold跨度匹配（冻结规则§5.2）：逐字→estage；否则同文书重叠率≥50%最大跨度；None=不可判定。"""
-    cands = [e for e in facts_entry['evs'] if e['doc'] == doc]
-    if not cands: return None, 'no_span_in_doc'
+def char_overlap(a, b):
+    return len(set(a) & set(b))
+
+def match_span(quote_norm, doc, fe):
+    cands = [e for e in fe['evs'] if e['doc'] == doc]
+    if not cands: return None, 'undecidable'
     for e in cands:
-        if quote_norm == e['span']:
-            return e['estage'], 'exact'
+        if quote_norm == e['span']: return e['estage'], 'exact'
     best, best_ov = None, 0.0
     for e in cands:
+        if not (quote_norm and e['span']): continue
         ov = char_overlap(quote_norm, e['span'])
-        r = ov / min(len(quote_norm), len(e['span'])) if quote_norm and e['span'] else 0
-        if r >= 0.5 and ov > best_ov:
-            best, best_ov = e, ov
+        r = ov / min(len(quote_norm), len(e['span']))
+        if r >= 0.5 and ov > best_ov: best, best_ov = e, ov
     if best: return best['estage'], 'overlap'
     return None, 'undecidable'
 
-def char_overlap(a, b):
-    sa, sb = set(a), set(b)
-    return len(sa & sb)
-
 def score_terminal(term, ct, undecidable_worst=False):
-    """→ per-fact verdicts + aggregate."""
+    """按冻结评分规则（G7_PROMPTS_FROZEN.scoring_implementation）：
+    UNKNOWN gold槽不计入错配/召回/Q（描述性单列）；多文书槽仅Q；单文书槽参与错配/召回/Q（Q要求阶段正确）。"""
     facts, docs_norm = ct['facts'], ct['docs_norm']
     answers = {a.get('fact_id'): a for a in (term or {}).get('answers', []) if isinstance(a, dict)}
-    unknowns = set((term or {}).get('unknown_slots') or [])
+    unknowns = set(map(str, (term or {}).get('unknown_slots') or []))
     rec = dict(mismatch_num=0, mismatch_den=0, recall_num=0, recall_den=0,
-               q_num=0, q_den=0, undecidable=[], wrong_value=[], missing=[], unk_handling=[])
+               q_num=0, q_den=0, undecidable=[], wrong_value=[], missing=[],
+               unk_correct=[], unk_answered=[], detail={})
     for fid, f in facts.items():
         if f['unknown']:
-            rec['q_den'] += 1
-            if fid in unknowns: rec['unk_handling'].append((fid, 'correct_unknown'))
-            elif fid in answers: rec['unk_handling'].append((fid, 'answered_value'))
-            else: rec['missing'].append(fid); rec['q_num'] += 0
+            if fid in unknowns: rec['unk_correct'].append(fid)
+            elif fid in answers: rec['unk_answered'].append(fid)
+            else: rec['missing'].append(fid)
             continue
         rec['q_den'] += 1
         a = answers.get(fid)
-        if a is None or not (a.get('value') or '').strip():
-            if a is None: rec['missing'].append(fid)
-            else: rec['wrong_value'].append(fid)
+        if a is None or not str(a.get('value') or '').strip():
+            rec['missing'].append(fid); rec['detail'][fid] = 'missing'
             if f['single']: rec['recall_den'] += 1; rec['mismatch_den'] += 1
             continue
         val_ok = values_equal(a.get('value'), f['value'])
-        q = norm_quote(a.get('quote'))
-        doc = a.get('doc')
-        verbatim = doc in docs_norm and q and q in docs_norm[doc]
-        if not val_ok:
-            rec['wrong_value'].append(fid)
+        q = norm_quote(a.get('quote')); doc = a.get('doc')
+        verbatim = bool(doc in docs_norm and q and q in docs_norm[doc])
+        if not val_ok: rec['wrong_value'].append(fid)
         if f['single']:
-            rec['recall_den'] += 1
-            rec['mismatch_den'] += 1
+            rec['recall_den'] += 1; rec['mismatch_den'] += 1
             if not verbatim:
-                rec['mismatch_num'] += 1
-                continue
+                rec['mismatch_num'] += 1; rec['detail'][fid] = 'non_verbatim'; continue
             estage, how = match_span(q, doc, f)
-            if estage is None or how == 'undecidable':
-                rec['undecidable'].append(fid)
+            if estage is None:
+                rec['undecidable'].append(fid); rec['detail'][fid] = 'undecidable'
                 if undecidable_worst: rec['mismatch_num'] += 1
+                elif val_ok: pass   # 不可判定：不计正确（三规则1）
                 continue
             if estage != f['stage']:
-                rec['mismatch_num'] += 1
-                continue
-            if val_ok: rec['recall_num'] += 1
-            rec['q_num'] += 1 if val_ok else 0
+                rec['mismatch_num'] += 1; rec['detail'][fid] = 'stage_mismatch'; continue
+            rec['detail'][fid] = 'correct' if val_ok else 'wrong_value_stage_ok'
+            if val_ok: rec['recall_num'] += 1; rec['q_num'] += 1
         else:
-            rec['q_num'] += 1 if (val_ok and verbatim) else 0
+            if val_ok and verbatim: rec['q_num'] += 1
+            rec['detail'][fid] = 'correct' if (val_ok and verbatim) else ('non_verbatim' if not verbatim else 'wrong_value')
     return rec
 
-def block_metrics(rec):
-    return dict(
-        r_mis=(rec['mismatch_num'] / rec['mismatch_den']) if rec['mismatch_den'] else 0.0,
-        recall=(rec['recall_num'] / rec['recall_den']) if rec['recall_den'] else 0.0,
-        q=(rec['q_num'] / rec['q_den']) if rec['q_den'] else 0.0,
-        n_undec=len(rec['undecidable']))
+def rate(r, num, den):
+    return (r[num] / r[den]) if r[den] else None
 
-def sign_flip_p(diffs, n_boot=None):
-    """Exact one-sided sign-flip (MITM over 2^n) for paired diffs; H1: mean<0 (G7−G6M<0)."""
-    import itertools, math
-    d = [x for x in diffs if x != 0]
-    n = len(d)
-    obs = sum(diffs)
-    if n == 0: return 1.0, obs, 0
-    if n > 26:   # MITM
-        A, B = d[:n//2], d[n//2:]
-        sa = sorted(sum(c) for c in _subsets_sums(A))
-        sb = sorted(sum(c) for c in _subsets_sums(B))
-        import bisect
-        count_le = 0
-        for s in sa:
-            count_le += bisect.bisect_right(sb, obs - s)
-        total = len(sa) * len(sb)
-        # p = P(flip sum <= obs) under symmetric flips; obs itself counted via <=
-        return count_le / total, obs, n
-    total = 2 ** n
-    count_le = 0
-    for mask in range(total):
-        s = 0
-        for i, v in enumerate(d):
-            s += v if (mask >> i) & 1 == 0 else -v
-        if s <= obs: count_le += 1
-    return count_le / total, obs, n
+def block_rates(rec):
+    return dict(mis=rate(rec, 'mismatch_num', 'mismatch_den'),
+                recall=rate(rec, 'recall_num', 'recall_den'),
+                q=rate(rec, 'q_num', 'q_den'))
 
-def _subsets_sums(arr):
+def subsets_sums(arr):
     out = [0]
-    for v in arr:
-        out += [x + v for x in out]
+    for v in arr: out += [x + v for x in out]
     return out
+
+def sign_flip_p(diffs):
+    """单侧精确符号翻转（H1: G7−G6M<0）。返回 (p, obs_sum, n_nonzero)。"""
+    import bisect
+    d = [x for x in diffs if x != 0]
+    n = len(d); obs = sum(diffs)
+    if n == 0: return 1.0, obs, 0
+    A, B = d[:n//2], d[n//2:]
+    sa, sb = sorted(subsets_sums(A)), sorted(subsets_sums(B))
+    cnt = 0
+    for s in sa: cnt += bisect.bisect_right(sb, obs - s)
+    return cnt / (2 ** n), obs, n
 
 def bootstrap_lb(diffs, B=10000, seed=20261110, alpha=0.05):
     import random
-    rng = random.Random(seed)
-    n = len(diffs)
-    means = []
-    for _ in range(B):
-        means.append(sum(diffs[rng.randrange(n)] for _ in range(n)) / n)
-    means.sort()
-    return means[int(alpha * B)]   # 单侧95%下界=第5百分位
+    rng = random.Random(seed); n = len(diffs)
+    ms = sorted(sum(diffs[rng.randrange(n)] for _ in range(n)) / n for _ in range(B))
+    return ms[int(alpha * B)], ms, rng
 
 def main():
     contracts = load_contracts()
     results = json.loads(RUN.read_text('utf-8'))
-    per_task = defaultdict(lambda: defaultdict(list))   # task → arm → [block metrics]
-    raw = defaultdict(lambda: defaultdict(list))
-    failed_blocks = []
-    for key, blk in sorted(results.items(), key=lambda kv: kv[1].get('seq', 0)):
-        if 'stopped' in blk: failed_blocks.append((key, blk['stopped'])); continue
-        tag = key.rsplit('_r', 1)[0]
-        for arm in ('G6-M', 'G7'):
+
+    # ===== 块级→任务簇（§6.5）=====
+    task_status = defaultdict(dict)     # task → rep → 'ok'|'failed'
+    per_rep = defaultdict(lambda: defaultdict(dict))   # task → arm → rep → rates
+    arm_recs = defaultdict(lambda: defaultdict(dict))  # task → arm → rep → rec（含undecidable等）
+    for key, blk in results.items():
+        t, rep = key.rsplit('_r', 1)
+        if 'stopped' in blk or blk.get('shared_fault'):
+            task_status[t][rep] = 'failed'; continue
+        ok = True
+        for arm in ARMS:
             term = blk['arms'].get(arm)
-            if term is None:
-                failed_blocks.append((key, f'{arm}_execution_failed')); continue
-            rec = score_terminal(term, contracts[tag])
-            per_task[tag][arm].append(rec)
-            raw[key][arm] = rec
-    # 任务级（重复均值）
-    tasks = sorted(per_task)
-    D_mis, D_rec, D_q = [], [], []
+            if term is None: ok = False; continue
+            rec = score_terminal(term, contracts[t])
+            arm_recs[t][arm][rep] = rec
+            per_rep[t][arm][rep] = block_rates(rec)
+        task_status[t][rep] = 'ok' if ok else 'failed'
+
+    dual_fail = sorted(t for t, d in task_status.items() if len(d) == 2 and all(s != 'ok' for s in d.values()))
+    single_ok = sorted(t for t, d in task_status.items() if any(s == 'ok' for s in d.values()))
+    included = [t for t in per_rep if per_rep[t]['G6-M'] and per_rep[t]['G7'] and t not in dual_fail]
+
+    def task_means(t):
+        out = {}
+        for arm in ARMS:
+            reps = per_rep[t][arm]
+            for m in ('mis', 'recall', 'q'):
+                vals = [v[m] for v in reps.values() if v[m] is not None]
+                out[f'{m}_{arm}'] = sum(vals) / len(vals) if vals else None
+        return out
+
     rows = []
-    for t in tasks:
-        def agg(arm, field_num, field_den):
-            num = sum(r[field_num] for r in per_task[t][arm]) / max(1, len(per_task[t][arm]))
-            den = sum(r[field_den] for r in per_task[t][arm]) / max(1, len(per_task[t][arm]))
-            return num / den if den else 0.0
-        r_g6m = per_task[t]['G6-M']; r_g7 = per_task[t]['G7']
-        mis6 = sum(x['mismatch_num'] for x in r_g6m) / max(1, sum(x['mismatch_den'] for x in r_g6m) and 1) if r_g6m else 0
-        # 用率平均（任务级两重复率均值），与预注册r_i,a一致（重复率平均）
-        m6 = sum((x['mismatch_num']/x['mismatch_den'] if x['mismatch_den'] else 0) for x in r_g6m)/len(r_g6m) if r_g6m else 0
-        m7 = sum((x['mismatch_num']/x['mismatch_den'] if x['mismatch_den'] else 0) for x in r_g7)/len(r_g7) if r_g7 else 0
-        rc6 = sum((x['recall_num']/x['recall_den'] if x['recall_den'] else 0) for x in r_g6m)/len(r_g6m) if r_g6m else 0
-        rc7 = sum((x['recall_num']/x['recall_den'] if x['recall_den'] else 0) for x in r_g7)/len(r_g7) if r_g7 else 0
-        q6 = sum((x['q_num']/x['q_den'] if x['q_den'] else 0) for x in r_g6m)/len(r_g6m) if r_g6m else 0
-        q7 = sum((x['q_num']/x['q_den'] if x['q_den'] else 0) for x in r_g7)/len(r_g7) if r_g7 else 0
-        D_mis.append(m7 - m6); D_rec.append(rc7 - rc6); D_q.append(q7 - q6)
-        rows.append(dict(task=t, mis_g6m=m6, mis_g7=m7, rec_g6m=rc6, rec_g7=rc7, q_g6m=q6, q_g7=q7,
-                         n6=len(r_g6m), n7=len(r_g7)))
-    p_mis, obs, n_eff = sign_flip_p(D_mis)
-    lb_rec = bootstrap_lb(D_rec); lb_q = bootstrap_lb(D_q); lb_q32 = bootstrap_lb(D_q)  # -0.032界仅判断阈值
-    mean = lambda xs: sum(xs)/len(xs)
-    cond1 = p_mis < 0.05
-    cond2 = lb_rec >= -0.05
-    cond3 = lb_q >= -0.05
+    for t in sorted(included):
+        tm = task_means(t)
+        if None in tm.values():
+            continue
+        rows.append(dict(task=t, **tm,
+                         n_reps_G6M=len(per_rep[t]['G6-M']), n_reps_G7=len(per_rep[t]['G7'])))
+    D = {m: [r[f'{m}_G7'] - r[f'{m}_G6-M'] for r in rows] for m in ('mis', 'recall', 'q')}
+
+    p_mis, obs_mis, n_nz = sign_flip_p(D['mis'])
+    lb_rec, _, _ = bootstrap_lb(D['recall'])
+    lb_q, _, _ = bootstrap_lb(D['q'])
+    mean = lambda xs: (sum(xs) / len(xs)) if xs else None
+
+    def analyze(Dm, Dr, Dq, tag):
+        p, o, nz = sign_flip_p(Dm)
+        lbr, _, _ = bootstrap_lb(Dr) if Dr else (None, [], None)
+        lbq, _, _ = bootstrap_lb(Dq) if Dq else (None, [], None)
+        return dict(tag=tag, n=len(Dm), mean_d_mis=mean(Dm), p_mis=p, eff_n=nz,
+                    cond1=(p < 0.05 and (mean(Dm) or 0) < 0),
+                    mean_d_recall=mean(Dr), lb_recall=lbr, cond2=(lbr is not None and lbr >= -0.05),
+                    mean_d_q=mean(Dq), lb_q=lbq, cond3=(lbq is not None and lbq >= -0.05),
+                    cond3_m32=(lbq is not None and lbq >= -0.032),
+                    joint=(p < 0.05 and (mean(Dm) or 0) < 0 and lbr is not None and lbr >= -0.05
+                           and lbq is not None and lbq >= -0.05))
+
+    main_res = analyze(D['mis'], D['recall'], D['q'], 'main')
+    # S1 零效应插补（仅补双重复失效任务，d=0）
+    n_ex = len(dual_fail)
+    s1 = analyze(D['mis'] + [0.0]*n_ex, D['recall'] + [0.0]*n_ex, D['q'] + [0.0]*n_ex, 'S1_zero')
+    # S2 对G7最不利边界插补
+    s2 = analyze(D['mis'] + [1.0]*n_ex, D['recall'] + [-1.0]*n_ex, D['q'] + [-1.0]*n_ex, 'S2_worst')
+
+    # 不可判定最劣敏感性：全部不可判定改判错配后重算（需逐块重算）
+    worst_rows = []
+    for t in sorted(included):
+        vals = []
+        for arm in ARMS:
+            per = []
+            for rep, rec0 in arm_recs[t][arm].items():
+                rec = score_terminal(results[f'{t}_r{rep}']['arms'][arm], contracts[t], undecidable_worst=True)
+                per.append(block_rates(rec)['mis'])
+            vals.append(sum(per) / len(per))
+        worst_rows.append(vals[1] - vals[0])
+    p_worst, obs_worst, nz_worst = sign_flip_p(worst_rows)
+
+    # 不可判定分臂统计
+    und = {a: sum(len(r['undecidable']) for t in arm_recs for rep, r in arm_recs[t][a].items()) for a in ARMS}
+    den = {a: sum(r['mismatch_den'] for t in arm_recs for rep, r in arm_recs[t][a].items()) for a in ARMS}
+
+    # ===== C/L 成本时延（账本）=====
+    ledger = [json.loads(l) for l in (HERE / 'g7_runs' / 'LEDGER.jsonl').read_text('utf-8').splitlines() if l.strip()]
+    done = [r for r in ledger if r.get('phase') == 'done']
+    cost = {}
+    for arm_key in ('shared', 'G6-M', 'G7'):
+        sub = [r for r in done if r.get('arm') == arm_key]
+        cost[arm_key] = dict(calls=len(sub),
+                             tokens_in=sum(r.get('in') or 0 for r in sub),
+                             tokens_out=sum(r.get('out') or 0 for r in sub),
+                             yuan_accounting=round(sum(r.get('yuan_accounting') or 0 for r in sub), 4),
+                             yuan_marginal=round(sum(r.get('yuan_marginal') or 0 for r in sub), 4))
+    kinds = defaultdict(lambda: dict(calls=0, tokens=0, yuan=0.0))
+    for r in done:
+        k = r.get('kind') or 'normal'
+        kinds[k]['calls'] += 1
+        kinds[k]['tokens'] += (r.get('in') or 0) + (r.get('out') or 0)
+        kinds[k]['yuan'] += r.get('yuan_accounting') or 0
+    # 区组墙钟（秒，1s分辨率；块内首末调用时间差）
+    block_wall = {}
+    for key, blk in results.items():
+        sub = [r for r in done if r.get('task') == key.rsplit('_r', 1)[0] and str(r.get('rep')) == key.rsplit('_r', 1)[1]]
+        ts = sorted(r['ts'] for r in sub)
+        if len(ts) >= 2:
+            from datetime import datetime
+            f = lambda s: datetime.strptime(s, '%Y-%m-%dT%H:%M:%S')
+            block_wall[key] = (f(ts[-1]) - f(ts[0])).total_seconds()
+    reanchor_stats = dict(
+        blocks_with_g7=len([1 for v in results.values() if 'arms' in v]),
+        reanchor_calls=sum((v.get('audit') or {}).get('G7', {}).get('reanchor_calls') or 0
+                           for v in results.values() if 'audit' in v),
+        verify_calls=sum((v.get('audit') or {}).get('G7', {}).get('verify_calls') or 0
+                         for v in results.values() if 'audit' in v),
+        final_failed_total=sum(len((v.get('audit') or {}).get('G7', {}).get('final_failed') or [])
+                               for v in results.values() if 'audit' in v))
+
     out = dict(
-        n_tasks=len(tasks), failed_blocks=failed_blocks,
-        primary=dict(mean_mismatch_G6M=mean([r['mis_g6m'] for r in rows]),
-                     mean_mismatch_G7=mean([r['mis_g7'] for r in rows]),
-                     mean_d=mean(D_mis), sign_flip_p_one_sided=p_mis, effective_n=n_eff,
-                     cond1_superiority=cond1),
-        recall=dict(mean_G6M=mean([r['rec_g6m'] for r in rows]), mean_G7=mean([r['rec_g7'] for r in rows]),
-                    mean_d=mean(D_rec), bootstrap95LB=lb_rec, cond2_ni=cond2),
-        q_all=dict(mean_G6M=mean([r['q_g6m'] for r in rows]), mean_G7=mean([r['q_g7'] for r in rows]),
-                   mean_d=mean(D_q), bootstrap95LB=lb_q, cond3_ni=cond3,
-                   cond3_ni_sensitivity_m32=(lb_q >= -0.032)),
-        joint_success=(cond1 and cond2 and cond3),
+        n_tasks_total=len(task_status), n_included=len(rows),
+        dual_failed_tasks=dual_fail, n_dual_failed=len(dual_fail),
+        single_rep_tasks=[t for t in single_ok if len([s for s in task_status[t].values() if s == 'ok']) == 1],
+        main=main_res, sensitivity_S1=s1, sensitivity_S2=s2,
+        undecidable_sensitivity=dict(p=p_worst, mean_d=mean(worst_rows), eff_n=nz_worst,
+                                     direction_changed=(p_worst >= 0.05)),
+        undecidable=dict(G6M=und['G6-M'], G7=und['G7'],
+                         rate_G6M=(und['G6-M'] / den['G6-M']) if den['G6-M'] else None,
+                         rate_G7=(und['G7'] / den['G7']) if den['G7'] else None),
+        cost=cost, kinds=dict(kinds), block_wall_sec=dict(mean=mean(list(block_wall.values())),
+                                                          n=len(block_wall)),
+        reanchor=reanchor_stats,
         per_task=rows)
-    # 不可判定统计+最劣敏感性（重算主检验）
-    und6 = sum(len(r['undecidable']) for k in raw for r in [raw[k]['G6-M']])
-    und7 = sum(len(r['undecidable']) for k in raw for r in [raw[k]['G7']])
-    out['undecidable'] = dict(G6M=und6, G7=und7,
-        note='不可判定两臂分报（§5.2三规则）；最劣敏感性见 below')
-    # S1/S2 插补（共享失效任务）
-    shared_fail_tasks = sorted({k.rsplit('_r',1)[0] for k,_ in failed_blocks} - set(tasks))
-    out['imputation'] = dict(shared_failed_tasks=shared_fail_tasks,
-        S1_zero='d=0 插补后重算', S2_worst='G7最劣边界插补后重算')
     print(json.dumps({k: v for k, v in out.items() if k != 'per_task'}, ensure_ascii=False, indent=1))
-    (HERE / 'g7_runs' / 'G7_ANALYSIS_MAIN.json').write_text(
-        json.dumps(out, ensure_ascii=False, indent=1), 'utf-8')
-    print('\nper-task rows written to g7_runs/G7_ANALYSIS_MAIN.json')
+    (HERE / 'g7_runs' / 'G7_ANALYSIS_MAIN.json').write_text(json.dumps(out, ensure_ascii=False, indent=1), 'utf-8')
+    print('\nper-task rows → g7_runs/G7_ANALYSIS_MAIN.json')
 
 if __name__ == '__main__':
     main()
