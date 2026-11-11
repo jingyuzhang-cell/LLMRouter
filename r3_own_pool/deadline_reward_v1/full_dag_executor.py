@@ -397,7 +397,8 @@ def _truncated(o) -> bool:
 class RealRunner:
     def __init__(self, arm, creds, budget, ledger_path,
                  transport=None, prior_store=None,
-                 learn_enabled=True, local_repair=False):
+                 learn_enabled=True, local_repair=False,
+                 z_split=False):
         self.arm = arm
         self.creds = creds
         self.budget = budget
@@ -408,6 +409,9 @@ class RealRunner:
         # v1.1: zero-call LOCAL_REPAIR pre-step (new-protocol arms
         # B/C/D/E only; the frozen A arms keep the original path)
         self.local_repair_enabled = local_repair
+        # Z arm（2026-11-11 操作员批准）：Z=1 时 xc 以 locate + per-field
+        # verify 两步执行；DAG 图、依赖闭包与输出合同不变。
+        self.z_split = z_split
         self.last_diagnosis = None
         self.records = []
         self.task_id = None
@@ -422,6 +426,9 @@ class RealRunner:
             os.fsync(f.fileno())
 
     def _exec(self, chain, clock, node, model, theta, tag, inject=None):
+        if node == 'xc' and self.z_split:
+            return self._exec_xc_split(chain, clock, model, theta, tag,
+                                       inject=inject)
         prompt, consumed = chain.build_prompt(node)
         est_in = est_in_tokens(prompt)
         est_out = theta.get('max_tokens') or 2048
@@ -464,6 +471,65 @@ class RealRunner:
                                  answer=o['answer'],
                                  finish=o['finish_reason']))
         chain.set_output(node, o, tag)
+        return o
+
+    def _exec_xc_split(self, chain, clock, model, theta, tag, inject=None):
+        """Z=1：xc -> locate + per-field verify（两臂同一 DAG/合同/上限）。
+        故障注入作用于该节点的第一次子调用（与 Z=0 单调用同条件）；
+        两次调用均如实计入成本与账本。"""
+        from deadline_reward_v1.full_dag_tasks import (
+            prompt_xc_locate, prompt_xc_verify)
+        doc_id = chain.task['doc_id']
+        a = (chain.current('tl') or {}).get('answer', '')
+        b = (chain.current('er') or {}).get('answer', '')
+        consumed = {'tl': sha(a), 'er': sha(b)}
+        first = not any(r['node'] == 'xc' for r in self.records)
+
+        def _call(prompt, sub, apply_inject):
+            est_in = est_in_tokens(prompt)
+            est_out = theta.get('max_tokens') or 2048
+            self.budget.pre_check(est_in, est_out,
+                                  cash_reserve(model, est_in, est_out))
+            force = 64 if (apply_inject == 'F_TRUNCATED' and first
+                           and tag == 'planned') else None
+            o = dict(self.transport(model, theta, prompt, self.creds,
+                                    force_max_tokens=force))
+            injected = bool(apply_inject and first and tag == 'planned')
+            if apply_inject == 'F_JSON' and injected:
+                o = dict(o, answer='[{"fact":"占位","evidence_doc_id":"?"}]',
+                         injected='output_replaced')
+            self.budget.settle(o)
+            clock.add('xc', o['latency_s'], f'{tag}:{sub}')
+            entry = dict(task=self.task_id, node='xc', sub=sub,
+                         z_split=True, model=model,
+                         theta={k: v for k, v in theta.items() if v},
+                         tag=tag, arm=self.arm,
+                         finish_reason=o['finish_reason'],
+                         usage=dict(prompt_tokens=o['tokens_in'],
+                                    completion_tokens=o['tokens_out']),
+                         cash_cny=o['cash_cny'], latency_s=o['latency_s'],
+                         answer=o['answer'], prompt_sha256=sha(prompt),
+                         consumed_upstream=consumed, injected=injected,
+                         task_t_s=round(clock.t, 3), deadline_s=clock.D,
+                         timestamp=time.strftime('%Y-%m-%dT%H:%M:%S'))
+            self._log(entry)
+            self.records.append(dict(node='xc', tag=tag, model=model,
+                                     injected=injected, theta=dict(theta),
+                                     tokens=o['tokens_in'] + o['tokens_out'],
+                                     cash=o['cash_cny'],
+                                     latency=o['latency_s'],
+                                     service_lat=o['latency_s'],
+                                     answer=o['answer'],
+                                     finish=o['finish_reason'],
+                                     z_split=True, sub=sub))
+            return o
+
+        loc_p = prompt_xc_locate(doc_id, a[:4000], b[:4000])
+        loc = _call(loc_p, 'locate', inject)
+        ver_p = prompt_xc_verify(doc_id, a[:4000], b[:4000],
+                                 (loc.get('answer') or '')[:4000])
+        o = _call(ver_p, 'verify', None)
+        chain.set_output('xc', o, tag)
         return o
 
     def task_totals(self):

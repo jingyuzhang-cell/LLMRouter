@@ -302,3 +302,34 @@ if __name__ == '__main__':
     print('deadlines:', dict(Counter(t['deadline_s']
                                      for t in doc['tasks'])))
     print('planned pi:', doc['planned_pi'])
+
+
+def prompt_xc_locate(doc_id, facts_tl, facts_er):
+    """Z=SPLIT_VERIFY 第一步：定位两路输出中可对照的字段证据（无 Gold）。"""
+    return (
+        '你是一个资本市场事件调查助手。\n\n'
+        '## 任务类型：cross_verification_locate\n'
+        f'## 证据文档 doc_id：{doc_id}\n'
+        '## 任务描述\n给定同一文档派生的两路输出（时间线 tl 与实体关系 er），'
+        '逐字段列出可用于对照的证据位置：对每个可对照字段输出 {field, tl_item, '
+        'er_item, evidence_ref}。只使用给定两路输出与文档，不得引入外部信息。\n\n'
+        f'## 时间线 tl [{doc_id}]\n{facts_tl}\n\n'
+        f'## 实体关系 er [{doc_id}]\n{facts_er}\n\n'
+        '## 输出要求\n- 输出格式：JSON数组，元素含 field, tl_item, er_item, '
+        'evidence_ref\n- 输出契约：xc_locate.v1\n\n请严格按照输出要求完成任务。')
+
+
+def prompt_xc_verify(doc_id, facts_tl, facts_er, located):
+    """Z=SPLIT_VERIFY 第二步：基于定位结果逐字段核验（输出合同不变：fact_check.v2）。"""
+    return (
+        '你是一个资本市场事件调查助手。\n\n'
+        '## 任务类型：cross_verification\n'
+        f'## 来源A doc_id：{doc_id}\n## 来源B doc_id：{doc_id}\n'
+        '## 任务描述\n基于已定位的字段证据，逐条核验两路输出的一致性（日期、金额、'
+        '主体名称），输出核查结论。不得引入定位证据之外的来源。\n\n'
+        f'## 来源A事实 [{doc_id}]\n{facts_tl}\n\n'
+        f'## 来源B事实 [{doc_id}]\n{facts_er}\n\n'
+        f'## 已定位字段证据\n{located}\n\n'
+        '## 输出要求\n- 输出格式：JSON数组，每条含 claim, source_a, source_b, '
+        'verdict(SUPPORTED/UNSUPPORTED/CONFLICT)\n- 输出契约：fact_check.v2\n\n'
+        '请严格按照输出要求完成任务。')
