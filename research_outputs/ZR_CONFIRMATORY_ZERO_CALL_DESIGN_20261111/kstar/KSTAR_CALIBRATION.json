@@ -1,0 +1,52 @@
+{
+ "method": "tokens(K)=overhead+per_field*K; K*=floor((B*(1-m)-overhead)/per_field)",
+ "xc_output_tokens": {
+  "n": 124,
+  "median": 662.0,
+  "mean": 870.4,
+  "p90": 1903,
+  "p95": 2048,
+  "max": 2048,
+  "cap_hit_rate": 0.0726
+ },
+ "K_distribution": {
+  "n": 66,
+  "median": 19.0,
+  "mean": 20.3,
+  "min": 9,
+  "max": 48,
+  "p10": 13,
+  "p25": 16,
+  "p75": 22,
+  "p90": 29
+ },
+ "grids": [
+  {
+   "per_field": 33,
+   "budget": 2048,
+   "margin": 0.25,
+   "K_star": 37
+  },
+  {
+   "per_field": 33,
+   "budget": 4096,
+   "margin": 0.25,
+   "K_star": 84
+  },
+  {
+   "per_field": 45,
+   "budget": 2048,
+   "margin": 0.25,
+   "K_star": 27
+  },
+  {
+   "per_field": 45,
+   "budget": 4096,
+   "margin": 0.25,
+   "K_star": 61
+  }
+ ],
+ "interpretation": "真实容量边界 K*=27~37（预算2048/余量25%）。任务事实数中位19，仅少数任务超过K*；不得为制造Z失败而下调K*。",
+ "code_sha256": "1f6f45f13454319603d5cf5ce568da2e90bd33a20ffc21f9c8cab65c9be283b8",
+ "seed": "N/A（无随机性）"
+}
