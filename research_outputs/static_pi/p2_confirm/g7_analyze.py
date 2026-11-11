@@ -194,24 +194,29 @@ def main():
     results = json.loads(RUN.read_text('utf-8'))
 
     # ===== 块级→任务簇（§6.5）=====
-    task_status = defaultdict(dict)     # task → rep → 'ok'|'failed'
-    per_rep = defaultdict(lambda: defaultdict(dict))   # task → arm → rep → rates
-    arm_recs = defaultdict(lambda: defaultdict(dict))  # task → arm → rep → rec（含undecidable等）
+    # 配对语义（预注册§6.2「任务为簇」+§6.5）：一个重复可评价 ⇔ 两臂均产出终端。
+    # 单臂失败重复不计入任一方；任务有≥1配对重复即纳入；0配对重复=任务级失效（主分析剔除+插补敏感性）。
+    task_status = defaultdict(dict)     # task → rep → 'paired'|'unpaired'
+    per_rep = defaultdict(lambda: defaultdict(dict))   # task → arm → rep → rates（仅配对重复）
+    arm_recs = defaultdict(lambda: defaultdict(dict))
+    arm_fail = {'G6-M': 0, 'G7': 0}
     for key, blk in results.items():
         t, rep = key.rsplit('_r', 1)
         if 'stopped' in blk or blk.get('shared_fault'):
-            task_status[t][rep] = 'failed'; continue
-        ok = True
+            task_status[t][rep] = 'unpaired'; continue
+        terms = {arm: blk['arms'].get(arm) for arm in ARMS}
+        for arm, term in terms.items():
+            if term is None: arm_fail[arm] += 1
+        if any(v is None for v in terms.values()):
+            task_status[t][rep] = 'unpaired'; continue
         for arm in ARMS:
-            term = blk['arms'].get(arm)
-            if term is None: ok = False; continue
-            rec = score_terminal(term, contracts[t])
+            rec = score_terminal(terms[arm], contracts[t])
             arm_recs[t][arm][rep] = rec
             per_rep[t][arm][rep] = block_rates(rec)
-        task_status[t][rep] = 'ok' if ok else 'failed'
+        task_status[t][rep] = 'paired'
 
-    dual_fail = sorted(t for t, d in task_status.items() if len(d) == 2 and all(s != 'ok' for s in d.values()))
-    single_ok = sorted(t for t, d in task_status.items() if any(s == 'ok' for s in d.values()))
+    dual_fail = sorted(t for t, d in task_status.items() if len(d) == 2 and all(s != 'paired' for s in d.values()))
+    single_ok = sorted(t for t, d in task_status.items() if any(s == 'paired' for s in d.values()))
     included = [t for t in per_rep if per_rep[t]['G6-M'] and per_rep[t]['G7'] and t not in dual_fail]
 
     def task_means(t):
@@ -311,7 +316,13 @@ def main():
     out = dict(
         n_tasks_total=len(task_status), n_included=len(rows),
         dual_failed_tasks=dual_fail, n_dual_failed=len(dual_fail),
-        single_rep_tasks=[t for t in single_ok if len([s for s in task_status[t].values() if s == 'ok']) == 1],
+        single_rep_tasks=[t for t in single_ok if len([s for s in task_status[t].values() if s == 'paired']) == 1],
+        unpaired_block_reasons=dict(
+            shared=sum(1 for v in results.values() if v.get('shared_fault')),
+            stopped=sum(1 for v in results.values() if 'stopped' in v),
+            one_arm=sum(1 for v in results.values() if 'arms' in v and 'stopped' not in v
+                        and not v.get('shared_fault')
+                        and any(v['arms'].get(a) is None for a in ARMS))),
         main=main_res, sensitivity_S1=s1, sensitivity_S2=s2,
         undecidable_sensitivity=dict(p=p_worst, mean_d=mean(worst_rows), eff_n=nz_worst,
                                      direction_changed=(p_worst >= 0.05)),
@@ -321,6 +332,7 @@ def main():
         cost=cost, kinds=dict(kinds), block_wall_sec=dict(mean=mean(list(block_wall.values())),
                                                           n=len(block_wall)),
         reanchor=reanchor_stats,
+        arm_failure_blocks=dict(arm_fail, note='单臂执行失败块数（G7含核验器/重锚定额外调用，截断风险更高）'),
         per_task=rows)
     print(json.dumps({k: v for k, v in out.items() if k != 'per_task'}, ensure_ascii=False, indent=1))
     (HERE / 'g7_runs' / 'G7_ANALYSIS_MAIN.json').write_text(json.dumps(out, ensure_ascii=False, indent=1), 'utf-8')
