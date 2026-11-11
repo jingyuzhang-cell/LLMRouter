@@ -2,11 +2,8 @@
 set -a
 DEEPSEEK_API_KEY=$(grep -E '^DEEPSEEK_API_KEY=' /root/.env | head -1 | cut -d= -f2-)
 export DEEPSEEK_API_KEY
-export STAGE_D_GLM_KEY=$(python3 -c "
-import json
-cfg=json.load(open('/root/.zcode/v2/provider_config.json'))
-print(next(r['config']['access']['apiKey'] for r in cfg['config']['providerConfigRules']['providerRules'] if r['providerId']=='bigmodel-api'))
-")
+# 操作员2026-11-11提供的GLM-Flash资源包密钥（同模型/端点/参数，仅凭据变更）
+export STAGE_D_GLM_KEY=$(cat /root/.g7_glm_key)
 export G7_GO=1
 set +a
 [ -n "$STAGE_D_GLM_KEY" ] && [ -n "$DEEPSEEK_API_KEY" ] || { echo 'CREDENTIALS MISSING'; exit 3; }
