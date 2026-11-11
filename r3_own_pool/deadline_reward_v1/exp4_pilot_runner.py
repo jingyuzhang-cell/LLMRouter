@@ -78,9 +78,13 @@ def run_pilot():
                 planned_outputs = {}
                 for node in nodes:
                     model = 'deepseek-flash'  # planned: DS for all
+                    # B1（2026-11-11 操作员批准）：将节点合法声明的文档正文注入提示词。
+                    # 只注入 task_spec['doc_slot'] 声明的文档，不改变上游输入合同。
                     prompt = (f'Node {node} type='
                               f'{node_types[node]} doc='
-                              f'{task_spec["doc_id"]}')
+                              f'{task_spec["doc_id"]}\n\n'
+                              f'## 证据文档 [{task_spec["doc_id"]}]\n'
+                              f'{doc_text}')
                     # inject fault
                     if node == faulted:
                         if task_spec['fault_type'] == 'F_TRUNCATED':
