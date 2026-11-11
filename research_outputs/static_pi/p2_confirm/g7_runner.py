@@ -136,7 +136,7 @@ def verify_g7_terminal(env, contract, terminal, prompts):
     for rec_line in records:
         fid = rec_line.split(' | ')[0]
         a = by_id.get(fid)
-        q = re.sub(r'\s+', '', a.get('quote', ''))
+        q = R.SC.norm_text(a.get('quote', ''))   # 冻结管线同口径规范化（NFKC+去空白）
         reasons = []
         # deterministic R2-precheck: quote must exist verbatim in cited doc
         if a.get('doc') not in contract['docs_norm'] or q not in contract['docs_norm'].get(a.get('doc'), ''):
