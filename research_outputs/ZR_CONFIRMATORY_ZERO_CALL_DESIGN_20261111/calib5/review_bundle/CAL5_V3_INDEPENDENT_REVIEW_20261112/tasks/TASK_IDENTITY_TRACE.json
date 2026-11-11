@@ -1,0 +1,50 @@
+{
+ "v1": {
+  "taskset": "CAL5_TASKS.json",
+  "sha": "203df3f092622f023b5c941ad0077dba8a4cde0b70e33e4f943a841acbe6f680",
+  "tasks": {
+   "CAL5_01": "603271",
+   "CAL5_02": "605336",
+   "CAL5_03": "603429",
+   "CAL5_04": "600173",
+   "CAL5_05": "600322"
+  },
+  "go_package": "CAL5_GO_PACKAGE.json"
+ },
+ "v2": {
+  "taskset": "CAL5_TASKS_V2.json",
+  "sha": "52f702c0fd62d534dd739189394ab5a5047810729687f4f2c8c04fd09b1d8adf",
+  "tasks": {
+   "CAL5_01B": "600185",
+   "CAL5_02": "605336",
+   "CAL5_03": "603429",
+   "CAL5_04": "600173",
+   "CAL5_05": "600322"
+  },
+  "change": "CAL5_01 603271 withdrawn (D2 facts at ~40297, outside fixed 4000-char window); CAL5_01B 600185 added",
+  "go_package": "CAL5_GO_PACKAGE_V2.json"
+ },
+ "v3": {
+  "go_package": "CAL5_GO_PACKAGE_V3.json",
+  "taskset_ref": "52f702c0fd62d534dd739189394ab5a5047810729687f4f2c8c04fd09b1d8adf"
+ },
+ "commits": [
+  {
+   "hash": "c8b439f7",
+   "desc": "V1 taskset + GO package"
+  },
+  {
+   "hash": "b91f5fdf",
+   "desc": "V2 input fix + taskset V2 + GO V2 (replacement introduced here, BEFORE operator GO V2)"
+  },
+  {
+   "hash": "7b083fcd",
+   "desc": "V3 transport fix + GO V3 (same taskset V2)"
+  },
+  {
+   "hash": "75cbc5f2",
+   "desc": "V3 parent run on taskset V2"
+  }
+ ],
+ "conclusion": "The 603271 -> 600185 replacement was introduced in the V2 taskset (commit b91f5fdf) and submitted in the V2 GO package; it predates the operator GO V2 and the V3 GO. The V3 parent run used CAL5_TASKS_V2.json SHA 52f702c0. No task replacement occurred after any freeze or after the V3 GO."
+}
