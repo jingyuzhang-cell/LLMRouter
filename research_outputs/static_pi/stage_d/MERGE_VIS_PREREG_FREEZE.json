@@ -1,0 +1,46 @@
+{
+ "batch": "MERGE_VIS",
+ "status": "DESIGN+CAP APPROVED by operator 2026-11-06; real-call GO DEFERRED pending global-budget verification (this document supplies it)",
+ "preregistration": {
+  "question": "At FULL input visibility, does the original semantic merge still lose facts? Does a fidelity contract add increment? Single factor = merge contract; visibility lifted symmetrically in BOTH arms (and in verify/report downstream).",
+  "arms": "A_full original merge prompt (byte-identical) vs B_full fidelity-contract merge + fid backfill; same 6 stored extract sets; symmetric namespaced fids; mt=8000 both; no retries; parse failure = recorded failure",
+  "scoring_rules": [
+   "fid echo NEVER counts toward TP: Q_merge/Q_report/Amount Recall/ES use identical value/quote matching for both arms; fid only for tracking (echo_rate is a separate diagnostic)",
+   "B-A paired per-set difference (n=6) is the ONLY estimator of the contract increment; the total Q_report gain vs the old frozen pipeline CANNOT be attributed to Merge alone because verify/report caps are also lifted (attribution caveat, operator rule)"
+  ],
+  "interpretation_table": {
+   "A_full faithful, B_full~=A_full": "original merge already faithful at full visibility; no observable contract increment in these 6 pairs (NOT equivalence proof)",
+   "A_full loses, B_full better": "semantic compression is real; contract effective",
+   "both lose": "long-input integration capability is the bottleneck",
+   "merge faithful but Q_report still low": "loss continues downstream; Merge exonerated further"
+  },
+  "exploratory_status": "n=6 paired, exploratory; no confirmatory claims; zero-delta phrased as 'no increment observed in these six pairs'"
+ },
+ "budget_audit_2026_11_06": {
+  "stage_d_all_real_batches": {
+   "batches": 30,
+   "calls": 4394,
+   "ledger_tokens": 10371498,
+   "yuan_est": 107.23,
+   "cap_breaches": "none where cap on file",
+   "schema_notes": "rq2_p2r v1-v3 ledgers lack tin/tout fields (GLOBAL_BUDGET tokens shown; v1 has known 2x token double-count -> real ~243K); 4 mock/replay dirs excluded; 2 no-ledger runs_final_real* dirs (67 calls, yuan 0.11) unclassified"
+  },
+  "outside_stage_d": "406 heterogeneous ledger files (capital_opinion_pilot etc., other sessions' separate envelopes) NOT consolidated - available as a separate zero-call task if a full-repo figure is required",
+  "not_locally_verifiable": "provider account balances and the 192 HOLD (account-level frozen credits); NO network/billing calls were made",
+  "implication": "no single global cap file exists in-repo; each batch's envelope is the operator's authorization itself; MERGE_VIS 36 calls/~330K tokens/~¥1.5 accounting is a new standalone envelope"
+ },
+ "planned": {
+  "calls": 36,
+  "config_caps": {
+   "calls": 45,
+   "tokens": 500000,
+   "yuan": 1.5
+  },
+  "hold_192": "untouched, not transferable"
+ },
+ "files_sha256": {
+  "merge_vis_runner.py": "b5b87b6e1325e899cc0a440f17dbfaddb4cbb6dd7a07110acfefff2cac6f8394",
+  "merge_vis_score.py": "1d80f781835da304a3db1b9b9589747c27cea5e19ce79d794b9d4dbeaa330169",
+  "merge_vis_config.json": "5509ccbdccccd0a8b14e6b81619cbacaadebdfaba0044e5098439b23782001a0"
+ }
+}

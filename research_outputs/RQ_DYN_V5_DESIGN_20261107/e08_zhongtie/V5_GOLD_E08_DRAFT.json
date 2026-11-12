@@ -1,0 +1,356 @@
+{
+ "task_id": "E08-ZHONGTIE",
+ "company": "中铁装配(300374)",
+ "status": "DRAFT_FOR_HUMAN_SIGNOFF_v1.1",
+ "docs": {
+  "E08-zhongtie_20260129.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E08-zhongtie_20260129.txt",
+   "sha256": "FREEZE时计算"
+  },
+  "E08-zhongtie_20260327.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E08-zhongtie_20260327.txt",
+   "sha256": "FREEZE时计算"
+  },
+  "E08-zhongtie_20260918.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E08-zhongtie_20260918.txt",
+   "sha256": "FREEZE时计算"
+  }
+ },
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "audit_reuse": "facts_E05_E08.json(10事实全带跨度) + RQ1_GOLD_REVIEW_V1_5(M1 PASS沿用、M2/M3判定为与基础事实重复而DROP、R1修正应用)",
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1_forecast",
+    "kind": "extract",
+    "docs": [
+     "E08-zhongtie_20260129.txt"
+    ],
+    "upstream": [],
+    "role": "业绩预告"
+   },
+   {
+    "node": "N2_annual",
+    "kind": "extract",
+    "docs": [
+     "E08-zhongtie_20260327.txt"
+    ],
+    "upstream": [],
+    "role": "年报披露与说明会"
+   },
+   {
+    "node": "N3_case",
+    "kind": "extract",
+    "docs": [
+     "E08-zhongtie_20260918.txt"
+    ],
+    "upstream": [],
+    "role": "立案事实"
+   },
+   {
+    "node": "N4_merge",
+    "kind": "reason",
+    "docs": [],
+    "upstream": [
+     "N1_forecast",
+     "N2_annual",
+     "N3_case"
+    ],
+    "role": "时序与比对"
+   },
+   {
+    "node": "N5_report",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N4_merge"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "F-E08-1",
+   "node": "N1_forecast",
+   "kind": "extract",
+   "value": "2025年度预告净亏损：7,900万至15,600万元",
+   "doc": "E08-zhongtie_20260129.txt",
+   "span": "公司预计报告期内归属于上市公司股东的净亏损为 7,900 万元至 15,600 万元",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-2",
+   "node": "N1_forecast",
+   "kind": "extract",
+   "value": "上年同期(2024)：-6,371.69万元",
+   "doc": "E08-zhongtie_20260129.txt",
+   "span": "预告表格：行名\"归属于上市公司股东的净利润\"行，-6,371.69为上年同期值(第30-32行，紧随本报告期预计值-7,900之后)",
+   "ai_verdict": "REVISED(独立复核R:补指标上下文)",
+   "source": "EXISTING_FACT",
+   "ai_note": "行名与列归属已补",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-3",
+   "node": "N1_forecast",
+   "kind": "extract",
+   "value": "2025年度预告扣非亏损：9,900万至18,600万元",
+   "doc": "E08-zhongtie_20260129.txt",
+   "span": "扣除非经常性损益后的净利润-18,600～-9,900",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-4",
+   "node": "N1_forecast",
+   "kind": "extract",
+   "value": "上年同期扣非：-7,701.18万元",
+   "doc": "E08-zhongtie_20260129.txt",
+   "span": "预告表格：行名\"扣除非经常性损益后的净利润\"行，-7,701.18为上年同期值(第40-42行，紧随本报告期-9,900之后)",
+   "ai_verdict": "REVISED(独立复核R:补指标上下文)",
+   "source": "EXISTING_FACT",
+   "ai_note": "行名与列归属已补",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-0a",
+   "node": "N1_forecast",
+   "kind": "extract",
+   "value": "业绩预告公告落款日期：2026-01-29；预告期间：2025年度",
+   "doc": "E08-zhongtie_20260129.txt",
+   "span": "公告落款\"2026年1月29日\"+\"业绩预告期间：2025 年 1(月至12月)\"",
+   "ai_verdict": "REVISED(预审R:落款口径)",
+   "source": "AI_PROPOSED",
+   "ai_note": "预审修订：不等同实际披露日期",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-0b",
+   "node": "N1_forecast",
+   "kind": "extract",
+   "value": "公告披露的经营情况及转型举措：整体平稳运行、强化中国中铁系统内部协同、推动内部转型",
+   "doc": "E08-zhongtie_20260129.txt",
+   "span": "第50行起完整句：\"2025 年，公司整体保持平稳运行，在压力中坚守经营主线，积极推动内部转型与能力提升。报告期内，公司进一步强化中国中铁系统内部协同、深化资(源整合)\"(业绩变动原因说明段首句)",
+   "ai_verdict": "REVISED(独立复核R:跨度补全)",
+   "source": "AI_PROPOSED",
+   "ai_note": "省略号已展开为完整句",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-5",
+   "node": "N2_annual",
+   "kind": "extract",
+   "value": "《2025年年度报告》披露日：2026-03-27(巨潮资讯网)",
+   "doc": "E08-zhongtie_20260327.txt",
+   "span": "于2026年3月27日在巨潮资讯网（www.cninfo.com.cn）上披露《2025年年度报告》",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-6",
+   "node": "N2_annual",
+   "kind": "extract",
+   "value": "业绩说明会时间：2026-04-08 15:00-17:00",
+   "doc": "E08-zhongtie_20260327.txt",
+   "span": "2026年4月8日（周三）15:00-17:00",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-6b",
+   "node": "N2_annual",
+   "kind": "extract",
+   "value": "说明会形式：业绩说明会",
+   "doc": "E08-zhongtie_20260327.txt",
+   "span": "\"业绩说明会\"表述",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-7",
+   "node": "N3_case",
+   "kind": "extract",
+   "value": "收到《立案告知书》日期：2026-09-18(对公司立案)",
+   "doc": "E08-zhongtie_20260918.txt",
+   "span": "于 2026 年 9 月 18 日收到中国证券监督管理委员会…对公司立案",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-8",
+   "node": "N3_case",
+   "kind": "extract",
+   "value": "立案编号：证监立案字0142026049号",
+   "doc": "E08-zhongtie_20260918.txt",
+   "span": "（编号：证监立案字 0142026049 号）",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-9",
+   "node": "N3_case",
+   "kind": "extract",
+   "value": "立案可能涉及实际控制人变更前开展的相关业务",
+   "doc": "E08-zhongtie_20260918.txt",
+   "span": "本次立案可能涉及公司实际控制人变更前开展的相关业务",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E08-9b",
+   "node": "N3_case",
+   "kind": "extract",
+   "value": "立案涉嫌事项：信息披露违法违规",
+   "doc": "E08-zhongtie_20260918.txt",
+   "span": "涉嫌信息披露违法违规",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "T1",
+   "node": "N4_merge",
+   "kind": "timeline",
+   "value": "业绩预告公告落款日期(2026-01-29)早于2025年年度报告披露日期(2026-03-27)",
+   "doc": "E08-zhongtie_20260129.txt + E08-zhongtie_20260327.txt",
+   "span": "两公告落款/披露表述",
+   "ai_verdict": "REVISED(预审R:统一落款日期口径)",
+   "source": "AI_PROPOSED",
+   "derived_from": [
+    "F-E08-0a",
+    "F-E08-5"
+   ],
+   "ai_note": "预审修订",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "T2",
+   "node": "N4_merge",
+   "kind": "timeline",
+   "value": "年报披露(2026-03-27)早于业绩说明会(2026-04-08)",
+   "doc": "E08-zhongtie_20260327.txt",
+   "span": "F-E08-5与F-E08-6跨度同文档",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "T3",
+   "node": "N4_merge",
+   "kind": "timeline",
+   "value": "业绩说明会(2026-04-08)早于收到立案告知(2026-09-18)",
+   "doc": "E08-zhongtie_20260327.txt + E08-zhongtie_20260918.txt",
+   "span": "F-E08-6与F-E08-7跨度",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "M1",
+   "node": "N4_merge",
+   "kind": "verification",
+   "value": "2025年度业绩预亏(亏损扩大)与2026年立案调查并存",
+   "doc": "E08-zhongtie_20260129.txt + E08-zhongtie_20260918.txt",
+   "span": "F-E08-1 + F-E08-7",
+   "ai_verdict": "PASS",
+   "source": "DERIVED_V15_PASS",
+   "scoring_points": [
+    "两事件并存关系成立(2025预亏+2026立案)",
+    "不作因果推断"
+   ],
+   "ai_note": "预审P沿用；判分要点补:不推断因果关系",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "R1",
+   "node": "N5_report",
+   "kind": "report",
+   "value": "跨文书综合结论：2026年内公司经历业绩预告(落款2026-01-29)→年报披露(2026-03-27)→业绩说明会安排(2026-04-08)→收到立案告知(2026-09-18)的完整事件链；说明会安排不等同实际交流内容已知(见UNKNOWN F-E08-10)；立案与业绩预亏仅并存，不作因果推断",
+   "doc": "E08-zhongtie_20260129.txt + E08-zhongtie_20260918.txt",
+   "span": "derived_from=[F-E08-0a,F-E08-5,F-E08-6,F-E08-7]+UNKNOWN边界F-E08-10：预告落款(F-E08-0a跨度)+年报披露句(F-E08-5跨度)+说明会安排(F-E08-6跨度)+立案告知句(F-E08-7跨度)+说明会内容不可知边界(F-E08-10)——四事件链各端点逐项引用",
+   "ai_verdict": "REVISED(独立复核R:依赖证据补齐)",
+   "source": "DERIVED_CORRECTED",
+   "derived_from": [
+    "F-E08-0a",
+    "F-E08-5",
+    "F-E08-6",
+    "F-E08-7"
+   ],
+   "scoring_points": [
+    "完整复现四事件时间链(含各日期)",
+    "明确说明会安排≠交流内容已知的证据边界",
+    "不作立案与预亏的因果推断",
+    "与M1判分区分：M1仅评价两事件并存，R1要求时间链整合+证据边界声明"
+   ],
+   "ai_note": "不再以\"同M1\"替代，逐端点引用",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "F-E08-10",
+   "node": "N2_annual",
+   "expected_status": "UNKNOWN",
+   "value": "业绩说明会中披露的具体风险信息",
+   "doc": "E08-zhongtie_20260327.txt",
+   "note": "原文为说明会安排公告，具体风险未披露(V1_5审查M3结论)；证据集合内不可答",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [
+  {
+   "slot_id": "D-E08-M2-orig",
+   "reason": "与基础事实F-E08-9同内容(立案涉及实控人变更前业务)，避免双计"
+  },
+  {
+   "slot_id": "D-E08-M3-orig",
+   "reason": "与UNKNOWN边界F-E08-10同内容，避免双计"
+  },
+  {
+   "slot_id": "D-E08-R1-orig",
+   "reason": "原文仅\"亏损扩大\"，原表述含越界推断；已由修正版R1替代"
+  }
+ ],
+ "scoring_contract": {
+  "n_scored_slots": 18,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "mvr1_crossref": "不适用",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "F-E08-0b为语义槽，判分要点见value；其余数值槽均有精确跨度",
+  "v1.1：4R落实；M1/R1判分区隔明确(并存 vs 时间链+边界)"
+ ],
+ "pre_review": {
+  "batch": 3,
+  "reviewer": "operator-AI-precheck(2026-11-08)",
+  "result": "14P/4R/0newD",
+  "note": "R1重设计为跨文书综合结论(时间链+证据边界)与M1判分区隔；F-E08-10维持UNKNOWN；3条原有DROP维持；14P待完整跨度人工终签"
+ },
+ "independent_ai_review": {
+  "date": "2026-11-08",
+  "result": "全P(依据修订明细更新，未重读原件)",
+  "boundary": "AI复核≠人工终签；human列空置待指定签收人"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ }
+}

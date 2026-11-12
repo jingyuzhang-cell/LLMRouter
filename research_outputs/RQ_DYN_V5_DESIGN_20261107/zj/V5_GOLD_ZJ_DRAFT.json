@@ -1,0 +1,408 @@
+{
+ "task_id": "ZJ",
+ "company": "紫晶存储(688086)",
+ "status": "FINAL_CANDIDATE_v1.3",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "ZIJING_2022-02-12.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZIJING/ZIJING_2022-02-12.txt",
+   "sha256": "70c4a3d1b15301b623149eef7477c900168298214b1dfc906acb7a2bd8fb37d1"
+  },
+  "ZIJING_2022-06-25.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZIJING/ZIJING_2022-06-25.txt",
+   "sha256": "7b4973893674e21df6ae683e0905a30e3ffd2bde88d4dbb764d849f4379940cc"
+  },
+  "ZIJING_2022-11-19.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZIJING/ZIJING_2022-11-19.txt",
+   "sha256": "502e5c5417e46e3935ba7be7145070a1db444089df59c14b2b3afc9a790fdf92"
+  },
+  "ZIJING_2023-04-22.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZIJING/ZIJING_2023-04-22.txt",
+   "sha256": "07786c15bb272c57196c67163efac21541a22238ea87692ddba8209994fa8f0c"
+  },
+  "ZIJING_2023-07-01.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZIJING/ZIJING_2023-07-01.txt",
+   "sha256": "9426830918c77254764ade7fecb127a2be130016c6a22c05397f1342308b67a1"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1",
+    "kind": "extract",
+    "docs": [
+     "ZIJING_2022-02-12.txt"
+    ],
+    "upstream": [],
+    "role": "公司及实控人立案"
+   },
+   {
+    "node": "N2",
+    "kind": "extract",
+    "docs": [
+     "ZIJING_2023-04-22.txt"
+    ],
+    "upstream": [],
+    "role": "招股阶段虚增(欺诈发行)"
+   },
+   {
+    "node": "N3",
+    "kind": "extract",
+    "docs": [
+     "ZIJING_2023-04-22.txt"
+    ],
+    "upstream": [],
+    "role": "上市后年报虚增"
+   },
+   {
+    "node": "N4",
+    "kind": "extract",
+    "docs": [
+     "ZIJING_2023-04-22.txt"
+    ],
+    "upstream": [],
+    "role": "量罚(两案合计)"
+   },
+   {
+    "node": "N5",
+    "kind": "timeline",
+    "docs": [
+     "ZIJING_2022-11-19.txt",
+     "ZIJING_2023-07-01.txt"
+    ],
+    "upstream": [],
+    "role": "终止上市与摘牌时序"
+   },
+   {
+    "node": "N_REPORT",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N2",
+     "N4",
+     "N5"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "ZJ-A1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "公司《立案告知书》编号：证监立案字0062022005号",
+   "doc": "ZIJING_2022-02-12.txt",
+   "span": "\"《立案告知书》编号：证监立案字 0062022005 号\"（ZIJING_2022-02-12.txt@L16）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-A2",
+   "node": "N1",
+   "kind": "extract",
+   "value": "立案事由：涉嫌信息披露违法违规",
+   "doc": "ZIJING_2022-02-12.txt",
+   "span": "\"因公司涉嫌信息披露违法违规\"（ZIJING_2022-02-12.txt@L16）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-A3",
+   "node": "N1",
+   "kind": "extract",
+   "value": "两名实际控制人：郑穆、罗铁威",
+   "doc": "ZIJING_2022-11-19.txt",
+   "span": "\"郑穆、罗铁威[实控人认定表述]\"（ZIJING_2022-11-19.txt@L27）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-A4",
+   "node": "N1",
+   "kind": "extract",
+   "value": "实控人立案编号：证监立案字0062022012号、0062022013号",
+   "doc": "ZIJING_2022-06-25.txt",
+   "span": "\"《立案告知书》编号：证监立案字 0062022012 号、0062022013 号\"（ZIJING_2022-06-25.txt@L17）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-B1",
+   "node": "N2",
+   "kind": "extract",
+   "value": "欺诈发行认定段·北神狐等单位虚假业务虚增营业收入：43,497,313.43元",
+   "doc": "ZIJING_2022-11-19.txt",
+   "span": "章节\"一、欺诈发行\"（告知书@L35）+\"北神狐等单位开展虚假业务虚增营业收入合计 43497313.43 元\"",
+   "ai_verdict": "REVISED(章节标题+主体命名)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-B1b",
+   "node": "N2",
+   "kind": "extract",
+   "value": "招股阶段虚增利润(第一部分)：21,627,070.35元",
+   "doc": "ZIJING_2022-11-19.txt",
+   "span": "\"虚增利润合计 21,627,070.35 元\"（ZIJING_2022-11-19.txt@L52）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-B2",
+   "node": "N2",
+   "kind": "extract",
+   "value": "欺诈发行认定段·华城镇中心卫生院相关虚增营业收入：111,457,882.74元",
+   "doc": "ZIJING_2022-11-19.txt",
+   "span": "章节\"一、欺诈发行\"（告知书@L35）+\"县华城镇中心卫生院的收入虚增营业收入合计 111457882.74 元\"",
+   "ai_verdict": "REVISED(章节标题+主体命名)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-B2b",
+   "node": "N2",
+   "kind": "extract",
+   "value": "招股阶段虚增利润(第二部分)：39,036,333.51元",
+   "doc": "ZIJING_2022-11-19.txt",
+   "span": "\"虚增利润合计 39,036,333.51 元\"（ZIJING_2022-11-19.txt@L60）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-B3",
+   "node": "N2",
+   "kind": "extract",
+   "value": "虚假对外担保余额：1,000万元、1,000万元、7,500.12万元",
+   "doc": "ZIJING_2022-11-19.txt",
+   "span": "\"对外担保余额分别为 1000万元、1000万元、7500.12万元\"（ZIJING_2022-11-19.txt@L69）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-C1",
+   "node": "N3",
+   "kind": "extract",
+   "value": "上市后虚增营业收入(2019-2020)：270,871,411.88元",
+   "doc": "ZIJING_2022-11-19.txt",
+   "span": "\"虚增营业收入 270,871,411.88 元\"（ZIJING_2022-11-19.txt@L91）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-C2",
+   "node": "N3",
+   "kind": "extract",
+   "value": "上市后虚增营业收入(另一认定段)：327,797,330.95元",
+   "doc": "ZIJING_2023-04-22.txt",
+   "span": "\"虚增营业收入 327,797,330.95 元\"（ZIJING_2023-04-22.txt@L233）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-D1",
+   "node": "N4",
+   "kind": "extract",
+   "value": "欺诈发行案公司罚款：非法所募集资金的3%即3,068.52万元",
+   "doc": "ZIJING_2023-04-22.txt",
+   "span": "\"一、对广东紫晶信息存储技术股份有限公司处以非法所募集资金的 3%，即 3,068.52 万元罚款\"（决定书欺诈发行段@L910-913）",
+   "ai_verdict": "REVISED(终案锚定)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-D2",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并)公司罚款：3,668.52万元",
+   "doc": "ZIJING_2023-04-22.txt",
+   "span": "\"综合上述二项：一、对广东紫晶…责令改正，给予警告，并处以 3,668.52 万元罚款\"（决定书综合段@L968-972）",
+   "ai_verdict": "REVISED(终案综合条款)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "AI核算：3,068.52+600=3,668.52 ✓",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-D3",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并)：郑穆2,164.26万元",
+   "doc": "ZIJING_2023-04-22.txt",
+   "span": "\"二、对郑穆给予警告，并处以 2,164.26 万元罚款\"（决定书综合段@L974）",
+   "ai_verdict": "REVISED(终案；罗铁威移出本槽，双计纠正)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "郑穆综合=欺诈1,564.26+信披600=2,164.26 ✓",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-D4",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并)：罗铁威1,803.55万元",
+   "doc": "ZIJING_2023-04-22.txt",
+   "span": "\"三、对罗铁威给予警告，并处以 1,803.55 万元罚款\"（决定书综合段@L976）",
+   "ai_verdict": "REVISED(终案；与D3双计纠正)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "罗铁威综合=欺诈1,303.55+信披500=1,803.55 ✓",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-D5",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并)：钟国裕、李燕霞各220万元",
+   "doc": "ZIJING_2023-04-22.txt",
+   "span": "\"四、对钟国裕、李燕霞给予警告，并分别处以 220 万元罚款\"（决定书综合段@L978）",
+   "ai_verdict": "REVISED(终案；=20+200 ✓)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-D6",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并)：黄美珊、焦仕志各160万元",
+   "doc": "ZIJING_2023-04-22.txt",
+   "span": "\"五、对黄美珊、焦仕志给予警告，并分别处以 160 万元罚款\"（决定书综合段@L980）",
+   "ai_verdict": "REVISED(终案；=10+150 ✓)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-D7",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并)：魏强、杨思维、王炜、林海忠、丁杰、刘宁宁各105万元",
+   "doc": "ZIJING_2023-04-22.txt",
+   "span": "\"六、对魏强、杨思维、王炜、林海忠、丁杰、刘宁宁给予警告，并分别处以[105万元]罚款\"（决定书综合段@L982-984，金额行终签逐字复核）",
+   "ai_verdict": "REVISED(终案；=5+100 ✓；综合段第七项王铁林50万不扩槽仅记录)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "分案明细：欺诈段@L918-934；信披段@L945-966",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-E1",
+   "node": "N5",
+   "kind": "extract",
+   "value": "终止上市暨摘牌日：2023-07-07",
+   "doc": "ZIJING_2023-07-01.txt",
+   "span": "\"公司股票将于 2023 年 7 月 7 日[终止上市暨摘牌]\"（ZIJING_2023-07-01.txt@L16）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-E2",
+   "node": "N5",
+   "kind": "extract",
+   "value": "终止上市决定日期：2023-05-31",
+   "doc": "ZIJING_2023-07-01.txt",
+   "span": "\"2023年5月31日\"（ZIJING_2023-07-01.txt@L23）",
+   "ai_verdict": "PASS(逐字+行号；案由归属终签核对)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-T1",
+   "node": "N5",
+   "kind": "timeline",
+   "value": "终止上市决定(2023-05-31)早于摘牌(2023-07-07)",
+   "doc": "ZIJING_2023-04-22.txt + ZIJING_2023-07-01.txt",
+   "span": "E2/E1两公告日期",
+   "ai_verdict": "REVISED(终审R:doc补全)",
+   "source": "AI_PROPOSED",
+   "derived_from": [
+    "ZJ-E1",
+    "ZJ-E2"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZJ-R1",
+   "node": "N_REPORT",
+   "kind": "report",
+   "value": "综合结论：紫晶存储欺诈发行+信披违法双线处罚，股票终止上市并摘牌",
+   "doc": "ZIJING_2023-07-01.txt",
+   "span": "终止上市公告结论段",
+   "ai_verdict": "PASS(汇总既有槽)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "ZJ-U1",
+   "node": "N_REPORT",
+   "expected_status": "UNKNOWN",
+   "value": "先行赔付专项基金总额及完成情况",
+   "doc": "本组文书",
+   "note": "未披露(silver结论)",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [],
+ "scoring_contract": {
+  "n_scored_slots": 22,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "P0补齐：3/3待定位槽已锚定，其余转人工"
+ ],
+ "self_precheck": {
+  "date": "2026-11-08",
+  "by": "builder-self(非独立复核)",
+  "findings": [
+   "22槽指标名+逐字+行号(未命中标PENDING)",
+   "处罚文书归属(2022-11-19告知 vs 2023-04-22决定)按ZED/KM先例需终案核对——紫晶两案处罚若决定书金额有变以决定书为准"
+  ]
+ },
+ "consolidated_ruling": {
+  "date": "2026-11-08",
+  "items": "D1-D7统一切终案(分案+综合双锚)；双计纠正；B1/B2章节命名"
+ },
+ "final_review": {
+  "date": "2026-11-08",
+  "result": "ZJ-T1 doc补全"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ }
+}

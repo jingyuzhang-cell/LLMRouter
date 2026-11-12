@@ -1,0 +1,357 @@
+{
+ "task_id": "E06-HUANRUI",
+ "company": "欢瑞世纪(000892)",
+ "status": "DRAFT_FOR_HUMAN_SIGNOFF_v1.1",
+ "docs": {
+  "E06-huanrui_20260423.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E06-huanrui_20260423.txt",
+   "sha256": "FREEZE时计算"
+  },
+  "E06-huanrui_20260715.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E06-huanrui_20260715.txt",
+   "sha256": "FREEZE时计算"
+  },
+  "E06-huanrui_20260919.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E06-huanrui_20260919.txt",
+   "sha256": "FREEZE时计算"
+  }
+ },
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "audit_reuse": "facts_E05_E08.json(12事实全带跨度) + RQ1_GOLD_REVIEW_V1_5(E06派生5条修正全部应用) + rq1_tasks_materials.json(节点结构)",
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1_case",
+    "kind": "extract",
+    "docs": [
+     "E06-huanrui_20260423.txt"
+    ],
+    "upstream": [],
+    "role": "立案事实"
+   },
+   {
+    "node": "N2_forecast",
+    "kind": "extract",
+    "docs": [
+     "E06-huanrui_20260715.txt"
+    ],
+    "upstream": [],
+    "role": "业绩预告数值"
+   },
+   {
+    "node": "N3_ir",
+    "kind": "extract",
+    "docs": [
+     "E06-huanrui_20260919.txt"
+    ],
+    "upstream": [],
+    "role": "投资者活动"
+   },
+   {
+    "node": "N4_merge",
+    "kind": "reason",
+    "docs": [],
+    "upstream": [
+     "N1_case",
+     "N2_forecast"
+    ],
+    "role": "跨文档比对与时序"
+   },
+   {
+    "node": "N5_report",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N4_merge",
+     "N3_ir"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "F-E06-1",
+   "node": "N1_case",
+   "kind": "extract",
+   "value": "收到《立案告知书》日期：2026-04-21",
+   "doc": "E06-huanrui_20260423.txt",
+   "span": "于2026年4月21日收到中国证券监督管理委员会对公司的《立案告知书》",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-2",
+   "node": "N1_case",
+   "kind": "extract",
+   "value": "立案编号：证监立案字0152026005号",
+   "doc": "E06-huanrui_20260423.txt",
+   "span": "（证监立案字0152026005号）",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-3",
+   "node": "N1_case",
+   "kind": "extract",
+   "value": "立案原因：信息披露违法违规",
+   "doc": "E06-huanrui_20260423.txt",
+   "span": "因公司涉嫌信息披露违法违规",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-4",
+   "node": "N1_case",
+   "kind": "extract",
+   "value": "立案涉及事项：2022年计提加计抵减额并确认为其他收益",
+   "doc": "E06-huanrui_20260423.txt",
+   "span": "本次立案涉及2022年计提加计抵减额并确认为其他收益事项",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-0a",
+   "node": "N1_case",
+   "kind": "extract",
+   "value": "立案公告落款日期：2026-04-22",
+   "doc": "E06-huanrui_20260423.txt",
+   "span": "公告落款\"欢瑞世纪联合股份有限公司董事会 2026年4月22日\"",
+   "ai_verdict": "REVISED(预审R:落款口径)",
+   "source": "AI_PROPOSED",
+   "ai_note": "预审修订：不等同实际披露日期",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-5",
+   "node": "N2_forecast",
+   "kind": "extract",
+   "value": "2026年半年度预告亏损：12,500.00万元",
+   "doc": "E06-huanrui_20260715.txt",
+   "span": "预告表格：行名\"归属于上市公司股东的净利润\"，本报告期列\"亏损：12,500.00 万元\"(第22-24行，表格为本报告期/上年同期分列布局)",
+   "ai_verdict": "REVISED(独立复核R:补完整指标行名与列归属)",
+   "source": "EXISTING_FACT",
+   "ai_note": "行名+列归属已补",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-6",
+   "node": "N2_forecast",
+   "kind": "extract",
+   "value": "上年同期(2025H1)亏损：12,300.00万元",
+   "doc": "E06-huanrui_20260715.txt",
+   "span": "预告表格：行名\"归属于上市公司股东的净利润\"，上年同期列\"亏损：12,300.00 万元\"(分列布局，上年同期列首值)",
+   "ai_verdict": "REVISED(独立复核R:补完整指标行名与列归属)",
+   "source": "EXISTING_FACT",
+   "ai_note": "与F-E06-5同行异列，指标一致",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-7",
+   "node": "N2_forecast",
+   "kind": "extract",
+   "value": "每股亏损：0.13元/股",
+   "doc": "E06-huanrui_20260715.txt",
+   "span": "预告表格：行名\"基本每股收益\"(第35行)，本报告期列\"亏损：0.13 元/股\"(第37行)",
+   "ai_verdict": "REVISED(独立复核R:补完整指标行名与列归属)",
+   "source": "EXISTING_FACT",
+   "ai_note": "行名已补",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-8",
+   "node": "N2_forecast",
+   "kind": "extract",
+   "value": "本报告期营业收入：24,500.00万元(上年同期19,804.88万元；扣除后营业收入两期同额24,500.00/19,804.88)",
+   "doc": "E06-huanrui_20260715.txt",
+   "span": "预告表格行\"营业收入 24,500.00 万元 19,804.88 万元\"及\"扣除后的营业收入 24,500.00 万元 19,804.88 万元\"(第41-51行)",
+   "ai_verdict": "REVISED(预审R:指标名与上下文已补齐)",
+   "source": "EXISTING_FACT",
+   "ai_note": "预审修订：预告表格预计值，指标名完整",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-9",
+   "node": "N2_forecast",
+   "kind": "extract",
+   "value": "本报告期扣除非经常性损益后的净利润：亏损639.38万元",
+   "doc": "E06-huanrui_20260715.txt",
+   "span": "表格\"亏损：639.38 万元\"+行名\"扣除非经常性损益后的净利润\"(第25-29行)",
+   "ai_verdict": "REVISED(预审R:完整指标名+亏损口径)",
+   "source": "EXISTING_FACT",
+   "ai_note": "预审修订：负值口径以\"亏损\"表述",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-10",
+   "node": "N2_forecast",
+   "kind": "extract",
+   "value": "预计非经常性损益对当期归母净利润的影响金额约为200.00万元",
+   "doc": "E06-huanrui_20260715.txt",
+   "span": "\"报告期内，预计非经常性损益对当期归母净利润的影响金额约为 200.00 万元。\"(第63行)",
+   "ai_verdict": "REVISED-KEPT(预审R核实：独立损益项目)",
+   "source": "EXISTING_FACT",
+   "ai_note": "预审条件判定完成：原文明确记载项目名称(非经常性损益影响金额)，非两亏损差额——保留；与M2(同比比较)为不同事实，不重复计分",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-0b",
+   "node": "N2_forecast",
+   "kind": "extract",
+   "value": "业绩预告公告落款日期：2026-07-14；预告期间：2026年1月至6月",
+   "doc": "E06-huanrui_20260715.txt",
+   "span": "公告落款\"2026年7月14日\"+\"业绩预告期间：2026 年 1(月至6月)\"",
+   "ai_verdict": "REVISED(预审R:落款口径)",
+   "source": "AI_PROPOSED",
+   "ai_note": "预审修订",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-11",
+   "node": "N3_ir",
+   "kind": "extract",
+   "value": "投资者活动时间：2026-09-23 15:30-17:00",
+   "doc": "E06-huanrui_20260919.txt",
+   "span": "2026 年 9 月 23 日（星期三）15:30-17:00",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_FACT",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-11b",
+   "node": "N3_ir",
+   "kind": "extract",
+   "value": "活动名称：投资者网上集体接待日(重庆辖区上市公司2026年)",
+   "doc": "E06-huanrui_20260919.txt",
+   "span": "重庆辖区上市公司2026年投资者网上集体接待日",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "ai_note": "即V1_5审查R2修正结论(原文无\"风险\"字样，活动为接待日)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E06-0c",
+   "node": "N3_ir",
+   "kind": "extract",
+   "value": "活动公告落款日期：2026-09-18",
+   "doc": "E06-huanrui_20260919.txt",
+   "span": "公告落款\"2026年9月18日\"",
+   "ai_verdict": "REVISED(预审R:落款口径)",
+   "source": "AI_PROPOSED",
+   "ai_note": "预审修订",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "M1",
+   "node": "N4_merge",
+   "kind": "timeline",
+   "value": "收到立案告知书(2026-04-21)早于业绩预告公告落款日期(2026-07-14)",
+   "doc": "E06-huanrui_20260423.txt + E06-huanrui_20260715.txt",
+   "span": "F-E06-1跨度 vs F-E06-0b跨度",
+   "ai_verdict": "REVISED(预审R:统一落款日期口径)",
+   "source": "DERIVED_CORRECTED",
+   "ai_note": "预审修订",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "M2",
+   "node": "N4_merge",
+   "kind": "verification",
+   "value": "亏损额由上年同期12,300万元增至12,500万元，同比增加约200万元",
+   "doc": "E06-huanrui_20260715.txt",
+   "span": "F-E06-5与F-E06-6跨度同表",
+   "ai_verdict": "REVISED(预审P+建议表述采纳)",
+   "source": "DERIVED_CORRECTED",
+   "ai_note": "采用预审建议表述",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "M3",
+   "node": "N4_merge",
+   "kind": "verification",
+   "value": "立案公告披露的调查事项为2022年加计抵减额确认事项；半年度业绩预告另行披露经营业绩及变动原因。现有材料未显示公司明确将半年度预亏归因于本次立案事项。",
+   "doc": "E06-huanrui_20260423.txt",
+   "span": "预告\"三、业绩变动原因说明\"完整段(第55-63行，AI已全文核对：原因为战略调整/影视剧业务承压/账龄延长计提信用减值损失，无立案相关表述)+立案公告F-E06-4跨度",
+   "ai_verdict": "REVISED(预审R:因果边界中性化+全文核对完成)",
+   "source": "DERIVED_CORRECTED",
+   "ai_note": "预审修订：以完整原因段(非摘要)为依据",
+   "scoring_points": [
+    "分别指出两文书各自披露的内容",
+    "指出预告原因段未提及立案归因",
+    "不断言两者无因果关系"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "R1",
+   "node": "N5_report",
+   "kind": "report",
+   "value": "综合结论：立案调查与半年度业绩预亏并存(2026年内先后发生)",
+   "doc": "E06-huanrui_20260423.txt + E06-huanrui_20260715.txt",
+   "span": "derived_from=[F-E06-1,F-E06-0b,F-E06-5]：立案告知句(F-E06-1跨度)+预告落款/期间(F-E06-0b跨度)+预告亏损行(F-E06-5跨度)——与包b0f6af2c及之后版本一致",
+   "ai_verdict": "REVISED(独立复核R:同步最新依赖版本)",
+   "source": "DERIVED_CORRECTED",
+   "derived_from": [
+    "F-E06-1",
+    "F-E06-0b",
+    "F-E06-5"
+   ],
+   "ai_note": "此前表格span未含0b，已同步",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "F-E06-12",
+   "node": "N3_ir",
+   "expected_status": "UNKNOWN",
+   "value": "投资者活动中披露的具体风险因素",
+   "doc": "E06-huanrui_20260919.txt",
+   "note": "原文为活动公告无风险表述(V1_5审查R2结论)；本UNKNOWN指证据集合内不可答",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [
+  {
+   "slot_id": "D-E06-M2-orig",
+   "reason": "原派生表述\"-12,500\"与原文不符，已由修正版M2替代"
+  }
+ ],
+ "scoring_contract": {
+  "n_scored_slots": 19,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "派生槽标注derived_from=其引用的F槽",
+  "semantic_rule": "语义槽按scoring_points判定",
+  "unknown_rule": "同舜天合同v2",
+  "mvr1_crossref": "不适用",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "F-E06-8/9/10三个数值槽的科目归属需人工对照预告表格核验(原事实未注明科目名)",
+  "M3为语义槽需人工确认判分要点",
+  "v1.1：8R全部落实；F-E06-8/9/10/M3原文上下文已补齐核对(预告第25-63行)"
+ ],
+ "pre_review": {
+  "batch": 2,
+  "reviewer": "operator-AI-precheck(2026-11-07)",
+  "result": "11P/8R/0newD",
+  "note": "R1由预审方独立预审为P并指定证据依赖(F-E06-1/0b/5)；批次2定稿：11P/8R(已落实)/0新D；人工签收列空置待终签"
+ },
+ "independent_ai_review": {
+  "date": "2026-11-08",
+  "result": "全P(依据修订明细更新，未重读原件)",
+  "boundary": "AI复核≠人工终签；human列空置待指定签收人"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ }
+}

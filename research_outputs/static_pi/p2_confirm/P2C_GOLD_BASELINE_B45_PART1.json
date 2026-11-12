@@ -1,0 +1,123 @@
+{
+ "name": "P2-C Gold baseline (P2C_GOLD_BASELINE_B45_PART1)",
+ "date": "2026-11-08",
+ "n_tasks": 6,
+ "rules": [
+  "冻结后不修改Gold；事实错误走正式版本修订(v1.1+)，不覆盖v1",
+  "D2未记载≠终罚为零；D2未出现某人≠法律意义上的撤销",
+  "文书未明确收到日期，不以公告日期替代（UNKNOWN）",
+  "摘要未披露金额，不得由终罚倒推拟罚",
+  "UNKNOWN槽不计入N、不计入critical、不得计为0",
+  "扫描表数值仅用于初筛，不作Gold依据"
+ ],
+ "builders": [
+  "build_contracts_batch4.py",
+  "build_contracts_batch5.py",
+  "build_contract_fr600781.py",
+  "p2c_gold_common.py"
+ ],
+ "contracts": {
+  "FR_600781": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_FR_600781_v1.json",
+   "sha256": "c90683e4f856463568eade56004950ff44d97a3a7d2e79ec177ce14580cc70ef",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED",
+   "note": "REVISE复核通过；以原文逐条核实16主体/590万为准，扫描表重复加总结果不作Gold",
+   "draft_sha256": "6897feaaa49def729f57bff7843202ae5a995a3c95ef5026e48af7b749c70a9c",
+   "task_id": "P2_FR_600781_PENALTY",
+   "slots": 21,
+   "critical": 12,
+   "unknown": [
+    "F20"
+   ],
+   "scored_N": 20
+  },
+  "HW_600360": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_HW_600360_v1.json",
+   "sha256": "1fde664a3dbd4114289d79743943e9e6bd998ee17bbc1ff0f86c714945d7442c",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED",
+   "note": "通过；夏增文\"另行处理\"不得解释为撤销或零处罚，终罚与禁入终局UNKNOWN",
+   "draft_sha256": "eb429c5b8985288f199857293776e2ed4476c74232f1ae9e9c9e43e7d7060bd4",
+   "task_id": "P2_HW_600360_PENALTY",
+   "slots": 21,
+   "critical": 15,
+   "unknown": [
+    "F13",
+    "F16"
+   ],
+   "scored_N": 19
+  },
+  "HZE_000693": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_HZE_000693_v1.json",
+   "sha256": "018d45722ae343729d7f4c8321ce0fc519cb33a4c50d33a93a3ca533bc0df9e6",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED",
+   "note": "通过；D1多人项缺\"分别\"，每人拟罚与拟罚合计UNKNOWN，不得以终罚反推",
+   "draft_sha256": "faaf721c67b212faa0d05a5936d0d61b9339bd6135c5acbd6b916054ac30449a",
+   "task_id": "P2_HZE_000693_PENALTY",
+   "slots": 20,
+   "critical": 12,
+   "unknown": [
+    "F10",
+    "F11",
+    "F14"
+   ],
+   "scored_N": 17
+  },
+  "SK_002278": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_SK_002278_v1.json",
+   "sha256": "6febe9c34cb9d2df867593bde2148aba4f29b5e869e5d1c8d3a75aeece73a09a",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED",
+   "note": "通过；D1多人项缺\"分别\"，每人拟罚与拟罚合计UNKNOWN，不得以终罚反推",
+   "draft_sha256": "cb1ac3339d6f2325189a0a795a0ba93d5428698931a3184058349bb3efd1e939",
+   "task_id": "P2_SK_002278_PENALTY",
+   "slots": 16,
+   "critical": 10,
+   "unknown": [
+    "F8",
+    "F9",
+    "F14"
+   ],
+   "scored_N": 13
+  },
+  "JZ_002470": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_JZ_002470_v1.json",
+   "sha256": "7575749409dc5c80a0288edafce98848d6666c85c49107fc95c5000af8fe57c6",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "APPROVED",
+   "note": "通过；三人禁入期限变化分别评分（F8-F13），不得只比较罚款金额",
+   "draft_sha256": "6ac65fc8966e5b6b6bcbc02fb48377004e7ca201ace6632f615c29cf1a0fe3e3",
+   "task_id": "P2_JZ_002470_PENALTY",
+   "slots": 19,
+   "critical": 16,
+   "unknown": [],
+   "scored_N": 19
+  },
+  "JB_600609": {
+   "file": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/P2_PILOT/TASK_CONTRACT_JB_600609_v1.json",
+   "sha256": "6957b795313f7ae0c27ad41b605e22683c21d02ba545695ca585f45f5b09a105",
+   "version": "v1",
+   "batch": 45,
+   "acceptance": "CONDITIONALLY_APPROVED",
+   "note": "有条件通过；D1/D2均为转述文本（source_nature已入合同），结论限定公告所载；吴小安不得升级为撤销",
+   "draft_sha256": "38950ed56feeba52e660df5ce293e2dbefe4fe5adf3bac4171bbf65812789de0",
+   "task_id": "P2_JB_600609_PENALTY",
+   "slots": 19,
+   "critical": 13,
+   "unknown": [
+    "F18"
+   ],
+   "scored_N": 18
+  }
+ },
+ "prior_baselines": [
+  "/root/research_outputs/static_pi/p2_confirm/P2C_GOLD_BASELINE_B1B2.json"
+ ]
+}

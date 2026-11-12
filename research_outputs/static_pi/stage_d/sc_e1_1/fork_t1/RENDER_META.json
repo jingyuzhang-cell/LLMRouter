@@ -1,0 +1,87 @@
+{
+ "flagged_slots": [
+  "F8",
+  "F9",
+  "F10",
+  "F11",
+  "F20"
+ ],
+ "candidate_rows": {
+  "F8": [
+   "R6",
+   "R7",
+   "R9",
+   "R10",
+   "R33",
+   "R35",
+   "R36",
+   "R37"
+  ],
+  "F9": [
+   "R6",
+   "R7",
+   "R10",
+   "R11",
+   "R33",
+   "R34",
+   "R35",
+   "R37",
+   "R38",
+   "R39"
+  ],
+  "F10": [
+   "R8",
+   "R35"
+  ],
+  "F11": [
+   "R8",
+   "R13",
+   "R35"
+  ],
+  "F20": [
+   "R14",
+   "R41",
+   "R51"
+  ]
+ },
+ "base_total": {
+  "value": "201万元",
+  "value_wan": 201.0,
+  "parties": 16,
+  "conflicts": [],
+  "rule": "sum over distinct parties extracted from the final decision (E_D2) that carry a numeric penalty_amount",
+  "computation": "獐子岛集团股份有限公司:60 + 吴厚刚:30 + 梁峻:30 + 孙福君:20 + 勾荣:20 + 邹建:4 + 王涛:4 + 罗伟新:4 + 赵志年:4 + 陈树文:4 + 吴晓巍:4 + 陈本洲:4 + 丛锦秀:4 + 于成家:3 + 赵颖:3 + 石敬江:3"
+ },
+ "requests": {
+  "A0_SINK": {
+   "chars": 7797,
+   "sha256": "46c9ceb7242c5dbabe5dea25b0f93f30d34b1aa721724e636c4447d0e5e81add",
+   "est_input_tokens": 4678
+  },
+  "A1_J2_blind": {
+   "chars": 9155,
+   "sha256": "203b074c7517519d82bf3d53313125efa370281c4b2a2bb326f8231e46c2d63f",
+   "est_input_tokens": 5493
+  },
+  "A2_J2_targeted": {
+   "chars": 11155,
+   "sha256": "902fad2074b25ad74a08097275c9e82c2871196bce2563108dd005af64df555e",
+   "est_input_tokens": 6693
+  },
+  "A3_SINK_bypass": {
+   "chars": 7591,
+   "sha256": "d394b09bac22376b59090708df88a8e19d65edbbc28a8a5fb0997febc596d031",
+   "est_input_tokens": 4554
+  }
+ },
+ "addendum_chars": 1998,
+ "templates": {
+  "A2_HEADER": "复核要求：下列槽位在上一次核验中被标为无法核验，但程序已逐字核对的证据表中存在可能相关的原文句子。请对照所列原文逐一重新核验：原文能支持的，给出 status 与 final_value；原文确实不能支持的，保留无法核验。其余槽位按原要求核验。",
+  "A2_ITEM": "- {fact_id}（{subject}{predicate}）候选原文：{rows}",
+  "A2_ROW": "[{row}|{doc}] {quote}",
+  "BASE_LINE": "确定性派生值（由程序根据决定书抽取结果计算，不由模型计算）：{fact_id} {subject}{predicate} = {value}（纳入规则：决定书抽取中带罚款金额的不同当事人逐一相加，共 {parties} 名）",
+  "H_HEADER": "终端校验反馈：下列答案的取值无法从其所引原文中读出，或所引原文不在证据表中。请改为引用证据表中能直接读出该值的原文；证据表中没有这样的原文时，将该槽位写入 unknown_slots。",
+  "H_ITEM": "- {fact_id}（{subject}{predicate}）：原答案 {value}；原因：{reason}"
+ },
+ "note": "A1 and A2 SINK requests are built after their J2 call returns; they follow the A0 template with the new J2 text."
+}

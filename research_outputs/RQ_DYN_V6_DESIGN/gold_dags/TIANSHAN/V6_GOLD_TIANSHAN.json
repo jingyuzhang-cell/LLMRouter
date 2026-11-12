@@ -1,0 +1,249 @@
+{
+ "task_id": "TIANSHAN",
+ "code": "300313",
+ "case": "天山生物",
+ "dag": {
+  "nodes": [
+   {
+    "node": "A1",
+    "kind": "extract",
+    "role": "重组流程线事实提取",
+    "docs": [
+     "重组流程线.txt"
+    ]
+   },
+   {
+    "node": "A2",
+    "kind": "extract",
+    "role": "资金往来线事实提取",
+    "docs": [
+     "资金往来线.txt"
+    ]
+   },
+   {
+    "node": "A3",
+    "kind": "extract",
+    "role": "担保线事实提取",
+    "docs": [
+     "担保线.txt"
+    ]
+   },
+   {
+    "node": "A4",
+    "kind": "extract",
+    "role": "诉讼线事实提取",
+    "docs": [
+     "诉讼线.txt"
+    ]
+   },
+   {
+    "node": "A5",
+    "kind": "extract",
+    "role": "实施对照线事实提取",
+    "docs": [
+     "实施对照线.txt"
+    ]
+   },
+   {
+    "node": "B1",
+    "kind": "verification",
+    "role": "跨线事实交叉核验(金额/口径/关系比对)",
+    "upstream": [
+     "A1",
+     "A2",
+     "A3",
+     "A4",
+     "A5"
+    ]
+   },
+   {
+    "node": "C1",
+    "kind": "timeline",
+    "role": "事件时序构建",
+    "upstream": [
+     "B1"
+    ]
+   },
+   {
+    "node": "D1",
+    "kind": "report",
+    "role": "终端综合结论",
+    "upstream": [
+     "B1",
+     "C1"
+    ]
+   }
+  ]
+ },
+ "slots": [
+  {
+   "value": "重组启动",
+   "fact_id": "TS-F01",
+   "proposition": "天山生物披露重组停牌进展公告:新标的营收占上市公司50%以上,构成重大资产重组",
+   "status": "PASS"
+  },
+  {
+   "value": "董事会决议",
+   "fact_id": "TS-F02",
+   "proposition": "第三届董事会2017年第八次会议审议通过发行股份及支付现金购买资产方案",
+   "status": "PASS"
+  },
+  {
+   "value": "96.21%股权收购",
+   "fact_id": "TS-F03",
+   "proposition": "披露重组报告书(草案):拟购买陈德宏等36名交易对方持有的大象广告96.21%股权并募集配套资金",
+   "status": "PASS"
+  },
+  {
+   "value": "重组报告书修订",
+   "fact_id": "TS-F04",
+   "proposition": "披露《重组报告书》(修订稿)",
+   "status": "PASS"
+  },
+  {
+   "value": "监管核准",
+   "fact_id": "TS-F05",
+   "proposition": "获得证监会核准批文",
+   "status": "PASS"
+  },
+  {
+   "value": "资产过户",
+   "fact_id": "TS-F06",
+   "proposition": "完成大象广告96.21%股权标的资产过户手续",
+   "status": "PASS"
+  },
+  {
+   "value": "实施披露",
+   "fact_id": "TS-F07",
+   "proposition": "披露标的资产过户完成及实施情况报告",
+   "status": "PASS"
+  },
+  {
+   "value": "关联关系认定",
+   "fact_id": "TS-F08",
+   "proposition": "陈德宏实际控制大象广告、深圳和达、东莞赞盈、信佳贸易四公司,依《公司法》§216互为关联关系",
+   "status": "PASS"
+  },
+  {
+   "value": "关联自然人+3关联法人",
+   "fact_id": "TS-F09",
+   "proposition": "并购后陈德宏持天山生物11.91%股权成为第二大股东,为关联自然人;其控制的深圳和达/东莞赞盈/信佳贸易为天山生物关联法人",
+   "status": "PASS"
+  },
+  {
+   "value": "1.09亿(还借款)",
+   "fact_id": "TS-F10",
+   "proposition": "大象广告将1.09亿元转至深圳和达,同日深圳和达用于归还借款",
+   "status": "PASS"
+  },
+  {
+   "value": "8034.13万(3笔)",
+   "fact_id": "TS-F11",
+   "proposition": "宁波广告交易中心(大象广告子公司)分三笔合计8034.13万元转至东莞赞盈,用于归还银行贷款",
+   "status": "PASS"
+  },
+  {
+   "value": "2.007亿(5笔)",
+   "fact_id": "TS-F12",
+   "proposition": "西安合源大象地铁广告(大象广告孙公司)分五笔合计2.007亿元转至深圳和达,用于归还融资借款",
+   "status": "PASS"
+  },
+  {
+   "value": "1000万",
+   "fact_id": "TS-F14",
+   "proposition": "大象广告/武汉合源/鲁虹为陈德宏向九坤小贷借款1000万元提供担保",
+   "status": "PASS"
+  },
+  {
+   "value": "100万",
+   "fact_id": "TS-F15",
+   "proposition": "大象广告等为信佳贸易向天峰普惠借款100万元提供担保",
+   "status": "PASS"
+  },
+  {
+   "value": "3000万",
+   "fact_id": "TS-F16",
+   "proposition": "大象广告等为陈德宏向张翠借款3000万元提供担保",
+   "status": "PASS"
+  },
+  {
+   "value": "2000万",
+   "fact_id": "TS-F17",
+   "proposition": "大象广告/信佳贸易/嘉盈实业等为陈德宏向张翠借款2000万元提供担保",
+   "status": "PASS"
+  },
+  {
+   "value": "350万",
+   "fact_id": "TS-F18",
+   "proposition": "大象广告为陈德宏向张群借款350万元提供担保",
+   "status": "PASS"
+  },
+  {
+   "value": "1020万+1614万",
+   "fact_id": "TS-F20",
+   "proposition": "九坤小贷两案强制执行:陈德宏借款本息1020万+武汉合源借款本息1614万,法院强制执行通知书",
+   "status": "PASS"
+  },
+  {
+   "value": "查封5560万",
+   "fact_id": "TS-F21",
+   "proposition": "大象广告向郭文锋借款5100万元,法院查封冻结5560万元财产",
+   "status": "PASS"
+  },
+  {
+   "value": "四案合计约1.27亿涉诉",
+   "fact_id": "TS-F22",
+   "proposition": "张翠四案:3000万(3667万诉讼)+2000万(2240万)+3000万(3361万)+朱社英案3000万(冻结3428万+判决偿还3000万及逾期利息)",
+   "status": "PASS"
+  },
+  {
+   "value": "重组阶段违法认定",
+   "fact_id": "TS-F24",
+   "proposition": "重组阶段:大象广告刻意隐瞒资金往来1.09亿+担保6100万,致《重组报告书》《实施情况报告书》重大遗漏,违反《重组办法》§4/§55及2005证券法§63",
+   "status": "PASS"
+  },
+  {
+   "value": "并表后违法认定",
+   "fact_id": "TS-F25",
+   "proposition": "并表后:大象广告刻意隐瞒资金往来2.81亿+担保350万+重大诉讼2.089亿,致天山生物临时报告及2018半年报/三季报未及时准确完整披露,构成2005证券法§193(一)",
+   "status": "PASS"
+  },
+  {
+   "value": "责任人行为认定",
+   "fact_id": "TS-F26",
+   "proposition": "陈德宏全程知晓应披露事项却刻意隐瞒,未履行告知义务,直接导致信息披露违法行为发生",
+   "status": "PASS"
+  },
+  {
+   "value": "60万",
+   "fact_id": "TS-F27",
+   "proposition": "重组阶段处罚:大象广告警告+30万;陈德宏警告+30万",
+   "status": "PASS"
+  },
+  {
+   "value": "65万",
+   "fact_id": "TS-F28",
+   "proposition": "并表后处罚:天山生物警告+30万;陈德宏警告+30万;李刚(董事长)警告+5万",
+   "status": "PASS"
+  }
+ ],
+ "docs": {
+  "重组流程线": {
+   "path": "/root/research_outputs/RQ_DYN_V6_DESIGN/gold_dags/TIANSHAN/重组流程线.txt"
+  },
+  "资金往来线": {
+   "path": "/root/research_outputs/RQ_DYN_V6_DESIGN/gold_dags/TIANSHAN/资金往来线.txt"
+  },
+  "担保线": {
+   "path": "/root/research_outputs/RQ_DYN_V6_DESIGN/gold_dags/TIANSHAN/担保线.txt"
+  },
+  "诉讼线": {
+   "path": "/root/research_outputs/RQ_DYN_V6_DESIGN/gold_dags/TIANSHAN/诉讼线.txt"
+  },
+  "实施对照线": {
+   "path": "/root/research_outputs/RQ_DYN_V6_DESIGN/gold_dags/TIANSHAN/实施对照线.txt"
+  }
+ },
+ "slot_source": "TIANSHAN_300313_SLOTS_V1_1.json",
+ "limitation": "value为叙事短语;精确匹配表达式待人工签发阶段细化"
+}

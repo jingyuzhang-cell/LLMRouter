@@ -1,0 +1,456 @@
+{
+ "generated": "2026-11-07T21:20:52",
+ "tests": [
+  {
+   "id": "A0",
+   "name": "V0.3 mechanism suite still 8/8 (archived results file restored byte-exact)",
+   "ok": true,
+   "evidence": {
+    "tail": "RESULT: 8 passed, 0 failed; network=0"
+   }
+  },
+  {
+   "id": "A1",
+   "name": "pilot R2 arm reproduces the real R2 smoke DAMJS executions (TP/status/calls/actions/decisions)",
+   "ok": true,
+   "evidence": {
+    "rows": [
+     {
+      "scenario": "S3",
+      "tp": 7,
+      "smoke_tp": 7,
+      "tp_strict": 0,
+      "match": {
+       "tp": true,
+       "status": true,
+       "calls": true,
+       "actions": true,
+       "per_node": true,
+       "chosen": true
+      }
+     },
+     {
+      "scenario": "S4",
+      "tp": 14,
+      "smoke_tp": 14,
+      "tp_strict": 14,
+      "match": {
+       "tp": true,
+       "status": true,
+       "calls": true,
+       "actions": true,
+       "per_node": true,
+       "chosen": true
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "A2",
+   "name": "S3 four arms: switches wired; rollback and valid committed J1 iff nd; first repair chosen in every arm (p=5.3% before any failure); GLM latch recorded in every arm",
+   "ok": true,
+   "evidence": {
+    "rows": [
+     {
+      "arm": "R2",
+      "nd": false,
+      "ev_gate": false,
+      "policy": "damjs_v03.BridgeV03",
+      "rollbacks": 0,
+      "committed_j1_valid": false,
+      "first_j1_choice": "Z_structure",
+      "glm_latched": true,
+      "tp": 7,
+      "tp_strict": 0
+     },
+     {
+      "arm": "ND-only",
+      "nd": true,
+      "ev_gate": false,
+      "policy": "damjs_v03.BridgeV03",
+      "rollbacks": 1,
+      "committed_j1_valid": true,
+      "first_j1_choice": "Z_structure",
+      "glm_latched": true,
+      "tp": 7,
+      "tp_strict": 0
+     },
+     {
+      "arm": "EV-only",
+      "nd": false,
+      "ev_gate": true,
+      "policy": "damjs_v03.BridgeV03",
+      "rollbacks": 0,
+      "committed_j1_valid": false,
+      "first_j1_choice": "Z_structure",
+      "glm_latched": true,
+      "tp": 7,
+      "tp_strict": 0
+     },
+     {
+      "arm": "V0.3",
+      "nd": true,
+      "ev_gate": true,
+      "policy": "damjs_v03.BridgeV03",
+      "rollbacks": 1,
+      "committed_j1_valid": true,
+      "first_j1_choice": "Z_structure",
+      "glm_latched": true,
+      "tp": 7,
+      "tp_strict": 0
+     }
+    ],
+    "note": "order-served replay: downstream responses do not follow the committed J1, so TP recovery is verified only by the content-conditioned test_damjs_v03 N2, not here"
+   }
+  },
+  {
+   "id": "A3",
+   "name": "S4 four arms: Z_format chosen, no rollback, TP 14 / strict 14 in every arm",
+   "ok": true,
+   "evidence": {
+    "rows": [
+     {
+      "arm": "R2",
+      "tp": 14,
+      "tp_strict": 14,
+      "rollbacks": 0,
+      "z_format": true
+     },
+     {
+      "arm": "ND-only",
+      "tp": 14,
+      "tp_strict": 14,
+      "rollbacks": 0,
+      "z_format": true
+     },
+     {
+      "arm": "EV-only",
+      "tp": 14,
+      "tp_strict": 14,
+      "rollbacks": 0,
+      "z_format": true
+     },
+     {
+      "arm": "V0.3",
+      "tp": 14,
+      "tp_strict": 14,
+      "rollbacks": 0,
+      "z_format": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "A4",
+   "name": "phase caps reach the children: shared ledger; denial -> INCOMPLETE_BUDGET -> stop; relaunch refused",
+   "ok": true,
+   "evidence": {
+    "stop": "INCOMPLETE_BUDGET: a reservation was denied by the batch ledger",
+    "ledger": {
+     "calls": 9,
+     "yuan": 0.050894,
+     "tokens": 25904
+    },
+    "statuses": [
+     "COMPLETE",
+     "INCOMPLETE_BUDGET"
+    ],
+    "relaunch_stop": "BUDGET_CAP_REACHED:calls (before launching A_240s_S3_r1_V0.3)"
+   }
+  },
+  {
+   "id": "A5",
+   "name": "authorization ceiling (shared with the R2 ledger): zero room -> no launch; real headroom leaves plan caps binding",
+   "ok": true,
+   "evidence": {
+    "caps_at_zero_room": {
+     "calls": 0,
+     "tokens": 130000,
+     "yuan": 0.25
+    },
+    "stop": "BUDGET_CAP_REACHED:calls (before launching A_240s_S3_r1_ND-only)",
+    "caps_with_real_r2_ledger": {
+     "calls": 140,
+     "tokens": 450000,
+     "yuan": 0.95
+    }
+   }
+  },
+  {
+   "id": "A6",
+   "name": "pilot MANIFEST: every registered component matches disk",
+   "ok": true,
+   "evidence": {
+    "n": 37,
+    "manifest_sha256": "182b0c91032dffd32d825313eb34b3bc0d18221cb2d3a57ac75a59afd40a4267",
+    "mismatches": []
+   }
+  },
+  {
+   "id": "A6",
+   "name": "every completed replay execution verified identity pre and post",
+   "ok": true,
+   "evidence": {
+    "n": 10
+   }
+  },
+  {
+   "id": "A6",
+   "name": "tampered manifest -> execution INTEGRITY_FAIL; runner refuses to start",
+   "ok": true,
+   "evidence": {
+    "mismatches": [
+     "v03_mechanisms"
+    ],
+    "stop": "INTEGRITY_FAIL: component SHA mismatch inside the execution",
+    "runner_refused": true
+   }
+  },
+  {
+   "id": "A7",
+   "name": "real mode refused without authorization, with mismatched GO, and for phase=all; with ALL conditions (auth + GO=A:smoke + frozen registered prereg) the lock opens only as far as the credential step (stubbed safety net, no call); synthetic gate passes only for a registered, unedited prereg",
+   "ok": true,
+   "evidence": {
+    "gates": [
+     [
+      "--plan A --mode real --phase smoke",
+      null,
+      "REFUSED: real A:smoke needs STAGE_D_REAL_CALLS_AUTHORIZED=1 and DAMJS_V03_GO=A:smoke"
+     ],
+     [
+      "--plan A --mode real --phase smoke",
+      null,
+      "REFUSED: real A:smoke needs STAGE_D_REAL_CALLS_AUTHORIZED=1 and DAMJS_V03_GO=A:smoke"
+     ],
+     [
+      "--plan A --mode real --phase smoke",
+      "B:smoke",
+      "REFUSED: real A:smoke needs STAGE_D_REAL_CALLS_AUTHORIZED=1 and DAMJS_V03_GO=A:smoke"
+     ],
+     [
+      "--plan A --mode real --phase smoke",
+      "A:smoke",
+      "PASSED_ALL_GATES->SAFETY_NET"
+     ],
+     [
+      "--plan A --mode real --phase all",
+      "A:all",
+      "REFUSED: real mode runs one phase per explicit GO"
+     ]
+    ],
+    "real_gate": null,
+    "gate_ok": null,
+    "gate_wrong_plan": "frozen prereg does not declare PILOT_PLAN=B",
+    "gate_edited": "frozen prereg not registered in the batch manifest"
+   }
+  },
+  {
+   "id": "A8",
+   "name": "stop detectors: C1 violation caught; valid recommit and invalid-v1 cases not flagged; V0.3 traceback caught",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "A9",
+   "name": "zero network attempts across every replay execution",
+   "ok": true,
+   "evidence": {
+    "executions": 11
+   }
+  },
+  {
+   "id": "A9",
+   "name": "replay children receive no credential variables and run the pilot child",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "A10",
+   "name": "node-level protection on the executor path: every rollback is on a directly recovered node; no downstream-invalidated node is ever rolled back",
+   "ok": true,
+   "evidence": {
+    "rollback_nodes": [
+     "J1"
+    ],
+    "direct_targets": [
+     "FMT",
+     "J1"
+    ],
+    "downstream_invalidated": []
+   }
+  },
+  {
+   "id": "A11",
+   "name": "decision audit: every EV-evaluated candidate records (p_hat, n_eff, CI95, mu_hat, L_hat, EV)",
+   "ok": true,
+   "evidence": {
+    "evaluated": 6,
+    "missing": []
+   }
+  }
+ ],
+ "runs": [
+  {
+   "tag": "a1_R2_S3",
+   "arm": "R2",
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp": 7,
+   "tp_strict": 0,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a1_R2_S4",
+   "arm": "R2",
+   "scenario": "S4",
+   "status": "COMPLETE",
+   "tp": 14,
+   "tp_strict": 14,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a2_R2_S3",
+   "arm": "R2",
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp": 7,
+   "tp_strict": 0,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a2_ND-only_S3",
+   "arm": "ND-only",
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp": 7,
+   "tp_strict": 0,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 1
+  },
+  {
+   "tag": "a2_EV-only_S3",
+   "arm": "EV-only",
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp": 7,
+   "tp_strict": 0,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a2_V0.3_S3",
+   "arm": "V0.3",
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp": 7,
+   "tp_strict": 0,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 1
+  },
+  {
+   "tag": "a3_R2_S4",
+   "arm": "R2",
+   "scenario": "S4",
+   "status": "COMPLETE",
+   "tp": 14,
+   "tp_strict": 14,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a3_ND-only_S4",
+   "arm": "ND-only",
+   "scenario": "S4",
+   "status": "COMPLETE",
+   "tp": 14,
+   "tp_strict": 14,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a3_EV-only_S4",
+   "arm": "EV-only",
+   "scenario": "S4",
+   "status": "COMPLETE",
+   "tp": 14,
+   "tp_strict": 14,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a3_V0.3_S4",
+   "arm": "V0.3",
+   "scenario": "S4",
+   "status": "COMPLETE",
+   "tp": 14,
+   "tp_strict": 14,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a6_tamper",
+   "arm": "V0.3",
+   "scenario": "S4",
+   "status": "COMPLETE",
+   "tp": 14,
+   "tp_strict": 14,
+   "net": 0,
+   "identity_ok": false,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a10_V0.3_S3",
+   "arm": "V0.3",
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp": 7,
+   "tp_strict": 0,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 1
+  },
+  {
+   "tag": "a11_EV-only_S3",
+   "arm": "EV-only",
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp": 7,
+   "tp_strict": 0,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 0
+  },
+  {
+   "tag": "a11_V0.3_S3",
+   "arm": "V0.3",
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp": 7,
+   "tp_strict": 0,
+   "net": 0,
+   "identity_ok": true,
+   "rollbacks": 1
+  }
+ ],
+ "summary": {
+  "passed": 15,
+  "failed": 0,
+  "executions": 14,
+  "wall_s": 360.5,
+  "manifest_sha256": "182b0c91032dffd32d825313eb34b3bc0d18221cb2d3a57ac75a59afd40a4267"
+ }
+}

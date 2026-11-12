@@ -1,0 +1,93 @@
+{
+ "batch": "RQ_DAJF_V1",
+ "frozen_at": "2026-11-06",
+ "design": "3 strategies (Static / Proposed R→π / DA-JS-v1 candidate-search) × 2 conditions (natural / persistent merge fault) × 3 reps, E04_zhuoran, per-exec deadline 240s",
+ "budget": {
+  "cap_calls": 150,
+  "cap_tokens": 1000000,
+  "cap_yuan": 4.0,
+  "used_calls": 126,
+  "used_tokens": 373146,
+  "used_yuan_est": 2.0514,
+  "injected_calls": 15
+ },
+ "results": {
+  "persistent": {
+   "Static": {
+    "Q_merge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "mean": 0.0,
+    "C_calls": 6.0,
+    "yuan": 0.0987,
+    "L_s": 72.0,
+    "deadline_met": "3/3",
+    "joint_success": "0/3"
+   },
+   "Proposed": {
+    "Q_merge": [
+     0.273,
+     0.273,
+     0.455
+    ],
+    "mean": 0.334,
+    "C_calls": 8.0,
+    "yuan": 0.1316,
+    "L_s": 145.7,
+    "deadline_met": "3/3",
+    "joint_success": "0/3",
+    "path": "R:fail→π(qwen→ds):ok 3/3"
+   },
+   "DA-JS-v1": {
+    "Q_merge": [
+     0.545,
+     0.545,
+     0.545
+    ],
+    "mean": 0.545,
+    "C_calls": 10.0,
+    "yuan": 0.1574,
+    "L_s": 149.3,
+    "deadline_met": "3/3",
+    "joint_success": "3/3",
+    "path": "decide(R probe)→R:fail→escalate→Z2(3×DS split):ok 3/3"
+   }
+  },
+  "natural": {
+   "note": "all 3 arms run identical code in natural condition (actions all merge:ok, 6 calls); between-arm differences are stochastic noise, pooled mean is the baseline",
+   "pooled_Q_merge": 0.354,
+   "per_arm_means": {
+    "Static": 0.455,
+    "Proposed": 0.303,
+    "DA-JS-v1": 0.303
+   },
+   "pooled_L_s": 98.2,
+   "deadline_met": "9/9"
+  }
+ },
+ "key_findings": [
+  "DA-JS-v1 > Proposed > Static in persistent: 0.545 > 0.334 > 0.000 (+21.1pp DA-JS vs Proposed); DA-JS Q identical across all 3 reps (Z2 split-union robust); n=3 exploratory",
+  "argmax selection validated: table Z2 Q_hat 0.545 realized exactly 0.545; table π Q_hat 0.500 overestimated realized 0.334 (table measured ds→qwen direction, run used qwen→ds)",
+  "Z2 recovery (0.545) exceeds the pooled natural baseline (0.354): structural split union (29-36 facts) preserves more gold slots than single big merge (22-26 facts)",
+  "Joint Success (Q≥0.5 ∧ deadline): DA-JS 3/3, Proposed 0/3, Static 0/3 — π recovers reachability but not the quality bar",
+  "DA-JS overhead vs Proposed: +2 calls (+25%), +¥0.026, +3s L; all execs meet 240s deadline",
+  "R probe always failed under persistent fault (6/6), costing 1 call before escalation — matches table success_rate(persistent)=0"
+ ],
+ "scoring": "E04 gold 11 slots (VAL_GOLD_ANNOTATION_PACKAGE/e04_candidates_atomic_facts.json); Q_merge = hit rate on adopted merge-stage facts (normalized quote/value containment), convention reproduced from RQ_DYN_3ARM_V2 (0.697/0.636/0.545); Q_report secondary due to report paraphrase",
+ "caveats": [
+  "n=3 reps, exploratory not confirmatory (sign-flip p unavailable for 3-0 paired comparisons; consistent 3/3 direction)",
+  "natural between-arm gap is noise (identical code); do not report as strategy effect",
+  "merge prompt input capped at 3000 chars in this pipeline (uniform across arms) — absolute Q lower than v2 runs; internal comparison unaffected",
+  "QCL table π estimate direction-mismatched (qwen→ds); table update candidate: LOCAL_pi(qwen→ds, merge) Q_hat≈0.334"
+ ],
+ "files_sha256": {
+  "rq_dajf_runner.py": "715ebc9fc03f31ff378636665244b0df345b675ae12b6a04db59dd1913ee10bf",
+  "rq_dajf_config.json": "32d366a980dc4fde197e8beb61a5e36b566dd0d781abac263212b30ad49fe386",
+  "rq_dajf_score.py": "5a4ab6eb62455f7e260cf7a489ef2afd8a60dc81c614e9368d10baee294fb54b",
+  "rq_dajf_runs/ledger.jsonl": "c8c76b1db4d7d4d11e85f6bb0b9e29e9a1d6c7d550dad0420091b877cb4d7f4a",
+  "rq_dajf_runs/outputs.jsonl": "ad92588dae43dd4fa76100610a35ad335db2e852db08061ec0163a011b5d2000",
+  "RQ_DAJF_SCORED.json": "b8f22d59067d56ab16650016c50f5348572ce80232aa0f67435e54d30bddd977"
+ }
+}

@@ -1,0 +1,1479 @@
+{
+ "generated": "2026-11-07",
+ "note": "zero-call; archived records only",
+ "S1_slow_prior": {
+  "frozen": {
+   "prior": [
+    33,
+    67
+   ],
+   "pseudo_count": 100,
+   "mean": 0.33,
+   "ci95": [
+    0.2418,
+    0.4247
+   ]
+  },
+  "source": {
+   "caps": 3,
+   "calls": 9,
+   "smoke_failures_under_frozen_definition": 4,
+   "smoke_definition_note": "4/9 = 3 caps + 1 L2 deadline-truncation timeout (CP S4 repair, timeout 67.6 s)",
+   "clopper_pearson_3_of_9": [
+    0.0749,
+    0.7007
+   ]
+  },
+  "verdict": "Beta(33,67) carries 100 pseudo-observations for a 9-call source: an x11.1 amplification, not a discount. The stated '降权' derivation is incorrect.",
+  "power_prior_family": {
+   "a0=0.0": {
+    "prior": [
+     0.5,
+     0.5
+    ],
+    "mean": 0.5,
+    "ci95": [
+     0.0015,
+     0.9985
+    ],
+    "n_eff": 1.0
+   },
+   "a0=0.25": {
+    "prior": [
+     1.25,
+     2.0
+    ],
+    "mean": 0.3846,
+    "ci95": [
+     0.0277,
+     0.8651
+    ],
+    "n_eff": 3.25
+   },
+   "a0=0.5": {
+    "prior": [
+     2.0,
+     3.5
+    ],
+    "mean": 0.3636,
+    "ci95": [
+     0.0592,
+     0.7594
+    ],
+    "n_eff": 5.5
+   },
+   "a0=1.0": {
+    "prior": [
+     3.5,
+     6.5
+    ],
+    "mean": 0.35,
+    "ci95": [
+     0.1042,
+     0.6522
+    ],
+    "n_eff": 10.0
+   }
+  }
+ },
+ "S2_normal_prior_source": {
+  "j1_glm_calls": 264,
+  "executions": 189,
+  "counts": {
+   "cap": 14,
+   "terr": 23,
+   "unparse": 14,
+   "fail": 37
+  },
+  "cap_only_rate": 0.053,
+  "frozen_definition_rate": 0.1402,
+  "transport_errors": {
+   "n": 23,
+   "first_call_j1_decision_times_s": [
+    26,
+    126,
+    126,
+    126,
+    126,
+    126,
+    127,
+    127,
+    127,
+    127,
+    129,
+    131,
+    134,
+    346
+   ],
+   "interpretation": "J1 starts ~6-11 s after launch and its decision lands at ~126 s: these are the baseline executor's 120 s socket timeouts, i.e. right-censored call durations (the pilot's J1 timeout is W_eff ~190-219 s, so the event is not transferable)"
+  },
+  "capped_call_latency_s": [
+   87.07,
+   87.39,
+   91.39,
+   93.23,
+   93.3,
+   94.08,
+   100.16,
+   102.15,
+   102.56,
+   104.85,
+   105.18,
+   106.73,
+   108.64,
+   108.76
+  ],
+  "verdict": "The normal prior counts caps only (14/264 = 5.3%) while the estimator counts timeout|cap|unparseable; under the estimator's own definition the baseline rate is 37/264 = 14.0%. 23 of the 37 events are 120 s censored timeouts specific to the baseline environment."
+ },
+ "S3_clustering": {
+  "cap": {
+   "by_execution": {
+    "p": 0.053,
+    "k": 14,
+    "n": 264,
+    "clusters": 189,
+    "deff": 1.101,
+    "n_eff": 239.9,
+    "chi2": 171.07,
+    "df": 188,
+    "p_value": 0.8068
+   },
+   "by_8_time_windows": {
+    "p": 0.053,
+    "k": 14,
+    "n": 264,
+    "clusters": 8,
+    "deff": 0.615,
+    "n_eff": 429.2,
+    "chi2": 4.44,
+    "df": 7,
+    "p_value": 0.7281
+   }
+  },
+  "fail": {
+   "by_execution": {
+    "p": 0.1402,
+    "k": 37,
+    "n": 264,
+    "clusters": 189,
+    "deff": 1.074,
+    "n_eff": 245.9,
+    "chi2": 167.19,
+    "df": 188,
+    "p_value": 0.8601
+   },
+   "by_8_time_windows": {
+    "p": 0.1402,
+    "k": 37,
+    "n": 264,
+    "clusters": 8,
+    "deff": 1.188,
+    "n_eff": 222.2,
+    "chi2": 6.9,
+    "df": 7,
+    "p_value": 0.4391
+   }
+  },
+  "verdict": "design effect 1.07-1.19 (n_eff ~220-246 of 264); no significant time heterogeneity; clustering is not the issue"
+ },
+ "S4_mu_L_by_caliber": {
+  "per_rep": [
+   {
+    "rep": 1,
+    "static": [
+     11,
+     0
+    ],
+    "proposed": [
+     14,
+     14
+    ],
+    "repair_ok": true,
+    "repair_calls": 1
+   },
+   {
+    "rep": 2,
+    "static": [
+     13,
+     0
+    ],
+    "proposed": [
+     14,
+     14
+    ],
+    "repair_ok": true,
+    "repair_calls": 1
+   },
+   {
+    "rep": 3,
+    "static": [
+     11,
+     0
+    ],
+    "proposed": [
+     8,
+     0
+    ],
+    "repair_ok": false,
+    "repair_calls": 2
+   },
+   {
+    "rep": 4,
+    "static": [
+     13,
+     0
+    ],
+    "proposed": [
+     14,
+     14
+    ],
+    "repair_ok": true,
+    "repair_calls": 1
+   },
+   {
+    "rep": 5,
+    "static": [
+     14,
+     0
+    ],
+    "proposed": [
+     16,
+     13
+    ],
+    "repair_ok": true,
+    "repair_calls": 1
+   },
+   {
+    "rep": 6,
+    "static": [
+     12,
+     0
+    ],
+    "proposed": [
+     13,
+     13
+    ],
+    "repair_ok": true,
+    "repair_calls": 1
+   },
+   {
+    "rep": 7,
+    "static": [
+     13,
+     0
+    ],
+    "proposed": [
+     14,
+     14
+    ],
+    "repair_ok": true,
+    "repair_calls": 1
+   },
+   {
+    "rep": 8,
+    "static": [
+     11,
+     0
+    ],
+    "proposed": [
+     14,
+     13
+    ],
+    "repair_ok": true,
+    "repair_calls": 1
+   }
+  ],
+  "frozen": {
+   "mu": 1.29,
+   "mu_source": "GAIN_TABLE (lenient TP; derivation script not in repository)",
+   "L": 11,
+   "L_source": "2026-11-06 smoke strict: Static S3 11 - DAMJS S3 0",
+   "threshold": 0.105
+  },
+  "lenient": {
+   "mu_success": 1.893,
+   "n_success": 7,
+   "L_baseline": 4.25,
+   "n_fail": 1,
+   "L_smoke": [
+    6,
+    10
+   ]
+  },
+  "strict": {
+   "mu_success": 13.571,
+   "L_baseline": 0.0,
+   "static_S3_strict_baseline": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "L_smoke": 11
+  },
+  "verdict": "The frozen threshold mixes calibers (lenient mu with a strict L) and takes L against an atypical Static run: baseline Static S3 strict TP is 0 in 8/8 runs, the smoke's Static S3 scored 11."
+ },
+ "S5_strict_driver": {
+  "sink_citation_docs": {
+   "S3|Static": [
+    {
+     "rep": 1,
+     "docs": [
+      "D3",
+      "E1",
+      "E2",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 2,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 3,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 4,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 5,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 6,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 7,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 8,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    }
+   ],
+   "S3|Proposed-Dynamic": [
+    {
+     "rep": 1,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 14
+    },
+    {
+     "rep": 2,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 14
+    },
+    {
+     "rep": 3,
+     "docs": [
+      "D1",
+      "D2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 4,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 14
+    },
+    {
+     "rep": 5,
+     "docs": [
+      "D1",
+      "D2",
+      "E3",
+      "E4"
+     ],
+     "strict": 13
+    },
+    {
+     "rep": 6,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 13
+    },
+    {
+     "rep": 7,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 14
+    },
+    {
+     "rep": 8,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 13
+    }
+   ],
+   "S4|Static": [
+    {
+     "rep": 1,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 8
+    },
+    {
+     "rep": 2,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 8
+    },
+    {
+     "rep": 3,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 8
+    },
+    {
+     "rep": 4,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 8
+    },
+    {
+     "rep": 5,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 6,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 8
+    },
+    {
+     "rep": 7,
+     "docs": [
+      "D1",
+      "D2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 8,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    }
+   ],
+   "S4|Proposed-Dynamic": [
+    {
+     "rep": 1,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 2,
+     "docs": [
+      "D1",
+      "D2",
+      "E3",
+      "E4"
+     ],
+     "strict": 11
+    },
+    {
+     "rep": 3,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 4,
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 13
+    },
+    {
+     "rep": 5,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 6,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 7,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    },
+    {
+     "rep": 8,
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    }
+   ],
+   "smoke Static S3": [
+    {
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 11
+    }
+   ],
+   "smoke DAMJS S3": [
+    {
+     "docs": [
+      "D1",
+      "D2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    }
+   ],
+   "smoke Static S4": [
+    {
+     "docs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+     ],
+     "strict": 0
+    }
+   ],
+   "smoke DAMJS S4": [
+    {
+     "docs": [
+      "D1",
+      "D2",
+      "D3",
+      "D4"
+     ],
+     "strict": 14
+    }
+   ]
+  },
+  "verdict": "Strict TP is gated by whether SINK cites document ids (D1-D4) or node names (E1-E4). In S3 the repaired J1's relay carries document ids (successful repairs: strict 13-14); without relay Static S3 cites node names (strict 0 in 8/8). In S4 the label is stochastic in both arms. Consequences: the smoke 'strict -11' and the N2 replay 'strict 0->11' both rest on the smoke Static S3 run's atypical D1 labels; the typical strict expectation for the rollback (v1, no relay) world is ~0, and ND's robust benefit is lenient (~+5-6)."
+ },
+ "S6_decision_matrix": [
+  {
+   "params": "frozen(mu=1.29,L=11)",
+   "threshold": 0.105,
+   "normal_prior": "cap_only",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 0.62,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": -2.847,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": -2.726,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": -2.807,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "frozen(mu=1.29,L=11)",
+   "threshold": 0.105,
+   "normal_prior": "cap_only",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 0.62,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": -4.382,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": -2.492,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": -3.626,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "frozen(mu=1.29,L=11)",
+   "threshold": 0.105,
+   "normal_prior": "cap_only",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 0.62,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": -7.928,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": -1.782,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": -4.855,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "frozen(mu=1.29,L=11)",
+   "threshold": 0.105,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": -0.443,
+    "decision": "REJECT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": -2.847,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": -2.726,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": -2.807,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "frozen(mu=1.29,L=11)",
+   "threshold": 0.105,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": -0.443,
+    "decision": "REJECT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": -4.382,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": -2.492,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": -3.626,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "frozen(mu=1.29,L=11)",
+   "threshold": 0.105,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": -0.443,
+    "decision": "REJECT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": -7.928,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": -1.782,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": -4.855,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=4.25)",
+   "threshold": 0.3078,
+   "normal_prior": "cap_only",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 1.555,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": -0.177,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": -0.116,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": -0.157,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=4.25)",
+   "threshold": 0.3078,
+   "normal_prior": "cap_only",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 1.555,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": -0.944,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": 0.001,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": -0.566,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=4.25)",
+   "threshold": 0.3078,
+   "normal_prior": "cap_only",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 1.555,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": -2.715,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": 0.355,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": -1.18,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=4.25)",
+   "threshold": 0.3078,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 1.024,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": -0.177,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": -0.116,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": -0.157,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=4.25)",
+   "threshold": 0.3078,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 1.024,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": -0.944,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": 0.001,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": -0.566,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=4.25)",
+   "threshold": 0.3078,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 1.024,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": -2.715,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": 0.355,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": -1.18,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=10)",
+   "threshold": 0.159,
+   "normal_prior": "cap_only",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 1.242,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": -2.113,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": -1.995,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": -2.073,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=10)",
+   "threshold": 0.159,
+   "normal_prior": "cap_only",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 1.242,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": -3.598,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": -1.768,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": -2.866,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=10)",
+   "threshold": 0.159,
+   "normal_prior": "cap_only",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 1.242,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": -7.027,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": -1.083,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": -4.055,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=10)",
+   "threshold": 0.159,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 0.214,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": -2.113,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": -1.995,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": -2.073,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=10)",
+   "threshold": 0.159,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 0.214,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": -3.598,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": -1.768,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": -2.866,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "lenient(mu=1.89,L=10)",
+   "threshold": 0.159,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 0.214,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": -7.027,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": -1.083,
+    "decision": "REJECT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": -4.055,
+    "decision": "REJECT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=0)",
+   "threshold": 1.0,
+   "normal_prior": "cap_only",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 12.83,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": 9.002,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": 9.136,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": 9.047,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=0)",
+   "threshold": 1.0,
+   "normal_prior": "cap_only",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 12.83,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": 7.307,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": 9.395,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": 8.142,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=0)",
+   "threshold": 1.0,
+   "normal_prior": "cap_only",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 12.83,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": 3.393,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": 10.178,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": 6.785,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=0)",
+   "threshold": 1.0,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 11.657,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": 9.002,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": 9.136,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": 9.047,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=0)",
+   "threshold": 1.0,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 11.657,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": 7.307,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": 9.395,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": 8.142,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=0)",
+   "threshold": 1.0,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 11.657,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": 3.393,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": 10.178,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": 6.785,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=11)",
+   "threshold": 0.5523,
+   "normal_prior": "cap_only",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 12.231,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": 5.299,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": 5.542,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": 5.38,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=11)",
+   "threshold": 0.5523,
+   "normal_prior": "cap_only",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 12.231,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": 2.23,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": 6.01,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": 3.742,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=11)",
+   "threshold": 0.5523,
+   "normal_prior": "cap_only",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.0545,
+    "EV": 12.231,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": -4.857,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": 7.428,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": 1.285,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=11)",
+   "threshold": 0.5523,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "frozen_33_67",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 10.106,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.3366,
+    "EV": 5.299,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3267,
+    "EV": 5.542,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.3333,
+    "EV": 5.38,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=11)",
+   "threshold": 0.5523,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "power_a0_0.5",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 10.106,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.4615,
+    "EV": 2.23,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.3077,
+    "EV": 6.01,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.4,
+    "EV": 3.742,
+    "decision": "ACCEPT"
+   }
+  },
+  {
+   "params": "strict(mu=13.57,L=11)",
+   "threshold": 0.5523,
+   "normal_prior": "frozen_definition",
+   "slow_prior": "jeffreys_a0_0",
+   "normal: first J1 clean (repair decision)": {
+    "p": 0.141,
+    "EV": 10.106,
+    "decision": "ACCEPT"
+   },
+   "latched: first J1 capped": {
+    "p": 0.75,
+    "EV": -4.857,
+    "decision": "REJECT"
+   },
+   "latched: first J1 valid but >154 s": {
+    "p": 0.25,
+    "EV": 7.428,
+    "decision": "ACCEPT"
+   },
+   "latched: after a failed repair": {
+    "p": 0.5,
+    "EV": 1.285,
+    "decision": "ACCEPT"
+   }
+  }
+ ]
+}

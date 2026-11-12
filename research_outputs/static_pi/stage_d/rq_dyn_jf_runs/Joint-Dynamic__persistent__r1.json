@@ -1,0 +1,54 @@
+{
+ "exec_id": "Joint-Dynamic|persistent|r1",
+ "arm": "Joint-Dynamic",
+ "condition": "persistent",
+ "rep": 1,
+ "actions": [
+  "merge_anomaly:R_retry",
+  "R:failed",
+  "pi_model_switch:deepseek",
+  "pi:recovered"
+ ],
+ "timeline": [
+  [
+   2.18,
+   "ext_doc1",
+   "executed"
+  ],
+  [
+   7.35,
+   "ext_doc2",
+   "executed"
+  ],
+  [
+   12.75,
+   "ext_doc3",
+   "executed"
+  ],
+  [
+   48.51,
+   "merge",
+   "anomaly_detected"
+  ],
+  [
+   84.71,
+   "merge",
+   "R_failed"
+  ],
+  [
+   90.31,
+   "merge",
+   "pi_recovered"
+  ]
+ ],
+ "n_merge_facts": 22,
+ "n_report_facts": 17,
+ "exec_span_s": 141.0,
+ "budget_left": {
+  "calls_left": 39,
+  "yuan_left": 2.1705,
+  "tokens_left": 661855,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 342249
+ }
+}

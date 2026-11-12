@@ -1,0 +1,288 @@
+{
+ "passed": 23,
+ "total": 23,
+ "results": [
+  {
+   "name": "S1 slot typing from schema only",
+   "ok": true,
+   "detail": "{'A': 'amount', 'B': 'amount', 'C': 'doc_number', 'D': 'derived', 'E': 'negation', 'F': 'title', 'G': 'date', 'H': 'amount'}"
+  },
+  {
+   "name": "S2 M1 explicit suppression (English and Chinese status) vs omission vs none",
+   "ok": true,
+   "detail": "{'A': {'state': 'NONE', 'j2_status': 'verified', 'candidates': 2, 'candidate_rows': ['R1', 'R2']}, 'B': {'state': 'EXPLICIT_SUPPRESSION', 'j2_status': 'unverifiable', 'candidates': 1, 'candidate_rows': ['R2']}, 'C': {'state': 'EXPLICIT_SUPPRESSION', 'j2_status': '无法核验', 'candidates': 1, 'candidate_r"
+  },
+  {
+   "name": "S2 M1 without a candidate row is NONE, not suppression",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 base module sums distinct parties with units, skips missing amounts, dedups same value",
+   "ok": true,
+   "detail": "{'value': '80万元', 'value_wan': 80.0, 'parties': 3, 'conflicts': [], 'rule': 'sum over distinct parties extracted from the final decision (E_D2) that carry a numeric penalty_amount', 'computation': '甲公司:50 + 张三:20 + 李四:10'}"
+  },
+  {
+   "name": "S3 base module refuses conflicting amounts for one party",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 base module has no answer constant (201 appears nowhere in the code)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 M2 consistent when stated total equals base",
+   "ok": true,
+   "detail": "{'D': {'state': 'CONSISTENT', 'stated': '80万元', 'base': '80万元'}}"
+  },
+  {
+   "name": "S4 M2 mismatch flagged",
+   "ok": true,
+   "detail": "{'D': {'state': 'DERIVED_MISMATCH', 'stated': '90万元', 'base': '80万元'}}"
+  },
+  {
+   "name": "S5 M3 typed: amount/doc number/date/derived/negation consistent; title with wrong quote and quote outside table flagged",
+   "ok": true,
+   "detail": "{'A': {'state': 'CONSISTENT', 'kind': 'amount', 'reason': None}, 'B': {'state': 'CONSISTENT', 'kind': 'amount', 'reason': None}, 'C': {'state': 'CONSISTENT', 'kind': 'doc_number', 'reason': None}, 'D': {'state': 'CONSISTENT', 'kind': 'derived', 'reason': None}, 'E': {'state': 'CONSISTENT', 'kind': '"
+  },
+  {
+   "name": "S5 M3 negation slot answered affirmatively against a denial quote is flagged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 M3 ignores abstentions",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 detectors never touch Gold fields or the contract",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T1 five metrics per the operator definitions",
+   "ok": true,
+   "detail": "{'Q_all': 0.4, 'error_rate': 0.1, 'error_burden': 0.05, 'coverage': 0.5, 'abstention_rate': 0.3, 'silent_omission_rate': 0.2, 'asserted': 10, 'wrong': 1, 'tp': 8, 'total': 20}"
+  },
+  {
+   "name": "T2 no assertions: error rate undefined, not zero",
+   "ok": true,
+   "detail": "{'Q_all': 0.0, 'error_rate': None, 'error_burden': 0.0, 'coverage': 0.0, 'abstention_rate': 1.0, 'silent_omission_rate': 0.0, 'asserted': 0, 'wrong': 0, 'tp': 0, 'total': 20}"
+  },
+  {
+   "name": "T2 all-abstain cannot pass the safety gate",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T3 gate: +5pp passes, +6pp fails",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T4 frozen scorer reports error_rate 0.0 on zero assertions; safety module overrides to None",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "V1 M1 explicit suppression: 11 slots, all ABSENT at the terminal",
+   "ok": true,
+   "detail": "[('Static', 'F8', 'ABSENT'), ('Static', 'F9', 'ABSENT'), ('Static', 'F10', 'ABSENT'), ('Static', 'F11', 'ABSENT'), ('Static', 'F20', 'ABSENT'), ('Fixed-Recovery', 'F8', 'ABSENT'), ('Fixed-Recovery', 'F9', 'ABSENT'), ('Fixed-Recovery', 'F10', 'ABSENT'), ('Fixed-Recovery', 'F11', 'ABSENT'), ('Fixed-Re"
+  },
+  {
+   "name": "V1 M1 omission: 6 slots, all TP at the terminal (V1 missed F17; V2 covers it)",
+   "ok": true,
+   "detail": "[('Joint-Dynamic', 'F8', 'TP'), ('Joint-Dynamic', 'F9', 'TP'), ('Joint-Dynamic', 'F10', 'TP'), ('Joint-Dynamic', 'F11', 'TP'), ('Joint-Dynamic', 'F17', 'TP'), ('Joint-Dynamic', 'F20', 'TP')]"
+  },
+  {
+   "name": "V2 M2: base module 201 from 16 extracted parties; 3/3 model totals mismatch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "V3 M3: flags hit only non-TP answers (V1 false alarms on F19 and F20 gone)",
+   "ok": true,
+   "detail": "[('Static', 'F12', 'UNSUPPORTED'), ('Static', 'F18', 'UNSUPPORTED'), ('Fixed-Recovery', 'F12', 'UNSUPPORTED'), ('Fixed-Recovery', 'F18', 'UNSUPPORTED'), ('Fixed-Recovery', 'F19', 'VALUE_WRONG'), ('Joint-Dynamic', 'F12', 'UNSUPPORTED'), ('Joint-Dynamic', 'F18', 'UNSUPPORTED'), ('Joint-Dynamic', 'F19'"
+  },
+  {
+   "name": "V3 M3: every unsupported or wrong answer flagged",
+   "ok": true,
+   "detail": "([('Static', 'F12'), ('Static', 'F18'), ('Fixed-Recovery', 'F12'), ('Fixed-Recovery', 'F18'), ('Fixed-Recovery', 'F19'), ('Joint-Dynamic', 'F12'), ('Joint-Dynamic', 'F18'), ('Joint-Dynamic', 'F19')], [('Static', 'F12', 'UNSUPPORTED'), ('Static', 'F18', 'UNSUPPORTED'), ('Fixed-Recovery', 'F12', 'UNSU"
+  },
+  {
+   "name": "V4 V1 results file untouched",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "development": {
+  "Static": {
+   "m1": {
+    "F8": "EXPLICIT_SUPPRESSION",
+    "F9": "EXPLICIT_SUPPRESSION",
+    "F10": "EXPLICIT_SUPPRESSION",
+    "F11": "EXPLICIT_SUPPRESSION",
+    "F20": "EXPLICIT_SUPPRESSION"
+   },
+   "m2": {
+    "F19": "DERIVED_MISMATCH"
+   },
+   "m3_flags": {
+    "F12": "UNSUPPORTED",
+    "F18": "UNSUPPORTED"
+   },
+   "m3_checked": 15,
+   "terminal": {
+    "F1": "TP",
+    "F2": "TP",
+    "F3": "TP",
+    "F4": "TP",
+    "F5": "TP",
+    "F6": "TP",
+    "F7": "TP",
+    "F8": "ABSENT",
+    "F9": "ABSENT",
+    "F10": "ABSENT",
+    "F11": "ABSENT",
+    "F12": "UNSUPPORTED",
+    "F13": "TP",
+    "F14": "TP",
+    "F15": "TP",
+    "F16": "TP",
+    "F17": "TP",
+    "F18": "UNSUPPORTED",
+    "F19": "TP",
+    "F20": "ABSENT"
+   },
+   "base": "201万元",
+   "safety": {
+    "Q_all": 0.65,
+    "error_rate": 0.0,
+    "error_burden": 0.0,
+    "coverage": 0.75,
+    "abstention_rate": 0.25,
+    "silent_omission_rate": 0.0,
+    "asserted": 15,
+    "wrong": 0,
+    "tp": 13,
+    "total": 20
+   }
+  },
+  "Fixed-Recovery": {
+   "m1": {
+    "F8": "EXPLICIT_SUPPRESSION",
+    "F9": "EXPLICIT_SUPPRESSION",
+    "F10": "EXPLICIT_SUPPRESSION",
+    "F11": "EXPLICIT_SUPPRESSION",
+    "F17": "EXPLICIT_SUPPRESSION",
+    "F20": "EXPLICIT_SUPPRESSION"
+   },
+   "m2": {
+    "F19": "DERIVED_MISMATCH"
+   },
+   "m3_flags": {
+    "F12": "UNSUPPORTED",
+    "F18": "UNSUPPORTED",
+    "F19": "VALUE_WRONG"
+   },
+   "m3_checked": 14,
+   "terminal": {
+    "F1": "TP",
+    "F2": "TP",
+    "F3": "TP",
+    "F4": "TP",
+    "F5": "TP",
+    "F6": "TP",
+    "F7": "TP",
+    "F8": "ABSENT",
+    "F9": "ABSENT",
+    "F10": "ABSENT",
+    "F11": "ABSENT",
+    "F12": "UNSUPPORTED",
+    "F13": "TP",
+    "F14": "TP",
+    "F15": "TP",
+    "F16": "TP",
+    "F17": "ABSENT",
+    "F18": "UNSUPPORTED",
+    "F19": "VALUE_WRONG",
+    "F20": "ABSENT"
+   },
+   "base": "201万元",
+   "safety": {
+    "Q_all": 0.55,
+    "error_rate": 0.071429,
+    "error_burden": 0.05,
+    "coverage": 0.7,
+    "abstention_rate": 0.3,
+    "silent_omission_rate": 0.0,
+    "asserted": 14,
+    "wrong": 1,
+    "tp": 11,
+    "total": 20
+   }
+  },
+  "Joint-Dynamic": {
+   "m1": {
+    "F8": "OMISSION",
+    "F9": "OMISSION",
+    "F10": "OMISSION",
+    "F11": "OMISSION",
+    "F17": "OMISSION",
+    "F20": "OMISSION"
+   },
+   "m2": {
+    "F19": "DERIVED_MISMATCH"
+   },
+   "m3_flags": {
+    "F12": "UNSUPPORTED",
+    "F18": "UNSUPPORTED",
+    "F19": "VALUE_WRONG"
+   },
+   "m3_checked": 20,
+   "terminal": {
+    "F1": "TP",
+    "F2": "TP",
+    "F3": "TP",
+    "F4": "TP",
+    "F5": "TP",
+    "F6": "TP",
+    "F7": "TP",
+    "F8": "TP",
+    "F9": "TP",
+    "F10": "TP",
+    "F11": "TP",
+    "F12": "UNSUPPORTED",
+    "F13": "TP",
+    "F14": "TP",
+    "F15": "TP",
+    "F16": "TP",
+    "F17": "TP",
+    "F18": "UNSUPPORTED",
+    "F19": "VALUE_WRONG",
+    "F20": "TP"
+   },
+   "base": "201万元",
+   "safety": {
+    "Q_all": 0.85,
+    "error_rate": 0.05,
+    "error_burden": 0.05,
+    "coverage": 1.0,
+    "abstention_rate": 0.0,
+    "silent_omission_rate": 0.0,
+    "asserted": 20,
+    "wrong": 1,
+    "tp": 17,
+    "total": 20
+   }
+  }
+ },
+ "v1_results_sha256": "30720eda6cd44cad7ca7bdf911aa6e3af4cef99cf01b2d28bbe6c850d9da9f7d",
+ "files": {
+  "detectors_v2.py": "c2c3384265b39aee6783eff407402c4c775d7eb0b18aea005442f80ec1548c24",
+  "safety_metrics.py": "552adcf6a00915201a97b396c30ae79c646ba42eff2829dff9014a907fa0b57f"
+ }
+}

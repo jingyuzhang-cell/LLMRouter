@@ -1,0 +1,106 @@
+{
+ "files": {
+  "/root/research_outputs/static_pi/stage_d/j2_probe/run_j2_probe.py": "d2f14645aaa4d2410d0d92ad5b014d838b124ec6aaffc19965e5a72e5103a6db",
+  "/root/research_outputs/static_pi/stage_d/j2_probe/J2_PROBE_DESIGN.md": "98fd42ac2e9ff93c9f6c61a9d3642d2b21623a91f0ae3470ce1f41deb88c660e",
+  "/root/research_outputs/static_pi/stage_d/sc_e1_1/sc_e1_1_runner.py": "b68a1b2ee1869fe26420c7d70ba8600c8309eb8441cfcf7b97122e45f487fbc4",
+  "/root/research_outputs/static_pi/stage_d/sc_e1_1/canary_A2/LEDGER.jsonl": "2ca98b522d30d9e885a3901a27ca0070270b2fe99c0c7dbc051ad070ba8f6e99",
+  "/root/research_outputs/static_pi/stage_d/sc_e1_runner.py": "20324428f5b604be2e0fb5162c325e055356fea7532c57617e0bc57a7619de6b",
+  "/root/capital_opinion_pilot/transport.py": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+  "/root/research_outputs/static_pi/stage_d/sc_e1_1/detectors_v4.py": "aebba8bba5277c6f05e07ae86fc1c41703818514db7d08a80e088d446bd4b77d",
+  "/root/research_outputs/static_pi/stage_d/sc_e1_1/sc_e1_scorer.py": "52bfb1e1394e4f25399700d589945b84f82d562ade848b2fd376dbc359688062"
+ },
+ "inputs": {
+  "J2_in1": {
+   "source_arm": "Static",
+   "user_sha256": "203b074c7517519d82bf3d53313125efa370281c4b2a2bb326f8231e46c2d63f"
+  },
+  "J2_in2": {
+   "source_arm": "Fixed-Recovery",
+   "user_sha256": "b803e1b06192df28f95630ec055b4321c4bd963df310e07c33efb54de5f04ed6"
+  },
+  "J2_in3": {
+   "source_arm": "Joint-Dynamic",
+   "user_sha256": "324b72eac1eac8df32b8896efe5236d34ef96137ab4f8c4cf1e9013405c5993e"
+  }
+ },
+ "j2_system_sha256": "919d8edbde01afa72c1fe8517f08f8384bff4f80dce54a4aeb6a1a421c074a4f",
+ "plan": [
+  [
+   "ds",
+   "J2_in1",
+   1
+  ],
+  [
+   "ds",
+   "J2_in1",
+   2
+  ],
+  [
+   "ds",
+   "J2_in2",
+   1
+  ],
+  [
+   "ds",
+   "J2_in2",
+   2
+  ],
+  [
+   "ds",
+   "J2_in3",
+   1
+  ],
+  [
+   "ds",
+   "J2_in3",
+   2
+  ],
+  [
+   "glm",
+   "J2_in1",
+   1
+  ],
+  [
+   "glm",
+   "J2_in1",
+   2
+  ],
+  [
+   "glm",
+   "J2_in2",
+   1
+  ],
+  [
+   "glm",
+   "J2_in2",
+   2
+  ],
+  [
+   "glm",
+   "J2_in3",
+   1
+  ],
+  [
+   "glm",
+   "J2_in3",
+   2
+  ]
+ ],
+ "caps": {
+  "calls": 12,
+  "tokens": 100000,
+  "yuan": 0.3
+ },
+ "max_tokens": {
+  "ds": 4000,
+  "glm": 8000
+ },
+ "models": {
+  "ds": "deepseek-flash",
+  "glm": "GLM-5.3-Flash"
+ },
+ "endpoints": {
+  "ds": "https://api.deepseek.com/chat/completions",
+  "glm": "https://open.bigmodel.cn/api/anthropic/v1/messages"
+ }
+}

@@ -1,0 +1,381 @@
+{
+ "task_id": "ZED",
+ "company": "泽达易盛(688555)·递补",
+ "status": "FINAL_CANDIDATE_v1.3",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "ZEDA_2022-05-12.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZEDA/ZEDA_2022-05-12.txt",
+   "sha256": "97adb90256aa787bb78cf6c38cafea6aa1aff88232c6f65b4de54b4cecd960bc"
+  },
+  "ZEDA_2022-07-13.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZEDA/ZEDA_2022-07-13.txt",
+   "sha256": "f169ed4dec67c6325cc2aef62d2fb223dbfc6cf0de0526fd24fd06158ef12bb9"
+  },
+  "ZEDA_2022-11-19.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZEDA/ZEDA_2022-11-19.txt",
+   "sha256": "325eab3db715c0a94cc9a28f71be94d86ed2e99c6d2d730ab2c369f32ed3f8f7"
+  },
+  "ZEDA_2023-04-22.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZEDA/ZEDA_2023-04-22.txt",
+   "sha256": "8081c6893a87dc69df3c72db4a01294c1863e4fb4d20086051cf5249f30b235c"
+  },
+  "ZEDA_2023-07-01.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZEDA/ZEDA_2023-07-01.txt",
+   "sha256": "d3e8de21e7276bea9e9ec1e7d8638b8deebc191574e6f3841c39057fd1d95758"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1",
+    "kind": "extract",
+    "docs": [
+     "ZEDA_2022-05-12.txt",
+     "ZEDA_2022-07-13.txt"
+    ],
+    "upstream": [],
+    "role": "立案"
+   },
+   {
+    "node": "N2",
+    "kind": "extract",
+    "docs": [
+     "ZEDA_2022-11-19.txt",
+     "ZEDA_2023-04-22.txt"
+    ],
+    "upstream": [],
+    "role": "虚增事实"
+   },
+   {
+    "node": "N3",
+    "kind": "extract",
+    "docs": [
+     "ZEDA_2022-11-19.txt"
+    ],
+    "upstream": [],
+    "role": "手法"
+   },
+   {
+    "node": "N4",
+    "kind": "extract",
+    "docs": [
+     "ZEDA_2022-11-19.txt"
+    ],
+    "upstream": [],
+    "role": "量罚"
+   },
+   {
+    "node": "N5",
+    "kind": "timeline",
+    "docs": [
+     "ZEDA_2023-07-01.txt"
+    ],
+    "upstream": [],
+    "role": "终止上市时序"
+   },
+   {
+    "node": "N6",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N2",
+     "N4",
+     "N5"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "ZED-A1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "公司《立案告知书》编号：证监立案字03720220019号（公司涉嫌信息披露违法违规）",
+   "doc": "ZEDA_2022-05-12.txt",
+   "span": "案告知书》（编号：证监立案字 03720220019 号），因公司涉嫌信息披露违法违…（ZEDA_2022-05-12.txt@L21）",
+   "ai_verdict": "PASS(逐字跨度+行号)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-A2",
+   "node": "N1",
+   "kind": "extract",
+   "value": "林应《立案告知书》编号：证监立案字03720220020号（实控人涉嫌信披违法）",
+   "doc": "ZEDA_2022-07-13.txt",
+   "span": "发的《立案告知书》（编号：证监立案字 03720220020 号），因林应女士涉嫌信…（ZEDA_2022-07-13.txt@L21）",
+   "ai_verdict": "PASS(逐字跨度+行号)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-B1",
+   "node": "N2",
+   "kind": "extract",
+   "value": "招股阶段2016-2019年累计虚增营业收入：342,296,307.13元",
+   "doc": "ZEDA_2022-11-19.txt",
+   "span": "章节标题\"一、在公告的证券发行文件中隐瞒重要事实、编造重大虚假内容\"(@L51)+招股说明书披露语境(@L53-56)+\"开展虚假业务等方式，2016年-2019年累计虚增营业收入342,296,307.13元\"(@L77)",
+   "ai_verdict": "REVISED(预审R:补章节标题锚点)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "v1.2:招股阶段归属=发行文件章节+招股说明书语境",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-B1b",
+   "node": "N2",
+   "kind": "extract",
+   "value": "招股阶段2016-2019年累计虚增利润：186,735,305.01元",
+   "doc": "ZEDA_2022-11-19.txt",
+   "span": "同上章节标题(@L51)+\"…虚增利润186,735,305.01元。其中2016年虚增营业收入…\"(@L77-79)",
+   "ai_verdict": "REVISED(预审R:补章节标题锚点)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "v1.2:同B1归属",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-B2",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年虚增利润22,438,194.83元，占当年利润的104.72%",
+   "doc": "ZEDA_2022-11-19.txt",
+   "span": "49.28%，虚增利润22,438,194.83元，占当年利润的104.72%；2017年虚增营业收（@L80-81）",
+   "ai_verdict": "PASS(逐字+年度+指标名)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "；CSV转义：span含千分位逗号由csv.writer自动双引号包裹",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-B3",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2019年虚增营业收入114,794,784.45元，占当年收入的51.87%",
+   "doc": "ZEDA_2022-11-19.txt",
+   "span": "2019 年虚增营业收入114,794,784.45元，占当年收入的51.87%，虚增利润65,281,020.91元（@L88-89）",
+   "ai_verdict": "PASS(年度归属已核：2019年)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "；CSV转义：span含千分位逗号由csv.writer自动双引号包裹",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-C1",
+   "node": "N3",
+   "kind": "extract",
+   "value": "股权代持未按规定如实披露：田力通过梅生持600万股、通过杨鑫持270万股，合计870万股(占13.96%)",
+   "doc": "ZEDA_2022-11-19.txt",
+   "span": "田力通过梅生持有泽达易盛600万股，通过杨鑫持有270万股，合计持有870万股，持股比例13.96%。泽达易盛未按规定如实披露上述股权代持情况（@L206-208）",
+   "ai_verdict": "PASS(定性原文已补：未按规定如实披露股权代持)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-C2",
+   "node": "N3",
+   "kind": "extract",
+   "value": "上市后年报虚增营业收入：152,168,610.58元，占当期报告记载营业收入的59.51%",
+   "doc": "ZEDA_2022-11-19.txt",
+   "span": "载，虚增营业收入152,168,610.58元，占当期报告记载的营业收入的59.51%（@L224）",
+   "ai_verdict": "PASS(逐字+指标名)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "；CSV转义：span含千分位逗号由csv.writer自动双引号包裹",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-C3",
+   "node": "N3",
+   "kind": "extract",
+   "value": "预付浙江观滔设备款中的36,320,600.00元(总额42,690,600.00元)",
+   "doc": "ZEDA_2022-11-19.txt",
+   "span": "简称浙江观滔）设备款42,690,600.00元。其中，预付浙江观滔36,320,600.00元设（@L288）",
+   "ai_verdict": "PASS(逐字+科目语境)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "；CSV转义：span含千分位逗号由csv.writer自动双引号包裹",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-D1",
+   "node": "N4",
+   "kind": "extract",
+   "value": "欺诈发行案公司罚款(终案)：非法所募资金40,500.22万元的20%即81,000,440元",
+   "doc": "ZEDA_2023-04-22.txt",
+   "span": "\"一、对泽达易盛处以非法所募资金金额 40,500.22 万元的 20%，即 81,000,440元罚款\"（决定书@L256-257）",
+   "ai_verdict": "REVISED(预审R:锚点切换至决定书终案)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "v1.2:金额与告知书一致，来源改决定书",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-D2",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并·终案)：公司责令改正+警告+86,000,440元",
+   "doc": "ZEDA_2023-04-22.txt",
+   "span": "\"一、对泽达易盛（天津）科技股份有限公司责令改正，给予警告，并处以86,000,440 元罚款\"（决定书综合处罚段@L275-276，完整主语句已补）",
+   "ai_verdict": "REVISED(预审R:决定书终案+主语句补齐)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "v1.2:PENDING清除；=欺诈发行81,000,440+年报案500万合并",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-D3",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并·终案)：林应3,800万元",
+   "doc": "ZEDA_2023-04-22.txt",
+   "span": "\"二、对林应给予警告，并处以 3,800 万元罚款\"（决定书综合处罚段@L277）",
+   "ai_verdict": "REVISED(预审R:决定书终案)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "v1.2:=欺诈案1000万+实控人组织指使2000万+年报案300万+实控人500万合并(AI已核算)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-D4",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并·终案)：应岚1,300万元",
+   "doc": "ZEDA_2023-04-22.txt",
+   "span": "\"三、对应岚给予警告，并处以 1,300 万元罚款\"（决定书综合处罚段@L278）",
+   "ai_verdict": "REVISED(预审R:决定书终案+行号修正)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "v1.2:原@L400系告知书欺诈案应岚1000万条目(行号错误已纠正)；=欺诈1000万+年报300万",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-D5",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并·终案)：王晓亮300万元",
+   "doc": "ZEDA_2023-04-22.txt",
+   "span": "\"四、对王晓亮给予警告，并处以 300 万元罚款\"（决定书综合处罚段@L279）",
+   "ai_verdict": "REVISED(预审R:决定书终案)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "v1.2:=欺诈案200万+年报案100万合并",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-D6",
+   "node": "N4",
+   "kind": "extract",
+   "value": "综合处罚(两案合并·终案)：姜亚莉250万元（=欺诈发行150万+年报100万）",
+   "doc": "ZEDA_2023-04-22.txt",
+   "span": "\"五、对姜亚莉给予警告，并处以250万元罚款\"（决定书综合段@L280）；欺诈发行段(@L261)载姜亚莉150万；年报段(@L273)载姜亚莉100万",
+   "ai_verdict": "REVISED(终签R：终案仅列姜亚莉；雷志锋另行依法处理)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "v1.2重要差异：告知书原列\"雷志锋、姜亚莉各250万\"及\"刘雪松600万\"，决定书终案仅列姜亚莉250万(=欺诈150万+年报100万)——以决定书为准，雷志锋/刘雪松差异如实记录不解释原因",
+   "human_verdict": "PASS",
+   "human_note": "终签R→闭：决定书@L30\"对于当事人刘某松、雷某锋，我会将另行依法处理\"——雷志锋不在终案处罚清单"
+  },
+  {
+   "slot_id": "ZED-E1",
+   "node": "N5",
+   "kind": "extract",
+   "value": "终止上市暨摘牌日：2023-07-07",
+   "doc": "ZEDA_2023-07-01.txt",
+   "span": "公司股票将于 2023 年 7 月 7 日被上海证券交易所终止上市暨摘牌（@L16）",
+   "ai_verdict": "PASS(语义命名+逐字)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-E2",
+   "node": "N5",
+   "kind": "extract",
+   "value": "终止上市决定日期：2023-05-31",
+   "doc": "ZEDA_2023-07-01.txt",
+   "span": "4、终止上市决定日期：2023 年 5 月 31 日（@L32）",
+   "ai_verdict": "PASS(语义命名+逐字)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZED-R1",
+   "node": "N6",
+   "kind": "report",
+   "value": "综合结论：泽达易盛因欺诈发行(终案罚81,000,440元)与年报虚假记载(终案罚500万元)被处罚，两案合并综合处罚公司86,000,440元、林应3,800万元、应岚1,300万元等；股票于2023-05-31被决定终止上市、2023-07-07摘牌",
+   "doc": "ZEDA_2023-04-22.txt + ZEDA_2023-07-01.txt",
+   "span": "决定书处罚段(@L254-280：欺诈发行案/年报案/综合处罚)+摘牌公告(@L16/@L32)",
+   "ai_verdict": "REVISED(预审R:来源分文书声明+derived_from修复)",
+   "source": "AI_PROPOSED",
+   "derived_from": [
+    "ZED-D1",
+    "ZED-D2",
+    "ZED-E1",
+    "ZED-E2"
+   ],
+   "ai_note": "v1.2:处罚引决定书、日期引摘牌公告；AI已核算合并恒等式(81,000,440+5,000,000=86,000,440及个人层面全部吻合)",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "ZED-U1",
+   "node": "N6",
+   "expected_status": "UNKNOWN",
+   "value": "先行赔付/民事赔偿进展",
+   "doc": "本组文书",
+   "note": "未披露则不可答"
+  }
+ ],
+ "dropped_slots": [],
+ "scoring_contract": {
+  "n_scored_slots": 18,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "D1修订：本包为元道退降级的递补候选，入列待操作者裁决",
+  "silver值锚定待人工复核",
+  "P0补齐：2/2待定位槽已锚定，其余转人工"
+ ],
+ "self_precheck": {
+  "date": "2026-11-08",
+  "by": "builder-self(非独立复核)",
+  "findings": [
+   "全部18槽由裸值/归一化窗口升级为指标名+逐字跨度+行号",
+   "E1/E2语义命名(摘牌日/决定日)",
+   "R1具体锚点替代泛化",
+   "DAG节点docs按锚点实际来源修复(N1两立案文书/N2告知+决定/N5摘牌公告)",
+   "D2条目主语、D5行号2处PENDING_HUMAN",
+   "本自查不构成独立复核，待预审方P/R/D"
+  ]
+ },
+ "pre_review": {
+  "batch": 5,
+  "reviewer": "operator-AI-precheck(2026-11-08)",
+  "result": "9P/9R/0D",
+  "note": "9R已落实v1.2：B1/B1b补章节锚点；D1-D6切换决定书终案口径(D6值变更:雷志锋不在终案)；D2主语句补齐；R1分文书来源+derived_from；U1保留UNKNOWN"
+ },
+ "final_review": {
+  "date": "2026-11-08",
+  "result": "ZED-D6补回雷志锋；4处span CSV转义说明"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "18P(D6修正后确认)；U1确认UNKNOWN"
+ }
+}

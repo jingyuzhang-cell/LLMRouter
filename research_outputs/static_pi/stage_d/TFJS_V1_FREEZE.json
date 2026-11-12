@@ -1,0 +1,76 @@
+{
+ "batch": "TFJS_V1",
+ "frozen_at": "2026-11-06",
+ "status": "COMPLETE (both stages; gate passed)",
+ "budget": {
+  "cap_calls": 100,
+  "cap_tokens": 500000,
+  "cap_yuan": 2.2,
+  "used_calls": 69,
+  "used_tokens_approx": 210481,
+  "used_yuan_est": 1.2309,
+  "hold_192": "untouched"
+ },
+ "stage_gate": {
+  "stage1": "30/30 calls",
+  "decision": "PASS (mean dQ_report=+0.068>0; dES=-0.084; dSupport=0.000)",
+  "stage2": "39/39 calls"
+ },
+ "G1_report_fidelity_paired": {
+  "upstream_Q_merge_mean": 0.439,
+  "A_original_Q_report_mean": 0.243,
+  "A_retention": "55%",
+  "B_fidelity_Q_report_mean": 0.311,
+  "B_retention": "71%",
+  "delta_Q_report": "+0.068 (5/6 sets improved-or-equal, none worse)",
+  "interpretation_boundary": "B gain is mechanism-driven information preservation (fid backfill), NOT model capability gain",
+  "ES_finding": "dB_ES=-0.084: B ES collapsed below even the upstream ceiling (0.16-0.44) on some sets",
+  "root_cause_fid_collision": "Z2 split unions carry colliding fids across branches (e.g. 29 facts/11 unique fids); fid-keyed deterministic backfill is last-wins and shadows facts with valid quotes. ES is bounded by THREE factors: upstream quote validity, report rewriting, and fid collisions breaking backfill. Fix candidate (future, not this batch): per-branch fid namespacing."
+ },
+ "G2_scheduling_paired_identical_extracts_and_anomaly": {
+  "Proposed_R_pi": {
+   "Q_merge": 0.364,
+   "Q_report": 0.273,
+   "ES": 0.25,
+   "C_own": 4.0,
+   "C_e2e": 8.0,
+   "L_rec_s": 37.5,
+   "L_e2e_s": 140.2,
+   "DL": "3/3"
+  },
+  "DA-JS-v2_Z2": {
+   "Q_merge": 0.425,
+   "Q_report": 0.303,
+   "ES": 0.295,
+   "C_own": 5.0,
+   "C_e2e": 9.0,
+   "L_rec_s": 8.7,
+   "L_e2e_s": 109.6,
+   "DL": "3/3"
+  },
+  "paired_reps": "r1 Qr -0.091 / r2 +0.182 / r3 0.000 (DA-JS minus Proposed)",
+  "scheduling_transfer": "dQ_merge=+0.061 -> dQ_report=+0.030 (49% transfer ratio)",
+  "joint_success": "Q_report>=0.5 & DL: 0/3 BOTH arms (terminal quality bar unreached by either strategy at n=3)",
+  "pareto": "neither arm dominates: DA-JS-v2 wins L (-30s e2e, 3/3 consistent) and mean Q; Proposed wins C (-1 call)"
+ },
+ "key_answers": {
+  "Q1_fidelity_transfer": "B_fidelity recovers about half of the report-stage loss (retention 55%->71%); mechanism-level, boundary declared",
+  "Q2_scheduling_to_terminal": "YES-directionally, partially: 49% of merge-stage scheduling gain transfers to terminal in paired design; consistent in mean but 1win/1tie/1loss across reps (n=3, exploratory)",
+  "Q3_where_is_the_bottleneck": "report stage still loses ~25-30% for BOTH arms even with fidelity report; ES bounded by upstream quotes + fid collisions; terminal quality bar (0.5) unreached by scheduling alone"
+ },
+ "caveats": [
+  "n=3 exploratory, no confirmatory claims",
+  "Support remains a span-anchor proxy; UAR=1-ES reported alongside",
+  "fid-collision fix deferred (no engineering this batch)",
+  "Q_report>=0.5 bar unreached: scheduling gain alone insufficient at current pipeline fidelity"
+ ],
+ "files_sha256": {
+  "tfjs_runner.py": "7612d618c9d022321f1a2f82a784a1bbdb64b57c856cf48fcdac82ea609d4de6",
+  "tfjs_score.py": "4a776325111f5504648fe30d048e60fae97090aed606148097410572e9791105",
+  "tfjs_config.json": "60ea43d7766d8819aeaa6f5ced2cb460bc8bbb9d161388ce8a201c3321f9dd60",
+  "tfjs_runs/ledger.jsonl": "3c7264f261ba7105577befd415ecf2f678fc42c16d01b42eacfd1c8a0bdff226",
+  "tfjs_runs/outputs.jsonl": "b12fde9aa5b71f3f94e3596bbd65107a5ce876e44265a0adda77283ab97da485",
+  "TFJS_G1_SCORED.json": "0c2340d3669b78a6834963ff534f61347522a545da0817a45cc9aaafedda41bc",
+  "TFJS_G2_SCORED.json": "cf830588d13d4a0d1555ee5f547e676ec816a2727db7172b11485901c753ab6f"
+ }
+}

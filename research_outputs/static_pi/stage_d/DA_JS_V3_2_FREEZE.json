@@ -1,0 +1,22 @@
+{
+ "spec": "DA-JS v3.2",
+ "frozen_at": "2026-11-07",
+ "changes_vs_v31": [
+  "UB-1 TWO-LAYER DELIVERY CONTRACT frozen (ub1_delivery.py): body = narrative + priority facts (selection organizes priority ONLY, never eligibility); appendix = ALL facts code-carried with conflict flags and source relations; Q_body/Q_appendix/Q_terminal scored separately",
+  "predictor formula: dQ_terminal = dQ_transport * P_select - L_selection (anchors exploratory n=1/task: V1 (0.33-0.70, L=0.32), V2 (0.94-1.00, L=0.02), V3 (1.00, L=0)); conservative end used",
+  "Zx ceiling gate: transport-saturated tasks -> Zx withheld (E03-type)",
+  "Zx cost scaling by docs_n (measured: 3-doc 8c/27.5K/235s; 5-doc 12c/82K/345s; latency scales 272*docs/3 conservative)"
+ ],
+ "phase3_replay": {
+  "result": "predicted == actual on 4/4 tasks under V3 delivery",
+  "cost_consistency": "E03 8c/31K/245s, E04 6c/19K/159s, SJZG 8c/15K/130s, YJGS 12c/82K/345s -> doc-scaling confirmed, QCL table was 3-doc specific"
+ },
+ "regression": "24/24 passed (added: v3.2 value formula, 5-doc deadline veto, ceiling gate)",
+ "next_batch": "V3_EXPERIMENT_2 (three-strategy paired) — application submitted separately",
+ "files_sha256": {
+  "ub1_delivery.py": "1908ceef0244b1576ca21371f9d675718377eed5f7436aba17d299b5f6142887",
+  "da_js_v3.py": "5dcedc1b68be365f9ce9af39b82c1addbc85f57a2d96523d4798360676391d4c",
+  "da_js_v3_validate.py": "b858c26c8f369a4134ff7638e482a7a55b5f112e7cb31a1449c2d5a2b8366beb",
+  "phase1_selection_audit.py": "f4a2bb185962e9c913db4a5f4a0865faf37608a0371f22b3f322ac1cffc80159"
+ }
+}

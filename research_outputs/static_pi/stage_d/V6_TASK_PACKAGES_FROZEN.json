@@ -1,0 +1,1435 @@
+{
+ "version": "V6_TASK_PACKAGES_FROZEN_V1",
+ "frozen_at": "2026-11-09",
+ "rule": {
+  "extracts": "one extract node per doc in order N1..Nk, docs=[D_i], upstream=[]",
+  "internal": "exactly one internal node, upstream=ALL extracts; kind=timeline if task date-slots>=3 (precedent ST-SHUN N3/LS N3); kind=verification if <3 date-slots AND >=2 decision docs (precedent E07C N3); kind=reason(merge) otherwise (precedent E06 N4/E08 N4)",
+  "report": "kind=report, upstream=[internal, Nk] — last extract bypasses to report (E06 convention: N5 up=N4_merge+N3_ir)",
+  "docs_keyed": "D1/D2/D3 (matches gold slot doc fields); paths+sha from frozen batch files",
+  "slots": "value=desc (fact statement, V5 convention), allowed_expressions=[span], kind=category, no explicit node field — attribution via frozen slot_to_node doc-mapping",
+  "scoring": "frozen v6_abo score semantics: containment after normalization, numeric fallback (v5_executor.score_tp contract)"
+ },
+ "gold_ref": "GOLD_V6_FULL_PANEL_FROZEN.json (53 slots, operator signed off 2026-11-09)",
+ "packages": {
+  "000070": {
+   "task_id": "000070",
+   "company": "000070",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/000070_decision_1720195200000.pdf.txt",
+     "sha256": "0abc55e61066a4fd8548ca60e0d48d527eb735a10f63529ccc3d88906012a736",
+     "file": "000070_decision_1720195200000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/000070_notice_1715529600000.pdf.txt",
+     "sha256": "35179a46ade8d246588ab54dc2a69e1a84a771cb047d7d598db0def0857f136d",
+     "file": "000070_notice_1715529600000.pdf.txt"
+    },
+    "D3": {
+     "path": "independent_case_search/raw/000070_notice_1716375680000.pdf.txt",
+     "sha256": "d857c08f35fb93805fec4d69da15204bf58e0a560c898538baa3671c85202d76",
+     "file": "000070_notice_1716375680000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_extract_D3",
+      "kind": "extract",
+      "docs": [
+       "D3"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N4_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2",
+       "N3_extract_D3"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N5_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N4_internal",
+       "N3_extract_D3"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "000070-F1",
+     "kind": "date",
+     "value": "2023-05-07收到证监会《立案告知书》(证监立案字0072023 9号;双跨度)",
+     "allowed_expressions": [
+      "于 2023 年 5 月 7 日收到中国证券监督管理委员会"
+     ],
+     "doc": "D1",
+     "span": "于 2023 年 5 月 7 日收到中国证券监督管理委员会",
+     "category": "date"
+    },
+    {
+     "slot_id": "000070-F2",
+     "kind": "amount",
+     "value": "对特发信息警告+800万罚款",
+     "allowed_expressions": [
+      "对深圳市特发信息股份有限公司给予警告，并处以800万元罚款"
+     ],
+     "doc": "D1",
+     "span": "对深圳市特发信息股份有限公司给予警告，并处以800万元罚款",
+     "category": "amount"
+    },
+    {
+     "slot_id": "000070-F3",
+     "kind": "penalty",
+     "value": "对蒋勤俭10年市场禁入",
+     "allowed_expressions": [
+      "对蒋勤俭采取10年证券市场禁入措施"
+     ],
+     "doc": "D1",
+     "span": "对蒋勤俭采取10年证券市场禁入措施",
+     "category": "penalty"
+    },
+    {
+     "slot_id": "000070-F4",
+     "kind": "core",
+     "value": "违法类型:信息披露违法违规(保留涉嫌)",
+     "allowed_expressions": [
+      "涉嫌信息披露"
+     ],
+     "doc": "D1",
+     "span": "涉嫌信息披露",
+     "category": "core"
+    },
+    {
+     "slot_id": "000070-F5",
+     "kind": "entity",
+     "value": "主体:特发信息",
+     "allowed_expressions": [
+      "深圳市特发信息股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "深圳市特发信息股份有限公司",
+     "category": "entity"
+    }
+   ],
+   "n_docs": 3,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 1,
+    "n_decision_docs": 1
+   }
+  },
+  "000995": {
+   "task_id": "000995",
+   "company": "000995",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/000995_decision_1602172800000.pdf.txt",
+     "sha256": "7fb0ed8ec5d3c8d8506f4d058ec624e56ecb2bdcb1a1f087e0f502ea94125731",
+     "file": "000995_decision_1602172800000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/000995_decision_1481731200000.pdf.txt",
+     "sha256": "c533e57a3311bbb5ddc5e5cb53202cd88590fcf0b0c1c880d377fe6695945c70",
+     "file": "000995_decision_1481731200000.pdf.txt"
+    },
+    "D3": {
+     "path": "independent_case_search/raw/000995_notice_1584288000000.pdf.txt",
+     "sha256": "ea14ef10897d8355c550ae307816658284d78a4d5122cbdbcc9fe648c2459edf",
+     "file": "000995_notice_1584288000000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_extract_D3",
+      "kind": "extract",
+      "docs": [
+       "D3"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N4_internal",
+      "kind": "timeline",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2",
+       "N3_extract_D3"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N5_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N4_internal",
+       "N3_extract_D3"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "000995-F1",
+     "kind": "date",
+     "value": "2016-12-14收到甘肃监管局处罚决定书",
+     "allowed_expressions": [
+      "于2016年12月14日收到中国证券监督管理委员甘肃监管局下发的"
+     ],
+     "doc": "D2",
+     "span": "于2016年12月14日收到中国证券监督管理委员甘肃监管局下发的",
+     "category": "date"
+    },
+    {
+     "slot_id": "000995-F2",
+     "kind": "date",
+     "value": "2019-04-12收到甘肃监管局《调查通知书》(甘调查通字2019002-2019006号;双跨度)",
+     "allowed_expressions": [
+      "于 2019 年 4 月 12 日收到中国证券监督管理委员会甘肃监管局"
+     ],
+     "doc": "D1",
+     "span": "于 2019 年 4 月 12 日收到中国证券监督管理委员会甘肃监管局",
+     "category": "date"
+    },
+    {
+     "slot_id": "000995-F3",
+     "kind": "date",
+     "value": "2020-09-30收到处罚决定书(第二次)",
+     "allowed_expressions": [
+      "公司于2020年9月30日收到《行政处罚决定书》"
+     ],
+     "doc": "D1",
+     "span": "公司于2020年9月30日收到《行政处罚决定书》",
+     "category": "date"
+    },
+    {
+     "slot_id": "000995-F4",
+     "kind": "amount",
+     "value": "虚增库存商品账面余额102,464,927元",
+     "allowed_expressions": [
+      "虚增库存商品账面余额102,464,927"
+     ],
+     "doc": "D3",
+     "span": "虚增库存商品账面余额102,464,927",
+     "category": "amount"
+    },
+    {
+     "slot_id": "000995-F5",
+     "kind": "entity",
+     "value": "主体:皇台酒业",
+     "allowed_expressions": [
+      "甘肃皇台酒业股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "甘肃皇台酒业股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "000995-F6",
+     "kind": "core",
+     "value": "违法类型:信息披露违法(保留涉嫌)",
+     "allowed_expressions": [
+      "涉嫌信息披露违法"
+     ],
+     "doc": "D3",
+     "span": "涉嫌信息披露违法",
+     "category": "core"
+    }
+   ],
+   "n_docs": 3,
+   "internal_kind": "timeline",
+   "rule_inputs": {
+    "n_date_slots": 3,
+    "n_decision_docs": 2
+   }
+  },
+  "002037": {
+   "task_id": "002037",
+   "company": "002037",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/002037_decision_1705420800000.pdf.txt",
+     "sha256": "a12eaa7f0214f81d24ba2f0eccfc2a1ed0c251de7125785c5ddc7c7d96c7dbc0",
+     "file": "002037_decision_1705420800000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/002037_decision_1755619200000.pdf.txt",
+     "sha256": "e3644485c188ba479b899a69c696856aab1c2a92c00afa7b3005d94dcfb2eef4",
+     "file": "002037_decision_1755619200000.pdf.txt"
+    },
+    "D3": {
+     "path": "independent_case_search/raw/002037_notice_1703865600000.pdf.txt",
+     "sha256": "c2b37af81349392e62c20f94d4f84b5df7fd025f43b198f0cdd4e0a589b62c19",
+     "file": "002037_notice_1703865600000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_extract_D3",
+      "kind": "extract",
+      "docs": [
+       "D3"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N4_internal",
+      "kind": "verification",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2",
+       "N3_extract_D3"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N5_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N4_internal",
+       "N3_extract_D3"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "002037-F1",
+     "kind": "date",
+     "value": "2023-06-30收到证监会《立案告知书》(证监立案字0312023004号;双跨度)",
+     "allowed_expressions": [
+      "于 2023 年 6 月 30 日收到中国证券监督管理委员会"
+     ],
+     "doc": "D1",
+     "span": "于 2023 年 6 月 30 日收到中国证券监督管理委员会",
+     "category": "date"
+    },
+    {
+     "slot_id": "002037-F2",
+     "kind": "amount",
+     "value": "对保利联合警告+300万罚款",
+     "allowed_expressions": [
+      "对保利联合给予警告，并处以300万元罚款"
+     ],
+     "doc": "D1",
+     "span": "对保利联合给予警告，并处以300万元罚款",
+     "category": "amount"
+    },
+    {
+     "slot_id": "002037-F3",
+     "kind": "amount",
+     "value": "虚增净利润36,653,679.66元",
+     "allowed_expressions": [
+      "虚增净利润36,653,679.66元"
+     ],
+     "doc": "D1",
+     "span": "虚增净利润36,653,679.66元",
+     "category": "amount"
+    },
+    {
+     "slot_id": "002037-F4",
+     "kind": "entity",
+     "value": "主体:保利联合",
+     "allowed_expressions": [
+      "保利联合化工控股集团股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "保利联合化工控股集团股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "002037-F5",
+     "kind": "core",
+     "value": "违法类型:信息披露违法违规(保留涉嫌)",
+     "allowed_expressions": [
+      "涉嫌信息披露违法违规"
+     ],
+     "doc": "D1",
+     "span": "涉嫌信息披露违法违规",
+     "category": "core"
+    }
+   ],
+   "n_docs": 3,
+   "internal_kind": "verification",
+   "rule_inputs": {
+    "n_date_slots": 1,
+    "n_decision_docs": 2
+   }
+  },
+  "600247": {
+   "task_id": "600247",
+   "company": "600247",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/600247_decision_1489939200000.pdf.txt",
+     "sha256": "6521e11e1a7720fbce0079c9b2b64ba8709d328d0d76140cd7f4a9fd6274894b",
+     "file": "600247_decision_1489939200000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/600247_notice_1472745600000.pdf.txt",
+     "sha256": "8b96bd1d6d5e9acb46ee36c671db1903bdccfd6f15b4a4a6f157cce860da7c7c",
+     "file": "600247_notice_1472745600000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "600247-F1",
+     "kind": "date",
+     "value": "2014-03-04收到调查通知书(第一次)",
+     "allowed_expressions": [
+      "于2014年3月4日收到中国证券监督管理委员会《调查通知书"
+     ],
+     "doc": "D1",
+     "span": "于2014年3月4日收到中国证券监督管理委员会《调查通知书",
+     "category": "date"
+    },
+    {
+     "slot_id": "600247-F2",
+     "kind": "date",
+     "value": "2016-09-01收到三份《行政处罚及市场禁入事先告知书》(处罚字[2016]82-84号)",
+     "allowed_expressions": [
+      "2016年9月1日，公司收到中国证券监督管理委员会下发的分别针对上述三项"
+     ],
+     "doc": "D1",
+     "span": "2016年9月1日，公司收到中国证券监督管理委员会下发的分别针对上述三项",
+     "category": "date"
+    },
+    {
+     "slot_id": "600247-F3",
+     "kind": "entity",
+     "value": "主体:成城集团",
+     "allowed_expressions": [
+      "吉林成城集团股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "吉林成城集团股份有限公司",
+     "category": "entity"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 2,
+    "n_decision_docs": 1
+   }
+  },
+  "600556": {
+   "task_id": "600556",
+   "company": "600556",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/600556_decision_1495209600000.pdf.txt",
+     "sha256": "bb25d3bfb43515d9c469a18c5629134852fa9cb8b99eb7e7eca6a7a430153c96",
+     "file": "600556_decision_1495209600000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/600556_notice_1487865600000.pdf.txt",
+     "sha256": "fee8a7fa1eacd3f5fb47d0b6c06b04054c2efe1b0ce3edd8c3277313c2f0d2ee",
+     "file": "600556_notice_1487865600000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "600556-F1",
+     "kind": "date",
+     "value": "2017-02-23收到4份事先告知书(处罚字[2017]16-19号;双跨度:日期+主体|文书+首文号)",
+     "allowed_expressions": [
+      "2017 年 2 月 23 日，广西慧球科技股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "2017 年 2 月 23 日，广西慧球科技股份有限公司",
+     "category": "date"
+    },
+    {
+     "slot_id": "600556-F2",
+     "kind": "date",
+     "value": "2017-05-18收到4份行政处罚决定书([2017]47-50号;双跨度:日期+首文书|末文号)",
+     "allowed_expressions": [
+      "2017 年 5 月 18 日，公司收到中国证监会《行政处罚决定书》[2017]47 号"
+     ],
+     "doc": "D1",
+     "span": "2017 年 5 月 18 日，公司收到中国证监会《行政处罚决定书》[2017]47 号",
+     "category": "date"
+    },
+    {
+     "slot_id": "600556-F3",
+     "kind": "entity",
+     "value": "主体:慧球科技",
+     "allowed_expressions": [
+      "广西慧球科技股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "广西慧球科技股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "600556-F4",
+     "kind": "core",
+     "value": "慧球科技信息披露违法违规行为(原文完整定性)",
+     "allowed_expressions": [
+      "我会对慧球科技信息披露违法违规行为进行了立案调查、审理"
+     ],
+     "doc": "D1",
+     "span": "我会对慧球科技信息披露违法违规行为进行了立案调查、审理",
+     "category": "core"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 2,
+    "n_decision_docs": 1
+   }
+  },
+  "000752": {
+   "task_id": "000752",
+   "company": "000752",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/000752_decision_1733760000000.pdf.txt",
+     "sha256": "8874e74b39b78dae31c0c262e201b5896c719206b9486fec2aab24e41723a485",
+     "file": "000752_decision_1733760000000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/000752_notice_1717776000000.pdf.txt",
+     "sha256": "2406a7c516f8e50025f91104a9a24f7ed8c410cf9505b495445276611199aec8",
+     "file": "000752_notice_1717776000000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "000752-F1",
+     "kind": "date",
+     "value": "2023-11-15西藏发展及实控人收到证监会《立案告知书》(三跨度:主体|日期+监管|文书)",
+     "allowed_expressions": [
+      "西藏发展股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "西藏发展股份有限公司",
+     "category": "date"
+    },
+    {
+     "slot_id": "000752-F2",
+     "kind": "amount",
+     "value": "对西藏发展警告+800万罚款",
+     "allowed_expressions": [
+      "对西藏发展责令改正，给予警告，并处以800万元"
+     ],
+     "doc": "D1",
+     "span": "对西藏发展责令改正，给予警告，并处以800万元",
+     "category": "amount"
+    },
+    {
+     "slot_id": "000752-F3",
+     "kind": "amount",
+     "value": "西藏发展2018年中期报告少计其他应收款29,330.00万元",
+     "allowed_expressions": [
+      "2018 年中期报告少计其他应收款 29,330.00 万元"
+     ],
+     "doc": "D1",
+     "span": "2018 年中期报告少计其他应收款 29,330.00 万元",
+     "category": "amount"
+    },
+    {
+     "slot_id": "000752-F4",
+     "kind": "entity",
+     "value": "主体:西藏发展",
+     "allowed_expressions": [
+      "西藏发展股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "西藏发展股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "000752-F5",
+     "kind": "core",
+     "value": "西藏发展因涉嫌信息披露违法违规被立案",
+     "allowed_expressions": [
+      "因涉嫌信息披露违法违规，中国证监会决定对公司及实际控制人立案"
+     ],
+     "doc": "D1",
+     "span": "因涉嫌信息披露违法违规，中国证监会决定对公司及实际控制人立案",
+     "category": "core"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 1,
+    "n_decision_docs": 1
+   }
+  },
+  "300216": {
+   "task_id": "300216",
+   "company": "300216",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/300216_decision_1596729600000.pdf.txt",
+     "sha256": "70212287c96cab108cd567b05183886d4d38edd89757955ecd3c07bc701bf402",
+     "file": "300216_decision_1596729600000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/300216_notice_1575290526000.pdf.txt",
+     "sha256": "dd72e0e86412f2a485de455df4c7706f958abe114466643c4ab02827f6623c2d",
+     "file": "300216_notice_1575290526000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "300216-F1",
+     "kind": "date",
+     "value": "2020-08-06千山药机收到《行政处罚决定书》[2020]32号+《市场禁入决定书》[2020]10号(三跨度:主体|日期|文书+文号)",
+     "allowed_expressions": [
+      "湖南千山制药机械股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "湖南千山制药机械股份有限公司",
+     "category": "date"
+    },
+    {
+     "slot_id": "300216-F2",
+     "kind": "penalty",
+     "value": "行政处罚决定书文号[2020]32号",
+     "allowed_expressions": [
+      "[2020]32号"
+     ],
+     "doc": "D1",
+     "span": "[2020]32号",
+     "category": "penalty"
+    },
+    {
+     "slot_id": "300216-F3",
+     "kind": "penalty",
+     "value": "市场禁入决定书文号[2020]10号",
+     "allowed_expressions": [
+      "[2020]10号"
+     ],
+     "doc": "D1",
+     "span": "[2020]10号",
+     "category": "penalty"
+    },
+    {
+     "slot_id": "300216-F4",
+     "kind": "entity",
+     "value": "主体:千山药机",
+     "allowed_expressions": [
+      "湖南千山制药机械股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "湖南千山制药机械股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "300216-F5",
+     "kind": "core",
+     "value": "违法事实:虚增销售收入/虚增利润",
+     "allowed_expressions": [
+      "虚增销售收入、虚增利润"
+     ],
+     "doc": "D1",
+     "span": "虚增销售收入、虚增利润",
+     "category": "core"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 1,
+    "n_decision_docs": 1
+   }
+  },
+  "000693": {
+   "task_id": "000693",
+   "company": "000693",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/000693_decision_1517414400000.pdf.txt",
+     "sha256": "a53a887c66d0f9ad74482ddfd4077a5399492ccc581c2a903280e0419aa3a254",
+     "file": "000693_decision_1517414400000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/000693_notice_1499356800000.pdf.txt",
+     "sha256": "f2f4b62b66c3031ea3aca86d6bd2ffc6f810562ef4a73ca8a9f5c4399db30265",
+     "file": "000693_notice_1499356800000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "000693-F1",
+     "kind": "date",
+     "value": "2018-01-31收到证监会《行政处罚决定书》([2018]008号)",
+     "allowed_expressions": [
+      "2018 年 1 月 31 日，公司收到中国证监会下发的《行政处罚决定书》（[2018]008 号）"
+     ],
+     "doc": "D1",
+     "span": "2018 年 1 月 31 日，公司收到中国证监会下发的《行政处罚决定书》（[2018]008 号）",
+     "category": "date"
+    },
+    {
+     "slot_id": "000693-F2",
+     "kind": "date",
+     "value": "2016-06-29接到调查通知书(成稽调查通字16032号;因关联交易和关联担保涉嫌违反证券法律法规)",
+     "allowed_expressions": [
+      "2016 年 6 月 29 日，公司接到中国证券监督管理委员会调查通知书（编号：成稽调查通字 16032 号）"
+     ],
+     "doc": "D1",
+     "span": "2016 年 6 月 29 日，公司接到中国证券监督管理委员会调查通知书（编号：成稽调查通字 16032 号）",
+     "category": "date"
+    },
+    {
+     "slot_id": "000693-F3",
+     "kind": "entity",
+     "value": "主体:华泽钴镍",
+     "allowed_expressions": [
+      "成都华泽钴镍材料股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "成都华泽钴镍材料股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "000693-F4",
+     "kind": "core",
+     "value": "因涉嫌信息披露不实等证券违法违规(保留原文表述)",
+     "allowed_expressions": [
+      "因公司涉嫌信息披露不实等证券违法违规"
+     ],
+     "doc": "D1",
+     "span": "因公司涉嫌信息披露不实等证券违法违规",
+     "category": "core"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 2,
+    "n_decision_docs": 1
+   }
+  },
+  "002667": {
+   "task_id": "002667",
+   "company": "002667",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/002667_decision_1493740800000.pdf.txt",
+     "sha256": "78f770cafa41f0162e5e3f1e71786a6b59259c83fcdcb04fbc39d1c616ea8f41",
+     "file": "002667_decision_1493740800000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/002667_notice_1489161600000.pdf.txt",
+     "sha256": "1ca853d47f48ad3b473891131a91611895448396cd66cf55e3ace36e87edd833",
+     "file": "002667_notice_1489161600000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "002667-F1",
+     "kind": "date",
+     "value": "2017-03-10鞍重股份收到中国证监会给予杜晓芳、张勇等相关当事人《行政处罚事先告知书》(处罚字【2017】29号)的通知",
+     "allowed_expressions": [
+      "鞍山重型矿山机器股份有限公司（以下简称“鞍重股份”\n                           、“本公\n\n司”或“公司”）于 2017 年 3 月 10 日收到中国证券监督管理委员会\n\n（以下简称“中国证监会”或“证监会”）给予杜晓芳、张勇、北京\n\n科桥嘉永创业投资中心（有限合伙）\n               、北京科桥成长创业投资中心（有\n\n限合伙）、浙江华睿海越现代服务业创业投资有限公司、浙江华睿德\n\n银创业投资有限公司、杭州金永信润禾创业投资合伙企业（有限合\n\n伙）\n 、江阴安益股份投资企业（有限合伙）、北京普思投资有限公司、\n\n宁波科发股权投资基金合伙企业（有限合伙）、大丰匀耀现代服务产\n\n业投资基金合伙企业（有限合伙）《行政处罚事先告知书》处罚字\n\n【2017】29 号的通知"
+     ],
+     "doc": "D1",
+     "span": "鞍山重型矿山机器股份有限公司（以下简称“鞍重股份”\n                           、“本公\n\n司”或“公司”）于 2017 年 3 月 10 日收到中国证券监督管理委员会\n\n（以下简称“中国证监会”或“证监会”）给予杜晓芳、张勇、北京\n\n科桥嘉永创业投资中心（有限合伙）\n               、北京科桥成长创业投资中心（有\n\n限合伙）、浙江华睿海越现代服务业创业投资有限公司、浙江华睿德\n\n银创业投资有限公司、杭州金永信润禾创业投资合伙企业（有限合\n\n伙）\n 、江阴安益股份投资企业（有限合伙）、北京普思投资有限公司、\n\n宁波科发股权投资基金合伙企业（有限合伙）、大丰匀耀现代服务产\n\n业投资基金合伙企业（有限合伙）《行政处罚事先告知书》处罚字\n\n【2017】29 号的通知",
+     "category": "date"
+    },
+    {
+     "slot_id": "002667-F2",
+     "kind": "entity",
+     "value": "主体:鞍重股份",
+     "allowed_expressions": [
+      "鞍山重型矿山机器股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "鞍山重型矿山机器股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "002667-F3",
+     "kind": "amount",
+     "value": "2013年至2015年，九好集团通过各种手段虚增服务费收入264,897,668.7元。",
+     "allowed_expressions": [
+      "2013 年至 2015 年，九好集团通过各种手段虚增服务费收入 264,897,668.7 元"
+     ],
+     "doc": "D1",
+     "span": "2013 年至 2015 年，九好集团通过各种手段虚增服务费收入 264,897,668.7 元",
+     "category": "amount"
+    },
+    {
+     "slot_id": "002667-F4",
+     "kind": "core",
+     "value": "信息披露违法行为(九好集团等,原文综合表述)",
+     "allowed_expressions": [
+      "九好集团等信息披露违法行为进行了立案调查"
+     ],
+     "doc": "D1",
+     "span": "九好集团等信息披露违法行为进行了立案调查",
+     "category": "core"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 1,
+    "n_decision_docs": 1
+   }
+  },
+  "002086": {
+   "task_id": "002086",
+   "company": "002086",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/002086_decision_1642608000000.pdf.txt",
+     "sha256": "3146cf4f4ce992242fb75295e62e31944a871ab1a58803d5d9aa8dd6159a6c84",
+     "file": "002086_decision_1642608000000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/002086_notice_1638288000000.pdf.txt",
+     "sha256": "3244e62d75cecd5365e4e43ec7f704ffaa919914f5200d084d4c062380384af4",
+     "file": "002086_notice_1638288000000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "002086-F1",
+     "kind": "date",
+     "value": "2022-01-19收到调查通知书",
+     "allowed_expressions": [
+      "于2022年1月19日收到中国证券监督管理委员会"
+     ],
+     "doc": "D1",
+     "span": "于2022年1月19日收到中国证券监督管理委员会",
+     "category": "date"
+    },
+    {
+     "slot_id": "002086-F2",
+     "kind": "date",
+     "value": "2021-11-30收到事先告知书",
+     "allowed_expressions": [
+      "2021年11月30日"
+     ],
+     "doc": "D1",
+     "span": "2021年11月30日",
+     "category": "date"
+    },
+    {
+     "slot_id": "002086-F3",
+     "kind": "entity",
+     "value": "主体:东方海洋",
+     "allowed_expressions": [
+      "山东东方海洋科技股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "山东东方海洋科技股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "002086-F4",
+     "kind": "core",
+     "value": "涉嫌存在信息披露违法违规行为(保留原文表述)",
+     "allowed_expressions": [
+      "因公司涉嫌存在信息披露违法违规行为"
+     ],
+     "doc": "D1",
+     "span": "因公司涉嫌存在信息披露违法违规行为",
+     "category": "core"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 2,
+    "n_decision_docs": 1
+   }
+  },
+  "300089": {
+   "task_id": "300089",
+   "company": "300089",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/300089_decision_1630592121000.pdf.txt",
+     "sha256": "866e19d7ab0e46ae14e3364687260bf9c3ba2ce9178ce7c770b07d5dec507d45",
+     "file": "300089_decision_1630592121000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/300089_notice_1625500800000.pdf.txt",
+     "sha256": "38a7d05f56e31f5b387d3075a47b003277baf16d5505087d441249c69f7d741c",
+     "file": "300089_notice_1625500800000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "300089-F1",
+     "kind": "date",
+     "value": "2019-11-04收到调查通知书",
+     "allowed_expressions": [
+      "于2019年11月4日收到中国证券监督管理委员会《调查通"
+     ],
+     "doc": "D1",
+     "span": "于2019年11月4日收到中国证券监督管理委员会《调查通",
+     "category": "date"
+    },
+    {
+     "slot_id": "300089-F2",
+     "kind": "date",
+     "value": "2021-07-04收到告知书",
+     "allowed_expressions": [
+      "公司于2021年7月4日收到中国证监会广东监管局"
+     ],
+     "doc": "D1",
+     "span": "公司于2021年7月4日收到中国证监会广东监管局",
+     "category": "date"
+    },
+    {
+     "slot_id": "300089-F3",
+     "kind": "entity",
+     "value": "主体:文化长城",
+     "allowed_expressions": [
+      "广东文化长城集团股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "广东文化长城集团股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "300089-F4",
+     "kind": "core",
+     "value": "违法类型:信息披露(需核实完整表述)",
+     "allowed_expressions": [
+      "涉嫌信息披露"
+     ],
+     "doc": "D1",
+     "span": "涉嫌信息披露",
+     "category": "core"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 2,
+    "n_decision_docs": 1
+   }
+  },
+  "002766": {
+   "task_id": "002766",
+   "company": "002766",
+   "docs": {
+    "D1": {
+     "path": "independent_case_search/raw/002766_decision_1607616000000.pdf.txt",
+     "sha256": "2d64f007e101106486f125bcba6c0c792a089faffb57df9eefc8330ab62ef18d",
+     "file": "002766_decision_1607616000000.pdf.txt"
+    },
+    "D2": {
+     "path": "independent_case_search/raw/002766_notice_1586707200000.pdf.txt",
+     "sha256": "0e2840eabd1742234a6a01ef47a271c1e181149acd2f3b853f510a85fc3958e0",
+     "file": "002766_notice_1586707200000.pdf.txt"
+    }
+   },
+   "dag": {
+    "nodes": [
+     {
+      "node": "N1_extract_D1",
+      "kind": "extract",
+      "docs": [
+       "D1"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N2_extract_D2",
+      "kind": "extract",
+      "docs": [
+       "D2"
+      ],
+      "upstream": [],
+      "role": "文书事实提取"
+     },
+     {
+      "node": "N3_internal",
+      "kind": "reason",
+      "docs": [],
+      "upstream": [
+       "N1_extract_D1",
+       "N2_extract_D2"
+      ],
+      "role": "跨文档时序/核验/合并"
+     },
+     {
+      "node": "N4_report",
+      "kind": "report",
+      "docs": [],
+      "upstream": [
+       "N3_internal",
+       "N2_extract_D2"
+      ],
+      "role": "终端调查报告"
+     }
+    ]
+   },
+   "slots": [
+    {
+     "slot_id": "002766-F1",
+     "kind": "date",
+     "value": "2019-04-26收到调查通知书",
+     "allowed_expressions": [
+      "于2019年4月26日收到了中国证券监督管理委员会"
+     ],
+     "doc": "D1",
+     "span": "于2019年4月26日收到了中国证券监督管理委员会",
+     "category": "date"
+    },
+    {
+     "slot_id": "002766-F2",
+     "kind": "date",
+     "value": "2020-12-10收到处罚决定书",
+     "allowed_expressions": [
+      "2020年12月10日"
+     ],
+     "doc": "D1",
+     "span": "2020年12月10日",
+     "category": "date"
+    },
+    {
+     "slot_id": "002766-F3",
+     "kind": "entity",
+     "value": "主体:索菱股份",
+     "allowed_expressions": [
+      "深圳市索菱实业股份有限公司"
+     ],
+     "doc": "D1",
+     "span": "深圳市索菱实业股份有限公司",
+     "category": "entity"
+    },
+    {
+     "slot_id": "002766-F4",
+     "kind": "core",
+     "value": "违法类型:信息披露(需核实完整表述)",
+     "allowed_expressions": [
+      "涉嫌信息披露"
+     ],
+     "doc": "D1",
+     "span": "涉嫌信息披露",
+     "category": "core"
+    }
+   ],
+   "n_docs": 2,
+   "internal_kind": "reason",
+   "rule_inputs": {
+    "n_date_slots": 2,
+    "n_decision_docs": 1
+   }
+  }
+ }
+}

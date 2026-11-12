@@ -1,0 +1,39 @@
+{
+ "deviation_id": "EXECUTION_DEVIATION: CALL_COUNT_OVERRUN",
+ "date": "2026-11-11/12",
+ "nature": "执行器缺陷导致的非计划调用(非擅自扩大实验范围)",
+ "authorized": 56,
+ "actual_requests": 62,
+ "overrun": 6,
+ "breakdown": {
+  "run1_maxtok8192": 12,
+  "run2_requests": 48,
+  "run2_reused": 8,
+  "crash_before_save": 1,
+  "glm_maxtok_verify": 1
+ },
+ "prev_claim_correction": "此前报告'超13次/69次'错误(把8个复用格计为请求);精确核对为超6次/62次",
+ "cost": {
+  "authorized_cap_yuan": 3.0,
+  "actual_yuan": 1.1359,
+  "within_cap": true,
+  "note": "费用未超上限,但调用次数配额与费用配额是两条独立约束"
+ },
+ "config_phase_separation": {
+  "rule": "GLM配置从8192改为32768,两阶段结果必须分别标记,不得无差别合并",
+  "final_records": {
+   "p1_maxtok8192|glm-5.3-flash": 2,
+   "p1_maxtok8192|deepseek-chat": 6,
+   "p2_maxtok32768|glm-5.3-flash": 26,
+   "p2_maxtok32768|deepseek-chat": 22
+  },
+  "affected": "GLM仅1条来自8192阶段(E07C/extract,文档较短未耗尽);27条来自32768阶段",
+  "deepseek_note": "DeepSeek配置始终8192,不受该变更影响"
+ },
+ "decisions": [
+  "接受已完成的有效测量",
+  "不把额外调用算作新增独立样本",
+  "已登记为执行偏差,不豁免(即不视为完全合规)",
+  "后续任何扩展需新GO"
+ ]
+}

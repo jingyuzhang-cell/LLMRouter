@@ -1,0 +1,621 @@
+{
+ "batch_id": "DAMJS_EXP_36",
+ "created": "2026-11-06T23:44:26",
+ "status": "FROZEN",
+ "authorization": {
+  "design": "Design and engineering approved by the operator on 2026-11-06.",
+  "smoke": "GO 2026-11-06: 6 real executions (Static / Current-Proposed / DAMJS x S3, S4 x 240 s, rep 1), phase caps 50 calls / 190,000 tokens / Y0.37 inside the batch caps; counted in the 36.",
+  "main": "NOT authorized: the remaining 30 executions need a separate explicit GO after the smoke report.",
+  "credential_sources": {
+   "glm": "provider entry bigmodel-api-6 (no fallback; stop if unavailable)",
+   "deepseek": "provider entry deepseek"
+  },
+  "credential_handling": "injected into the child process environment only; never printed, logged or written to any file"
+ },
+ "supersedes_for_new_runs": "DAMJS_BATCH_MANIFEST.json (DAMJS_PILOT_54, INCOMPLETE, no admissible data); left unchanged",
+ "evidence_status": "EXPLORATORY: 2 repetitions per cell; not confirmatory evidence",
+ "design": {
+  "arms": {
+   "Static": {
+    "executor_arm": "Static",
+    "policy": "native:Static"
+   },
+   "Current-Proposed": {
+    "executor_arm": "Proposed-Dynamic",
+    "policy": "native:Proposed-Dynamic"
+   },
+   "DAMJS": {
+    "executor_arm": "Proposed-Dynamic",
+    "policy": "damjs_engine.Scheduler"
+   }
+  },
+  "deadlines_s": [
+   130.0,
+   150.0,
+   240.0
+  ],
+  "deadline_note": "110 s dropped (Static S4 finishes within 95 s usable in 2/8 baseline runs)",
+  "scenarios": [
+   "S3",
+   "S4"
+  ],
+  "reps": [
+   1,
+   2
+  ],
+  "executions": 36,
+  "phases": {
+   "smoke": [
+    "240s_S3_r1_Current-Proposed",
+    "240s_S3_r1_Static",
+    "240s_S3_r1_DAMJS",
+    "240s_S4_r1_Current-Proposed",
+    "240s_S4_r1_Static",
+    "240s_S4_r1_DAMJS"
+   ],
+   "main": [
+    "150s_S3_r2_Current-Proposed",
+    "150s_S3_r2_DAMJS",
+    "150s_S3_r2_Static",
+    "130s_S4_r2_DAMJS",
+    "130s_S4_r2_Static",
+    "130s_S4_r2_Current-Proposed",
+    "150s_S4_r1_DAMJS",
+    "150s_S4_r1_Current-Proposed",
+    "150s_S4_r1_Static",
+    "150s_S4_r2_Current-Proposed",
+    "150s_S4_r2_Static",
+    "150s_S4_r2_DAMJS",
+    "150s_S3_r1_DAMJS",
+    "150s_S3_r1_Static",
+    "150s_S3_r1_Current-Proposed",
+    "240s_S4_r2_Current-Proposed",
+    "240s_S4_r2_DAMJS",
+    "240s_S4_r2_Static",
+    "240s_S3_r2_DAMJS",
+    "240s_S3_r2_Current-Proposed",
+    "240s_S3_r2_Static",
+    "130s_S4_r1_Current-Proposed",
+    "130s_S4_r1_Static",
+    "130s_S4_r1_DAMJS",
+    "130s_S3_r2_Current-Proposed",
+    "130s_S3_r2_Static",
+    "130s_S3_r2_DAMJS",
+    "130s_S3_r1_DAMJS",
+    "130s_S3_r1_Current-Proposed",
+    "130s_S3_r1_Static"
+   ]
+  },
+  "order_seed": 20261106,
+  "order": [
+   "smoke:240s_S3_r1_Current-Proposed",
+   "smoke:240s_S3_r1_Static",
+   "smoke:240s_S3_r1_DAMJS",
+   "smoke:240s_S4_r1_Current-Proposed",
+   "smoke:240s_S4_r1_Static",
+   "smoke:240s_S4_r1_DAMJS",
+   "main:150s_S3_r2_Current-Proposed",
+   "main:150s_S3_r2_DAMJS",
+   "main:150s_S3_r2_Static",
+   "main:130s_S4_r2_DAMJS",
+   "main:130s_S4_r2_Static",
+   "main:130s_S4_r2_Current-Proposed",
+   "main:150s_S4_r1_DAMJS",
+   "main:150s_S4_r1_Current-Proposed",
+   "main:150s_S4_r1_Static",
+   "main:150s_S4_r2_Current-Proposed",
+   "main:150s_S4_r2_Static",
+   "main:150s_S4_r2_DAMJS",
+   "main:150s_S3_r1_DAMJS",
+   "main:150s_S3_r1_Static",
+   "main:150s_S3_r1_Current-Proposed",
+   "main:240s_S4_r2_Current-Proposed",
+   "main:240s_S4_r2_DAMJS",
+   "main:240s_S4_r2_Static",
+   "main:240s_S3_r2_DAMJS",
+   "main:240s_S3_r2_Current-Proposed",
+   "main:240s_S3_r2_Static",
+   "main:130s_S4_r1_Current-Proposed",
+   "main:130s_S4_r1_Static",
+   "main:130s_S4_r1_DAMJS",
+   "main:130s_S3_r2_Current-Proposed",
+   "main:130s_S3_r2_Static",
+   "main:130s_S3_r2_DAMJS",
+   "main:130s_S3_r1_DAMJS",
+   "main:130s_S3_r1_Current-Proposed",
+   "main:130s_S3_r1_Static"
+  ],
+  "routing": "A‴ (stage_d_v2_executor.AROUT/AMAX): E1-E4/J2/SINK DeepSeek thinking-off @4000; J1 GLM-5.3-Flash reasoning_effort=low @8192; FMT local",
+  "primary_comparison": "DAMJS-Recovery vs Current-Proposed (paired within block); Static is the reference arm",
+  "metrics": {
+   "joint_success": "TP >= 12 and the execution completes before D - 15 s (L3)",
+   "delta_tp": "TP(DAMJS) - TP(Current-Proposed), paired by block",
+   "cost_increment": "accounting Y and cash Y, DAMJS minus Current-Proposed, paired",
+   "latency_increment": "makespan / elapsed, DAMJS minus Current-Proposed, paired",
+   "negative_gain_rate": "share of blocks with TP(DAMJS) < TP(Current-Proposed)",
+   "worst_negative_gain": "min over blocks of TP(DAMJS) - TP(Current-Proposed)",
+   "invalid_intervention_rate": "share of executed recovery actions whose re-executed node still shows the triggering signal, failed, or after which the run missed D - 15 s",
+   "recovery_rounds": "number of executed recovery actions per execution (and extra calls beyond the 7-call DAG)"
+  },
+  "stop_rules": [
+   "a reservation denied by the batch ledger (INCOMPLETE_BUDGET)",
+   "any ledger metric at its cap, or headroom below the smallest single-call reservation",
+   "identity mismatch in any execution, or before/after the batch (INTEGRITY_FAIL)",
+   "a tag with a progress log but no result is never retried automatically (real mode)"
+  ]
+ },
+ "scope": {
+  "validates": "deadline-aware selective recovery (Z/R) against the existing dynamic recovery policy",
+  "does_not_validate": "model switching (PI) or cross-agent migration (X'); multi-agent cooperative scheduling is NOT validated by this batch",
+  "damjs_action_space": [
+   "NONE",
+   "Z_format",
+   "Z_structure",
+   "R"
+  ],
+  "pi_enabled": false,
+  "x_prime_enabled": false,
+  "agents": "fixed roster: one agent per role (extractor x4 capacity, reasoner, verifier, reporter, formatter); no compatible second agent exists for any node"
+ },
+ "algorithm": {
+  "engine": "damsj_engine.Scheduler (V0.2.1), unmodified: build_candidates -> select -> apply; GAIN_TABLE, reliable(), feasible(), Pareto, U weights 1.0/0.3/0.5, T_reserve 15 s",
+  "latency_prediction": "L_hat(a) = sum of per-node p95 wall over the nodes the executor re-runs because of a (target plus invalidated descendants; FMT only for Z_format). p95 table frozen in DAMJS_DESIGN.md section Q3. Replaces the engine's 2.0 s/call placeholder, per V0.2.1 correction 3. sigma_l, cost and sigma_c are the engine's own estimates.",
+  "p95_wall_s": {
+   "E1": 3.6,
+   "E2": 3.4,
+   "E3": 4.4,
+   "E4": 2.7,
+   "J1": 102.6,
+   "J2": 7.0,
+   "SINK": 7.3,
+   "FMT": 0.0
+  },
+  "history": "Scheduler.apply() records a predicted-gain placeholder; when the re-executed target completes, the placeholder is overwritten by the gold-blind observed gain: +1 triggering signal cleared, 0 signal persists, -1 node failed. C3-a / C3-b act on these observations.",
+  "current_q": "0.0 (decision-equivalent: Q_current cancels in argmax U and is unused by feasible() since V0.2.1-R2)",
+  "executability": "Z_structure only for nodes with a repair spec (REPAIR_LIB); Z_format only before the first format repair; Z_structure/R not after the executor's rerun cap (2)",
+  "watchdog": {
+   "L2": "every call's socket timeout = min(max(3*p95, 120 s), D_rem - 15 s) via the engine's effective_node_timeout (all arms)",
+   "L3": "child refuses calls once D_rem <= 15 s or the cancel token exists; parent terminates the child at D - 15 s (all arms)",
+   "L4": "degraded result from node_end outputs, minus invalidated ones, cut at the abort time; late results quarantined",
+   "anchor": "all deadlines measured from the parent's launch; the child subtracts its startup offset (M5)"
+  },
+  "current_proposed_note": "native V2 Proposed-Dynamic. Under A‴ routing a 'swap' re-runs the node on the same model (AROUT overrides the spec model): 89/89 swaps in the 192 baseline runs, S0-S4"
+ },
+ "budget": {
+  "caps": {
+   "calls": 350,
+   "tokens": 1250000,
+   "yuan": 2.3
+  },
+  "phase_caps": {
+   "smoke": {
+    "calls": 50,
+    "tokens": 190000,
+    "yuan": 0.37
+   }
+  },
+  "currency": "accounting Y (GLM accounted at notional price, cash Y0)",
+  "authorization_remaining": {
+   "calls": 377,
+   "tokens": 1348528,
+   "yuan": 2.3788
+  },
+  "ledger": "state/GLOBAL_BUDGET.json of the batch runs dir, shared by all child processes (stage_d_v2_executor.GlobalBudget)",
+  "reconciliation": "after each child: worst-case charge (prompt chars + 64 + max_tokens; matching Y) for every call that errored or was cut off",
+  "per_execution": "14 calls / Y0.18 (V2 config per_exec)",
+  "min_call_headroom": {
+   "tokens": 4997,
+   "yuan": 0.011946
+  }
+ },
+ "identity": {
+  "per_execution": "identity block with all runtime component SHAs, verified at child start and end",
+  "batch": "runner verifies every registered component before the first and after the last execution",
+  "rule": "any mismatch -> INTEGRITY_FAIL; results not admissible as evidence"
+ },
+ "modes": {
+  "replay": "zero-call acceptance: recorded responses through the executor's real handle, network tripwire, credentials stripped, records marked dry_run",
+  "real": "needs --mode real, STAGE_D_REAL_CALLS_AUTHORIZED=1 and DAMJS_R2_GO=<phase>; separate runs dir"
+ },
+ "components": [
+  {
+   "role": "child",
+   "path": "damjs_r2/damjs_r2_child.py",
+   "sha256": "6443250ff90c377fcb1d269bb84637477ca20454d1b5a8b2edb3289380bc38f7",
+   "bytes": 10159,
+   "runtime": true
+  },
+  {
+   "role": "bridge",
+   "path": "damjs_r2/damjs_bridge.py",
+   "sha256": "c3e21e85f986cf60aaa8633ab93ea7deee9ff731e95a884c43869f26831b7ce6",
+   "bytes": 12437,
+   "runtime": true
+  },
+  {
+   "role": "runner",
+   "path": "damjs_r2/damjs_r2_runner.py",
+   "sha256": "6043b300aba964ad80bf64a580cf3798f89578419fab2959b75edaf9e7b24f8d",
+   "bytes": 16299,
+   "runtime": true
+  },
+  {
+   "role": "wrapper",
+   "path": "damsj_executor.py",
+   "sha256": "107db96a0308c5317b229ca21892de0bb697a2ff4b527c0082cdc344f95292b6",
+   "bytes": 10352,
+   "runtime": true
+  },
+  {
+   "role": "engine",
+   "path": "damsj_engine.py",
+   "sha256": "7eec919b6a11ea99e4e5fb8bfc8ab7edfa0b90def5f360e145b062e570493aef",
+   "bytes": 12741,
+   "runtime": true
+  },
+  {
+   "role": "executor",
+   "path": "stage_d_v2_executor.py",
+   "sha256": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+   "bytes": 56231,
+   "runtime": true
+  },
+  {
+   "role": "config",
+   "path": "stage_d_v2_executor_config.json",
+   "sha256": "914f3edd4c4848e3f7063ce6c398f80afc773cf790844973638550848f543581",
+   "bytes": 1243,
+   "runtime": true
+  },
+  {
+   "role": "dependency_d2",
+   "path": "d2_executor.py",
+   "sha256": "df8a2de69079916110018699c57ec7f4ad9fd482af3f2fa9917360bac056c16e",
+   "bytes": 18399,
+   "runtime": true
+  },
+  {
+   "role": "dependency_prompts",
+   "path": "/root/research_outputs/static_pi/stage_a/executor.py",
+   "sha256": "5f1de3c770aa4869c2b39daa54f8917a90dcd100a8a1952e3315862abf14f889",
+   "bytes": 40089,
+   "runtime": true
+  },
+  {
+   "role": "dependency_transport",
+   "path": "/root/capital_opinion_pilot/transport.py",
+   "sha256": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+   "bytes": 4129,
+   "runtime": true
+  },
+  {
+   "role": "scorer",
+   "path": "/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py",
+   "sha256": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+   "bytes": 40717,
+   "runtime": true
+  },
+  {
+   "role": "task_contract",
+   "path": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/PHASE2B/TASK_CONTRACT_PHASE2B_v2_1.json",
+   "sha256": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234",
+   "bytes": 33063,
+   "runtime": true
+  },
+  {
+   "role": "test",
+   "path": "damjs_r2/test_damjs_r2.py",
+   "sha256": "7df7d137cc8694a2f0dd58c1f4d4dcd45f70fac1937cab86ca37e4b8ffe8d1e3",
+   "bytes": 27383,
+   "runtime": false
+  },
+  {
+   "role": "test",
+   "path": "test_damsj_engine.py",
+   "sha256": "c51e697ae3761c532b72174fc1908fb023a4012f2a82c7682908fac0289c3262",
+   "bytes": 7557,
+   "runtime": false
+  },
+  {
+   "role": "test",
+   "path": "test_damsj_executor.py",
+   "sha256": "226e5b94cc6e16a38d8c2aa4426fc2a8c9d6a5ad31ae0ca69db2bb65e4bf2120",
+   "bytes": 4091,
+   "runtime": false
+  },
+  {
+   "role": "screen",
+   "path": "damjs_r2/deadline_grid_check.py",
+   "sha256": "a473861f07aebb84f9f60f86c936ffb6618b38402010ec8cbb40ef1247b1a63f",
+   "bytes": 3564,
+   "runtime": false
+  },
+  {
+   "role": "screen",
+   "path": "damjs_r2/DEADLINE_GRID_CHECK.json",
+   "sha256": "e19b32eb4c0233b9c543f599699d1a122c4eb7a2b71727edeff49a2dc75ddb10",
+   "bytes": 4099,
+   "runtime": false
+  },
+  {
+   "role": "governance_tool",
+   "path": "damjs_r2/build_manifest.py",
+   "sha256": "6b75f5c1c54bb78388bed092eaeec74db3e09459c852a2082567e8f364ef2e42",
+   "bytes": 10292,
+   "runtime": false
+  },
+  {
+   "role": "prereg",
+   "path": "DAMJS_DESIGN.md",
+   "sha256": "908f73fee8974f81ebf5fb1952be5009e724dd8c78e93ef9c6bde199a1a36f94",
+   "bytes": 10550,
+   "runtime": false
+  },
+  {
+   "role": "prereg",
+   "path": "DAMJS_V0_2.md",
+   "sha256": "48b97d7fdfecfacb43126f06e607b9467ec995841dc7590f057cfc2bf5fc639c",
+   "bytes": 10049,
+   "runtime": false
+  },
+  {
+   "role": "prereg",
+   "path": "DAMJS_V0_2_1.md",
+   "sha256": "4862c5a6ef8fce9b9b1ea3ae89bf356e57beead5c7c656d74e78cb16b0d665ab",
+   "bytes": 6675,
+   "runtime": false
+  },
+  {
+   "role": "governance",
+   "path": "EXECUTOR_IDENTITY_ERRATUM.md",
+   "sha256": "5ba7a13388f8746d1395c69a2a7c9a2c7579a716a715e379c860ae73b3e3f662",
+   "bytes": 4984,
+   "runtime": false
+  },
+  {
+   "role": "governance",
+   "path": "e_node_audit/E_NODE_COMPAT_AUDIT.md",
+   "sha256": "3cbac9e83e989bbdd83e16f8e3bdc5aa1a46bad2815840b609be6a471e75fb4b",
+   "bytes": 18603,
+   "runtime": false
+  },
+  {
+   "role": "evidence",
+   "path": "e_node_audit/REPLAY_192_RESULTS.json",
+   "sha256": "d1178041e97fa788b95081896ce846c454e2ad030a19c5934ae7979bd1a8ecca",
+   "bytes": 66346,
+   "runtime": false
+  },
+  {
+   "role": "evidence",
+   "path": "e_node_audit/replay_all_192.py",
+   "sha256": "1788bc80aa2a5a025a6a38e40d3b79544a9ad929b466360250cf25189b1a8e5a",
+   "bytes": 8005,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S3__r1.json",
+   "sha256": "00560b9e903cb0228e0882fbfb154cd6938f5de1f3e5615d5d4b376ecc2d34e3",
+   "bytes": 30626,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S3__r2.json",
+   "sha256": "c0bf0cd3de74662ce8c67557991f428a80d8e3e8f3a238665c5510bdc812d389",
+   "bytes": 37623,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S3__r3.json",
+   "sha256": "6c4333020aea8d947a024cdb7d7d351d57d1864f7c7d5a1d7a3402115a8daa89",
+   "bytes": 39699,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S3__r4.json",
+   "sha256": "1ba140f7827e023d3fdf4abd6422451dcc8aaca809e57de0ad7975187c72a4a0",
+   "bytes": 39632,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S3__r5.json",
+   "sha256": "3a15e89841c92fe847b8d02330f9005eb548e20f306acd15da7a48eab8a94473",
+   "bytes": 37141,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S3__r6.json",
+   "sha256": "1c82494ae9fb1ff0607e34894935f15184d55f463f80f9b30d0913162b5b123c",
+   "bytes": 36149,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S3__r7.json",
+   "sha256": "9c1cedd7a3b8da02f61cb3d8249fe21858f8a421ed8c86ca749e5e3a74493b83",
+   "bytes": 37097,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S3__r8.json",
+   "sha256": "b3e9b0f7dd5d492f154ab3cca688e63d35e8826ee6cad366e05c6ad1ea5b4093",
+   "bytes": 37362,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S3__r1.json",
+   "sha256": "413dbbfd713d35dea97c4c81a02d6dd6f8674a1735b899c833b0df8f2d9edea3",
+   "bytes": 45887,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S3__r2.json",
+   "sha256": "670c500d7c923daff0695ecb4cb3c2b3341b428af59c5abd2bda27c10a700c40",
+   "bytes": 42691,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S3__r3.json",
+   "sha256": "19935f6131f2f3cef7772c71430f37eba73cd7d7759b9d04d4014ab915d5c80b",
+   "bytes": 31926,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S3__r4.json",
+   "sha256": "f602ddc651ddaac02626a802ad5f88f61a49b0f9d019c5a454181997432ff519",
+   "bytes": 44952,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S3__r5.json",
+   "sha256": "9f3cab742fb458790d8cd0e89f54572a60649fecf54800d6f0305b2bc900d1c0",
+   "bytes": 42060,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S3__r6.json",
+   "sha256": "ba2a2e9030542a5576af6b658ea671759003aa0030b810a05128bd25984381d5",
+   "bytes": 44963,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S3__r7.json",
+   "sha256": "2a61bd993dc0d81264ce7e98b1e30b1460790e44d4790372af04ba4455177e1a",
+   "bytes": 42430,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S3__r8.json",
+   "sha256": "36738e48e048c8ebc285a0f862bad9c8c75582a96a954f517e8bb247bcdc5f9f",
+   "bytes": 41726,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S4__r1.json",
+   "sha256": "75c9729889e9721e6c25a77164c30763a972c315e50efe19b35c3757d8fc2164",
+   "bytes": 39794,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S4__r2.json",
+   "sha256": "89de246ce44816d042de21dc1c605bafc1cf13e4fa67c71918cc1eb62e6349b2",
+   "bytes": 38939,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S4__r3.json",
+   "sha256": "e14827e6976a82e45e58e0795c4ed5664631a3b4d7647503572d2591383f2c82",
+   "bytes": 42730,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S4__r4.json",
+   "sha256": "4a844cc034241cd744e323470fa81daec0b789fa31521bcc7cb830a98f604e8b",
+   "bytes": 38858,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S4__r5.json",
+   "sha256": "8d1abc72a68c2cd05bc7cce2da6e339458e666cf046c2e46aaadc0129f39fc88",
+   "bytes": 38541,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S4__r6.json",
+   "sha256": "c3ce5b00839852baaaefab4a4276236da344afee9df715ec76506063441e1088",
+   "bytes": 39100,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S4__r7.json",
+   "sha256": "7a7930cf07dc28b06247cff80ee54ee71fdde387f1e5a55e193bb2c794d5b5d2",
+   "bytes": 27443,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Static__S4__r8.json",
+   "sha256": "0399efc8f602bf0c5b94e3217ea30e2b200bff21abe376376dd132c9b2547853",
+   "bytes": 39630,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S4__r1.json",
+   "sha256": "aaedb3939976b85c3724733a63d1412381f3f1a941a179bce7458336b0083113",
+   "bytes": 39316,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S4__r2.json",
+   "sha256": "bf420754f87c56103b6b7ae3567a5fe351954b338eaea8672f2e734b6f719cb7",
+   "bytes": 38767,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S4__r3.json",
+   "sha256": "53010ad4a3581b43a0159dc787eecbc62a58079da057e911b0a7e69d73ff7dfd",
+   "bytes": 39927,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S4__r4.json",
+   "sha256": "bebe70107d3e01aed4484f40fae631724e1c04e328d872ea67134724c4af1ba4",
+   "bytes": 38235,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S4__r5.json",
+   "sha256": "025a8bf753f7a072451d3945bcd9a789c2fa92c865c6e0f5847c5c976e7baf92",
+   "bytes": 42388,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S4__r6.json",
+   "sha256": "b97eff1e179cb309204f8120b424c6d464036aad3f2f0377f7256abffcd881f5",
+   "bytes": 38348,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S4__r7.json",
+   "sha256": "6cc8bc5b7ac6e160257dc5931e2dff09fafc88bdb9b22d66607f8e7e5ecd6821",
+   "bytes": 38631,
+   "runtime": false
+  },
+  {
+   "role": "replay_source",
+   "path": "runs_final/Proposed-Dynamic__S4__r8.json",
+   "sha256": "d9030cf53a0afd79e7d53edfeed2c608712e04b3fc21a04591ef01b858f0955a",
+   "bytes": 45529,
+   "runtime": false
+  }
+ ]
+}

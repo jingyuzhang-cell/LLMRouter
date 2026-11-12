@@ -1,0 +1,105 @@
+{
+ "batch": "V3_STAGE_A_PRIME",
+ "frozen_at": "2026-11-07",
+ "status": "COMPLETE (11/11 calls)",
+ "budget": {
+  "cap_calls": 20,
+  "cap_tokens": 250000,
+  "cap_yuan": 0.8,
+  "used_calls": 11,
+  "used_tokens": 130259,
+  "used_yuan_est": 0.22,
+  "incidents": "assertion caught a serialization-mismatch bug in supplemental-verify path (mock + real, zero wasted calls); fixed, resumed; E04|Zx gold-critical fid doc9::s1::f11 supplemented (+4 statuses)"
+ },
+ "three_metric_results": {
+  "Q_transport": {
+   "base": [
+    1.0,
+    0.364,
+    0.571,
+    0.9
+   ],
+   "Zx": [
+    1.0,
+    0.455,
+    0.786,
+    1.0
+   ],
+   "paired_d": [
+    0.0,
+    0.091,
+    0.215,
+    0.1
+   ],
+   "verdict": "Zx consistently raises code-carried store coverage (4/4 up-or-ceiling)"
+  },
+  "Q_narrative": {
+   "base": [
+    0.111,
+    0.273,
+    0.071,
+    0.2
+   ],
+   "Zx": [
+    0.333,
+    0.273,
+    0.071,
+    0.2
+   ],
+   "verdict": "low everywhere; narratives rarely contain verbatim gold spans (expected for prose)"
+  },
+  "Q_terminal": {
+   "base": [
+    0.389,
+    0.364,
+    0.286,
+    0.5
+   ],
+   "Zx": [
+    0.333,
+    0.273,
+    0.5,
+    0.4
+   ],
+   "paired_d": [
+    -0.056,
+    -0.091,
+    0.214,
+    -0.1
+   ],
+   "verdict": "MIXED - transport gains do NOT consistently reach the delivered answer"
+  },
+  "Q_terminal_fullfact_diag": {
+   "base": [
+    1.0,
+    0.364,
+    0.5,
+    0.9
+   ],
+   "Zx": [
+    1.0,
+    0.455,
+    0.643,
+    1.0
+   ],
+   "verdict": "full-factbase delivery recovers transport-level terminal Q -> the gap is entirely in key_facts SELECTION (9-15 fids cited of 37-231 stored)"
+  }
+ },
+ "interpretation": "operator outcome #2 confirmed: Q_transport improves but Q_terminal does not consistently improve. Under complete information transfer, the binding constraint has MOVED to the organization/selection stage (which facts the model cites into the delivered answer). Zx remains transport-valuable; its terminal value is gated by narrative-stage selection.",
+ "implications_for_v3": [
+  "Zx should NOT be valued at +15pp terminal unconditionally",
+  "terminal-value model for Zx must include a selection-transfer term (cited-facts coverage), currently ~0.3-0.6 of transport",
+  "next lever candidates (NOT to build now): key_facts guidance in narrative contract, or full-factbase appendix delivery (Qfull diag shows it reaches transport level)"
+ ],
+ "caveats": [
+  "n=1 rep, 4 tasks, exploratory",
+  "SJZG +21.4pp is the only positive terminal delta",
+  "E03 at transport ceiling shows Zx pure-downside risk on terminal (selection noise)"
+ ],
+ "files_sha256": {
+  "v3_aprime_runner.py": "65fb6b637e4641bf53a59879d0fe36a28fed32975d98b9386664eea254b321e3",
+  "v3_aprime_config.json": "8a01e469d2de70ba1535cd0efe5436d9d2b98a5015faf1b2f460263272775bf2",
+  "v3_aprime_runs/ledger.jsonl": "df43165d58166a8c4c1ede65d61142ef72b6ba4accc5236edc2070b97d70349e",
+  "v3_aprime_runs/outputs.jsonl": "dbeb046fccffc34eebbe1f9225da212b42726d3b938cb34c9c8749a16515e885"
+ }
+}

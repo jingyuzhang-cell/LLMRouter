@@ -1,0 +1,326 @@
+{
+ "task_id": "MD",
+ "company": "美的集团·吸并小天鹅(000333)",
+ "status": "FINAL_CANDIDATE_v1.3",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "md_ask_reply_2018.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/md_ask_reply_2018.txt",
+   "sha256": "2a1e37dcf75f9d0d59725f5e7ec2ae81dd49ce61b34980da236b492cdf6d8e7c"
+  },
+  "md_approval_2019.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/md_approval_2019.txt",
+   "sha256": "39cbc8bc34a4424cfd26838677e8d080da0a7058d7deac53e0c7ad8291f284ce"
+  },
+  "md_listing_2019.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/md_listing_2019.txt",
+   "sha256": "ddf449e5847706b2e07d3186c406dc6718eb5859fd6dbb3c680ddb029ad44188"
+  },
+  "md_ratio_adj_2019.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/md_ratio_adj_2019.txt",
+   "sha256": "dff11f07d80e28fc971d70eb343c0c5b666454a1846a4c4ce04060d8c56a89d3"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1",
+    "kind": "extract",
+    "docs": [
+     "md_ask_reply_2018.txt"
+    ],
+    "upstream": [],
+    "role": "问询与前置"
+   },
+   {
+    "node": "N2",
+    "kind": "extract",
+    "docs": [
+     "md_listing_2019.txt",
+     "md_ratio_adj_2019.txt"
+    ],
+    "upstream": [],
+    "role": "方案与比例"
+   },
+   {
+    "node": "N3",
+    "kind": "timeline",
+    "docs": [],
+    "upstream": [
+     "N1",
+     "N2"
+    ],
+    "role": "审批时序"
+   },
+   {
+    "node": "N4",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N2",
+     "N3"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "MD-1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "公告编号2018-090(问询回复)，落款2018-10-29",
+   "doc": "md_ask_reply_2018.txt",
+   "span": "证券代码：000333 证券简称：美的集团 公告编号：2018-090 + 尾部\"2018年10月29日\"",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-2",
+   "node": "N1",
+   "kind": "extract",
+   "value": "公告编号2019-032(核准批复)，落款2019-03-13",
+   "doc": "md_approval_2019.txt",
+   "span": "公告编号：2019-032 + 尾部\"2019年3月13日\"",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-3",
+   "node": "N2",
+   "kind": "extract",
+   "value": "公告编号2019-079(换股比例调整)，落款2019-05-23",
+   "doc": "md_ratio_adj_2019.txt",
+   "span": "公告编号：2019-079 + 尾部\"2019年5月23日\"",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-4",
+   "node": "N2",
+   "kind": "extract",
+   "value": "交易结构：美的集团发行A股股份换股吸收合并小天鹅(深交所上市)",
+   "doc": "md_listing_2019.txt",
+   "span": "美的集团股份有限公司发行A股股份换股吸收合…(报告书标题)",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-5",
+   "node": "N2",
+   "kind": "extract",
+   "value": "小天鹅A股换股比例：1股小天鹅A股换1.2110股美的集团A股",
+   "doc": "md_listing_2019.txt",
+   "span": "\"1:1.2110\"（md_listing_2019.txt换股比例章节）",
+   "ai_verdict": "REVISED(终审R:方向已明确——小天鹅→美的)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-6",
+   "node": "N2",
+   "kind": "extract",
+   "value": "小天鹅B股换股比例：1股小天鹅B股换0.93446244股美的集团A股",
+   "doc": "md_listing_2019.txt",
+   "span": "\"1:0.93446244\"（同上章节）",
+   "ai_verdict": "REVISED(终审R:方向已明确)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-7",
+   "node": "N2",
+   "kind": "extract",
+   "value": "换股比例公式：小天鹅调整后的A股股票换股价格/美的集团股票价格",
+   "doc": "md_listing_2019.txt",
+   "span": "换股比例=小天鹅调整后的 A 股股票换股价格/美的集团",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-8",
+   "node": "N1",
+   "kind": "extract",
+   "value": "问询回复中\"小天鹅\"主体编号引用：02764611（系问询回复编号引用，非证券代码；小天鹅A股证券代码为000418见MD-15）",
+   "doc": "md_ask_reply_2018.txt",
+   "span": "小天鹅 02764611 长期 无锡",
+   "ai_verdict": "REVISED(终审R:明确编号性质)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-9",
+   "node": "N1",
+   "kind": "extract",
+   "value": "问询回复涉及小天鹅2013/2017年度财务指标(权益/每股销售等)",
+   "doc": "md_ask_reply_2018.txt",
+   "span": "小天鹅 2013 年度权益/2017 年度归属于母公司股…每股销售收入",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-10",
+   "node": "N3",
+   "kind": "timeline",
+   "value": "时序：问询回复(2018-10-29)早于核准批复(2019-03-13)",
+   "doc": "md_ask_reply_2018.txt + md_approval_2019.txt",
+   "span": "MD-1/MD-2落款",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "derived_from": [
+    "MD-1",
+    "MD-2"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-11",
+   "node": "N3",
+   "kind": "timeline",
+   "value": "时序：核准批复(2019-03-13)早于换股比例调整公告(2019-05-23)",
+   "doc": "md_approval_2019.txt + md_ratio_adj_2019.txt",
+   "span": "MD-2/MD-3落款",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "derived_from": [
+    "MD-2",
+    "MD-3"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-12",
+   "node": "N3",
+   "kind": "timeline",
+   "value": "上市公告书披露年份：2019年（落款页日期栏空白\"年 月 日\"，落款仅2019年可考）",
+   "doc": "md_ratio_adj_2019.txt + md_listing_2019.txt",
+   "span": "公告尾部\"美的集团股份有限公司 年 月 日\"（落款空白）+文件内容均为2019年",
+   "ai_verdict": "REVISED(终审R:年份为落款可考信息，非文件名推断)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-13",
+   "node": "N4",
+   "kind": "report",
+   "value": "综合结论：美的集团换股吸收合并小天鹅，经问询回复(2018-10)→核准批复(2019-03)→比例调整(2019-05)→上市公告(2019年)四个阶段完成整合",
+   "doc": "md_listing_2019.txt",
+   "span": "报告书结论章节",
+   "ai_verdict": "REVISED(终审R:判分要点完善)",
+   "source": "AI_PROPOSED",
+   "scoring_points": [
+    "四阶段按时间顺序整合",
+    "各阶段日期/文号有据",
+    "不出现无来源交易结论"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-14",
+   "node": "N4",
+   "kind": "report",
+   "value": "核验：2019-079公告调整后换股比例与上市公告书载比例是否一致（须逐份文书核对具体数值及股份类别）",
+   "doc": "md_ratio_adj_2019.txt + md_listing_2019.txt",
+   "span": "调整后比例 vs 报告书比例",
+   "ai_verdict": "REVISED(终审R:判分要求明确)",
+   "source": "AI_PROPOSED",
+   "scoring_points": [
+    "实际比较两份文书比例数值",
+    "核对同一股份类别",
+    "仅提及文书不构成通过"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-15",
+   "node": "N2",
+   "kind": "extract",
+   "value": "小天鹅A股证券代码：000418",
+   "doc": "md_listing_2019.txt",
+   "span": "代码：小天鹅A股指000418.SZ）在深交所上市流通的小天鹅B股（股票代码：小天鹅B股指2004",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-16",
+   "node": "N2",
+   "kind": "extract",
+   "value": "现金选择权申报结果：A股现金选择权申报期内没有投资者申报行使",
+   "doc": "md_listing_2019.txt",
+   "span": "次合并所涉现金选择权申报期内，没有投资者申报行使小天鹅A股现金选择权，没有投资者申报行使小天鹅B股现金选择权。（三）",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-17",
+   "node": "N2",
+   "kind": "extract",
+   "value": "现金选择权实施情况：已实施完毕",
+   "doc": "md_listing_2019.txt",
+   "span": "集团股东收购请求权、小天鹅股东现金选择权已实施完毕。7、小天鹅B股股票主动终止上市的申请已获得深圳证券交易所同意，深圳",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "MD-18",
+   "node": "N2",
+   "kind": "extract",
+   "value": "报告书释义：换股价格=定价基准日小天鹅股票每股价格(含A股换股价格定义)",
+   "doc": "md_listing_2019.txt",
+   "span": "换为美的集团A股股小天鹅换股价格指票时的小天鹅股票每股价格，包括小天鹅A股换股价格和小天鹅B股换股价格",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "MD-U1",
+   "node": "N4",
+   "expected_status": "UNKNOWN",
+   "value": "美的集团异议股东收购请求权行权结果（小天鹅股东现金选择权已有MD-16/17覆盖）",
+   "doc": "本组文书",
+   "note": "缩小范围：仅美的集团侧异议股东行权结果未披露",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [],
+ "scoring_contract": {
+  "n_scored_slots": 18,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "标签勘误：原\"md=梦网\"为筛选报告误标，实为美的集团(T-M1)",
+  "4个扩展槽为占位框架，需人工填充后才可计分；填充前有效槽10——低于18门槛，属从零建任务的诚实状态",
+  "P0深读补齐完成：占位槽已全部替换为锚定事实，待人工签收"
+ ],
+ "consolidated_ruling": {
+  "date": "2026-11-08",
+  "items": "MD-5/6/8确认；MD-12落款空白只写年份；MD-13/14判分要点"
+ },
+ "final_review": {
+  "date": "2026-11-08",
+  "result": "MD-5/6/8/12/13/14/U1六项+UNK闭合"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ }
+}

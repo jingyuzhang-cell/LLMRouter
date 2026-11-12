@@ -1,0 +1,151 @@
+{
+ "passed": 29,
+ "total": 29,
+ "results": [
+  {
+   "name": "T1 prior usage is read from the ledger: 3 calls including the truncated J1",
+   "ok": true,
+   "detail": "{'calls': 3, 'tokens': 27328, 'yuan_accounting': 0.0399664, 'yuan_marginal': 0.0166216}"
+  },
+  {
+   "name": "T1 J1 now routes to DS; J2/SINK unchanged; prompts byte-identical to the frozen runner",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T2 three arms run in order, each PASS",
+   "ok": true,
+   "detail": "{'Static': None, 'Fixed-Recovery': None, 'Joint-Dynamic': None}"
+  },
+  {
+   "name": "T2 each arm spends exactly 3 calls; cumulative ends at 12 of 13",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T2 no E call is made; every new call is J1/J2/SINK on DS",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T2 the reused E outputs reach J1 byte for byte",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T2 J1 system prompt sent is the frozen J1_SYS",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T2 aggregate and ledger-only rescore agree",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T2 no recovery action in any arm",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T3 order gate refuses second arm without the first",
+   "ok": true,
+   "detail": "REFUSED: Static has not run"
+  },
+  {
+   "name": "T3 order gate refuses rerun of a finished arm",
+   "ok": true,
+   "detail": "REFUSED: arm Static already ran; its scene is never rerun"
+  },
+  {
+   "name": "T3 order gate refuses a wrong --after sha",
+   "ok": true,
+   "detail": "REFUSED: --after does not match ARM_Static.json"
+  },
+  {
+   "name": "T3 order gate accepts the right --after sha",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T4 a reused E output whose text hash differs is refused before any call",
+   "ok": true,
+   "detail": "REFUSED: reused E_D2 fails ['text sha256']"
+  },
+  {
+   "name": "T4 a reused E output from a different prompt is refused",
+   "ok": true,
+   "detail": "REFUSED: reused E_D1 fails ['system prompt']"
+  },
+  {
+   "name": "T5 a 4th call in one arm is stopped before sending",
+   "ok": true,
+   "detail": "arm call cap 3 reached"
+  },
+  {
+   "name": "T5 cumulative token cap counts canary_A usage",
+   "ok": true,
+   "detail": "token pre-flight: 229000+7387+8000 > 230000"
+  },
+  {
+   "name": "T5 cumulative yuan cap counts canary_A usage",
+   "ok": true,
+   "detail": "yuan pre-flight exceeds 0.3"
+  },
+  {
+   "name": "T6 truncation at DS J1: arm stops after 1 call, FAIL, next arm refused",
+   "ok": true,
+   "detail": "{'Static': {'arm': 'Static', 'stopped': 'J1/ds natural fault: truncated (stop=length)', 'used_arm_calls': 1, 'used_cumulative': {'calls': 4, 'tokens': 36509, 'yuan_accounting': 0.063311, 'yuan_marginal': 0.039966}, 'caps': {'calls': 13, 'tokens': 230000, 'yuan': 0.3, 'arm_calls': 3}, 'route': {'J1':"
+  },
+  {
+   "name": "T6 SINK empty answers: stop, FAIL, scene kept",
+   "ok": true,
+   "detail": "Static: SINK returned no answers"
+  },
+  {
+   "name": "T6 HTTP 429 at J2: stop, FAIL, scene kept",
+   "ok": true,
+   "detail": "J2/ds transport error: HTTPError: HTTP Error 429: Too Many Requests"
+  },
+  {
+   "name": "T6 J2 parse failure: stop, FAIL, scene kept",
+   "ok": true,
+   "detail": "J2/ds natural fault: json_invalid (stop=stop)"
+  },
+  {
+   "name": "T6 a recovery wanted in the normal condition stops before any recovery call",
+   "ok": true,
+   "detail": "Fixed-Recovery: recovery action repair_retry in a stage that allows none (Obs(j1_fault=None, final_coverage=0.0, e_d2_penalty_signal=14))"
+  },
+  {
+   "name": "T6 scoring exception stops the arm and fails it",
+   "ok": true,
+   "detail": "Static: scoring failed: ValueError: scorer broke"
+  },
+  {
+   "name": "T7 real mode refused without SC_E1_1_A2_GO",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T7 real mode refused with a wrong freeze sha",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T8 runner, scorer, contract, prompts source and scoring dependencies are unchanged since the Stage A freeze",
+   "ok": true,
+   "detail": "{'sc_e1_1_runner.py': True, 'sc_e1_scorer.py': True, 'sc_e1_runner.py': True, 'TASK_CONTRACT_SC_E1_v1_1.json': True, 'transport.py': True, 'P2_AMENDMENT_SC_E1_1.md': True, 'scorer_qp1_v2.py': True, 'terminal_quality.py': True}"
+  },
+  {
+   "name": "T8 canary_A ledger and results carry no write bits and the ledger hash is pinned in the A2 freeze",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T8 the real canary_A E outputs pass the reuse checks",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

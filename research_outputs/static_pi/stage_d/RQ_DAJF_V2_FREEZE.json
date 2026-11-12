@@ -1,0 +1,138 @@
+{
+ "batch": "RQ_DAJF_V2",
+ "frozen_at": "2026-11-06",
+ "budget": {
+  "cap_calls": 160,
+  "cap_tokens": 800000,
+  "cap_yuan": 3.5,
+  "used_calls": 134,
+  "used_tokens": 390159,
+  "used_yuan_est": 2.1617
+ },
+ "design": "18 execs: DA-JS-v2 x {natural,persistent,persistent_bcap,transient,transient_bcap} x3 + Proposed x transient x3; corrected table V2; eps-dominance + VoI probe policy + per-block Beta posterior",
+ "results_v2_means": {
+  "DA-JS-v2|natural": {
+   "Q_merge": 0.424,
+   "Q_report": 0.243,
+   "ES": 0.278,
+   "Q_terminal": 0.253,
+   "C": 6.0,
+   "L": 100
+  },
+  "DA-JS-v2|persistent": {
+   "Q_merge": 0.334,
+   "Q_report": 0.152,
+   "ES": 0.249,
+   "Q_terminal": 0.181,
+   "C": 8.667,
+   "L": 108
+  },
+  "DA-JS-v2|persistent_bcap": {
+   "Q_merge": 0.364,
+   "Q_report": 0.152,
+   "ES": 0.497,
+   "Q_terminal": 0.255,
+   "C": 7.333,
+   "L": 96
+  },
+  "DA-JS-v2|transient": {
+   "Q_merge": 0.485,
+   "Q_report": 0.273,
+   "ES": 0.209,
+   "Q_terminal": 0.254,
+   "C": 8.667,
+   "L": 109
+  },
+  "DA-JS-v2|transient_bcap": {
+   "Q_merge": 0.364,
+   "Q_report": 0.152,
+   "ES": 0.308,
+   "Q_terminal": 0.198,
+   "C": 7.0,
+   "L": 125
+  },
+  "Proposed|transient": {
+   "Q_merge": 0.455,
+   "Q_report": 0.273,
+   "ES": 0.298,
+   "Q_terminal": 0.28,
+   "C": 7.0,
+   "L": 136
+  }
+ },
+ "pooled_mechanism_estimates_both_batches": {
+  "Z2": {
+   "n": 9,
+   "mean": 0.454,
+   "sd": 0.135,
+   "range": [
+    0.273,
+    0.636
+   ],
+   "note": "bounded by upstream extract draw; V1's 3x0.545 was a favorable-extract draw"
+  },
+  "pi_qwen_to_ds": {
+   "n": 6,
+   "mean": 0.349,
+   "sd": 0.152,
+   "note": "validates corrected 0.334"
+  },
+  "R_recovered_qwen_merge_redraw": {
+   "n": 6,
+   "mean": 0.409,
+   "sd": 0.114,
+   "note": "R success = fresh draw of natural merge quality"
+  },
+  "natural": {
+   "n": 12,
+   "mean": 0.371,
+   "sd": 0.12
+  }
+ },
+ "work_item_outcomes": {
+  "W1_table_fix": {
+   "status": "validated",
+   "detail": "pi corrected 0.500 to 0.334; realized pooled 0.349"
+  },
+  "W2_conditional_skip": {
+   "status": "live-validated both directions",
+   "persistent_bcap": "r1 probe(p=.50) fail, posterior .33, escalate pi; r2/r3 skip doomed probe, pi direct (-1 call,-35s each)",
+   "transient_bcap": "probe ok 3/3, posterior .50->.67->.75->.80, keeps probing",
+   "large_B_persistent": "R-skip is derived (Z2 dominates by >=0.151*p Q and 15s vs 50s), prior-free"
+  },
+  "W3_directZ2_vs_RthenZ2": {
+   "status": "savings confirmed; dQ confounded by extract draw",
+   "v1_R_then_Z2": {
+    "Q": 0.545,
+    "calls": 10,
+    "L": 149.3
+   },
+   "v2_direct_Z2": {
+    "Q": 0.334,
+    "calls": 8.667,
+    "L": 108
+   },
+   "confound_evidence": "V1 extracts 8/9/9 gold hits vs V2 4/9/9; Z2 union bounded by extract draw; V2 r1 had an empty extract (split skipped, 8 calls)",
+   "verdict": "skip saves 1-1.3 calls and ~41s with no mechanism-level quality loss; cross-batch dQ=-21pp attributable to upstream stochasticity (n=3 each, cannot statistically separate)"
+  }
+ },
+ "terminal_metrics_finding": "operator-required terminal view: Q_report/ES uniformly low and noisy (no strategy separates at n=3); merge-stage gains lose ~50% at report stage; report-node fidelity is now the binding constraint. ES_r range 0.11-0.59.",
+ "caveats": [
+  "n=3 per cell, exploratory",
+  "Z2 Q_hat updated 0.545 to 0.454 sd 0.135 (n=9); controller should treat Z2 as upstream-bounded",
+  "empty extracts observed 3x across batches: extract-node anomalies currently unwatched by controller (future: per-node detection)",
+  "cross-batch W3 contrast confounded by extract draws"
+ ],
+ "files_sha256": {
+  "rq_dajf2_runner.py": "7c1e7c5191004a6304c69d9e97d83373d06d64c867843f18c5a68de158f75785",
+  "rq_dajf2_config.json": "6fe311c3c81f263703164907e3427e7931d052b95d099e6cf30576cbd597f22a",
+  "rq_dajf2_score.py": "1b93883e517b4427772198b2276a17a8958bd693f7635e51d7d7cc2c78d1d04b",
+  "da_js_v2.py": "3389beb74316deefd829811f912e81839aed5190e3a92fcc63c3e72b7e12e2a1",
+  "QCL_ESTIMATION_TABLE_V2.json": "f2b283484a29a3c7542a75ec6ef023f34ee815c0a7b9f304ab4bb0286a18653c",
+  "rq_dajf2_runs/ledger.jsonl": "b7d0807d59fee6fa23dfd19b7d4d4943eea982661ea371ed3351df7c96855f51",
+  "rq_dajf2_runs/outputs.jsonl": "ca32165a11e63e37685cf81199d702315b50a3b4fed455d2a7d4ad3026f65af8",
+  "RQ_DAJF_V2_SCORED.json": "451dde533cfd42f91099ca2430b03e79f0a91e26789bf339ac0d67a7fb8036a2",
+  "DA_JS_V2_POLICY_MAP.json": "a9fc3de6cd3731dbcb7aefc2b6f436a2f239ce7cea973f2088272a6bc9b268e4",
+  "RQ_DAJF_V1_TERMINAL_RETRO.json": "988ee22edaeb108dd361d2aab78c756e9fd1cdc5b369248191879eeb096fbad9"
+ }
+}

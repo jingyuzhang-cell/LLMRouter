@@ -1,0 +1,80 @@
+{
+ "batch": "SC-E1.1-PI-RECOVERY",
+ "frozen_at": "2026-11-06T16:12:54",
+ "experiment": "V2 real anomaly replay: Static vs FR(R-only) vs JD(R→π), persistent J2 anomaly",
+ "design": {
+  "shared_condition": "V2 FR J1 (8,609 chars, 25 parties) + injected persistent J2 anomaly (R also returns empty)",
+  "anomaly_source": "Real V2 FR J2 empty output (DS natural anomaly, verified)",
+  "arms": {
+   "Static": "detect anomaly → NO recovery",
+   "Fixed-Recovery": "detect → R(DS retry) → still empty → give up",
+   "Joint-Dynamic": "detect → R(DS retry) → still empty → π(switch to Qwen) → recovered"
+  }
+ },
+ "results": {
+  "Static": {
+   "Q": 0.0,
+   "answers": 0,
+   "j2": "empty",
+   "sink": "36ch",
+   "calls": 1
+  },
+  "Fixed-Recovery": {
+   "Q": 0.0,
+   "answers": 0,
+   "j2": "empty_after_R",
+   "sink": "36ch",
+   "calls": 1
+  },
+  "Joint-Dynamic": {
+   "Q": 0.35,
+   "answers": 27,
+   "hits": "7/20",
+   "j2": "2,538ch(Qwen)",
+   "sink": "4,314ch",
+   "calls": 1,
+   "actions": [
+    "J2_anomaly_detected:R_retry",
+    "R_retry:FAILED",
+    "pi_model_switch:qwen",
+    "pi:RECOVERED"
+   ]
+  },
+  "pi_fallback_comparison": {
+   "GLM": {
+    "stop": "max_tokens",
+    "body": "0 chars (thinking consumed all)",
+    "Q": 0.0
+   },
+   "Qwen": {
+    "stop": "stop",
+    "body": "2,538 chars",
+    "Q": 0.35
+   },
+   "lesson": "GLM unsuitable for structured verification fallback (thinking-token issue); Qwen 0% truncation rate confirmed"
+  }
+ },
+ "scientific_conclusion": {
+  "primary": "When same-model retry cannot resolve a persistent anomaly, switching to a heterogeneous model with different failure modes is the only effective recovery",
+  "evidence_level": "single controlled anomaly replay (not natural execution statistics)",
+  "limitations": [
+   "one anomaly type (J2 empty output)",
+   "one event (SC-E1.1 獐子岛)",
+   "one primary model (DS)",
+   "one fallback tested successfully (Qwen); GLM failed",
+   "Q=0.350 is recovery quality, not full pipeline quality ceiling"
+  ]
+ },
+ "cost": {
+  "calls": 3,
+  "tokens": 17984,
+  "yuan": 0.0196
+ },
+ "files_sha256": {
+  "plan_a_prime.py": "088622a8524927ea9404bfd2611cf2b37be491a6856fd26cb5cbf414c6453e96",
+  "plan_a_qwen_pi_runs/RESULTS.json": "b06d403b9dba75fad16c54769061e915884e084762c63495e718fba5c63498c1",
+  "plan_a_qwen_pi_runs/LEDGER.jsonl": "04e8c46fc3f28146ff5b91759c090ec7c491ce9689a73541918932493f3e7ef0",
+  "plan_a_pi_replay_runs/RESULTS.json": "581162bd34a3c7e31dcc7a750f89d3d6a835ac5f18b24ac6ef62c1c6e68add64",
+  "plan_a_pi_replay_runs/LEDGER.jsonl": "2653ec0546a85a98de8abb7cd40377e5284c493ceef799e5674146d20166f9f8"
+ }
+}

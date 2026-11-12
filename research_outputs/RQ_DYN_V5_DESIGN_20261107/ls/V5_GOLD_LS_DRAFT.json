@@ -1,0 +1,309 @@
+{
+ "task_id": "LS",
+ "company": "乐视网(300104)·退市",
+ "status": "FINAL_CANDIDATE_v1.2",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "ls_delist_2020.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/ls_delist_2020.txt",
+   "sha256": "d94e6df43ad6ee040860de13d5d21a7e33be77801e1543ec3bc1fcf5e023e868"
+  },
+  "ls_terminate_2020.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/ls_terminate_2020.txt",
+   "sha256": "0c2adeb30937f0ed067dc63de4a50504c200f4715159066c24be0e4cf60daf31"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1",
+    "kind": "extract",
+    "docs": [
+     "ls_delist_2020.txt"
+    ],
+    "upstream": [],
+    "role": "退市整理期安排"
+   },
+   {
+    "node": "N2",
+    "kind": "extract",
+    "docs": [
+     "ls_terminate_2020.txt"
+    ],
+    "upstream": [],
+    "role": "终止上市"
+   },
+   {
+    "node": "N3",
+    "kind": "timeline",
+    "docs": [],
+    "upstream": [
+     "N1",
+     "N2"
+    ],
+    "role": "时序"
+   },
+   {
+    "node": "N4",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N3"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "LS-1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "公告2020-037：进入退市整理期交易第一次风险提示",
+   "doc": "ls_delist_2020.txt",
+   "span": "证券简称：乐视网 公告编号：2020-037…退市整理期交易(文件头)",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-2",
+   "node": "N1",
+   "kind": "extract",
+   "value": "退市整理期：三十个交易日",
+   "doc": "ls_delist_2020.txt",
+   "span": "退市整理期为三十个交易日",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-3",
+   "node": "N1",
+   "kind": "extract",
+   "value": "预计最后交易日：2020-07-20",
+   "doc": "ls_delist_2020.txt",
+   "span": "预计最后交易日期为…2020 年 7 月 20 日",
+   "ai_verdict": "PENDING_HUMAN(日期与公告表述对应复核)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-12",
+   "node": "N1",
+   "kind": "extract",
+   "value": "退市整理期涨跌幅限制：10%",
+   "doc": "ls_delist_2020.txt",
+   "span": "2、股票简称：乐视退3、涨跌幅限制：10%4、进入退市整理期首日的开盘参考价：1.69元/股二、公司股票退市整理期",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-5",
+   "node": "N1",
+   "kind": "extract",
+   "value": "整理期期间公司不筹划或实施重大资产重组",
+   "doc": "ls_delist_2020.txt",
+   "span": "退市整理期交易期间，公司将不筹划或实施重大资",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-6",
+   "node": "N1",
+   "kind": "extract",
+   "value": "规则依据：《退市整理期业务特别规定(2017年修订)》",
+   "doc": "ls_delist_2020.txt",
+   "span": "退市整理期业务特别规定（2017 年修订）》",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-7",
+   "node": "N2",
+   "kind": "extract",
+   "value": "公告2020-035：终止上市相关公告",
+   "doc": "ls_terminate_2020.txt",
+   "span": "公告编号：2020-035 乐视网信息技术（北京）股份有限公…(文件头)",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-8",
+   "node": "N2",
+   "kind": "extract",
+   "value": "公司全称：乐视网信息技术（北京）股份有限公司(300104)",
+   "doc": "ls_terminate_2020.txt",
+   "span": "证券代码：300104…乐视网信息技术（北京）股份有限公",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-9",
+   "node": "N3",
+   "kind": "timeline",
+   "value": "时序：收到深交所终止上市决定(2020-05-14)早于退市整理期起始日(2020-06-05)早于预计最后交易日(2020-07-20)",
+   "doc": "ls_delist_2020.txt",
+   "span": "\"公司股票进入退市整理期交易的起始日为 2020 年 6 月 5 日…预计最后交易日期为 2020 年 7 月 20 日\"（ls_delist@L31-33）+\"2020年5月14日收到深圳证券交易所下发的《…终止上市的决定》\"（@L19）",
+   "ai_verdict": "REVISED(按原文逐字：06-05=公告载明起始日)",
+   "source": "AI_PROPOSED",
+   "ai_note": "证据冲突标记：操作者离线记录(06-08首日/06-05披露日)与本组原文(起始日=06-05)不一致，按证据优先采用原文，留终签裁定",
+   "human_verdict": "PASS",
+   "human_note": "第二人复核P：官方公告直接支持06-05为整理期起始日"
+  },
+  {
+   "slot_id": "LS-13",
+   "node": "N2",
+   "kind": "extract",
+   "value": "终止上市决定机关：深圳证券交易所",
+   "doc": "ls_delist_2020.txt",
+   "span": "重要提示：1、公司股票已被深圳证券交易所决定终止上市，公司股票于2020年6月5日进入退市整理期，在退市整理期交易",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-11",
+   "node": "N4",
+   "kind": "report",
+   "value": "综合结论：乐视网经退市整理期后终止上市",
+   "doc": "ls_terminate_2020.txt",
+   "span": "终止上市公告结论段",
+   "ai_verdict": "PENDING_HUMAN",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-14",
+   "node": "N2",
+   "kind": "extract",
+   "value": "决定文件：《关于乐视网信息技术（北京）股份有…终止上市的决定》",
+   "doc": "ls_delist_2020.txt",
+   "span": "月14日收到深圳证券交易所下发的《关于乐视网信息技术（北京）股份有限公司股票终止上市的决定》（深证上【2020】405",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-15",
+   "node": "N2",
+   "kind": "extract",
+   "value": "摘牌：深圳证券交易所对公司股票予以摘牌",
+   "doc": "ls_delist_2020.txt",
+   "span": "市整理期届满的次一个交易日，深圳证券交易所对公司股票予以摘牌。三、退市整理期风险提示公告的披露安排退市整理期间，公司将在",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-16",
+   "node": "N1",
+   "kind": "extract",
+   "value": "整理期停牌规则：申请全天停牌累计不超过五个交易日",
+   "doc": "ls_delist_2020.txt",
+   "span": "证券交易所申请股票全天停牌的，累计停牌天数不超过五个交易日。退市整理期间，公司股票交易的涨跌幅限制、行情揭示、公开信息等其他交",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-17",
+   "node": "N3",
+   "kind": "timeline",
+   "value": "时序链：收到终止上市决定(2020-05-14)→退市整理期起始(2020-06-05公告口径，首日开盘参考价1.69元)→三十个交易日→预计最后交易日(2020-07-20)→摘牌",
+   "doc": "ls_delist_2020.txt",
+   "span": "ls_delist@L19+L31-33+摘牌表述",
+   "ai_verdict": "REVISED(按原文重组；06-08口径不在本组文书未采用)",
+   "source": "DEEP_READ",
+   "derived_from": [
+    "LS-13",
+    "LS-2",
+    "LS-3",
+    "LS-15"
+   ],
+   "ai_note": "同LS-9冲突标记",
+   "human_verdict": "PASS",
+   "human_note": "第二人复核P：06-05为起始日及首日，开盘参考价1.69元，30交易日，预计07-20最后交易日，届满次一交易日摘牌"
+  },
+  {
+   "slot_id": "LS-18",
+   "node": "N4",
+   "kind": "report",
+   "value": "综合结论：乐视网因深交所决定终止上市，经30个交易日整理期(涨跌幅10%)后摘牌",
+   "doc": "ls_delist_2020.txt",
+   "span": "LS-2/LS-12/LS-13/LS-15汇总",
+   "ai_verdict": "PASS(汇总)",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-E6",
+   "node": "N2",
+   "kind": "extract",
+   "value": "《2019年年度报告》披露日期：2020-04-27",
+   "doc": "ls_terminate_2020.txt",
+   "span": "\"2020 年 4 月 27 日，公司披露的《2019 年年度报告》显示…\"（ls_terminate@L20）",
+   "ai_verdict": "REVISED(裁决R：语义=年报披露日)",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "LS-E7",
+   "node": "N3",
+   "kind": "verification",
+   "value": "跨文档一致性：终止上市公告(2020-035)与整理期公告(2020-037)对\"整理期三十个交易日/预计最后交易日\"表述一致",
+   "doc": "ls_terminate_2020.txt + ls_delist_2020.txt",
+   "span": "两文件均载\"退市整理期为三十个交易日，预计最后交易日期为\"",
+   "ai_verdict": "PASS(一致性核验槽)",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "LS-U1",
+   "node": "N4",
+   "expected_status": "UNKNOWN",
+   "value": "摘牌后新三板/老三板挂牌安排结果",
+   "doc": "本组文书",
+   "note": "未披露则不可答"
+  }
+ ],
+ "dropped_slots": [],
+ "scoring_contract": {
+  "n_scored_slots": 18,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "7个扩展槽为占位；填充前有效槽11——低于18门槛",
+  "两公告编号时序(LS-10)需人工核对落款日期",
+  "P0深读补齐完成：占位槽已全部替换为锚定事实，待人工签收",
+  "漏网占位槽更正：LS-E6已替换为锚定事实(2026-11-07)",
+  "漏网占位槽更正：LS-E7已替换为锚定事实(2026-11-07)"
+ ],
+ "consolidated_ruling": {
+  "date": "2026-11-08",
+  "items": "LS-3/11确认；LS-9/17按原文06-05(冲突已标记)；LS-E6=年报披露日"
+ },
+ "final_review": {
+  "date": "2026-11-08",
+  "result": "终审P候选：LS-3保留\"预计\"语义；LS-17时序链保留；LS-U1保留；06-05语义待签收人裁定"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer+second-reviewer",
+  "result": "18P全部通过；LS-3确认\"预计\"语义；LS-U1确认UNKNOWN"
+ }
+}

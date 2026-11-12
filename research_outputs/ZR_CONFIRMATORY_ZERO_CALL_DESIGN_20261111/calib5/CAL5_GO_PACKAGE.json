@@ -1,0 +1,196 @@
+{
+ "status": "AWAITING_OPERATOR_GO",
+ "generated_at": "2026-11-11",
+ "zero_calls_made": true,
+ "purpose": "calibrate split-verify (Z=1) detection/adjudication of injected cross-branch numeric conflict vs single-join Z=0",
+ "model": "GLM-5.3-Flash",
+ "calls": {
+  "parent_setup": 15,
+  "measurement": 30,
+  "total": 45,
+  "parent_breakdown": "5 tasks x (fe, tl, er)",
+  "measurement_breakdown": "10 paired units x (Z0 xc 1 + Z1 loc 1 + Z1 ver 1)",
+  "deviation_note": "original 30-call plan assumed pre-existing parent caches; new calibration tasks require 15 upstream calls"
+ },
+ "caps": {
+  "calls": 45,
+  "tokens": 300000,
+  "yuan_accounting": 0.3,
+  "yuan_marginal_glm": 0.0,
+  "estimate": "~214K chars (parents 27.3K + measurement 186.8K); accounting ~¥0.24 at list price, marginal ¥0",
+  "token_accounting_note": "token 上限按实际用量结算；预检仅按输入侧保守估计，避免输出预留提前撞满"
+ },
+ "sha": {
+  "taskset": "203df3f092622f023b5c941ad0077dba8a4cde0b70e33e4f943a841acbe6f680",
+  "prompts": "f2b13bc09059f437537d41399b71338a45317d0778392e55765a602763aa7c2f",
+  "harness": "6421097f50ab5a46989b91b21bd044467006c5a52fbb4a725558190a66ccd982",
+  "documents": {
+   "tasks/CAL5_TASKS.json": "203df3f092622f023b5c941ad0077dba8a4cde0b70e33e4f943a841acbe6f680",
+   "calib_prompts.py": "f2b13bc09059f437537d41399b71338a45317d0778392e55765a602763aa7c2f",
+   "calib_harness.py": "1f0d0e0b7671037385eac95de3d46ff41b59c6ba286013693f9330bd55867edd",
+   "raw/603271_D1_inquiry.pdf": "75ed393e6e45266f746a07c3f400a1446bc087b851b85e57798f42dd051e3b62",
+   "raw/603271_D2_reply.pdf": "c8b3bb3c9b9807f9019a449d9d33421ecaa2d51e4f7b5361557ae4ba3cb4483d",
+   "raw/603271_D1_inquiry.txt": "cbf2ecbb4175d69e59bab1df034dfe303092954722dfd00d2f170c408b82f837",
+   "raw/603271_D2_reply.txt": "093268d5a8c2416980b45ddd211c5a9a433a5868015ef5ed7ff395e328d84a72",
+   "raw/605336_D1_inquiry.pdf": "9280534852a58e932193332841bc02219bdb7f90143da090d002b3c125410fb8",
+   "raw/605336_D2_reply.pdf": "3ad6fa6d4e19d6957ce75e0652651b138edadfbf9fc30645fe57e2758e5699ea",
+   "raw/605336_D1_inquiry.txt": "614e9eb8e03e129afcde1b04f7a7ea2cd33d6fa450fc609ebcaf7c9a6bf4c835",
+   "raw/605336_D2_reply.txt": "cc67037b547270e751e27dda18fac2d308c886ffbf3ab1884db2e32067173878",
+   "raw2/ma_603429_11_D1.pdf": "5857eb6641ab1529c6054f87f6e6a665e9acb88f24836b3eb1cb71086e42703a",
+   "raw2/ma_603429_11_D2.pdf": "b83cc7c782c5dcb5717b1535b2564fc674ed8ae2aa10753188736bcee1d6c9eb",
+   "raw2/ma_603429_11_D1.txt": "1765122dfc85984189b02b2564a7aa7ae6dc0e5e45be169f0a0e56d46ee26906",
+   "raw2/ma_603429_11_D2.txt": "5bcfd84bbf2f8c94d5ce854c1dd9c2b1aee503a1ae8f5064b3fa5f1616b6833b",
+   "raw2/ma_600173_23_D1.pdf": "8006682f706e1c90eaefc6bd566833b77b7730b209c9e0e136f1476e83afc184",
+   "raw2/ma_600173_23_D2.pdf": "df33254fd11aa19cac9549f5b08d43019e9f0582fe13ee3f53fb3280fb2ced96",
+   "raw2/ma_600173_23_D1.txt": "fb55a350106d043b8065f69f29527d5ab23dbbb304d93ee2ea6342f29eba7359",
+   "raw2/ma_600173_23_D2.txt": "4e655029a9d2f85b3a07a46f3a4088fe9bb9a6db54d0b3795b62207421cd7d0d",
+   "raw2/ma_600322_22_D1.pdf": "c2ef4967a9a4c1d54fb9b381cd4e1c2d6a46e5e8de943c12864cb8ac25e43993",
+   "raw2/ma_600322_22_D2.pdf": "d574951063924f620147ffed8bc2bde43ac25e86bf9c19c8416039ba18cae2b7",
+   "raw2/ma_600322_22_D1.txt": "98df2e5f67676bf07f01077139e466367476c0b630b3edcabe903b28385ab34c",
+   "raw2/ma_600322_22_D2.txt": "2c4179b0d3c671d12686fdc1a7aeb88d917b031c092b62eba2981e04a0822932"
+  }
+ },
+ "injection": {
+  "rule": "first candidate per task whose correct value appears in BOTH frozen tl and er outputs and whose wrong value is absent from both doc excerpts; replace first occurrence in er output once; same injected er for both arms and both reps",
+  "candidates": {
+   "CAL5_01": [
+    "-10.52%→-15.20%",
+    "约6.01亿元→约6.51亿元"
+   ],
+   "CAL5_02": [
+    "11,856.93万元→11,586.93万元",
+    "20,561.82万元→20,651.82万元"
+   ],
+   "CAL5_03": [
+    "100,606.32万元→106,006.32万元",
+    "80,485.06万元→84,085.06万元"
+   ],
+   "CAL5_04": [
+    "6,800万元→8,600万元"
+   ],
+   "CAL5_05": [
+    "9,832.61万元→9,382.61万元",
+    "157.60万元→175.60万元",
+    "7,093.25万元→7,903.25万元"
+   ]
+  },
+  "setup_fail_policy": "record SETUP_FAIL, no task replacement, no prompt tuning"
+ },
+ "units": [
+  {
+   "unit_id": "CAL5_01_r1",
+   "task": "CAL5_01",
+   "rep": 1,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_01_r2",
+   "task": "CAL5_01",
+   "rep": 2,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_02_r1",
+   "task": "CAL5_02",
+   "rep": 1,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_02_r2",
+   "task": "CAL5_02",
+   "rep": 2,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_03_r1",
+   "task": "CAL5_03",
+   "rep": 1,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_03_r2",
+   "task": "CAL5_03",
+   "rep": 2,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_04_r1",
+   "task": "CAL5_04",
+   "rep": 1,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_04_r2",
+   "task": "CAL5_04",
+   "rep": 2,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_05_r1",
+   "task": "CAL5_05",
+   "rep": 1,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  },
+  {
+   "unit_id": "CAL5_05_r2",
+   "task": "CAL5_05",
+   "rep": 2,
+   "calls": [
+    "Z0_xc",
+    "Z1_loc",
+    "Z1_ver"
+   ]
+  }
+ ],
+ "scoring": {
+  "z1_success": "loc locates injected field with evidence span AND ver returns CONFLICT/UNSUPPORTED with correct resolved value",
+  "z0_success": "xc returns CONFLICT/UNSUPPORTED with correct resolved value",
+  "gate_z1": ">=8/10",
+  "gate_z0": "success <=6/10 AND at least one task fails both reps",
+  "anomaly_rule": ">2/30 execution anomalies (truncation/invalid JSON/missing window/input mismatch) => inconclusive",
+  "stop_rule": "Z0 success >=7/10 => SPLIT_VERIFY has no structural increment; stop confirmatory experiment; no prompt tuning"
+ },
+ "non_goals": [
+  "formal 52-task experiment",
+  "formal task collection calls",
+  "pi/L experiments",
+  "ZxR effect claims"
+ ],
+ "prereg_note": "calibration only; D2 quotes D1, shared facts are non-independent sources; input windows are frozen excerpts, not full documents"
+}

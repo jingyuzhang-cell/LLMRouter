@@ -1,0 +1,673 @@
+{
+ "passed": 109,
+ "total": 109,
+ "results": [
+  {
+   "name": "D1 Gold v1 is untouched",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "D2 v1.1 file matches the pinned sha256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "D2 scoring refuses contract v1, so versions cannot be mixed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "D3 no Gold value changed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "D4 every evidence quote is verbatim in its source document",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "D4 revision log names exactly the four corrected quotes",
+   "ok": true,
+   "detail": "['F12', 'F13', 'F14', 'F19']"
+  },
+  {
+   "name": "D5 F19 recomputed from source: final 16 parties 201, proposed 25 parties 344",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "D6 P2 mapping: 20 rows, 7 same, 13 changed, 4 added, every slot accounted for",
+   "ok": true,
+   "detail": "['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F20', 'F19']"
+  },
+  {
+   "name": "D7 every slot has a citation whitelist and a known grounding rule",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "D8 positioning and independence are corrected in the contract",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "D9 the whitelist is read from the contract, not from code",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1 gold self-test: Q_all=Q_terminal=1, 20 TP, no unTPable slot",
+   "ok": true,
+   "detail": "[{'fact_id': 'F1', 'critical': True, 'status': 'TP', 'value': '60万元', 'doc': 'D2', 'quote': '对獐子岛集团股份有限公司给予警告，并处以 60 万元罚款', 'value_correct': True, 'literal_cite': True, 'answered_and_unknown': False}, {'fact_id': 'F2', 'critical': True, 'status': 'TP', 'value': '30万元', 'doc': 'D2', 'quote': '对吴厚刚、梁峻"
+  },
+  {
+   "name": "A2 28 wrong values all scored VALUE_WRONG (incl. D1 proposed-stage traps)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "A3 37 format variants of right values all TP",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "A4 evidence bar: fabricated quote -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 evidence bar: node name as doc id (P0 root cause 3) -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 evidence bar: empty citation -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 evidence bar: proposed-stage sentence for a final fact -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 evidence bar: identical sentence cited from D1 for a final fact -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 evidence bar: verbatim but irrelevant sentence -> UNSUPPORTED",
+   "ok": true,
+   "detail": "UNSUPPORTED"
+  },
+  {
+   "name": "A4 evidence bar: quote lacks the subject -> UNSUPPORTED",
+   "ok": true,
+   "detail": "UNSUPPORTED"
+  },
+  {
+   "name": "A4 evidence bar: another subject in the quote -> UNSUPPORTED",
+   "ok": true,
+   "detail": "UNSUPPORTED"
+  },
+  {
+   "name": "A4 evidence bar: bare number with no fact context -> UNSUPPORTED",
+   "ok": true,
+   "detail": "UNSUPPORTED"
+  },
+  {
+   "name": "A4 evidence bar: too short to be evidence -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 whitelisted background fact may cite either doc",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A4 quote across a PDF page break matches once the page number is ignored",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A4 E_literal keeps the P2 caliber: verbatim but unsupported counts there, not in TP",
+   "ok": true,
+   "detail": "{'Q_all': 0.0, 'Q_terminal': 0.51, 'F': 1.0, 'E': 0.0, 'C': 0.05, 'E_literal': 1.0, 'error_rate': 0.0, 'asserted': 1, 'correct': 1, 'tp': 0, 'wrong': 0, 'total': 20, 'critical_tp': 0, 'critical_total': 12, 'critical_gate': 'FAIL', 'out_of_contract': [], 'malformed_answers': 0, 'zero_assertions': Fal"
+  },
+  {
+   "name": "A5 zero answers: Q_all=0, not NULL, flagged",
+   "ok": true,
+   "detail": "{'Q_all': 0.0, 'Q_terminal': 0.0, 'F': 0.0, 'E': 0.0, 'C': 0.0, 'E_literal': 0.0, 'error_rate': 0.0, 'asserted': 0, 'correct': 0, 'tp': 0, 'wrong': 0, 'total': 20, 'critical_tp': 0, 'critical_total': 12, 'critical_gate': 'FAIL', 'out_of_contract': [], 'malformed_answers': 0, 'zero_assertions': True,"
+  },
+  {
+   "name": "A5 unknown_slots recorded as declared abstention",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A5 null/未载明 is abstention, not a wrong assertion",
+   "ok": true,
+   "detail": "{'Q_all': 0.0, 'Q_terminal': 0.0, 'F': 0.0, 'E': 0.0, 'C': 0.0, 'E_literal': 0.0, 'error_rate': 0.0, 'asserted': 0, 'correct': 0, 'tp': 0, 'wrong': 0, 'total': 20, 'critical_tp': 0, 'critical_total': 12, 'critical_gate': 'FAIL', 'out_of_contract': [], 'malformed_answers': 0, 'zero_assertions': True,"
+  },
+  {
+   "name": "A5 unknown ids are reported, never remapped",
+   "ok": true,
+   "detail": "{'Q_all': 0.0, 'Q_terminal': 0.0, 'F': 0.0, 'E': 0.0, 'C': 0.0, 'E_literal': 0.0, 'error_rate': 0.0, 'asserted': 0, 'correct': 0, 'tp': 0, 'wrong': 0, 'total': 20, 'critical_tp': 0, 'critical_total': 12, 'critical_gate': 'FAIL', 'out_of_contract': ['X9', 'f1'], 'malformed_answers': 1, 'zero_assertio"
+  },
+  {
+   "name": "A5 same duplicate counted once; conflicting duplicate is wrong",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A6 discrimination: Q_all and Q_terminal fall strictly as wrong answers rise",
+   "ok": true,
+   "detail": "([1.0, 0.96, 0.8, 0.6, 0.2], [1.0, 0.95, 0.75, 0.5, 0.0])"
+  },
+  {
+   "name": "A6 primary endpoint fixes the abstention defect: 15 right 5 wrong outranks one lone answer on Q_all only",
+   "ok": true,
+   "detail": "(0.75, 0.05)"
+  },
+  {
+   "name": "A8 scorer is arm-blind: no arm/condition/rep identifier, signature score(sink, contract)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A7 old scorer defect reproduced: perfect answer capped below 1 (F18, F20 can never match)",
+   "ok": true,
+   "detail": "{'Q_terminal': 0.95, 'F': 0.9, 'E': 1.0, 'C': 1.0, 'correct': 18, 'wrong': 2, 'covered': 20, 'total': 20, 'error_rate': 0.1}"
+  },
+  {
+   "name": "A7 old scorer defect reproduced: wrong date/doc number/unit credited correct; new scorer rejects them",
+   "ok": true,
+   "detail": "({'Q_terminal': 0.83, 'F': 1.0, 'E': 1.0, 'C': 0.15, 'correct': 3, 'wrong': 0, 'covered': 3, 'total': 20, 'error_rate': 0.0}, 0)"
+  },
+  {
+   "name": "A7 old scorer defect reproduced: fabricated citation credited (E=1); new scorer gives E=0",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 stage A: 11 calls, three COMPLETE, acceptance PASS",
+   "ok": true,
+   "detail": "{'calls': 11, 'tokens': 66306, 'yuan_accounting': 0.095955, 'yuan_marginal': 0.049281}"
+  },
+  {
+   "name": "B1 oracle reaches 20/20 TP in every arm",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 normal condition: no arm takes a recovery action",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 all three arms go through one scorer with no arm input",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 ledger-only rescore reproduces every online score",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 E_D2 receives the whole document, not doc[:6000]",
+   "ok": true,
+   "detail": "24915"
+  },
+  {
+   "name": "B1 J2 receives the whole J1 output, not j1[:3000]",
+   "ok": true,
+   "detail": "10438"
+  },
+  {
+   "name": "B1 SINK receives the whole J2 output and the evidence table",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 frozen route: J1=GLM (P2 pool), E/J2/SINK=DS",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 ledger: a sent row precedes every done row, each done row has payload, response, usage, model, cost, output",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 GLM calls are booked at the accounting price, marginal ¥0",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B1 model identity is summarized",
+   "ok": true,
+   "detail": "['ds:deepseek-flash', 'glm:glm-5.3-flash']"
+  },
+  {
+   "name": "B2 exec_anomaly Static: injected empty, no paid J1 call, INCOMPLETE",
+   "ok": true,
+   "detail": "['J1']"
+  },
+  {
+   "name": "B2 exec_anomaly: Fixed retries same model, Joint swaps model",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B2 recovery calls share max_tokens (old runner gave Joint 4000, Fixed 8000)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B2 info_anomaly reaches the arms: Static acts none, Fixed retries J1, Joint re-extracts E_D2",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B2 info_anomaly oracle ordering: Joint recovers penalty slots, Fixed cannot (set by topology)",
+   "ok": true,
+   "detail": "(0.6, 0.6, 1.0)"
+  },
+  {
+   "name": "B2 stage B mock stays inside its call cap (22 of 23)",
+   "ok": true,
+   "detail": "{'calls': 22, 'tokens': 136016, 'yuan_accounting': 0.196265, 'yuan_marginal': 0.109632}"
+  },
+  {
+   "name": "B2 acceptance PASS with Static INCOMPLETE by design only",
+   "ok": true,
+   "detail": "{'checks': {'C1_no_stop': True, 'C2_answers_present': True, 'C3_ids_in_contract': True, 'C4_q_all_not_null': True, 'C5_evidence_path_alive': True, 'C6_incomplete_only_by_design': True, 'C7_no_recovery_in_normal': True, 'C8_ledger_complete': True}, 'verdict': 'PASS'}"
+  },
+  {
+   "name": "B3 stop, GLM J1 HTTP 400: halts after 3 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "('J1/glm transport error: HTTPError: HTTP Error 400: Bad Request', 3)"
+  },
+  {
+   "name": "B3 stop, GLM J1 HTTP 500: halts after 3 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "('J1/glm transport error: HTTPError: HTTP Error 500: Internal Server Error', 3)"
+  },
+  {
+   "name": "B3 stop, HTTP 429 at SINK: halts after 5 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "('SINK/ds transport error: HTTPError: HTTP Error 429: Too Many Requests', 5)"
+  },
+  {
+   "name": "B3 stop, truncation at E_D1: halts after 1 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "('E_D1/ds natural fault: truncated (stop=length)', 1)"
+  },
+  {
+   "name": "B3 stop, empty text at J1: halts after 3 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "('J1/glm natural fault: empty_text (stop=stop)', 3)"
+  },
+  {
+   "name": "B3 stop, parse failure at J2: halts after 4 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "('J2/ds natural fault: json_invalid (stop=stop)', 4)"
+  },
+  {
+   "name": "B3 stop, SINK empty answers: halts after 5 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "('Static: SINK returned no answers', 5)"
+  },
+  {
+   "name": "B3 stop, input silently truncated: halts after 1 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "('E_D1/ds: 10 input tokens for 9055 chars; input looks truncated', 1)"
+  },
+  {
+   "name": "B3 stop, provider reports another model family: halts after 3 calls, no retry, FAIL, scene on disk",
+   "ok": true,
+   "detail": "(\"J1/glm: provider reports model 'deepseek-flash'\", 3)"
+  },
+  {
+   "name": "B3 a failed request keeps its payload and the status line",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B3 stop, recovery wanted in Stage A: no recovery call, Static record survives",
+   "ok": true,
+   "detail": "('Fixed-Recovery: recovery action repair_retry in a stage that allows none (Obs(j1_fault=None, final_coverage=0.0, e_d2_penalty_signal=14))', 6)"
+  },
+  {
+   "name": "B3 stop, scoring exception on a complete execution",
+   "ok": true,
+   "detail": "('Static: scoring failed: ValueError: scorer broke', 5)"
+  },
+  {
+   "name": "B3 stop, Q_all NULL on a complete execution",
+   "ok": true,
+   "detail": "('Static: Q_all is NULL for a complete execution', 5)"
+  },
+  {
+   "name": "B3 same-family model alias is recorded, not a stop",
+   "ok": true,
+   "detail": "None"
+  },
+  {
+   "name": "B3 a response without a model string is recorded, not a stop",
+   "ok": true,
+   "detail": "None"
+  },
+  {
+   "name": "B3 truncation outranks empty text (GLM budget filling), unknown stop reason is a fault",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B3 a crash between send and receive leaves a dangling row that fails ledger integrity",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4 token cap: pre-flight stops before the transport is called",
+   "ok": true,
+   "detail": "token pre-flight: 0+20108+8000 > 1000"
+  },
+  {
+   "name": "B4 yuan cap: pre-flight stops before the transport is called",
+   "ok": true,
+   "detail": "yuan pre-flight exceeds 0.001"
+  },
+  {
+   "name": "B4 call cap: reaching it stops at once",
+   "ok": true,
+   "detail": "calls cap reached: 1 >= 1"
+  },
+  {
+   "name": "B4 authorized Stage A caps are exactly 13 / 230K / ¥0.30 with no recovery",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4 request differing from the frozen route or prompt stops before sending",
+   "ok": true,
+   "detail": "('J1: request differs from the frozen configuration (backend=ds, max_tokens=8000, system_sha256=baddac93f8af273c)', 'J2: request differs from the frozen configuration (backend=ds, max_tokens=4000, system_sha256=ba11d4239431079e)', 'E_D2: request differs from the frozen configuration (backend=ds, max"
+  },
+  {
+   "name": "B4b J1 contract: all-null final amounts are unmet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4b J1 contract: amounts copied from D1 do not hide a deficient E_D2",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4b J1 contract: one lone D2-backed row is still unmet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4b J1 contract: 16 of 25 D2-backed rows (expected normal shape) passes in every policy",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4b J1 contract accepts D2 named as 决定书 and a final amount given as a number",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4b Joint repairs J1, not E_D2, when E_D2 already carries penalty sentences",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B4b Joint maps empty/truncated to model swap, malformed JSON to structural retry",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B5 decision code reads no condition flag and no Gold (old Joint branched on inject_empty)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "B5 slots carry no Gold value",
+   "ok": true,
+   "detail": "{'predicate', 'unit', 'subject', 'fact_id'}"
+  },
+  {
+   "name": "B6 evidence table: verbatim kept (whitespace-insensitive), fabricated dropped",
+   "ok": true,
+   "detail": "([{'row': 'R1', 'doc': 'D1', 'label': 'quotes', 'quote': '2019 年 7 月 9 日，公司及相关人员收到 中国证监会下发的'}, {'row': 'R2', 'doc': 'D2', 'label': '吴厚刚', 'quote': '对吴厚刚、梁峻给予警告，并分别处以 30 万元罚款'}], 1)"
+  },
+  {
+   "name": "B6 evidence table drops the model-attached amount, keeps the source sentence",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B7 system prompts are byte-identical to sc_e1_runner.py",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B7 degraded E prompt differs only by dropped penalty fields and quotes list",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B7 every prompt sent with json_object contains \"json\" (HTTP 400 regression)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B8 false-PASS regression: an all-zero run can never be accepted",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B8 a spurious recovery in the normal condition fails acceptance",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B8 an incomplete ledger fails acceptance",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B9 Stage B cannot run for real even with the GO flag",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B9 real mode refused without GO flag",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B9 real mode refused with a wrong freeze sha",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 DS request is byte-identical to transport.openai_call",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 GLM request is byte-identical to the prior glm_low (subscription endpoint, reasoning_effort=low, no thinking field)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 the payload written to the ledger is what is sent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E2 raw response and model identity kept; thinking blocks stay in raw only",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E2 cached GLM input counts toward usage (J1 repeats one prompt across arms)",
+   "ok": true,
+   "detail": "12"
+  },
+  {
+   "name": "E3 no credential can reach the ledger: keys only in headers, never in the returned record",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "C1 old plumbing yields zero answers even with oracle nodes",
+   "ok": true,
+   "detail": "{'old_all_cuts_no_table': {'asserted': 0, 'correct': 0, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.0}, 'fix_e_window_only': {'asserted': 7, 'correct': 7, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.57}, 'fix_j1_to_j2_only': {'asserted': 6, 'correct': 6, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.56}, 'fix_j2_to_"
+  },
+  {
+   "name": "C2 removing the cuts alone still leaves TP=0 (no path carries doc+quote to SINK)",
+   "ok": true,
+   "detail": "{'old_all_cuts_no_table': {'asserted': 0, 'correct': 0, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.0}, 'fix_e_window_only': {'asserted': 7, 'correct': 7, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.57}, 'fix_j1_to_j2_only': {'asserted': 6, 'correct': 6, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.56}, 'fix_j2_to_"
+  },
+  {
+   "name": "C3 the table alone cannot reach the penalty slots",
+   "ok": true,
+   "detail": "{'old_all_cuts_no_table': {'asserted': 0, 'correct': 0, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.0}, 'fix_e_window_only': {'asserted': 7, 'correct': 7, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.57}, 'fix_j1_to_j2_only': {'asserted': 6, 'correct': 6, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.56}, 'fix_j2_to_"
+  },
+  {
+   "name": "C4 all fixes together reach 20/20 TP",
+   "ok": true,
+   "detail": "{'old_all_cuts_no_table': {'asserted': 0, 'correct': 0, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.0}, 'fix_e_window_only': {'asserted': 7, 'correct': 7, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.57}, 'fix_j1_to_j2_only': {'asserted': 6, 'correct': 6, 'tp': 0, 'Q_all': 0.0, 'Q_terminal': 0.56}, 'fix_j2_to_"
+  }
+ ],
+ "ablation": {
+  "old_all_cuts_no_table": {
+   "asserted": 0,
+   "correct": 0,
+   "tp": 0,
+   "Q_all": 0.0,
+   "Q_terminal": 0.0
+  },
+  "fix_e_window_only": {
+   "asserted": 7,
+   "correct": 7,
+   "tp": 0,
+   "Q_all": 0.0,
+   "Q_terminal": 0.57
+  },
+  "fix_j1_to_j2_only": {
+   "asserted": 6,
+   "correct": 6,
+   "tp": 0,
+   "Q_all": 0.0,
+   "Q_terminal": 0.56
+  },
+  "fix_j2_to_sink_only": {
+   "asserted": 0,
+   "correct": 0,
+   "tp": 0,
+   "Q_all": 0.0,
+   "Q_terminal": 0.0
+  },
+  "fix_all_cuts_no_table": {
+   "asserted": 15,
+   "correct": 15,
+   "tp": 0,
+   "Q_all": 0.0,
+   "Q_terminal": 0.65
+  },
+  "table_only_old_cuts": {
+   "asserted": 11,
+   "correct": 11,
+   "tp": 11,
+   "Q_all": 0.55,
+   "Q_terminal": 0.91
+  },
+  "all_fixes": {
+   "asserted": 20,
+   "correct": 20,
+   "tp": 20,
+   "Q_all": 1.0,
+   "Q_terminal": 1.0
+  }
+ },
+ "extra": {
+  "q_terminal_by_wrong": {
+   "0": 1.0,
+   "1": 0.96,
+   "5": 0.8,
+   "10": 0.6,
+   "20": 0.2
+  },
+  "q_all_by_wrong": {
+   "0": 1.0,
+   "1": 0.95,
+   "5": 0.75,
+   "10": 0.5,
+   "20": 0.0
+  },
+  "old_scorer_perfect": {
+   "Q_terminal": 0.95,
+   "F": 0.9,
+   "E": 1.0,
+   "C": 1.0,
+   "correct": 18,
+   "wrong": 2,
+   "covered": 20,
+   "total": 20,
+   "error_rate": 0.1
+  },
+  "old_scorer_collapse": {
+   "Q_terminal": 0.83,
+   "F": 1.0,
+   "E": 1.0,
+   "C": 0.15,
+   "correct": 3,
+   "wrong": 0,
+   "covered": 3,
+   "total": 20,
+   "error_rate": 0.0
+  },
+  "stage_A_mock_used": {
+   "calls": 11,
+   "tokens": 66306,
+   "yuan_accounting": 0.095955,
+   "yuan_marginal": 0.049281
+  },
+  "stage_B_mock_used": {
+   "calls": 22,
+   "tokens": 136016,
+   "yuan_accounting": 0.196265,
+   "yuan_marginal": 0.109632
+  },
+  "info_anomaly_oracle": {
+   "Static": [
+    0.6,
+    0.92
+   ],
+   "Fixed": [
+    0.6,
+    0.92
+   ],
+   "Joint": [
+    1.0,
+    1.0
+   ]
+  }
+ },
+ "files": {
+  "sc_e1_scorer.py": "52bfb1e1394e4f25399700d589945b84f82d562ade848b2fd376dbc359688062",
+  "sc_e1_1_runner.py": "b68a1b2ee1869fe26420c7d70ba8600c8309eb8441cfcf7b97122e45f487fbc4",
+  "sc_e1_1_mock.py": "91639dfcfdb4f483a056b38da9db222f54814590605cf290577d294eb1f59d59",
+  "build_contract_v1_1.py": "ace45d09f671a6441f37708a1241b08b84919b38e65789a673ced1450be88e17",
+  "TASK_CONTRACT_SC_E1_v1_1.json": "ad0f0454b57e75030a2d7155cbc48bfcaa160f56bb415f2a73d91dec400f7c0d"
+ }
+}

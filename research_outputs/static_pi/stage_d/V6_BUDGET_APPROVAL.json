@@ -1,0 +1,49 @@
+{
+ "version": "V6_BUDGET_APPROVAL_V1",
+ "date": "2026-11-09",
+ "status": "APPROVED per operator review 2026-11-09 (budget scheme approved; REAL API CALLS NOT YET AUTHORIZED — separate GO required)",
+ "batch": "V6_CONFIRMATORY",
+ "plan": {
+  "executions": 96,
+  "calls": 550,
+  "tokens": "4.2M",
+  "yuan": 5.8
+ },
+ "hard_caps": {
+  "calls": 700,
+  "tokens": 6000000,
+  "yuan": 8.0
+ },
+ "disciplines": [
+  "任一预算上限先达到，即停止后续调用",
+  "API 异常不得无限重试，恢复验证失败则暂停",
+  "不得为了补齐样本擅自改变 Gold、统计口径或实验臂"
+ ],
+ "sequencing": "two-phase: FC(48) -> A/B/O freeze (sha256) -> PD(48); executor refuses PD before A-freeze exists",
+ "refs": {
+  "prereg": "V6_PREREG_FINAL_v2.md",
+  "packages": "V6_TASK_PACKAGES_FROZEN.json",
+  "packages_sha256": "1fdb05cd11ab4f173776ce65b58beb103395da5c90ec0795f1ae919bd25d21c6",
+  "abo_code_sha256": "8bb6fb5b823a46edbb718116f9aaf7670677385edfd91441381a14f507baa2c5",
+  "rand_table_sha256": "6abf0d35a8866abdcaad0087670d2d31147d2737099b2b95f0c43d3cc17b7cb3",
+  "hold_192": "untouched"
+ },
+ "amendments": [
+  {
+   "date": "2026-11-10",
+   "by": "operator",
+   "reason": "FC-phase measured burn rate: 96-exec projection ¥8.5-9.5 / 5.8-6.3M tok exceeded original caps; out-tokens 49% at 2x price under mandated full-input protocol",
+   "old_caps": {
+    "calls": 700,
+    "tokens": 6000000,
+    "yuan": 8.0
+   },
+   "new_caps": {
+    "calls": 700,
+    "tokens": 7000000,
+    "yuan": 12.0
+   },
+   "unchanged": "protocol, gold, arms, stats, sequencing — all frozen; calls cap unchanged"
+  }
+ ]
+}

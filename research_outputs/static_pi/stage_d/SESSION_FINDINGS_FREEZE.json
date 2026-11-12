@@ -1,0 +1,73 @@
+{
+ "session": "RQ-DYN complete session findings",
+ "frozen_at": "2026-11-06T16:21:54",
+ "five_findings": {
+  "1_information_fidelity": {
+   "finding": "DAG 4-node fixes (extract 6-category, merge lossless, verify annotate, report dual-input) raised Q from 0.06-0.17 to 0.43-0.70",
+   "evidence": "3ARM-V1 vs V2, all arms consistent (+26-58pp)",
+   "files": [
+    "rq_dyn_3arm_runner.py",
+    "rq_dyn_3arm_v2_runs/",
+    "rq_dyn_3arm_runs/"
+   ]
+  },
+  "2_model_complementarity": {
+   "finding": "DS excels at extract (Q=0.365, 5.6s); Qwen excels at merge/verify/report (Q=0.494-0.598, 33-42s)",
+   "evidence": "4×2 capability matrix, 72 real calls (VAL QCL)",
+   "files": [
+    "rq_val_qcl_runs/",
+    "rq_val_qcl_v2_runs/",
+    "rq_val_qcl_v2p2_runs/"
+   ]
+  },
+  "3_conditional_decision": {
+   "finding": "Controller correctly selects NONE/R/π based on fault type: natural→no action, transient→R, persistent→R then π",
+   "evidence": "3-condition verification, 10/10 correct decisions",
+   "files": [
+    "rq_dyn_tjoint_runs/",
+    "rq_dyn_transient_runs/"
+   ]
+  },
+  "4_R_vs_pi": {
+   "finding": "Transient anomaly: R sufficient (Q=0.394 both); Persistent anomaly: R fails (Q=0), π only recovery (Q=0.500)",
+   "evidence": "Controlled mechanism comparison, 4/4 paired positive",
+   "files": [
+    "rq_dyn_rpi_runs/",
+    "rq_dyn_final_runs/",
+    "rq_dyn_final_e03_runs/"
+   ]
+  },
+  "5_pi_qwen_recovery": {
+   "finding": "In tested persistent node execution anomaly, same-model retry failed; switching to Qwen (different failure mode) recovered, terminal Q 0→0.35",
+   "evidence": "Real V2 anomaly replay + persistent injection; GLM fallback failed (thinking-token), Qwen succeeded",
+   "note": "Positive mechanism evidence for tested conditions; not claimed as universal for all persistent anomalies",
+   "files": [
+    "sc_e1_1/plan_a_qwen_pi_runs/",
+    "sc_e1_1/plan_a_pi_replay_runs/"
+   ]
+  }
+ },
+ "joint_optimization_summary": {
+  "natural_execution": {
+   "Static": 0.485,
+   "FixedRecovery": 0.532,
+   "JointDynamic": 0.644
+  },
+  "fault_injection": {
+   "Static": 0.0,
+   "FixedRecovery": 0.0,
+   "JointDynamic_pi": 0.5
+  },
+  "conclusion": "JointDynamic highest Q in both conditions; cost premium 9-12%; π is sole recovery for persistent anomalies"
+ },
+ "files_sha256": {
+  "rq_dyn_3arm_runner.py": "50c30422ac2a2e31eeb2ad764297ae4532938d17793d560b351d0ffe849d152d",
+  "rq_dyn_joint_opt_runner.py": "f5e61d6c751197276e650c61039f5925591e3d49754ac59cbdfc56aff5e18158",
+  "rq_dyn_final_runner.py": "322b33163351021fd09434ef13bd16778c237bcf2d9babc14061ad8e08d16aa9",
+  "rq_dyn_rpi_runner.py": "a4e1c7432feff566a785491358763404ebb73d7aafc524da35d1d8b715606eec",
+  "rq_dyn_tjoint_runner.py": "6c7ada7d1140964e3b75dfe580fb86dbcb176cd0453262ab0137d3c13e5c5305",
+  "rq_dyn_transient_runner.py": "23e7fe4de2de3f4ccdca720149d1a5a57bc5bafcd1c7b159763146c9f11ddc7f",
+  "sc_e1_1/plan_a_prime.py": "088622a8524927ea9404bfd2611cf2b37be491a6856fd26cb5cbf414c6453e96",
+  "sc_e1_1/PI_RECOVERY_FREEZE.json": "3cc693e7b6b0823ad014d2f79d3bc80b719446dbe9d6c6a50e85ddb8598802ca"
+ }
+}

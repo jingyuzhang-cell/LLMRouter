@@ -1,0 +1,337 @@
+{
+ "task": "QS_300216_PENALTY_CONFIRM",
+ "status": "FROZEN_PENDING_PREREGISTRATION",
+ "contract": {
+  "path": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/QS_300216/TASK_CONTRACT_QS_v1.json",
+  "sha256": "910fa806a833d748580f380c7b45404f241f1075c7ee77c0d32c8281276775d3"
+ },
+ "principle": "Same DAG, prompts and contracts as the validated SC-E1.1 chain; the only addition is the deterministic total (M2 fixed as base structure, operator decision 2026-11-06).",
+ "nodes": [
+  {
+   "id": "E_D1",
+   "kind": "model",
+   "role": "extract notice D1",
+   "input": "D1 full text, no truncation",
+   "user_template": "请从以下文书中抽取全部信息：\n\n{doc}",
+   "system": "E_SYS",
+   "system_sha256": "eaa0fae47588c4bbcc67eb2b2b038d8ceab8b4d2c2238a69b3cbc62395b42cf6",
+   "max_tokens": 8000,
+   "required_keys": [
+    "parties"
+   ]
+  },
+  {
+   "id": "E_D2",
+   "kind": "model",
+   "role": "extract decision D2",
+   "input": "D2 full text, no truncation",
+   "user_template": "请从以下文书中抽取全部信息：\n\n{doc}",
+   "system": "E_SYS",
+   "system_sha256": "eaa0fae47588c4bbcc67eb2b2b038d8ceab8b4d2c2238a69b3cbc62395b42cf6",
+   "max_tokens": 8000,
+   "required_keys": [
+    "parties"
+   ]
+  },
+  {
+   "id": "EVIDENCE_TABLE",
+   "kind": "deterministic",
+   "code": "sc_e1_1_runner.evidence_rows",
+   "input": [
+    "E_D1",
+    "E_D2",
+    "source texts"
+   ],
+   "rule": "keep quotes that are verbatim in their source document; drop values the model attached"
+  },
+  {
+   "id": "BASE_TOTAL",
+   "kind": "deterministic",
+   "code": "base_total_v2.total(E_D2, D2 source text)",
+   "input": [
+    "E_D2"
+   ],
+   "rule": "one amount per distinct party in E_D2 with a numeric amount; names mapped through aliases the document declares (以下简称)",
+   "known_limitation": "undeclared name variants are not merged (no similarity matching); disagreeing amounts make the total unavailable"
+  },
+  {
+   "id": "J1",
+   "kind": "model",
+   "role": "cross-document stage linkage",
+   "input": [
+    "E_D1",
+    "E_D2"
+   ],
+   "system": "J1_SYS",
+   "system_sha256": "baddac93f8af273c7d87a1deb91531bea191774d66020b6754084cfe046fbb9b",
+   "max_tokens": 8000,
+   "required_keys": [
+    "party_matrix"
+   ]
+  },
+  {
+   "id": "J2",
+   "kind": "model",
+   "role": "verification",
+   "input": [
+    "J1",
+    "slots"
+   ],
+   "system": "J2_SYS",
+   "system_sha256": "919d8edbde01afa72c1fe8517f08f8384bff4f80dce54a4aeb6a1a421c074a4f",
+   "max_tokens": 4000,
+   "required_keys": [
+    "verified"
+   ]
+  },
+  {
+   "id": "DETECT_M1_M2",
+   "kind": "deterministic",
+   "code": "detectors_v5.detect_m1 / detect_m2",
+   "input": [
+    "J2",
+    "EVIDENCE_TABLE",
+    "BASE_TOTAL",
+    "slots"
+   ]
+  },
+  {
+   "id": "SINK",
+   "kind": "model",
+   "role": "terminal answer",
+   "input": [
+    "J2",
+    "EVIDENCE_TABLE",
+    "BASE_TOTAL line",
+    "slots"
+   ],
+   "system": "SINK_SYS",
+   "system_sha256": "7f1661f4fd06ee93246231790b9e948753dc133a245a7e9ba9e1cda07447ebe5",
+   "max_tokens": 4000,
+   "required_keys": [
+    "answers"
+   ]
+  },
+  {
+   "id": "DETECT_M3",
+   "kind": "deterministic",
+   "code": "detectors_v5.detect_m3 (= V3 polar, V2 base)",
+   "input": [
+    "SINK",
+    "EVIDENCE_TABLE",
+    "BASE_TOTAL",
+    "slots"
+   ]
+  },
+  {
+   "id": "SCORE",
+   "kind": "offline",
+   "code": "qs_scorer.score",
+   "arm_blind": true
+  }
+ ],
+ "edges": [
+  [
+   "E_D1",
+   "J1"
+  ],
+  [
+   "E_D2",
+   "J1"
+  ],
+  [
+   "E_D1",
+   "EVIDENCE_TABLE"
+  ],
+  [
+   "E_D2",
+   "EVIDENCE_TABLE"
+  ],
+  [
+   "E_D2",
+   "BASE_TOTAL"
+  ],
+  [
+   "J1",
+   "J2"
+  ],
+  [
+   "J2",
+   "DETECT_M1_M2"
+  ],
+  [
+   "EVIDENCE_TABLE",
+   "DETECT_M1_M2"
+  ],
+  [
+   "BASE_TOTAL",
+   "DETECT_M1_M2"
+  ],
+  [
+   "J2",
+   "SINK"
+  ],
+  [
+   "EVIDENCE_TABLE",
+   "SINK"
+  ],
+  [
+   "BASE_TOTAL",
+   "SINK"
+  ],
+  [
+   "SINK",
+   "DETECT_M3"
+  ],
+  [
+   "SINK",
+   "SCORE"
+  ]
+ ],
+ "sink_user_template": "核验结果：\n{J2 text}\n\n{evidence table block}\n\n{BASE_TOTAL line}\n\n槽位：{slots json}",
+ "new_prompt_text": {
+  "BASE_TOTAL_LINE": "确定性派生值（由程序根据决定书抽取结果计算，不由模型计算）：{fact_id} {subject}{predicate} = {value}（纳入规则：决定书抽取中带罚款金额的不同当事人逐一相加，共 {parties} 名）",
+  "BASE_TOTAL_LINE_WHEN_UNAVAILABLE": "确定性派生值：{fact_id} 无法由程序确定计算（{reason}），请按证据表作答或写入 unknown_slots。",
+  "note": "Only new text in the DAG; filled for slots typed derived by detectors_v2.slot_type (gold-blind). Requires operator review."
+ },
+ "slots_shown_to_models": [
+  {
+   "fact_id": "F1",
+   "subject": "湖南千山制药机械股份有限公司",
+   "predicate": "行政处罚罚款金额",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F2",
+   "subject": "刘祥华",
+   "predicate": "行政处罚罚款金额",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F3",
+   "subject": "刘华山",
+   "predicate": "行政处罚罚款金额",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F4",
+   "subject": "周大连",
+   "predicate": "行政处罚罚款金额",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F5",
+   "subject": "姜纯",
+   "predicate": "行政处罚罚款金额",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F6",
+   "subject": "钟波等7人",
+   "predicate": "单人行政处罚罚款金额",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F7",
+   "subject": "付慧龙等2人",
+   "predicate": "单人行政处罚罚款金额",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F8",
+   "subject": "千山药机2016年度",
+   "predicate": "虚增在建工程",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F9",
+   "subject": "千山药机2016年度（太平洋证券保理业务）",
+   "predicate": "虚减应收账款",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F10",
+   "subject": "千山药机2016年度（华冠花炮烟花生产线）",
+   "predicate": "虚增收入",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F11",
+   "subject": "刘祥华",
+   "predicate": "持股比例",
+   "unit": "%"
+  },
+  {
+   "fact_id": "F12",
+   "subject": "千山药机",
+   "predicate": "调查通知书收到日期"
+  },
+  {
+   "fact_id": "F13",
+   "subject": "千山药机",
+   "predicate": "事先告知书收到日期"
+  },
+  {
+   "fact_id": "F14",
+   "subject": "千山药机及相关当事人",
+   "predicate": "行政处罚决定书收到日期"
+  },
+  {
+   "fact_id": "F15",
+   "subject": "行政处罚决定书",
+   "predicate": "文号"
+  },
+  {
+   "fact_id": "F16",
+   "subject": "市场禁入决定书",
+   "predicate": "文号"
+  },
+  {
+   "fact_id": "F17",
+   "subject": "事先告知书",
+   "predicate": "文号"
+  },
+  {
+   "fact_id": "F18",
+   "subject": "刘祥华",
+   "predicate": "职务"
+  },
+  {
+   "fact_id": "F19",
+   "subject": "全部当事人",
+   "predicate": "罚款合计",
+   "unit": "万元"
+  },
+  {
+   "fact_id": "F20",
+   "subject": "千山药机（依据《事先告知书》认定的事实）",
+   "predicate": "是否触及重大违法强制退市情形"
+  }
+ ],
+ "model_assignment": {
+  "status": "FROZEN from evidence",
+  "E": "DS",
+  "J1": "DS",
+  "J2": "GLM (J2 probe rule, J2_PROBE_REPORT.md)",
+  "SINK": "DS",
+  "evidence": [
+   "Stage A: GLM J1 truncated at 8000 thinking-only",
+   "Stage A': DS completed J1/J2/SINK",
+   "J2 probe 2026-11-06: reliability 6/6 both, suppression 25 vs 34, quality 0.683 vs 0.667 -> GLM"
+  ],
+  "scope": "fixed heterogeneous assignment; dynamic model switching NOT verified this round"
+ },
+ "stop_rules": "inherit P2_AMENDMENT_SC_E1_1.md section 3 (no retry, keep the scene, write-ahead ledger)",
+ "isolation": "No QS output may be used to choose models, prompts, thresholds or detector rules.",
+ "versions": {
+  "detectors": "v5 (V2/V3/V4 kept and reported alongside; V5 adds probe-observed labels)",
+  "base_total": "base_total_v2 (v1 = detectors_v2.deterministic_total, kept)"
+ },
+ "operator_decisions_2026_11_06": [
+  "Gold conditional pass, F18 clarified in v1",
+  "three scorer additions accepted",
+  "SINK derived-value line accepted",
+  "detectors V3 and base_total_v2 approved as separate versions",
+  "QS confirmation experiment HOLD until preregistration"
+ ]
+}

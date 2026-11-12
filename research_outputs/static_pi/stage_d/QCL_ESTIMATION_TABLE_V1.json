@@ -1,0 +1,49 @@
+{
+ "NONE": {
+  "Q_hat": 0.576,
+  "C_hat": 0,
+  "L_hat": 0,
+  "feasible_when": "no anomaly detected OR anomaly is cosmetic"
+ },
+ "LOCAL_R": {
+  "Q_hat": 0.394,
+  "Q_hat_persistent": 0.0,
+  "C_hat": 1,
+  "L_hat_s": {
+   "ds": 5,
+   "qwen": 35
+  },
+  "success_rate": {
+   "transient": 1.0,
+   "persistent": 0.0
+  },
+  "feasible_when": "transient anomaly AND B_rem>=1 call AND L_rem>=retry_latency"
+ },
+ "LOCAL_pi": {
+  "Q_hat": 0.5,
+  "C_hat": 1,
+  "L_hat_s": {
+   "ds": 5,
+   "qwen": 35
+  },
+  "success_rate": {
+   "transient": 1.0,
+   "persistent": 1.0
+  },
+  "feasible_when": "any anomaly AND B_rem>=1 AND L_rem>=switch_latency",
+  "note": "Qwen→DS for merge, DS→Qwen for verify; GLM unsuitable (thinking-token)"
+ },
+ "Z2_split_R": {
+  "Q_hat": 0.545,
+  "C_hat": 3,
+  "L_hat_s": {
+   "ds": 15,
+   "qwen": 105
+  },
+  "success_rate": {
+   "transient": 1.0,
+   "persistent": 1.0
+  },
+  "feasible_when": "persistent anomaly AND B_rem>=3 AND L_rem>=3*latency"
+ }
+}

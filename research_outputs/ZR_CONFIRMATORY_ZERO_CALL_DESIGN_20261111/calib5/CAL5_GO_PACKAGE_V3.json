@@ -1,0 +1,67 @@
+{
+ "status": "AWAITING_OPERATOR_GO_V3",
+ "version": "V3",
+ "generated_at": "2026-11-11",
+ "used": {
+  "v1": 3,
+  "v2": 1,
+  "total": 4
+ },
+ "calls": {
+  "total_cumulative": 49,
+  "parents": 15,
+  "measurement": 30,
+  "valid_remaining": 45
+ },
+ "caps": {
+  "calls": 49,
+  "tokens": 300000,
+  "yuan_accounting": 0.3,
+  "yuan_marginal_glm": 0.0,
+  "token_used_estimate": 17421,
+  "estimate": "~269K tokens for 45 valid calls at 0.6 tok/char"
+ },
+ "change": {
+  "scope": "transport body only",
+  "added": {
+   "thinking": {
+    "type": "enabled"
+   },
+   "output_config": {
+    "effort": "low"
+   }
+  },
+  "reason": "GLM-5.3 always thinks; Anthropic endpoint ignores reasoning_effort; default max consumed 8000 output tokens with 0 text",
+  "docs": [
+   "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.3",
+   "https://docs.bigmodel.cn/cn/guide/capabilities/thinking"
+  ]
+ },
+ "sha": {
+  "taskset": "52f702c0fd62d534dd739189394ab5a5047810729687f4f2c8c04fd09b1d8adf",
+  "prompts": "f2b13bc09059f437537d41399b71338a45317d0778392e55765a602763aa7c2f",
+  "harness_v3": "446ae7bb9d1ffb9b44955fe36eab8872d31a60a97d3d400f61292cf634afcb01",
+  "gate": "901a2271a001219e6586645b6f2af64d2a1c30d83303366e2ecc8c2d5404f63f"
+ },
+ "unchanged": [
+  "tasks/CAL5_TASKS_V2.json",
+  "calib_prompts.py",
+  "all inputs/facts/injection rules/scoring"
+ ],
+ "zero_call_checks": [
+  "V3 selftest PASS (10 units, per-task injection/scoring, validity gate)",
+  "inputs/facts unchanged from V2 zero-call checks"
+ ],
+ "stop_rules": [
+  "parent validity gate failure -> stop and report",
+  "SETUP failure -> stop before measurement",
+  "no prompt/task/error-value changes",
+  "effort=low still failing -> stop, no budget burn"
+ ],
+ "non_goals": [
+  "formal 52-task experiment",
+  "formal task collection",
+  "pi/L experiments",
+  "ZxR effect claims"
+ ]
+}

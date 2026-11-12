@@ -1,0 +1,181 @@
+{
+ "design": "Profiling V1 平衡不完全区组(56次)",
+ "status": "待48案名单冻结后确认L3/L4",
+ "models": [
+  "glm-5.3-flash",
+  "deepseek-chat"
+ ],
+ "matrix": [
+  {
+   "task": "E07C",
+   "tier": "L1",
+   "node_types": [
+    "extract",
+    "report"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "LS",
+   "tier": "L1",
+   "node_types": [
+    "extract",
+    "verification"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "CS",
+   "tier": "L1",
+   "node_types": [
+    "extract",
+    "reason"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "E04",
+   "tier": "L2",
+   "node_types": [
+    "reason",
+    "verification"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "KM",
+   "tier": "L2",
+   "node_types": [
+    "reason",
+    "report"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "MD",
+   "tier": "L2",
+   "node_types": [
+    "verification",
+    "report"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "待定1",
+   "tier": "L3",
+   "node_types": [
+    "extract",
+    "reason"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "待定2",
+   "tier": "L3",
+   "node_types": [
+    "reason",
+    "verification"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "待定3",
+   "tier": "L3",
+   "node_types": [
+    "verification",
+    "report"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "待定4",
+   "tier": "L3",
+   "node_types": [
+    "extract",
+    "report"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "待定1",
+   "tier": "L4",
+   "node_types": [
+    "extract",
+    "verification"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  },
+  {
+   "task": "待定2",
+   "tier": "L4",
+   "node_types": [
+    "reason",
+    "report"
+   ],
+   "calls_per_model": 2,
+   "models": 2,
+   "repeat": false
+  }
+ ],
+ "calls": {
+  "base": 48,
+  "repeat": 8,
+  "total": 56,
+  "worst_cost_yuan": 2.688,
+  "cap_yuan": 3.0
+ },
+ "coverage": {
+  "extract": 6,
+  "report": 6,
+  "verification": 6,
+  "reason": 6
+ },
+ "isolation_rules": [
+  "L3/L4任务不得来自最终48案确认性集",
+  "E04已参与MX机制实验,标注既有暴露",
+  "V5十二任务仅作L1/L2材料(结构偏浅:1/12深度3,4/12平坦)"
+ ],
+ "q_scoring": {
+  "dimensions": [
+   "正确性",
+   "完整性",
+   "证据性",
+   "关系正确性",
+   "边界遵循"
+  ],
+  "by_node": {
+   "extract": "事实准确率+证据定位",
+   "reason": "计算+关系推理",
+   "verification": "一致/矛盾/未知判定",
+   "report": "事实覆盖+结论准确+无证据断言率"
+  },
+  "separate_metrics": [
+   "JSON解析成功率",
+   "合同违约率"
+  ],
+  "inference": "n=1仅点估计;跨任务极值称观测范围不称置信区间;以任务为统计单元"
+ },
+ "data_retention": "保存完整原始输出(不只解析后JSON),因HIST-03评分工件教训"
+}

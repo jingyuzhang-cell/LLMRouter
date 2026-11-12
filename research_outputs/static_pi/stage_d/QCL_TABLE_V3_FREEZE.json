@@ -1,0 +1,90 @@
+{
+ "batch": "QCL_TABLE_V3",
+ "frozen_at": "2026-11-07",
+ "status": "COMPLETE",
+ "budget": {
+  "cap_calls": 90,
+  "cap_tokens": 600000,
+  "cap_yuan": 3.0,
+  "used_calls": 70,
+  "used_tokens": 334113,
+  "used_yuan_est": 1.1173,
+  "incidents": "2 process kills by SSL/DNS transients (transport safe-retry per application absorbed some; 3-strike failures stopped runs; resumed via RunStore, zero duplicate calls)"
+ },
+ "table": {
+  "NONE": {
+   "E04_Q": [
+    0.545,
+    0.636,
+    0.636,
+    0.545,
+    0.545,
+    0.364
+   ],
+   "E03_Q": [
+    0.556,
+    1.0,
+    0.389,
+    0.444
+   ],
+   "note": "UB-1 base 5 calls; large task-level variance (E03 r2=1.0 vs r3=0.389) -> step-4 must pair at task level"
+  },
+  "R_transient": {
+   "dQ_vs_base": 0.0,
+   "recovered_Q_equals_base": "2/2",
+   "cost": "1c/~5.7K tok",
+   "note": "full restoration under transient fault; terminal gain vs FAULTED state = +base"
+  },
+  "pi_persistent": {
+   "dQ_vs_base": 0.0,
+   "recovered_Q_equals_base": "2/2 (pi:ok 4/4 overall)",
+   "cost": "1c/~6.0K tok",
+   "note": "SOLE persistent recovery; executor reassignment qwen->ds fully restores terminal Q"
+  },
+  "R_persistent": {
+   "Q": 0.0,
+   "dQ_vs_base": -0.591,
+   "note": "fails 2/2 as predicted; 1 wasted call"
+  },
+  "Zx_segment_split": {
+   "dQ_vs_base": [
+    0.273,
+    0.091,
+    0.091
+   ],
+   "mean": 0.152,
+   "direction": "3/3 positive",
+   "cost": "8c/~27.5K tok/~235s",
+   "note": "FIRST action with genuine positive terminal gain ABOVE healthy baseline (G2_r1 0.545->0.818); proactive restructuring, not fault recovery"
+  },
+  "E_targeted_reroll": {
+   "dQ_vs_base": -0.5,
+   "n": 1,
+   "note": "ARTIFACT-TRIGGERED (doc-id false flags, corrected metrics show all branches healthy): rerolling healthy branches is DESTRUCTIVE (-50pp; reroll_D1 empty -> branch lost). Empirically grounds two v3 controller rules: fire E only on genuine deficiency; ADOPTION GATE (never replace branch with empty/worse reroll)"
+  },
+  "E_ZX_joint": {
+   "status": "NOT TRIGGERED",
+   "note": "no genuinely-deficient branch occurred in-batch (contract respected); natural habitat = step-4 task panel"
+  }
+ },
+ "implications_for_DA_JS_v3": [
+  "fault axis unchanged: R(transient)/pi(persistent) confirmed at TERMINAL level",
+  "NEW proactive axis: Zx lifts terminal Q above healthy baseline (+15pp mean, 3/3) - scheduler should consider quality-upgrade actions, not only fault recovery",
+  "E requires deficiency gate + adoption gate (both now empirically grounded)",
+  "NONE variance across tasks/replicates is large -> three-strategy experiment MUST pair at task level (supports 8-12 task design)"
+ ],
+ "caveats": [
+  "exploratory n per cell (1-3)",
+  "E row is artifact-triggered (labeled; still informative as negative control)",
+  "Zx on 3 E04 units only; E03 untested for Zx",
+  "joint cell unmeasured"
+ ],
+ "files_sha256": {
+  "qcl_v3_runner.py": "fe3594fa7d2bb39d4c11394906141284fd4724198c2dab2401e10b2578603bd2",
+  "qcl_v3_score.py": "bfc981ed51077cca245258608a11ec4710e8f2e834921974c13726b2adaf8965",
+  "qcl_v3_config.json": "44dc38626139e93589b92f3e9d2bd2424362cdc37a1961a60f58fb8e48b181cb",
+  "qcl_v3_runs/ledger.jsonl": "5670fc6c4538140477f28f021ad3f1078e462b0e2f72366f74c761d7bb5f3a39",
+  "qcl_v3_runs/outputs.jsonl": "13479f16ab88314e1d001087ccd964dd807dcc7ce7b2e9901246486ad3f49d0c",
+  "QCL_TABLE_V3.json": "9c2459448d5db480c9b655015cc6745adfe32ad54d51d37707af31512b778e71"
+ }
+}

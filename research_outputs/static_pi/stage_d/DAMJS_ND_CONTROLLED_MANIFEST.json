@@ -1,0 +1,258 @@
+{
+ "batch_id": "DAMJS_ND_CONTROLLED",
+ "created": "2026-11-07T21:59:17",
+ "status": "FROZEN_PREREG",
+ "authorization": "No real call authorized. Real mode needs STAGE_D_REAL_CALLS_AUTHORIZED=1, DAMJS_NDC_GO=run, and the frozen prereg (DAMJS_ND_CONTROLLED_PREREG.md) registered here as role prereg_frozen.",
+ "design": {
+  "reps": [
+   1,
+   2,
+   3
+  ],
+  "arms": [
+   "R2",
+   "ND-only"
+  ],
+  "deadline_s": 240.0,
+  "seed": 20261107,
+  "caps": {
+   "calls": 50,
+   "tokens": 160000,
+   "yuan": 0.35
+  },
+  "inject": {
+   "node": "J1",
+   "at": "repair",
+   "text": "",
+   "in": 1690,
+   "out": 8192,
+   "wall": 119.83,
+   "source": "smoke DAMJS S3 J1#2 (2026-11-06, recorded)"
+  },
+  "endpoint_order": [
+   "primary_mechanism: byte-exact v1 restoration 3/3",
+   "primary_quality: paired dTP strict-normalized (per-rep + mean, no significance)",
+   "secondary: paired dTP lenient",
+   "others: citation support, downstream validity, chain cost delta"
+  ],
+  "statistics": "3 reps = mechanism verification; min one-sided sign-test p=0.125; confirmatory run separate"
+ },
+ "accounting": "ledger separates real API calls / injected simulated (history tokens, simulated accounting, simulated wall; charged to caps conservatively) / fixture replays (deducted, already paid in generation run)",
+ "components": [
+  {
+   "role": "child",
+   "path": "damjs_r2/v03/v03_child.py",
+   "sha256": "86a18e483d41299310a63e66781baf6d39e36dc3d634f57d460e4c679b3d3117",
+   "bytes": 10219,
+   "runtime": true
+  },
+  {
+   "role": "ndc_runner",
+   "path": "damjs_r2/v03/nd_controlled.py",
+   "sha256": "61320c41454d77213551eb74afec4fb0e7decbfd92fed66ed861910ff6d1d015",
+   "bytes": 12368,
+   "runtime": true
+  },
+  {
+   "role": "v03_mechanisms",
+   "path": "damjs_r2/v03/damjs_v03.py",
+   "sha256": "6b0c9fb7acb9500d0220d632696ee69b3c3deb73e5dca4ba523e9c4a26018101",
+   "bytes": 12341,
+   "runtime": true
+  },
+  {
+   "role": "r2_child_lib",
+   "path": "damjs_r2/damjs_r2_child.py",
+   "sha256": "6443250ff90c377fcb1d269bb84637477ca20454d1b5a8b2edb3289380bc38f7",
+   "bytes": 10159,
+   "runtime": true
+  },
+  {
+   "role": "r2_runner_lib",
+   "path": "damjs_r2/damjs_r2_runner.py",
+   "sha256": "6043b300aba964ad80bf64a580cf3798f89578419fab2959b75edaf9e7b24f8d",
+   "bytes": 16299,
+   "runtime": true
+  },
+  {
+   "role": "bridge",
+   "path": "damjs_r2/damjs_bridge.py",
+   "sha256": "c3e21e85f986cf60aaa8633ab93ea7deee9ff731e95a884c43869f26831b7ce6",
+   "bytes": 12437,
+   "runtime": true
+  },
+  {
+   "role": "wrapper",
+   "path": "damsj_executor.py",
+   "sha256": "107db96a0308c5317b229ca21892de0bb697a2ff4b527c0082cdc344f95292b6",
+   "bytes": 10352,
+   "runtime": true
+  },
+  {
+   "role": "engine",
+   "path": "damsj_engine.py",
+   "sha256": "7eec919b6a11ea99e4e5fb8bfc8ab7edfa0b90def5f360e145b062e570493aef",
+   "bytes": 12741,
+   "runtime": true
+  },
+  {
+   "role": "executor",
+   "path": "stage_d_v2_executor.py",
+   "sha256": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+   "bytes": 56231,
+   "runtime": true
+  },
+  {
+   "role": "config",
+   "path": "stage_d_v2_executor_config.json",
+   "sha256": "914f3edd4c4848e3f7063ce6c398f80afc773cf790844973638550848f543581",
+   "bytes": 1243,
+   "runtime": true
+  },
+  {
+   "role": "dependency_d2",
+   "path": "d2_executor.py",
+   "sha256": "df8a2de69079916110018699c57ec7f4ad9fd482af3f2fa9917360bac056c16e",
+   "bytes": 18399,
+   "runtime": true
+  },
+  {
+   "role": "dependency_prompts",
+   "path": "/root/research_outputs/static_pi/stage_a/executor.py",
+   "sha256": "5f1de3c770aa4869c2b39daa54f8917a90dcd100a8a1952e3315862abf14f889",
+   "bytes": 40089,
+   "runtime": true
+  },
+  {
+   "role": "dependency_transport",
+   "path": "/root/capital_opinion_pilot/transport.py",
+   "sha256": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+   "bytes": 4129,
+   "runtime": true
+  },
+  {
+   "role": "scorer",
+   "path": "/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py",
+   "sha256": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+   "bytes": 40717,
+   "runtime": true
+  },
+  {
+   "role": "task_contract",
+   "path": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/PHASE2B/TASK_CONTRACT_PHASE2B_v2_1.json",
+   "sha256": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234",
+   "bytes": 33063,
+   "runtime": true
+  },
+  {
+   "role": "prereg_draft",
+   "path": "damjs_r2/v03/DAMJS_ND_CONTROLLED_PREREG_DRAFT.md",
+   "sha256": "19f43bce8770a2c95cbca57db465f1d2f00a23d12b30ba25fb89cd306d2f8507",
+   "bytes": 4793,
+   "runtime": false
+  },
+  {
+   "role": "governance",
+   "path": "damjs_r2/v03/CALIBER_FREEZE.json",
+   "sha256": "0a60f63786db3113742496b1951e33013a07140c432fbdb383d8959fed9e64b9",
+   "bytes": 1800,
+   "runtime": false
+  },
+  {
+   "role": "prereg_frozen",
+   "path": "damjs_r2/v03/DAMJS_ND_CONTROLLED_PREREG.md",
+   "sha256": "0fda04456a1d2fee1fb0633147c299b8ad92284eb6154007f8b7cd4620d48e28",
+   "bytes": 5991,
+   "runtime": false
+  },
+  {
+   "role": "real_report",
+   "path": "damjs_r2/v03/NDC_REAL_REPORT.md",
+   "sha256": "53c1ee4c4c6856eb02f213ff6373dd272e144622ffa92f8183337a7ecead67d1",
+   "bytes": 5326,
+   "runtime": false
+  },
+  {
+   "role": "endpoints",
+   "path": "damjs_r2/v03/NDC_ENDPOINTS.json",
+   "sha256": "53e67f209965c385d6c337d7436a19df0411097e4100939c6da02a04d07c91d4",
+   "bytes": 12607,
+   "runtime": false
+  },
+  {
+   "role": "endpoints_tool",
+   "path": "damjs_r2/v03/ndc_endpoints.py",
+   "sha256": "e5dc40ae764bbe7d7af0b148f2f8d3bf4b92df183b7cfa53c265533f7b82ff7e",
+   "bytes": 6733,
+   "runtime": false
+  },
+  {
+   "role": "batch_summary",
+   "path": "damjs_r2/v03/runs_real_ndc/BATCH_SUMMARY.json",
+   "sha256": "7a26f6b1239e05eb59caaf1cecdef8e98c92f448a5bc5aa32d1a16adc6970628",
+   "bytes": 872,
+   "runtime": false
+  },
+  {
+   "role": "batch_ledger",
+   "path": "damjs_r2/v03/runs_real_ndc/NDC_LEDGER.jsonl",
+   "sha256": "5f6016d1befd530a7ba34e43e02ab4fe70c98ef6a92cdc38cb638867f09c6a1c",
+   "bytes": 3344,
+   "runtime": false
+  },
+  {
+   "role": "batch_budget",
+   "path": "damjs_r2/v03/runs_real_ndc/state/GLOBAL_BUDGET.json",
+   "sha256": "6b0ee11b37c4e8095779b953e02ee2ea49e5546a385b1709f1a32df6d8363b4b",
+   "bytes": 49,
+   "runtime": false
+  },
+  {
+   "role": "evidence_audit",
+   "path": "damjs_r2/v03/ndc_evidence_audit.py",
+   "sha256": "ce4c84f917143ba9f07d4e27c3de795c8a03811dac7594eb3de8ffc1224a941c",
+   "bytes": 8435,
+   "runtime": false
+  },
+  {
+   "role": "evidence_audit",
+   "path": "damjs_r2/v03/NDC_EVIDENCE_AUDIT.json",
+   "sha256": "87911628a439930d067059d354fb9dd26ab8ad88dd91b50befbc3c0e85d461be",
+   "bytes": 28940,
+   "runtime": false
+  },
+  {
+   "role": "caliber_v3",
+   "path": "damjs_r2/v03/caliber_v3.py",
+   "sha256": "8edbb81931267d38961f4a22fcfc001788234449c93f57a478d196c568279b3c",
+   "bytes": 5955,
+   "runtime": false
+  },
+  {
+   "role": "caliber_v3",
+   "path": "damjs_r2/v03/CALIBER_V3.json",
+   "sha256": "857e97422db734cca5780b020eb83b5cc50b04e693de32bf6b4b9b7c77f14e64",
+   "bytes": 9695,
+   "runtime": false
+  },
+  {
+   "role": "followup_report",
+   "path": "damjs_r2/v03/NDC_ZERO_CALL_FOLLOWUP.md",
+   "sha256": "342984392a8dc519b22bc9da3cf1fb81861b9d9ea98159c774ec1cc559dcdd9d",
+   "bytes": 6634,
+   "runtime": false
+  }
+ ],
+ "runner_patch_note": "2026-11-07: controlled-log lookup extended to the quarantined late child record when the watchdog degrades an arm (rep-1 bookkeeping stop); no behavioral change to arms.",
+ "real_run": {
+  "status": "INCOMPLETE (token cap guard; protocol deviations disclosed in NDC_REAL_REPORT.md)",
+  "ledger": {
+   "calls": 33,
+   "tokens": 142913,
+   "yuan": 0.284485
+  },
+  "executed_at": "2026-11-07",
+  "authorization": "operator 授权 (DAMJS_NDC_GO=run)"
+ },
+ "post_run_patch_note": "2026-11-07 after the real run: resume-skip + orphan-rep guard, unique per-batch run tag in exec ids, ledger non-negativity assertion, CP_GATE candidate (off). See NDC_ZERO_CALL_FOLLOWUP.md."
+}

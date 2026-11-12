@@ -1,0 +1,318 @@
+{
+ "task_id": "CS",
+ "company": "中国船舶·吸并中国重工(600150)",
+ "status": "FINAL_CANDIDATE_v1.3",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "cs_plan_2024.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/cs_plan_2024.txt",
+   "sha256": "6f5afc855fc44a6e4338ce3a67668bdb2cd680e85a21e55add394890a189db5e"
+  },
+  "cs_plan_summary_2024.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/cs_plan_summary_2024.txt",
+   "sha256": "ccaa940b7f3859f693ad6d52fe7364830ebf9b21fc5814ec422522fb227f685c"
+  },
+  "cs_listing_2025.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/cs_listing_2025.txt",
+   "sha256": "16ba6f28318a6bed88a9fa3aa7602cfea6858b715915173f4001ab9e0d82d7b7"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1",
+    "kind": "extract",
+    "docs": [
+     "cs_plan_2024.txt"
+    ],
+    "upstream": [],
+    "role": "交易结构与比例"
+   },
+   {
+    "node": "N2",
+    "kind": "extract",
+    "docs": [
+     "cs_plan_summary_2024.txt",
+     "cs_listing_2025.txt"
+    ],
+    "upstream": [],
+    "role": "方案阶段与上市"
+   },
+   {
+    "node": "N3",
+    "kind": "timeline",
+    "docs": [],
+    "upstream": [
+     "N1",
+     "N2"
+    ],
+    "role": "推进时序"
+   },
+   {
+    "node": "N4",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N1",
+     "N3"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "CS-1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "交易双方：中国船舶(600150)换股吸收合并中国重工(601989)，均上交所上市",
+   "doc": "cs_plan_2024.txt",
+   "span": "证券代码：600150 证券简称：中国船舶…601989 中国重工(文件头)",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-9",
+   "node": "N1",
+   "kind": "extract",
+   "value": "中国船舶换股价格：37.59元/股",
+   "doc": "cs_listing_2025.txt",
+   "span": "\"二、本次换股吸收合并中，中国船舶换股价格为37.59元/…（cs_listing_2025.txt）\"",
+   "ai_verdict": "REVISED(终审R:37.X回退已纠正→37.59)",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-3",
+   "node": "N1",
+   "kind": "extract",
+   "value": "两项已核股本事实：大连造船2017年增资后注册资本1,498,024.08万元；大连船舶重工集团注册资本1,599,617.0752万元",
+   "doc": "cs_plan_2024.txt",
+   "span": "\"同意大连造船注册资本由 854,000.00 万元增加至 1,498,024.08 万元\"（@L4452-4453）+\"注册资本 1,599,617.0752 万元\"（@L4231）",
+   "ai_verdict": "REVISED(裁决R：科目对应；原1,545,024/1,595,024系中国重工股本序列非本槽科目，已移除)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-4",
+   "node": "N2",
+   "kind": "extract",
+   "value": "方案阶段：2024年吸并报告书(草案)及摘要",
+   "doc": "cs_plan_2024.txt + cs_plan_summary_2024.txt",
+   "span": "《换股吸收合并中国船舶重工股份有限公司暨关联交易报告书（草案…）》标题",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-5",
+   "node": "N2",
+   "kind": "extract",
+   "value": "上市公告书落款日期：2025-09-11",
+   "doc": "cs_listing_2025.txt",
+   "span": "公告尾部\"2025 年 9 月 11 日\"",
+   "ai_verdict": "REVISED(裁决R：原文落款)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-6",
+   "node": "N3",
+   "kind": "timeline",
+   "value": "时序：报告书草案(2024)早于上市公告(2025)",
+   "doc": "cs_plan_2024.txt + cs_listing_2025.txt",
+   "span": "两文件年份",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-7",
+   "node": "N4",
+   "kind": "report",
+   "value": "综合结论：中国船舶吸并中国重工经2024草案到2025上市的推进链",
+   "doc": "cs_listing_2025.txt",
+   "span": "上市公告结论段",
+   "ai_verdict": "PENDING_HUMAN",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-8",
+   "node": "N4",
+   "kind": "report",
+   "value": "核验：cs_plan_summary与cs_plan主报告关键数据一致性",
+   "doc": "cs_plan_summary_2024.txt + cs_plan_2024.txt",
+   "span": "摘要vs主文(cs_plan_2024.txt)",
+   "ai_verdict": "REVISED(终审R:doc补齐主报告)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-10",
+   "node": "N1",
+   "kind": "extract",
+   "value": "合并方向：中国船舶向中国重工全体股东发行股份换股吸收合并中国重工",
+   "doc": "cs_listing_2025.txt",
+   "span": "次上市股份为中国船舶为本次换股吸收合并之目的向中国重工的全体换股股东发行的股份。二、本次换股吸收合并中，中国船舶换股价格为",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-11",
+   "node": "N1",
+   "kind": "extract",
+   "value": "换股安排：换股股东将所持中国重工股份转换为中国船舶股份",
+   "doc": "cs_listing_2025.txt",
+   "span": "体股东本次换股吸收合并中，换股股东将所持中国重工股换股指票按换股比例换成中国船舶为本次换股吸收合并所发行的A股股",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-12",
+   "node": "N1",
+   "kind": "extract",
+   "value": "异议股东安排：吸并中分别赋予中国船舶与中国重工异议股东权利",
+   "doc": "cs_listing_2025.txt",
+   "span": "5本次换股吸收合并中赋予中国船舶异议股东的权利。申报行使该权利的中国船舶异议股东可以在收收购请求权指购请求权/船舶股票本次换股吸收合并中赋予中国重工异议股东的权利。申报行使该权利的中国重工异议股东可以在现现金选择权指金选择权",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-13",
+   "node": "N2",
+   "kind": "extract",
+   "value": "交割安排：吸收合并交割日之后中国重工签署合同的主体变更安排",
+   "doc": "cs_listing_2025.txt",
+   "span": "3、合同承继在本次换股吸收合并交割日之后，中国重工签署的一切有效的合同/协议的主体变更为中国船舶。4、资料交接",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-14",
+   "node": "N2",
+   "kind": "extract",
+   "value": "实施文件：上市公告书为吸收合并中国船舶重工股份有限公司暨关联交易实施情况报告",
+   "doc": "cs_listing_2025.txt",
+   "span": "中国船舶工业股份有限公司换股吸收合并中国船舶重工股份有限公司暨关联交易报告书》全文及其他相关文件，该等文件已刊载于上海证券交易",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-15",
+   "node": "N2",
+   "kind": "extract",
+   "value": "财务口径：披露吸并中国重工实施当年和实施后备考信息",
+   "doc": "cs_listing_2025.txt",
+   "span": "务顾问中信证券结合中国船舶换股吸收合并中国重工实施当年和实施完毕后的第一个会计年度的年报，自年报披露之日起15日内，对本次交",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-16",
+   "node": "N3",
+   "kind": "timeline",
+   "value": "时序：2024年报告书(草案)→2025年实施情况报告书(交割完成)",
+   "doc": "cs_plan_2024.txt + cs_listing_2025.txt",
+   "span": "两文件年份与实施情况表述",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "derived_from": [
+    "CS-4",
+    "CS-14"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-17",
+   "node": "N4",
+   "kind": "verification",
+   "value": "核验：cs_plan_2024.txt载换股比例1:0.1335，cs_listing_2025.txt载换股价格37.59元/股，计算37.59×0.1335=5.018265≈5.02元/股；与CS-E10现金选择权4.03元/股属不同交易安排",
+   "doc": "cs_plan_2024.txt + cs_listing_2025.txt",
+   "span": "cs_plan_2024.txt换股比例段+cs_listing_2025.txt价格段",
+   "ai_verdict": "REVISED(终审R:移除CS-2引用，改直接引用两份文书)",
+   "source": "DEEP_READ",
+   "derived_from": [
+    "CS-1",
+    "CS-9",
+    "CS-E10"
+   ],
+   "scoring_points": [
+    "计算正确(5.02)",
+    "明确换股价值与现金选择权为不同交易安排",
+    "不因数值不同判定矛盾"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-18",
+   "node": "N4",
+   "kind": "report",
+   "value": "综合结论：中国船舶换股吸并中国重工已交割并披露实施情况(换股+异议股东安排+合同承继)",
+   "doc": "cs_listing_2025.txt",
+   "span": "CS-10~CS-13汇总",
+   "ai_verdict": "PASS(汇总)",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "CS-E10",
+   "node": "N1",
+   "kind": "extract",
+   "value": "中国重工异议股东现金选择权价格：4.03元/股",
+   "doc": "cs_listing_2025.txt",
+   "span": "现金选择权价格为 4.03",
+   "ai_verdict": "PASS",
+   "source": "DEEP_READ",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "CS-U1",
+   "node": "N4",
+   "expected_status": "UNKNOWN",
+   "value": "终止上市后续具体安排(摘牌后挂牌/转让安排等，本组文书未披露)",
+   "doc": "本组文书",
+   "note": "CS-18已确认交割完成；本UNKNOWN缩小为交割后具体上市地位变更结果",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [],
+ "scoring_contract": {
+  "n_scored_slots": 18,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "10个扩展槽为占位，需人工填充；填充前有效槽8——低于18门槛，从零建任务诚实状态",
+  "P0深读补齐完成：占位槽已全部替换为锚定事实，待人工签收",
+  "漏网占位槽更正：CS-E10已替换为锚定事实(2026-11-07)"
+ ],
+ "consolidated_ruling": {
+  "date": "2026-11-08",
+  "items": "CS-9=37.59确认；CS-3两项已核；CS-5=2025-09-11；CS-17=5.02+界定"
+ },
+ "final_review": {
+  "date": "2026-11-08",
+  "result": "CS-9/8/17/U1四处定点修订"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ }
+}

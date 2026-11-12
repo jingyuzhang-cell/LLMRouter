@@ -1,0 +1,61 @@
+{
+ "name": "PILOT_ALLOC_AB(设计,未执行,需单独GO)",
+ "question": "基于节点类型的异构分配 vs 表现更优的单一模型全节点应用,哪个在完整DAG上更优?",
+ "arms": [
+  {
+   "id": "A_V5MIXED",
+   "allocation": "extract=deepseek-chat; verification/report/reason=glm-5.3-flash (V5历史分配)",
+   "purpose": "历史基线"
+  },
+  {
+   "id": "B_DSALL",
+   "allocation": "四类节点全部deepseek-chat",
+   "purpose": "DeepSeek-first新假设"
+  }
+ ],
+ "controls": [
+  "同一任务",
+  "同一DAG",
+  "同一输入",
+  "同一提示词",
+  "同一截止时间(300s)",
+  "只有基础模型分配不同",
+  "不修改Z/R/π恢复逻辑(隔离分配效应)"
+ ],
+ "metrics": {
+  "Q": [
+   "终端事实正确性",
+   "完整性",
+   "证据定位",
+   "关系正确性"
+  ],
+  "node_Q": [
+   "verification节点质量",
+   "report节点质量——检查拼接评分是否掩盖节点退化"
+  ],
+  "C": [
+   "实际Token",
+   "API费用"
+  ],
+  "L": [
+   "端到端时延"
+  ],
+  "reliability": [
+   "解析失败率",
+   "合同违约率",
+   "超时率",
+   "任务未完成率"
+  ]
+ },
+ "design": {
+  "tasks": "8-12个已完成Gold任务(从32案DAG通过中选,覆盖L1-L4结构)",
+  "pairs": "每任务2臂=2次执行 → 16-24次",
+  "statistics": "以任务为统计单元配对分析; n小仅探索性"
+ },
+ "historical_reuse": {
+  "Phase_Pi_V2": "36次完整执行/282调用/六臂机制诊断——先核对其可复用结果,不重复已回答的问题",
+  "caution": "Phase-Pi V2非完整三臂VAL数据,不能直接替代本次分配对照"
+ },
+ "budget_est": "20次执行×~20节点×~¥0.005-0.03/节点 ≈ ¥2-12(需按节点数校准)",
+ "status": "DRAFT — 未获GO,零调用; 需另报预算与任务清单"
+}

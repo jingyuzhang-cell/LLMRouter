@@ -1,0 +1,106 @@
+{
+ "version": "V6_FINAL_FREEZE_V1",
+ "frozen_at": "2026-11-10",
+ "batch": "V6_CONFIRMATORY",
+ "status": "COMPLETE 96/96 executions (FC 48 + PD 48), zero-call analysis",
+ "prereg": "V6_PREREG_FINAL_v2.md",
+ "budget": {
+  "booked": {
+   "calls": 526,
+   "tokens": "5.56M",
+   "yuan": 8.23
+  },
+  "in_completed_execs": {
+   "calls": 499,
+   "yuan_fc": 4.16,
+   "yuan_pd": 3.81
+  },
+  "waste": {
+   "calls": 27,
+   "note": "7 hung-first-PD-launch + ~10 external-kill mid-exec + ~10 timeout retries; all logged in ledger"
+  },
+  "caps": {
+   "calls": 700,
+   "tokens": "7.0M",
+   "yuan": 12.0,
+   "amendment": "operator 2026-11-10"
+  },
+  "hold_192": "untouched"
+ },
+ "primary_test": {
+  "name": "O-median-split interaction (O=AxB; frozen tie rule: ==median -> LOW)",
+  "O_median": 0.0,
+  "groups": {
+   "HIGH_n": 5,
+   "LOW_n": 7
+  },
+  "result": {
+   "HIGH_mean_diff": 0.02,
+   "LOW_mean_diff": 0.0,
+   "MW_U": 14.0,
+   "p": 0.5698,
+   "spearman_diff_O": 0.197,
+   "cohen_d": 0.71
+  },
+  "verdict": "NOT significant at 0.05. Direction positive, effect driven by single task 000752"
+ },
+ "auxiliary": {
+  "wilcoxon_cluster": {
+   "W": 0,
+   "p": 0.3173,
+   "nonzero": "1/12 tasks (+1/−0/=11)",
+   "mean_diff": 0.0083,
+   "verdict": "NOT significant; nonzero task fraction 8% < pessimistic scenario 25% in prereg power sim"
+  },
+  "low_group_NI": {
+   "mean": 0.0,
+   "LCB95": 0.0,
+   "threshold": -0.05,
+   "verdict": "PASS — PD did not harm any LOW-O task (no ZIJING repeat)"
+  },
+  "a_median_split": {
+   "note": "coincides with O split on this panel (B=1.0 for all failure tasks, O≡A); same p-values"
+  }
+ },
+ "mechanism": {
+  "pd_recovered_slots": "000752-F5 only (3 recoveries across pairs); 4 other A>0 tasks recovered 0/1 slot per pair",
+  "arm_costs": {
+   "FC": {
+    "calls": 250,
+    "yuan": 4.16,
+    "makespan_mean_s": 304
+   },
+   "PD": {
+    "calls": 249,
+    "yuan": 3.81,
+    "makespan_mean_s": 302
+   },
+   "note": "PD equal calls, slightly cheaper, equal latency on this panel"
+  }
+ },
+ "ERRATUM_measurement_construction": {
+  "discovered": "post-hoc at zero-call analysis, self-disclosed",
+  "issue": "slot scoring values (value=desc) contain analyst annotations or type-label prefixes: 002667-F4 \"(九好集团等,原文综合表述)\", 600556-F4 \"(原文完整定性)\", 002766-F3 \"主体:索菱股份\", 300216-F5 \"违法事实:虚增销售收入/虚增利润\"; containment scoring requires verbatim echo of value OR span; annotation-bearing/label-prefixed values can only hit via span echo; paraphrase misses",
+  "impact": "these 4 slots are the persistent misses defining A>0 on 002667/002766/300216/600556; if they are scoring artifacts, those tasks true A≈0 and HIGH group reduces to 000752; if genuine extraction gaps, they are persistent capability limits unrecoverable by scheduling; raw outputs were not persisted, so the two explanations cannot be distinguished without new calls",
+  "does_not_change": "the primary null result (null under either explanation); NI pass; no-harm finding"
+ },
+ "interpretation": {
+  "honest": "V6 primary hypothesis NOT confirmed on this panel: realized PD recovery confined to 1/12 tasks; interaction direction positive but far from significance at n=12 with 1 nonzero task",
+  "posthoc_exploratory": "A (any FC miss) conflates TRANSIENT misses (000752-F5: varied across reps, PD-recoverable) with PERSISTENT misses (stable across reps and arms, not PD-recoverable). Recoverable failure space appears to be the transient component only. This was NOT preregistered for V6; any future test must preregister A_transient = 1 - P(slot hit | it was missed in a sibling rep) or similar, before data",
+  "relation_to_V5": "consistent with concentration pattern (V5: 3/12 tasks carried 90% of gain); V6 extends it: even within A>0 tasks, only transient-failure tasks yield recoverable space"
+ },
+ "open_decisions_for_operator": [
+  "A) accept freeze with erratum caveat (primary null stands)",
+  "B) authorize measurement-validity audit: rerun the 4 affected tasks x 1 arm with raw-output persistence (~24 calls, separate small budget) to classify artifact vs capability-gap",
+  "C) preregister V7 with A_transient moderator on fresh tasks"
+ ],
+ "files_sha256": {
+  "v6_runs/results_fc.json": "8f358725eef22f2c88609f3d5743c664c75ab48d63aca7d9be49765cabeda711",
+  "v6_runs/results_pd.json": "da1bd231ef46fb70319b05d8e624deabf218a69e5ff1eb4172761875c2be861d",
+  "v6_runs/V6_ABO_FROZEN.json": "a2d0ece109e0affecdf65fc2294134330d788793f8aa0cc89fd26b15120ffe14",
+  "v6_runs/ANALYSIS_TASKLEVEL.json": "fd5fd9d812601d1c621a9bde6c14c8adc7a61785f3683c22e28596536878e6a2",
+  "v6_runs/PERSISTENT_SLOTS.json": "de169fe3d206a63a836aa1a9d2b4473f5894d0f50d9637b53dfb23f3d287bafd",
+  "v6_abo.py": "8bb6fb5b823a46edbb718116f9aaf7670677385edfd91441381a14f507baa2c5",
+  "v6_executor.py": "a54e27720178d937bea8f32fcf711c7e593dbc967563b1497f9196833c8fd800"
+ }
+}

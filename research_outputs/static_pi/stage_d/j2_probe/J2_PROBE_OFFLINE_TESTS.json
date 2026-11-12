@@ -1,0 +1,61 @@
+{
+ "passed": 11,
+ "total": 11,
+ "results": [
+  {
+   "name": "P1 three inputs, each byte-identical to a Stage A' J2 request",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P2 plan: DS then GLM, 3 inputs x 2 replicates each, 12 calls",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P3 all 12 calls made in order with the frozen J2 prompt and the per-model output cap",
+   "ok": true,
+   "detail": "12"
+  },
+  {
+   "name": "P4 ledger write-ahead and complete; summary used = 12 calls",
+   "ok": true,
+   "detail": "{'calls': 12, 'tokens': 55560, 'yuan_accounting': 0.044808, 'yuan_marginal': 0.022404}"
+  },
+  {
+   "name": "P5 GLM request: subscription endpoint, reasoning_effort low, no thinking field, max_tokens 8000",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P6 DS request: thinking disabled, temperature 0, json_object, max_tokens 4000",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P7 GLM truncation stops GLM only: DS 6 calls done, GLM 1 call then skipped, no retry",
+   "ok": true,
+   "detail": "({'glm': 'truncated'}, {'calls': 7, 'tokens': 40433, 'yuan_accounting': 0.048526, 'yuan_marginal': 0.022404})"
+  },
+  {
+   "name": "P8 DS transport error stops DS only; GLM still runs its 6 calls",
+   "ok": true,
+   "detail": "({'ds': 'transport error: HTTPError: HTTP Error 429: Too Many Requests'}, {'calls': 7, 'tokens': 27780, 'yuan_accounting': 0.022404, 'yuan_marginal': 0.0})"
+  },
+  {
+   "name": "P9 a finished probe scene is never rerun",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P10 real mode refused without J2_PROBE_GO",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P11 Stage A' ledger untouched",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

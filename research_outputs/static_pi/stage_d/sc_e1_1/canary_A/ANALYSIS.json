@@ -1,0 +1,308 @@
+{
+ "stopped": "J1/glm natural fault: truncated (stop=max_tokens)",
+ "used": {
+  "calls": 3,
+  "tokens": 41334,
+  "yuan_accounting": 0.060437,
+  "yuan_marginal": 0.033447
+ },
+ "caps": {
+  "calls": 13,
+  "tokens": 230000,
+  "yuan": 0.3
+ },
+ "models_reported": [
+  "ds:deepseek-flash",
+  "glm:GLM-5.3-Flash"
+ ],
+ "acceptance": {
+  "checks": {
+   "C1_no_stop": false,
+   "C2_answers_present": false,
+   "C3_ids_in_contract": false,
+   "C4_q_all_not_null": false,
+   "C5_evidence_path_alive": false,
+   "C6_incomplete_only_by_design": true,
+   "C7_no_recovery_in_normal": true,
+   "C8_ledger_complete": true
+  },
+  "verdict": "FAIL"
+ },
+ "rescore": true,
+ "evidence_table": {
+  "rows": 51,
+  "rejected": 8,
+  "by_doc": {
+   "D1": 21,
+   "D2": 30
+  },
+  "chars": 4747
+ },
+ "slots_with_evidence": 18,
+ "calls": [
+  {
+   "arm": "shared",
+   "node": "E_D1",
+   "backend": "ds",
+   "model": "deepseek-flash",
+   "stop": "stop",
+   "tokens_in": 6008,
+   "tokens_out": 3065,
+   "lat_s": 9.61,
+   "yuan_accounting": 0.0133884,
+   "text_chars": 5606,
+   "thinking_chars": 0,
+   "fault": null,
+   "error": null
+  },
+  {
+   "arm": "shared",
+   "node": "E_D2",
+   "backend": "ds",
+   "model": "deepseek-flash",
+   "stop": "stop",
+   "tokens_in": 15903,
+   "tokens_out": 2620,
+   "lat_s": 8.54,
+   "yuan_accounting": 0.0200584,
+   "text_chars": 4942,
+   "thinking_chars": 0,
+   "fault": null,
+   "error": null
+  },
+  {
+   "arm": "Static",
+   "node": "J1",
+   "backend": "glm",
+   "model": "GLM-5.3-Flash",
+   "stop": "max_tokens",
+   "tokens_in": 5738,
+   "tokens_out": 8000,
+   "lat_s": 109.23,
+   "yuan_accounting": 0.0269904,
+   "text_chars": 0,
+   "thinking_chars": 25260,
+   "fault": "truncated",
+   "error": null
+  }
+ ],
+ "arms": {},
+ "slots": [
+  {
+   "fact_id": "F1",
+   "critical": true,
+   "gold": 60,
+   "evidence_rows": [
+    "R22",
+    "R48"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F2",
+   "critical": true,
+   "gold": 30,
+   "evidence_rows": [
+    "R23",
+    "R48"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F3",
+   "critical": true,
+   "gold": 30,
+   "evidence_rows": [
+    "R23",
+    "R48"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F4",
+   "critical": true,
+   "gold": 20,
+   "evidence_rows": [
+    "R26",
+    "R48"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F5",
+   "critical": true,
+   "gold": 20,
+   "evidence_rows": [
+    "R26",
+    "R48"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F6",
+   "critical": false,
+   "gold": 4,
+   "evidence_rows": [
+    "R27",
+    "R48"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F7",
+   "critical": false,
+   "gold": 3,
+   "evidence_rows": [
+    "R28",
+    "R48"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F8",
+   "critical": true,
+   "gold": 6002.99,
+   "evidence_rows": [
+    "R33"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F9",
+   "critical": true,
+   "gold": 7111.78,
+   "evidence_rows": [
+    "R34"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F10",
+   "critical": true,
+   "gold": 13114.77,
+   "evidence_rows": [
+    "R35"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F11",
+   "critical": false,
+   "gold": 158.11,
+   "evidence_rows": [
+    "R35"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F12",
+   "critical": true,
+   "gold": "2018-02-09",
+   "evidence_rows": [],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F13",
+   "critical": true,
+   "gold": "2019-07-09",
+   "evidence_rows": [
+    "R15"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F14",
+   "critical": true,
+   "gold": "2020-06-23",
+   "evidence_rows": [
+    "R42"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F15",
+   "critical": false,
+   "gold": "【2020】29号",
+   "evidence_rows": [
+    "R42"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F16",
+   "critical": false,
+   "gold": "【2020】9号",
+   "evidence_rows": [
+    "R42"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F17",
+   "critical": false,
+   "gold": "处罚字【2019】95号",
+   "evidence_rows": [
+    "R15"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F18",
+   "critical": true,
+   "gold": "董事长、总裁",
+   "evidence_rows": [],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F19",
+   "critical": false,
+   "gold": 201,
+   "evidence_rows": [
+    "R22",
+    "R23",
+    "R26",
+    "R27",
+    "R28",
+    "R48"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  },
+  {
+   "fact_id": "F20",
+   "critical": false,
+   "gold": "否",
+   "evidence_rows": [
+    "R14",
+    "R41",
+    "R51"
+   ],
+   "by_arm": {},
+   "j2_by_arm": {}
+  }
+ ],
+ "noise": {
+  "q_all": [],
+  "q_all_range": null,
+  "slots_differing": [],
+  "tp_all_arms": []
+ }
+}

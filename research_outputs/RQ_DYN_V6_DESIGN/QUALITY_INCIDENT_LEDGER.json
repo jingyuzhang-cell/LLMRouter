@@ -1,0 +1,87 @@
+{
+ "incident": "Gold建设期质量事故台账 V1",
+ "date": "2026-11-11",
+ "incidents": [
+  {
+   "id": "INC-01",
+   "type": "DAG段落结论泄露",
+   "count_caliber": {
+    "leaked_segments": 9,
+    "affected_cases": 7,
+    "note": "段数9≠案件数7:信威单案3段(柬埔寨/尼加拉瓜/坦桑尼亚)+金洲/华泽/神雾/中安科/天沃(2段)——天沃2段计入段数但同案",
+    "per_case": {
+     "金洲慈航": 1,
+     "华泽钴镍": 1,
+     "神雾节能": 1,
+     "中安科": 1,
+     "信威集团": 3,
+     "天沃科技": 2
+    }
+   },
+   "root_cause": "章节结束锚点未命中→默认截取30000字符兜底,将处罚决定段纳入上游提取节点",
+   "fix": "按'根据当事人违法行为的事实'处截断;天沃2段按正确锚点重建;禁用30000字符兜底",
+   "verify": "全75段泄露扫描→0段残留",
+   "status": "已修复"
+  },
+  {
+   "id": "INC-02",
+   "type": "证据跨度转述非逐字",
+   "count_caliber": {
+    "slots_repaired_approx": 104,
+    "tables_affected": 21,
+    "examples": [
+     "高升F01用简称替全称",
+     "新纶F16'分别在'vs原文'分别于'",
+     "天业F02数字重排",
+     "雏鹰F16空跨度"
+    ]
+   },
+   "root_cause": "建表时撰写摘要式跨度而非原文切片",
+   "fix": "四轮逐字化修复(数字定位→片段定位→实体定位→精确切片);多源文档匹配;全角半角归一",
+   "verify": "21表全槽位逐字回溯→0槽未通过",
+   "status": "已修复"
+  },
+  {
+   "id": "INC-03",
+   "type": "locator标签混入evidence_span",
+   "count_caliber": {
+    "slots_cleaned": 119
+   },
+   "root_cause": "定位符(§N:/P45-46:)直接写入跨度字段",
+   "fix": "剥离并移入独立locator字段",
+   "status": "已修复"
+  },
+  {
+   "id": "INC-04",
+   "type": "检查器误判",
+   "count_caliber": {
+    "false_negative": 2,
+    "false_positive": 2,
+    "cases": [
+     "span含省略号未分片匹配(误判FAIL)",
+     "逗号与检索词不对称(误判)",
+     "'上述违法事实'过度匹配(误判泄露)",
+     "跨文档未纳入匹配集(误判)"
+    ]
+   },
+   "fix": "分片匹配+归一化+多文档集+精确泄露标记",
+   "status": "已修复,保留正反例测试"
+  }
+ ],
+ "review_history": {
+  "first_pass": {
+   "result": "0/5 PASS",
+   "reason": "三类缺陷全部暴露"
+  },
+  "final_pass": {
+   "result": "5/5 PASS",
+   "reason": "修复后重跑"
+  },
+  "policy": "首轮与终轮结果均保留,不得只记录最终PASS"
+ },
+ "hard_gates_promoted": [
+  "门禁1:跨度必须原文切片(含起止位置+文书SHA)",
+  "门禁2:DAG段双锚点+结论泄露扫描"
+ ],
+ "sha256": "3d2a0413da40813db738626450eef99615a6cc08d433298af4ae8d6d9bc5582a"
+}

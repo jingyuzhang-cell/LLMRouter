@@ -1,0 +1,665 @@
+{
+ "runs": [
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S3",
+   "pair": 1,
+   "task": "MOCK1",
+   "tp": 2,
+   "n_slots": 2,
+   "tp_ratio": 1.0,
+   "catastrophic": false,
+   "makespan_s": 0.0,
+   "calls": 5,
+   "tokens_in": 2500,
+   "tokens_out": 1000,
+   "cost_yuan": 0.0045,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "DRY_MOCK1_Proposed-Dynamic_S3_P1",
+    "node_log": [
+     {
+      "exec_id": "DRY_MOCK1_Proposed-Dynamic_S3_P1",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:8bbafa0fb27ffb38",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "DRY_MOCK1_Proposed-Dynamic_S3_P1",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:771cd9996849ae4f",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "DRY_MOCK1_Proposed-Dynamic_S3_P1",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:ef09bf5df29d80fb",
+      "parent_hashes": {
+       "A1": "sha256:8bbafa0fb27ffb38",
+       "A2": "sha256:771cd9996849ae4f"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:22024022118b3ec4",
+       "recovered_hash": "sha256:ef09bf5df29d80fb"
+      }
+     },
+     {
+      "exec_id": "DRY_MOCK1_Proposed-Dynamic_S3_P1",
+      "node_id": "C1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:fd74eed392564004",
+      "parent_hashes": {
+       "B1": "sha256:ef09bf5df29d80fb"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S3",
+      "Z": {
+       "action": "reExecute_node",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:reexec"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1"
+     ],
+     "seed_material": "MOCK1|1|S3",
+     "seed": 1836540238,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock 108,666.32万元 2025-04-29\"}]}",
+     "B1_cor": "{\"facts\":[{\"fact\""
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-b068174b 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-7f7e403d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-9e83ff68 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-2584f4c9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S4",
+   "pair": 1,
+   "task": "MOCK1",
+   "tp": 2,
+   "n_slots": 2,
+   "tp_ratio": 1.0,
+   "catastrophic": false,
+   "makespan_s": 0.0,
+   "calls": 5,
+   "tokens_in": 2500,
+   "tokens_out": 1000,
+   "cost_yuan": 0.0045,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "DRY_MOCK1_Proposed-Dynamic_S4_P1",
+    "node_log": [
+     {
+      "exec_id": "DRY_MOCK1_Proposed-Dynamic_S4_P1",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:8bbafa0fb27ffb38",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "DRY_MOCK1_Proposed-Dynamic_S4_P1",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:771cd9996849ae4f",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "DRY_MOCK1_Proposed-Dynamic_S4_P1",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:fcfb049c4eccbf28",
+      "parent_hashes": {
+       "A1": "sha256:8bbafa0fb27ffb38",
+       "A2": "sha256:771cd9996849ae4f"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:30881a36eda06f07",
+       "recovered_hash": "sha256:fcfb049c4eccbf28"
+      }
+     },
+     {
+      "exec_id": "DRY_MOCK1_Proposed-Dynamic_S4_P1",
+      "node_id": "C1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:fd74eed392564004",
+      "parent_hashes": {
+       "B1": "sha256:fcfb049c4eccbf28"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S4",
+      "Z": {
+       "action": "repair_format",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:repair"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1"
+     ],
+     "seed_material": "MOCK1|1|S4",
+     "seed": 1872694797,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock 108,666.32万元 2025-04-29\"}]}",
+     "B1_cor": "['facts':[['fact':'mock 108,666.32万元 2025-04-29']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-b068174b 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-7f7e403d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-cb5a525c 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-2584f4c9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S3",
+   "pair": 1,
+   "task": "MOCK1",
+   "tp": 2,
+   "n_slots": 2,
+   "tp_ratio": 1.0,
+   "catastrophic": false,
+   "makespan_s": 0.0,
+   "calls": 5,
+   "tokens_in": 2500,
+   "tokens_out": 1000,
+   "cost_yuan": 0.0045,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "DRY_MOCK1_Fixed-Composite_S3_P1",
+    "node_log": [
+     {
+      "exec_id": "DRY_MOCK1_Fixed-Composite_S3_P1",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:8bbafa0fb27ffb38",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "DRY_MOCK1_Fixed-Composite_S3_P1",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:771cd9996849ae4f",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "DRY_MOCK1_Fixed-Composite_S3_P1",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:3776744dff699a8f",
+      "parent_hashes": {
+       "A1": "sha256:8bbafa0fb27ffb38",
+       "A2": "sha256:771cd9996849ae4f"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:22024022118b3ec4",
+       "recovered_hash": "sha256:3776744dff699a8f"
+      }
+     },
+     {
+      "exec_id": "DRY_MOCK1_Fixed-Composite_S3_P1",
+      "node_id": "C1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:fd74eed392564004",
+      "parent_hashes": {
+       "B1": "sha256:3776744dff699a8f"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S3",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "reExecute_node",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1"
+     ],
+     "seed_material": "MOCK1|1|S3",
+     "seed": 1836540238,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock 108,666.32万元 2025-04-29\"}]}",
+     "B1_cor": "{\"facts\":[{\"fact\""
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-b068174b 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-7f7e403d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-ac657320 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-2584f4c9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S4",
+   "pair": 1,
+   "task": "MOCK1",
+   "tp": 2,
+   "n_slots": 2,
+   "tp_ratio": 1.0,
+   "catastrophic": false,
+   "makespan_s": 0.0,
+   "calls": 5,
+   "tokens_in": 2500,
+   "tokens_out": 1000,
+   "cost_yuan": 0.0045,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "DRY_MOCK1_Fixed-Composite_S4_P1",
+    "node_log": [
+     {
+      "exec_id": "DRY_MOCK1_Fixed-Composite_S4_P1",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:8bbafa0fb27ffb38",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "DRY_MOCK1_Fixed-Composite_S4_P1",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:771cd9996849ae4f",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "DRY_MOCK1_Fixed-Composite_S4_P1",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:3776744dff699a8f",
+      "parent_hashes": {
+       "A1": "sha256:8bbafa0fb27ffb38",
+       "A2": "sha256:771cd9996849ae4f"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:30881a36eda06f07",
+       "recovered_hash": "sha256:3776744dff699a8f"
+      }
+     },
+     {
+      "exec_id": "DRY_MOCK1_Fixed-Composite_S4_P1",
+      "node_id": "C1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:fd74eed392564004",
+      "parent_hashes": {
+       "B1": "sha256:3776744dff699a8f"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S4",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "repair_format",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1"
+     ],
+     "seed_material": "MOCK1|1|S4",
+     "seed": 1872694797,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock 108,666.32万元 2025-04-29\"}]}",
+     "B1_cor": "['facts':[['fact':'mock 108,666.32万元 2025-04-29']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-b068174b 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-7f7e403d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-ac657320 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-2584f4c9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  }
+ ],
+ "metrics": {
+  "n_runs": 4,
+  "decision_opportunities": 4,
+  "Z_divergence": 1.0,
+  "R_divergence": 1.0,
+  "pi_divergence": 1.0,
+  "n_divergence_points": 4,
+  "effective_recoveries": 4,
+  "ineffective_recoveries": 0,
+  "harmful_recoveries": 0,
+  "recovery_attempts": 4,
+  "wasted_recovery_calls": 0
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "frozen_at": "2026-11-10",
+ "authority": "P2C_G7_PREREG_FROZEN.md sha 5fd6569f… §3/§4.1/§4.2 逐字实例化",
+ "base_prompts": "E/J1/J2/SINK/J2R 系统提示词与用户模板逐字复用冻结 p2c_runner.py（sha 7396f432…）及其依赖 sc_e1_1_runner",
+ "g6m_input_delta": "两臂共同的槽位清单 slots_json 每槽增加 fact_stage 字段（G6-M=逐字管线+阶段元数据输入，不执行约束；G7 同输入+执行约束）——唯一输入差异为 G7 的重锚定附加块",
+ "verifier": {
+  "system": "你是独立的证据阶段核验员。给你若干条引文记录，每条格式为：fact_id | doc | quote。doc 是文书编号：D1=行政处罚事先告知书（拟处罚阶段文书），D2=行政处罚决定书（终局处罚文书）；quote 是从该文书逐字复制的句子。你的任务：对每条引文，判定该句内容实际支持的处罚阶段，输出 quote_stage：拟 或 终 或 不明确。判定规则：（1）句内有显式阶段标记时以其为准：句中出现\"拟决定/拟对/拟采取/我局拟\"等提议性表述→拟；句中出现\"经审理终结/本局决定/我会决定/决定：\"等终局性表述→终；（2）句内无显式阶段标记时，按其所处文书语境判定：D1（事先告知书）中的处罚内容→拟；D2（决定书）中的处罚内容→终（注意：D2中转述拟处罚内容的句子带拟标记，按（1）判拟）；（3）引文残缺、孤立数字或无法辨认处罚动作的，输出\"不明确\"。只依据给定记录判定，不使用任何外部信息；每条输入记录对应一项输出，不得遗漏或新增。只输出 JSON：{\"stages\": [{\"fact_id\": \"...\", \"quote_stage\": \"拟|终|不明确\"}]}。",
+  "backend": "glm",
+  "max_tokens": 8000,
+  "user_template": "引文记录（fact_id | doc | quote）：\n{records}\n\n请逐条判定 quote_stage。"
+ },
+ "reanchor": {
+  "system": "你是严谨的最终答案汇总器。只输出 JSON：{\"answers\": [{fact_id, value, quote, doc}], \"unknown_slots\": []}。不得使用给定上游材料之外的任何信息。约束规则（必须遵守）：R1 每条事实绑定其阶段标签，槽位清单已给出 fact_stage（拟或终）；R2 引文内容实际支持的阶段必须与该事实的 fact_stage 一致（按引文语义判断，非仅看文书类型；决定书中转述的拟处罚内容仍属拟阶段）；R3 不得跨阶段推断（终局文书未载明的拟阶段信息不得从终局文书推断补足）。修正要求：失败清单中的事实，只允许更换 quote 或 doc（从证据表逐字复制），不允许改 value，不允许删除事实；为失败事实选择支持其 fact_stage 阶段的句级引文（含金额/日期整句），禁止裸数字引文；未在失败清单中的事实保持原样照抄。",
+  "backend": "ds",
+  "max_tokens": 4000,
+  "user_template": "上一版答案：\n{prev}\n\n失败清单与指引：\n{failures}\n\n{evidence}\n\n槽位：{slots}"
+ },
+ "failure_item_template": "fact_id={fid}｜fact_stage={stage}｜当前doc={doc}｜当前quote={quote}｜失败原因={reason}｜指引：为该事实改选支持\"{stage}\"阶段语义的句级证据（可换文书），保持 value 不变",
+ "scoring_implementation": {
+  "value_canon": "值比较前规范化：去空白；全角→半角（ASCII范围）；汉字数字（一~九/十/百/千/万/亿组合及大写）解析为数值后与阿拉伯数值等值比较；\"元/万元/元的罚款/罚款\"等金额后缀与括号内容外的标点容差；其余逐字符比较",
+  "unknown_slots": "value==UNKNOWN 的 gold 槽：不计入错配/召回/Q 的分子与可评价分母（无 Gold 证据跨度，不可评价）；模型对该类槽输出 unknown_slots 记为正确处理（描述性统计），输出具体值记为处理不当（描述性）",
+  "stage_sensitive": "单文书槽（allowed为单一doc）为阶段敏感；多文书槽仅计 Q_all",
+  "mismatch": "终端quote→Gold跨度匹配（冻结规则）：逐字相同取该跨度evidence_stage；否则同文书字符重叠率≥50%的最大跨度；无匹配→不可判定桶（不计正确；三规则敏感性照§5.2）",
+  "q_all": "全部槽位零稀释：correct=value_canon∧quote在被引文书逐字存在（规范化后）∧（若阶段敏感）跨度匹配evidence_stage==fact_stage；遗漏与M3置零槽计为错；Q_all=correct/全部槽数",
+  "m3": "detect_m3 置零逻辑逐字复用（两臂相同）"
+ },
+ "sha256": "cab91ec76c39969d599939bf106a08583fa2cf74a07e3c92d3f8551c66870be0",
+ "version_log": [
+  {
+   "version": 1,
+   "sha256": "7fc882edd0de3e7265e378e5fb6c80555381aab2b8f27f3a965f1de691f3bc7b",
+   "note": "v1核验器禁用文书语境，与§4.2输入定义不符，弃用（见g7_runs_verifier_v1/VERIFIER_NOTE.md）"
+  },
+  {
+   "version": 2,
+   "note": "v2=句内显式标记优先+无标记按文书语境基线（§4.2 document_id为合法输入）"
+  }
+ ]
+}

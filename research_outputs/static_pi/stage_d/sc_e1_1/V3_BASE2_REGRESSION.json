@@ -1,0 +1,116 @@
+{
+ "passed": 21,
+ "total": 21,
+ "results": [
+  {
+   "name": "P1 V2 file is the frozen one",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P2 是否 slots are typed polar; every other type is V2's",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P3 answer polarity: 是/触及 affirm, 否/未触及 deny, hedged answers unknown",
+   "ok": true,
+   "detail": "{\"'是'\": 'AFFIRM', \"'已触及'\": 'AFFIRM', \"'触及重大违法强制退市情形'\": 'AFFIRM', 'True': 'AFFIRM', \"'否'\": 'DENY', \"'未触及'\": 'DENY', \"'不触及重大违法强制退市情形'\": 'DENY', 'False': 'DENY', \"'可能'\": 'UNKNOWN', \"'公司股票可能被实施重大违法强制退市'\": 'UNKNOWN'}"
+  },
+  {
+   "name": "P4 quote polarity for the slot verb: affirm, deny, mixed clause unknown, other verbs ignored, no verb unknown",
+   "ok": true,
+   "detail": "['AFFIRM', 'DENY', 'UNKNOWN', 'DENY', 'UNKNOWN']"
+  },
+  {
+   "name": "P4 the slot verb is read from the schema",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P5 M3 polar: matching polarity consistent, opposite inconsistent, unreadable undetermined",
+   "ok": true,
+   "detail": "[('是', '根据《事先告知书', 'CONSISTENT'), ('否', '《事先告知书》中', 'CONSISTENT'), ('是', '《事先告知书》中', 'SELF_EVIDENCE_INCONSISTENT'), ('否', '根据《事先告知书', 'SELF_EVIDENCE_INCONSISTENT'), ('是', '认定的事实未触及', 'UNDETERMINED'), ('可能', '根据《事先告知书', 'UNDETERMINED'), ('是', '不在证据表中的触', 'SELF_EVIDENCE_INCONSISTENT')]"
+  },
+  {
+   "name": "P6 the V2 defect this fixes is still present in V2 (kept unchanged)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "P7 M1 polar: an affirmative row is a candidate (V3 flags suppression; V2 could not see it)",
+   "ok": true,
+   "detail": "({'P': {'state': 'EXPLICIT_SUPPRESSION', 'j2_status': 'unverifiable', 'candidates': 1, 'candidate_rows': ['R1']}}, {'P': {'state': 'NONE', 'j2_status': 'unverifiable', 'candidates': 0, 'candidate_rows': []}})"
+  },
+  {
+   "name": "E1 identical states for every slot on all three arms",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "B1 aliases come only from the document's own 以下简称 declarations",
+   "ok": true,
+   "detail": "{'公司': '湖南千山制药机械股份有限公司', '千山药机': '湖南千山制药机械股份有限公司'}"
+  },
+  {
+   "name": "B2 clean extraction: 179 over 14 parties",
+   "ok": true,
+   "detail": "{'value': '179万元', 'value_wan': 179.0, 'parties': 14, 'conflicts': [], 'addends': {'湖南千山制药机械股份有限公司': '60', '刘祥华': '30', '刘华山': '30', '周大连': '15', '姜纯': '10', '钟波': '4', '刘燕': '4', '邓铁山': '4', '王国华': '4', '郑国胜': '4', '彭勋德': '4', '黄盛秋': '4', '付慧龙': '3', '金杰': '3'}, 'rule': 'sum over distinct parties e"
+  },
+  {
+   "name": "B3 declared alias listed twice: counted once, 179, merge recorded",
+   "ok": true,
+   "detail": "{'value': '179万元', 'value_wan': 179.0, 'parties': 14, 'conflicts': [], 'addends': {'湖南千山制药机械股份有限公司': '60', '刘祥华': '30', '刘华山': '30', '周大连': '15', '姜纯': '10', '钟波': '4', '刘燕': '4', '邓铁山': '4', '王国华': '4', '郑国胜': '4', '彭勋德': '4', '黄盛秋': '4', '付慧龙': '3', '金杰': '3'}, 'rule': 'sum over distinct parties e"
+  },
+  {
+   "name": "B4 the declared generic alias 公司 maps to the company",
+   "ok": true,
+   "detail": "{'value': '179万元', 'value_wan': 179.0, 'parties': 14, 'conflicts': [], 'addends': {'湖南千山制药机械股份有限公司': '60', '刘祥华': '30', '刘华山': '30', '周大连': '15', '姜纯': '10', '钟波': '4', '刘燕': '4', '邓铁山': '4', '王国华': '4', '郑国胜': '4', '彭勋德': '4', '黄盛秋': '4', '付慧龙': '3', '金杰': '3'}, 'rule': 'sum over distinct parties e"
+  },
+  {
+   "name": "B5 alias with a different amount: total unavailable, conflict reported",
+   "ok": true,
+   "detail": "{'value': None, 'parties': 14, 'conflicts': ['湖南千山制药机械股份有限公司'], 'rule': 'sum over distinct parties extracted from the final decision (E_D2) that carry a numeric penalty_amount; names mapped through aliases declared in the source (以下简称)', 'aliases_declared': {'公司': '湖南千山制药机械股份有限公司', '千山药机': '湖南千山制药机械"
+  },
+  {
+   "name": "B6 undeclared similar name is not merged (no similarity matching): counted separately",
+   "ok": true,
+   "detail": "{'value': '239万元', 'value_wan': 239.0, 'parties': 15, 'conflicts': [], 'addends': {'湖南千山制药机械股份有限公司': '60', '千山制药': '60', '刘祥华': '30', '刘华山': '30', '周大连': '15', '姜纯': '10', '钟波': '4', '刘燕': '4', '邓铁山': '4', '王国华': '4', '郑国胜': '4', '彭勋德': '4', '黄盛秋': '4', '付慧龙': '3', '金杰': '3'}, 'rule': 'sum over dist"
+  },
+  {
+   "name": "B7 an alias declared for two different entities is dropped",
+   "ok": true,
+   "detail": "({}, ['甲公司'])"
+  },
+  {
+   "name": "B8 without declarations it behaves as version 1 (double count stays visible)",
+   "ok": true,
+   "detail": "{'value': '239万元', 'value_wan': 239.0, 'parties': 15, 'conflicts': [], 'addends': {'湖南千山制药机械股份有限公司': '60', '千山药机': '60', '刘祥华': '30', '刘华山': '30', '周大连': '15', '姜纯': '10', '钟波': '4', '刘燕': '4', '邓铁山': '4', '王国华': '4', '郑国胜': '4', '彭勋德': '4', '黄盛秋': '4', '付慧龙': '3', '金杰': '3'}, 'rule': 'sum over dist"
+  },
+  {
+   "name": "B9 SC-E1 development extraction: same 201 over 16 parties as version 1",
+   "ok": true,
+   "detail": "({'value': '201万元', 'value_wan': 201.0, 'parties': 16, 'conflicts': [], 'rule': 'sum over distinct parties extracted from the final decision (E_D2) that carry a numeric penalty_amount', 'computation': '獐子岛集团股份有限公司:60 + 吴厚刚:30 + 梁峻:30 + 孙福君:20 + 勾荣:20 + 邹建:4 + 王涛:4 + 罗伟新:4 + 赵志年:4 + 陈树文:4 + 吴晓巍:4 + 陈"
+  },
+  {
+   "name": "B10 no answer constants in either module",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B11 neither module reads Gold or a contract",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B12 V2 regression results untouched",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "files": {
+  "detectors_v3.py": "6f39b9af9f0405376b8bad71a8d685814fb34e05a4029b920f1da0256401cd30",
+  "base_total_v2.py": "e75f00587069c9955b889d6c449af0535f0fba569b20c364396082e33980939d",
+  "detectors_v2.py": "c2c3384265b39aee6783eff407402c4c775d7eb0b18aea005442f80ec1548c24"
+ }
+}

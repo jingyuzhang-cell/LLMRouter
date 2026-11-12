@@ -1,0 +1,237 @@
+{
+ "batch": "DAMJS_EXP_36",
+ "arm": "DAMJS",
+ "executor_arm": "Proposed-Dynamic",
+ "policy_source": "damjs_engine.Scheduler",
+ "scenario": "S3",
+ "rep": 1,
+ "deadline_s": 240.0,
+ "deadline_ex_s": 239.906,
+ "startup_offset_s": 0.094,
+ "mode": "real",
+ "exec_id": "DAMJS|S3|r1|D240",
+ "status": "COMPLETE",
+ "tp": 7,
+ "slot_success": 0.3043,
+ "makespan_s": 185.7,
+ "elapsed_since_launch_s": 175.85,
+ "calls": 8,
+ "tokens_in": 10205,
+ "tokens_out": 14547,
+ "accounting_yuan": 0.0488956,
+ "actual_cash_yuan": 0.0191588,
+ "actions": [
+  {
+   "kind": "structure_repair",
+   "node": "J1",
+   "t": 34.9
+  },
+  {
+   "kind": "format_repair",
+   "node": "FMT",
+   "t": 175.1
+  }
+ ],
+ "decisions": [
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "acts": [
+    [
+     "structure_repair",
+     "J1"
+    ]
+   ],
+   "t_rem": 205,
+   "engine": "damjs_engine.Scheduler",
+   "chosen": "Z_structure"
+  },
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "acts": [],
+   "t_rem": 85,
+   "engine": "damjs_engine.Scheduler",
+   "chosen": "NONE"
+  },
+  {
+   "node": "FMT",
+   "sig": {
+    "D3": "format"
+   },
+   "acts": [
+    [
+     "format_repair",
+     "FMT"
+    ]
+   ],
+   "t_rem": 65,
+   "engine": "damjs_engine.Scheduler",
+   "chosen": "Z_format"
+  },
+  {
+   "node": "FMT",
+   "sig": {
+    "D3": "format"
+   },
+   "acts": [],
+   "t_rem": 65,
+   "engine": "damjs_engine.Scheduler",
+   "chosen": "NONE"
+  }
+ ],
+ "anomalies": [
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "t": 34.9
+  },
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "t": 155.1
+  },
+  {
+   "node": "FMT",
+   "sig": {
+    "D3": "format"
+   },
+   "t": 175.1
+  },
+  {
+   "node": "FMT",
+   "sig": {
+    "D3": "format"
+   },
+   "t": 175.3
+  }
+ ],
+ "final_states": {
+  "E1": "Completed",
+  "E2": "Completed",
+  "E3": "Completed",
+  "E4": "Completed",
+  "J1": "Completed",
+  "J2": "Completed",
+  "SINK": "Completed",
+  "FMT": "Completed"
+ },
+ "invalid_reason": null,
+ "per_node_calls": {
+  "E1": [
+   "deepseek"
+  ],
+  "E2": [
+   "deepseek"
+  ],
+  "E3": [
+   "deepseek"
+  ],
+  "E4": [
+   "deepseek"
+  ],
+  "J1": [
+   "glm53flash",
+   "glm53flash"
+  ],
+  "J2": [
+   "deepseek"
+  ],
+  "SINK": [
+   "deepseek"
+  ],
+  "FMT": []
+ },
+ "exec_record": "/root/research_outputs/static_pi/stage_d/damjs_r2/runs_real/exec_records/DAMJS__S3__r1__D240.json",
+ "bridge": {
+  "engine_module": "/root/research_outputs/static_pi/stage_d/damsj_engine.py",
+  "counts": {
+   "build_candidates": 4,
+   "select": 4,
+   "apply": 2,
+   "observe": 2
+  },
+  "history": {
+   "J1|Z_structure": {
+    "count": 1,
+    "gains": [
+     0.0
+    ]
+   },
+   "FMT|Z_format": {
+    "count": 1,
+    "gains": [
+     0.0
+    ]
+   }
+  },
+  "engine_log": [
+   {
+    "ev": "apply",
+    "kind": "Z_structure",
+    "node": "J1",
+    "t": 34.85468542575836
+   },
+   {
+    "ev": "apply",
+    "kind": "Z_format",
+    "node": "FMT",
+    "t": 175.14595437049866
+   }
+  ],
+  "unresolved": []
+ },
+ "network_attempts": 0,
+ "wall_s": 175.75,
+ "identity": {
+  "pre": {
+   "verified": true,
+   "mismatches": [],
+   "components": {
+    "child:damjs_r2/damjs_r2_child.py": "6443250ff90c377fcb1d269bb84637477ca20454d1b5a8b2edb3289380bc38f7",
+    "bridge:damjs_r2/damjs_bridge.py": "c3e21e85f986cf60aaa8633ab93ea7deee9ff731e95a884c43869f26831b7ce6",
+    "runner:damjs_r2/damjs_r2_runner.py": "6043b300aba964ad80bf64a580cf3798f89578419fab2959b75edaf9e7b24f8d",
+    "wrapper:damsj_executor.py": "107db96a0308c5317b229ca21892de0bb697a2ff4b527c0082cdc344f95292b6",
+    "engine:damsj_engine.py": "7eec919b6a11ea99e4e5fb8bfc8ab7edfa0b90def5f360e145b062e570493aef",
+    "executor:stage_d_v2_executor.py": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+    "config:stage_d_v2_executor_config.json": "914f3edd4c4848e3f7063ce6c398f80afc773cf790844973638550848f543581",
+    "dependency_d2:d2_executor.py": "df8a2de69079916110018699c57ec7f4ad9fd482af3f2fa9917360bac056c16e",
+    "dependency_prompts:/root/research_outputs/static_pi/stage_a/executor.py": "5f1de3c770aa4869c2b39daa54f8917a90dcd100a8a1952e3315862abf14f889",
+    "dependency_transport:/root/capital_opinion_pilot/transport.py": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+    "scorer:/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+    "task_contract:/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/PHASE2B/TASK_CONTRACT_PHASE2B_v2_1.json": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234"
+   },
+   "manifest_sha256": "efd65e70eb0fd68ecc610269f0fa7f69f0cf22b27a8569fbd971c7ec7c18f8cc",
+   "batch_id": "DAMJS_EXP_36"
+  },
+  "post": {
+   "verified": true,
+   "mismatches": [],
+   "components": {
+    "child:damjs_r2/damjs_r2_child.py": "6443250ff90c377fcb1d269bb84637477ca20454d1b5a8b2edb3289380bc38f7",
+    "bridge:damjs_r2/damjs_bridge.py": "c3e21e85f986cf60aaa8633ab93ea7deee9ff731e95a884c43869f26831b7ce6",
+    "runner:damjs_r2/damjs_r2_runner.py": "6043b300aba964ad80bf64a580cf3798f89578419fab2959b75edaf9e7b24f8d",
+    "wrapper:damsj_executor.py": "107db96a0308c5317b229ca21892de0bb697a2ff4b527c0082cdc344f95292b6",
+    "engine:damsj_engine.py": "7eec919b6a11ea99e4e5fb8bfc8ab7edfa0b90def5f360e145b062e570493aef",
+    "executor:stage_d_v2_executor.py": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+    "config:stage_d_v2_executor_config.json": "914f3edd4c4848e3f7063ce6c398f80afc773cf790844973638550848f543581",
+    "dependency_d2:d2_executor.py": "df8a2de69079916110018699c57ec7f4ad9fd482af3f2fa9917360bac056c16e",
+    "dependency_prompts:/root/research_outputs/static_pi/stage_a/executor.py": "5f1de3c770aa4869c2b39daa54f8917a90dcd100a8a1952e3315862abf14f889",
+    "dependency_transport:/root/capital_opinion_pilot/transport.py": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+    "scorer:/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+    "task_contract:/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/PHASE2B/TASK_CONTRACT_PHASE2B_v2_1.json": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234"
+   },
+   "manifest_sha256": "efd65e70eb0fd68ecc610269f0fa7f69f0cf22b27a8569fbd971c7ec7c18f8cc",
+   "batch_id": "DAMJS_EXP_36"
+  },
+  "ok": true
+ }
+}
