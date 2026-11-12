@@ -1,0 +1,38 @@
+{
+ "batch": "V4_CONFIRMATORY_I",
+ "frozen_at": "2026-11-07",
+ "status": "COMPLETE (36/110 calls, ¥0.58, ~283K tok)",
+ "panel": {
+  "MVR1": "16 slots, machine-verifiable reference (Route B per its governance)",
+  "QS": "20 slots, GOLD_APPROVED",
+  "class": "NEW tasks, excluded calibration contamination; n=2 exploratory mid-confirmatory increment"
+ },
+ "healthy_paired_dQ_v32_minus_static": {
+  "MVR1": 0.0,
+  "QS": 0.05,
+  "reading": "direction consistent but smaller than calibration tasks (+9-14pp); MVR1 = no-headroom case (base 0.875; Zx spent +6 calls for +0 slots) -> ceiling gate needs a saturation prior for new tasks (declared absent); QS +5pp at +4 calls"
+ },
+ "fault_arm": {
+  "parity": "v3.2 ladder correct in all 4 cells (transient R:ok 1c; persistent R:fail->pi 2c)",
+  "defect_disclosed": "Proposed arm's pi-escalation branch was dead code in THIS runner (persistent Proposed = R only, 1 wasted call) — implementation defect, disclosed; effect on Q nil because of the structural finding below",
+  "structural_finding": "under the two-layer delivery contract, report-node faults are Q-NEUTRAL: delivery assembles from the code-carried store, so even a failed report leaves Q_body (priority facts) and Q_appendix at baseline; the fault axis that matters has MOVED to extract/store-side"
+ },
+ "b2_audit": {
+  "MVR1": "NONE (deadline: 4-doc 362s>300s) correct",
+  "QS": "Zx feasible (2-doc) correct"
+ },
+ "budget": {
+  "used_calls": 36,
+  "used_tokens": 282471,
+  "used_yuan_est": 0.58,
+  "hold_192": "untouched"
+ },
+ "files_sha256": {
+  "v4_runner.py": "5db718a0d6a71f296f82c691ba9401a128aaade8e126fb4e004c8f14ece55331",
+  "v4_config.json": "ef2a41730f18791bf6f1e8a7b7019125115b398463ec0a862a9c12f044132c06",
+  "v4_runs/ledger.jsonl": "703354959ec69be155f7a02b161acbf6fccdd295d44bd5a8a85db9ca1ed4be2a",
+  "v4_runs/outputs.jsonl": "5cf7e309ed25fafb89873fa6bd3c459c8577b05cc919de73a18c40c999979ff7",
+  "V4I_MVR1_PORT.json": "8a931005eb0578343c001e32183dd8dbb40f6f283030d8442affd9ebf2b1d48f",
+  "V4I_QS_PORT.json": "202e208a01163b8845a2af2ed1970c89a7680677bdc6d4021e0807014e294ceb"
+ }
+}

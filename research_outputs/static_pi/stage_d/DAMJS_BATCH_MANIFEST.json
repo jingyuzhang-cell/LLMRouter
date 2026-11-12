@@ -1,0 +1,172 @@
+{
+ "batch_id": "DAMJS_PILOT_54",
+ "created": "2026-11-06T19:13:38",
+ "purpose": "DAMJS 三臂探索性实验（Static / Current-Proposed / DAMJS）× 110/150/240s × S3/S4 × 3 重复",
+ "status": "FROZEN_PENDING_GO",
+ "model_calls": 0,
+ "integrity_policy": {
+  "verify_before_batch": true,
+  "verify_after_batch": true,
+  "on_mismatch": "batch results flagged INTEGRITY_FAIL, not admissible as evidence",
+  "per_run_record_required": "identity block with all component sha256"
+ },
+ "budget": {
+  "calls_max": 400,
+  "tokens_max": 1400000,
+  "yuan_max": 2.5
+ },
+ "design": {
+  "arms": [
+   "Static",
+   "Current-Proposed",
+   "DAMJS"
+  ],
+  "deadlines_s": [
+   110,
+   150,
+   240
+  ],
+  "scenarios": [
+   "S3",
+   "S4"
+  ],
+  "reps": 3,
+  "executions": 54,
+  "primary_metric": "Success = 1(TP>=12 AND T<=D) with D hard-enforced",
+  "secondary": [
+   "TP/23",
+   "Delta TP",
+   "cost",
+   "makespan",
+   "abort_rate",
+   "negative_gain_rate",
+   "worst_negative_gain",
+   "action_count",
+   "wasted_action_rate",
+   "migration_count",
+   "post_migration_outcome"
+  ]
+ },
+ "components": [
+  {
+   "path": "stage_d_executor.py",
+   "role": "executor",
+   "description": "冻结执行器（不可修改）",
+   "sha256": "64dea81992f9f036af783cf91079f32dbb808948210c13ea72069ddd35839f7d",
+   "bytes": 53244,
+   "mtime": "2026-11-03T10:14:02"
+  },
+  {
+   "path": "stage_d_executor_config.json",
+   "role": "config",
+   "description": "六臂与场景配置",
+   "sha256": "11e520323ecf94a3d70130c8b1da15cd65e31b019f4bf669aed93361bbdecdb5",
+   "bytes": 1205,
+   "mtime": "2026-11-02T12:37:36"
+  },
+  {
+   "path": "damsj_engine.py",
+   "role": "engine",
+   "description": "DAMJS 调度核心 V0.2.1",
+   "sha256": "7eec919b6a11ea99e4e5fb8bfc8ab7edfa0b90def5f360e145b062e570493aef",
+   "bytes": 12741,
+   "mtime": "2026-11-06T19:03:09"
+  },
+  {
+   "path": "damsj_executor.py",
+   "role": "wrapper",
+   "description": "L2/L3/L4 包装器",
+   "sha256": "04964d72bdf43ab97aa78abb9114500df9d1d766c1b1abb2b88af1b17c509dd2",
+   "bytes": 9822,
+   "mtime": "2026-11-06T19:07:30"
+  },
+  {
+   "path": "_damsj_child.py",
+   "role": "child",
+   "description": "压力测试模拟子进程（仅 mock）",
+   "sha256": "bbfc527d5d4deee9ea5b6bc218f86f43314b3f026dbc3d4ff985aedab8c6b4cf",
+   "bytes": 1776,
+   "mtime": "2026-11-06T19:07:23"
+  },
+  {
+   "path": "d2_executor.py",
+   "role": "dependency",
+   "description": "D2 状态机/检测器/修复库（只读复用）",
+   "sha256": "df8a2de69079916110018699c57ec7f4ad9fd482af3f2fa9917360bac056c16e",
+   "bytes": 18399,
+   "mtime": "2026-11-02T12:37:36"
+  },
+  {
+   "path": "exact_perm.py",
+   "role": "stats",
+   "description": "精确配对符号翻转检验",
+   "sha256": "09468d2488ba3d6d6ba02f2c91c68f12bd6e8fc17954e362d2d843ca08e7fd6e",
+   "bytes": 6079,
+   "mtime": "2026-11-02T12:37:36"
+  },
+  {
+   "path": "stage_d_final_analysis.py",
+   "role": "analysis",
+   "description": "终局分析入口",
+   "sha256": "037fa446c440c856ea0366d9e331bc8fa49d3a8f84318576f496c6a8e66c773e",
+   "bytes": 9490,
+   "mtime": "2026-11-02T12:37:36"
+  },
+  {
+   "path": "DAMJS_DESIGN.md",
+   "role": "prereg",
+   "description": "算法设计 V0.1",
+   "sha256": "908f73fee8974f81ebf5fb1952be5009e724dd8c78e93ef9c6bde199a1a36f94",
+   "bytes": 10550,
+   "mtime": "2026-11-06T18:41:17"
+  },
+  {
+   "path": "DAMJS_V0_2.md",
+   "role": "prereg",
+   "description": "算法设计 V0.2",
+   "sha256": "48b97d7fdfecfacb43126f06e607b9467ec995841dc7590f057cfc2bf5fc639c",
+   "bytes": 10049,
+   "mtime": "2026-11-06T18:55:17"
+  },
+  {
+   "path": "DAMJS_V0_2_1.md",
+   "role": "prereg",
+   "description": "算法设计 V0.2.1（当前）",
+   "sha256": "4862c5a6ef8fce9b9b1ea3ae89bf356e57beead5c7c656d74e78cb16b0d665ab",
+   "bytes": 6675,
+   "mtime": "2026-11-06T19:02:26"
+  },
+  {
+   "path": "EXECUTOR_IDENTITY_SUPPLEMENT.md",
+   "role": "governance",
+   "description": "执行器身份补记",
+   "sha256": "62e9494beca20bbcf2004a500a2be1988b579b2b06481e3d5c390540df421448",
+   "bytes": 3817,
+   "mtime": "2026-11-06T19:13:30"
+  },
+  {
+   "path": "test_damsj_engine.py",
+   "role": "test",
+   "description": "调度引擎不变式测试",
+   "sha256": "c51e697ae3761c532b72174fc1908fb023a4012f2a82c7682908fac0289c3262",
+   "bytes": 7557,
+   "mtime": "2026-11-06T19:03:12"
+  },
+  {
+   "path": "test_damsj_executor.py",
+   "role": "test",
+   "description": "执行器压力测试",
+   "sha256": "226e5b94cc6e16a38d8c2aa4426fc2a8c9d6a5ad31ae0ca69db2bb65e4bf2120",
+   "bytes": 4091,
+   "mtime": "2026-11-06T19:07:23"
+  },
+  {
+   "path": "/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py",
+   "role": "scorer",
+   "description": "终端评分器 v1.2.3（冻结）",
+   "sha256": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+   "bytes": 40717,
+   "mtime": "2026-10-30T22:09:50"
+  }
+ ]
+}

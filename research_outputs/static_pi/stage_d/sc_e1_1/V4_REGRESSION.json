@@ -1,0 +1,98 @@
+{
+ "passed": 10,
+ "total": 10,
+ "results": [
+  {
+   "name": "L1 V2 and V3 files are the frozen ones",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L2 classifier: seen affirmatives, V2 suppressions plus not_found, anything else unknown, missing None",
+   "ok": true,
+   "detail": "{'已核验': 'affirmed', 'Verified': 'affirmed', 'correct': 'affirmed', 'supported': 'affirmed', 'computed': 'affirmed', 'unverifiable': 'suppressed', '无法核验': 'suppressed', 'not_found': 'suppressed', 'partially_verified': 'unknown', '部分核验': 'unknown', None: None}"
+  },
+  {
+   "name": "L3 replay covers every real J2 output (3 Stage A' + 6 T1)",
+   "ok": true,
+   "detail": "9"
+  },
+  {
+   "name": "L4 T1 A1 r3 (status not_found): V4 flags all five slots as explicit suppression where V3 reported NONE",
+   "ok": true,
+   "detail": "{'F8': 'EXPLICIT_SUPPRESSION', 'F9': 'EXPLICIT_SUPPRESSION', 'F10': 'EXPLICIT_SUPPRESSION', 'F11': 'EXPLICIT_SUPPRESSION', 'F20': 'EXPLICIT_SUPPRESSION'}"
+  },
+  {
+   "name": "L5 T1 A1 r1, r2 (unverifiable): explicit suppression, as in V2/V3",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L6 T1 A2 replicates (已核验): NONE on all five",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L7 the only differences from V3 across all nine real J2 outputs are the five not_found slots",
+   "ok": true,
+   "detail": "[('T1:A1:r3', 'F8', 'NONE', 'EXPLICIT_SUPPRESSION', 'not_found'), ('T1:A1:r3', 'F9', 'NONE', 'EXPLICIT_SUPPRESSION', 'not_found'), ('T1:A1:r3', 'F10', 'NONE', 'EXPLICIT_SUPPRESSION', 'not_found'), ('T1:A1:r3', 'F11', 'NONE', 'EXPLICIT_SUPPRESSION', 'not_found'), ('T1:A1:r3', 'F20', 'NONE', 'EXPLICIT"
+  },
+  {
+   "name": "L8 an unseen label with candidate evidence is UNKNOWN_LABEL, never silently NONE",
+   "ok": true,
+   "detail": "{'F1': {'state': 'NONE', 'j2_status': '部分核验', 'label_class': 'unknown', 'candidates': 0, 'candidate_rows': []}, 'F2': {'state': 'UNKNOWN_LABEL', 'j2_status': '部分核验', 'label_class': 'unknown', 'candidates': 6, 'candidate_rows': ['R16', 'R19', 'R20', 'R23', 'R48', 'R49']}, 'F3': {'state': 'UNKNOWN_LAB"
+  },
+  {
+   "name": "L9 polar slots keep V3 candidates: not_found on an affirmative row is explicit suppression",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "L10 V4 reads no Gold or contract",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "files": {
+  "detectors_v4.py": "aebba8bba5277c6f05e07ae86fc1c41703818514db7d08a80e088d446bd4b77d",
+  "detectors_v3.py": "6f39b9af9f0405376b8bad71a8d685814fb34e05a4029b920f1da0256401cd30",
+  "detectors_v2.py": "c2c3384265b39aee6783eff407402c4c775d7eb0b18aea005442f80ec1548c24"
+ },
+ "v3_v4_differences": [
+  [
+   "T1:A1:r3",
+   "F8",
+   "NONE",
+   "EXPLICIT_SUPPRESSION",
+   "not_found"
+  ],
+  [
+   "T1:A1:r3",
+   "F9",
+   "NONE",
+   "EXPLICIT_SUPPRESSION",
+   "not_found"
+  ],
+  [
+   "T1:A1:r3",
+   "F10",
+   "NONE",
+   "EXPLICIT_SUPPRESSION",
+   "not_found"
+  ],
+  [
+   "T1:A1:r3",
+   "F11",
+   "NONE",
+   "EXPLICIT_SUPPRESSION",
+   "not_found"
+  ],
+  [
+   "T1:A1:r3",
+   "F20",
+   "NONE",
+   "EXPLICIT_SUPPRESSION",
+   "not_found"
+  ]
+ ]
+}

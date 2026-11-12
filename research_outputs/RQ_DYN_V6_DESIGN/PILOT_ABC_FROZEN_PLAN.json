@@ -1,0 +1,206 @@
+{
+ "name": "PILOT_ABC_FROZEN_PLAN",
+ "date": "2026-11-12",
+ "tasks": {
+  "E06-HUANRUI": {
+   "dag_nodes": 5,
+   "kinds": [
+    "extract",
+    "extract",
+    "extract",
+    "reason",
+    "report"
+   ],
+   "slots": 19,
+   "gold_path": "/root/research_outputs/RQ_DYN_V5_DESIGN_20261107/e06_huanrui/V5_GOLD_E06_DRAFT.json",
+   "source": "V5隔离池",
+   "isolation": "不与48案确认性集/Profiling12任务/Phase-Pi-V2(E07B等)重叠"
+  },
+  "E08-ZHONGTIE": {
+   "dag_nodes": 5,
+   "kinds": [
+    "extract",
+    "extract",
+    "extract",
+    "reason",
+    "report"
+   ],
+   "slots": 18,
+   "gold_path": "/root/research_outputs/RQ_DYN_V5_DESIGN_20261107/e08_zhongtie/V5_GOLD_E08_DRAFT.json",
+   "source": "V5隔离池",
+   "isolation": "不与48案确认性集/Profiling12任务/Phase-Pi-V2(E07B等)重叠"
+  },
+  "ZJ": {
+   "dag_nodes": 6,
+   "kinds": [
+    "extract",
+    "extract",
+    "extract",
+    "extract",
+    "timeline",
+    "report"
+   ],
+   "slots": 22,
+   "gold_path": "/root/research_outputs/RQ_DYN_V5_DESIGN_20261107/zj/V5_GOLD_ZJ_DRAFT.json",
+   "source": "V5隔离池",
+   "isolation": "不与48案确认性集/Profiling12任务/Phase-Pi-V2(E07B等)重叠"
+  },
+  "ZED": {
+   "dag_nodes": 6,
+   "kinds": [
+    "extract",
+    "extract",
+    "extract",
+    "extract",
+    "timeline",
+    "report"
+   ],
+   "slots": 18,
+   "gold_path": "/root/research_outputs/RQ_DYN_V5_DESIGN_20261107/zed/V5_GOLD_ZED_DRAFT.json",
+   "source": "V5隔离池",
+   "isolation": "不与48案确认性集/Profiling12任务/Phase-Pi-V2(E07B等)重叠"
+  }
+ },
+ "arms": {
+  "A_V5MIXED": {
+   "alloc": {
+    "extract": "deepseek-chat",
+    "reason": "glm-5.3-flash",
+    "verification": "glm-5.3-flash",
+    "report": "glm-5.3-flash"
+   },
+   "purpose": "历史基线"
+  },
+  "B_DSALL": {
+   "alloc": {
+    "extract": "deepseek-chat",
+    "reason": "deepseek-chat",
+    "verification": "deepseek-chat",
+    "report": "deepseek-chat"
+   },
+   "purpose": "单一优势模型",
+   "config": {
+    "glm": "maxtok65536",
+    "deepseek": "maxtok8192"
+   }
+  },
+  "C_HETERO": {
+   "alloc": {
+    "extract": "qwen3.7-max",
+    "reason": "deepseek-chat",
+    "verification": "deepseek-chat",
+    "report": "deepseek-chat"
+   },
+   "purpose": "异构分配增量价值"
+  }
+ },
+ "execution": {
+  "dag_runs": 12,
+  "randomization": "三臂顺序随机(seed=20261112)",
+  "anomaly_injection": false,
+  "recovery": "无(先隔离静态分配效应)",
+  "deadline_s": 300
+ },
+ "api_calls": {
+  "total": 66,
+  "per_task": {
+   "E06-HUANRUI": 15,
+   "E08-ZHONGTIE": 15,
+   "ZJ": 18,
+   "ZED": 18
+  }
+ },
+ "budget": {
+  "A": 0.66,
+  "B": 0.136,
+  "C": 0.209,
+  "total_est": 1.006,
+  "cap": 1.51,
+  "note": "12次DAG执行≈65次API调用; 累计已花¥2.58+¥1.01=¥3.59/总预算独立核算",
+  "cumulative_note": "Profiling累计已花¥2.58(上限¥3.00);Pilot需¥1.01 → 累计¥3.59,超出Profiling预算上限,须单列Pilot预算",
+  "pilot_cap_recommendation": 1.51
+ },
+ "metrics": {
+  "Q": [
+   "终端TP对照Gold槽",
+   "完整性",
+   "证据定位",
+   "关系正确性"
+  ],
+  "node_Q": [
+   "每节点输出合同合规(重点verification/report)"
+  ],
+  "C": [
+   "实际Token",
+   "API费用"
+  ],
+  "L": [
+   "端到端时延"
+  ],
+  "reliability": [
+   "解析失败",
+   "超时",
+   "未完成"
+  ]
+ },
+ "comparison_plan": {
+  "B_vs_A": "优势模型替代混合(非多智能体收益)",
+  "C_vs_B": "异构节点分配增量",
+  "C_vs_A": "整体变化"
+ },
+ "data_retention": "每节点完整原始输入输出/usage/成本/时延;终端答案全量",
+ "status": "FROZEN — 待GO",
+ "node_kind_mapping": {
+  "E06-HUANRUI": {
+   "N1_case": "extract",
+   "N2_forecast": "extract",
+   "N3_ir": "extract",
+   "N4_merge": "verification(Pilot重标:原reason,职责为跨文档比对)",
+   "N5_report": "report"
+  },
+  "E08-ZHONGTIE": {
+   "N1_forecast": "extract",
+   "N2_annual": "extract",
+   "N3_case": "extract",
+   "N4_merge": "verification(Pilot重标)",
+   "N5_report": "report"
+  },
+  "ZJ": {
+   "N1": "extract",
+   "N2": "extract",
+   "N3": "extract",
+   "N4": "extract",
+   "N5": "timeline",
+   "N_REPORT": "report"
+  },
+  "ZED": {
+   "N1": "extract",
+   "N2": "extract",
+   "N3": "extract",
+   "N4": "extract",
+   "N5": "timeline",
+   "N6": "report"
+  },
+  "note": "ZJ/ZED无汇合或核验节点(扁平结构),Pilot中不覆盖verification类型"
+ },
+ "structural_limitations": [
+  "★4个候选任务均无原生verification节点;仅E06/E08的N4_merge(跨文档比对)可重标为verification",
+  "ZJ/ZED为扁平结构(extract×4→timeline→report),无汇合、无核验,无法测试Profiling发现的verification能力差异",
+  "V5任务历史审计:12任务仅E04达深度≥3边;本次4任务深度1-2边",
+  "若Pilot必须覆盖verification差异,需扩充隔离池或接受仅2/4任务覆盖"
+ ],
+ "coverage_analysis": {
+  "extract": 4,
+  "reason": "E06/E08的N4若重标verification后为0",
+  "verification": 2,
+  "report": 4,
+  "timeline": 2,
+  "conclusion": "C臂(extract=qwen)可在4任务检验;verification差异仅E06/E08可检验"
+ },
+ "open_questions_for_window": [
+  "①Pilot预算单列¥1.51(累计将达¥3.59,超出Profiling的¥3.00上限)——是否批准",
+  "②Pilot任务仅2/4覆盖verification:接受该结构限制,或扩充隔离池(需牺牲2个48案候选)",
+  "③E06/E08的N4_merge重标为verification是否认可(依据:role='跨文档比对与时序')",
+  "④ZJ/ZED的timeline节点应归入reason类还是单列"
+ ]
+}

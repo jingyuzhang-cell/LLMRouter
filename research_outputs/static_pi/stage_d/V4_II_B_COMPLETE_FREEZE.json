@@ -1,0 +1,64 @@
+{
+ "batch": "V4_II_B_COMPLETE",
+ "frozen_at": "2026-11-08",
+ "status": "20/20 COMPLETE PAIRS — CONFIRMATORY RESULTS",
+ "panel": "20 independent tasks, 171 gold slots, 65 source docs, 0 cross-task overlap",
+ "primary_endpoint": {
+  "test": "Learning vs NoLearning paired sign test (one-sided, alpha=0.05)",
+  "n": 20,
+  "positive": 5,
+  "negative": 0,
+  "zero": 15,
+  "mean_call_saving": 0.25,
+  "p_value": 0.0312,
+  "verdict": "SIGNIFICANT — Learning reduces recovery calls"
+ },
+ "persistent_subgroup": {
+  "n": 6,
+  "mean_saving": 0.67,
+  "saving_tasks": [
+   "000670",
+   "600290",
+   "600382",
+   "600671"
+  ],
+  "pattern": "Tasks 1-2 (600781, 002490): LR=2c (posterior learning); Tasks 3-6: LR=1c (pi-direct, saved 1 call each)"
+ },
+ "transient_subgroup": {
+  "n": 14,
+  "mean_saving": 0.07,
+  "saving_tasks": [
+   "600074"
+  ],
+  "note": "1/14 transient showed saving (R unexpectedly failed, Learning's pi-direct was correct)"
+ },
+ "quality_ni": {
+  "mean_Q_diff": -0.0117,
+  "margin": -0.05,
+  "normal_LCB": -0.0414,
+  "t_dist_LCB": -0.0429,
+  "bootstrap_LCB": -0.0429,
+  "all_methods": "PASS",
+  "verdict": "Non-inferiority CONFIRMED — Learning does not degrade terminal quality"
+ },
+ "learning_mechanism": {
+  "validated": "Beta(1,3) posterior after 2 persistent R failures → pi-direct from task 3 onward",
+  "cost_effect": "4/4 subsequent persistent faults saved 1 call each (100% consistency)",
+  "quality_effect": "Q_terminal unchanged in 4/4 saving tasks",
+  "limitation": "Single Beta posterior learns environment statistics, not fault-type-specific"
+ },
+ "total_spend_across_all_runs": {
+  "v4b_original": 175,
+  "v4b_resume": "~103",
+  "v4b_final10": "~93",
+  "qwen_recovery_checks": 4,
+  "total_calls": 368,
+  "total_yuan_est": "~¥5.5"
+ },
+ "files_sha256": {
+  "v4b_runner.py": "37ec1f414711e1b8d389f3946bb8052cab13f03c22bbf7bc182fb4c3f130c55a",
+  "v4b_runs/ledger.jsonl": "535808e586f8a4eb71f6927ab094bc491f53c914571de0828e492b067d7d5ffe",
+  "v4b_runs/outputs.jsonl": "547944efe22e3c4e67e653c5acd0a1a4dc7b4e68a535f8e8668fc2d3d212f4e6",
+  "V4B_FINAL_20PAIR_RESULTS.json": "cd0354b0a3d7eb66c35cc1da19a9e6e6b5dec6497c06cd948540ab18c9b10dba"
+ }
+}

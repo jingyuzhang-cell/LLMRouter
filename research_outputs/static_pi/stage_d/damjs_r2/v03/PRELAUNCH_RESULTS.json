@@ -1,0 +1,379 @@
+{
+ "generated": "2026-11-07T21:29:17",
+ "tests": [
+  {
+   "id": "P1",
+   "name": "repair-call failure: estimator updated before each decision; first decision unlatched and repairs in all arms; second latched; ND rollback precedes J2 dispatch",
+   "ok": true,
+   "evidence": {
+    "rows": [
+     {
+      "arm": "R2",
+      "outcomes": [
+       [
+        false,
+        1794058160.887
+       ],
+       [
+        true,
+        1794058172.876
+       ]
+      ],
+      "decisions": [
+       [
+        "Z_structure",
+        1794058160.889
+       ],
+       [
+        "NONE",
+        1794058172.879
+       ]
+      ],
+      "first_latched": false,
+      "first_p": 0.059670781893004114,
+      "second_latched": true,
+      "rollback": [],
+      "ok": true
+     },
+     {
+      "arm": "ND-only",
+      "outcomes": [
+       [
+        false,
+        1794058178.621
+       ],
+       [
+        true,
+        1794058190.61
+       ]
+      ],
+      "decisions": [
+       [
+        "Z_structure",
+        1794058178.624
+       ],
+       [
+        "NONE",
+        1794058190.613
+       ]
+      ],
+      "first_latched": false,
+      "first_p": 0.059670781893004114,
+      "second_latched": true,
+      "rollback": [
+       "J1"
+      ],
+      "ok": true
+     },
+     {
+      "arm": "EV-only",
+      "outcomes": [
+       [
+        false,
+        1794058196.364
+       ],
+       [
+        true,
+        1794058208.352
+       ]
+      ],
+      "decisions": [
+       [
+        "Z_structure",
+        1794058196.366
+       ],
+       [
+        "NONE",
+        1794058208.355
+       ]
+      ],
+      "first_latched": false,
+      "first_p": 0.059670781893004114,
+      "second_latched": true,
+      "rollback": [],
+      "ok": true
+     },
+     {
+      "arm": "V0.3",
+      "outcomes": [
+       [
+        false,
+        1794058214.096
+       ],
+       [
+        true,
+        1794058226.085
+       ]
+      ],
+      "decisions": [
+       [
+        "Z_structure",
+        1794058214.098
+       ],
+       [
+        "NONE",
+        1794058226.087
+       ]
+      ],
+      "first_latched": false,
+      "first_p": 0.059670781893004114,
+      "second_latched": true,
+      "rollback": [
+       "J1"
+      ],
+      "ok": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P2",
+   "name": "first-call failure: latch set before the J1 decision; EV arms exclude Z_structure (EV_gate), non-EV arms choose it; no rollback anywhere (v1 invalid)",
+   "ok": true,
+   "evidence": {
+    "rows": [
+     {
+      "arm": "R2",
+      "first_outcome": [
+       true,
+       true
+      ],
+      "latched_at_decision": true,
+      "chosen": "Z_structure",
+      "ev_gate_excluded": false,
+      "ev_record": null,
+      "rollbacks": 0,
+      "order_ok": true,
+      "ok": true
+     },
+     {
+      "arm": "ND-only",
+      "first_outcome": [
+       true,
+       true
+      ],
+      "latched_at_decision": true,
+      "chosen": "Z_structure",
+      "ev_gate_excluded": false,
+      "ev_record": null,
+      "rollbacks": 0,
+      "order_ok": true,
+      "ok": true
+     },
+     {
+      "arm": "EV-only",
+      "first_outcome": [
+       true,
+       true
+      ],
+      "latched_at_decision": true,
+      "chosen": "NONE",
+      "ev_gate_excluded": true,
+      "ev_record": {
+       "model": "glm53flash",
+       "p": 0.5,
+       "n_eff": 6.0,
+       "ci95": [
+        0.0999,
+        0.9001
+       ],
+       "observed": {
+        "calls": 1,
+        "fails": 1
+       },
+       "truncated": 0,
+       "slow": true,
+       "mu": 1.89,
+       "L": 10.0,
+       "ev": -4.055
+      },
+      "rollbacks": 0,
+      "order_ok": true,
+      "ok": true
+     },
+     {
+      "arm": "V0.3",
+      "first_outcome": [
+       true,
+       true
+      ],
+      "latched_at_decision": true,
+      "chosen": "NONE",
+      "ev_gate_excluded": true,
+      "ev_record": {
+       "model": "glm53flash",
+       "p": 0.5,
+       "n_eff": 6.0,
+       "ci95": [
+        0.0999,
+        0.9001
+       ],
+       "observed": {
+        "calls": 1,
+        "fails": 1
+       },
+       "truncated": 0,
+       "slow": true,
+       "mu": 1.89,
+       "L": 10.0,
+       "ev": -4.055
+      },
+      "rollbacks": 0,
+      "order_ok": true,
+      "ok": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P3",
+   "name": "posterior bookkeeping: every decision's GLM (calls, fails) equals the outcomes logged before it",
+   "ok": true,
+   "evidence": {
+    "decisions": 22,
+    "mismatches": []
+   }
+  },
+  {
+   "id": "P4",
+   "name": "node-level scope in both ND arms: exactly one rollback, on the directly repaired J1; committed J1 valid",
+   "ok": true,
+   "evidence": {
+    "rows": [
+     {
+      "arm": "ND-only",
+      "rollbacks": [
+       "J1"
+      ],
+      "direct": [
+       "FMT",
+       "J1"
+      ],
+      "downstream": [],
+      "ok": true
+     },
+     {
+      "arm": "V0.3",
+      "rollbacks": [
+       "J1"
+      ],
+      "direct": [
+       "FMT",
+       "J1"
+      ],
+      "downstream": [],
+      "ok": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "P5",
+   "name": "zero network attempts across all pre-launch replay executions",
+   "ok": true,
+   "evidence": {
+    "executions": 18
+   }
+  }
+ ],
+ "runs": [
+  {
+   "tag": "p1_R2",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p1_ND-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p1_EV-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p1_V0.3",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p2_R2",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p2_ND-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p2_EV-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p2_V0.3",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p3a_R2",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p3b_R2",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p3a_ND-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p3b_ND-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p3a_EV-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p3b_EV-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p3a_V0.3",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p3b_V0.3",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p4_ND-only",
+   "status": "COMPLETE",
+   "net": 0
+  },
+  {
+   "tag": "p4_V0.3",
+   "status": "COMPLETE",
+   "net": 0
+  }
+ ],
+ "summary": {
+  "passed": 5,
+  "failed": 0,
+  "executions": 18,
+  "wall_s": 305.1,
+  "manifest_sha256": "182b0c91032dffd32d825313eb34b3bc0d18221cb2d3a57ac75a59afd40a4267",
+  "note": "parameter-agnostic mechanics; run under the v1 parameter set, which the erratum voids for launch"
+ }
+}

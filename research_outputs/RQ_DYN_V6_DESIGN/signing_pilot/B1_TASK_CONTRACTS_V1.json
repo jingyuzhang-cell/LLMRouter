@@ -1,0 +1,809 @@
+{
+ "XINWEI": {
+  "task": "信威集团600485",
+  "b1_role": "海外项目担保披露 × 控制关系认定 的实体级交叉核验",
+  "required_fields": [
+   "entities_disclosed_in_guarantee_table: 年报担保表中出现的被担保方实体清单",
+   "entities_named_in_control_chain: 各事实线认定的海外采购商/股东实体清单",
+   "entity_matches: 两清单交集,每项含 entity + guarantee_evidence + control_evidence",
+   "unmatched_side_a / unmatched_side_b: 单侧实体及原因",
+   "boundary_statement: 必须声明'担保披露≠控制认定,两文书各证一面'"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "直接引用决定书'控制关系'结论段作为B1自身结论",
+   "把担保金额当作控制证据"
+  ],
+  "source_lines": {
+   "A1:柬埔寨/尼加拉瓜": "DEC §10-17",
+   "A2:坦桑尼亚": "DEC §18-22",
+   "A3:巴拿马/乌克兰": "DEC §23-30",
+   "A4:年报项目披露": "AR15 P57-58",
+   "A5:问询指标": "INQ §2-5",
+   "A6:担保表": "AR15 P45-46"
+  },
+  "acceptance": "≥3个实体在两清单中同时出现,且每个匹配项两侧证据可分别回溯到各自源段",
+  "entity_aliases": {
+   "SIF Telecom Cambodia (Project) Limited": {
+    "aliases_in_source": [
+     "SIFTelecomCambodia(Project)Limited"
+    ],
+    "role_in_source": "柬埔寨信威控股股东",
+    "source_line": "DEC:…柬埔寨信威控股股东SIFTelecomCambodia(Project)Limited…"
+   },
+   "SIF Telecom Cambodia Limited": {
+    "aliases_in_source": [
+     "SIFTelecomCambodiaLimited"
+    ],
+    "role_in_source": "柬埔寨信威控股股东的间接股东、买方信贷借款方之一",
+    "source_line": "DEC:…间接股东、买方信贷借款方之一SIFTelecomCambodiaLimited提供资金"
+   },
+   "SIF Telecom Investment Limited (SIF投资)": {
+    "aliases_in_source": [
+     "SIFTelecomInvestmentLimited",
+     "SIF投资"
+    ],
+    "role_in_source": "乌克兰项目Jovius股权受让方(2012-12-10受让95%)",
+    "source_line": "DEC:重庆信威与SIFTelecomInvestmentLimited(以下简称SIF投资)签订股权转让协议"
+   },
+   "Lamericom International Co., Limited": {
+    "aliases_in_source": [
+     "LamericomInternationalCo.,Limited",
+     "Lamericom",
+     "香港Lamericom公司"
+    ],
+    "role_in_source": "尼加拉瓜信威控股股东、买方信贷借款方;亦为年报担保表被担保方",
+    "source_line": "DEC:…向尼加拉瓜信威控股股东、买方信贷的借款方LamericomInternationalCo.,Limited提供资金"
+   },
+   "Innovaciones Tecnologicas, S.A.": {
+    "aliases_in_source": [
+     "InnovacionesTechnologicas,S.A.",
+     "Innovatech",
+     "INNOVACIONESTECHNOLOGICAS"
+    ],
+    "role_in_source": "巴拿马项目采购商/运营商",
+    "source_line": "DEC:控制巴拿马项目采购商和运营商InnovacionesTechnologicas,S.A.(以下简称Innovatech)"
+   },
+   "柬埔寨信威(Xinwei Cambodia Telecom Co.,Ltd)": {
+    "aliases_in_source": [
+     "柬埔寨信威"
+    ],
+    "role_in_source": "柬埔寨项目采购商及运营商",
+    "source_line": "DEC"
+   },
+   "非洲无线坦桑公司(WiAfrica Tanzania Limited)": {
+    "aliases_in_source": [
+     "非洲无线坦桑公司",
+     "非洲无线"
+    ],
+    "role_in_source": "坦桑尼亚项目采购商及运营商",
+    "source_line": "DEC"
+   },
+   "Jovius Limited": {
+    "aliases_in_source": [
+     "Jovius"
+    ],
+    "role_in_source": "乌克兰项目海外采购商",
+    "source_line": "DEC"
+   },
+   "NovaTel Investment Co., Ltd (诺华投资)": {
+    "aliases_in_source": [
+     "诺华投资",
+     "NovatelInvestmentCo.,Ltd."
+    ],
+    "role_in_source": "资金通道主体",
+    "source_line": "DEC"
+   }
+  },
+  "alias_rule": "匹配前先做别名归一(大小写/空格/中英文名/简称);每个别名对必须在合同中显式登记,不得由模型自由联想",
+  "validation_result": {
+   "entities_matched": 4,
+   "single_sided_before_alias": 1,
+   "note": "INNOVACIONES在决定书以简称Innovatech出现,别名归一后两侧可匹配"
+  },
+  "unmatched_policy": {
+   "rule": "未匹配实体保持UNKNOWN,不得为满足required_min_items自动补全",
+   "allowed_output": "unmatched_side_a / unmatched_side_b 列出并标注 UNKNOWN + 原因",
+   "minimum_count_rule": "required_min_items(3)只能由已匹配实体满足;若匹配数<3则B1输出partial并标记契约未达成,不得编造"
+  },
+  "alias_lock": {
+   "status": "LOCKED",
+   "approved": "2026-11-11",
+   "note": "Innovatech ≡ Innovaciones Tecnologicas, S.A. 显式登记;其余别名不得由模型自行关联"
+  },
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "cross_entity_relation_rule": {
+   "finding": "原决定书出现三个不同SIF实体(Project)Limited / Limited / InvestmentLimited,分别对应柬埔寨控股股东、柬埔寨间接股东、乌克兰股权受让方;原文未认定三者之间存在关联或同一关系",
+   "rule": "三个SIF实体必须作为独立主体登记,禁止合并;其相互关系标记UNKNOWN,不得凭名称相似推定",
+   "correction_note": "V1合同曾把SIF投资与SIF Telecom Cambodia Limited并入同一别名组——属事实错误,已撤回;此为引擎侧错误,非源文书问题",
+   "severity": "HIGH — 直接影响实体匹配正确性"
+  },
+  "alias_evidence_requirement": {
+   "rule": "每组别名签发时必须提供: 原始名称、归一名称、A侧(担保表)证据跨度、B侧(控制链)证据跨度",
+   "no_similarity_inference": "禁止仅凭名称相似认定同一主体;必须在同一项目语境下出现且承担一致角色",
+   "insufficient": "任一侧无证据→该实体UNKNOWN,不影响其他已证实实体",
+   "validation_recompute": "按独立实体重算后,可匹配实体数需重新核验(原4/5基于错误合并)"
+  },
+  "validation_result_v2": {
+   "method": "页级提取担保表(P45-46)+决定书全文,双侧证据,严格名称匹配(非相似推断)",
+   "matched": [
+    {
+     "entity": "柬埔寨信威",
+     "side_a": "担保表P45(7行,含604,605,580.74/185,249,521.32等)",
+     "side_b": "决定书§12(运营商,11处)",
+     "alias_basis": "中文名直用"
+    },
+    {
+     "entity": "SIF Telecom Cambodia Limited",
+     "side_a": "担保表P46(5行:16,120,000/384,400,000/378,820,000/415,400,000/345,260,000)",
+     "side_b": "决定书§12(间接股东、买方信贷借款方之一,1处)",
+     "alias_basis": "表内名称恰为'SIF Telecom Cambodia'+换行'Limited',与决定书实体#2全称逐字一致;非(Project)Limited"
+    },
+    {
+     "entity": "Lamericom International Co., Limited",
+     "side_a": "担保表P46(3行:108,741,695.73/97,404,000/407,083,784)",
+     "side_b": "决定书§16(尼加拉瓜控股股东/借款方,2处)",
+     "alias_basis": "全称一致"
+    },
+    {
+     "entity": "Innovaciones Tecnologicas, S.A.",
+     "side_a": "担保表P46(1行:32,468,000,表内原文'INNOVACIONES TECH... (INNOVATECH),S.A.')",
+     "side_b": "决定书§24-25(巴拿马采购商,以简称Innovatech出现6处)",
+     "alias_basis": "年报担保表自身即标注(INNOVATECH)别名——双侧同源别名,非推断"
+    }
+   ],
+   "unknown_single_sided": [
+    "SIF Telecom Cambodia (Project) Limited(控股股东;年报全文0处)",
+    "SIF Telecom Investment Limited/SIF投资(乌克兰;年报全文0处)",
+    "Jovius Limited(决定书12处,年报5处但均非担保表)",
+    "NovaTel/诺华投资(资金通道;非担保对象)",
+    "非洲无线坦桑公司(年报7处但非担保表区间)"
+   ],
+   "table_only_entities": [
+    "RussWill Telecom(担保表P46被担保方,决定书控制链未提及)→unmatched_side_a"
+   ],
+   "matched_count": 4,
+   "min_items_satisfied": true,
+   "sif_ambiguity_note": "担保表'SIF Telecom Cambodia Limited'与决定书实体#2全称逐字一致方可匹配;若表内换行致后缀存疑,须在人工签发时以原PDF放大核对P46该行——此前提下计为MATCHED",
+   "superseded": "旧'4/5匹配'作废(基于错误的实体合并)",
+   "matched_status_split": {
+    "MATCHED_CONFIRMED": [
+     "柬埔寨信威",
+     "Lamericom International Co., Limited",
+     "Innovaciones Tecnologicas, S.A."
+    ],
+    "MATCHED_PENDING_VISUAL_CHECK": [
+     "SIF Telecom Cambodia Limited(P46换行后缀需原PDF放大核对)"
+    ],
+    "rationale": "即使SIF项最终不能确认,剩余3个已确认匹配仍达B1最低要求,不阻塞合同"
+   },
+   "russwill_rule": {
+    "output": "unmatched_side_a = RussWill Telecom",
+    "allowed_statement": "仅说明担保表出现、决定书控制链未提及",
+    "prohibited": "不得进一步认定其属于监管未认定事项或任何控制关系"
+   }
+  },
+  "status": "FROZEN_V1(待人工签发;含SIF行后缀原PDF放大核对一项遗留)"
+ },
+ "TIANWO": {
+  "task": "天沃科技002564",
+  "b1_role": "业绩承诺缺口 × 年度虚增调节 × 更正后实绩 的动机链核验",
+  "required_fields": [
+   "commitment_targets: 各期承诺扣非净利润及合计",
+   "reported_profit_original: 各年被虚增/虚减前的披露利润",
+   "restated_profit: 更正后利润(含正负号)",
+   "gap_analysis: 每期 承诺额 - 更正后实绩 = 缺口(允许负缺口)",
+   "mechanism_statement: 必须区分'虚增'与'虚减'年度并说明方向"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把37项目虚增总额直接等同于承诺缺口",
+   "将2020虚减年度的更正额与决定书虚减收入额混同(已知口径待核)"
+  ],
+  "source_lines": {
+   "A1:37项目手法": "DEC §26",
+   "A2:五年度金额": "DEC §27",
+   "A3:13关联方往来": "DEC §33-35",
+   "A4:业绩承诺": "PERF 2023-104",
+   "A5:三年更正": "CORR 2023-103"
+  },
+  "acceptance": "三年度缺口均算出且方向正确(2018/2019缺口为负),承诺合计140,200万与四期分项自洽",
+  "delta_definition": {
+   "formula": "Δ = 更正后实际利润 − 业绩承诺利润",
+   "unit": "万元",
+   "signed": true,
+   "no_abs": "禁止取绝对值,负号必须保留",
+   "worked_example": "2019: Δ = -3,895.6 − 37,600 = -41,495.6万元",
+   "prohibited": [
+    "缺口415,495.6万(丢符号)",
+    "正向缺口41,495.6万(改写方向)"
+   ]
+  },
+  "period_caliber": {
+   "rule": "承诺年度与更正年度逐期配对;承诺首期(2016年8-12月)单列",
+   "prohibited": "不得把37项目五年度合计与四年承诺合计直接相减"
+  },
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "completeness_rule": {
+   "all_fields_mandatory": true,
+   "required_fields_all": "commitment_targets / reported_profit_original / restated_profit / gap_analysis / mechanism_statement 五项全部必填",
+   "min_items_semantics": "required_min_items=3 仅指'至少三个缺口'的下限表达,不得作为'完成三项即通过'的宽松门槛",
+   "mandatory_periods": [
+    "2016年8月-12月(承诺首期,单列)",
+    "2017年度",
+    "2018年度",
+    "2019年度"
+   ],
+   "mandatory_gap_computation": "2017/2018/2019三年度缺口必须逐年计算并带符号;2016年8-12月单列(数据可得时计算,不可得则标注UNKNOWN并列原因)",
+   "commitment_sum_check": "15,500+37,600+41,500+45,600 = 140,200万元 必须自洽",
+   "fail_condition": "缺少任一必要期间数据 → B1判定incomplete,不得判通过",
+   "pass_condition": "五字段齐备 + 三年度缺口逐年算出且方向正确 + 承诺合计自洽"
+  },
+  "status": "FROZEN_V1(窗口通过,五字段+四期间完整性)"
+ },
+ "JINYA": {
+  "task": "金亚科技300028",
+  "b1_role": "七科目加减 × 虚增利润总额 的算术闭合核验",
+  "required_fields": [
+   "components: 逐科目列出(收入/成本/销售费用/管理费用/财务费用/营业外收入/营业外支出)及其加减方向",
+   "computed_total: 按方向计算所得虚增利润",
+   "stated_total: 决定书所载80,495,532.40元",
+   "closure: 差额(应为0.00)",
+   "sign_check: 特别标注'少计营业外收入'为减项(方向与其余相反)"
+  ],
+  "required_min_items": 7,
+  "forbidden": [
+   "把少计营业外收入19,050.00当作加项",
+   "用四舍五入后的万元值替代分位精确值"
+  ],
+  "source_lines": {
+   "A1:造假组织链": "DEC §47-52",
+   "A2:七科目金额": "DEC §55-61",
+   "A3:银行存款/预付": "DEC §63-67",
+   "A4:签署与申辩": "DEC §69-92"
+  },
+  "acceptance": "computed_total与stated_total差额为0.00元,且七科目方向全对(含营业外收入减项)",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "negative_test": {
+   "JY_F03": {
+    "windows_found": 1,
+    "window": "…财务负责人(2014年6月20日之前是张法德,之后是丁勇和)…",
+    "verdict": "全文唯一三要素窗口即目标事实,无语义误命中",
+    "status": "PASS"
+   },
+   "JY_F06": {
+    "windows_found": 4,
+    "all_in_ledger_context": true,
+    "interference_hits": 0,
+    "note": "003/006在非账套语境出现0处;四窗口均含'账套/核算/对外披露/内部管理'",
+    "status": "PASS"
+   }
+  },
+  "status": "FROZEN_V1(负例核验通过)"
+ },
+ "GAOSHENG": {
+  "task": "高升控股",
+  "b1_role": "共同借款前五笔 ↔ 公告认定 ↔ 排除重复计槽核验",
+  "required_fields": [
+   "adjacent_loan_sum:前五笔合计(应=27,500万)",
+   "announcement_occupation:公告认定占用额",
+   "overlap_verdict:是否同一链(是/否+依据)",
+   "excluded_items:后两笔及拆借链标注不计入",
+   "duplicate_warning:若计为第8笔则报错"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把27,500万与七笔总额37,215万混同",
+   "把18,100万代还当最终清偿"
+  ],
+  "acceptance": "前五笔合计=27,500万且公告一致;重叠判定明确;后两笔单列",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "YISHITE": {
+  "task": "易事特",
+  "b1_role": "三业务模式×年度 → 年度汇总 加总闭合",
+  "required_fields": [
+   "mode_x_year:三模式×各年(14项)",
+   "annual_sum:每年合计",
+   "stated_annual:决定书年度汇总(5项)",
+   "closure:逐年差额(应全0)"
+  ],
+  "required_min_items": 14,
+  "forbidden": [
+   "把14个年度槽再合并",
+   "用万元四舍五入覆盖分位"
+  ],
+  "acceptance": "五年逐年加总=决定书汇总(分位级)",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "XINLUN": {
+  "task": "新纶科技",
+  "b1_role": "七条贸易链 ↔ 年度虚增 ↔ 更正公告 三方核验",
+  "required_fields": [
+   "chain_totals:七链收入合计",
+   "annual_inflation:2016-2018(3项)",
+   "restatement:2020-035更正(3项)",
+   "closure:三路径闭合"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把附注P124监管转述当独立第二来源"
+  ],
+  "acceptance": "三路径闭合(73,717.33万)且标注同源/跨源",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "CHANGYUAN": {
+  "task": "长园集团",
+  "b1_role": "累计发生额 ↔ 时点余额 ↔ 更正调整额 口径分离",
+  "required_fields": [
+   "cumulative:108,666.32万",
+   "point_balance:26,431.18万(含息1,831.18)",
+   "restatement_2023:更正调整额",
+   "caliber_verdict:非同一统计口径"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把累计发生额与时点余额互证为同一金额"
+  ],
+  "acceptance": "口径分离明确;调整额与分笔明细对应",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "SANTE": {
+  "task": "三特索道",
+  "b1_role": "决定书 ↔ 问询函回复 ↔ 追回 三源核验",
+  "required_fields": [
+   "dec_by_year:2019/2020/2021/2022M1",
+   "inquiry_2021:19.04亿(131.71%)",
+   "caliber_diff:131.67%vs131.71%",
+   "recovery:2022-04全额追回"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把131.67%与131.71%当同一数值",
+   "把2022年1月5亿与1-4月5.05亿混为一事"
+  ],
+  "acceptance": "三源对应且口径差异逐项登记",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "TIANSHAN": {
+  "task": "天山生物",
+  "b1_role": "三线违法 → 重组/并表后分期 汇合核验",
+  "required_fields": [
+   "pre_merger:资金1.09亿+担保6100万",
+   "post_merger:2.81亿+350万+2.089亿",
+   "line_totals:3.90亿/6450万/2.089亿",
+   "phase_split:与并表日2018-04-26对齐"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把三线合并为单一事实",
+   "把汇总槽当独立交易事件"
+  ],
+  "acceptance": "三线自洽且分期与并表日一致",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "SHENGLI": {
+  "task": "胜利精密",
+  "b1_role": "三造假手法 → 年度虚增 → 追溯更正 传导",
+  "required_fields": [
+   "methods:虚开发票/虚假销售/未入账",
+   "annual:2016-2018(9值)",
+   "restatement_2020:更正金额",
+   "causal_boundary:对赌→造假动机链未认定(UNKNOWN)"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把郭文杰申辩写成监管已认定"
+  ],
+  "acceptance": "三年闭合;动机链明确标未认定",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "ZHONGAN": {
+  "task": "中安科",
+  "b1_role": "三违法线 → 重组文件违法 汇合",
+  "required_fields": [
+   "banbantong:3.42亿预测/0中标/增值1597.19%",
+   "shigui:5000万+四要件",
+   "bt:7155万/515万",
+   "closure:5000+515=5515万"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把'真实性存疑'改写为'认定伪造'"
+  ],
+  "acceptance": "三线闭合(5515万)且四要件逐条",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "SHENWU": {
+  "task": "神雾节能",
+  "b1_role": "三项目机理 → 两年报 → 更正 跨项目核验",
+  "required_fields": [
+   "jinchuan1:1.95亿/3.11亿/1.16亿",
+   "jinchuan2:1.41亿应0.55亿虚记0.86亿/6175.71万",
+   "jingshenglong:1.48亿/1.02亿/1.47亿",
+   "closure:逐年差"
+  ],
+  "required_min_items": 3,
+  "forbidden": [
+   "把'宁大勿小'改写成客观陈述",
+   "合并三项目"
+  ],
+  "acceptance": "三项目各自闭合;主观表述原样",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "YINGFANGWEI": {
+  "task": "盈方微",
+  "b1_role": "双主体(元/美元) → 折算 → 合并 闭合",
+  "required_fields": [
+   "shanghai:17,890,040.00元",
+   "us_usd:900,000.00美元",
+   "conversion:5,675,670.00元(6.3063)",
+   "consolidated:23,565,710.00元(245.08%)"
+  ],
+  "required_min_items": 4,
+  "forbidden": [
+   "美元值当人民币相加",
+   "忽略折算率"
+  ],
+  "acceptance": "四值逐级闭合且折算可复算",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)",
+  "ratio_caliber": {
+   "source_stated": "占当期披露利润总额的245.08%",
+   "denominator": "当期披露利润总额(虚增后,正值)",
+   "denominator_reverse_value": "约961.55万元(由23,565,710÷2.4508反算)",
+   "caveat": "原文仅给比例未给分母金额;反算值一致性良好但不得表述为原文数据",
+   "direction": "披露利润总额为正(小额盈利);扣除虚增23,565,710元后真实利润约-1,395万元(亏损)",
+   "prohibited": [
+    "把245.08%解释为'接近2.5倍正常水平'",
+    "把反算的961.55万当作原文披露数",
+    "忽略利润由盈转亏的方向"
+   ]
+  }
+ },
+ "WANFU": {
+  "task": "万福生科",
+  "b1_role": "四定性 → 责任矩阵 → 处罚档位",
+  "required_fields": [
+   "four_charges:欺诈发行/2011年报/停产/半年报",
+   "liability_sets:各违法项责任名单",
+   "penalty_tiers:七档",
+   "matrix:档位=所涉违法项综合"
+  ],
+  "required_min_items": 4,
+  "forbidden": [
+   "把覃学军(移送司法)当未处罚",
+   "把金额表述为终局认定"
+  ],
+  "acceptance": "四定性/责任/档位对应;移送边界明确",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)"
+ },
+ "ZHONGCHAO": {
+  "task": "中超控股",
+  "b1_role": "三线 → 双实控人期 归属核验",
+  "required_fields": [
+   "control_chain:3.6772亿股/29%/19.08亿",
+   "litigation:28起60,948.31万+撤销决议诉讼",
+   "occupation:7000万/6974万/7448.86万",
+   "controller_period:黄锦光2018-01-01至2018-10-10/杨2018-10-10起"
+  ],
+  "required_min_items": 4,
+  "forbidden": [
+   "把四告知函当已披露(仅两函)",
+   "混同两实控人期间"
+  ],
+  "acceptance": "三线闭合;实控期日级分界正确",
+  "scoring_boundary": {
+   "auto_preferred": [
+    "客观数值(金额/比例/股数)",
+    "日期",
+    "主体名称",
+    "科目金额及方向"
+   ],
+   "manual_allowed": [
+    "复杂关系(担保披露≠控制认定)",
+    "因果边界(主导造假未被认定)",
+    "申辩与监管认定的区别",
+    "口径差异说明"
+   ],
+   "manual_requirements": [
+    "保留evidence_span",
+    "记录判定理由",
+    "有复核记录"
+   ],
+   "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+  },
+  "status": "SIGNED_BATCH_20261111(窗口原则批准+三案抽查通过; 易见除外—DAG未建)",
+  "period_boundary": {
+   "source_text_overlap": true,
+   "source_quote_huang": "在2018年1月至10月10日黄锦光实际控制中超控股期间",
+   "source_quote_yang": "杨飞作为公司实际控制人(2018年10月10日至今)",
+   "finding": "源文书将2018-10-10同时纳入两方期间——原文本身存在1日重叠,非引擎转录错误",
+   "gold_disambiguation": {
+    "rule": "黄锦光期间=2018-01-01至2018-10-10(含当日); 杨飞期间=2018-10-11起",
+    "rationale": "避免Gold出现1日期间重叠;以'黄锦光实际控制期间'句的闭区间终点为准,杨飞'至今'表述视为该时点之后的接续",
+    "must_flag": "Gold报告与评分说明中必须标注此消歧为Gold侧规则,源文书为重叠表述;禁止表述为'原文明确杨飞自10-11起'"
+   },
+   "prohibited": [
+    "两个期间均含2018-10-10(重叠)",
+    "改写为杨飞自2018-10-10起且不提消歧"
+   ]
+  }
+ }
+}

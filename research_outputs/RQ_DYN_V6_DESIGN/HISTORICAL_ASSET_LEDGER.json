@@ -1,0 +1,33 @@
+{
+ "note": "历史证据账本:以下资产不得计入本次Profiling新结果",
+ "entries": [
+  {
+   "id": "HIST-01",
+   "asset": "节点级能力测量(Node Oracle Gap)",
+   "scale": "100任务/493个主要节点",
+   "finding": "抽取节点约+20个百分点(初步正向)",
+   "relation_to_profiling": "可作为历史基线;但模型池已变更,不能替代当前模型实测",
+   "isolation": "不计入本次56次调用矩阵"
+  },
+  {
+   "id": "HIST-02",
+   "asset": "V6动态调度确认性记录(2026-11-10冻结)",
+   "scale": "96/96次执行,526次调用,5.56M tokens,¥8.23",
+   "result": "主检验p=0.5698;簇级Wilcoxon p=0.3173;恢复收益集中1个任务;4个评分槽存在测量构造问题",
+   "relation_to_profiling": "FC vs PD的动态调度比较,非节点级Profiling;必须入账但不得作为Profiling结果",
+   "isolation": "其96次执行不计入本次56次"
+  },
+  {
+   "id": "HIST-03",
+   "asset": "评分工件问题(V6暴露)",
+   "finding": "字段前缀/人工注记/逐字匹配影响评分",
+   "requirement": "Profiling必须保存完整原始输出,不能只存解析后JSON与最终分数",
+   "action": "已纳入Profiling设计的数据留存要求"
+  }
+ ],
+ "implications_for_design": [
+  "HIST-01/02证明已有测量基础,本次仅针对当前模型池补充四类节点数据",
+  "HIST-02的p=0.5698是本项目已取得的最强确认性证据——须在论文中如实呈现,不得因结果不显著而弱化",
+  "HIST-03要求原始输出全量留存(已写入设计)"
+ ]
+}

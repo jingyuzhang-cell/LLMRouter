@@ -1,0 +1,58 @@
+{
+ "batch": "V4_II_A",
+ "frozen_at": "2026-11-07",
+ "status": "COMPLETE (80/80 calls, ¥1.36, ~211K tok)",
+ "panel": "E05(14 slots)/E06(9)/E07(11) — GOLD frozen after two-round operator adjudication; E08 excluded (Silver, sign-off BLOCKED); n=3 exploratory",
+ "healthy_arm": {
+  "dQ_terminal": [
+   0.0,
+   -0.111,
+   0.0
+  ],
+  "mean": -0.037,
+  "verdict": "Zx did NOT generalize to new tasks without saturation priors: E06 base was PERFECT (1.000) and Zx re-extraction DROPPED it to 0.889 — proactive restructuring of near-ceiling states has real downside; E05/E07 no headroom on these draws",
+  "cost": "v3.2 spent +1..3 calls/task for <=0 gain"
+ },
+ "extract_fault_axis_PRIMARY": {
+  "vs_Static": "strong: E05 0.286->0.5-1.0 (+21~+71pp); E06 0.556->0.778-1.0 (+22~+44pp); E07 1.0 (degradation Q-neutral, gold concentrated in other branches)",
+  "v32_vs_Proposed": "mixed: v3.2 wins E06 both cells (1.0/1.0 vs 0.778/0.889), E05-persistent (0.714 vs 0.500); Proposed wins E05-transient (1.0 vs 0.857); E07 equal quality",
+  "posterior_learning": "E07-persistent: v3.2 decided pi DIRECTLY from cross-task posterior (E05/E06 R-failures) -> 3 calls vs Proposed 4, same Q — first real cross-task learning saving",
+  "mechanism_note": "recovery quality variance is dominated by stochastic re-extraction draws, not ladder choice"
+ },
+ "report_fault_aux": {
+  "Q_terminal": [
+   0.857,
+   1.0,
+   1.0
+  ],
+  "note": "two-layer Q-neutrality reconfirmed on new tasks"
+ },
+ "b2_audit": {
+  "selected": [
+   "Zx",
+   "Zx",
+   "Zx"
+  ],
+  "note": "decision-correct per frozen policy (2-3doc latencies fit D=300); NOTE: healthy arm showed the policy's Zx prior is miscalibrated for new tasks — audit measures policy-consistency, not outcome-optimality"
+ },
+ "shadow_v1_update": "density signal WRONG 3/3 on new tasks (predicted headroom; actual 0/-11/0) — v1 rejected like v0; cold-start saturation detection remains OPEN (both candidate signals failed out-of-task validation)",
+ "interpretation": {
+  "strengthens": "fault-recovery axis (extract-primary design) — the cleanest recovery evidence yet vs Static; online posterior cross-task learning with cost saving",
+  "weakens": "proactive Zx on unseen tasks — now 4/7 zero-or-negative across V4-I+V4-II-A new tasks; Zx value conditional on KNOWN headroom",
+  "open_problem": "cold-start saturation prediction: v0 (overlap) and v1 (density) both failed out-of-task; honest status = unsolved"
+ },
+ "budget": {
+  "used_calls": 80,
+  "used_tokens_approx": 200715,
+  "used_yuan_est": 1.3586,
+  "hold_192": "untouched"
+ },
+ "files_sha256": {
+  "v4a_runner.py": "5fbacf691e1623bd46fb3cefe8a78913599fd61a9200de7e40caef9623787366",
+  "v4a_config.json": "913800c04fa1e213808128d96016d8ef0c5e24e1a2a2d6a35d55159d0d6e3497",
+  "v4a_runs/ledger.jsonl": "382b3e67902f9ca34fe944996e46a2b5103f55ef94352c79f0e1d17559dbdf31",
+  "v4a_runs/outputs.jsonl": "abe76d87265f3f4c2250c4594e94ae24d0045b88c19e6f50dad483c1fee9602f",
+  "GOLD_E05E06E07_FROZEN.json": "f8450a20a3f668d627f4a8a0e6b4e689ae7d9390416c0a5b3a1ce6555842c3c6",
+  "SHADOW_SATURATION_V0.json": "eba6bd46676c76030b769edf44c7ec1c536d24a2ccf514d7448b949dcd5c6265"
+ }
+}

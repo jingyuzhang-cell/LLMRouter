@@ -1,0 +1,46 @@
+{
+ "batch": "TFJS_V1",
+ "status": "CONDITIONAL GO (operator 2026-11-06) - conventions frozen, awaiting explicit execution authorization",
+ "statistical_conventions": {
+  "C_cost": [
+   "per-arm C_own (recovery+verify+report) AND C_incl_shared (own + shared extracts+base-merge) both reported",
+   "shared calls are single real calls, counted ONCE in the batch budget ledger; per-arm attribution is for comparison only"
+  ],
+  "L_latency": [
+   "L_recovery_s: recovery-phase incremental wall time only (R+pi vs Z2 splits)",
+   "L_e2e_s: shared_prefix + recovery + verify+report (deployment-realistic end-to-end per arm)",
+   "both reported side by side in every table"
+  ],
+  "Support": [
+   "span-anchor PROXY on gold-hitting facts, explicitly NOT semantic support accuracy",
+   "denominator concern addressed by always reporting alongside: ES over ALL report assertions, UAR=1-ES (unsupported/error assertion rate), n_report, and gold-hit count",
+   "G1 printout carries the proxy label; no semantic-support claims permitted from this batch"
+  ]
+ },
+ "stage_gate": {
+  "stage1": "G1 ONLY (30 calls): 6 paired sets x {A_original, B_fidelity} x 2 reps",
+  "gate_rule": "proceed to stage2 iff mean dB_Q_report>0 OR mean dES>0 OR mean dSupport>0 (any one); else PAUSE G2 and re-evaluate fidelity approach (operator rule)",
+  "stage2": "G2 ONLY (39 calls), runner hard-refuses unless all 6 G1 records exist",
+  "final": "Q/C/L + JointSuccess + Pareto; n=3 exploratory only, no confirmatory claims"
+ },
+ "interpretation_boundary": "B-arm Q_report approaching Q_merge is MECHANISM-driven information preservation (deterministic fid backfill), not model generation capability gain - must be framed as such in all reports",
+ "preregistered_expectations": [
+  "Q_report(B) ceiling = Q_merge (value transfer via fid backfill)",
+  "ES(B) ceiling = upstream quote validity, measured 0.16-0.44 zero-call (backfill transfers, does not repair citations)",
+  "B shortfall below ceiling = fid-drop rate during organization (measurable)",
+  "if G1 shows no Q_report AND no citation/support improvement: accept result, re-evaluate scheduling benefit boundary"
+ ],
+ "budget": {
+  "cap_calls": 100,
+  "cap_tokens": 500000,
+  "cap_yuan": 2.2,
+  "planned_calls": 69,
+  "mock_yuan": 1.23,
+  "hold_192": "untouched"
+ },
+ "files_sha256": {
+  "tfjs_runner.py": "7612d618c9d022321f1a2f82a784a1bbdb64b57c856cf48fcdac82ea609d4de6",
+  "tfjs_score.py": "4a776325111f5504648fe30d048e60fae97090aed606148097410572e9791105",
+  "tfjs_config.json": "60ea43d7766d8819aeaa6f5ced2cb460bc8bbb9d161388ce8a201c3321f9dd60"
+ }
+}

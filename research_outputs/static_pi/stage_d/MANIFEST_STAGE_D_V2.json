@@ -1,0 +1,62 @@
+{
+ "manifest_version": "v2",
+ "type": "APPEND_ONLY_GOVERNANCE_SUPPLEMENT",
+ "created": "2026-11-05",
+ "purpose": "为 DAMJS_PILOT_54 建立治理关联；不修改、不覆盖 MANIFEST_STAGE_D.json",
+ "supersedes": null,
+ "base_manifest": {
+  "path": "MANIFEST_STAGE_D.json",
+  "status": "UNCHANGED",
+  "note": "原文件及其 66 项 artifacts 锚点保持原样，本文件仅追加引用与补登记"
+ },
+ "reference_to_supplement": {
+  "path": "EXECUTOR_IDENTITY_SUPPLEMENT.md",
+  "sha256": "62e9494beca20bbcf2004a500a2be1988b579b2b06481e3d5c390540df421448",
+  "bytes": 3817
+ },
+ "executor_version_registration": {
+  "version": "V3",
+  "sha256": "64dea81992f9f036af783cf91079f32dbb808948210c13ea72069ddd35839f7d",
+  "bytes": 53244,
+  "historical_use": "192 次 Stage D 执行的推定版本",
+  "basis": "mtime 时间序证据（执行器 mtime 2026-11-03 10:14:02 早于首个执行记录 2026-11-03 13:03）",
+  "cryptographic_proof": "不存在逐次证明（实测 0/192 执行记录含执行器/配置/依赖哈希）",
+  "trust_level": "时间序推定，非逐次验证",
+  "prior_registered_versions": {
+   "V1": {
+    "sha256": "b0d7a58900f8f27a3e6f3451147c44204533c53dd5583ebd207a78edc83fc74a",
+    "bytes": 44419,
+    "source": "MANIFEST_STAGE_D.json artifacts",
+    "status": "历史锚点，已被 V3 取代但保留"
+   },
+   "V2": {
+    "sha256": "4ab0c47d642e4ec6e19b28f3725024550ea56df5842876434b55deaf5c67c997",
+    "bytes": 48385,
+    "source": "STAGE_D_S5_FIX_FREEZE.json executor_candidate",
+    "status": "S5 修复候选，未登记为磁盘版本"
+   }
+  },
+  "verified_against_disk": true
+ },
+ "batch_reference": {
+  "batch_id": "DAMJS_PILOT_54",
+  "manifest_path": "DAMJS_BATCH_MANIFEST.json",
+  "note": "该批次清单冻结 15 个组件 SHA，并要求每次执行写入 identity 块"
+ },
+ "admissibility_rules": {
+  "historical_stage_d": "可引用，但须标注执行器版本为时间序推定、无逐次密码学证明",
+  "damjs_pilot_54": "必须满足逐次 identity 块 + 批次前后组件校验，否则标记 INTEGRITY_FAIL",
+  "q_final": "仍为 BLOCKED；TP/23 为代理质量指标，不得表述为已完成 Gold 校准"
+ },
+ "computed_hashes": {
+  "base_manifest_unchanged": {
+   "path": "MANIFEST_STAGE_D.json",
+   "sha256": "27bccff0f8fcd575a78bab6bcd0886a82b701314a8574e91600b99c317166c3d"
+  },
+  "batch_manifest": {
+   "path": "DAMJS_BATCH_MANIFEST.json",
+   "sha256": "cba7d7202270494d26312dd1edc1ddfed6ddbdd72414c1dde43c5d7115591bb2"
+  },
+  "this_manifest_note": "本文件不自我包含哈希（避免自哈希循环）"
+ }
+}

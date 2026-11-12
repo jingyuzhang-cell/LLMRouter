@@ -1,0 +1,4505 @@
+{
+ "runs": [
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S3",
+   "pair": 1,
+   "task": "MX1_E04",
+   "tp": 2,
+   "n_slots": 23,
+   "tp_ratio": 0.08695652173913043,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P1",
+    "node_log": [
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P1",
+      "node_id": "N1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c6d0e4ff75f52cda",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P1",
+      "node_id": "N2",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:ed4bd513a551a626",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P1",
+      "node_id": "N3",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:837443e10948271b",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P1",
+      "node_id": "N4",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:7ef2224294cd211e",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:ed4bd513a551a626",
+       "N3": "sha256:837443e10948271b"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:309a1c8ec733880f",
+       "recovered_hash": "sha256:7ef2224294cd211e"
+      }
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P1",
+      "node_id": "N5",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:de65706550b10f53",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:ed4bd513a551a626",
+       "N3": "sha256:837443e10948271b",
+       "N4": "sha256:7ef2224294cd211e"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "N4",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S3",
+      "Z": {
+       "action": "reExecute_node",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:reexec"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "N4",
+     "eligible_middle_nodes": [
+      "N2",
+      "N4"
+     ],
+     "seed_material": "MX1_E04|1|S3",
+     "seed": 1910648785,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "N4_rec": "{\"facts\":[{\"fact\":\"mock-0d10ed2e 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4_cor": "{\"facts\":[{\"fact\":\"mock-0"
+    },
+    "final_outputs": {
+     "N1": "{\"facts\":[{\"fact\":\"mock-0ee731ba 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2": "{\"facts\":[{\"fact\":\"mock-3a433363 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N3": "{\"facts\":[{\"fact\":\"mock-28f1cef8 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4": "{\"facts\":[{\"fact\":\"mock-0d10ed2e 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N5": "{\"facts\":[{\"fact\":\"mock-cd10e213 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S3",
+   "pair": 1,
+   "task": "MX1_E04",
+   "tp": 2,
+   "n_slots": 23,
+   "tp_ratio": 0.08695652173913043,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P1",
+    "node_log": [
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P1",
+      "node_id": "N1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c6d0e4ff75f52cda",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P1",
+      "node_id": "N2",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:ed4bd513a551a626",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P1",
+      "node_id": "N3",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:837443e10948271b",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P1",
+      "node_id": "N4",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:686bb074ad9dd11d",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:ed4bd513a551a626",
+       "N3": "sha256:837443e10948271b"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:309a1c8ec733880f",
+       "recovered_hash": "sha256:686bb074ad9dd11d"
+      }
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P1",
+      "node_id": "N5",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:de65706550b10f53",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:ed4bd513a551a626",
+       "N3": "sha256:837443e10948271b",
+       "N4": "sha256:686bb074ad9dd11d"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "N4",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S3",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "reExecute_node",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "N4",
+     "eligible_middle_nodes": [
+      "N2",
+      "N4"
+     ],
+     "seed_material": "MX1_E04|1|S3",
+     "seed": 1910648785,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "N4_rec": "{\"facts\":[{\"fact\":\"mock-8a6fcc98 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4_cor": "{\"facts\":[{\"fact\":\"mock-0"
+    },
+    "final_outputs": {
+     "N1": "{\"facts\":[{\"fact\":\"mock-0ee731ba 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2": "{\"facts\":[{\"fact\":\"mock-3a433363 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N3": "{\"facts\":[{\"fact\":\"mock-28f1cef8 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4": "{\"facts\":[{\"fact\":\"mock-8a6fcc98 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N5": "{\"facts\":[{\"fact\":\"mock-cd10e213 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S3",
+   "pair": 2,
+   "task": "MX1_E04",
+   "tp": 2,
+   "n_slots": 23,
+   "tp_ratio": 0.08695652173913043,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P2",
+    "node_log": [
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P2",
+      "node_id": "N1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c6d0e4ff75f52cda",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P2",
+      "node_id": "N2",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:ed4bd513a551a626",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P2",
+      "node_id": "N3",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:837443e10948271b",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P2",
+      "node_id": "N4",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:686bb074ad9dd11d",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:ed4bd513a551a626",
+       "N3": "sha256:837443e10948271b"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:309a1c8ec733880f",
+       "recovered_hash": "sha256:686bb074ad9dd11d"
+      }
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S3_P2",
+      "node_id": "N5",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:de65706550b10f53",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:ed4bd513a551a626",
+       "N3": "sha256:837443e10948271b",
+       "N4": "sha256:686bb074ad9dd11d"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "N4",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S3",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "reExecute_node",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "N4",
+     "eligible_middle_nodes": [
+      "N2",
+      "N4"
+     ],
+     "seed_material": "MX1_E04|2|S3",
+     "seed": 2738307991,
+     "pair_id": 2,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "N4_rec": "{\"facts\":[{\"fact\":\"mock-8a6fcc98 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4_cor": "{\"facts\":[{\"fact\":\"mock-0"
+    },
+    "final_outputs": {
+     "N1": "{\"facts\":[{\"fact\":\"mock-0ee731ba 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2": "{\"facts\":[{\"fact\":\"mock-3a433363 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N3": "{\"facts\":[{\"fact\":\"mock-28f1cef8 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4": "{\"facts\":[{\"fact\":\"mock-8a6fcc98 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N5": "{\"facts\":[{\"fact\":\"mock-cd10e213 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S3",
+   "pair": 2,
+   "task": "MX1_E04",
+   "tp": 2,
+   "n_slots": 23,
+   "tp_ratio": 0.08695652173913043,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P2",
+    "node_log": [
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P2",
+      "node_id": "N1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c6d0e4ff75f52cda",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P2",
+      "node_id": "N2",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:ed4bd513a551a626",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P2",
+      "node_id": "N3",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:837443e10948271b",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P2",
+      "node_id": "N4",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:7ef2224294cd211e",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:ed4bd513a551a626",
+       "N3": "sha256:837443e10948271b"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:309a1c8ec733880f",
+       "recovered_hash": "sha256:7ef2224294cd211e"
+      }
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S3_P2",
+      "node_id": "N5",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:de65706550b10f53",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:ed4bd513a551a626",
+       "N3": "sha256:837443e10948271b",
+       "N4": "sha256:7ef2224294cd211e"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "N4",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S3",
+      "Z": {
+       "action": "reExecute_node",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:reexec"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "N4",
+     "eligible_middle_nodes": [
+      "N2",
+      "N4"
+     ],
+     "seed_material": "MX1_E04|2|S3",
+     "seed": 2738307991,
+     "pair_id": 2,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "N4_rec": "{\"facts\":[{\"fact\":\"mock-0d10ed2e 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4_cor": "{\"facts\":[{\"fact\":\"mock-0"
+    },
+    "final_outputs": {
+     "N1": "{\"facts\":[{\"fact\":\"mock-0ee731ba 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2": "{\"facts\":[{\"fact\":\"mock-3a433363 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N3": "{\"facts\":[{\"fact\":\"mock-28f1cef8 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4": "{\"facts\":[{\"fact\":\"mock-0d10ed2e 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N5": "{\"facts\":[{\"fact\":\"mock-cd10e213 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S4",
+   "pair": 3,
+   "task": "MX1_E04",
+   "tp": 2,
+   "n_slots": 23,
+   "tp_ratio": 0.08695652173913043,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P3",
+    "node_log": [
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P3",
+      "node_id": "N1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c6d0e4ff75f52cda",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P3",
+      "node_id": "N2",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:4347c1f4f72a1489",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:7ab4e7d755246fcc",
+       "recovered_hash": "sha256:4347c1f4f72a1489"
+      }
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P3",
+      "node_id": "N3",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:837443e10948271b",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P3",
+      "node_id": "N4",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:7ef2224294cd211e",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:4347c1f4f72a1489",
+       "N3": "sha256:837443e10948271b"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P3",
+      "node_id": "N5",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:de65706550b10f53",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:4347c1f4f72a1489",
+       "N3": "sha256:837443e10948271b",
+       "N4": "sha256:7ef2224294cd211e"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "N2",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S4",
+      "Z": {
+       "action": "repair_format",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:repair"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "N2",
+     "eligible_middle_nodes": [
+      "N2",
+      "N4"
+     ],
+     "seed_material": "MX1_E04|3|S4",
+     "seed": 1136170899,
+     "pair_id": 3,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "N2_rec": "{\"facts\":[{\"fact\":\"mock-ba188251 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2_cor": "['facts':[['fact':'mock-3a433363 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "N1": "{\"facts\":[{\"fact\":\"mock-0ee731ba 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2": "{\"facts\":[{\"fact\":\"mock-ba188251 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N3": "{\"facts\":[{\"fact\":\"mock-28f1cef8 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4": "{\"facts\":[{\"fact\":\"mock-0d10ed2e 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N5": "{\"facts\":[{\"fact\":\"mock-cd10e213 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S4",
+   "pair": 3,
+   "task": "MX1_E04",
+   "tp": 2,
+   "n_slots": 23,
+   "tp_ratio": 0.08695652173913043,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P3",
+    "node_log": [
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P3",
+      "node_id": "N1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c6d0e4ff75f52cda",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P3",
+      "node_id": "N2",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:557bf4a7d6602e3d",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:7ab4e7d755246fcc",
+       "recovered_hash": "sha256:557bf4a7d6602e3d"
+      }
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P3",
+      "node_id": "N3",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:837443e10948271b",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P3",
+      "node_id": "N4",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:7ef2224294cd211e",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:557bf4a7d6602e3d",
+       "N3": "sha256:837443e10948271b"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P3",
+      "node_id": "N5",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:de65706550b10f53",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:557bf4a7d6602e3d",
+       "N3": "sha256:837443e10948271b",
+       "N4": "sha256:7ef2224294cd211e"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "N2",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S4",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "repair_format",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "N2",
+     "eligible_middle_nodes": [
+      "N2",
+      "N4"
+     ],
+     "seed_material": "MX1_E04|3|S4",
+     "seed": 1136170899,
+     "pair_id": 3,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "N2_rec": "{\"facts\":[{\"fact\":\"mock-10403d58 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2_cor": "['facts':[['fact':'mock-3a433363 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "N1": "{\"facts\":[{\"fact\":\"mock-0ee731ba 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2": "{\"facts\":[{\"fact\":\"mock-10403d58 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N3": "{\"facts\":[{\"fact\":\"mock-28f1cef8 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4": "{\"facts\":[{\"fact\":\"mock-0d10ed2e 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N5": "{\"facts\":[{\"fact\":\"mock-cd10e213 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S4",
+   "pair": 4,
+   "task": "MX1_E04",
+   "tp": 2,
+   "n_slots": 23,
+   "tp_ratio": 0.08695652173913043,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P4",
+    "node_log": [
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P4",
+      "node_id": "N1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c6d0e4ff75f52cda",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P4",
+      "node_id": "N2",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:557bf4a7d6602e3d",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:7ab4e7d755246fcc",
+       "recovered_hash": "sha256:557bf4a7d6602e3d"
+      }
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P4",
+      "node_id": "N3",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:837443e10948271b",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P4",
+      "node_id": "N4",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:7ef2224294cd211e",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:557bf4a7d6602e3d",
+       "N3": "sha256:837443e10948271b"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Fixed-Composite_S4_P4",
+      "node_id": "N5",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:de65706550b10f53",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:557bf4a7d6602e3d",
+       "N3": "sha256:837443e10948271b",
+       "N4": "sha256:7ef2224294cd211e"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "N2",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S4",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "repair_format",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "N2",
+     "eligible_middle_nodes": [
+      "N2",
+      "N4"
+     ],
+     "seed_material": "MX1_E04|4|S4",
+     "seed": 1528543528,
+     "pair_id": 4,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "N2_rec": "{\"facts\":[{\"fact\":\"mock-10403d58 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2_cor": "['facts':[['fact':'mock-3a433363 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "N1": "{\"facts\":[{\"fact\":\"mock-0ee731ba 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2": "{\"facts\":[{\"fact\":\"mock-10403d58 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N3": "{\"facts\":[{\"fact\":\"mock-28f1cef8 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4": "{\"facts\":[{\"fact\":\"mock-0d10ed2e 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N5": "{\"facts\":[{\"fact\":\"mock-cd10e213 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S4",
+   "pair": 4,
+   "task": "MX1_E04",
+   "tp": 2,
+   "n_slots": 23,
+   "tp_ratio": 0.08695652173913043,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P4",
+    "node_log": [
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P4",
+      "node_id": "N1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c6d0e4ff75f52cda",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P4",
+      "node_id": "N2",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:4347c1f4f72a1489",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:7ab4e7d755246fcc",
+       "recovered_hash": "sha256:4347c1f4f72a1489"
+      }
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P4",
+      "node_id": "N3",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:837443e10948271b",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P4",
+      "node_id": "N4",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:7ef2224294cd211e",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:4347c1f4f72a1489",
+       "N3": "sha256:837443e10948271b"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX1_E04_Proposed-Dynamic_S4_P4",
+      "node_id": "N5",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:de65706550b10f53",
+      "parent_hashes": {
+       "N1": "sha256:c6d0e4ff75f52cda",
+       "N2": "sha256:4347c1f4f72a1489",
+       "N3": "sha256:837443e10948271b",
+       "N4": "sha256:7ef2224294cd211e"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "N2",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S4",
+      "Z": {
+       "action": "repair_format",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:repair"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "N2",
+     "eligible_middle_nodes": [
+      "N2",
+      "N4"
+     ],
+     "seed_material": "MX1_E04|4|S4",
+     "seed": 1528543528,
+     "pair_id": 4,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "N2_rec": "{\"facts\":[{\"fact\":\"mock-ba188251 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2_cor": "['facts':[['fact':'mock-3a433363 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "N1": "{\"facts\":[{\"fact\":\"mock-0ee731ba 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N2": "{\"facts\":[{\"fact\":\"mock-ba188251 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N3": "{\"facts\":[{\"fact\":\"mock-28f1cef8 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N4": "{\"facts\":[{\"fact\":\"mock-0d10ed2e 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "N5": "{\"facts\":[{\"fact\":\"mock-cd10e213 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S3",
+   "pair": 1,
+   "task": "MX2_STSHUN",
+   "tp": 0,
+   "n_slots": 42,
+   "tp_ratio": 0.0,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P1",
+    "node_log": [
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P1",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c5b7d6090a2502d",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P1",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:754f8e671607bde2",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P1",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:c9448c3697333b3d",
+      "parent_hashes": {
+       "A1": "sha256:5c5b7d6090a2502d",
+       "A2": "sha256:754f8e671607bde2"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:612a929e4f81b42e",
+       "recovered_hash": "sha256:c9448c3697333b3d"
+      }
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P1",
+      "node_id": "C1",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:7bbea6971b914ec0",
+      "parent_hashes": {
+       "B1": "sha256:c9448c3697333b3d"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P1",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:484a71350f69234d",
+      "parent_hashes": {
+       "B1": "sha256:c9448c3697333b3d",
+       "C1": "sha256:7bbea6971b914ec0"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S3",
+      "Z": {
+       "action": "reExecute_node",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:reexec"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX2_STSHUN|1|S3",
+     "seed": 3828870765,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock-29cd84a9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1_cor": "{\"facts\":[{\"fact\":\"mock-2"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-916965a5 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-f9cdb916 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-29cd84a9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-21f8eced 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-41406250 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S3",
+   "pair": 1,
+   "task": "MX2_STSHUN",
+   "tp": 0,
+   "n_slots": 42,
+   "tp_ratio": 0.0,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P1",
+    "node_log": [
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P1",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c5b7d6090a2502d",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P1",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:754f8e671607bde2",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P1",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:64f0ea48d1445a17",
+      "parent_hashes": {
+       "A1": "sha256:5c5b7d6090a2502d",
+       "A2": "sha256:754f8e671607bde2"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:612a929e4f81b42e",
+       "recovered_hash": "sha256:64f0ea48d1445a17"
+      }
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P1",
+      "node_id": "C1",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:6c1b72ca2aec32a8",
+      "parent_hashes": {
+       "B1": "sha256:64f0ea48d1445a17"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P1",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:484a71350f69234d",
+      "parent_hashes": {
+       "B1": "sha256:64f0ea48d1445a17",
+       "C1": "sha256:6c1b72ca2aec32a8"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S3",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "reExecute_node",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX2_STSHUN|1|S3",
+     "seed": 3828870765,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock-ba4eb214 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1_cor": "{\"facts\":[{\"fact\":\"mock-2"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-916965a5 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-f9cdb916 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-ba4eb214 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-7a83a8d9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-41406250 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S3",
+   "pair": 2,
+   "task": "MX2_STSHUN",
+   "tp": 0,
+   "n_slots": 42,
+   "tp_ratio": 0.0,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P2",
+    "node_log": [
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P2",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c5b7d6090a2502d",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P2",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:754f8e671607bde2",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P2",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:64f0ea48d1445a17",
+      "parent_hashes": {
+       "A1": "sha256:5c5b7d6090a2502d",
+       "A2": "sha256:754f8e671607bde2"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:612a929e4f81b42e",
+       "recovered_hash": "sha256:64f0ea48d1445a17"
+      }
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P2",
+      "node_id": "C1",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:6c1b72ca2aec32a8",
+      "parent_hashes": {
+       "B1": "sha256:64f0ea48d1445a17"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S3_P2",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:484a71350f69234d",
+      "parent_hashes": {
+       "B1": "sha256:64f0ea48d1445a17",
+       "C1": "sha256:6c1b72ca2aec32a8"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S3",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "reExecute_node",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX2_STSHUN|2|S3",
+     "seed": 3572569743,
+     "pair_id": 2,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock-ba4eb214 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1_cor": "{\"facts\":[{\"fact\":\"mock-2"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-916965a5 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-f9cdb916 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-ba4eb214 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-7a83a8d9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-41406250 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S3",
+   "pair": 2,
+   "task": "MX2_STSHUN",
+   "tp": 0,
+   "n_slots": 42,
+   "tp_ratio": 0.0,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P2",
+    "node_log": [
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P2",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c5b7d6090a2502d",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P2",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:754f8e671607bde2",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P2",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:c9448c3697333b3d",
+      "parent_hashes": {
+       "A1": "sha256:5c5b7d6090a2502d",
+       "A2": "sha256:754f8e671607bde2"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:612a929e4f81b42e",
+       "recovered_hash": "sha256:c9448c3697333b3d"
+      }
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P2",
+      "node_id": "C1",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:7bbea6971b914ec0",
+      "parent_hashes": {
+       "B1": "sha256:c9448c3697333b3d"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S3_P2",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:484a71350f69234d",
+      "parent_hashes": {
+       "B1": "sha256:c9448c3697333b3d",
+       "C1": "sha256:7bbea6971b914ec0"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S3",
+      "Z": {
+       "action": "reExecute_node",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:reexec"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX2_STSHUN|2|S3",
+     "seed": 3572569743,
+     "pair_id": 2,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock-29cd84a9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1_cor": "{\"facts\":[{\"fact\":\"mock-2"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-916965a5 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-f9cdb916 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-29cd84a9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-21f8eced 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-41406250 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S4",
+   "pair": 3,
+   "task": "MX2_STSHUN",
+   "tp": 0,
+   "n_slots": 42,
+   "tp_ratio": 0.0,
+   "catastrophic": true,
+   "makespan_s": 0.1,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P3",
+    "node_log": [
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P3",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c5b7d6090a2502d",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P3",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:754f8e671607bde2",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P3",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c9448c3697333b3d",
+      "parent_hashes": {
+       "A1": "sha256:5c5b7d6090a2502d",
+       "A2": "sha256:754f8e671607bde2"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P3",
+      "node_id": "C1",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:f8c1b06c0f49f9c5",
+      "parent_hashes": {
+       "B1": "sha256:c9448c3697333b3d"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:f093b2246258856b",
+       "recovered_hash": "sha256:f8c1b06c0f49f9c5"
+      }
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P3",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:484a71350f69234d",
+      "parent_hashes": {
+       "B1": "sha256:c9448c3697333b3d",
+       "C1": "sha256:f8c1b06c0f49f9c5"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "C1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S4",
+      "Z": {
+       "action": "repair_format",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:repair"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "C1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX2_STSHUN|3|S4",
+     "seed": 3229597963,
+     "pair_id": 3,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "C1_rec": "{\"facts\":[{\"fact\":\"mock-cf977a72 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1_cor": "['facts':[['fact':'mock-21f8eced 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-916965a5 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-f9cdb916 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-29cd84a9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-cf977a72 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-41406250 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S4",
+   "pair": 3,
+   "task": "MX2_STSHUN",
+   "tp": 0,
+   "n_slots": 42,
+   "tp_ratio": 0.0,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P3",
+    "node_log": [
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P3",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c5b7d6090a2502d",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P3",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:754f8e671607bde2",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P3",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c9448c3697333b3d",
+      "parent_hashes": {
+       "A1": "sha256:5c5b7d6090a2502d",
+       "A2": "sha256:754f8e671607bde2"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P3",
+      "node_id": "C1",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:85d13c218b64a0f7",
+      "parent_hashes": {
+       "B1": "sha256:c9448c3697333b3d"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:f093b2246258856b",
+       "recovered_hash": "sha256:85d13c218b64a0f7"
+      }
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P3",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:484a71350f69234d",
+      "parent_hashes": {
+       "B1": "sha256:c9448c3697333b3d",
+       "C1": "sha256:85d13c218b64a0f7"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "C1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S4",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "repair_format",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "C1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX2_STSHUN|3|S4",
+     "seed": 3229597963,
+     "pair_id": 3,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "C1_rec": "{\"facts\":[{\"fact\":\"mock-10ab7e7c 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1_cor": "['facts':[['fact':'mock-21f8eced 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-916965a5 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-f9cdb916 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-29cd84a9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-10ab7e7c 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-41406250 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S4",
+   "pair": 4,
+   "task": "MX2_STSHUN",
+   "tp": 0,
+   "n_slots": 42,
+   "tp_ratio": 0.0,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P4",
+    "node_log": [
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P4",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c5b7d6090a2502d",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P4",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:754f8e671607bde2",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P4",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:64f0ea48d1445a17",
+      "parent_hashes": {
+       "A1": "sha256:5c5b7d6090a2502d",
+       "A2": "sha256:754f8e671607bde2"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:964cec3e7dde140c",
+       "recovered_hash": "sha256:64f0ea48d1445a17"
+      }
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P4",
+      "node_id": "C1",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:6c1b72ca2aec32a8",
+      "parent_hashes": {
+       "B1": "sha256:64f0ea48d1445a17"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Fixed-Composite_S4_P4",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:484a71350f69234d",
+      "parent_hashes": {
+       "B1": "sha256:64f0ea48d1445a17",
+       "C1": "sha256:6c1b72ca2aec32a8"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S4",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "repair_format",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX2_STSHUN|4|S4",
+     "seed": 2516352135,
+     "pair_id": 4,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock-ba4eb214 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1_cor": "['facts':[['fact':'mock-29cd84a9 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-916965a5 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-f9cdb916 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-ba4eb214 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-7a83a8d9 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-41406250 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S4",
+   "pair": 4,
+   "task": "MX2_STSHUN",
+   "tp": 0,
+   "n_slots": 42,
+   "tp_ratio": 0.0,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P4",
+    "node_log": [
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P4",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c5b7d6090a2502d",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P4",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:754f8e671607bde2",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P4",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:aad80303fba5b917",
+      "parent_hashes": {
+       "A1": "sha256:5c5b7d6090a2502d",
+       "A2": "sha256:754f8e671607bde2"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:964cec3e7dde140c",
+       "recovered_hash": "sha256:aad80303fba5b917"
+      }
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P4",
+      "node_id": "C1",
+      "kind": "timeline",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:c5565634264c3c2b",
+      "parent_hashes": {
+       "B1": "sha256:aad80303fba5b917"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX2_STSHUN_Proposed-Dynamic_S4_P4",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:484a71350f69234d",
+      "parent_hashes": {
+       "B1": "sha256:aad80303fba5b917",
+       "C1": "sha256:c5565634264c3c2b"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S4",
+      "Z": {
+       "action": "repair_format",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:repair"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX2_STSHUN|4|S4",
+     "seed": 2516352135,
+     "pair_id": 4,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock-e36ba5b6 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1_cor": "['facts':[['fact':'mock-29cd84a9 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-916965a5 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-f9cdb916 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-e36ba5b6 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-260280a1 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-41406250 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S3",
+   "pair": 1,
+   "task": "MX3_ZD",
+   "tp": 1,
+   "n_slots": 18,
+   "tp_ratio": 0.05555555555555555,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P1",
+    "node_log": [
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P1",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c7a934dd9e95542",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P1",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:a829c132a4987727",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P1",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:2bc57938e401528a",
+      "parent_hashes": {
+       "A1": "sha256:5c7a934dd9e95542",
+       "A2": "sha256:a829c132a4987727"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P1",
+      "node_id": "C1",
+      "kind": "reason",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:8461b7011d67c8be",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:c8316eadbcb3c16e",
+       "recovered_hash": "sha256:8461b7011d67c8be"
+      }
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P1",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:622cd0f3f5e4e328",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a",
+       "C1": "sha256:8461b7011d67c8be"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "C1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S3",
+      "Z": {
+       "action": "reExecute_node",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:reexec"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "C1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX3_ZD|1|S3",
+     "seed": 2530431306,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "C1_rec": "{\"facts\":[{\"fact\":\"mock-794960de 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1_cor": "{\"facts\":[{\"fact\":\"mock-7"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-3adb871d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-dcc65666 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-2ccd9592 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-794960de 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-e9ddb2b7 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S3",
+   "pair": 1,
+   "task": "MX3_ZD",
+   "tp": 1,
+   "n_slots": 18,
+   "tp_ratio": 0.05555555555555555,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P1",
+    "node_log": [
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P1",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c7a934dd9e95542",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P1",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:a829c132a4987727",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P1",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:2bc57938e401528a",
+      "parent_hashes": {
+       "A1": "sha256:5c7a934dd9e95542",
+       "A2": "sha256:a829c132a4987727"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P1",
+      "node_id": "C1",
+      "kind": "reason",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:822158b6c1c62f79",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:c8316eadbcb3c16e",
+       "recovered_hash": "sha256:822158b6c1c62f79"
+      }
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P1",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:622cd0f3f5e4e328",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a",
+       "C1": "sha256:822158b6c1c62f79"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "C1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S3",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "reExecute_node",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "C1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX3_ZD|1|S3",
+     "seed": 2530431306,
+     "pair_id": 1,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "C1_rec": "{\"facts\":[{\"fact\":\"mock-15c1b2db 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1_cor": "{\"facts\":[{\"fact\":\"mock-7"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-3adb871d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-dcc65666 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-2ccd9592 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-15c1b2db 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-e9ddb2b7 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S3",
+   "pair": 2,
+   "task": "MX3_ZD",
+   "tp": 1,
+   "n_slots": 18,
+   "tp_ratio": 0.05555555555555555,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P2",
+    "node_log": [
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P2",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c7a934dd9e95542",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P2",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:a829c132a4987727",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P2",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:2bc57938e401528a",
+      "parent_hashes": {
+       "A1": "sha256:5c7a934dd9e95542",
+       "A2": "sha256:a829c132a4987727"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P2",
+      "node_id": "C1",
+      "kind": "reason",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:822158b6c1c62f79",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:c8316eadbcb3c16e",
+       "recovered_hash": "sha256:822158b6c1c62f79"
+      }
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S3_P2",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:622cd0f3f5e4e328",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a",
+       "C1": "sha256:822158b6c1c62f79"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "C1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S3",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "reExecute_node",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "C1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX3_ZD|2|S3",
+     "seed": 1259373210,
+     "pair_id": 2,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "C1_rec": "{\"facts\":[{\"fact\":\"mock-15c1b2db 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1_cor": "{\"facts\":[{\"fact\":\"mock-7"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-3adb871d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-dcc65666 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-2ccd9592 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-15c1b2db 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-e9ddb2b7 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S3",
+   "pair": 2,
+   "task": "MX3_ZD",
+   "tp": 1,
+   "n_slots": 18,
+   "tp_ratio": 0.05555555555555555,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P2",
+    "node_log": [
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P2",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c7a934dd9e95542",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P2",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:a829c132a4987727",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P2",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:2bc57938e401528a",
+      "parent_hashes": {
+       "A1": "sha256:5c7a934dd9e95542",
+       "A2": "sha256:a829c132a4987727"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P2",
+      "node_id": "C1",
+      "kind": "reason",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:8461b7011d67c8be",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:c8316eadbcb3c16e",
+       "recovered_hash": "sha256:8461b7011d67c8be"
+      }
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S3_P2",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:622cd0f3f5e4e328",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a",
+       "C1": "sha256:8461b7011d67c8be"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "C1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S3",
+      "Z": {
+       "action": "reExecute_node",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:reexec"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "C1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX3_ZD|2|S3",
+     "seed": 1259373210,
+     "pair_id": 2,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "C1_rec": "{\"facts\":[{\"fact\":\"mock-794960de 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1_cor": "{\"facts\":[{\"fact\":\"mock-7"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-3adb871d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-dcc65666 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-2ccd9592 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-794960de 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-e9ddb2b7 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S4",
+   "pair": 3,
+   "task": "MX3_ZD",
+   "tp": 1,
+   "n_slots": 18,
+   "tp_ratio": 0.05555555555555555,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P3",
+    "node_log": [
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P3",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c7a934dd9e95542",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P3",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:a829c132a4987727",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P3",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:a942c55f8d9517a8",
+      "parent_hashes": {
+       "A1": "sha256:5c7a934dd9e95542",
+       "A2": "sha256:a829c132a4987727"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:5c952fdec2470f78",
+       "recovered_hash": "sha256:a942c55f8d9517a8"
+      }
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P3",
+      "node_id": "C1",
+      "kind": "reason",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:8461b7011d67c8be",
+      "parent_hashes": {
+       "B1": "sha256:a942c55f8d9517a8"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P3",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:622cd0f3f5e4e328",
+      "parent_hashes": {
+       "B1": "sha256:a942c55f8d9517a8",
+       "C1": "sha256:8461b7011d67c8be"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S4",
+      "Z": {
+       "action": "repair_format",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:repair"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX3_ZD|3|S4",
+     "seed": 123386559,
+     "pair_id": 3,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock-c1129194 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1_cor": "['facts':[['fact':'mock-2ccd9592 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-3adb871d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-dcc65666 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-c1129194 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-794960de 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-e9ddb2b7 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S4",
+   "pair": 3,
+   "task": "MX3_ZD",
+   "tp": 1,
+   "n_slots": 18,
+   "tp_ratio": 0.05555555555555555,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P3",
+    "node_log": [
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P3",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c7a934dd9e95542",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P3",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:a829c132a4987727",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P3",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:26304c03fece273f",
+      "parent_hashes": {
+       "A1": "sha256:5c7a934dd9e95542",
+       "A2": "sha256:a829c132a4987727"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:5c952fdec2470f78",
+       "recovered_hash": "sha256:26304c03fece273f"
+      }
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P3",
+      "node_id": "C1",
+      "kind": "reason",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:8461b7011d67c8be",
+      "parent_hashes": {
+       "B1": "sha256:26304c03fece273f"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P3",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:622cd0f3f5e4e328",
+      "parent_hashes": {
+       "B1": "sha256:26304c03fece273f",
+       "C1": "sha256:8461b7011d67c8be"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "B1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S4",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "repair_format",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "B1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX3_ZD|3|S4",
+     "seed": 123386559,
+     "pair_id": 3,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "B1_rec": "{\"facts\":[{\"fact\":\"mock-d96f827c 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1_cor": "['facts':[['fact':'mock-2ccd9592 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-3adb871d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-dcc65666 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-d96f827c 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-794960de 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-e9ddb2b7 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Fixed-Composite",
+   "scenario": "S4",
+   "pair": 4,
+   "task": "MX3_ZD",
+   "tp": 1,
+   "n_slots": 18,
+   "tp_ratio": 0.05555555555555555,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P4",
+    "node_log": [
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P4",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c7a934dd9e95542",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P4",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:a829c132a4987727",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P4",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:2bc57938e401528a",
+      "parent_hashes": {
+       "A1": "sha256:5c7a934dd9e95542",
+       "A2": "sha256:a829c132a4987727"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P4",
+      "node_id": "C1",
+      "kind": "reason",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:822158b6c1c62f79",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:554a7e3d66d2c73b",
+       "recovered_hash": "sha256:822158b6c1c62f79"
+      }
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Fixed-Composite_S4_P4",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:622cd0f3f5e4e328",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a",
+       "C1": "sha256:822158b6c1c62f79"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "C1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Fixed-Composite",
+      "scenario": "S4",
+      "Z": {
+       "action": "full_retry",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "retry_anomaly_node_with_fixed_prompt"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "fixed_by_node_kind"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "repair_format",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "anomaly_type_dependent"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "keep_assignment"
+       }
+      },
+      "recovery_prompt_kind": "fc:fixed"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "C1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX3_ZD|4|S4",
+     "seed": 630578068,
+     "pair_id": 4,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "C1_rec": "{\"facts\":[{\"fact\":\"mock-15c1b2db 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1_cor": "['facts':[['fact':'mock-794960de 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-3adb871d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-dcc65666 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-2ccd9592 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-15c1b2db 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-e9ddb2b7 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  },
+  {
+   "arm": "Proposed-Dynamic",
+   "scenario": "S4",
+   "pair": 4,
+   "task": "MX3_ZD",
+   "tp": 1,
+   "n_slots": 18,
+   "tp_ratio": 0.05555555555555555,
+   "catastrophic": true,
+   "makespan_s": 0.0,
+   "calls": 6,
+   "tokens_in": 3000,
+   "tokens_out": 1200,
+   "cost_yuan": 0.0054,
+   "on_time": true,
+   "process_log": {
+    "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P4",
+    "node_log": [
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P4",
+      "node_id": "A1",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:5c7a934dd9e95542",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P4",
+      "node_id": "A2",
+      "kind": "extract",
+      "agent_assigned": "deepseek-chat",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:a829c132a4987727",
+      "parent_hashes": {},
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P4",
+      "node_id": "B1",
+      "kind": "verification",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:2bc57938e401528a",
+      "parent_hashes": {
+       "A1": "sha256:5c7a934dd9e95542",
+       "A2": "sha256:a829c132a4987727"
+      },
+      "anomaly": null
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P4",
+      "node_id": "C1",
+      "kind": "reason",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 2,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "recovered",
+      "anomaly_injected": true,
+      "output_hash": "sha256:6fca722b16d8a7f0",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a"
+      },
+      "anomaly": {
+       "corrupted_hash": "sha256:554a7e3d66d2c73b",
+       "recovered_hash": "sha256:6fca722b16d8a7f0"
+      }
+     },
+     {
+      "exec_id": "MX_MX3_ZD_Proposed-Dynamic_S4_P4",
+      "node_id": "D1",
+      "kind": "report",
+      "agent_assigned": "glm-5.3-flash",
+      "pi_reason": "initial_fixed_by_kind",
+      "attempt": 1,
+      "t_start": 0.0,
+      "t_end": 0.0,
+      "cost_tokens": {
+       "in": 500,
+       "out": 200
+      },
+      "status": "ok",
+      "anomaly_injected": false,
+      "output_hash": "sha256:622cd0f3f5e4e328",
+      "parent_hashes": {
+       "B1": "sha256:2bc57938e401528a",
+       "C1": "sha256:6fca722b16d8a7f0"
+      },
+      "anomaly": null
+     }
+    ],
+    "decision_log": [
+     {
+      "decision_id": "D1",
+      "node_id": "C1",
+      "trigger": "node_anomaly",
+      "decision_opportunity": true,
+      "arm": "Proposed-Dynamic",
+      "scenario": "S4",
+      "Z": {
+       "action": "repair_format",
+       "scope": "node"
+      },
+      "R": {
+       "reexecute_set": null,
+       "policy": "anomaly_type_dependent"
+      },
+      "pi": {
+       "changes": [],
+       "policy": "keep_assignment"
+      },
+      "shadow_other_arm": {
+       "Z": {
+        "action": "full_retry",
+        "scope": "node"
+       },
+       "R": {
+        "reexecute_set": null,
+        "policy": "retry_anomaly_node_with_fixed_prompt"
+       },
+       "pi": {
+        "changes": [],
+        "policy": "fixed_by_node_kind"
+       }
+      },
+      "recovery_prompt_kind": "pd:repair"
+     }
+    ],
+    "inject_trace": {
+     "inject_node": "C1",
+     "eligible_middle_nodes": [
+      "B1",
+      "C1"
+     ],
+     "seed_material": "MX3_ZD|4|S4",
+     "seed": 630578068,
+     "pair_id": 4,
+     "policy": "pair-shared: 同配对PD/FC同注入节点同场景, 稳定哈希, 必注入(仅真中间节点)"
+    },
+    "_recovery_texts": {
+     "C1_rec": "{\"facts\":[{\"fact\":\"mock-5192d589 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1_cor": "['facts':[['fact':'mock-794960de 108,666.32万元 2025-04-29','source':'mock']]]"
+    },
+    "final_outputs": {
+     "A1": "{\"facts\":[{\"fact\":\"mock-3adb871d 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "A2": "{\"facts\":[{\"fact\":\"mock-dcc65666 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "B1": "{\"facts\":[{\"fact\":\"mock-2ccd9592 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "C1": "{\"facts\":[{\"fact\":\"mock-5192d589 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}",
+     "D1": "{\"facts\":[{\"fact\":\"mock-e9ddb2b7 108,666.32万元 2025-04-29\",\"source\":\"mock\"}]}"
+    }
+   }
+  }
+ ],
+ "metrics": {
+  "n_runs": 24,
+  "decision_opportunities": 24,
+  "Z_divergence": 1.0,
+  "R_divergence": 1.0,
+  "pi_divergence": 1.0,
+  "n_divergence_points": 24,
+  "effective_recoveries": 16,
+  "ineffective_recoveries": 8,
+  "harmful_recoveries": 0,
+  "recovery_attempts": 24,
+  "wasted_recovery_calls": 8
+ }
+}

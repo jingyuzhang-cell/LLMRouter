@@ -1,0 +1,116 @@
+{
+ "passed": 22,
+ "total": 22,
+ "results": [
+  {
+   "name": "T1 clean rep: no targets, B and C add no calls, three arms identical output, tie",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T2 explicit suppression: A loses the four slots; B rechecks (GLM) + SINK; C bypasses SINK only",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T2 both recover to 1.0; C uses fewer own calls than B",
+   "ok": true,
+   "detail": "({'calls': 2, 'yuan': 0.008588, 'lat': 81.0, 'tokens': 6212}, {'calls': 1, 'yuan': 0.004842, 'lat': 1.0, 'tokens': 3235})"
+  },
+  {
+   "name": "T3 unknown labels: C goes straight to J2 recheck, nothing deleted",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T4 mixed states: C rechecks (no deletion)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T5 omission with evidence and a recoverable pre-recovery terminal: C spends zero calls, B spends two",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T6 M3 handling: convert-to-unknown then one H rerun, no third attempt",
+   "ok": true,
+   "detail": "['none', 'm3_convert_to_unknown', 'call', 'h_rerun']"
+  },
+  {
+   "name": "T7 node fault: arm uses its single retry, then succeeds",
+   "ok": true,
+   "detail": "(2, [{'node': 'SINK', 'attempt': 1, 'fault': 'empty_text'}])"
+  },
+  {
+   "name": "T8 second fault in a no-target rep: all three arms incomplete with Q_all = 0 (uniform imputation, batch continues)",
+   "ok": true,
+   "detail": "(True, True, True)"
+  },
+  {
+   "name": "T9 stubborn recheck: C escalates to recheck exactly once, terminal check fails, it stops (no third attempt)",
+   "ok": true,
+   "detail": "['j2_recheck', 'call', 'call', 'terminal_check']"
+  },
+  {
+   "name": "T10 shared-stage fault stops the whole batch (no arm owns recovery before the checkpoint)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T11 transport error inside an arm is also an infrastructure stop (per prereg section 6)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T12 token pre-flight stops the batch before the cap can be crossed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T13 fairness: B and C send byte-identical recheck requests when both recheck",
+   "ok": true,
+   "detail": "{('B', 'J2_recheck'): 'ed94237676a90555804672bb0f9ad3f04982f3065cc56d67adbb841bbc312554', ('C', 'J2_recheck'): 'ed94237676a90555804672bb0f9ad3f04982f3065cc56d67adbb841bbc312554'}"
+  },
+  {
+   "name": "T14 frozen route: J2 and its recheck on GLM at 8000; E/J1/SINK on DS; system prompts are the frozen ones",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T15 block 1: four replicates, PASS, per-rep scenes and analysis written, ledger intact",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T16 a finished block scene is never rerun",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T17 sign test: ties dropped, exact one-sided p",
+   "ok": true,
+   "detail": "{'n_eff': 5, 'positive': 4, 'p': 0.1875}"
+  },
+  {
+   "name": "T18 analysis reports H1..H3 with per-rep Q, calls, yuan, latency, error rates and incompleteness",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T19 real mode refused without QS_BLOCK_GO=1",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T20 block 2 refused without block 1",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "T21 freeze pins V5 as execution detector and covers runner, mock-absent assets, contract, templates",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

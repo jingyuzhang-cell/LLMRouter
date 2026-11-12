@@ -1,0 +1,116 @@
+{
+ "revision": "三案复核裁决执行 V2",
+ "date": "2026-11-11",
+ "api_calls": 0,
+ "adjudication": {
+  "XINWEI": "PASS(合同设计)",
+  "TIANWO": "REVISE→已修正",
+  "JINYA": "REVISE→已修正",
+  "ZHONGCHAO": "PASS(补来源异常说明)",
+  "YINGFANGWEI": "PASS(补分母限制)"
+ },
+ "revisions": [
+  {
+   "case": "XINWEI",
+   "type": "ENGINE_ERROR_HIGH",
+   "severity": "HIGH",
+   "finding": "原合同把三个不同SIF实体并入同一别名组",
+   "source_evidence": [
+    "SIFTelecomCambodia(Project)Limited=柬埔寨信威控股股东",
+    "SIFTelecomCambodiaLimited=柬埔寨信威间接股东、买方信贷借款方之一",
+    "SIFTelecomInvestmentLimited(SIF投资)=乌克兰Jovius股权受让方"
+   ],
+   "source_relation_verdict": "原文未认定三者存在关联或同一关系",
+   "action": "拆分为三个独立实体;cross_entity_relation_rule登记'禁止凭名称相似推定,相互关系UNKNOWN'",
+   "impact": "此前'4/5实体匹配'基于错误合并,须按独立实体重算;这不是降低标准而是纠正事实错误",
+   "note": "该错误由引擎引入,源文书无问题;窗口提示'SIF投资与SIF Telecom Cambodia不能只凭名称相似认定'直接命中"
+  },
+  {
+   "case": "XINWEI",
+   "type": "ADDITION",
+   "action": "entity_aliases 升级为结构化条目(原始名/归一名/源角色/源句),新增alias_evidence_requirement四项要求",
+   "status": "待证:每组别名的A侧(担保表)+B侧(控制链)双侧证据逐项提供;单侧无证据→UNKNOWN"
+  },
+  {
+   "case": "TIANWO",
+   "type": "REVISE",
+   "action": "新增completeness_rule:五字段全必填;required_min_items=3仅作下限表达,不得作'完成三项即通过'宽松门槛;四期间(2016年8-12月单列/2017/2018/2019)强制;三年度缺口逐年带符号;四期承诺合计140,200万自洽;缺任一期间→incomplete",
+   "status": "已修正"
+  },
+  {
+   "case": "JINYA",
+   "type": "REVISE",
+   "action": "JY-F03: 裸年'2014' → 联合匹配(2014-06-20 且 同span含'张法德'与'丁勇和');JY-F06: '003/006' → 联合匹配(003+006 且 同span含'对外披露'或'内部管理')",
+   "residual": "JY-F07(仅'006')、JY-F27(仅'425')仍为弱判别→已降级人工",
+   "status": "已修正"
+  },
+  {
+   "case": "ALL",
+   "type": "GLOBAL_PRINCIPLE_APPLIED",
+   "action": "弱判别式全表重分类: 强=≥4位非年份数字/含小数/完整日期/术语配对; 弱=裸年份/≤3位短数/账套编号",
+   "result": "15案347槽: 自动134(39%) 人工213; 原报'47%自动'偏高,已下调",
+   "principle": "准确性优先于覆盖率——39%可复核的自动评分优于80%有假阳性的覆盖"
+  },
+  {
+   "case": "ZHONGCHAO",
+   "type": "ADDITION",
+   "action": "period_boundary登记'源文书2018-10-10重叠';Gold消歧:黄至10-10含当日,杨自10-11起;禁止表述为'原文明确记载'",
+   "status": "已补"
+  },
+  {
+   "case": "YINGFANGWEI",
+   "type": "ADDITION",
+   "action": "ratio_caliber登记:分母=披露利润总额(虚增后正值),反算约961.55万;原文未给分母金额;真实利润约-1,395万;禁止把反算值当原文数据",
+   "status": "已补"
+  }
+ ],
+ "auto_coverage_after": {
+  "total_slots": 347,
+  "auto": 134,
+  "manual": 213,
+  "rate": "39%",
+  "per_case": {
+   "XINWEI": 7,
+   "TIANWO": 12,
+   "JINYA": 8,
+   "GAOSHENG": 22,
+   "YISHITE": 16,
+   "XINLUN": 5,
+   "CHANGYUAN": 9,
+   "SANTE": 8,
+   "TIANSHAN": 9,
+   "SHENGLI": 5,
+   "ZHONGAN": 11,
+   "SHENWU": 9,
+   "YINGFANGWEI": 6,
+   "WANFU": 2,
+   "ZHONGCHAO": 5
+  }
+ },
+ "next": [
+  "信威:补齐5组别名双侧证据(待原始PDF逐页)",
+  "三案修正版送窗口确认",
+  "其余12案套用同一强度规则(已应用)"
+ ],
+ "honest_note": "本轮仅基于内联材料完成合同与计算复核,未取得原始PDF逐页证据跨度与完整JSON;不等于最终Gold签发",
+ "final_verifications": {
+  "xinwei_entity_rematch": {
+   "matched": 4,
+   "unknown": 5,
+   "table_only": 1,
+   "method": "严格名称匹配+双侧证据",
+   "key_evidence": "年报担保表自身标注(INNOVATECH)别名;SIF表内名称与决定书实体#2逐字一致",
+   "residual": "SIF行后缀'Limited'因PDF换行,人工签发时原PDF放大核对P46"
+  },
+  "jinya_negative_tests": {
+   "JY_F03": "1窗口=目标事实,无假阳性",
+   "JY_F06": "4窗口全账套语境,0干扰"
+  },
+  "contracts_frozen": [
+   "XINWEI(带1项遗留)",
+   "TIANWO",
+   "JINYA"
+  ]
+ },
+ "next_step": "其余12案弱判别/口径统一检查(强度规则已应用)→48案收口→192组终验→P2→384 GO"
+}

@@ -1,0 +1,46 @@
+{
+ "batch": "TFJS_V2",
+ "frozen_at": "2026-11-06",
+ "status": "COMPLETE (C-arm only, as authorized)",
+ "budget": {
+  "cap_calls": 30,
+  "cap_tokens": 200000,
+  "cap_yuan": 1.0,
+  "used_calls": 18,
+  "used_tokens_approx": 60523,
+  "used_yuan_est": 0.3604,
+  "retries": 0,
+  "hold_192": "untouched"
+ },
+ "primary_endpoint": {
+  "dQ_report_C_minus_B": -0.144,
+  "C_mean_Q_report": 0.167,
+  "B_mean_Q_report": 0.311,
+  "verdict": "NEGATIVE - C did not improve; per operator decision table: stop fid investment, pivot to report-stage fact selection/coverage"
+ },
+ "operator_conventions": {
+  "Q_report_sole_primary": "reported above, paired per set (dQr per set: -0.273/-0.136/-0.273/0.000/-0.182/0.000)",
+  "ES_corrected_symmetric": "B 0.931 / C 0.915 (no meaningful difference; citations healthy in both)",
+  "fid_echo_rate": "unique-legal-echo vs TOTAL upstream: B 0.720 / C 0.581; duplicates B 9.0,8.0 on colliding sets vs C 0.0 everywhere; unknowns 0.0 both; echo vs VISIBLE input: B 0.980 / C 0.992"
+ },
+ "decomposition_of_negative_result": {
+  "visibility_ceiling": "pipeline-frozen [:3000] report-input cap truncates BOTH arms every set (B full 3534-5021, C 3934-5595); mean visible facts B 19.8 / C 18.0; input Q ceiling mean B 0.285 / C 0.165 (namespaced fids cost ~2 facts/set of visibility)",
+  "collision_lottery_for_B": "B actual 0.311 EXCEEDS its visible ceiling 0.285: echoing ambiguous colliding short fids triggers deterministic backfill of facts the model never saw (accidental inflation unique to B)",
+  "model_faithfulness": "echo-vs-visible B 0.980 / C 0.992 -> organization-dropping theory REFUTED; report-stage loss is entirely input visibility",
+  "mechanism_validity": "C identities mechanically perfect (0 dup, 0 unknown, 99% echo) but the intervention is untestable/undervalued under the frozen cap"
+ },
+ "systemic_finding": "[:3000] report-input cap (and [:3000] merge-input, [:2000] verify-input caps) have silently bounded ALL terminal Q in this pipeline family; the ledger's REPORT-stage first-losses are visibility losses, not organization losses",
+ "implications": {
+  "stop": "fid/identity investment per operator table",
+  "pivot_target_precise": "report-stage fact selection/coverage = input visibility budget (selection/packing under cap) + upstream merge compression (~50% of extracted slots)",
+  "not_done": "no pipeline/prompt changes were made (frozen); next-step options await operator ruling"
+ },
+ "files_sha256": {
+  "tfjs_v2_runner.py": "02f20cbfa3ad0086a4e50238a4064712759304ae2efb9184a68530104ac0b07d",
+  "tfjs_v2_score.py": "583696b69091af27d809d0447e1899a9ae4ca83d9a89a4c3f96b4a1a0b508b45",
+  "tfjs_v2_config.json": "1fdad2a5298a5563d9493174f08944a3582657061161bd97c081fd27b3c4fdef",
+  "tfjs_v2_runs/ledger.jsonl": "33b72f040f552da098d9dc65c03890674438f9eacc8e903f4cc3e0eae6e546d0",
+  "tfjs_v2_runs/outputs.jsonl": "f492a366c4cabf08906a80c4c33ca0fb862b6c7a52f21e6254cab5cec0f92b58",
+  "TFJS_V2_SCORED.json": "ea42f23b736774b38f00adefd7b4f6a21d39cf298973ee06f0e5960d3c899d87"
+ }
+}

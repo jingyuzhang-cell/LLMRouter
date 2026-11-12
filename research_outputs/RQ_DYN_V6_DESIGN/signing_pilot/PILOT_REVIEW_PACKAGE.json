@@ -1,0 +1,999 @@
+{
+ "package": "三案签发试点独立复核包",
+ "date": "2026-11-11",
+ "api_calls": 0,
+ "purpose": "供窗口独立复核: 信威/天沃/金亚三案的B1合同+槽位表达式+高风险字段复核结果",
+ "pilots": {
+  "XINWEI": {
+   "contract": {
+    "task": "信威集团600485",
+    "b1_role": "海外项目担保披露 × 控制关系认定 的实体级交叉核验",
+    "required_fields": [
+     "entities_disclosed_in_guarantee_table: 年报担保表中出现的被担保方实体清单",
+     "entities_named_in_control_chain: 各事实线认定的海外采购商/股东实体清单",
+     "entity_matches: 两清单交集,每项含 entity + guarantee_evidence + control_evidence",
+     "unmatched_side_a / unmatched_side_b: 单侧实体及原因",
+     "boundary_statement: 必须声明'担保披露≠控制认定,两文书各证一面'"
+    ],
+    "required_min_items": 3,
+    "forbidden": [
+     "直接引用决定书'控制关系'结论段作为B1自身结论",
+     "把担保金额当作控制证据"
+    ],
+    "source_lines": {
+     "A1:柬埔寨/尼加拉瓜": "DEC §10-17",
+     "A2:坦桑尼亚": "DEC §18-22",
+     "A3:巴拿马/乌克兰": "DEC §23-30",
+     "A4:年报项目披露": "AR15 P57-58",
+     "A5:问询指标": "INQ §2-5",
+     "A6:担保表": "AR15 P45-46"
+    },
+    "acceptance": "≥3个实体在两清单中同时出现,且每个匹配项两侧证据可分别回溯到各自源段",
+    "entity_aliases": {
+     "SIF Telecom Cambodia Limited": [
+      "SIFTelecomCambodiaLimited",
+      "SIFTelecomCambodia(Project)Limited",
+      "SIF投资",
+      "SIFTelecomInvestmentLimited"
+     ],
+     "Lamericom International Co., Limited": [
+      "Lamericom",
+      "香港Lamericom公司"
+     ],
+     "Innovaciones Tecnologicas, S.A.": [
+      "Innovatech",
+      "INNOVACIONESTECHNOLOGICAS"
+     ],
+     "柬埔寨信威(Xinwei Cambodia Telecom)": [
+      "柬埔寨信威"
+     ],
+     "非洲无线坦桑公司(WiAfrica Tanzania)": [
+      "非洲无线坦桑公司",
+      "非洲无线"
+     ]
+    },
+    "alias_rule": "匹配前先做别名归一(大小写/空格/中英文名/简称);每个别名对必须在合同中显式登记,不得由模型自由联想",
+    "validation_result": {
+     "entities_matched": 4,
+     "single_sided_before_alias": 1,
+     "note": "INNOVACIONES在决定书以简称Innovatech出现,别名归一后两侧可匹配"
+    },
+    "unmatched_policy": {
+     "rule": "未匹配实体保持UNKNOWN,不得为满足required_min_items自动补全",
+     "allowed_output": "unmatched_side_a / unmatched_side_b 列出并标注 UNKNOWN + 原因",
+     "minimum_count_rule": "required_min_items(3)只能由已匹配实体满足;若匹配数<3则B1输出partial并标记契约未达成,不得编造"
+    },
+    "alias_lock": {
+     "status": "LOCKED",
+     "approved": "2026-11-11",
+     "note": "Innovatech ≡ Innovaciones Tecnologicas, S.A. 显式登记;其余别名不得由模型自行关联"
+    },
+    "scoring_boundary": {
+     "auto_preferred": [
+      "客观数值(金额/比例/股数)",
+      "日期",
+      "主体名称",
+      "科目金额及方向"
+     ],
+     "manual_allowed": [
+      "复杂关系(担保披露≠控制认定)",
+      "因果边界(主导造假未被认定)",
+      "申辩与监管认定的区别",
+      "口径差异说明"
+     ],
+     "manual_requirements": [
+      "保留evidence_span",
+      "记录判定理由",
+      "有复核记录"
+     ],
+     "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+    }
+   },
+   "slot_expressions": {
+    "case": "信威集团",
+    "code": "600485",
+    "total_scoring_slots": 21,
+    "auto_scorable": 7,
+    "manual_only": 14,
+    "expressions": [
+     {
+      "fact_id": "XW-F01",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F02",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F03",
+      "all_of_numbers": [
+       "203,677.84",
+       "39,581.33"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F04",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F05",
+      "all_of_numbers": [
+       "19,290",
+       "132,273.19"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F06",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F07",
+      "all_of_numbers": [
+       "42,036.40",
+       "275,201.29"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F08",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F09",
+      "all_of_numbers": [
+       "399.60",
+       "3,241.64"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F10",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F11",
+      "all_of_numbers": [
+       "205,491.85",
+       "46,268.46"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F12",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F13",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F14",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F15",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F16",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F17",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F18",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F19",
+      "all_of_numbers": [
+       "55,929.60",
+       "41,741.10"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F20",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "XW-F22",
+      "all_of_numbers": [
+       "2,700"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     }
+    ]
+   }
+  },
+  "TIANWO": {
+   "contract": {
+    "task": "天沃科技002564",
+    "b1_role": "业绩承诺缺口 × 年度虚增调节 × 更正后实绩 的动机链核验",
+    "required_fields": [
+     "commitment_targets: 各期承诺扣非净利润及合计",
+     "reported_profit_original: 各年被虚增/虚减前的披露利润",
+     "restated_profit: 更正后利润(含正负号)",
+     "gap_analysis: 每期 承诺额 - 更正后实绩 = 缺口(允许负缺口)",
+     "mechanism_statement: 必须区分'虚增'与'虚减'年度并说明方向"
+    ],
+    "required_min_items": 3,
+    "forbidden": [
+     "把37项目虚增总额直接等同于承诺缺口",
+     "将2020虚减年度的更正额与决定书虚减收入额混同(已知口径待核)"
+    ],
+    "source_lines": {
+     "A1:37项目手法": "DEC §26",
+     "A2:五年度金额": "DEC §27",
+     "A3:13关联方往来": "DEC §33-35",
+     "A4:业绩承诺": "PERF 2023-104",
+     "A5:三年更正": "CORR 2023-103"
+    },
+    "acceptance": "三年度缺口均算出且方向正确(2018/2019缺口为负),承诺合计140,200万与四期分项自洽",
+    "delta_definition": {
+     "formula": "Δ = 更正后实际利润 − 业绩承诺利润",
+     "unit": "万元",
+     "signed": true,
+     "no_abs": "禁止取绝对值,负号必须保留",
+     "worked_example": "2019: Δ = -3,895.6 − 37,600 = -41,495.6万元",
+     "prohibited": [
+      "缺口415,495.6万(丢符号)",
+      "正向缺口41,495.6万(改写方向)"
+     ]
+    },
+    "period_caliber": {
+     "rule": "承诺年度与更正年度逐期配对;承诺首期(2016年8-12月)单列",
+     "prohibited": "不得把37项目五年度合计与四年承诺合计直接相减"
+    },
+    "scoring_boundary": {
+     "auto_preferred": [
+      "客观数值(金额/比例/股数)",
+      "日期",
+      "主体名称",
+      "科目金额及方向"
+     ],
+     "manual_allowed": [
+      "复杂关系(担保披露≠控制认定)",
+      "因果边界(主导造假未被认定)",
+      "申辩与监管认定的区别",
+      "口径差异说明"
+     ],
+     "manual_requirements": [
+      "保留evidence_span",
+      "记录判定理由",
+      "有复核记录"
+     ],
+     "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+    }
+   },
+   "slot_expressions": {
+    "case": "天沃科技",
+    "code": "002564",
+    "total_scoring_slots": 19,
+    "auto_scorable": 14,
+    "manual_only": 5,
+    "expressions": [
+     {
+      "fact_id": "TW-F01",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F02",
+      "all_of_numbers": [
+       "9.07",
+       "0.80"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F03",
+      "all_of_numbers": [
+       "19.71",
+       "23.90",
+       "3.27",
+       "3.53"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F04",
+      "all_of_numbers": [
+       "13.77",
+       "8.82"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F05",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F06",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F07",
+      "all_of_numbers": [
+       "56.0",
+       "206.51",
+       "195.6",
+       "515.02"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F08",
+      "all_of_numbers": [
+       "16.3",
+       "44.29",
+       "8.4",
+       "33.66"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F09",
+      "all_of_numbers": [
+       "165,531.11"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F10",
+      "all_of_numbers": [
+       "83,125.68",
+       "33.21",
+       "45.92"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F11",
+      "all_of_numbers": [
+       "1.6"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F12",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F13",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F14",
+      "all_of_numbers": [
+       "300",
+       "100",
+       "650"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F15",
+      "all_of_numbers": [
+       "350",
+       "300"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F17",
+      "all_of_numbers": [
+       "28.96"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F18",
+      "all_of_numbers": [
+       "15,500",
+       "37,600",
+       "41,500",
+       "45,600",
+       "140,200"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F19",
+      "all_of_numbers": [
+       "19.71",
+       "9.24"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "TW-F20",
+      "all_of_numbers": [
+       "23.90",
+       "2.15"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     }
+    ]
+   },
+   "dag": {
+    "path": "gold_dags/TIANWO/V6_GOLD_TIANWO.json",
+    "sha256": "920012da1c74d68c0f82ef5c3a46fa58a5bbb0478317b3b6fa2b12d02cfd647c",
+    "structure": "5条事实线(虚假记载/关联交易/募集迟延/业绩承诺/追溯更正)→B1→C1→D1, 21计分槽, 深3边"
+   }
+  },
+  "JINYA": {
+   "contract": {
+    "task": "金亚科技300028",
+    "b1_role": "七科目加减 × 虚增利润总额 的算术闭合核验",
+    "required_fields": [
+     "components: 逐科目列出(收入/成本/销售费用/管理费用/财务费用/营业外收入/营业外支出)及其加减方向",
+     "computed_total: 按方向计算所得虚增利润",
+     "stated_total: 决定书所载80,495,532.40元",
+     "closure: 差额(应为0.00)",
+     "sign_check: 特别标注'少计营业外收入'为减项(方向与其余相反)"
+    ],
+    "required_min_items": 7,
+    "forbidden": [
+     "把少计营业外收入19,050.00当作加项",
+     "用四舍五入后的万元值替代分位精确值"
+    ],
+    "source_lines": {
+     "A1:造假组织链": "DEC §47-52",
+     "A2:七科目金额": "DEC §55-61",
+     "A3:银行存款/预付": "DEC §63-67",
+     "A4:签署与申辩": "DEC §69-92"
+    },
+    "acceptance": "computed_total与stated_total差额为0.00元,且七科目方向全对(含营业外收入减项)",
+    "scoring_boundary": {
+     "auto_preferred": [
+      "客观数值(金额/比例/股数)",
+      "日期",
+      "主体名称",
+      "科目金额及方向"
+     ],
+     "manual_allowed": [
+      "复杂关系(担保披露≠控制认定)",
+      "因果边界(主导造假未被认定)",
+      "申辩与监管认定的区别",
+      "口径差异说明"
+     ],
+     "manual_requirements": [
+      "保留evidence_span",
+      "记录判定理由",
+      "有复核记录"
+     ],
+     "principle": "不为提高自动比例给叙事型事实设计模糊匹配;自动比例低≠Gold质量低"
+    }
+   },
+   "slot_expressions": {
+    "case": "金亚科技",
+    "code": "300028",
+    "total_scoring_slots": 26,
+    "auto_scorable": 10,
+    "manual_only": 16,
+    "expressions": [
+     {
+      "fact_id": "JY-F01",
+      "all_of_numbers": [
+       "3,000"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F02",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F03",
+      "all_of_numbers": [
+       "2014"
+      ],
+      "all_of_dates": [
+       "2014-06-20"
+      ],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F04",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F05",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F06",
+      "all_of_numbers": [
+       "003",
+       "006"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F07",
+      "all_of_numbers": [
+       "006"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F08",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F09",
+      "all_of_numbers": [
+       "73,635,141.10"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F10",
+      "all_of_numbers": [
+       "19,253,313.84"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F11",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F12",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F14",
+      "all_of_numbers": [
+       "217,911,835.55",
+       "16.46"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F15",
+      "all_of_numbers": [
+       "385,133",
+       "2,000"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F16",
+      "all_of_numbers": [
+       "3.1"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F17",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F18",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F19",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F20",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F21",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F22",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F23",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F24",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F25",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F26",
+      "all_of_numbers": [],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     },
+     {
+      "fact_id": "JY-F27",
+      "all_of_numbers": [
+       "425"
+      ],
+      "all_of_dates": [],
+      "match_rule": "numbers: 去千分位后全串包含; dates: 原样包含; 二者皆空则该槽不参与自动评分(转人工)",
+      "weight": 1
+     }
+    ]
+   }
+  },
+  "ZHONGCHAO_BOUNDARY_NOTE": "见 B1_TASK_CONTRACTS_V1.ZHONGCHAO.period_boundary"
+ },
+ "high_risk_recheck": {
+  "report": "高风险字段六维复核表",
+  "date": "2026-11-11",
+  "api_calls": 0,
+  "dimensions": [
+   "金额",
+   "日期",
+   "主体",
+   "数量",
+   "方向",
+   "期间"
+  ],
+  "samples": [
+   {
+    "sample": "高升控股",
+    "field": "前五笔共同借款合计",
+    "dimension": "数量/金额",
+    "claim": "27,500万元(槽GS-F10关联)",
+    "source_spans": [
+     "DEC §23:借款金额1亿元",
+     "§24:1亿元",
+     "§25:1,000万元",
+     "§26:2,500万元",
+     "§27:4,000万元"
+    ],
+    "independent_computation": "10,000+10,000+1,000+2,500+4,000 = 27,500万元",
+    "verdict": "PASS",
+    "note": "与公告§11认定占用27,500万元精确吻合 ✓"
+   },
+   {
+    "sample": "高升控股",
+    "field": "七笔合同总额",
+    "dimension": "数量/金额",
+    "claim": "37,215万元(派生不计槽)",
+    "source_spans": [
+     "§28:5,000万转贷",
+     "§29:4,715万元"
+    ],
+    "independent_computation": "27,500+5,000+4,715 = 37,215万元",
+    "verdict": "PASS",
+    "note": "V1曾误写33,215万,窗口复核纠正为37,215万——本次独立复算确认37,215 ✓"
+   },
+   {
+    "sample": "高升控股",
+    "field": "后两笔是否计入27,500万",
+    "dimension": "方向/期间",
+    "claim": "不计入(独立后续合同)",
+    "source_spans": [
+     "§28日期2018-03-16",
+     "§29日期2018-04-26"
+    ],
+    "independent_computation": "前五笔日期范围2017-10-30~2018-01-29;后两笔2018-03/04起,在公告认定的'2017年10月至2018年1月'范围外",
+    "verdict": "PASS",
+    "note": "期间比对支持后两笔独立(非仅靠金额)"
+   },
+   {
+    "sample": "易事特",
+    "field": "三模式×年度 → 年度汇总",
+    "dimension": "数量/方向",
+    "claim": "14个年度槽加总=5个年度汇总槽",
+    "source_spans": [
+     "DEC §20(虚假贸易4年)",
+     "§23(代采代理5年)",
+     "§26(数据中心5年)",
+     "§27(年度汇总5年)"
+    ],
+    "independent_computation": "逐年加总:2017:822,061,666.54 2018:1,292,502,254.02 2019:972,323,881.98 2020:676,329,648.72 2021:311,257,267.03",
+    "verdict": "PASS",
+    "note": "五年逐年分位级闭合,偏差0处"
+   },
+   {
+    "sample": "易事特",
+    "field": "年度槽独立性",
+    "dimension": "数量",
+    "claim": "14槽不可再合并",
+    "source_spans": [
+     "§20/§23/§26各年原句独立"
+    ],
+    "independent_computation": "每槽有专属年度原句跨度(已核14条span均含该年金额)",
+    "verdict": "PASS",
+    "note": "三模式×年份均为独立监管认定单元"
+   },
+   {
+    "sample": "盈方微",
+    "field": "美国盈方微虚增利润折算",
+    "dimension": "金额/方向",
+    "claim": "900,000.00美元 → 5,675,670.00元",
+    "source_spans": [
+     "DEC:美国盈方微…虚增利润总额900,000.00美元",
+     "根据…期末外币报表折算的说明,折算后…5,675,670.00元"
+    ],
+    "independent_computation": "5,675,670.00 ÷ 900,000.00 = 6.3063 (隐含折算率)",
+    "verdict": "PASS",
+    "note": "折算率6.3063属合理区间;原文未给汇率,不可反推为'官方汇率'"
+   },
+   {
+    "sample": "盈方微",
+    "field": "合并虚增利润",
+    "dimension": "数量/方向",
+    "claim": "23,565,710.00元",
+    "source_spans": [
+     "DEC:合并报表虚增利润总额23,565,710.00元"
+    ],
+    "independent_computation": "17,890,040.00 + 5,675,670.00 = 23,565,710元",
+    "verdict": "PASS",
+    "note": "人民币与折算后美元相加,口径正确"
+   },
+   {
+    "sample": "盈方微",
+    "field": "占比245.08%",
+    "dimension": "方向/期间",
+    "claim": "虚增利润占披露利润总额245.08%",
+    "source_spans": [
+     "DEC:占当期披露利润总额的245.08%"
+    ],
+    "independent_computation": "占比>100% → 披露利润总额约961.6万(23565710/2.4508);虚增后为小正数,扣除后为负",
+    "verdict": "PASS",
+    "note": "禁止把245.08%误读为'接近2.5倍正常'——实为扭亏"
+   },
+   {
+    "sample": "中超控股",
+    "field": "告知函数量",
+    "dimension": "数量",
+    "claim": "收到四份告知函(8-09/14/28/29)",
+    "source_spans": [
+     "DEC §37:2018年8月9日、8月14日、8月28日和8月29日…四份《告知函》"
+    ],
+    "independent_computation": "逐项清点:8-09, 8-14, 8-28, 8-29 = 4份",
+    "verdict": "PASS",
+    "note": ""
+   },
+   {
+    "sample": "中超控股",
+    "field": "实际披露的告知函",
+    "dimension": "数量",
+    "claim": "公告仅披露两份(8-09与8-28)",
+    "source_spans": [
+     "DEC §39:披露了2018年8月9日和8月28日收到的…《告知函》相关内容"
+    ],
+    "independent_computation": "逐项清点:8-09, 8-28 = 2份;未披露8-14与8-29",
+    "verdict": "PASS",
+    "note": "4-2=2份未披露 — 覆盖不全的量化证据"
+   },
+   {
+    "sample": "中超控股",
+    "field": "披露时点",
+    "dimension": "日期/期间",
+    "claim": "首收8-09 → 应两交易日内 → 实际9-28",
+    "source_spans": [
+     "DEC §40:应在2018年8月9日首次收到…后两个交易日公告…延迟至2018年9月28日"
+    ],
+    "independent_computation": "8-09(周四)→两交易日=8-13(周一)为最后期限;实际9-28,延迟约46个自然日",
+    "verdict": "PASS",
+    "note": "延迟可量化;注意交易日/自然日口径须在报告中区分"
+   },
+   {
+    "sample": "中超控股",
+    "field": "双实控人期间",
+    "dimension": "期间/主体",
+    "claim": "黄锦光2018-01-01至2018-10-10;杨飞2018-10-10至今",
+    "source_spans": [
+     "DEC §52:2018年1月至10月10日黄锦光实际控制期间",
+     "§50:杨飞…(2018年10月10日至今)"
+    ],
+    "independent_computation": "起止日期均带日级精度;10-10为交接点(同日两方均被表述,归属需按'至/起'判别)",
+    "verdict": "PASS",
+    "note": "此前合同笔误写2020-01-01,已修正;10-10当日归属按原文'至10月10日'含当日"
+   }
+  ],
+  "summary": {
+   "total_checks": 12,
+   "pass": 12,
+   "fail": 0
+  },
+  "notes": [
+   "所有复核均独立计算,不采信槽位表内已填值",
+   "原文跨度逐条对照决定书/公告原句",
+   "重点验证数字的定义(如'前五笔'边界)而非仅数值"
+  ]
+ },
+ "review_checklist": {
+  "XINWEI": [
+   "5组实体别名是否均为公开可核的同一实体",
+   "担保事实与控制关系是否真正分离(不得互推)",
+   "未匹配实体是否保持UNKNOWN而非补全",
+   "required_min_items=3是否仅由匹配实体满足"
+  ],
+  "TIANWO": [
+   "Δ公式符号与数值:2019=-41,495.6万是否复算一致",
+   "承诺四期分项与合计140,200万是否自洽",
+   "五条事实线输入输出是否互不串线",
+   "是否出现监管结论泄露(37项目虚增额≠承诺缺口)"
+  ],
+  "JINYA": [
+   "七科目闭合是否分位精确(80,495,532.40)",
+   "营业外收入是否为减项",
+   "单位与精度是否统一(元/分位)",
+   "人工评分槽位是否保留了span与理由"
+  ]
+ },
+ "known_limits": [
+  "仅验证'上游段含所需数据',未验证模型实际生成正确率",
+  "自动评分覆盖47%-76%不等,叙事型槽位占比高的案件需人工评分",
+  "高鸿13槽暂挂(补充文书缺失),不计入48案"
+ ],
+ "addenda_20261111": {
+  "zhongchao_period": "源文书2018-10-10重叠;Gold消歧:黄至10-10含当日,杨自10-11起,须标注",
+  "yingfangwei_ratio": "245.08%分母=披露利润总额(虚增后正值),反算约961.55万;原文未给分母金额;真实利润约-1,395万"
+ }
+}

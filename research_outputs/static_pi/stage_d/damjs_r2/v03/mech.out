@@ -1,0 +1,18 @@
+[DAMJS|S3|r1] 143.5s on_time=True status=COMPLETE calls=8 TP=14 race=None
+  [PASS] N1 repair success commits v2 (no rollback), TP equals the baseline record
+[DAMJS|S3|r1] 181.9s on_time=True status=COMPLETE calls=8 TP=13 race=None
+[DAMJS|S3|r1] 182.3s on_time=True status=COMPLETE calls=8 TP=7 race=None
+  [PASS] N2 capped repair with valid v1: rollback restores v1 bytes; downstream runs in the v1 world; TP recovers vs nd=off on the identical replay
+[DAMJS|S4|r1] 110.1s on_time=True status=COMPLETE calls=7 TP=14 race=None
+  [PASS] N3 usable-for-usable commits: S4 Z_format keeps its gain, no rollback anywhere
+[DAMJS|S3|r1] 188.7s on_time=True status=COMPLETE calls=7 TP=13 race=None
+[DAMJS|S3|r1] 315.6s on_time=True status=COMPLETE calls=8 TP=0 race=None
+  [PASS] N4 slow latch -> p≈46%: EV gate excludes Z_structure (ev on -> NONE) while ev off chooses it; Z_format never gated; v1 invalid -> no rollback (H-ND-2)
+[DAMJS|S3|r1] 181.9s on_time=True status=COMPLETE calls=8 TP=13 race=None
+  [PASS] N5 rollback consistency: observe gain=0 with repeat forbidden, downstream starts after rollback, invalidations present, run completes
+[DAMJS|S3|r1] 182.3s on_time=True status=COMPLETE calls=8 TP=7 race=None
+  [PASS] N6 regression: nd=ev=off reproduces the smoke decision order and destructive overwrite
+  [FAIL] N7 V0.3.1 estimator: censoring-consistent priors, truncated events excluded from p but latched, single-caliber mu/L, EV sign consistent with the threshold across the (mu,L) grid
+  [PASS] N8 node-level protection: only the direct recovery target (J1) is armed and restored; the downstream node (J2) invalidated by the repair is not protected (stale-parent output not reused)
+
+RESULT: 7 passed, 1 failed; network=0

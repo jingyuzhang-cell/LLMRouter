@@ -1,0 +1,35 @@
+{
+ "report": "V6-MX机制实验P0归因报告(冻结)",
+ "freeze_sha256": {
+  "mech_result.json": "d4bbf98734c622e69d67ca5750c5fb6bf3e74d789a2ff2f9c3ed177bc222b910",
+  "run.log": "58c82b8733b051dfee73c44af4b079d7c08c6e686dc19f07c333fb482a66b9f3"
+ },
+ "metric_renaming": {
+  "recovery_policy_divergence": "恢复策略差异(S3→reExecute/S4→repair_format vs FC恒定full_retry), 12/12为真",
+  "Z_scope_divergence": "恢复范围差异——本次两臂均为node级, 实际未启用subgraph/DAG级差异",
+  "R_set_divergence": "重执行节点集合差异——本次均为单节点重执行",
+  "pi_model_assignment_divergence": "实际模型分配差异——本次未启用,标记N/A(决策日志中policy标签差异不构成真实π差异)"
+ },
+ "slot_attribution": {
+  "finding": "三个非平局配对(S3p1 PD+2 / S4p3 PD+2 / S4p4 FC+2)的ΔTP全部由同两个槽位翻转构成,且均为跨文书比对型事实(CROSS_SOURCE类): ①'更正公告落款日期(2022-04-30)早于收到立案告知书(2022-11-04)' ②'处罚认定:2022-04-30更正公告调整后数据仍存在虚假记载'",
+  "hypothesis": "质量收益集中在异构文书汇合任务(MX2舜天)——PD的场景化恢复更易重新产出跨文书关系事实; 单任务簇,不外推"
+ },
+ "s4p4_zero_call_validation": {
+  "target": "恢复决策时(不使用Gold)能否检测repair_format恢复后的内容缺失",
+  "signal_numeric_density": {
+   "result": "失败",
+   "detail": "PD恢复后B1含25个数字事实≥参照22个——数字数量不缺失,缺的是关系型事实"
+  },
+  "signal_relation_markers": {
+   "result": "不可靠",
+   "detail": "PD负局B1关系标记4个<参照11个,但FC同局B1仅3个却最终胜——缺失关系可由下游C1/D1从其他输入路径补救,单节点启发式不决定终局TP"
+  },
+  "conclusion": "朴素的数字密度/关系标记启发式均不能零调用可靠识别S4p4缺陷;可行方向是执行前定义的节点输出合同(按kind规定必需字段,如verification节点必须含≥N条带'一致/矛盾'判定的比对项),属执行器设计任务,待窗口批准——且必须严防Gold答案泄露",
+  "discipline": "未新增任何API调用;未将检测规则实装;S4p4作为反向案例完整保留"
+ },
+ "next_gates": [
+  "48案Gold DAG构建(P1)",
+  "π真实模型重分配设计(P2,384次实验前置条件)",
+  "广州浪奇〔2021〕21号URL"
+ ]
+}

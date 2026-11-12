@@ -1,0 +1,20 @@
+[ 1] NDC_r1_GEN: watchdog=COMPLETE ledger={'calls': 5, 'yuan': 0.013058, 'tokens': 7405}
+[ 2] NDC_r1_R2: status=COMPLETE tp=7 injected=1 ledger={'calls': 8, 'tokens': 24752, 'yuan': 0.048896}
+[ 3] NDC_r1_ND-only: status=COMPLETE tp=7 injected=1 ledger={'calls': 11, 'tokens': 42099, 'yuan': 0.084734}
+[ 4] NDC_r2_GEN: watchdog=COMPLETE ledger={'calls': 16, 'yuan': 0.097792, 'tokens': 49504}
+[ 5] NDC_r2_R2: status=COMPLETE tp=7 injected=1 ledger={'calls': 19, 'tokens': 66851, 'yuan': 0.13363}
+[ 6] NDC_r2_ND-only: status=COMPLETE tp=7 injected=1 ledger={'calls': 22, 'tokens': 84198, 'yuan': 0.169468}
+[ 7] NDC_r3_GEN: watchdog=COMPLETE ledger={'calls': 27, 'yuan': 0.182526, 'tokens': 91603}
+[ 8] NDC_r3_ND-only: status=COMPLETE tp=7 injected=1 ledger={'calls': 30, 'tokens': 108950, 'yuan': 0.218364}
+[ 9] NDC_r3_R2: status=COMPLETE tp=7 injected=1 ledger={'calls': 33, 'tokens': 126297, 'yuan': 0.254202}
+{"mode": "replay", "executed": 9, "stop": null, "status": "DONE", "ledger": {"calls": 33, "yuan": 0.254202, "tokens": 126297}, "integrity": "OK"}
+  [PASS] C1 generation run stops after J1's first valid call; fixture = E1-E4 + J1 v1
+  [PASS] C2 both arms replay the identical upstream fixture; exactly one byte-identical injected repair per arm, classified outcome=injected and invisible to the estimator
+  [PASS] C3 arm order per rep randomized and reproducible under the frozen seed
+  [PASS] C4 ledger separation: fixture replays deducted; injected simulated costs isolated; real calls = generation + J2/SINK only; within caps
+  [PASS] C5 injected 119.83 s wall reflected identically in both arms' executor clocks
+  [PASS] C6 mechanism on the executor path: R2 commits the empty v2 (destructive); ND rolls back to the fixture v1 byte-exactly and J2 starts after the rollback
+  [PASS] C7 identity verified in every arm execution; zero network; controlled_injection marked; dual-caliber TP recorded
+  [PASS] C8 real mode refused without authorization and without GO; with both plus the registered frozen prereg, the lock opens only as far as the credential step (stubbed safety net, no launch)
+
+RESULT: 8 passed, 0 failed | batch stop=None

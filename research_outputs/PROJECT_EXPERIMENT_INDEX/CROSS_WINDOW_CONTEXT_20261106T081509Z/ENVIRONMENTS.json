@@ -1,0 +1,14 @@
+{
+  "inventoried_at": "2026-11-06T08:15:09Z",
+  "environments": [
+    {"id": "AUTODL_CONTAINER_ROOT", "desc": "AutoDL容器 /root（主机 autodl-container-024b4f8aa7-7660f85b，RTX4090当前无卡模式）", "visibility": "LOCAL_VISIBLE", "resources_indexed": 70538, "last_sync": "2026-11-06T08:00:09Z", "method": "RESOURCE_SYNC_20261106T080009Z/RESOURCES.jsonl（SHA256逐文件）"},
+    {"id": "AUTODL_DATADISK", "desc": "/root/autodl-tmp（数据盘）", "visibility": "LOCAL_VISIBLE_PARTIAL", "note": "LLMRouter-extracted/llmrouterbench_r2_*等已入根索引；模型权重(GB级)按体积排除未索引", "last_sync": "2026-11-06T08:00:09Z"},
+    {"id": "GIT_LOCAL", "desc": "本地git分支14+worktree 6个", "visibility": "LOCAL_VISIBLE", "method": "CODE/GIT_REFS.json；分支含feature/joint-algorithm、feature/planner-execution、zcode/deadline-feasibility-audit等未推分支（见VERSION_CANDIDATES）", "last_sync": "2026-11-06T08:00:09Z"},
+    {"id": "GITHUB_ORIGIN", "desc": "github.com/jingyuzhang-cell/LLMRouter", "visibility": "API_VISIBLE", "state": "15远端分支；main=c91afd43(PR#11已合)；归档分支工作流PR#7-#11", "last_sync": "2026-11-06T08:41Z(PR#11)"},
+    {"id": "AI_SESSIONS_ON_SERVER", "desc": "服务器上其他AI窗口会话存档（.claude/.codex/.copilot/.zcode）", "visibility": "LOCAL_VISIBLE", "resources_indexed": 412, "note": "含历史讨论产物的存档文件；对话内容本身只能从存档文件恢复，不做语义提取", "last_sync": "2026-11-06T08:00:09Z"},
+    {"id": "CHATGPT_WINDOWS", "desc": "用户的其他ChatGPT对话窗口", "visibility": "NOT_VISIBLE", "reason": "本环境无ChatGPT访问权限，对话内容不可达", "sync_method": "用户将本CROSS_WINDOW包（RESEARCH_MASTER_CONTEXT.md等7文件）导入目标窗口作为基线；窗口产生的新结论由用户拷回本目录形成追加"},
+    {"id": "LOCAL_WINDOWS", "desc": "用户本地Windows科研目录（论文草稿/文献PDF/挑战杯材料等）", "visibility": "NOT_VISIBLE", "reason": "本地电脑磁盘未挂载到服务器", "sync_method": "用户将论文/文献目录上传服务器(如 /root/paper_assets/，未建)或推GitHub后由下轮索引收录；当前PAPERS类745条均为服务器侧文件"},
+    {"id": "OTHER_SOFTWARE", "desc": "Overleaf/Zotero/其他科研软件", "visibility": "NOT_VISIBLE_UNVERIFIED", "reason": "无法从本环境确认是否存在及内容", "sync_method": "用户提供清单或导出文件"}
+  ],
+  "credential_policy": "EXCLUSIONS.json记录198个凭据/敏感名文件已排除；禁止索引/复制API Key、令牌、密码"
+}

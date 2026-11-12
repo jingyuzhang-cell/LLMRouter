@@ -1,0 +1,703 @@
+{
+ "tests": [
+  {
+   "id": "N1",
+   "name": "repair success commits v2 (no rollback), TP equals the baseline record",
+   "ok": true,
+   "evidence": {
+    "tp": 14,
+    "strict": 14,
+    "baseline_tp": 14,
+    "rollbacks": 0
+   }
+  },
+  {
+   "id": "N2",
+   "name": "capped repair with valid v1: rollback restores v1 bytes; downstream runs in the v1 world; TP recovers vs nd=off on the identical replay",
+   "ok": false,
+   "evidence": {
+    "tp_nd_on": 13,
+    "tp_nd_off": 7,
+    "strict_nd_on": 11,
+    "strict_nd_off": 0,
+    "served_on": [
+     [
+      "J2",
+      0,
+      "person_identity"
+     ],
+     [
+      "SINK",
+      0,
+      "person_identity"
+     ]
+    ],
+    "served_off": [
+     [
+      "J2",
+      1,
+      null
+     ],
+     [
+      "SINK",
+      1,
+      null
+     ]
+    ],
+    "rollback": [
+     {
+      "ev": "node_rollback",
+      "node": "J1",
+      "reason": "v2_unparseable",
+      "v1_len": 1974,
+      "v2_len": 0,
+      "t": 155.01,
+      "schema": 1,
+      "ts": 1794027526.4830573
+     }
+    ],
+    "v1_restored": 0,
+    "smoke_v1_len": 1974
+   }
+  },
+  {
+   "id": "N3",
+   "name": "usable-for-usable commits: S4 Z_format keeps its gain, no rollback anywhere",
+   "ok": false,
+   "evidence": {
+    "tp": 14,
+    "smoke_tp": 14,
+    "rollbacks": 0
+   }
+  },
+  {
+   "id": "N4",
+   "name": "slow latch -> p≈33.7%: EV gate excludes Z_structure (ev on -> NONE) while ev off chooses it; Z_format never gated; v1 invalid -> no rollback (H-ND-2)",
+   "ok": true,
+   "evidence": {
+    "estimator": {
+     "calls": 1,
+     "fails": 1,
+     "slow": true,
+     "p": 0.3366
+    },
+    "ev_exclusions": [
+     {
+      "kind": "Z_structure",
+      "node": "J1",
+      "why": "EV_gate:p=0.3366,EV=-2.8472"
+     },
+     {
+      "kind": "R",
+      "node": "J1",
+      "why": "EV_gate:p=0.3366,EV=-3.703"
+     }
+    ],
+    "j1_decision_on": "NONE",
+    "j1_decision_off": "Z_structure",
+    "d_rem_off": 158.48,
+    "rollbacks": 0
+   }
+  },
+  {
+   "id": "N5",
+   "name": "rollback consistency: observe gain=0 with repeat forbidden, downstream starts after rollback, invalidations present, run completes",
+   "ok": true,
+   "evidence": {
+    "observe": [
+     {
+      "ev": "damjs_observe",
+      "node": "J1",
+      "kind": "Z_structure",
+      "family": "structure",
+      "gain": 0.0,
+      "hist": {
+       "count": 1,
+       "gains": [
+        0.0
+       ]
+      },
+      "forbidden_now": true,
+      "t": 155.0,
+      "schema": 1,
+      "ts": 1794027619.5737472
+     }
+    ],
+    "j2_start": 155.67,
+    "rollback_t": 154.99,
+    "status": "COMPLETE"
+   }
+  },
+  {
+   "id": "N6",
+   "name": "regression: nd=ev=off reproduces the smoke decision order and destructive overwrite",
+   "ok": true,
+   "evidence": {
+    "chosen": [
+     "Z_structure",
+     "NONE",
+     "Z_format",
+     "NONE"
+    ],
+    "tp": 7,
+    "final_j1_len": 0
+   }
+  },
+  {
+   "id": "N7",
+   "name": "estimator priors/latch/posterior and EV arithmetic at preregistered constants",
+   "ok": true,
+   "evidence": {
+    "p_normal": 0.053,
+    "p_slow": 0.3366,
+    "p_post": 0.3398,
+    "ev_normal": 0.638,
+    "ev_slow": -2.847,
+    "flip_threshold": 0.105
+   }
+  }
+ ],
+ "runs": [
+  {
+   "tag": "N1_repair_success",
+   "nd": true,
+   "ev": true,
+   "deadline": 300.0,
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp_lenient": 14,
+   "tp_strict": 14,
+   "served": [
+    [
+     "E1",
+     0,
+     null
+    ],
+    [
+     "E2",
+     0,
+     null
+    ],
+    [
+     "E3",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ],
+    [
+     "E4",
+     0,
+     null
+    ],
+    [
+     "J1",
+     1,
+     null
+    ],
+    [
+     "J2",
+     0,
+     null
+    ],
+    [
+     "SINK",
+     0,
+     null
+    ]
+   ],
+   "rollbacks": [],
+   "estimator": {
+    "deepseek": {
+     "calls": 6,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0519
+    },
+    "glm53flash": {
+     "calls": 2,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0526
+    }
+   }
+  },
+  {
+   "tag": "N2_nd_on",
+   "nd": true,
+   "ev": true,
+   "deadline": 300.0,
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp_lenient": 13,
+   "tp_strict": 11,
+   "served": [
+    [
+     "E1",
+     0,
+     null
+    ],
+    [
+     "E2",
+     0,
+     null
+    ],
+    [
+     "E3",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ],
+    [
+     "E4",
+     0,
+     null
+    ],
+    [
+     "J1",
+     1,
+     null
+    ],
+    [
+     "J2",
+     0,
+     "person_identity"
+    ],
+    [
+     "SINK",
+     0,
+     "person_identity"
+    ]
+   ],
+   "rollbacks": [
+    {
+     "ev": "node_rollback",
+     "node": "J1",
+     "reason": "v2_unparseable",
+     "v1_len": 1974,
+     "v2_len": 0,
+     "t": 155.01
+    }
+   ],
+   "estimator": {
+    "deepseek": {
+     "calls": 6,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0519
+    },
+    "glm53flash": {
+     "calls": 2,
+     "fails": 1,
+     "slow": true,
+     "p": 0.3333
+    }
+   }
+  },
+  {
+   "tag": "N2_nd_off",
+   "nd": false,
+   "ev": false,
+   "deadline": 300.0,
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp_lenient": 7,
+   "tp_strict": 0,
+   "served": [
+    [
+     "E1",
+     0,
+     null
+    ],
+    [
+     "E2",
+     0,
+     null
+    ],
+    [
+     "E3",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ],
+    [
+     "E4",
+     0,
+     null
+    ],
+    [
+     "J1",
+     1,
+     null
+    ],
+    [
+     "J2",
+     1,
+     null
+    ],
+    [
+     "SINK",
+     1,
+     null
+    ]
+   ],
+   "rollbacks": [],
+   "estimator": {
+    "deepseek": {
+     "calls": 6,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0519
+    },
+    "glm53flash": {
+     "calls": 2,
+     "fails": 1,
+     "slow": true,
+     "p": 0.3333
+    }
+   }
+  },
+  {
+   "tag": "N3_fmt_commit",
+   "nd": true,
+   "ev": true,
+   "deadline": 300.0,
+   "scenario": "S4",
+   "status": "COMPLETE",
+   "tp_lenient": 14,
+   "tp_strict": 14,
+   "served": [
+    [
+     "E1",
+     0,
+     null
+    ],
+    [
+     "E2",
+     0,
+     null
+    ],
+    [
+     "E3",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ],
+    [
+     "E4",
+     0,
+     null
+    ],
+    [
+     "J2",
+     0,
+     null
+    ],
+    [
+     "SINK",
+     0,
+     null
+    ]
+   ],
+   "rollbacks": [],
+   "estimator": {
+    "deepseek": {
+     "calls": 6,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0519
+    },
+    "glm53flash": {
+     "calls": 1,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0528
+    }
+   }
+  },
+  {
+   "tag": "N4_ev_on",
+   "nd": true,
+   "ev": true,
+   "deadline": 320.0,
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp_lenient": 13,
+   "tp_strict": 11,
+   "served": [
+    [
+     "E1",
+     0,
+     null
+    ],
+    [
+     "E2",
+     0,
+     null
+    ],
+    [
+     "E3",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ],
+    [
+     "E4",
+     0,
+     null
+    ],
+    [
+     "J2",
+     0,
+     null
+    ],
+    [
+     "SINK",
+     0,
+     null
+    ]
+   ],
+   "rollbacks": [],
+   "estimator": {
+    "deepseek": {
+     "calls": 6,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0519
+    },
+    "glm53flash": {
+     "calls": 1,
+     "fails": 1,
+     "slow": true,
+     "p": 0.3366
+    }
+   }
+  },
+  {
+   "tag": "N4_ev_off",
+   "nd": true,
+   "ev": false,
+   "deadline": 320.0,
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp_lenient": 0,
+   "tp_strict": 0,
+   "served": [
+    [
+     "E1",
+     0,
+     null
+    ],
+    [
+     "E2",
+     0,
+     null
+    ],
+    [
+     "E3",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ],
+    [
+     "E4",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ]
+   ],
+   "rollbacks": [],
+   "estimator": {
+    "deepseek": {
+     "calls": 4,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0522
+    },
+    "glm53flash": {
+     "calls": 2,
+     "fails": 2,
+     "slow": true,
+     "p": 0.3431
+    }
+   }
+  },
+  {
+   "tag": "N5_consistency",
+   "nd": true,
+   "ev": true,
+   "deadline": 300.0,
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp_lenient": 13,
+   "tp_strict": 11,
+   "served": [
+    [
+     "E1",
+     0,
+     null
+    ],
+    [
+     "E2",
+     0,
+     null
+    ],
+    [
+     "E3",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ],
+    [
+     "E4",
+     0,
+     null
+    ],
+    [
+     "J1",
+     1,
+     null
+    ],
+    [
+     "J2",
+     0,
+     "person_identity"
+    ],
+    [
+     "SINK",
+     0,
+     "person_identity"
+    ]
+   ],
+   "rollbacks": [
+    {
+     "ev": "node_rollback",
+     "node": "J1",
+     "reason": "v2_unparseable",
+     "v1_len": 1974,
+     "v2_len": 0,
+     "t": 154.99
+    }
+   ],
+   "estimator": {
+    "deepseek": {
+     "calls": 6,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0519
+    },
+    "glm53flash": {
+     "calls": 2,
+     "fails": 1,
+     "slow": true,
+     "p": 0.3333
+    }
+   }
+  },
+  {
+   "tag": "N6_r2_mode",
+   "nd": false,
+   "ev": false,
+   "deadline": 300.0,
+   "scenario": "S3",
+   "status": "COMPLETE",
+   "tp_lenient": 7,
+   "tp_strict": 0,
+   "served": [
+    [
+     "E1",
+     0,
+     null
+    ],
+    [
+     "E2",
+     0,
+     null
+    ],
+    [
+     "E3",
+     0,
+     null
+    ],
+    [
+     "J1",
+     0,
+     null
+    ],
+    [
+     "E4",
+     0,
+     null
+    ],
+    [
+     "J1",
+     1,
+     null
+    ],
+    [
+     "J2",
+     1,
+     null
+    ],
+    [
+     "SINK",
+     1,
+     null
+    ]
+   ],
+   "rollbacks": [],
+   "estimator": {
+    "deepseek": {
+     "calls": 6,
+     "fails": 0,
+     "slow": false,
+     "p": 0.0519
+    },
+    "glm53flash": {
+     "calls": 2,
+     "fails": 1,
+     "slow": true,
+     "p": 0.3333
+    }
+   }
+  }
+ ],
+ "prereg_sha256": "a173154deb2eb32438f0a6d4190ea7ebd000bd161ee1a7bd968269acea68a4d8",
+ "summary": {
+  "passed": 5,
+  "failed": 2,
+  "wall_s": 141.0,
+  "network_attempts": 0
+ }
+}

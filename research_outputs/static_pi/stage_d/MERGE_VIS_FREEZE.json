@@ -1,0 +1,67 @@
+{
+ "batch": "MERGE_VIS",
+ "frozen_at": "2026-11-07",
+ "status": "COMPLETE (operator option ii: A_full only, 18/18 calls)",
+ "budget": {
+  "cap_calls": 45,
+  "cap_tokens": 500000,
+  "cap_yuan": 1.5,
+  "used_calls": 18,
+  "used_tokens": 183485,
+  "used_yuan_est": 0.36,
+  "incidents": "run interrupted twice by session breaks (process killed with wrapper); resumed via RunStore skip + nohup; zero duplicate calls (ledger 18 entries, sequential units)"
+ },
+ "results_A_full_mean": {
+  "Q_merge": 0.712,
+  "Q_report": 0.712,
+  "merge_retention": 1.0,
+  "amount_recall": 0.833,
+  "ES": 0.978,
+  "L_unit_s": 300.7,
+  "tokens_per_call": 10193
+ },
+ "per_set": {
+  "G2_r1": [
+   0.818,
+   0.818
+  ],
+  "G2_r2": [
+   0.818,
+   0.818
+  ],
+  "G2_r3": [
+   0.727,
+   0.727
+  ],
+  "V2nat_r1": [
+   0.727,
+   0.727
+  ],
+  "V2nat_r2": [
+   0.818,
+   0.818
+  ],
+  "V2nat_r3": [
+   0.364,
+   0.364
+  ]
+ },
+ "findings": [
+  "F1: at FULL visibility the ORIGINAL merge prompt retains 100% of extracted slots (retention 1.000 x6) - semantic-compression hypothesis definitively answered NO; all merge loss was the [:3000] input cap",
+  "F2: Q_report == Q_merge exactly in all 6 sets (report pass-through 100% at full visibility; fidelity report contract echo 63->63, 66->66 etc.)",
+  "F3: terminal Q_report 0.712 vs frozen-cap pipeline ~0.30 (+41pp) and vs frozen visible@3000 ceiling 0.258 (+45pp) - single-factor: input truncation lifted, prompts untouched",
+  "F4: remaining terminal gap = extract coverage (8-9/11 typical; V2nat_r3 poor draw 4/11) + verbatim-rule artifacts (E04-02/09: A_full captures 1-2 of 2 under paraphrase-tolerant diagnostic -> substantive coverage ~0.82)",
+  "F5: cost of fix: tokens x3.4 per call (~10.2K/call) and unit latency ~300s vs ~100s; ST V1.2 evidence suggests structured carrying + full visibility can cut tokens BELOW frozen pipeline",
+  "F6: amount recall 1.00 in 5/6 (0 in the set where extract captured 0 amounts) - amounts never lost downstream once visible"
+ ],
+ "interpretation_table_verdict": "row 1 confirmed: 'A_full faithful, contract increment ~0 (predicted; B not run per option ii; ST V1.2 is the cross-pipeline fidelity-arm evidence)'",
+ "implications_for_mainline": "with visibility fixed, terminal Q is again responsive to upstream quality: scheduling gains (recovery/Z2/pipeline) will propagate; the 49%-transfer bottleneck is eliminated at its true cause",
+ "files_sha256": {
+  "merge_vis_runner.py": "e4d4fa3db0703b610ba4b8fc69546992d7c239d43d5c8737b7ec5b16e31d8d20",
+  "merge_vis_score.py": "ff54c681760229c356b48d23d6513258c91821bd7334223ea990b4adc0bb840b",
+  "merge_vis_config.json": "5509ccbdccccd0a8b14e6b81619cbacaadebdfaba0044e5098439b23782001a0",
+  "merge_vis_runs/ledger.jsonl": "c5c4932e301b7cc28653c34e65c5f3f88f5aae4237cf9fa0095370fbceb23ffc",
+  "merge_vis_runs/outputs.jsonl": "c29d36ab50752d424a70e2c6d06b4ebb0906c97011c2cb27ebeb49440b56155f",
+  "MERGE_VIS_SCORED.json": "dfbc6462c9372f92000025350edba90c1e6aa6da3ff860570a2ab74562a53393"
+ }
+}

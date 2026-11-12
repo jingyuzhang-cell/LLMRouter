@@ -1,0 +1,203 @@
+{
+ "definition": "Zero-call deadline screen for DAMJS_EXP_36 from the 32 A‴ baseline records (S3/S4 x Static/Proposed).\n\nsuccess(D) = TP >= 12 and finish <= D - 15 s (L3 terminates the child at D - 15; startup offset added).\nStatic and Current-Proposed outcomes are read off their own records (the native t_rem gates are\nre-applied at the recorded fault time). DAMJS is a projection: the frozen gate decides repair vs NONE\nat the recorded fault time, and the outcome is taken from the Proposed record (repair) or the Static\nrecord of the same rep (NONE); a Proposed record with no fault signal is used as is (no decision\nto re-gate). This is a feasibility screen, not a prediction.",
+ "deadlines": {
+  "110": {
+   "S3": {
+    "n": 8,
+    "usable_s": 95.0,
+    "static_success": 5,
+    "current_proposed_success": 1,
+    "damjs_projected_success": 5,
+    "current_proposed_repairs": 7,
+    "damjs_projected_repairs": 0,
+    "static_on_time": 8,
+    "proposed_on_time": 0
+   },
+   "S4": {
+    "n": 8,
+    "usable_s": 95.0,
+    "static_success": 0,
+    "current_proposed_success": 1,
+    "damjs_projected_success": 2,
+    "current_proposed_repairs": 1,
+    "damjs_projected_repairs": 2,
+    "static_on_time": 2,
+    "proposed_on_time": 2
+   }
+  },
+  "130": {
+   "S3": {
+    "n": 8,
+    "usable_s": 115.0,
+    "static_success": 5,
+    "current_proposed_success": 0,
+    "damjs_projected_success": 5,
+    "current_proposed_repairs": 8,
+    "damjs_projected_repairs": 0,
+    "static_on_time": 8,
+    "proposed_on_time": 0
+   },
+   "S4": {
+    "n": 8,
+    "usable_s": 115.0,
+    "static_success": 0,
+    "current_proposed_success": 2,
+    "damjs_projected_success": 3,
+    "current_proposed_repairs": 1,
+    "damjs_projected_repairs": 3,
+    "static_on_time": 6,
+    "proposed_on_time": 3
+   }
+  },
+  "150": {
+   "S3": {
+    "n": 8,
+    "usable_s": 135.0,
+    "static_success": 5,
+    "current_proposed_success": 2,
+    "damjs_projected_success": 5,
+    "current_proposed_repairs": 8,
+    "damjs_projected_repairs": 0,
+    "static_on_time": 8,
+    "proposed_on_time": 2
+   },
+   "S4": {
+    "n": 8,
+    "usable_s": 135.0,
+    "static_success": 0,
+    "current_proposed_success": 3,
+    "damjs_projected_success": 5,
+    "current_proposed_repairs": 2,
+    "damjs_projected_repairs": 4,
+    "static_on_time": 8,
+    "proposed_on_time": 5
+   }
+  },
+  "240": {
+   "S3": {
+    "n": 8,
+    "usable_s": 225.0,
+    "static_success": 5,
+    "current_proposed_success": 7,
+    "damjs_projected_success": 7,
+    "current_proposed_repairs": 8,
+    "damjs_projected_repairs": 8,
+    "static_on_time": 8,
+    "proposed_on_time": 7
+   },
+   "S4": {
+    "n": 8,
+    "usable_s": 225.0,
+    "static_success": 0,
+    "current_proposed_success": 7,
+    "damjs_projected_success": 8,
+    "current_proposed_repairs": 5,
+    "damjs_projected_repairs": 6,
+    "static_on_time": 8,
+    "proposed_on_time": 8
+   }
+  }
+ },
+ "baseline": {
+  "S3|Static": {
+   "makespan_median": 58.55,
+   "makespan_min": 35.4,
+   "makespan_max": 72.3,
+   "tp": [
+    11,
+    11,
+    11,
+    12,
+    13,
+    13,
+    13,
+    14
+   ],
+   "fault_time": [
+    15.8,
+    40.9,
+    48.5,
+    42.4,
+    33.1,
+    36.4,
+    32.9,
+    35.7
+   ]
+  },
+  "S3|Proposed-Dynamic": {
+   "makespan_median": 141.60000000000002,
+   "makespan_min": 116.4,
+   "makespan_max": 285.7,
+   "tp": [
+    8,
+    13,
+    14,
+    14,
+    14,
+    14,
+    14,
+    16
+   ],
+   "fault_time": [
+    39.4,
+    40.2,
+    26.1,
+    44.4,
+    46.3,
+    26.3,
+    60.2,
+    31.9
+   ]
+  },
+  "S4|Static": {
+   "makespan_median": 103.15,
+   "makespan_min": 69.6,
+   "makespan_max": 125.4,
+   "tp": [
+    2,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8
+   ],
+   "fault_time": [
+    95.9,
+    72.5,
+    96.3,
+    106.3,
+    85.2,
+    59.5,
+    null,
+    90.0
+   ]
+  },
+  "S4|Proposed-Dynamic": {
+   "makespan_median": 125.44999999999999,
+   "makespan_min": 58.3,
+   "makespan_max": 215.0,
+   "tp": [
+    12,
+    12,
+    13,
+    14,
+    14,
+    14,
+    14,
+    14
+   ],
+   "fault_time": [
+    132.0,
+    null,
+    71.6,
+    122.5,
+    190.5,
+    47.7,
+    107.2,
+    null
+   ]
+  }
+ }
+}

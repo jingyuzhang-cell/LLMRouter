@@ -1,0 +1,1395 @@
+{
+ "generated": "2026-11-06T22:31:10",
+ "tests": [
+  {
+   "id": "T0",
+   "name": "test_damsj_engine.py -> 29 passed, 0 failed",
+   "ok": true,
+   "evidence": {
+    "tail": "RESULT: 29 passed, 0 failed",
+    "rc": 0
+   }
+  },
+  {
+   "id": "T0",
+   "name": "test_damsj_executor.py -> 17 passed, 0 failed",
+   "ok": true,
+   "evidence": {
+    "tail": "RESULT: 17 passed, 0 failed",
+    "rc": 0
+   }
+  },
+  {
+   "id": "T1",
+   "name": "A‴ baseline replay: every fully-timed record reproduced field-by-field",
+   "ok": true,
+   "evidence": {
+    "strata": {
+     "fully_timed": "30/30",
+     "has_transport_errors": "1/2"
+    },
+    "mismatches": [
+     {
+      "tag": "Current-Proposed|S3|r3",
+      "stratum": "has_transport_errors",
+      "mismatched": [
+       "actions"
+      ],
+      "orig": {
+       "actions": [
+        [
+         "structure_repair",
+         "J1"
+        ],
+        [
+         "structure_repair",
+         "J1"
+        ]
+       ]
+      },
+      "r2": {
+       "actions": [
+        [
+         "format_repair",
+         "FMT"
+        ],
+        [
+         "format_repair",
+         "FMT"
+        ],
+        [
+         "structure_repair",
+         "J1"
+        ],
+        [
+         "structure_repair",
+         "J1"
+        ],
+        [
+         "structure_repair",
+         "J1"
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "T1",
+   "name": "degraded-output scorer reproduces finish() TP on every COMPLETE replay",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "T2",
+   "name": "arm map exact; unknown or raw executor labels rejected",
+   "ok": true,
+   "evidence": {
+    "mapping": {
+     "Static": [
+      "Static",
+      "native:Static"
+     ],
+     "Current-Proposed": [
+      "Proposed-Dynamic",
+      "native:Proposed-Dynamic"
+     ],
+     "DAMJS": [
+      "Proposed-Dynamic",
+      "damjs_engine.Scheduler"
+     ]
+    },
+    "accepted_bad": []
+   }
+  },
+  {
+   "id": "T2",
+   "name": "child refuses an unknown arm label before any call",
+   "ok": true,
+   "evidence": {
+    "rc": 3,
+    "stderr": "UNKNOWN_ARM_LABEL:'Current-Proposd'"
+   }
+  },
+  {
+   "id": "T2",
+   "name": "Current-Proposed runs the native Proposed-Dynamic policy (repairs J1 in S3), Static never acts",
+   "ok": true,
+   "evidence": {
+    "cp_runs_with_J1_repair": "8/8"
+   }
+  },
+  {
+   "id": "T3",
+   "name": "every DAMJS decision comes from damjs_engine.Scheduler and every action maps 1:1 to a decision",
+   "ok": false,
+   "evidence": {
+    "decisions": 9,
+    "actions": 3,
+    "problems": [
+     [
+      "t3_DAMJS_130_S4_r1",
+      "policy_source"
+     ],
+     [
+      "t3_DAMJS_130_S4_r1",
+      "engine_module"
+     ],
+     [
+      "t3_DAMJS_130_S4_r1",
+      "actions_not_from_scheduler",
+      [],
+      []
+     ],
+     [
+      "t3_DAMJS_130_S4_r1",
+      "identity"
+     ]
+    ],
+    "engine_sha": "7eec919b6a11ea99",
+    "engine_sha_manifest": "7eec919b6a11ea99"
+   }
+  },
+  {
+   "id": "T3",
+   "name": "deadline gate: Z_* chosen iff L_hat+sigma_l+T_reserve <= D_rem (both branches observed)",
+   "ok": true,
+   "evidence": {
+    "gate_decisions": [
+     {
+      "tag": "t3_DAMJS_130_S3_r1",
+      "kind": "Z_structure",
+      "d_rem": 89.44,
+      "gate": 137.9,
+      "feasible": false,
+      "chosen": "NONE"
+     },
+     {
+      "tag": "t3_DAMJS_130_S3_r2",
+      "kind": "Z_structure",
+      "d_rem": 88.58,
+      "gate": 137.9,
+      "feasible": false,
+      "chosen": "NONE"
+     },
+     {
+      "tag": "t3_DAMJS_150_S3_r1",
+      "kind": "Z_structure",
+      "d_rem": 109.33,
+      "gate": 137.9,
+      "feasible": false,
+      "chosen": "NONE"
+     },
+     {
+      "tag": "t3_DAMJS_150_S3_r2",
+      "kind": "Z_structure",
+      "d_rem": 108.53,
+      "gate": 137.9,
+      "feasible": false,
+      "chosen": "NONE"
+     },
+     {
+      "tag": "t3_DAMJS_150_S4_r1",
+      "kind": "Z_format",
+      "d_rem": 16.9,
+      "gate": 21.0,
+      "feasible": false,
+      "chosen": "NONE"
+     },
+     {
+      "tag": "t3_DAMJS_240_S3_r1",
+      "kind": "Z_structure",
+      "d_rem": 199.44,
+      "gate": 137.9,
+      "feasible": true,
+      "chosen": "Z_structure"
+     },
+     {
+      "tag": "t3_DAMJS_240_S3_r2",
+      "kind": "Z_structure",
+      "d_rem": 198.51,
+      "gate": 137.9,
+      "feasible": true,
+      "chosen": "Z_structure"
+     },
+     {
+      "tag": "t3_DAMJS_240_S4_r1",
+      "kind": "Z_format",
+      "d_rem": 106.91,
+      "gate": 21.0,
+      "feasible": true,
+      "chosen": "Z_format"
+     }
+    ]
+   }
+  },
+  {
+   "id": "T4",
+   "name": "persistent J1 fault: DAMJS repairs once, History forbids a repeat; Current-Proposed repeats",
+   "ok": true,
+   "evidence": {
+    "damjs_repairs": 1,
+    "damjs_J1_calls": 2,
+    "observe": [
+     {
+      "ev": "damjs_observe",
+      "node": "J1",
+      "kind": "Z_structure",
+      "family": "structure",
+      "gain": 0.0,
+      "hist": {
+       "count": 1,
+       "gains": [
+        0.0
+       ]
+      },
+      "forbidden_now": true,
+      "t": 102.98,
+      "schema": 1,
+      "ts": 1793975888.752701
+     }
+    ],
+    "later_decisions": [
+     {
+      "chosen": "NONE",
+      "kinds": [
+       "NONE",
+       "R"
+      ]
+     }
+    ],
+    "cp_repairs": 3,
+    "cp_J1_calls": 3
+   }
+  },
+  {
+   "id": "T4",
+   "name": "engine History semantics on observed gains: C3-a and C3-b",
+   "ok": true,
+   "evidence": {
+    "c3a": true,
+    "allowed_after_positive": true,
+    "c3b": true
+   }
+  },
+  {
+   "id": "T5",
+   "name": "shared ledger across child processes; denial -> INCOMPLETE_BUDGET -> batch stops",
+   "ok": true,
+   "evidence": {
+    "stop": "INCOMPLETE_BUDGET: a reservation was denied by the batch ledger",
+    "ledger_after": [
+     {
+      "calls": 7,
+      "yuan": 0.022934,
+      "tokens": 15210
+     },
+     {
+      "calls": 9,
+      "yuan": 0.027908,
+      "tokens": 17863
+     }
+    ],
+    "statuses": [
+     "COMPLETE",
+     "INCOMPLETE_BUDGET"
+    ]
+   }
+  },
+  {
+   "id": "T5",
+   "name": "exhausted ledger refuses to launch the next execution",
+   "ok": true,
+   "evidence": {
+    "stop": "BUDGET_CAP_REACHED:calls (before launching t5_DAMJS)"
+   }
+  },
+  {
+   "id": "T5",
+   "name": "yuan cap denies the first reservation and stops",
+   "ok": true,
+   "evidence": {
+    "ledger": {
+     "calls": 0,
+     "yuan": 0.0,
+     "tokens": 0
+    },
+    "stop": "INCOMPLETE_BUDGET: a reservation was denied by the batch ledger",
+    "invalid_reason": "INCOMPLETE_BUDGET"
+   }
+  },
+  {
+   "id": "T5",
+   "name": "tokens cap denies the first reservation and stops",
+   "ok": true,
+   "evidence": {
+    "ledger": {
+     "calls": 4,
+     "yuan": 0.0,
+     "tokens": 0
+    },
+    "stop": "INCOMPLETE_BUDGET: a reservation was denied by the batch ledger",
+    "invalid_reason": "INCOMPLETE_BUDGET"
+   }
+  },
+  {
+   "id": "T6",
+   "name": "L2 W_node: E1 call timeout = max(3*p95,120) = 120 s, aborted twice, node fails, no J1 dispatch",
+   "ok": false,
+   "evidence": {
+    "timeouts": [
+     120.0
+    ],
+    "ends": [
+     "TimeoutError:replay call exceeded socket timeout 120.0s"
+    ],
+    "final": {
+     "E1": "Completed",
+     "E2": "Completed",
+     "E3": "Completed",
+     "E4": "Completed",
+     "J1": "Completed",
+     "J2": "Completed",
+     "SINK": "Completed",
+     "FMT": "Completed"
+    }
+   }
+  },
+  {
+   "id": "T6",
+   "name": "L2 deadline term: J1 timeout = D_rem - T_reserve; no call starts after D-15; watchdog degrades (L4)",
+   "ok": true,
+   "evidence": {
+    "j1_timeout": 278.27,
+    "expected": 278.27,
+    "refused": [],
+    "completed": [
+     "E1",
+     "E2",
+     "E3",
+     "E4"
+    ],
+    "reconcile": {
+     "n_calls_started": 5,
+     "n_unsettled": 1,
+     "topup_tokens": 11747,
+     "topup_yuan": 0.02573,
+     "unsettled": [
+      {
+       "node": "J1",
+       "alias": "glm53flash"
+      }
+     ]
+    },
+    "late_quarantined": true
+   }
+  },
+  {
+   "id": "T6",
+   "name": "L3 hard stop at D-15 on a stuck call (1:1 clock); L4 keeps the completed E outputs verbatim",
+   "ok": true,
+   "evidence": {
+    "elapsed": 31.0,
+    "wall": 31.0,
+    "completed": [
+     "E1",
+     "E2",
+     "E3",
+     "E4"
+    ],
+    "reconcile": {
+     "n_calls_started": 5,
+     "n_unsettled": 1,
+     "topup_tokens": 11747,
+     "topup_yuan": 0.02573,
+     "unsettled": [
+      {
+       "node": "J1",
+       "alias": "glm53flash"
+      }
+     ]
+    },
+    "degraded": {
+     "tp": 0,
+     "src": "unknown_all"
+    }
+   }
+  },
+  {
+   "id": "T6",
+   "name": "L4 partial outputs drop invalidated results and anything after the abort time",
+   "ok": true,
+   "evidence": {
+    "all": {
+     "J2": "j2v2",
+     "SINK": "sink"
+    },
+    "cutoff": {
+     "J2": "j2v2"
+    }
+   }
+  },
+  {
+   "id": "T7",
+   "name": "new MANIFEST: every registered component SHA matches disk",
+   "ok": true,
+   "evidence": {
+    "n": 57,
+    "manifest_sha256": "ca54831dd95c736b97660001fec0a354bf5c51600d10d0f44c3d2b3455a09af3",
+    "mismatches": []
+   }
+  },
+  {
+   "id": "T7",
+   "name": "every completed replay execution verified its identity block pre and post",
+   "ok": true,
+   "evidence": {
+    "n": 48
+   }
+  },
+  {
+   "id": "T7",
+   "name": "tampered manifest -> execution identity fails -> runner stop reason INTEGRITY_FAIL",
+   "ok": true,
+   "evidence": {
+    "mismatches": [
+     "bridge"
+    ],
+    "stop": "INTEGRITY_FAIL: component SHA mismatch inside the execution"
+   }
+  },
+  {
+   "id": "T7",
+   "name": "runner refuses to start a batch whose manifest does not match disk",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "T8",
+   "name": "zero network attempts across every replay execution",
+   "ok": true,
+   "evidence": {
+    "executions": 52
+   }
+  },
+  {
+   "id": "T8",
+   "name": "replay children never receive credential variables",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "T8",
+   "name": "real mode refused without STAGE_D_REAL_CALLS_AUTHORIZED=1 and a matching per-phase DAMJS_R2_GO",
+   "ok": true,
+   "evidence": {
+    "gates": [
+     "--mode real --phase smoke -> REFUSED",
+     "--mode real --phase smoke -> REFUSED",
+     "--mode real --phase main -> REFUSED",
+     "--mode real --phase all -> REFUSED"
+    ]
+   }
+  }
+ ],
+ "runs": [
+  {
+   "tag": "t1_Static_S3_r1",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 11,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S3_r2",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 13,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S3_r3",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 11,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S3_r4",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 13,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S3_r5",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S3_r6",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 12,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S3_r7",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 13,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S3_r8",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 11,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S3_r1",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S3_r2",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S3_r3",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S3_r4",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S3_r5",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 16,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S3_r6",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 13,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S3_r7",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S3_r8",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S4_r1",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S4_r2",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S4_r3",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S4_r4",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S4_r5",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S4_r6",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S4_r7",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 2,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Static_S4_r8",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S4_r1",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S4_r2",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 12,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S4_r3",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S4_r4",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 13,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S4_r5",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S4_r6",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S4_r7",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t1_Current-Proposed_S4_r8",
+   "runs_dir": "/tmp/r2acc_t1_5jqj0430",
+   "status": "COMPLETE",
+   "tp": 12,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_130_S3_r1",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_130_S3_r2",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_130_S4_r1",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "INCOMPLETE_DEADLINE_DEGRADED",
+   "tp": 0,
+   "watchdog": "INCOMPLETE_DEADLINE_DEGRADED",
+   "net": 0,
+   "identity_ok": null
+  },
+  {
+   "tag": "t3_DAMJS_130_S4_r2",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 12,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_150_S3_r1",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_150_S3_r2",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_150_S4_r1",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 8,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_150_S4_r2",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 12,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_240_S3_r1",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_240_S3_r2",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_240_S4_r1",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t3_DAMJS_240_S4_r2",
+   "runs_dir": "/tmp/r2acc_t3_nknc0s4_",
+   "status": "COMPLETE",
+   "tp": 12,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t4_DAMJS",
+   "runs_dir": "/tmp/r2acc_t4_l8nbrw2t",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t4_CP",
+   "runs_dir": "/tmp/r2acc_t4_l8nbrw2t",
+   "status": "COMPLETE",
+   "tp": 14,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t5_yuan",
+   "runs_dir": "/tmp/r2acc_t5yuan_mtw_y4__",
+   "status": "INCOMPLETE_BUDGET",
+   "tp": 0,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t5_tokens",
+   "runs_dir": "/tmp/r2acc_t5tokens_9av1hxc_",
+   "status": "INCOMPLETE_BUDGET",
+   "tp": 0,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t6_L2_wnode",
+   "runs_dir": "/tmp/r2acc_t6_ia5hyv_5",
+   "status": "COMPLETE",
+   "tp": 11,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": true
+  },
+  {
+   "tag": "t6_L2_deadline",
+   "runs_dir": "/tmp/r2acc_t6_ia5hyv_5",
+   "status": "INCOMPLETE_DEADLINE_DEGRADED",
+   "tp": 0,
+   "watchdog": "INCOMPLETE_DEADLINE_DEGRADED",
+   "net": 0,
+   "identity_ok": null
+  },
+  {
+   "tag": "t6_L3_kill",
+   "runs_dir": "/tmp/r2acc_t6_ia5hyv_5",
+   "status": "INCOMPLETE_DEADLINE_DEGRADED",
+   "tp": 0,
+   "watchdog": "INCOMPLETE_DEADLINE_DEGRADED",
+   "net": 0,
+   "identity_ok": null
+  },
+  {
+   "tag": "t7_tamper",
+   "runs_dir": "/tmp/r2acc_t7_qw25b4sj",
+   "status": "COMPLETE",
+   "tp": 11,
+   "watchdog": "COMPLETE",
+   "net": 0,
+   "identity_ok": false
+  }
+ ],
+ "t1_rows": [
+  {
+   "tag": "Static|S3|r1",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S3|r2",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S3|r3",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S3|r4",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S3|r5",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S3|r6",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S3|r7",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S3|r8",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Current-Proposed|S3|r1",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Current-Proposed|S3|r2",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Current-Proposed|S3|r3",
+   "stratum": "has_transport_errors",
+   "match": false,
+   "mismatched": [
+    "actions"
+   ],
+   "orig": {
+    "actions": [
+     [
+      "structure_repair",
+      "J1"
+     ],
+     [
+      "structure_repair",
+      "J1"
+     ]
+    ]
+   },
+   "r2": {
+    "actions": [
+     [
+      "format_repair",
+      "FMT"
+     ],
+     [
+      "format_repair",
+      "FMT"
+     ],
+     [
+      "structure_repair",
+      "J1"
+     ],
+     [
+      "structure_repair",
+      "J1"
+     ],
+     [
+      "structure_repair",
+      "J1"
+     ]
+    ]
+   },
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Current-Proposed|S3|r4",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Current-Proposed|S3|r5",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Current-Proposed|S3|r6",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Current-Proposed|S3|r7",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Current-Proposed|S3|r8",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Static|S4|r1",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S4|r2",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S4|r3",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S4|r4",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S4|r5",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S4|r6",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S4|r7",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Static|S4|r8",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Static",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Current-Proposed|S4|r1",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Current-Proposed|S4|r2",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Current-Proposed|S4|r3",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Current-Proposed|S4|r4",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Current-Proposed|S4|r5",
+   "stratum": "has_transport_errors",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  },
+  {
+   "tag": "Current-Proposed|S4|r6",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Current-Proposed|S4|r7",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": false
+  },
+  {
+   "tag": "Current-Proposed|S4|r8",
+   "stratum": "fully_timed",
+   "match": true,
+   "mismatched": [],
+   "orig": {},
+   "r2": {},
+   "policy": "native:Proposed-Dynamic",
+   "identity_ok": true,
+   "degraded_scorer_matches_finish": true,
+   "cp_structure_repair": true
+  }
+ ],
+ "summary": {
+  "passed": 24,
+  "failed": 2,
+  "executions": 52,
+  "wall_s": 519.2,
+  "manifest_sha256": "ca54831dd95c736b97660001fec0a354bf5c51600d10d0f44c3d2b3455a09af3"
+ }
+}

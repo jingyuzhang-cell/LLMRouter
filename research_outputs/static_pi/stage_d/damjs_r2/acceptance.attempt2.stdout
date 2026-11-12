@@ -1,0 +1,92 @@
+  [PASS] T0 test_damsj_engine.py -> 29 passed, 0 failed
+  [PASS] T0 test_damsj_executor.py -> 17 passed, 0 failed
+  [PASS] T1 A‴ baseline replay: every fully-timed record reproduced field-by-field
+  [PASS] T1 degraded-output scorer reproduces finish() TP on every COMPLETE replay
+  [PASS] T2 arm map exact; unknown or raw executor labels rejected
+  [PASS] T2 child refuses an unknown arm label before any call
+  [PASS] T2 Current-Proposed runs the native Proposed-Dynamic policy (repairs J1 in S3), Static never acts
+  [PASS] T3 every DAMJS decision comes from damjs_engine.Scheduler and every action maps 1:1 to a decision
+  [PASS] T3 deadline gate: Z_* chosen iff L_hat+sigma_l+T_reserve <= D_rem (both branches observed)
+  [PASS] T4 persistent J1 fault: DAMJS repairs once, History forbids a repeat; Current-Proposed repeats
+  [PASS] T4 engine History semantics on observed gains: C3-a and C3-b
+[ 1] t5_Static: status=COMPLETE tp=11 watchdog=COMPLETE ledger={'calls': 7, 'yuan': 0.022934, 'tokens': 15210}
+[ 2] t5_Current-Proposed: status=INCOMPLETE_BUDGET tp=0 watchdog=COMPLETE ledger={'calls': 9, 'yuan': 0.027908, 'tokens': 17863}
+{
+ "batch": "DAMJS_EXP_36",
+ "mode": "replay",
+ "phase": "smoke",
+ "executed": 2,
+ "stop": "INCOMPLETE_BUDGET: a reservation was denied by the batch ledger",
+ "status": "INCOMPLETE",
+ "ledger": {
+  "calls": 9,
+  "yuan": 0.027908,
+  "tokens": 17863
+ },
+ "caps": {
+  "calls": 9,
+  "tokens": 1250000,
+  "yuan": 2.3
+ },
+ "manifest_pre": {
+  "ok": true,
+  "mismatches": [],
+  "manifest_sha256": "4466499c50fb8aba5776044730246faa73134dd3c9113b91fc1a21d1fb764e73",
+  "n": 57
+ },
+ "manifest_post": {
+  "ok": true,
+  "mismatches": [],
+  "manifest_sha256": "4466499c50fb8aba5776044730246faa73134dd3c9113b91fc1a21d1fb764e73",
+  "n": 57
+ },
+ "integrity": "OK"
+}
+  [PASS] T5 shared ledger across child processes; denial -> INCOMPLETE_BUDGET -> batch stops
+{
+ "batch": "DAMJS_EXP_36",
+ "mode": "replay",
+ "phase": "smoke",
+ "executed": 0,
+ "stop": "BUDGET_CAP_REACHED:calls (before launching t5_DAMJS)",
+ "status": "INCOMPLETE",
+ "ledger": {
+  "calls": 9,
+  "yuan": 0.027908,
+  "tokens": 17863
+ },
+ "caps": {
+  "calls": 9,
+  "tokens": 1250000,
+  "yuan": 2.3
+ },
+ "manifest_pre": {
+  "ok": true,
+  "mismatches": [],
+  "manifest_sha256": "4466499c50fb8aba5776044730246faa73134dd3c9113b91fc1a21d1fb764e73",
+  "n": 57
+ },
+ "manifest_post": {
+  "ok": true,
+  "mismatches": [],
+  "manifest_sha256": "4466499c50fb8aba5776044730246faa73134dd3c9113b91fc1a21d1fb764e73",
+  "n": 57
+ },
+ "integrity": "OK"
+}
+  [PASS] T5 exhausted ledger refuses to launch the next execution
+  [PASS] T5 yuan cap denies the first reservation and stops
+  [PASS] T5 tokens cap denies the first reservation and stops
+  [PASS] T6 L2 W_node: a stuck E1 call is cut at max(3*p95,120)=120 s; A‴ semantics: transport error -> empty output + D2 signal, DAG continues
+  [PASS] T6 L2 deadline term: J1 timeout = D_rem - T_reserve; no call starts after D-15; watchdog degrades (L4)
+  [PASS] T6 L3 hard stop at D-15 on a stuck call (1:1 clock); L4 keeps the completed E outputs verbatim
+  [PASS] T6 L4 partial outputs drop invalidated results and anything after the abort time
+  [PASS] T7 new MANIFEST: every registered component SHA matches disk
+  [PASS] T7 every completed replay execution verified its identity block pre and post
+  [PASS] T7 tampered manifest -> execution identity fails -> runner stop reason INTEGRITY_FAIL
+  [PASS] T7 runner refuses to start a batch whose manifest does not match disk
+  [PASS] T8 zero network attempts across every replay execution
+  [PASS] T8 replay children never receive credential variables
+  [PASS] T8 real mode refused without STAGE_D_REAL_CALLS_AUTHORIZED=1 and a matching per-phase DAMJS_R2_GO
+
+RESULT: 26 passed, 0 failed (52 replay executions, 519.4 s)

@@ -1,0 +1,279 @@
+{
+ "task_id": "GAOSHENG",
+ "code": "000971",
+ "case": "高升控股",
+ "dag": {
+  "nodes": [
+   {
+    "node": "A1",
+    "kind": "extract",
+    "role": "共同借款线事实提取",
+    "docs": [
+     "共同借款线.txt"
+    ]
+   },
+   {
+    "node": "A2",
+    "kind": "extract",
+    "role": "直接担保线事实提取",
+    "docs": [
+     "直接担保线.txt"
+    ]
+   },
+   {
+    "node": "A3",
+    "kind": "extract",
+    "role": "拆借与占用线事实提取",
+    "docs": [
+     "拆借与占用线.txt"
+    ]
+   },
+   {
+    "node": "B1",
+    "kind": "verification",
+    "role": "跨线事实交叉核验(金额/口径/关系比对)",
+    "upstream": [
+     "A1",
+     "A2",
+     "A3"
+    ]
+   },
+   {
+    "node": "C1",
+    "kind": "timeline",
+    "role": "事件时序构建",
+    "upstream": [
+     "B1"
+    ]
+   },
+   {
+    "node": "D1",
+    "kind": "report",
+    "role": "终端综合结论",
+    "upstream": [
+     "B1",
+     "C1"
+    ]
+   }
+  ]
+ },
+ "slots": [
+  {
+   "value": "关联方法律认定",
+   "fact_id": "GS-F01",
+   "proposition": "华嬉云游系实控人韦振宇之父韦某康控制的公司，杨某刚/何某/吕某本签《委托持股协议》代持",
+   "status": "PASS"
+  },
+  {
+   "value": "关联方法律认定",
+   "fact_id": "GS-F02",
+   "proposition": "神州百戏系韦某康控制的公司(何某/吕某本代持)，且为华嬉云游第一大股东",
+   "status": "PASS"
+  },
+  {
+   "value": "关联方法律认定",
+   "fact_id": "GS-F03",
+   "proposition": "文化硅谷系韦某康控制，韦某星/韦某瑞直接间接合计持82.08%出资份额全部代持",
+   "status": "PASS"
+  },
+  {
+   "value": "关联方法律认定",
+   "fact_id": "GS-F04",
+   "proposition": "华蝶嘉艺系韦某康控制，韦某星/韦某瑞各持50%份额均代持",
+   "status": "PASS"
+  },
+  {
+   "value": "关联方法律认定",
+   "fact_id": "GS-F05",
+   "proposition": "卓越领创系韦某康控制(合伙人华蝶嘉艺+双和康泰均系代持)",
+   "status": "PASS"
+  },
+  {
+   "value": "借款本金10,000万元",
+   "fact_id": "GS-F06",
+   "proposition": "高升控股与宇驰瑞德、蓝鼎实业作为共同借款人向赵某宾借款1亿元(收款使用方均非高升,实质担保)",
+   "status": "PASS"
+  },
+  {
+   "value": "借款本金10,000万元",
+   "fact_id": "GS-F07",
+   "proposition": "高升控股与文化硅谷共同向熊某伟借款1亿元",
+   "status": "PASS"
+  },
+  {
+   "value": "借款本金1,000万元",
+   "fact_id": "GS-F08",
+   "proposition": "高升控股与韦振宇、韦某康共同向周某宾借款1,000万元",
+   "status": "PASS"
+  },
+  {
+   "value": "借款本金2,500万元",
+   "fact_id": "GS-F09",
+   "proposition": "高升控股与宇驰瑞德、蓝鼎实业、华嬉云游、韦某康共同向朱某波签订最高额保证借款2,500万元",
+   "status": "PASS"
+  },
+  {
+   "value": "借款本金4,000万元",
+   "fact_id": "GS-F10",
+   "proposition": "高升控股与宇驰瑞德、蓝鼎实业、华嬉云游、韦某康共同向蔡某远签订最高额保证借款4,000万元",
+   "status": "PASS"
+  },
+  {
+   "value": "转贷额度5,000万元",
+   "fact_id": "GS-F11",
+   "proposition": "高升控股与蓝鼎实业、文化硅谷作为共同借款人向嘉兴国瀚签订最高额5,000万转贷资金使用合同",
+   "status": "PASS"
+  },
+  {
+   "value": "借款本金4,715万元",
+   "fact_id": "GS-F12",
+   "proposition": "高升控股与宇驰瑞德等7方共同借款人向田某伟借款4,715万元,同日并为该借款提供保证担保",
+   "status": "PASS"
+  },
+  {
+   "value": "担保2亿元+1,200万元",
+   "fact_id": "GS-F13",
+   "proposition": "高升控股为宇驰瑞德向上海汐麟借款2亿元及骑士联盟1,200万财务咨询费协议提供连带责任保证",
+   "status": "PASS"
+  },
+  {
+   "value": "担保1亿元",
+   "fact_id": "GS-F14",
+   "proposition": "高升控股为宇驰瑞德向碧天财富借款1亿元提供连带责任保证",
+   "status": "PASS"
+  },
+  {
+   "value": "担保4.5亿元",
+   "fact_id": "GS-F15",
+   "proposition": "高升控股为蓝鼎实业与中泰创盈4.5亿元委托贷款提供连带责任保证",
+   "status": "PASS"
+  },
+  {
+   "value": "担保5.5亿元",
+   "fact_id": "GS-F16",
+   "proposition": "高升控股向华融北分出具承诺函,对神州百戏5.5亿元债务承担连带担保责任",
+   "status": "PASS"
+  },
+  {
+   "value": "担保合计4.47亿元",
+   "fact_id": "GS-F17",
+   "proposition": "高升控股为蓝鼎实业与高搜易两笔委托贷款4.47亿元(2.94亿+1.58亿)提供连带责任保证",
+   "status": "PASS"
+  },
+  {
+   "value": "担保1亿元",
+   "fact_id": "GS-F18",
+   "proposition": "高升控股向神州长城出具商业承兑汇票兑付担保承诺函,对1亿元商业汇票承担兑付保证(卓越领创-惠泽岩土借款)",
+   "status": "PASS"
+  },
+  {
+   "value": "担保1,668.33万元",
+   "fact_id": "GS-F19",
+   "proposition": "高升控股与韦某康为神州百戏向宁波华沪1,668.33万元借款提供连带责任保证",
+   "status": "PASS"
+  },
+  {
+   "value": "担保4,000万元(本息合计4,168万元)",
+   "fact_id": "GS-F20",
+   "proposition": "高升控股向国信保理出具承兑担保及无条件回购承诺函,为世宇天地4,000万元商票保理提供担保",
+   "status": "PASS"
+  },
+  {
+   "value": "担保2,250万元",
+   "fact_id": "GS-F21",
+   "proposition": "高升控股为蓝鼎实业向中泰创展2,250万元借款提供第三方无限连带责任保证",
+   "status": "PASS"
+  },
+  {
+   "value": "担保1,418.09万元",
+   "fact_id": "GS-F22",
+   "proposition": "高升控股为蓝鼎实业向宝盈保理1,418.09万元借款提供连带责任保证",
+   "status": "PASS"
+  },
+  {
+   "value": "担保合计12,829万元",
+   "fact_id": "GS-F23",
+   "proposition": "高升控股与文化硅谷、北洋博天12,829万元借款(6,415万+展期新增6,414万)提供担保,2018-09-30补充协议7方连带担保",
+   "status": "PASS"
+  },
+  {
+   "value": "拆借4,000万元",
+   "fact_id": "GS-F24",
+   "proposition": "高升控股与董某巍、鄢某晴签订4,000万元借款及保证协议,资金当日直接打入文化硅谷账户(拆借资金给关联方使用)",
+   "status": "PASS"
+  },
+  {
+   "value": "19项(违法认定)",
+   "fact_id": "GS-F25",
+   "proposition": "高升控股19项关联交易未按规定履行审议程序并及时披露,构成未按规定披露信息",
+   "status": "PASS"
+  },
+  {
+   "value": "11起(年报遗漏)",
+   "fact_id": "GS-F26",
+   "proposition": "高升控股未在2017年年度报告中披露11起关联方担保关联交易(第1-3项,第8-15项),构成重大遗漏",
+   "status": "PASS"
+  },
+  {
+   "value": "法律认定",
+   "fact_id": "GS-F27",
+   "proposition": "韦振宇作为实际控制人指使从事信息披露违法行为(隐瞒关联担保及资金拆借,不通知上市公司履行义务)",
+   "status": "PASS"
+  },
+  {
+   "value": "占用18,200万元(9,000+9,200)",
+   "fact_id": "GS-F28",
+   "proposition": "高升控股向顺日兴、龙明源分别拆出资金9,000万、9,200万元用于华嬉云游项目建设,构成非经营性资金占用18,200万元",
+   "status": "PASS"
+  },
+  {
+   "value": "资金流转18,100万元(两次)",
+   "fact_id": "GS-F29",
+   "proposition": "怡然歆代关联方还款18,100万元(6-30),次日高升控股将18,100万元全额转回怡然歆(7-1)",
+   "status": "PASS"
+  },
+  {
+   "value": "承诺违约(18,200万元)",
+   "fact_id": "GS-F30",
+   "proposition": "韦振宇承诺2018-08-24前清偿18,200万元,未在承诺期限履行",
+   "status": "PASS"
+  },
+  {
+   "value": "冻结30,448.90万股/29.86%",
+   "fact_id": "GS-F31",
+   "proposition": "韦振宇及其一致行动人宇驰瑞德、蓝鼎实业所持30,448.90万股(29.86%)被国信保理、中融信托、安信信托司法冻结及轮候冻结,未及时披露",
+   "status": "PASS"
+  },
+  {
+   "value": "归还18,200万元",
+   "fact_id": "GS-F32",
+   "proposition": "2018-10-24韦振宇向公司偿还关联方非经营性资金占用18,200万元",
+   "status": "PASS"
+  },
+  {
+   "value": "纪律处分",
+   "fact_id": "GS-F33",
+   "proposition": "深交所对公司、韦振宇、李耀、孙鹏、张一文给予公开谴责(记入诚信档案)",
+   "status": "PASS"
+  },
+  {
+   "value": "罚款合计220万元(分主体)",
+   "fact_id": "GS-F34",
+   "proposition": "湖北证监局处罚:公司警告+60万;韦振宇合计90万(主管30+实控人60);李耀/张一文各30万;孙鹏10万",
+   "status": "PASS"
+  }
+ ],
+ "docs": {
+  "共同借款线": {
+   "path": "/root/research_outputs/RQ_DYN_V6_DESIGN/gold_dags/GAOSHENG/共同借款线.txt"
+  },
+  "直接担保线": {
+   "path": "/root/research_outputs/RQ_DYN_V6_DESIGN/gold_dags/GAOSHENG/直接担保线.txt"
+  },
+  "拆借与占用线": {
+   "path": "/root/research_outputs/RQ_DYN_V6_DESIGN/gold_dags/GAOSHENG/拆借与占用线.txt"
+  }
+ },
+ "slot_source": "GAOSHENG_000971_SLOTS_V2_1.json",
+ "limitation": "value为叙事短语;精确匹配表达式待人工签发阶段细化"
+}

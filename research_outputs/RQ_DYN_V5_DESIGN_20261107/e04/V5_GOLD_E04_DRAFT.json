@@ -1,0 +1,444 @@
+{
+ "task_id": "E04",
+ "company": "*ST卓然(688121)",
+ "status": "DRAFT_FOR_HUMAN_SIGNOFF_v1.3",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "E04-zhuoran_20260910.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E04-zhuoran_20260910.txt",
+   "sha256": "e8f128139c8df141f857dda6bdcaa65bcfd603e208143026e3727692b6a3fbbc"
+  },
+  "E04-zhuoran_20261009.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E04-zhuoran_20261009.txt",
+   "sha256": "688d42b04a0647f8a7eabf401894c429b83c69890e75a22f00d0e700d922a430"
+  },
+  "E04-zhuoran_20261013.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E04-zhuoran_20261013.txt",
+   "sha256": "1f1bc81c399bfc0684431440d92ae70d1d4abe5d5071c6ddb98d152e6b6ee5f7"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1",
+    "kind": "extract",
+    "docs": [
+     "E04-zhuoran_20261009.txt",
+     "E04-zhuoran_20260910.txt"
+    ],
+    "upstream": [],
+    "role": "立案与告知"
+   },
+   {
+    "node": "N2",
+    "kind": "timeline",
+    "docs": [
+     "E04-zhuoran_20261013.txt",
+     "E04-zhuoran_20261009.txt"
+    ],
+    "upstream": [
+     "N1",
+     "N3"
+    ],
+    "role": "风险提示时序"
+   },
+   {
+    "node": "N3",
+    "kind": "extract",
+    "docs": [
+     "E04-zhuoran_20261013.txt"
+    ],
+    "upstream": [],
+    "role": "股价面值与市值"
+   },
+   {
+    "node": "N4",
+    "kind": "verification",
+    "docs": [
+     "E04-zhuoran_20261009.txt",
+     "E04-zhuoran_20261013.txt"
+    ],
+    "upstream": [
+     "N1",
+     "N2",
+     "N3"
+    ],
+    "role": "退市类型判断(重建)"
+   },
+   {
+    "node": "N5",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N1",
+     "N2",
+     "N3",
+     "N4"
+    ],
+    "role": "综合结论(重建)"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "F-A1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "收到中国证监会《立案告知书》日期：2025-12-19（证监立案字0032025031号、0032025032号）",
+   "doc": "E04-zhuoran_20261009.txt",
+   "span": "公司于 2025 年 12 月 19 日收到中国证券监督管理委员会…出具的《立案告知书》（证监立案字 0032025031 号、证监立案字 0032025032 号）（20261009第36-38行；20261013第67-70行同文）",
+   "ai_verdict": "REVISED(预审R:补立案编号与文书名)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-A2",
+   "node": "N1",
+   "kind": "extract",
+   "value": "立案与告知：公司及实际控制人张锦红",
+   "doc": "E04-zhuoran_20261009.txt",
+   "span": "中国证监会决定对公司及实际控制人张锦红立案",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-A3",
+   "node": "N1",
+   "kind": "extract",
+   "value": "立案与告知：涉嫌信息披露违法违规",
+   "doc": "E04-zhuoran_20261009.txt",
+   "span": "因涉嫌信息披露违法违规等事项",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-A4",
+   "node": "N1",
+   "kind": "extract",
+   "value": "立案与告知：2026-09-11",
+   "doc": "E04-zhuoran_20261009.txt",
+   "span": "2026年9月11日，公司收到上海证监局下发的《行政处罚事先告知书》",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-A5",
+   "node": "N1",
+   "kind": "extract",
+   "value": "立案与告知：沪证监处罚字[2026]11号",
+   "doc": "E04-zhuoran_20261009.txt",
+   "span": "（沪证监处罚字[2026]11号）",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-A6",
+   "node": "N1",
+   "kind": "extract",
+   "value": "《关于公司及实际控制人收到立案告知书的公告》披露日期：2025-12-20（公告编号2025-053）",
+   "doc": "E04-zhuoran_20260910.txt",
+   "span": "于 2025 年 12 月 20 日在上海证券交易所网站（www.sse.com.cn）披露了《关于公司及实际控制人收到立案告知书的公告》（公告编号：2025-053）（20260910第12-14行）",
+   "ai_verdict": "REVISED(预审R:改为披露日期口径，与收到日区分)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-B1",
+   "node": "N2",
+   "kind": "extract",
+   "value": "风险提示：4次",
+   "doc": "E04-zhuoran_20261009.txt",
+   "span": "关于公司股票可能被实施重大违法强制退市的第四次风险提示公告",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-B2",
+   "node": "N2",
+   "kind": "extract",
+   "value": "风险提示：2026-09-12",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "2026年9月12日披露了《关于公司股票可能被实施重大违法强制退市的第一次风险提示公告》",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-B3",
+   "node": "N2",
+   "kind": "extract",
+   "value": "风险提示：2026-09-18",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "2026年9月18日披露了《关于公司股票可能被实施重大违法强制退市的第二次风险提示公告》",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-B4",
+   "node": "N2",
+   "kind": "extract",
+   "value": "风险提示：2026-09-25",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "2026年9月25日披露了《关于公司股票可能被实施重大违法强制退市的第三次风险提示公告》",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-B5",
+   "node": "N2",
+   "kind": "extract",
+   "value": "风险提示：2026-10-09",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "2026年10月9日披露了《关于公司股票可能被实施重大违法强制退市的第四次风险提示公告》（公告编号：2026-097）",
+   "ai_verdict": "PASS(V1_5审查判定有支撑，复用)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-B6",
+   "node": "N2",
+   "kind": "extract",
+   "value": "风险提示(市值线)：2026-09-24披露《关于公司股票可能存在因市值低于3亿元而终止上市的首次风险提示暨…风险提示公告》（公告编号2026-091）",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "公司于 2026 年 9 月 24 日披露了《关于公司股票可能存在因市值低于 3 亿元而终止上市的首次风险提示暨公司股票可能被实施重大违法强制退市的风险提示公告》（公告编号：2026-091）（20261013第92-94行）",
+   "ai_verdict": "REVISED(预审R:补完整标题与公告编号)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E1",
+   "node": "N3",
+   "kind": "extract",
+   "value": "股票收盘价格：2026-10-12收盘0.96元/股（日收盘价格首次低于1元）",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "公司股票2026年10月12日收盘价格0.96元/股，总市值2.24亿元，股票日收盘价格首次低于1元（20261013第18行）",
+   "ai_verdict": "REVISED(预审R:术语修正为收盘价格)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E2",
+   "node": "N3",
+   "kind": "extract",
+   "value": "总市值：2.24亿元（2026-10-12）",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "公司股票2026年10月12日收盘价格0.96元/股，总市值2.24亿元（20261013第18行，含日期完整句）",
+   "ai_verdict": "REVISED(非阻断完善:跨度含日期)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "ai_note": "v1.2:独立复核建议采纳",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E3",
+   "node": "N3",
+   "kind": "extract",
+   "value": "首次出现股票收盘市值低于3亿元日期：2026-09-23（当日收盘价1.16元/股、总市值2.71亿元）",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "公司股票2026年9月23日收盘价格1.16元/股，总市值2.71亿元，公司于2026年9月23日首次出现股票收盘市值低于3亿元（20261013第24-25行）",
+   "ai_verdict": "REVISED(预审R:术语与日期口径修正)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E4",
+   "node": "N3",
+   "kind": "extract",
+   "value": "连续8个交易日每日股票收盘市值低于3亿元（截至公告披露日；规则触发阈值为连续20个交易日）",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "公司股票已连续8个交易日每日股票收盘市值低于3亿元（20261013第25行）；20日规则原句：\"上市公司出现连续20个交易日每日股票收盘市值均低于3亿元情形的，上海证券交易所将决定终止公司股票上市\"（20261013第26-30行）",
+   "ai_verdict": "REVISED(非阻断完善:补20日规则原句)",
+   "source": "ALL_FACTS_BACKED",
+   "critical": false,
+   "ai_note": "v1.2:独立复核建议采纳",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "C1",
+   "node": "N4",
+   "kind": "extract",
+   "value": "条件性判断：根据《行政处罚事先告知书》认定情况，公司可能触及重大违法强制退市情形；若据行政处罚决定书结论触及的，股票将被终止上市（当前为可能触及，尚未正式认定）",
+   "doc": "E04-zhuoran_20261009.txt",
+   "span": "根据收到的《行政处罚事先告知书》认定情况，公司可能触及…第12.2.1条第（一）项、第12.2.2条第（六）项规定的重大违法行为，可能被实施重大违法强制退市…如根据中国证监会行政处罚决定书结论，公司触及重大违法强制退市情形的，公司股票将被终止上市（20261009第23-27行）",
+   "ai_verdict": "REVISED(预审R:恢复条件性表述)",
+   "source": "REBUILD_PER_REVIEW",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "C2",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终止上市实施原则：上市公司出现两项以上终止上市情形的，其股票按照先触及先适用的原则实施终止上市（《股票上市规则》第12.1.10条）",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "根据《股票上市规则》第12.1.10条的规定，上市公司出现两项以上终止上市情形的，其股票按照先触及先适用的原则实施终止上市（20261013第33-34行）",
+   "ai_verdict": "REVISED(预审R:补完整规则条件；N4文档依赖同步修复)",
+   "source": "REBUILD_PER_REVIEW",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "C3",
+   "node": "N4",
+   "kind": "extract",
+   "value": "交易类强制退市公司股票不进入退市整理期交易（《股票上市规则》第12.7.1条第一款）",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "根据《股票上市规则》第 12.7.1 条第一款规定，交易类强制退市公司股票不进入退市整理期交易（20261013第31-32行）",
+   "ai_verdict": "REVISED(预审R:补完整主语与规则依据)",
+   "source": "REBUILD_PER_REVIEW",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F1",
+   "node": "N5",
+   "kind": "report",
+   "value": "因果链：因涉嫌信息披露违法违规被立案并收到行政处罚事先告知书 → 可能触及重大违法强制退市风险 → 四次风险提示",
+   "doc": "E04-zhuoran_20261009.txt",
+   "span": "20261009第15-27行(告知书+可能触及)+第70-82行(历次风险提示披露)串联",
+   "ai_verdict": "REVISED(独立复核终版措辞)",
+   "source": "REBUILD_PER_REVIEW",
+   "derived_from": [
+    "F-A1",
+    "F-A2",
+    "F-A3",
+    "F-A4",
+    "F-B1"
+   ],
+   "ai_note": "v1.3:按复核方建议文本定稿；derived_from=[F-A1,F-A2,F-A3,F-A4,F-B1]保持；与E04-U1 UNKNOWN边界一致(正式决定未出)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F2",
+   "node": "N5",
+   "kind": "report",
+   "value": "因果链(风险层面)：股票收盘市值自2026-09-23首次低于3亿元后连续8个交易日低于3亿元→已出现交易类强制退市风险信号，尚未达到连续20个交易日触发条件",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "20261013第24-30行(8日事实+20日规则)",
+   "ai_verdict": "REVISED(独立复核R:删除程度推断\"接近\")",
+   "source": "REBUILD_PER_REVIEW",
+   "derived_from": [
+    "F-E3",
+    "F-E4"
+   ],
+   "ai_note": "v1.2:改为风险信号表述",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "T1",
+   "node": "N2",
+   "kind": "timeline",
+   "value": "时序：收到立案告知(2025-12-19)→立案公告披露(2025-12-20)→收到事先告知书(2026-09-11)→第1次风险提示(09-12)→第2次(09-18)→市值线首次提示(09-24)→第3次(09-25)→第4次(10-09)→收盘价首次低于1元(10-12)",
+   "doc": "E04-zhuoran_20260910.txt + E04-zhuoran_20261009.txt + E04-zhuoran_20261013.txt",
+   "span": "F-A1/F-A6/F-A4/F-B2/F-B3/F-B6/F-B4/F-B5/F-E1跨度链",
+   "ai_verdict": "REVISED(独立复核R:补20260910来源)",
+   "source": "REBUILD_PER_REVIEW",
+   "derived_from": [
+    "F-A1",
+    "F-A6",
+    "F-A4",
+    "F-B2",
+    "F-B3",
+    "F-B6",
+    "F-B4",
+    "F-B5",
+    "F-E1"
+   ],
+   "ai_note": "v1.2:T1.doc三文书齐全；N2←N3依赖边已加",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "R1",
+   "node": "N5",
+   "kind": "report",
+   "value": "综合结论(风险层面，非终局)：公司同时面临两类退市风险——①重大违法强制退市风险(立案+事先告知书，可能触及，正式决定未出)；②交易类强制退市风险(市值连续8日低于3亿元、收盘价2026-10-12首次低于1元，均未达20个交易日触发阈值)；若出现两项以上终止上市情形，按先触及先适用原则实施；最终结果以正式处罚决定与交易所决定为准",
+   "doc": "E04-zhuoran_20261013.txt",
+   "span": "20261013重要内容提示第1/2项+第50-64行",
+   "ai_verdict": "REVISED(预审R:区分风险/触发条件/终局；补收盘价低于1元指标)",
+   "source": "REBUILD_PER_REVIEW",
+   "derived_from": [
+    "C1",
+    "C2",
+    "C3",
+    "F1",
+    "F2",
+    "F-E1"
+   ],
+   "scoring_points": [
+    "两类风险线并列陈述",
+    "明确均为风险状态且未达触发条件",
+    "引用先触及先适用原则",
+    "终局以正式决定为准"
+   ],
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "E04-U1",
+   "node": "N5",
+   "expected_status": "UNKNOWN",
+   "value": "最终处罚决定书文号与金额(截至本组文书未下达)",
+   "doc": "E04-zhuoran_20261009.txt",
+   "note": "仅有事先告知书(沪证监处罚字[2026]11号)，决定书未载——证据集合内不可答",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [
+  {
+   "slot_id": "D类6条+F类3条",
+   "reason": "原有D/F类9条事实因与M8-P2文档及事实口径不匹配而弃用，并非本组文档缺少财务数据。当前证据文书(20261009第43-51行)包含2021-2024虚增营业收入及利润的具体金额和比例；按本轮不扩槽原则，相关数据暂不新增计分槽。"
+  }
+ ],
+ "scoring_contract": {
+  "n_scored_slots": 23,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "audit_reuse": "all_facts E04 A/B/E16条+V1_5路径2重建清单",
+ "review_hints": [
+  "D/F类9条已弃用重建",
+  "C1-C3/F1/F2/T1/R1锚点已grep验证",
+  "E04-U1为诚实UNKNOWN"
+ ],
+ "pre_review": {
+  "batch": 4,
+  "reviewer": "operator-AI-precheck(2026-11-08)",
+  "result": "9P/14R/0newD",
+  "note": "14R已落实；DAG依赖修复(N2←N1、N4显式docs、N5←N1-N4)；DROP理由修正；E04-U1保留UNKNOWN；不扩槽；独立复核3R于v1.2闭环"
+ },
+ "independent_ai_review": {
+  "date": "2026-11-08",
+  "result": "20P/3R/1UNKNOWN/9DROP聚合",
+  "note": "3R(F1/F2/T1)+N2输入问题已于v1.2修复：F1补derived_from(F-A2/F-A3)；F2改风险信号表述；T1.doc补20260910；N2.docs=[20261013,20261009]并增N3依赖(选项b最小修复)；另采纳F-E2/F-E4跨度完善建议；20个通过槽未动；F1措辞按复核建议定稿于v1.3——有条件通过转最终通过，直接进入人工终签"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ }
+}

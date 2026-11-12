@@ -1,0 +1,354 @@
+{
+ "task_id": "KM",
+ "company": "康美药业(600518)",
+ "status": "FINAL_CANDIDATE_v1.3",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "KANGMEI_2018-12-29.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/KANGMEI/KANGMEI_2018-12-29.txt",
+   "sha256": "eb51d2453533c1b18e9b2221a6d4fe18bd6ae3b4abbd26279ea016691de7b8b6"
+  },
+  "KANGMEI_2019-08-17.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/KANGMEI/KANGMEI_2019-08-17.txt",
+   "sha256": "bd7b12ad492e9861c3f4263acbda8f01323e7fda5c60164819daa22b07de8847"
+  },
+  "KANGMEI_2020-05-15.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/KANGMEI/KANGMEI_2020-05-15.txt",
+   "sha256": "db5d32ab456b103651c1197bc82ca017d955d7ccb093c0704b5b82d7623ee105"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1",
+    "kind": "extract",
+    "docs": [
+     "KANGMEI_2018-12-29.txt"
+    ],
+    "upstream": [],
+    "role": "立案事实"
+   },
+   {
+    "node": "N2",
+    "kind": "extract",
+    "docs": [
+     "KANGMEI_2019-08-17.txt",
+     "KANGMEI_2020-05-15.txt"
+    ],
+    "upstream": [],
+    "role": "虚增金额"
+   },
+   {
+    "node": "N3",
+    "kind": "extract",
+    "docs": [
+     "KANGMEI_2020-05-15.txt"
+    ],
+    "upstream": [],
+    "role": "造假手法"
+   },
+   {
+    "node": "N4",
+    "kind": "extract",
+    "docs": [
+     "KANGMEI_2020-05-15.txt"
+    ],
+    "upstream": [],
+    "role": "量罚与禁入"
+   },
+   {
+    "node": "N_REPORT",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N2",
+     "N4"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "KM-A1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "《调查通知书》编号：粤证调查通字180199号",
+   "doc": "KANGMEI_2018-12-29.txt",
+   "span": "《调查通知书》编号：粤证调查通字180199号（2018-12-29公告@文件头段）",
+   "ai_verdict": "PASS(逐字)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-A2",
+   "node": "N1",
+   "kind": "extract",
+   "value": "财务造假期间：2016年1月1日至2018年6月30日",
+   "doc": "KANGMEI_2019-08-17.txt",
+   "span": "\"2016 年 1 月 1 日至 2018 年 6 月 30 日，康美药业通过财务不记账、虚假记账\"（告知书@L47）",
+   "ai_verdict": "PASS(预审P：新值接受，独立时间事实)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "v1.1提案",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-B1",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年报虚增营业收入：89.99亿元（另多计利息收入1.51亿元）",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"《2016 年年度报告》虚增营业收入 89.99 亿元，多计利息收入 1.51 亿元\"（决定书@L86）",
+   "ai_verdict": "PASS(终案+指标名)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-B2",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2017年报虚增营业收入：100.32亿元（另多计利息收入2.28亿元）",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"《2017年年度报告》虚增营业收入 100.32 亿元，多计利息收入 2.28 亿元\"（决定书@L88）",
+   "ai_verdict": "PASS(终案+指标名)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-B3",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年报虚增货币资金：22,548,513,485.42元",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"康美药业《2016 年年度报告》虚增货币资金 22，548，513，485.42 元\"（决定书@L102-103金额部分，全角逗号）",
+   "ai_verdict": "REVISED(预审R：金额/占比拆分，本槽仅测绝对金额)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-B4",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2017年年度报告虚增货币资金：29,944,309,821.45元",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"《2017 年年度报告》虚增货币资金 29，944，309，821.45 元，占公司披露总资产的 43.57%和净资产的 93.18%\"（决定书@L104，全角逗号）",
+   "ai_verdict": "REVISED(终审R:补指标名)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-B5",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2018半年报虚增货币资金：36,188,038,359.50元（占披露总资产45.96%、净资产108.24%）",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"《2018 年半年度报告》虚增货币资金 36,188,038,359.50 元，占公司披露总资产的 45.96%和净资产的 108.24%\"（决定书@L105）",
+   "ai_verdict": "PASS(终案+占比补全)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-B6",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2018年报虚增固定资产11.89亿元、在建工程4.01亿元、投资性房地产20.15亿元（合计调增资产总额36.05亿元）",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"等 6 个工程项目纳入表内，分别调增固定资产 11.89 亿元，调增在建工程 4.01 亿元，调增投资性房地产 20.15 亿元，合计调增资产总额 36.05 亿元…虚增固定资产 11.89 亿元，虚增在建工程 4.01 亿元，虚增投资性房地产 20.15 亿元\"（决定书@L114）",
+   "ai_verdict": "PASS(终案+三科目+合计)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-C1",
+   "node": "N3",
+   "kind": "extract",
+   "value": "造假手法：财务不记账、虚假记账，伪造、变造大额定期存单或银行对账单，配合营业收入造假伪造销售回款（造假期间见KM-A2，不重复计分）",
+   "doc": "KANGMEI_2019-08-17.txt",
+   "span": "\"康美药业通过财务不记账、虚假记账，伪造、变造大额定期存单或银行对账单，配合营业收入造假伪造销售回款等方式，虚增货币资金\"（告知书@L46-48全句；决定书@L100-102同文）",
+   "ai_verdict": "REVISED(预审R：删期间+跨度补全至最后一项手法)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-D1",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案处罚：公司责令改正+警告+罚款60万元",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"一、对康美药业股份有限公司责令改正，给予警告，并处以 60 万元的罚款\"（决定书@L268）",
+   "ai_verdict": "REVISED(终案锚点，金额与告知书一致)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-D2",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案处罚：马兴田、许冬瑾各罚款90万元",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"二、对马兴田、许冬瑾给予警告，并分别处以 90 万元的罚款\"（决定书@L269）",
+   "ai_verdict": "REVISED(终案锚点+主体)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-D3",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案处罚：邱锡伟罚款30万元",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"三、对邱锡伟给予警告，并处以 30 万元的罚款\"（决定书@L271）",
+   "ai_verdict": "REVISED(终案锚点+主体)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-D4",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案处罚：庄义清、温少生、马焕洲各罚款25万元",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"四、对庄义清、温少生、马焕洲给予警告，并分别处以 25 万元的罚款\"（决定书@L272）",
+   "ai_verdict": "REVISED(终案锚点+主体)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-D5",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案市场禁入（两档）：马兴田、许冬瑾、邱锡伟终身证券市场禁入；庄义清、温少生、马焕洲10年证券市场禁入",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "禁入决定书段：\"对马兴田、许冬瑾、邱锡伟采取终身证券市场禁入措施\"(@L495-496)+\"对庄义清、温少生、马焕洲采取 10 年证券市场禁入措施\"(@L503)",
+   "ai_verdict": "PASS(预审P：两档禁入接受，单槽双跨度分别绑定两组人员与期限)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "v1.1提案B：值扩展覆盖终案两档禁入",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-R1",
+   "node": "N_REPORT",
+   "kind": "report",
+   "value": "综合结论：康美药业2016/2017年报虚增营业收入、2016年报/2017年报/2018年半年报虚增货币资金及2018年报虚增资产，终案被处公司罚款60万元并有多人罚款与两档市场禁入(3人终身/3人10年)，两决定书([2020]24号/[2020]6号)于2020-05-14收到",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "决定书事实段(@L86-117)+处罚段(@L268-272)+禁入段(@L495-503)",
+   "ai_verdict": "REVISED(预审R：依赖补全12项+货币资金三报告期精确表述)",
+   "source": "AI_PROPOSED",
+   "derived_from": [
+    "KM-B1",
+    "KM-B2",
+    "KM-B3",
+    "KM-B4",
+    "KM-B5",
+    "KM-B6",
+    "KM-D1",
+    "KM-D2",
+    "KM-D3",
+    "KM-D4",
+    "KM-D5",
+    "KM-X2"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-X1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "2019-08-16收到《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119号）",
+   "doc": "KANGMEI_2019-08-17.txt",
+   "span": "\"2019 年 8 月 16 日，公司及相关当事人收到证监会《行政处罚及市场禁入事先告知书》（处罚字〔2019〕119 号）\"（告知书@L26-27）",
+   "ai_verdict": "REVISED(预审R：行号已补)",
+   "source": "KM_GOLD_CANDIDATES",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-X2",
+   "node": "N4",
+   "kind": "extract",
+   "value": "2020-05-14收到《行政处罚决定书》（[2020]24号）及《市场禁入决定书》（[2020]6号）",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"2020 年 5 月 14 日，公司收到证监会《行政处罚决定书》（[2020]24 号）及《市场禁入决定书》（[2020]6 号）\"（决定书@L29-30完整句，含禁入决定书文号）",
+   "ai_verdict": "REVISED(预审R：完整标题+文号恢复)",
+   "source": "KM_GOLD_CANDIDATES",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "KM-X5",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年报虚增货币资金占披露总资产41.13%、净资产76.74%",
+   "doc": "KANGMEI_2020-05-15.txt",
+   "span": "\"占公司披露总资产的 41.13%和净资产的 76.74%\"（决定书@L103占比部分）",
+   "ai_verdict": "REVISED(预审R：与B3拆分，本槽仅测相对占比)",
+   "source": "AI_PROPOSED",
+   "ai_note": "v1.1提案",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "KM-U1",
+   "node": "N_REPORT",
+   "expected_status": "UNKNOWN",
+   "value": "虚假陈述民事赔偿诉讼最终赔付总额",
+   "doc": "本组文书",
+   "note": "本组文书未披露(silver结论)",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [],
+ "scoring_contract": {
+  "n_scored_slots": 18,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "P0补齐：6/6待定位槽已锚定，其余转人工",
+  "数值归一化(预审接受)：①全角，与半角,数值比较等价②归一化采用Unicode NFKC③千分位逗号统一处理④证据跨度保留文书原貌，不为归一化改写原文——22，548，513，485.42与22,548,513,485.42判定数值一致"
+ ],
+ "self_precheck": {
+  "date": "2026-11-08",
+  "by": "builder-self(非独立复核)",
+  "findings": [
+   "全部槽位升级为指标名+逐字跨度+行号(事实与处罚锚定2020-05-15终案决定书公告)",
+   "D5扩展覆盖终案两档禁入(告知书仅终身档)",
+   "A2/X5两处建设方提案改值(原值模糊/误挂)——待预审裁决",
+   "B3-B5仍锚告知书"
+  ]
+ },
+ "pre_review": {
+  "batch": 6,
+  "reviewer": "operator-AI-precheck(2026-11-08)",
+  "result": "8P/7R+3提案裁决(A2 P/X5条件R/D5 P)",
+  "note": "v1.2落实：B3/X5金额-占比拆分；C1删期间+手法全句跨度；R1依赖12项+三报告期表述；X1行号@L26-27；X2完整句含[2020]6号；全角逗号归一化规则入hints；U1保留UNKNOWN"
+ },
+ "final_review": {
+  "date": "2026-11-08",
+  "result": "KM-B4指标名补齐"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ }
+}

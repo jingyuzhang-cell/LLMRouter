@@ -1,0 +1,49 @@
+{
+ "batch": "V3_EXPERIMENT_2",
+ "frozen_at": "2026-11-07",
+ "status": "COMPLETE",
+ "budget": {
+  "cap_calls": 120,
+  "cap_tokens": 800000,
+  "cap_yuan": 2.5,
+  "used_calls": 24,
+  "used_tokens": 237805,
+  "used_yuan_est": 0.4232,
+  "note": "healthy arm zero-call (A-PRIME reuse per plan); B1 24 calls; B2 zero-call; 14 calls burned pre-fix on the R-parse bug (wiped, not counted here; total real spend incl. burned = 38)"
+ },
+ "healthy_loose": {
+  "dQ(v3.2-Static) per task": [
+   0.0,
+   0.091,
+   0.143,
+   0.1
+  ],
+  "mean": 0.084,
+  "direction": "3 positive / 1 tie-at-ceiling / 0 negative — matches preregistered prediction (+9.1/+14.3/+10.0/0) exactly",
+  "v3.2_actions": "E03 NONE(saturated gate); E04/SJZG/YJGS Zx (doc-scaled cost)"
+ },
+ "b1_fault_parity": {
+  "result": "v3.2 online ladder == Proposed fixed ladder in outcome AND cost on all 8 cells",
+  "transient": "R:ok, 1 call, full terminal recovery (both strategies)",
+  "persistent": "R:fail -> pi:ok, 2 calls, full recovery (both)",
+  "static": "accepts degraded (Q=0) — recorded"
+ },
+ "b2_tight_audit": "4/4 correct: E03 ceiling-veto, E04/SJZG Zx-feasible(3-doc 272s<=300s), YJGS deadline-veto(5-doc 453s>300s), zero calls",
+ "three_strategy_verdict": {
+  "vs Static": "dominant: healthy +8.4pp mean terminal Q; faults recovered vs collapse; tight-deadline correct withholding",
+  "vs Proposed": ">= everywhere: proactive gains where gates pass, parity at equal cost on faults, savings under tight deadlines",
+  "caveats": "n=4 tasks exploratory; P_select anchors n=1/task; Zx gains ride on the frozen two-layer delivery contract"
+ },
+ "incidents": {
+  "r_parse_bug": "R-success was checked with facts-contract parser against narrative outputs -> false R:fail; caught on first real cell, fixed via Edit (pkill -f had been self-matching the fixing shell, which silently killed two fix attempts); clean rerun; 14 burned calls wiped",
+  "parallel_window": "another session is concurrently executing batch P2B (p2_confirm, launched 21:13) on this machine — separate ledger, shared API accounts; flagged per concurrency precedent"
+ },
+ "files_sha256": {
+  "v3_experiment2_runner.py": "44412123f4f822b310037c7389c28b017ada95437342c32e28691be77fef3d1b",
+  "v3_exp2_config.json": "7ef834d765397c3911959f71fa628126ba7a0c61ad018c713d8db5fbf78c718e",
+  "v3_exp2_runs/ledger.jsonl": "0a9f0fb55afa0d36808bcbd33477bda57cdd939811c8eae979cc9678ae844b10",
+  "v3_exp2_runs/outputs.jsonl": "91b02f2eca4402730555f72b5dafe094d35b2a1431f47139be49152eceac2114",
+  "ub1_delivery.py": "1908ceef0244b1576ca21371f9d675718377eed5f7436aba17d299b5f6142887",
+  "da_js_v3.py": "5dcedc1b68be365f9ce9af39b82c1addbc85f57a2d96523d4798360676391d4c"
+ }
+}

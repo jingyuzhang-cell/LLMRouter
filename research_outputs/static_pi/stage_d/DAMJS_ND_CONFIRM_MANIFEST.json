@@ -1,0 +1,190 @@
+{
+ "batch_id": "DAMJS_ND_CONFIRM",
+ "created": "2026-11-07T23:47:58",
+ "status": "FROZEN_PREREG",
+ "authorization": "No real call authorized. Real mode needs STAGE_D_REAL_CALLS_AUTHORIZED=1, DAMJS_NDC_GO=run, and this prereg registered here; run with --deadline 300 --reps 1,2,3,4,5,6,7,8 --caps {\"calls\":100,\"tokens\":360000,\"yuan\":1.60} --prereg .../DAMJS_ND_CONFIRM_PREREG.md --manifest this.",
+ "design": {
+  "pairs": 8,
+  "deadline_s": 300,
+  "arms": [
+   "R2",
+   "ND-only"
+  ],
+  "seed": 20261107,
+  "caps": {
+   "calls": 100,
+   "tokens": 360000,
+   "yuan": 1.6
+  },
+  "primary": "paired dTP strict-normalized+canonicalized (caliber v3); two-sided exact sign-flip Wilcoxon (nd_confirm_stats.exact_two_sided)",
+  "power": "joint-difference sims: pessimistic 0.891 / hostile 0.640 at n=8 (3 seeds x 20k)"
+ },
+ "components": [
+  {
+   "role": "child",
+   "path": "damjs_r2/v03/v03_child.py",
+   "sha256": "86a18e483d41299310a63e66781baf6d39e36dc3d634f57d460e4c679b3d3117",
+   "bytes": 10219,
+   "runtime": true
+  },
+  {
+   "role": "ndc_runner",
+   "path": "damjs_r2/v03/nd_controlled.py",
+   "sha256": "61320c41454d77213551eb74afec4fb0e7decbfd92fed66ed861910ff6d1d015",
+   "bytes": 12368,
+   "runtime": true
+  },
+  {
+   "role": "v03_mechanisms",
+   "path": "damjs_r2/v03/damjs_v03.py",
+   "sha256": "6b0c9fb7acb9500d0220d632696ee69b3c3deb73e5dca4ba523e9c4a26018101",
+   "bytes": 12341,
+   "runtime": true
+  },
+  {
+   "role": "r2_child_lib",
+   "path": "damjs_r2/damjs_r2_child.py",
+   "sha256": "6443250ff90c377fcb1d269bb84637477ca20454d1b5a8b2edb3289380bc38f7",
+   "bytes": 10159,
+   "runtime": true
+  },
+  {
+   "role": "r2_runner_lib",
+   "path": "damjs_r2/damjs_r2_runner.py",
+   "sha256": "6043b300aba964ad80bf64a580cf3798f89578419fab2959b75edaf9e7b24f8d",
+   "bytes": 16299,
+   "runtime": true
+  },
+  {
+   "role": "bridge",
+   "path": "damjs_r2/damjs_bridge.py",
+   "sha256": "c3e21e85f986cf60aaa8633ab93ea7deee9ff731e95a884c43869f26831b7ce6",
+   "bytes": 12437,
+   "runtime": true
+  },
+  {
+   "role": "wrapper",
+   "path": "damsj_executor.py",
+   "sha256": "107db96a0308c5317b229ca21892de0bb697a2ff4b527c0082cdc344f95292b6",
+   "bytes": 10352,
+   "runtime": true
+  },
+  {
+   "role": "engine",
+   "path": "damsj_engine.py",
+   "sha256": "7eec919b6a11ea99e4e5fb8bfc8ab7edfa0b90def5f360e145b062e570493aef",
+   "bytes": 12741,
+   "runtime": true
+  },
+  {
+   "role": "executor",
+   "path": "stage_d_v2_executor.py",
+   "sha256": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+   "bytes": 56231,
+   "runtime": true
+  },
+  {
+   "role": "config",
+   "path": "stage_d_v2_executor_config.json",
+   "sha256": "914f3edd4c4848e3f7063ce6c398f80afc773cf790844973638550848f543581",
+   "bytes": 1243,
+   "runtime": true
+  },
+  {
+   "role": "dependency_d2",
+   "path": "d2_executor.py",
+   "sha256": "df8a2de69079916110018699c57ec7f4ad9fd482af3f2fa9917360bac056c16e",
+   "bytes": 18399,
+   "runtime": true
+  },
+  {
+   "role": "dependency_prompts",
+   "path": "/root/research_outputs/static_pi/stage_a/executor.py",
+   "sha256": "5f1de3c770aa4869c2b39daa54f8917a90dcd100a8a1952e3315862abf14f889",
+   "bytes": 40089,
+   "runtime": true
+  },
+  {
+   "role": "dependency_transport",
+   "path": "/root/capital_opinion_pilot/transport.py",
+   "sha256": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+   "bytes": 4129,
+   "runtime": true
+  },
+  {
+   "role": "scorer",
+   "path": "/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py",
+   "sha256": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+   "bytes": 40717,
+   "runtime": true
+  },
+  {
+   "role": "task_contract",
+   "path": "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/PHASE2B/TASK_CONTRACT_PHASE2B_v2_1.json",
+   "sha256": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234",
+   "bytes": 33063,
+   "runtime": true
+  },
+  {
+   "role": "confirm_stats",
+   "path": "damjs_r2/v03/nd_confirm_stats.py",
+   "sha256": "c1bd8276b49f9e46622f5ef95ee6e971b8f247a85320c6cf6c3e40365ff3b26d",
+   "bytes": 6407,
+   "runtime": false
+  },
+  {
+   "role": "power_joint",
+   "path": "damjs_r2/v03/nd_confirm_power_joint.py",
+   "sha256": "a715d77bef7f0ce32bd0ff445d13b4b4bd4146a1df0e09a90c5786e871b9f795",
+   "bytes": 2888,
+   "runtime": false
+  },
+  {
+   "role": "caliber_v3",
+   "path": "damjs_r2/v03/caliber_v3.py",
+   "sha256": "8edbb81931267d38961f4a22fcfc001788234449c93f57a478d196c568279b3c",
+   "bytes": 5955,
+   "runtime": false
+  },
+  {
+   "role": "caliber_v3_freeze",
+   "path": "damjs_r2/v03/CALIBER_V3_FREEZE.md",
+   "sha256": "863f79f66e20fb15bd3c396a124606fb7087b152b37e1f042b2973ea3a5839c3",
+   "bytes": 1192,
+   "runtime": false
+  },
+  {
+   "role": "prereg_frozen",
+   "path": "damjs_r2/v03/DAMJS_ND_CONFIRM_PREREG.md",
+   "sha256": "0ea36e6e99ae670d156362f46fa06e8b07b45a654b89e5fc4243b2efde696bf5",
+   "bytes": 5528,
+   "runtime": false
+  },
+  {
+   "role": "real_report",
+   "path": "damjs_r2/v03/ND_CONFIRM_REAL_REPORT.md",
+   "sha256": "8f627d00097adcd821b193f78c0e0ae9992643c9a7a0213cbcdd6f507a895cc5",
+   "bytes": 4070,
+   "runtime": false
+  },
+  {
+   "role": "analysis",
+   "path": "damjs_r2/v03/ND_CONFIRM_ANALYSIS.json",
+   "sha256": "05484b8d65863672ce3b3b34489019583f9aa35c00ba2b84c327a2a246951fc7",
+   "bytes": 8823,
+   "runtime": false
+  },
+  {
+   "role": "analysis_tool",
+   "path": "damjs_r2/v03/nd_confirm_analysis.py",
+   "sha256": "dfb5b48bfab62bfecea588117c7662cf4b2b614e1c8f0d3b97cdf312ca91350e",
+   "bytes": 3526,
+   "runtime": false
+  }
+ ],
+ "real_run": {
+  "status": "7/8 pairs complete (pair 8 infrastructure-incomplete, disclosed); primary p=0.015625, HL +10.5 [9.5,11.0]; ledger 84/343374/Y0.6947",
+  "executed_at": "2026-11-08",
+  "authorization": "operator terminal GO 2026-11-08"
+ }
+}

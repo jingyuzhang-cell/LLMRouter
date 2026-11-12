@@ -1,0 +1,23 @@
+  [PASS] A0 V0.3 mechanism suite still 8/8 (archived results file restored byte-exact)
+  [PASS] A1 pilot R2 arm reproduces the real R2 smoke DAMJS executions (TP/status/calls/actions/decisions)
+  [PASS] A2 S3 four arms: switches wired; rollback and valid committed J1 iff nd; first repair chosen in every arm (p=5.3% before any failure); GLM latch recorded in every arm
+  [PASS] A3 S4 four arms: Z_format chosen, no rollback, TP 14 / strict 14 in every arm
+[ 1] A_240s_S3_r1_ND-only: status=COMPLETE tp=7 watchdog=COMPLETE ledger={'calls': 8, 'yuan': 0.048896, 'tokens': 24752}
+[ 2] A_240s_S3_r1_R2: status=INCOMPLETE_BUDGET tp=0 watchdog=COMPLETE ledger={'calls': 9, 'yuan': 0.050894, 'tokens': 25904}
+{"plan": "A", "mode": "replay", "phase": "smoke", "executed": 2, "stop": "INCOMPLETE_BUDGET: a reservation was denied by the batch ledger", "status": "INCOMPLETE", "ledger": {"calls": 9, "yuan": 0.050894, "tokens": 25904}, "integrity": "OK"}
+{"plan": "A", "mode": "replay", "phase": "smoke", "executed": 0, "stop": "BUDGET_CAP_REACHED:calls (before launching A_240s_S3_r1_V0.3)", "status": "INCOMPLETE", "ledger": {"calls": 9, "yuan": 0.050894, "tokens": 25904}, "integrity": "OK"}
+  [PASS] A4 phase caps reach the children: shared ledger; denial -> INCOMPLETE_BUDGET -> stop; relaunch refused
+{"plan": "A", "mode": "replay", "phase": "smoke", "executed": 0, "stop": "BUDGET_CAP_REACHED:calls (before launching A_240s_S3_r1_ND-only)", "status": "INCOMPLETE", "ledger": {"calls": 0, "yuan": 0.0, "tokens": 0}, "integrity": "OK"}
+  [PASS] A5 authorization ceiling (shared with the R2 ledger): zero room -> no launch; real headroom leaves plan caps binding
+  [PASS] A6 pilot MANIFEST: every registered component matches disk
+  [PASS] A6 every completed replay execution verified identity pre and post
+  [PASS] A6 tampered manifest -> execution INTEGRITY_FAIL; runner refuses to start
+  [PASS] A7 real mode refused without authorization, with mismatched GO, and for phase=all; with ALL conditions (auth + GO=A:smoke + frozen registered prereg) the lock opens only as far as the credential step (stubbed safety net, no call); synthetic gate passes only for a registered, unedited prereg
+  [PASS] A8 stop detectors: C1 violation caught; valid recommit and invalid-v1 cases not flagged; V0.3 traceback caught
+  [PASS] A9 zero network attempts across every replay execution
+  [PASS] A9 replay children receive no credential variables and run the pilot child
+  [PASS] A10 node-level protection on the executor path: every rollback is on a directly recovered node; no downstream-invalidated node is ever rolled back
+  [PASS] A11 decision audit: every EV-evaluated candidate records (p_hat, n_eff, CI95, mu_hat, L_hat, EV)
+
+RESULT: 15 passed, 0 failed (14 replay executions)
+acceptance exit=0

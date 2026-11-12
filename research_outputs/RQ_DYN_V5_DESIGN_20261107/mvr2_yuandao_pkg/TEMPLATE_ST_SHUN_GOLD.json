@@ -1,0 +1,644 @@
+{
+ "task_id": "ST-SHUN",
+ "company": "江苏舜天（*ST舜天 600287）",
+ "status": "FINAL_CANDIDATE_v1.4_PRE_REVIEW_APPLIED",
+ "decisions_ref": "../GOLD_DECISIONS_V5.md",
+ "protocol_ref": "../RQ_DYN_V5_PREREG_FROZEN_v1_0.md",
+ "adjudication": "AI辅助+人工逐槽签收（D2）；未经人工签收不得计分",
+ "review_response": {
+  "v1.1复核六项问题": "全部落实：①补020文档与SHA并加入N3/N2输入 ②13个分年槽补完整表格行跨度(2021同值已原文核实并补占比) ③ST-12删除 ④U-01转正为P-01~P-05+F-01 ⑤时间线全部补具体日期+ST-06改\"收到告知书日期\"+ST-10拆分 ⑥合同v2补复合/派生/语义/UNKNOWN规则",
+  "原则确认": "槽位数量服从质量：本版42计分槽全部有完整证据锚点；签收阶段可再DROP，不维持数量"
+ },
+ "docs": {
+  "st_correction_2022.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/st_correction_2022.txt",
+   "sha256": "2307507920c14f463b80bd8cf69f5edc7fc3e1cee80ac648ee5d58e8ef43e062"
+  },
+  "st_board_note_2022.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/st_board_note_2022.txt",
+   "sha256": "c0e119e8680e71cf78ebb540c3959332fa762040991e4aec20b70dcdc9c04c1d"
+  },
+  "csrc_penalty_2024_41.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/csrc_penalty_2024_41.txt",
+   "sha256": "bd737603de0c4a4355a0d0707582a0a6e0e5d30162fd9515d889215e4a657756"
+  },
+  "st_advance_notice_2023.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/st_advance_notice_2023.txt",
+   "sha256": "5acc3cf9e7f86a359332d62fa895e3df97ca3544d8b9c8407fc9d27e9c7f878d"
+  },
+  "st_announce_2024_020.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/st_announce_2024_020.txt",
+   "sha256": "0817ab85241a01561616616bfa0449e74dbaedac6221b342251ba445e2770333"
+  },
+  "st_announce_2024_021.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/st_announce_2024_021.txt",
+   "sha256": "0aa968ce094cd2bc863cc3bd103a624ce9bc4d9d8637c254565d021d02d30333"
+  }
+ },
+ "doc_alias": {
+  "correction": "st_correction_2022.txt",
+  "board_note": "st_board_note_2022.txt",
+  "penalty": "csrc_penalty_2024_41.txt",
+  "advance": "st_advance_notice_2023.txt",
+  "receipt_020": "st_announce_2024_020.txt",
+  "warning_021": "st_announce_2024_021.txt"
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1_corr_extract",
+    "kind": "extract",
+    "docs": [
+     "st_correction_2022.txt",
+     "st_board_note_2022.txt"
+    ],
+    "upstream": [],
+    "role": "差错更正与会计调整事实"
+   },
+   {
+    "node": "N2_penalty_extract",
+    "kind": "extract",
+    "docs": [
+     "csrc_penalty_2024_41.txt",
+     "st_announce_2024_020.txt"
+    ],
+    "upstream": [],
+    "role": "处罚认定：方式/总额/分年/责任人/量罚"
+   },
+   {
+    "node": "N3_proced_timeline",
+    "kind": "timeline",
+    "docs": [
+     "st_advance_notice_2023.txt",
+     "st_announce_2024_020.txt",
+     "st_announce_2024_021.txt"
+    ],
+    "upstream": [],
+    "role": "更正→立案→告知→决定→警示时序"
+   },
+   {
+    "node": "N4_cross_verify",
+    "kind": "verification",
+    "docs": [],
+    "upstream": [
+     "N1_corr_extract",
+     "N2_penalty_extract"
+    ],
+    "role": "跨文档一致性与矛盾核查"
+   },
+   {
+    "node": "N5_final_report",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N2_penalty_extract",
+     "N3_proced_timeline",
+     "N4_cross_verify"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "ST-01",
+   "node": "N1_corr_extract",
+   "kind": "extract",
+   "value": "差错更正涉及年度：2009–2020年报+2021Q3",
+   "doc": "st_correction_2022.txt",
+   "span": "本次差错更正涉及 2009 年度至 2020 年度合并财务报表及母公司财务报表、2021 年第三季度合并财务报表（公告头部重要内容提示）",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-02",
+   "node": "N1_corr_extract",
+   "kind": "extract",
+   "value": "差错更正原因：通讯器材业务收入确认总额法→净额法",
+   "doc": "st_board_note_2022.txt",
+   "span": "公司决定将通讯器材业务的收入确认方法由\"总额法\"调整为\"净额法\"",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-13",
+   "node": "N1_corr_extract",
+   "kind": "extract",
+   "value": "差错更正声明：对公司总资产/净资产/利润均无影响",
+   "doc": "st_correction_2022.txt",
+   "span": "对公司总资产、归属于上市公司股东的净资产、利润总额、净利润、归属于上市公司股东的净利润均无影响",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-14",
+   "node": "N1_corr_extract",
+   "kind": "extract",
+   "value": "合并资产负债表预付款项更正：561,176,780.74→528,645,635.36（调减32,531,145.38）",
+   "doc": "st_correction_2022.txt",
+   "span": "表头\"项目 更正前金额 更正金额 更正后金额\"+行\"预付款项 561,176,780.74 -32,531,145.38 528,645,635.36\"（第40-41行；区别于第50/90行母公司/2021Q3同科目行）",
+   "ai_verdict": "PASS(v1.2已补表头与表格归属)",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-03",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2009–2021虚增营业收入总额：10,333,448,392.98元",
+   "doc": "csrc_penalty_2024_41.txt",
+   "span": "共计虚增营业收入 10,333,448,392.98 元，虚增营业成本 9,398,996,635.72 元，虚增利润总额 934,451,757.26 元（020公告76-77行同文）",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-04",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2009–2021虚增利润总额：934,451,757.26元",
+   "doc": "csrc_penalty_2024_41.txt",
+   "span": "虚增利润总额 934,451,757.26 元（总额段同句）",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-05",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "违法方式：通讯器材内贸虚假自循环业务",
+   "doc": "csrc_penalty_2024_41.txt",
+   "span": "通过参与通讯器材内贸虚假自循环业务",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-08",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "行政处罚决定书文号：〔2024〕41号",
+   "doc": "st_announce_2024_020.txt",
+   "span": "《行政处罚决定书》（〔2024〕41 号）及《市场禁入决定书》（〔2024〕10 号）（第23行）",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-08b",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "市场禁入决定书文号：〔2024〕10号",
+   "doc": "st_announce_2024_020.txt",
+   "span": "同上句",
+   "ai_verdict": "PASS(v1.2新增，双文书配套)",
+   "source": "AI_PROPOSED"
+  },
+  {
+   "slot_id": "ST-09",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "高松在相关期间曾任江苏舜天董事、总经理、董事长",
+   "doc": "csrc_penalty_2024_41.txt",
+   "span": "csrc_penalty_2024_41.txt\"高松，男，1971 年 2 月出生，时任江苏舜天董事、总经理、董事长等职务\"+st_announce_2024_020.txt第138行任职时间线\"高松 2016 年 12 月至 2018 年 3 月任江苏舜天董事兼总经理，2018 年 3 月至 2019 年 8 月任江苏舜天总经理，2018 年 3 月至今任江苏舜天董事长\"(历任佐证)",
+   "ai_verdict": "REVISED(独立复核R:补强证据定位)",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED",
+   "ai_note": "证据补强：csrc任职表述+020第138行分段时间线，支撑\"在相关期间曾任\""
+  },
+  {
+   "slot_id": "ST-Y2009",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2009年年报虚增营业收入156,498,376.07元、虚增营业成本151,597,880.30元、虚增利润总额4,900,495.77元、收入占比3.77%、利润占比8.69%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2009 年年报虚增营业收入 156,498,376.07 元，虚增营业成本 151,597,880.30 元，虚增利润总额 4,900,495.77 元，虚增营业收入占当年年报披露营业收入的 3.77%，虚增利润总额占当年披露利润总额的 8.69%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2010",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2010年年报虚增营业收入324,680,384.70元、虚增营业成本307,117,384.62元、虚增利润总额17,563,000.08元、收入占比5.83%、利润占比52.52%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2010 年年报虚增营业收入 324,680,384.70 元，虚增营业成本 307,117,384.62 元，虚增利润总额 17,563,000.08 元，虚增营业收入占当年年报披露营业收入的 5.83%，虚增利润总额占当年披露利润总额的 52.52%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2011",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2011年年报虚增营业收入439,362,648.95元、虚增营业成本401,183,581.47元、虚增利润总额38,179,067.48元、收入占比7.41%、利润占比51.12%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2011 年年报虚增营业收入 439,362,648.95 元，虚增营业成本 401,183,581.47 元，虚增利润总额 38,179,067.48 元，虚增营业收入占当年年报披露营业收入的 7.41%，虚增利润总额占当年披露利润总额的 51.12%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2012",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2012年年报虚增营业收入1,143,696,580.99元、虚增营业成本1,051,275,717.43元、虚增利润总额92,420,863.56元、收入占比19.95%、利润占比132.86%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2012 年年报虚增营业收入 1,143,696,580.99 元，虚增营业成本 1,051,275,717.43 元，虚增利润总额 92,420,863.56 元，虚增营业收入占当年年报披露营业收入的 19.95%，虚增利润总额占当年披露利润总额的 132.86%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2013",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2013年年报虚增营业收入1,169,640,166.32元、虚增营业成本1,096,542,042.37元、虚增利润总额73,098,123.95元、收入占比20.17%、利润占比18.26%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2013 年年报虚增营业收入 1,169,640,166.32 元，虚增营业成本 1,096,542,042.37 元，虚增利润总额 73,098,123.95 元，虚增营业收入占当年年报披露营业收入的 20.17%，虚增利润总额占当年披露利润总额的 18.26%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2014",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2014年年报虚增营业收入1,108,470,170.54元、虚增营业成本1,038,223,035.03元、虚增利润总额70,247,135.51元、收入占比19.19%、利润占比55.38%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2014 年年报虚增营业收入 1,108,470,170.54 元，虚增营业成本 1,038,223,035.03 元，虚增利润总额 70,247,135.51 元，虚增营业收入占当年年报披露营业收入的 19.19%，虚增利润总额占当年披露利润总额的 55.38%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2015",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2015年年报虚增营业收入1,495,996,753.28元、虚增营业成本1,367,440,895.74元、虚增利润总额128,555,857.54元、收入占比25.61%、利润占比88.68%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2015 年年报虚增营业收入 1,495,996,753.28 元，虚增营业成本 1,367,440,895.74 元，虚增利润总额 128,555,857.54 元，虚增营业收入占当年年报披露营业收入的 25.61%，虚增利润总额占当年披露利润总额的 88.68%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2016",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2016年年报虚增营业收入837,819,999.91元、虚增营业成本696,192,478.97元、虚增利润总额141,627,520.94元、收入占比17.64%、利润占比110.51%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2016 年年报虚增营业收入 837,819,999.91 元，虚增营业成本 696,192,478.97 元，虚增利润总额 141,627,520.94 元，虚增营业收入占当年年报披露营业收入的 17.64%，虚增利润总额占当年披露利润总额的 110.51%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2017",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2017年年报虚增营业收入882,007,949.22元、虚增营业成本777,011,141.34元、虚增利润总额104,996,807.88元、收入占比16.04%、利润占比74.24%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2017 年年报虚增营业收入 882,007,949.22 元，虚增营业成本 777,011,141.34 元，虚增利润总额 104,996,807.88 元，虚增营业收入占当年年报披露营业收入的 16.04%，虚增利润总额占当年披露利润总额的 74.24%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2018",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2018年年报虚增营业收入426,024,840.24元、虚增营业成本380,149,826.73元、虚增利润总额45,875,013.51元、收入占比7.94%、利润占比29.20%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2018 年年报虚增营业收入 426,024,840.24 元，虚增营业成本 380,149,826.73 元，虚增利润总额 45,875,013.51 元，虚增营业收入占当年年报披露营业收入的 7.94%，虚增利润总额占当年披露利润总额的 29.20%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2019",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2019年年报虚增营业收入764,429,653.89元、虚增营业成本723,449,307.48元、虚增利润总额40,980,346.41元、收入占比16.54%、利润占比10.13%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2019 年年报虚增营业收入 764,429,653.89 元，虚增营业成本 723,449,307.48 元，虚增利润总额 40,980,346.41 元，虚增营业收入占当年年报披露营业收入的 16.54%，虚增利润总额占当年披露利润总额的 10.13%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2020",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2020年年报虚增营业收入1,494,153,988.91元、虚增营业成本1,408,813,344.24元、虚增利润总额85,340,644.67元、收入占比34.13%、利润占比32.49%",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2020 年年报虚增营业收入 1,494,153,988.91 元，虚增营业成本 1,408,813,344.24 元，虚增利润总额 85,340,644.67 元，虚增营业收入占当年年报披露营业收入的 34.13%，虚增利润总额占当年披露利润总额的 32.49%\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 补全完整表格行跨度（原span仅为节标题）",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-Y2021",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "2021年年报虚增营业收入90,666,879.96元、虚增利润总额90,666,879.96元、收入占比2.34%、利润占比16.23%(绝对值)",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2021 年年报虚增营业收入 90,666,879.96 元，虚增利润总额 90,666,879.96 元，虚增营业收入占当年年报披露营业收入的 2.34%，虚增利润总额占当年披露利润总额的 16.23%(绝对值)\"（020公告分年表完整行）",
+   "ai_verdict": "PASS(完整行跨度已补)",
+   "ai_note": "v1.2: 2021行营收与利润同值90,666,879.96已经原文逐字核对属实；2021利润占比为绝对值口径",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "P-01",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "公司处罚：责令改正+警告+罚款1,000万元",
+   "doc": "st_announce_2024_020.txt",
+   "span": "一、对江苏舜天股份有限公司责令改正，给予警告，并处以 1,000 万元罚款",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "ai_note": "原U-01转正；对应MVR1 penalty_amounts锚点"
+  },
+  {
+   "slot_id": "P-02",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "高松处罚：警告+罚款150万元",
+   "doc": "st_announce_2024_020.txt",
+   "span": "二、对高松给予警告，并处以 150 万元罚款",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "ai_note": "原U-01拆分"
+  },
+  {
+   "slot_id": "P-03",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "桂生春处罚：警告+罚款100万元",
+   "doc": "st_announce_2024_020.txt",
+   "span": "三、对桂生春给予警告，并处以 100 万元罚款",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED"
+  },
+  {
+   "slot_id": "P-04",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "王重人/李焱/赵凡处罚：警告+各罚款60万元",
+   "doc": "st_announce_2024_020.txt",
+   "span": "四、对王重人、李焱、赵凡给予警告，并分别处以 60 万元罚款",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED"
+  },
+  {
+   "slot_id": "P-05",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "高松被采取3年证券市场禁入措施",
+   "doc": "st_announce_2024_020.txt",
+   "span": "高松采取 3 年证券市场禁入措施。自我会宣布决定之日起…（第479行）",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED"
+  },
+  {
+   "slot_id": "F-01",
+   "node": "N2_penalty_extract",
+   "kind": "extract",
+   "value": "公司及高松、桂生春、王重人、李焱、赵凡的申辩意见分别不予采纳",
+   "doc": "st_announce_2024_020.txt",
+   "span": "st_announce_2024_020.txt 六处复核结论(行号)：第278行(公司)\"我会对江苏舜天的申辩意见不予采纳\"；第475行(高松)；第297行(桂生春)；第307行(王重人)；第314行(李焱)；第320行(赵凡)各自\"申辩意见不予采纳\"",
+   "ai_verdict": "REVISED(独立复核R:补强证据定位)",
+   "source": "AI_PROPOSED",
+   "ai_note": "证据补强：六处逐条行号定位"
+  },
+  {
+   "slot_id": "ST-06",
+   "node": "N3_proced_timeline",
+   "kind": "extract",
+   "value": "收到中国证监会《立案告知书》日期：2022-11-04（编号：证监立案字0382022008号）",
+   "doc": "st_advance_notice_2023.txt",
+   "span": "江苏舜天股份有限公司…于2022年11月4日收到中国证券监督管理委员会下发的《立案告知书》（编号：证监立案字0382022008号）（第88行；020公告13-15行同文）",
+   "ai_verdict": "PASS(v1.2已按复核意见改为\"收到告知书日期\"，与立案决定日期区分)",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-07",
+   "node": "N3_proced_timeline",
+   "kind": "extract",
+   "value": "事先告知书文号：处罚字〔2023〕37号",
+   "doc": "st_advance_notice_2023.txt",
+   "span": "《行政处罚及市场禁入事先告知书》（处罚字〔2023〕37号）（第89行）",
+   "ai_verdict": "PASS",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-10",
+   "node": "N3_proced_timeline",
+   "kind": "extract",
+   "value": "停牌日：2024-07-08（全天）",
+   "doc": "st_announce_2024_021.txt",
+   "span": "600287 江苏舜天 A 股 停牌 2024/7/8 全天 2024/7/8 2024/7/9；\"停牌日期为 2024 年 7 月 8 日\"（第17-18行）",
+   "ai_verdict": "PASS(v1.2: 停牌与警示实施两概念已拆分，本槽仅停牌日)",
+   "source": "EXISTING_CANDIDATE_SPANCHECKED"
+  },
+  {
+   "slot_id": "ST-10b",
+   "node": "N3_proced_timeline",
+   "kind": "extract",
+   "value": "其他风险警示实施起始日：2024-07-09；简称变更为\"ST舜天\"；日涨跌幅限制5%",
+   "doc": "st_announce_2024_021.txt",
+   "span": "\"实施起始日为 2024 年 7 月 9 日\"\"实施后 A 股简称为 ST 舜天\"\"日涨跌幅限制为 5%\"",
+   "ai_verdict": "PASS(v1.2新增拆分槽)",
+   "source": "AI_PROPOSED"
+  },
+  {
+   "slot_id": "T-01",
+   "node": "N3_proced_timeline",
+   "kind": "timeline",
+   "value": "会计差错更正公告落款日期(2022-04-30)早于收到《立案告知书》(2022-11-04)",
+   "doc": "st_correction_2022.txt + st_advance_notice_2023.txt",
+   "span": "更正公告尾部落款\"二零二二年四月三十日\"+020公告\"2022 年 4 月 30 日，江苏舜天发布《…关于会计差错更正的公告》\"(发布旁证) vs ST-06跨度",
+   "ai_verdict": "REVISED(预审R:改为落款日期口径)",
+   "source": "AI_PROPOSED",
+   "ai_note": "预审修订v1.4；不凭落款推断实际发布时间，020同日发布表述仅作旁证"
+  },
+  {
+   "slot_id": "T-02",
+   "node": "N3_proced_timeline",
+   "kind": "timeline",
+   "value": "收到《立案告知书》(2022-11-04)早于收到事先告知书(2023-06-30)",
+   "doc": "st_advance_notice_2023.txt",
+   "span": "第88行(2022年11月4日)与第89行(2023年6月30日)相邻两句",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED"
+  },
+  {
+   "slot_id": "T-03",
+   "node": "N3_proced_timeline",
+   "kind": "timeline",
+   "value": "收到事先告知书(2023-06-30)早于《行政处罚决定书》收到情况公告披露日(2024-07-06，临2024-020)",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2023 年 6 月 30 日…收到…事先告知书\"（16行）与\"近日…收到《行政处罚决定书》（〔2024〕41 号）\"（21-23行）+公告落款\"二零二四年七月六日\"；注：决定书签收具体日期原文未载(\"近日\")，以公告日2024-07-06为可验证上界",
+   "ai_verdict": "PASS(口径定案：不主张决定书签收具体日期——原文仅\"近日\"；以公告披露日2024-07-06为可验证锚点)",
+   "source": "AI_PROPOSED",
+   "ai_note": "T-03口径已按复核意见定案，本槽为严格可验证事实"
+  },
+  {
+   "slot_id": "T-04",
+   "node": "N3_proced_timeline",
+   "kind": "timeline",
+   "value": "决定书收到公告(2024-07-06)早于停牌(2024-07-08)早于风险警示实施(2024-07-09)",
+   "doc": "st_announce_2024_020.txt + st_announce_2024_021.txt",
+   "span": "020落款2024-07-06 vs 021\"停牌2024/7/8\"\"实施起始日2024年7月9日\"",
+   "ai_verdict": "PASS(v1.2已补全部具体日期)",
+   "source": "AI_PROPOSED"
+  },
+  {
+   "slot_id": "V-01",
+   "node": "N4_cross_verify",
+   "kind": "verification",
+   "value": "2009-2021十三个分年虚增营业收入合计=10,333,448,392.98元，与处罚认定总额一致",
+   "doc": "st_announce_2024_020.txt",
+   "span": "分年表(79-134行)+\"共计虚增营业收入 10,333,448,392.98 元\"(76行)",
+   "derived_from": [
+    "ST-Y2009",
+    "ST-Y2010",
+    "ST-Y2011",
+    "ST-Y2012",
+    "ST-Y2013",
+    "ST-Y2014",
+    "ST-Y2015",
+    "ST-Y2016",
+    "ST-Y2017",
+    "ST-Y2018",
+    "ST-Y2019",
+    "ST-Y2020",
+    "ST-Y2021",
+    "ST-03"
+   ],
+   "computation": "Σ(2009..2021 虚增营业收入)=10,333,448,392.98（复核已验证差额0.00元）",
+   "expected_value": "10,333,448,392.98",
+   "ai_verdict": "PASS(算术+证据链均已核)",
+   "source": "AI_PROPOSED"
+  },
+  {
+   "slot_id": "V-02",
+   "node": "N4_cross_verify",
+   "kind": "verification",
+   "value": "会计差错更正与处罚决定对通讯器材业务分别作出会计处理口径(总额法→净额法)与违法性质认定(虚假自循环业务)，两者涉及范围及金额口径需进一步核对，不直接判定是否矛盾",
+   "doc": "st_board_note_2022.txt + csrc_penalty_2024_41.txt",
+   "span": "ST-02跨度+\"通过参与通讯器材内贸虚假自循环业务\"",
+   "scoring_points": [
+    "分别指出两文书的表述层次(会计处理vs违法认定)",
+    "指出范围与金额口径需核对",
+    "不断言存在或不存在事实矛盾"
+   ],
+   "allowed_expressions": [
+    "口径需进一步核对",
+    "分别作出会计处理与违法性质认定",
+    "不直接判定矛盾"
+   ],
+   "ai_verdict": "REVISED(预审R:中性化表述)",
+   "source": "AI_PROPOSED",
+   "ai_note": "预审修订v1.4；判分要点同步改为中性口径"
+  },
+  {
+   "slot_id": "R-01",
+   "node": "N5_final_report",
+   "kind": "report",
+   "value": "公司公告称：依据《上海证券交易所股票上市规则》新旧规则衔接安排第七条实施其他风险警示；公司自查认为未触及重大违法强制退市情形(公告口径，非监管认定)",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"1、根据《上海证券交易所股票上市规则》的规定以及《行政处罚决定书》陈述的情况，经公司自查，判断本次涉及信息披露违法违规行为未触及…重大违法强制退市情形。2、根据…新旧规则适用的衔接安排第七条规定，公司将被实施其他风险警示\"（490-495行）",
+   "scoring_points": [
+    "其他风险警示(非退市风险警示/非强制退市)",
+    "衔接安排第七条",
+    "自查未触及重大违法强制退市"
+   ],
+   "ai_verdict": "REVISED(预审R:归属公告口径)",
+   "source": "AI_PROPOSED",
+   "ai_note": "预审修订v1.4；公司自查结论不作独立监管认定；span(020第490-495行)不变"
+  },
+  {
+   "slot_id": "R-02",
+   "node": "N5_final_report",
+   "kind": "report",
+   "value": "待核验的口径差异：更正公告声明\"对总资产/净资产/利润均无影响\"，处罚决定认定2009-2021虚增利润总额934,451,757.26元——两份文书存在待核验的口径差异",
+   "doc": "st_correction_2022.txt + csrc_penalty_2024_41.txt",
+   "span": "ST-13跨度+\"虚增利润总额 934,451,757.26 元\"",
+   "scoring_points": [
+    "指出两文书表述差异",
+    "引用两处原文表述/数字",
+    "不直接判定矛盾成立"
+   ],
+   "ai_verdict": "REVISED(预审R:改为待核验口径)",
+   "source": "AI_PROPOSED",
+   "ai_note": "预审修订v1.4；R-03(更正后数据仍虚假记载)保留为相关事实但不升级为矛盾判定"
+  },
+  {
+   "slot_id": "R-03",
+   "node": "N5_final_report",
+   "kind": "report",
+   "value": "处罚认定：2022-04-30更正公告中调整后的财务数据仍存在虚假记载",
+   "doc": "st_announce_2024_020.txt",
+   "span": "\"2022 年 4 月 30 日，江苏舜天发布《…关于会计差错更正的公告》…该公告中调整后的财务数据仍存在虚假记载\"（136-139行）",
+   "scoring_points": [
+    "更正后数据仍虚假",
+    "关联2022-04-30更正公告"
+   ],
+   "ai_verdict": "PASS(v1.2新增，直接支撑R-02结论链)",
+   "source": "AI_PROPOSED"
+  }
+ ],
+ "dropped_slots": [
+  {
+   "slot_id": "ST-12",
+   "reason": "无文档无跨度；与V-02为同一跨文档判断；v1.1中span=null却标PASS属标注不一致——按复核意见DROP，判断由V-02承载"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "U-02",
+   "node": "N5_final_report",
+   "expected_status": "UNKNOWN",
+   "value": "公司是否进入退市整理期及期限",
+   "doc": "六份证据文件全集",
+   "note": "AI已验证020/021/更正公告均无\"退市整理期\"表述；且020载明自查未触及重大违法强制退市。本UNKNOWN指\"本任务证据集合内不可答\"，非对事实的断言"
+  }
+ ],
+ "scoring_contract": {
+  "n_scored_slots": 42,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15（协议§5）",
+  "normalization": "空白（含全角）全去；数值去千分位；日期归一 YYYY-MM-DD；中文日期与ISO等价（沿用 E04_P2 合同）",
+  "value_match_rules": {
+   "exact_string": "去空白后与 expected_value/allowed_expressions 逐字相等(不计大小写)",
+   "numeric": "抽取数值(去千分位/单位)与任一允许值相等",
+   "date": "归一后相等",
+   "set": "必含元素齐全"
+  },
+  "composite_rule": "复合槽（如ST-Y*）必须全部必填字段正确才计正确：年份+虚增营业收入+虚增利润总额+收入占比+利润占比（营业成本为span内参考项，不强制）；数值必须与指标名+单位正确绑定，仅出现相同数字不计分",
+  "derived_rule": "派生槽必须声明 derived_from/计算过程/expected_value；V-01: derived_from=[ST-Y2009..ST-Y2021,ST-03]，计算=Σ13个分年虚增营业收入，expected=10,333,448,392.98，判分要求模型给出一致合计并正确关联分年事实",
+  "semantic_rule": "语义槽（V-02/R-02/R-03）按 scoring_points 逐点判定，允许表达见 allowed_expressions；R-02与V-02判分点已区分，如人工认定语义重复可DROP其一",
+  "unknown_rule": "UNKNOWN槽单独评价：仅当模型显式声明证据不足/无法从材料判定时计为正确识别；错误作答具体值或笼统拒答均不计分",
+  "mvr1_crossref": "P-01~P-05 对应 v23a MVR1 penalty_amounts 冻结锚点，签收阶段逐值交叉核对",
+  "tp_definition": "终端节点输出对照全部 scored slots；下游不得复制上游（协议§3.4①）"
+ },
+ "review_hints": [
+  "ST-Y2021：营收与利润同为90,666,879.96——已对照020公告第130-133行原文逐字核实属实（v1.1提示中的\"90,668,79.96\"为笔误，正确值为90,666,879.96）",
+  "T-03：决定书签收具体日期原文为\"近日\"未载——已改为以公告日2024-07-06为可验证上界并如实标注，请人工确认接受该锚点或要求降级处理",
+  "V-01：Σ13分年=总额 差额0.00元（复核已独立验证）；derived_from与计算式已入合同",
+  "U-01已全部转正（P-01公司1000万/P-02高松150万/P-03桂生春100万/P-04王等各60万/P-05高松3年禁入/F-01申辩均不予采纳）；U-02保留且范围表述已按复核意见修正",
+  "ST-14：span已补表头\"项目/更正前金额/更正金额/更正后金额\"并注明区别于第50/90行的同科目行",
+  "六门状态：①④已修复待签收 ②全部槽位有跨度待逐槽签验 ③仅U-02且范围明确 ⑤SHA256已算出(冻结于签收完成时) ⑥合同v2已补四类规则",
+  "v1.4：预审第一批6R全部落实；F-01覆盖核实=公司+5责任人共6处不予采纳"
+ ],
+ "expansion_policy": "按操作者2026-11-07策略指示：停止扩展，v1.3为最终候选；后续变更仅限人工签收产生的REVISE/DROP",
+ "slot_count_comparability": "本任务42槽 vs 其余任务目标18-24槽：①灾难阈值为TP_ratio比例口径，跨任务可比；②主检验为簇级秩和(秩统计对量纲稳健)；③预注册敏感性含任务内标准化ΔTP/槽位数。如签收人认为需更均衡，可将ST-Y*分年行降为span参考、仅保留ST-03总额（核心计分槽降至约24）——由签收人裁决，不预设",
+ "pre_review": {
+  "batch": 1,
+  "reviewer": "operator-AI-precheck(2026-11-07)",
+  "result": "36P/6R/0newD",
+  "note": "P项为预审建议，最终签收须对照完整跨度与源文档；6个R项已按预审措辞落实到v1.4；U-02维持UNKNOWN待人工确认全集检索；ST-12维持DROP"
+ },
+ "independent_ai_review": {
+  "date": "2026-11-08",
+  "result": "全P(依据修订明细更新，未重读原件)",
+  "boundary": "AI复核≠人工终签；human列空置待指定签收人"
+ }
+}

@@ -1,0 +1,362 @@
+{
+ "task_id": "MX3_ZD",
+ "company": "獐子岛(002069)",
+ "status": "FINAL_CANDIDATE_v1.3",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "ZHANGZIDAO_2019-01-08.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZHANGZIDAO/ZHANGZIDAO_2019-01-08.txt",
+   "sha256": "3e68d8c40c47d8238771375487b779181e850f3179daa2b9e62604768bafd5d6"
+  },
+  "ZHANGZIDAO_2019-07-11.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZHANGZIDAO/ZHANGZIDAO_2019-07-11.txt",
+   "sha256": "26ca538ea2c8e3bf764463616b51a01da8d4476500272b7ebf520c6f55b48448"
+  },
+  "ZHANGZIDAO_2020-06-25.txt": {
+   "path": "/root/research_outputs/static_pi/stage_d/v23a/docs/ZHANGZIDAO/ZHANGZIDAO_2020-06-25.txt",
+   "sha256": "1654125c0bd9dc2c21db70b47e17b3207f17e1f818288ac37cf38047d03ce0f5"
+  },
+  "zzd_notice_2019.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/zzd_notice_2019.txt",
+   "sha256": "89ccf12e1921dc43d617301ab9e001e445507bc4f20d84708badb991cb982e9f"
+  },
+  "zzd_penalty_2020.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/zzd_penalty_2020.txt",
+   "sha256": "3fb8dcbf08a8469c4735c54bbe8e9c6553971d5b93a51319e95f42f4831934be"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "A1",
+    "kind": "extract",
+    "role": "2019年年初公告披露的进展事实",
+    "docs": [
+     "ZHANGZIDAO_2019-01-08.txt"
+    ]
+   },
+   {
+    "node": "A2",
+    "kind": "extract",
+    "role": "2020年处罚决定认定的违法事实",
+    "docs": [
+     "zzd_penalty_2020.txt"
+    ]
+   },
+   {
+    "node": "B1",
+    "kind": "verification",
+    "role": "比对早期披露与处罚认定的差异(消费A1与A2输出)",
+    "upstream": [
+     "A1",
+     "A2"
+    ]
+   },
+   {
+    "node": "C1",
+    "kind": "reason",
+    "role": "基于B1差异推导披露问题的性质与时序",
+    "upstream": [
+     "B1"
+    ]
+   },
+   {
+    "node": "D1",
+    "kind": "report",
+    "role": "综合结论",
+    "upstream": [
+     "B1",
+     "C1"
+    ]
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "ZD-A1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "《调查通知书》编号：连调查字[2018]001号",
+   "doc": "ZHANGZIDAO_2019-01-08.txt",
+   "span": "《调查通知书》编号：连调查字[2018]001号（ZHANGZIDAO_2019-01-08.txt@L31）",
+   "ai_verdict": "PASS(逐字+行号)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-B1",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年度虚减营业成本：6,002.99万元（因账面结转捕捞面积较实际少13.93万亩）",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"獐子岛公司 2016 年度账面结转捕捞面积较实际捕捞面积少 13.93 万亩，由此，獐子岛公司 2016 年度虚减营业成本 6,002.99 万元\"（终案@L173-174）",
+   "ai_verdict": "PASS(终案+指标名+因果)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-B2",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年度虚减营业外支出：7,111.78万元",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"獐子岛公司 2016 年度虚减了营业外支出 7,111.78 万元\"（终案@L182-183）",
+   "ai_verdict": "PASS(终案+指标名)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-B3",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年度虚增利润：13,114.77万元",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"獐子岛公司 2016 年度虚增利润 13,114.77 万元\"（终案@L187-188，仅金额；占比见ZD-B3b）",
+   "ai_verdict": "PASS(终案+金额/占比拆分)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-B3b",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年度虚增利润占当期利润总额比例：158.11%",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"虚增利润占当期利润总额的 158.11%\"（终案@L188-189，仅占比）",
+   "ai_verdict": "PASS(与B3拆分，本槽仅测占比)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-B4",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2016年度账面结转捕捞面积较实际捕捞面积少：13.93万亩",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"獐子岛公司 2016 年度账面结转捕捞面积较实际捕捞面积少 13.93 万亩\"（终案@L173）",
+   "ai_verdict": "PASS(终案+指标名)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-B5",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2017年度虚增营业成本：6,159.03万元",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"獐子岛公司 2017 年度虚增营业成本 6,159.03 万元\"（终案@L205）",
+   "ai_verdict": "PASS(终案+指标名)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-B6",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2017年度合计虚增营业外支出：20,595.54万元",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"2017 年度獐子岛公司合计虚增营业外支出 20,595.54 万元\"（终案@L233）",
+   "ai_verdict": "PASS(终案+指标名)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-C1",
+   "node": "N3",
+   "kind": "extract",
+   "value": "成本结转方法认定：以当月虾夷扇贝捕捞区域(采捕坐标)作为成本结转的依据；捕捞区域由人工填报且缺乏船只航海日志予以佐证",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"作为成本结转的依据，捕捞区域系由人工填报且缺乏船只航海日志予以佐证\"（终案@L165）",
+   "ai_verdict": "PASS(终案+逐字)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-D1",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案处罚：公司警告+罚款60万元",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"一、对獐子岛集团股份有限公司给予警告，并处以 60 万元罚款\"（终案@L938）",
+   "ai_verdict": "PASS(终案)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-D2",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案处罚：吴厚刚、梁峻各罚款30万元",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"二、对吴厚刚、梁峻给予警告，并分别处以 30 万元罚款\"（终案@L940）",
+   "ai_verdict": "REVISED(终案主体变更：告知书拟罚四人均30万→终案仅吴/梁30万)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "ai_note": "v1.1重要差异：孙福君/勾荣终案降为20万(见D3)；告知书于成家等20万档及8/5/3万档未现于终案罚款清单",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-D3",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案处罚：孙福君、勾荣各罚款20万元",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"三、对孙福君、勾荣给予警告，并分别处以 20 万元罚款\"（终案@L942）",
+   "ai_verdict": "REVISED(终案主体变更：告知书该二人在30万档)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "ai_note": "终案另新增四档：邹建/王涛/罗伟新/赵志年/陈树文/吴晓巍/陈本洲/丛锦秀各4万(@L944-945)，按不扩槽原则不新增槽位",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-D4",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案市场禁入：吴厚刚终身",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"我会决定：对吴厚刚采取终身市场禁入措施\"（终案@L1311）",
+   "ai_verdict": "PASS(终案锚点切换)",
+   "source": "SILVER_V23A",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-D5",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案市场禁入：梁峻10年",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"我会决定：对梁峻采取 10 年市场禁入措施\"（终案@L1323）",
+   "ai_verdict": "PASS(终案)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-D6",
+   "node": "N4",
+   "kind": "extract",
+   "value": "终案市场禁入：勾荣、孙福君各5年",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "\"对勾荣、孙福君分别采取 5 年证券市场禁入措施\"（终案@L1323-1325）",
+   "ai_verdict": "PASS(终案)",
+   "source": "SILVER_V23A",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-R1",
+   "node": "N_REPORT",
+   "kind": "report",
+   "value": "综合结论：獐子岛2016年报虚假记载(虚减成本/虚减营业外支出→虚增利润13,114.77万元，占158.11%)与2017年报虚假记载(虚增成本6,159.03万/合计虚增营业外支出20,595.54万)，终案公司罚60万元、吴厚刚/梁峻各30万、孙福君/勾荣各20万，吴厚刚终身禁入、梁峻10年、勾荣/孙福君各5年",
+   "doc": "ZHANGZIDAO_2020-06-25.txt",
+   "span": "终案事实段(@L170-245)+处罚段(@L936-945)+禁入段(@L1311-1325)",
+   "ai_verdict": "PASS(终案口径+依赖10项)",
+   "source": "AI_PROPOSED",
+   "derived_from": [
+    "ZD-B3",
+    "ZD-B3b",
+    "ZD-B5",
+    "ZD-B6",
+    "ZD-D1",
+    "ZD-D2",
+    "ZD-D3",
+    "ZD-D4",
+    "ZD-D5",
+    "ZD-D6"
+   ],
+   "ai_note": "告知书→终案差异如实记录：拟罚人员结构变化(四人均30万→分档)，新增8人4万档未建槽",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-X1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "事先告知书公告编号：2019—34",
+   "doc": "zzd_notice_2019.txt",
+   "span": "证券代码：002069 证券简称：獐子岛 公告编号：2019—34（zzd_notice_2019.txt@L1）",
+   "ai_verdict": "PASS(逐字+行号)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "ZD-X2",
+   "node": "N4",
+   "kind": "extract",
+   "value": "收到决定书及禁入决定书公告编号：2020—48",
+   "doc": "zzd_penalty_2020.txt",
+   "span": "证券代码：002069 证券简称：獐子岛 公告编号：2020—48（zzd_penalty_2020.txt@L1）",
+   "ai_verdict": "PASS(逐字+行号)",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "ZD-U1",
+   "node": "N_REPORT",
+   "expected_status": "UNKNOWN",
+   "value": "本组文书之外的后续股票终止上市及挂牌安排结果",
+   "doc": "本组文书",
+   "note": "决定书已认定不触及重大违法强制退市；后续股票命运需组外文书——缩小边界",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [
+  {
+   "slot_id": "ZD-A2",
+   "reason": "裁决D(2026-11-08)：2019-07-09日期语义不成立，删除不另造日期；公告身份由ZD-X1承载"
+  }
+ ],
+ "scoring_contract": {
+  "n_scored_slots": 18,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "review_hints": [
+  "P0补齐：5/5待定位槽已锚定，其余转人工"
+ ],
+ "self_precheck": {
+  "date": "2026-11-08",
+  "by": "builder-self(非独立复核)",
+  "findings": [
+   "19槽全部指标名+逐字跨度+行号",
+   "事实与处罚全锚2020-06-25终案(告知书金额仅在差异记录)",
+   "D2/D3终案主体变更(孙/勾30→20万)",
+   "B3/B3b金额-占比拆分(沿KM先例)",
+   "新增8人4万档不扩槽仅记录",
+   "A2语义待终签核对",
+   "自查≠独立复核"
+  ]
+ },
+ "consolidated_ruling": {
+  "date": "2026-11-08",
+  "items": "D2/D3终案主体确认；A2 DROP；8人4万档仅记录；B3/B3b拆分确认(B3=虚增利润)"
+ },
+ "final_review": {
+  "date": "2026-11-08",
+  "result": "ZD-U1边界缩小"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ },
+ "mx_note": "机制实验专用DAG:结构同MX2;评分沿用V5张子岛18槽"
+}

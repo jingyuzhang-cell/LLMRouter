@@ -1,0 +1,214 @@
+{
+ "passed": 29,
+ "total": 29,
+ "results": [
+  {
+   "name": "G1 contract is the pinned v1, 20 slots, 12 critical, approved",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G1 v1 changes no Gold value or evidence quote relative to the reviewed draft",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G1 F18 records required titles and the separate legal identity",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G2 every evidence quote is verbatim in its source document",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "G3 recorded char offsets reproduce each quote from the raw text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G4 every evidence doc is in the slot whitelist",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G5 D1 PDF and text hashes match the recorded source",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G5 D2 PDF and text hashes match the recorded source",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G6 totals recompute from the source: final 14 parties 179, proposed 25 parties 320",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G7 entity correspondence: 11 parties not penalized at D2, 12 adjusted, 2 unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G8 no Gold value appears in any slot subject or predicate shown to models",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "A1 gold self-test: 20 TP, Q_all = 1",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "A2 28 wrong values rejected, including every notice-stage amount",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "A3 25 right values in other formats or units accepted",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "A4 evidence bar: notice-stage line cited for a final amount -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 evidence bar: same company line cited from the notice -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 evidence bar: fabricated quote -> LOC_WRONG",
+   "ok": true,
+   "detail": "LOC_WRONG"
+  },
+  {
+   "name": "A4 evidence bar: quote without the subject -> UNSUPPORTED",
+   "ok": true,
+   "detail": "UNSUPPORTED"
+  },
+  {
+   "name": "A4 evidence bar: verbatim but unrelated sentence -> UNSUPPORTED",
+   "ok": true,
+   "detail": "UNSUPPORTED"
+  },
+  {
+   "name": "A4 evidence bar: 2015 sentence for a 2016 slot -> UNSUPPORTED",
+   "ok": true,
+   "detail": "UNSUPPORTED"
+  },
+  {
+   "name": "A4 evidence bar: affirmation slot cited with a denial-free unrelated sentence -> UNSUPPORTED",
+   "ok": true,
+   "detail": "UNSUPPORTED"
+  },
+  {
+   "name": "A4 a D1 sentence is accepted where the whitelist allows it (F11)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A5 zero answers: Q_all 0, error rate undefined, safety gate never passes",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A6 scorer is arm-blind: score(sink, contract), no arm/condition/rep identifiers",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "V1 V2 typing matches the scoring rule of every slot except F20 (affirmation typed as negation)",
+   "ok": true,
+   "detail": "{'F1': 'amount', 'F2': 'amount', 'F3': 'amount', 'F4': 'amount', 'F5': 'amount', 'F6': 'amount', 'F7': 'amount', 'F8': 'amount', 'F9': 'amount', 'F10': 'amount', 'F11': 'amount', 'F12': 'date', 'F13': 'date', 'F14': 'date', 'F15': 'doc_number', 'F16': 'doc_number', 'F17': 'doc_number', 'F18': 'title"
+  },
+  {
+   "name": "V2 KNOWN LIMITATION: V2 M3 flags the correct F20 answer \"是\" (assumes 是否 answers are denials)",
+   "ok": true,
+   "detail": "{'F20': {'state': 'SELF_EVIDENCE_INCONSISTENT', 'kind': 'negation', 'reason': 'negation not supported by a table quote with a denial phrase'}}"
+  },
+  {
+   "name": "V3 base module on a clean decision extraction: 179 over 14 parties",
+   "ok": true,
+   "detail": "{'value': '179万元', 'value_wan': 179.0, 'parties': 14, 'conflicts': [], 'rule': 'sum over distinct parties extracted from the final decision (E_D2) that carry a numeric penalty_amount', 'computation': '湖南千山制药机械股份有限公司:60 + 刘祥华:30 + 刘华山:30 + 周大连:15 + 姜纯:10 + 钟波:4 + 刘燕:4 + 邓铁山:4 + 王国华:4 + 郑国胜:4 + 彭勋德:4 "
+  },
+  {
+   "name": "V4 KNOWN LIMITATION: if the extraction lists the company under both names, the frozen base module double-counts (239)",
+   "ok": true,
+   "detail": "{'value': '239万元', 'value_wan': 239.0, 'parties': 15, 'conflicts': [], 'rule': 'sum over distinct parties extracted from the final decision (E_D2) that carry a numeric penalty_amount', 'computation': '湖南千山制药机械股份有限公司:60 + 刘祥华:30 + 刘华山:30 + 周大连:15 + 姜纯:10 + 钟波:4 + 刘燕:4 + 邓铁山:4 + 王国华:4 + 郑国胜:4 + 彭勋德:4 "
+  },
+  {
+   "name": "I1 14 event-specific strings: no pre-selection use, no run artefact, nothing in git",
+   "ok": true,
+   "detail": "{}"
+  }
+ ],
+ "independence_terms": [
+  "千山药机",
+  "千山制药",
+  "华冠花炮",
+  "中苋生态",
+  "春华建筑",
+  "千山慢病",
+  "经沣财务",
+  "湘稽调查字0528",
+  "处罚字[2019]149号",
+  "刘祥华",
+  "刘华山",
+  "周大连",
+  "管新和",
+  "刘件民"
+ ],
+ "independence_hits": {
+  "exposure": {},
+  "post_selection_docs": {
+   "千山药机": [
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/DETECTORS_V4_FREEZE.md",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/fork_t1/FORK_T1_MATERIALS.md",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/fork_t1/T1_REPORT.md",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/test_v3_base2.py",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/V3_BASE2_REGRESSION.json",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/DETECTORS_V3_FREEZE.md",
+    "/root/research_outputs/static_pi/stage_d/j2_probe/J2_PROBE_DESIGN.md",
+    "/root/research_outputs/PAPER_COMPLEX_TASK_MULTIAGENT_CH5_20261106T114304Z/CHAPTER_5_EXPERIMENTS_ZH.md"
+   ],
+   "千山制药": [
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/test_v3_base2.py",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/V3_BASE2_REGRESSION.json",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/DETECTORS_V3_FREEZE.md"
+   ],
+   "刘祥华": [
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/test_v3_base2.py",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/V3_BASE2_REGRESSION.json"
+   ],
+   "刘华山": [
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/test_v3_base2.py",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/V3_BASE2_REGRESSION.json"
+   ],
+   "周大连": [
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/test_v3_base2.py",
+    "/root/research_outputs/static_pi/stage_d/sc_e1_1/V3_BASE2_REGRESSION.json"
+   ]
+  },
+  "cutoff_mtime": 1793962868.6373212
+ },
+ "sha256": {
+  "/root/research_outputs/static_pi/stage_d/independent_case_search/raw/300216_notice_1575290526000.pdf": "69a1a17a1636d04ad60d7124fcac3e98a9cb8d15394d3b40dd8e98e7cab8035a",
+  "/root/research_outputs/static_pi/stage_d/independent_case_search/raw/300216_notice_1575290526000.pdf.txt": "dd72e0e86412f2a485de455df4c7706f958abe114466643c4ab02827f6623c2d",
+  "/root/research_outputs/static_pi/stage_d/independent_case_search/raw/300216_decision_1596729600000.pdf": "0b7b23b73ee30a55a51c013d7ba2f87231a47b569c043a4b41207ea376fb41fa",
+  "/root/research_outputs/static_pi/stage_d/independent_case_search/raw/300216_decision_1596729600000.pdf.txt": "70212287c96cab108cd567b05183886d4d38edd89757955ecd3c07bc701bf402",
+  "/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/QS_300216/TASK_CONTRACT_QS_v1.json": "910fa806a833d748580f380c7b45404f241f1075c7ee77c0d32c8281276775d3",
+  "/root/research_outputs/static_pi/stage_d/qs_confirm/build_contract_qs.py": "b110f04d1ba1dba46b9c18227e7b455d1339360226ce1ff5e53889d23b7c4cc1",
+  "/root/research_outputs/static_pi/stage_d/qs_confirm/qs_scorer.py": "332ce5763de318dac05941352e69e31f3db098dfb49cda33bdde8fc742e91164",
+  "/root/research_outputs/static_pi/stage_d/qs_confirm/dag_qs.json": "4a3cc02c54c47e02039d5000fbb3bafd0b32f5d984dbe865474a90feda8f3b3a",
+  "/root/research_outputs/static_pi/stage_d/qs_confirm/test_qs.py": "eb033bee56e1f9e0ab7a9ef9ff15e419d02a11c520c02ee4c4c96468efae702b",
+  "/root/research_outputs/static_pi/stage_d/sc_e1_1/detectors_v2.py": "c2c3384265b39aee6783eff407402c4c775d7eb0b18aea005442f80ec1548c24",
+  "/root/research_outputs/static_pi/stage_d/sc_e1_1/safety_metrics.py": "552adcf6a00915201a97b396c30ae79c646ba42eff2829dff9014a907fa0b57f",
+  "/root/research_outputs/static_pi/stage_d/sc_e1_1/sc_e1_scorer.py": "52bfb1e1394e4f25399700d589945b84f82d562ade848b2fd376dbc359688062"
+ }
+}

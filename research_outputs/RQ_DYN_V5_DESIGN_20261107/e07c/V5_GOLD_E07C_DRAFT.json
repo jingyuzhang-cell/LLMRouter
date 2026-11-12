@@ -1,0 +1,342 @@
+{
+ "task_id": "E07C",
+ "company": "ST西王·净化版(000639)",
+ "status": "FINAL_CANDIDATE_v1.2",
+ "template_ref": "../st_shun/V5_GOLD_ST_SHUN_DRAFT.json",
+ "docs": {
+  "E07-xiwang_20260328.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E07-xiwang_20260328.txt",
+   "sha256": "1f915b588f98b955ca1a8b6f9df03714f543713972f44c4c115e2be84bb66f0d"
+  },
+  "E07-xiwang_20260822.txt": {
+   "path": "/root/cap_eval_bench_v1/evidence/texts/E07-xiwang_20260822.txt",
+   "sha256": "9fb6f5c4450253b7308eca9181e16e2d4ef1fd7c7c3c97f3b1fe9de7b71d138a"
+  }
+ },
+ "dag": {
+  "nodes": [
+   {
+    "node": "N1",
+    "kind": "extract",
+    "docs": [
+     "E07-xiwang_20260328.txt"
+    ],
+    "upstream": [],
+    "role": "业绩与警示条件"
+   },
+   {
+    "node": "N2",
+    "kind": "extract",
+    "docs": [
+     "E07-xiwang_20260822.txt"
+    ],
+    "upstream": [],
+    "role": "警示实施与占用事实"
+   },
+   {
+    "node": "N3",
+    "kind": "verification",
+    "docs": [],
+    "upstream": [
+     "N1",
+     "N2"
+    ],
+    "role": "因果与时序"
+   },
+   {
+    "node": "N4",
+    "kind": "report",
+    "docs": [],
+    "upstream": [
+     "N3"
+    ],
+    "role": "综合结论"
+   }
+  ]
+ },
+ "slots": [
+  {
+   "slot_id": "F-E07-1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "条件性风险：若公司2025年度审计报告被出具无法表示意见或者否定意见，公司股票可能被实施退市风险警示（条件+可能性，未触发）",
+   "doc": "E07-xiwang_20260328.txt",
+   "span": "若公司 2025 年度审计报告被出具无法表示意见或者否定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示",
+   "ai_verdict": "REVISED(裁决P：完整条件表述)",
+   "source": "FACTS_CLEAN",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E07-2",
+   "node": "N1",
+   "kind": "extract",
+   "value": "条件性风险：若公司2025年度内部控制审计报告被出具否定意见，公司股票交易可能被实施其他风险警示（条件+可能性，未触发）",
+   "doc": "E07-xiwang_20260328.txt",
+   "span": "若公司 2025 年度内部控制审计报告被出具否定意见，公司股票交易将在 2025 年度报告披露后被实施其他风险警示",
+   "ai_verdict": "REVISED(裁决P：完整条件表述)",
+   "source": "FACTS_CLEAN",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E07-7",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2026-04-29",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "公司股票已于 2026 年 4 月 29 日起被实施其他风险警示",
+   "ai_verdict": "PASS(净化版)",
+   "source": "FACTS_CLEAN",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E07-8",
+   "node": "N2",
+   "kind": "extract",
+   "value": "2025内控否定",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》",
+   "ai_verdict": "PASS(净化版)",
+   "source": "FACTS_CLEAN",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E07-9",
+   "node": "N2",
+   "kind": "extract",
+   "value": "西王淀粉非经营性资金占用余额：13,000万元",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "西王淀粉非经营性资金占用余额为 13,000 万元",
+   "ai_verdict": "REVISED(裁决P：补指标名)",
+   "source": "FACTS_CLEAN",
+   "critical": true,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "F-E07-10",
+   "node": "N2",
+   "kind": "extract",
+   "value": "一个月内解决否则叠加",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+   "ai_verdict": "PASS(净化版)",
+   "source": "FACTS_CLEAN",
+   "critical": false,
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "V1",
+   "node": "N3",
+   "kind": "verification",
+   "value": "因果链：2025年度内控审计否定意见→触发其他风险警示实施条件",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "财务报告内部控制被出具否定意见的《2025 年度内部控制审计报告》",
+   "ai_verdict": "PASS(V1_5 PASS沿用)",
+   "source": "DERIVED_V15_PASS",
+   "derived_from": [
+    "F-E07-2",
+    "F-E07-7",
+    "F-E07-8"
+   ],
+   "pre_review_note": "v1.1 span指向同文档依赖槽F-E07-8逐字跨度",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "V2",
+   "node": "N3",
+   "kind": "verification",
+   "value": "资金占用风险叠加：西王淀粉13,000万元非经营性占用若一个月内未解决将叠加其他风险警示",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "西王淀粉非经营性资金占用余额为 13,000 万元",
+   "ai_verdict": "PASS(V1_5 PASS沿用)",
+   "source": "DERIVED_V15_PASS",
+   "derived_from": [
+    "F-E07-9",
+    "F-E07-10"
+   ],
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "R2c",
+   "node": "N4",
+   "kind": "report",
+   "value": "西王淀粉13,000万元非经营性资金占用事项与已实施的其他风险警示是两个独立风险事项：占用若未在一个月内解决，可能在已实施的其他风险警示基础上*叠加*新的其他风险警示；这不是解除现有警示的意思",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "若公司未能在一个月内解决上述资金占用事项，公司股票交易可能将被叠加实施其他风险警示",
+   "ai_verdict": "REVISED(终审R:区分已实施vs可能叠加)",
+   "source": "DERIVED_CORRECTED",
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "scoring_points": [
+    "区分已实施警示与可能叠加的新警示",
+    "占用主体/金额/性质/一个月期限",
+    "未解决→叠加的因果链",
+    "不得混同解除与叠加"
+   ],
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "X1",
+   "node": "N1",
+   "kind": "extract",
+   "value": "业绩类公告落款：2026-03-27",
+   "doc": "E07-xiwang_20260328.txt",
+   "span": "西王食品股份有限公司董事会\n2026 年 3 月 27 日",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "X2",
+   "node": "N2",
+   "kind": "extract",
+   "value": "风险警示公告落款：2026-08-21",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "2026年8月21日",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "X3",
+   "node": "N2",
+   "kind": "extract",
+   "value": "占用主体：西王淀粉有限公司(公司重要子公司/关联主体)",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "西王淀粉有限公司（以下简称“西王淀粉”）",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "X4",
+   "node": "N1",
+   "kind": "extract",
+   "value": "审计报告条件与退市风险警示的规则依据：2025年度审计报告若被出具无法表示意见或否定意见→*触及退市风险警示情形*（规则条文引用，与F-E07-1的事实性条件描述各有判分维度：F-E07-1判事实条件表述，X4判规则条文理解）",
+   "doc": "E07-xiwang_20260328.txt",
+   "span": "若公司 2025 年度审计报告被出具无法表示意见或者否\n定意见，公司股票交易将在 2025 年度报告披露后被实施退市风险警示",
+   "ai_verdict": "REVISED(终审R:与F-E07-1区分——X4侧重规则理解，F-E07-1侧重事实条件)",
+   "source": "FACTS_CLEAN",
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "T1",
+   "node": "N3",
+   "kind": "timeline",
+   "value": "时序：条件公告(2026-03-27)早于其他风险警示实施(2026-04-29)",
+   "doc": "E07-xiwang_20260328.txt + E07-xiwang_20260822.txt",
+   "span": "西王食品股份有限公司董事会\n2026 年 3 月 27 日",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "derived_from": [
+    "X1",
+    "F-E07-7"
+   ],
+   "pre_review_note": "v1.1 span指向同文档依赖槽X1逐字跨度",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "X5",
+   "node": "N1",
+   "kind": "extract",
+   "value": "审计机构：中名国成会计师事务所（特殊普通合伙）",
+   "doc": "E07-xiwang_20260328.txt",
+   "span": "中名国成会计师事务所（特殊普通合伙）",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "X6",
+   "node": "N1",
+   "kind": "extract",
+   "value": "审计机构认为公司未能提供充分、适当的审计证据",
+   "doc": "E07-xiwang_20260328.txt",
+   "span": "审计机构认为“公司未能提供充分、适当的审计证据，将导致公司财务报表出具\n非无保留意见的审计报告",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "X7",
+   "node": "N2",
+   "kind": "extract",
+   "value": "占用性质：非经营性占用上市公司资金",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "占用上市公司资金的情形",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "human_verdict": "PASS"
+  },
+  {
+   "slot_id": "X8",
+   "node": "N2",
+   "kind": "extract",
+   "value": "资金占用余额表述：13,000万元(两处一致)",
+   "doc": "E07-xiwang_20260822.txt",
+   "span": "非经营性资金占用余额 13,000 万元。",
+   "ai_verdict": "PASS",
+   "source": "AI_PROPOSED",
+   "pre_review_note": "v1.1 span改逐字引用(2026-11-08 AI预审)",
+   "human_verdict": "PASS"
+  }
+ ],
+ "unknown_boundary": [
+  {
+   "slot_id": "F-E07-11",
+   "node": "N1",
+   "expected_status": "UNKNOWN",
+   "value": "2025年度财务报表审计报告意见类型",
+   "doc": "E07-xiwang_20260328.txt",
+   "note": "内控审计报告否定意见已有事实槽(F-E07-8)；本UNKNOWN仅指财务报表审计意见类型",
+   "human_note": "确认UNKNOWN"
+  }
+ ],
+ "dropped_slots": [
+  {
+   "slot_id": "doc2全部事实+V3派生",
+   "reason": "doc2=20260429与192批次同源，净化版剔除"
+  }
+ ],
+ "scoring_contract": {
+  "n_scored_slots": 18,
+  "n_unknown": 1,
+  "catastrophe": "TP_ratio ≤ 0.15",
+  "normalization": "同舜天合同(沿用E04_P2)",
+  "composite_rule": "同舜天合同v2",
+  "derived_rule": "同舜天合同v2",
+  "semantic_rule": "同舜天合同v2",
+  "unknown_rule": "同舜天合同v2",
+  "tp_definition": "终端输出对照scored slots；下游不复制上游"
+ },
+ "audit_reuse": "facts_E05_E08+V1_5审查",
+ "review_hints": [
+  "净化版文档=20260328+20260822",
+  "是否入列12任务随D1修订由操作者裁决"
+ ],
+ "review_response": {
+  "v1.1预审修订": "11槽span改逐字引用：X1-X6/X8弯引号与断句修正、派生槽(V1/V2/R2c/T1)span指向首要依赖槽逐字跨度(derived_from不变)；X4确认为文档中与F-E07-2并列的另一条款(退市风险警示)；18/18复验可定位；V1/T1 span改指同文档依赖槽"
+ },
+ "consolidated_ruling": {
+  "date": "2026-11-08",
+  "items": "F-E07-1/2条件化；F-E07-9指标名；R2c七要点"
+ },
+ "final_review": {
+  "date": "2026-11-08",
+  "result": "UNK缩小+X4去重+R2c区分"
+ },
+ "signoff": {
+  "date": "2026-11-08",
+  "signer": "designated-human-signer",
+  "result": "全部PASS"
+ }
+}

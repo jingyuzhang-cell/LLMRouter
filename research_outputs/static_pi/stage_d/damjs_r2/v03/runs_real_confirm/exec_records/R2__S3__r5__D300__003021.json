@@ -1,0 +1,451 @@
+{
+ "exec_id": "R2|S3|r5|D300|003021",
+ "arm": "R2",
+ "scenario": "S3",
+ "rep": 5,
+ "dry_run": false,
+ "mock": false,
+ "deadline_s": 299.8810455799103,
+ "makespan_s": 180.8,
+ "on_time": true,
+ "terminal_completed_at_s": 180.8,
+ "j2_winner_completed_at_s": null,
+ "settlement_pending": false,
+ "settlement": null,
+ "status": "COMPLETE",
+ "calls": 8,
+ "accounting_yuan": 0.050886,
+ "actual_cash_yuan": 0.0172848,
+ "tokens_in": 10047,
+ "tokens_out": 15303,
+ "actions": [
+  {
+   "kind": "structure_repair",
+   "node": "J1",
+   "t": 40.9
+  }
+ ],
+ "decisions": [
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "acts": [
+    [
+     "structure_repair",
+     "J1"
+    ]
+   ],
+   "t_rem": 259,
+   "engine": "damjs_engine.Scheduler",
+   "chosen": "Z_structure"
+  },
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "acts": [],
+   "t_rem": 139,
+   "engine": "damjs_engine.Scheduler",
+   "chosen": "NONE"
+  }
+ ],
+ "anomalies": [
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "t": 40.9
+  },
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "t": 161.0
+  }
+ ],
+ "final_states": {
+  "E1": "Completed",
+  "E2": "Completed",
+  "E3": "Completed",
+  "E4": "Completed",
+  "J1": "Completed",
+  "J2": "Completed",
+  "SINK": "Completed",
+  "FMT": "Completed"
+ },
+ "exec_log": [
+  {
+   "node": "E1",
+   "model": "deepseek",
+   "prompt_sha": "40a238a4fddf",
+   "wall": 2.735
+  },
+  {
+   "node": "E2",
+   "model": "deepseek",
+   "prompt_sha": "40a238a4fddf",
+   "wall": 3.279
+  },
+  {
+   "node": "E3",
+   "model": "deepseek",
+   "prompt_sha": "9a5fd4276fc4",
+   "wall": 3.147
+  },
+  {
+   "node": "E4",
+   "model": "deepseek",
+   "prompt_sha": "9a5fd4276fc4",
+   "wall": 2.349
+  },
+  {
+   "node": "J1",
+   "model": "glm53flash",
+   "prompt_sha": "6c61979d5ccd",
+   "wall": 34.44
+  },
+  {
+   "node": "J1",
+   "model": "glm53flash",
+   "prompt_sha": "c7384236807c",
+   "wall": 119.83
+  },
+  {
+   "node": "J2",
+   "model": "deepseek",
+   "prompt_sha": "7ca250ac1a07",
+   "wall": 4.6
+  },
+  {
+   "node": "SINK",
+   "model": "deepseek",
+   "prompt_sha": "30c5b67cc411",
+   "wall": 4.3
+  },
+  {
+   "node": "FMT",
+   "model": "deterministic",
+   "version": 0,
+   "input_sha": "0e3b782898c6",
+   "output_sha": "324ddfdd33ec",
+   "bypassed": false,
+   "wall": 0.0
+  }
+ ],
+ "fault_checks": [
+  {
+   "node": "E1",
+   "dates_extracted": true,
+   "consistent": true
+  },
+  {
+   "node": "E2",
+   "dates_extracted": true,
+   "consistent": true
+  },
+  {
+   "node": "J1",
+   "deploy_defect_active": true,
+   "dates_relay_present": false,
+   "consistent": true
+  },
+  {
+   "node": "J1",
+   "deploy_defect_active": true,
+   "dates_relay_present": false,
+   "consistent": true
+  }
+ ],
+ "invalid_reason": null,
+ "raw": {
+  "nodes": {
+   "E1": [
+    {
+     "model": "deepseek",
+     "text": "{\"subjects\":[{\"field\":\"立案对象\",\"value\":\"实际控制人俞发祥（个人）\",\"quote\":\"浙江祥源文旅股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（证监立案字01120260037 号），因俞发祥先生个人涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\",\"page\":1}],\"notice_numbers\":[{\"field\":\"告知书编号\",\"value\":\"证监立案字01120260037 号\",\"quote\":\"其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（证监立案字01120260037 号）\",\"page\":1}],\"dates\":[{\"field\":\"收到日\",\"value\":\"2026年10月9日\",\"quote\":\"浙江祥源文旅股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（证监立案字01120260037 号）\",\"page\":1},{\"field\":\"落款日\",\"value\":\"2026年10月9日\",\"quote\":\"浙江祥源文旅股份有限公司董事会\\n2026 年10 月9 日\",\"page\":1}],\"cause\":[{\"field\":\"立案事由\",\"value\":\"俞发祥先生个人涉嫌信息披露违法违规\",\"quote\":\"因俞发祥先生个人涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\",\"page\":1}],\"quotes\":[{\"field\":\"完整原句引用\",\"value\":\"浙江祥源文旅股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（证监立案字01120260037 号），因俞发祥先生个人涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\",\"page\":1}],\"positions\":[{\"field\":\"任职状况\",\"value\":\"俞发祥先生除为公司实际控制人外，未在公司担任任何职务\",\"quote\":\"俞发祥先生除为公司实际控制人外，未在公司担任任何职务，公司生产经营一切正常，上述事项不会对公司正常生产经营产生重大影响。\",\"page\":1}]}",
+     "in": 614,
+     "out": 549,
+     "latency": 2.74,
+     "cancelled": false,
+     "late": false,
+     "attempt": 1
+    }
+   ],
+   "E2": [
+    {
+     "model": "deepseek",
+     "text": "{\"subjects\":[{\"field\":\"立案对象\",\"value\":\"俞发祥（公司实际控制人，个人）\",\"quote\":\"俞发祥先生个人因涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\",\"page\":1}],\"notice_numbers\":[{\"field\":\"告知书编号\",\"value\":\"证监立案字01120260037号\",\"quote\":\"其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号）\",\"page\":1}],\"dates\":[{\"field\":\"收到日\",\"value\":\"2026年10月9日\",\"quote\":\"安徽省交通建设股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号）\",\"page\":1},{\"field\":\"落款日\",\"value\":\"2026年10月10日\",\"quote\":\"安徽省交通建设股份有限公司董事会\\n2026 年10 月10 日\",\"page\":1}],\"cause\":[{\"field\":\"立案事由\",\"value\":\"涉嫌信息披露违法违规（泛称，未指明具体事项）\",\"quote\":\"俞发祥先生个人因涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\",\"page\":1}],\"quotes\":[{\"field\":\"立案对象\",\"value\":\"俞发祥（公司实际控制人，个人）\",\"quote\":\"俞发祥先生个人因涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\",\"page\":1},{\"field\":\"告知书编号\",\"value\":\"证监立案字01120260037号\",\"quote\":\"其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号）\",\"page\":1},{\"field\":\"收到日\",\"value\":\"2026年10月9日\",\"quote\":\"安徽省交通建设股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号）\",\"page\":1},{\"field\":\"落款日\",\"value\":\"2026年10月10日\",\"quote\":\"安徽省交通建设股份有限公司董事会\\n2026 年10 月10 日\",\"page\":1},{\"field\":\"立案事由\",\"value\":\"涉嫌信息披露违法违规（泛称，未指明具体事项）\",\"quote\":\"俞发祥先生个人因涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\",\"page\":1}],\"positions\":[{\"field\":\"任职状况\",\"value\":\"除为公司实际控制人外，未在公司担任任何职务\",\"quote\":\"俞发祥先生除为公司实际控制人外，未在公司担任任何职务，公司生产经营一切正常，上述事项不会对公司正常生产经营产生重大影响。\",\"page\":1}]}",
+     "in": 613,
+     "out": 679,
+     "latency": 6.02,
+     "cancelled": false,
+     "late": false,
+     "attempt": 1
+    }
+   ],
+   "E3": [
+    {
+     "model": "deepseek",
+     "text": "{\"subjects\":[{\"field\":\"立案对象\",\"value\":\"公司及实际控制人王勇（两者）\",\"quote\":\"中国证监会决定对公司、王勇先生进行立案调查。\",\"page\":\"D3\"},{\"field\":\"公司名称\",\"value\":\"西王食品股份有限公司\",\"quote\":\"西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》\",\"page\":\"D3\"},{\"field\":\"实际控制人姓名\",\"value\":\"王勇\",\"quote\":\"分别对公司、实际控制人王勇先生下发的《立案告知书》\",\"page\":\"D3\"}],\"notice_numbers\":[{\"field\":\"告知书编号\",\"value\":\"证监立案字0042026002号\",\"quote\":\"（告知书编号分别为：证监立案字0042026002 号、证监立案字0042026003 号）\",\"page\":\"D3\"},{\"field\":\"告知书编号\",\"value\":\"证监立案字0042026003号\",\"quote\":\"（告知书编号分别为：证监立案字0042026002 号、证监立案字0042026003 号）\",\"page\":\"D3\"}],\"dates\":[{\"field\":\"收到日期\",\"value\":\"近日（未载明具体日期）\",\"quote\":\"西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》\",\"page\":\"D3\"},{\"field\":\"落款日期\",\"value\":\"2026年4月28日\",\"quote\":\"2026 年4 月28 日\",\"page\":\"D3\"}],\"cause\":[{\"field\":\"立案事由\",\"value\":\"涉嫌信息披露违法违规（泛称，未指明具体事项）\",\"quote\":\"因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查。\",\"page\":\"D3\"}],\"quotes\":[{\"field\":\"完整原句引用\",\"value\":\"立案对象与编号对应关系\",\"quote\":\"西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》（告知书编号分别为：证监立案字0042026002 号、证监立案字0042026003 号）。\",\"page\":\"D3\"},{\"field\":\"完整原句引用\",\"value\":\"立案事由\",\"quote\":\"因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查。\",\"page\":\"D3\"}]}",
+     "in": 555,
+     "out": 565,
+     "latency": 9.17,
+     "cancelled": false,
+     "late": false,
+     "attempt": 1
+    }
+   ],
+   "E4": [
+    {
+     "model": "deepseek",
+     "text": "{\"subjects\":[{\"field\":\"立案对象\",\"value\":\"公司（福建纳川管材科技股份有限公司）\",\"quote\":\"中国证监会决定对公司立案。\",\"page\":1}],\"notice_numbers\":[{\"field\":\"告知书编号\",\"value\":\"证监立案字0262026012号\",\"quote\":\"收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》（编号：证监立案字0262026012 号）。\",\"page\":1}],\"dates\":[{\"field\":\"收到日\",\"value\":\"2026年10月9日\",\"quote\":\"2026 年10 月9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》（编号：证监立案字0262026012 号）。\",\"page\":1},{\"field\":\"落款日\",\"value\":\"二〇二六年十月九日\",\"quote\":\"二〇二六年十月九日\",\"page\":1}],\"cause\":[{\"field\":\"立案事由\",\"value\":\"公司2023年年报涉嫌信息披露违法违规\",\"quote\":\"因公司2023年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。\",\"page\":1}],\"quotes\":[{\"field\":\"完整原句引用\",\"value\":\"2026 年10 月9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》（编号：证监立案字0262026012 号）。\",\"page\":1},{\"field\":\"完整原句引用\",\"value\":\"因公司2023年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。\",\"page\":1}]}",
+     "in": 532,
+     "out": 393,
+     "latency": 8.78,
+     "cancelled": false,
+     "late": false,
+     "attempt": 1
+    }
+   ],
+   "J1": [
+    {
+     "model": "glm53flash",
+     "text": "```json\n{\n  \"judgments\": [\n    {\n      \"kind\": \"person_identity\",\n      \"verdict\": \"SAME_PERSON\",\n      \"evidence\": [\n        {\n          \"doc_id\": \"E1\",\n          \"page\": 1,\n          \"quote\": \"浙江祥源文旅股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（证监立案字01120260037 号），因俞发祥先生个人涉嫌信息披露违法违规，中国证监会根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，决定对其立案。\"\n        },\n        {\n          \"doc_id\": \"E2\",\n          \"page\": 1,\n          \"quote\": \"安徽省交通建设股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号）\"\n        }\n      ],\n      \"reasoning\": \"同名同实控人同告知书\"\n    },\n    {\n      \"kind\": \"notice_instance\",\n      \"verdict\": \"SAME_NOTICE_INSTANCE\",\n      \"evidence\": [\n        {\n          \"doc_id\": \"E1\",\n          \"page\": 1,\n          \"quote\": \"其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（证监立案字01120260037 号）\"\n        },\n        {\n          \"doc_id\": \"E2\",\n          \"page\": 1,\n          \"quote\": \"其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号）\"\n        }\n      ],\n      \"reasoning\": \"编号完全一致，同一实例\"\n    },\n    {\n      \"kind\": \"receipt_event\",\n      \"verdict\": \"SAME_RECEIPT_EVENT\",\n      \"evidence\": [\n        {\n          \"doc_id\": \"E1\",\n          \"page\": 1,\n          \"quote\": \"浙江祥源文旅股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（证监立案字01120260037 号）\"\n        },\n        {\n          \"doc_id\": \"E2\",\n          \"page\": 1,\n          \"quote\": \"安徽省交通建设股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知，其于同日收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《立案告知书》（编号：证监立案字01120260037 号）\"\n        }\n      ],\n      \"reasoning\": \"同人同日收同一文书\"\n    },\n    {\n      \"kind\": \"announcing_companies\",\n      \"verdict\": \"DIFFERENT_COMPANY\",\n      \"evidence\": [\n        {\n          \"doc_id\": \"E1\",\n          \"page\": 1,\n          \"quote\": \"浙江祥源文旅股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知\"\n        },\n        {\n          \"doc_id\": \"E2\",\n          \"page\": 1,\n          \"quote\": \"安徽省交通建设股份有限公司（以下简称“公司”）于2026 年10 月9 日收到实际控制人俞发祥先生通知\"\n        }\n      ],\n      \"reasoning\": \"两家公司全称明显不同\"\n    }\n  ]\n}\n```",
+     "in": 1563,
+     "out": 2879,
+     "latency": 34.44,
+     "cancelled": false,
+     "late": false,
+     "attempt": 1
+    },
+    {
+     "model": "glm53flash",
+     "text": "",
+     "in": 1690,
+     "out": 8192,
+     "latency": 119.83,
+     "cancelled": false,
+     "late": false,
+     "attempt": 1
+    }
+   ],
+   "J2": [
+    {
+     "model": "deepseek",
+     "text": "{\"subject_binding\":[{\"doc\":\"D3\",\"subject_type\":\"BOTH\",\"entities\":[\"西王食品股份有限公司\",\"王勇\"],\"evidence\":[{\"doc_id\":\"D3\",\"page\":\"D3\",\"quote\":\"中国证监会决定对公司、王勇先生进行立案调查。\"},{\"doc_id\":\"D3\",\"page\":\"D3\",\"quote\":\"西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》\"},{\"doc_id\":\"D3\",\"page\":\"D3\",\"quote\":\"分别对公司、实际控制人王勇先生下发的《立案告知书》\"}]},{\"doc\":\"D4\",\"subject_type\":\"COMPANY_ONLY\",\"entities\":[\"福建纳川管材科技股份有限公司\"],\"evidence\":[{\"doc_id\":\"D4\",\"page\":\"1\",\"quote\":\"中国证监会决定对公司立案。\"},{\"doc_id\":\"D4\",\"page\":\"1\",\"quote\":\"2026 年10 月9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》（编号：证监立案字0262026012 号）。\"}]}],\"notice_binding\":[{\"doc\":\"D3\",\"numbers\":[\"证监立案字0042026002号\",\"证监立案字0042026003号\"],\"per_number_binding_or_null\":[{\"number\":\"证监立案字0042026002号\",\"bound_to\":\"西王食品股份有限公司\"},{\"number\":\"证监立案字0042026003号\",\"bound_to\":\"王勇\"}],\"rule_applied\":\"ordered_correspondence\",\"evidence\":[{\"doc_id\":\"D3\",\"page\":\"D3\",\"quote\":\"西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》（告知书编号分别为：证监立案字0042026002 号、证监立案字0042026003 号）。\"},{\"doc_id\":\"D3\",\"page\":\"D3\",\"quote\":\"中国证监会决定对公司、王勇先生进行立案调查。\"}]},{\"doc\":\"D4\",\"numbers\":[\"证监立案字0262026012号\"],\"per_number_binding_or_null\":[{\"number\":\"证监立案字0262026012号\",\"bound_to\":\"福建纳川管材科技股份有限公司\"}],\"rule_applied\":null,\"evidence\":[{\"doc_id\":\"D4\",\"page\":\"1\",\"quote\":\"收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》（编号：证监立案字0262026012 号）。\"},{\"doc_id\":\"D4\",\"page\":\"1\",\"quote\":\"中国证监会决定对公司立案。\"}]}],\"cause_specificity\":[{\"doc\":\"D3\",\"class\":\"GENERIC\",\"evidence\":[{\"doc_id\":\"D3\",\"page\":\"D3\",\"quote\":\"因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查。\"}]},{\"doc\":\"D4\",\"class\":\"SPECIFIC\",\"evidence\":[{\"doc_id\":\"D4\",\"page\":\"1\",\"quote\":\"因公司2023年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。\"}]}],\"counts\":{\"personal_filing_instances\":1,\"announcing_company_count\":1,\"d3_subject_count\":2,\"evidence\":[{\"doc_id\":\"D3\",\"page\":\"D3\",\"quote\":\"中国证监会决定对公司、王勇先生进行立案调查。\"},{\"doc_id\":\"D3\",\"page\":\"D3\",\"quote\":\"西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》（告知书编号分别为：证监立案字0042026002 号、证监立案字0042026003 号）。\"}]},\"unresolvable\":[{\"field\":\"D3收到日期\",\"reason\":\"原文仅载“近日”，未载明具体日期\"},{\"field\":\"D1/D2主体绑定与编号归属\",\"reason\":\"材料中未提供D1、D2公告抽取内容，无法判定其立案对象、告知书编号及与D3的同一性\"},{\"field\":\"D1与D2是否指向同一俞发祥、同一份立案告知书、同一收到事件\",\"reason\":\"材料中未提供D1、D2内容，无法核验\"},{\"field\":\"两家公告主体是否为同一公司\",\"reason\":\"材料中未提供D1、D2公告主体信息，无法核验\"}]}",
+     "in": 1571,
+     "out": 1002,
+     "latency": 4.61,
+     "cancelled": false,
+     "late": false,
+     "attempt": 1
+    }
+   ],
+   "SINK": [
+    {
+     "model": "deepseek",
+     "text": "{\"answers\":[{\"fact_id\":\"A3\",\"value\":\"BOTH_公司、实际控制人王勇先生\",\"quote\":\"中国证监会决定对公司、王勇先生进行立案调查。\",\"doc\":\"D3\",\"page\":\"D3\"},{\"fact_id\":\"A4\",\"value\":\"COMPANY_ONLY_福建纳川管材科技股份有限公司\",\"quote\":\"中国证监会决定对公司立案。\",\"doc\":\"D4\",\"page\":\"1\"},{\"fact_id\":\"B3\",\"value\":\"两个编号：证监立案字0042026002号、证监立案字0042026003号\",\"quote\":\"西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》（告知书编号分别为：证监立案字0042026002 号、证监立案字0042026003 号）。\",\"doc\":\"D3\",\"page\":\"D3\"},{\"fact_id\":\"B3b\",\"value\":\"证监立案字0042026002号→公司(西王食品)；证监立案字0042026003号→王勇\",\"quote\":\"西王食品股份有限公司（以下简称“公司”）于近日收到中国证券监督管理委员会（以下简称“中国证监会”）分别对公司、实际控制人王勇先生下发的《立案告知书》（告知书编号分别为：证监立案字0042026002 号、证监立案字0042026003 号）。\",\"doc\":\"D3\",\"page\":\"D3\"},{\"fact_id\":\"B4\",\"value\":\"证监立案字0262026012号\",\"quote\":\"2026 年10 月9 日，福建纳川管材科技股份有限公司（以下简称“公司”）收到中国证券监督管理委员会（以下简称“中国证监会”）下发的《中国证券监督管理委员会立案告知书》（编号：证监立案字0262026012 号）。\",\"doc\":\"D4\",\"page\":\"1\"},{\"fact_id\":\"C1\",\"value\":\"SPECIFIC_公司2023年年报涉嫌信息披露违法违规\",\"quote\":\"因公司2023年年报涉嫌信息披露违法违规，根据《中华人民共和国证券法》《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司立案。\",\"doc\":\"D4\",\"page\":\"1\"},{\"fact_id\":\"C2\",\"value\":\"GENERIC_涉嫌信息披露违法违规\",\"quote\":\"因涉嫌信息披露违法违规，根据《中华人民共和国证券法》、《中华人民共和国行政处罚法》等法律法规，中国证监会决定对公司、王勇先生进行立案调查。\",\"doc\":\"D3\",\"page\":\"D3\"},{\"fact_id\":\"E1\",\"value\":1,\"quote\":\"中国证监会决定对公司、王勇先生进行立案调查。\",\"doc\":\"D3\",\"page\":\"D3\"},{\"fact_id\":\"E2\",\"value\":1,\"quote\":\"中国证监会决定对公司、王勇先生进行立案调查。\",\"doc\":\"D3\",\"page\":\"D3\"},{\"fact_id\":\"E3\",\"value\":2,\"quote\":\"中国证监会决定对公司、王勇先生进行立案调查。\",\"doc\":\"D3\",\"page\":\"D3\"}],\"abstentions\":[{\"item_id\":\"A1\",\"text\":\"材料中未提供D1公告抽取内容，无法判定其立案对象，拒判。\"},{\"item_id\":\"A2\",\"text\":\"材料中未提供D2公告抽取内容，无法判定其立案对象，拒判。\"},{\"item_id\":\"A5\",\"text\":\"材料中未提供俞发祥在两家上市公司职务的信息，拒判。\"},{\"item_id\":\"B1\",\"text\":\"材料中未提供D1立案告知书编号，拒判。\"},{\"item_id\":\"B2\",\"text\":\"材料中未提供D2立案告知书编号，拒判。\"},{\"item_id\":\"D_1\",\"text\":\"材料中未提供D1、D2内容，无法核验两处俞发祥是否为同一自然人，拒判。\"},{\"item_id\":\"D_2\",\"text\":\"材料中未提供D1、D2内容，无法核验是否为同一份立案告知书，拒判。\"},{\"item_id\":\"D_3\",\"text\":\"材料中未提供D1、D2内容，无法核验是否为同一收到事件，拒判。\"},{\"item_id\":\"D_4\",\"text\":\"材料中未提供D1、D2公告主体信息，无法核验是否为同一公司，拒判。\"},{\"item_id\":\"F1\",\"text\":\"材料中未提供D1公告落款日，拒判。\"},{\"item_id\":\"F2\",\"text\":\"材料中未提供D2公告落款日，拒判。\"},{\"item_id\":\"F3\",\"text\":\"材料中未提供D1、D2所载告知书收到日，拒判。\"},{\"item_id\":\"F4\",\"text\":\"材料中未提供D1、D2落款日与收到日，无法判定其关系，拒判。\"},{\"item_id\":\"U2\",\"text\":\"D3收到告知书的具体日期原文仅载“近日”，不可判定，拒判。\"}],\"complete\":false}",
+     "in": 2909,
+     "out": 1044,
+     "latency": 4.3,
+     "cancelled": false,
+     "late": false,
+     "attempt": 1
+    }
+   ]
+  },
+  "calls": [
+   {
+    "node": "E1",
+    "attempt": 1,
+    "alias": "deepseek",
+    "model": "deepseek",
+    "latency": 2.74,
+    "in": 614,
+    "out": 549,
+    "cancelled": false,
+    "late": false,
+    "accounting_yuan": 0.0020284
+   },
+   {
+    "node": "E2",
+    "attempt": 1,
+    "alias": "deepseek",
+    "model": "deepseek",
+    "latency": 6.02,
+    "in": 613,
+    "out": 679,
+    "cancelled": false,
+    "late": false,
+    "accounting_yuan": 0.0023916
+   },
+   {
+    "node": "E3",
+    "attempt": 1,
+    "alias": "deepseek",
+    "model": "deepseek",
+    "latency": 9.17,
+    "in": 555,
+    "out": 565,
+    "cancelled": false,
+    "late": false,
+    "accounting_yuan": 0.002026
+   },
+   {
+    "node": "E4",
+    "attempt": 1,
+    "alias": "deepseek",
+    "model": "deepseek",
+    "latency": 8.78,
+    "in": 532,
+    "out": 393,
+    "cancelled": false,
+    "late": false,
+    "accounting_yuan": 0.001526
+   },
+   {
+    "node": "J1",
+    "attempt": 1,
+    "alias": "glm53flash",
+    "model": "glm53flash",
+    "latency": 34.44,
+    "in": 1563,
+    "out": 2879,
+    "cancelled": false,
+    "late": false,
+    "accounting_yuan": 0.0093116
+   },
+   {
+    "node": "J1",
+    "attempt": 1,
+    "alias": "glm53flash",
+    "model": "glm53flash",
+    "latency": 119.83,
+    "in": 1690,
+    "out": 8192,
+    "cancelled": false,
+    "late": false,
+    "accounting_yuan": 0.0242896
+   },
+   {
+    "node": "J2",
+    "attempt": 1,
+    "alias": "deepseek",
+    "model": "deepseek",
+    "latency": 4.61,
+    "in": 1571,
+    "out": 1002,
+    "cancelled": false,
+    "late": false,
+    "accounting_yuan": 0.0040624
+   },
+   {
+    "node": "SINK",
+    "attempt": 1,
+    "alias": "deepseek",
+    "model": "deepseek",
+    "latency": 4.3,
+    "in": 2909,
+    "out": 1044,
+    "cancelled": false,
+    "late": false,
+    "accounting_yuan": 0.0052504
+   }
+  ]
+ },
+ "race": [],
+ "s5": {
+  "slo_violation": false,
+  "race_triggered": false,
+  "winner": null,
+  "late": false,
+  "late_calls": 0,
+  "late_cost_yuan": 0.0,
+  "j2_start_at": null,
+  "ds_started_at": null
+ },
+ "global_budget": {
+  "calls_left": 43,
+  "yuan_left": 1.15819,
+  "tokens_left": 138479,
+  "reserved_tokens": 0,
+  "peak_used_plus_reserved": 228235
+ },
+ "slots": {
+  "max_seen": {
+   "glm53flash": 1,
+   "deepseek": 1
+  },
+  "active": {
+   "glm53flash": 0,
+   "deepseek": 0
+  },
+  "n_intervals": 8
+ },
+ "score": {
+  "tp": 4,
+  "slot_success": 0.1739,
+  "quality_status": null,
+  "claim_results": [
+   {
+    "claim_id": "c_A3",
+    "status": "CORRECT_BUT_UNSUPPORTED_CITATION",
+    "fact_id": "A3"
+   },
+   {
+    "claim_id": "c_A4",
+    "status": "WRONG_GOLD_FACT_VALUE_OR_RELATION",
+    "fact_id": "A4"
+   },
+   {
+    "claim_id": "c_B3",
+    "status": "WRONG_GOLD_FACT_VALUE_OR_RELATION",
+    "fact_id": "B3"
+   },
+   {
+    "claim_id": "c_B3b",
+    "status": "CORRECT_BUT_UNSUPPORTED_CITATION",
+    "fact_id": "B3b"
+   },
+   {
+    "claim_id": "c_B4",
+    "status": "CORRECT_GOLD",
+    "fact_id": "B4"
+   },
+   {
+    "claim_id": "c_C1",
+    "status": "WRONG_GOLD_FACT_VALUE_OR_RELATION",
+    "fact_id": "C1"
+   },
+   {
+    "claim_id": "c_C2",
+    "status": "WRONG_GOLD_FACT_VALUE_OR_RELATION",
+    "fact_id": "C2"
+   },
+   {
+    "claim_id": "c_E1",
+    "status": "CORRECT_BUT_UNSUPPORTED_CITATION",
+    "fact_id": "E1"
+   },
+   {
+    "claim_id": "c_E2",
+    "status": "WRONG_GOLD_FACT_VALUE_OR_RELATION",
+    "fact_id": "E2"
+   },
+   {
+    "claim_id": "c_E3",
+    "status": "WRONG_GOLD_FACT_VALUE_OR_RELATION",
+    "fact_id": "E3"
+   }
+  ],
+  "F1_ok": false,
+  "F2_ok": false,
+  "E2": "1"
+ },
+ "tp": 4
+}

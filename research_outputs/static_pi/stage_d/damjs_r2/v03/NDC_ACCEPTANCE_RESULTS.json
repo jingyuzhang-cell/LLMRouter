@@ -1,0 +1,388 @@
+{
+ "generated": "2026-11-07T23:09:46",
+ "tests": [
+  {
+   "id": "C1",
+   "name": "generation run stops after J1's first valid call; fixture = E1-E4 + J1 v1",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "C2",
+   "name": "both arms replay the identical upstream fixture; exactly one byte-identical injected repair per arm, classified outcome=injected and invisible to the estimator",
+   "ok": true,
+   "evidence": {
+    "arms": [
+     {
+      "rep": 1,
+      "arm": "R2",
+      "fixture_calls": 5,
+      "injected": 1,
+      "estimator": {
+       "p": 0.059670781893004114,
+       "n_eff": 243.0,
+       "observed": {
+        "calls": 1,
+        "fails": 0
+       },
+       "truncated": 0,
+       "injected": 1,
+       "ci95": [
+        0.0299,
+        0.0895
+       ],
+       "slow": false
+      }
+     },
+     {
+      "rep": 1,
+      "arm": "ND-only",
+      "fixture_calls": 5,
+      "injected": 1,
+      "estimator": {
+       "p": 0.059670781893004114,
+       "n_eff": 243.0,
+       "observed": {
+        "calls": 1,
+        "fails": 0
+       },
+       "truncated": 0,
+       "injected": 1,
+       "ci95": [
+        0.0299,
+        0.0895
+       ],
+       "slow": false
+      }
+     },
+     {
+      "rep": 2,
+      "arm": "R2",
+      "fixture_calls": 5,
+      "injected": 1,
+      "estimator": {
+       "p": 0.059670781893004114,
+       "n_eff": 243.0,
+       "observed": {
+        "calls": 1,
+        "fails": 0
+       },
+       "truncated": 0,
+       "injected": 1,
+       "ci95": [
+        0.0299,
+        0.0895
+       ],
+       "slow": false
+      }
+     },
+     {
+      "rep": 2,
+      "arm": "ND-only",
+      "fixture_calls": 5,
+      "injected": 1,
+      "estimator": {
+       "p": 0.059670781893004114,
+       "n_eff": 243.0,
+       "observed": {
+        "calls": 1,
+        "fails": 0
+       },
+       "truncated": 0,
+       "injected": 1,
+       "ci95": [
+        0.0299,
+        0.0895
+       ],
+       "slow": false
+      }
+     },
+     {
+      "rep": 3,
+      "arm": "R2",
+      "fixture_calls": 5,
+      "injected": 1,
+      "estimator": {
+       "p": 0.059670781893004114,
+       "n_eff": 243.0,
+       "observed": {
+        "calls": 1,
+        "fails": 0
+       },
+       "truncated": 0,
+       "injected": 1,
+       "ci95": [
+        0.0299,
+        0.0895
+       ],
+       "slow": false
+      }
+     },
+     {
+      "rep": 3,
+      "arm": "ND-only",
+      "fixture_calls": 5,
+      "injected": 1,
+      "estimator": {
+       "p": 0.059670781893004114,
+       "n_eff": 243.0,
+       "observed": {
+        "calls": 1,
+        "fails": 0
+       },
+       "truncated": 0,
+       "injected": 1,
+       "ci95": [
+        0.0299,
+        0.0895
+       ],
+       "slow": false
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "C3",
+   "name": "arm order per rep randomized and reproducible under the frozen seed",
+   "ok": true,
+   "evidence": {
+    "orders": [
+     [
+      "R2",
+      "ND-only"
+     ],
+     [
+      "R2",
+      "ND-only"
+     ],
+     [
+      "ND-only",
+      "R2"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "C4",
+   "name": "ledger separation: fixture replays deducted; injected simulated costs isolated; real calls = generation + J2/SINK only; within caps",
+   "ok": true,
+   "evidence": {
+    "real_calls_total": 27,
+    "ledger": {
+     "calls": 33,
+     "yuan": 0.254202,
+     "tokens": 126297
+    },
+    "caps": {
+     "calls": 50,
+     "tokens": 160000,
+     "yuan": 0.35
+    },
+    "rows": [
+     {
+      "tag": "NDC_r1_GEN",
+      "kind": "generation",
+      "charged_after_deduction": {
+       "calls": 5,
+       "yuan": 0.013058,
+       "tokens": 7405
+      },
+      "injected": {
+       "calls": 0,
+       "history_tokens": 0,
+       "simulated_accounting_yuan": 0.0,
+       "simulated_wall_s": 0.0
+      },
+      "fixture_replays_deducted": {
+       "calls": 0,
+       "tokens": 0,
+       "yuan": 0.0
+      },
+      "real": {
+       "calls": 5,
+       "tokens": 7405,
+       "accounting_yuan": 0.013058
+      }
+     },
+     {
+      "tag": "NDC_r1_R2",
+      "kind": "R2",
+      "charged_after_deduction": {
+       "calls": 3,
+       "tokens": 17347,
+       "yuan": 0.035838
+      },
+      "injected": {
+       "calls": 1,
+       "history_tokens": 9882,
+       "simulated_accounting_yuan": 0.02429,
+       "simulated_wall_s": 119.83
+      },
+      "fixture_replays_deducted": {
+       "calls": 5,
+       "tokens": 7405,
+       "yuan": 0.013058
+      },
+      "real": {
+       "calls": 2,
+       "tokens": 7465,
+       "accounting_yuan": 0.011548
+      }
+     },
+     {
+      "tag": "NDC_r1_ND-only",
+      "kind": "ND-only",
+      "charged_after_deduction": {
+       "calls": 3,
+       "tokens": 17347,
+       "yuan": 0.035838
+      },
+      "injected": {
+       "calls": 1,
+       "history_tokens": 9882,
+       "simulated_accounting_yuan": 0.02429,
+       "simulated_wall_s": 119.83
+      },
+      "fixture_replays_deducted": {
+       "calls": 5,
+       "tokens": 7405,
+       "yuan": 0.013058
+      },
+      "real": {
+       "calls": 2,
+       "tokens": 7465,
+       "accounting_yuan": 0.011548
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "C5",
+   "name": "injected 119.83 s wall reflected identically in both arms' executor clocks",
+   "ok": true,
+   "evidence": {
+    "walls": {
+     "r1_R2": 119.8,
+     "r1_ND-only": 119.8,
+     "r2_R2": 119.8,
+     "r2_ND-only": 119.8,
+     "r3_R2": 119.8,
+     "r3_ND-only": 119.8
+    }
+   }
+  },
+  {
+   "id": "C6",
+   "name": "mechanism on the executor path: R2 commits the empty v2 (destructive); ND rolls back to the fixture v1 byte-exactly and J2 starts after the rollback",
+   "ok": true,
+   "evidence": {
+    "reps": [
+     {
+      "rep": 1,
+      "r2_j1_len": 0,
+      "nd_j1_len": 1974,
+      "v1_len": 1974,
+      "rollback": 1
+     },
+     {
+      "rep": 2,
+      "r2_j1_len": 0,
+      "nd_j1_len": 1974,
+      "v1_len": 1974,
+      "rollback": 1
+     },
+     {
+      "rep": 3,
+      "r2_j1_len": 0,
+      "nd_j1_len": 1974,
+      "v1_len": 1974,
+      "rollback": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "C7",
+   "name": "identity verified in every arm execution; zero network; controlled_injection marked; dual-caliber TP recorded",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "C8",
+   "name": "real mode refused without authorization and without GO; with both plus the registered frozen prereg, the lock opens only as far as the credential step (stubbed safety net, no launch)",
+   "ok": true,
+   "evidence": {
+    "gates": [
+     [
+      [],
+      "REFUSED: real mode needs STAGE_D_REAL_CALLS_AUTHORIZED=1 and DAMJS_NDC"
+     ],
+     [
+      [
+       "STAGE_D_REAL_CALLS_AUTHORIZED"
+      ],
+      "REFUSED: real mode needs STAGE_D_REAL_CALLS_AUTHORIZED=1 and DAMJS_NDC"
+     ],
+     [
+      [
+       "DAMJS_NDC_GO",
+       "STAGE_D_REAL_CALLS_AUTHORIZED"
+      ],
+      "PASSED_GATES->SAFETY_NET"
+     ]
+    ]
+   }
+  }
+ ],
+ "rows": [],
+ "batch": {
+  "batch": "DAMJS_ND_CONTROLLED",
+  "mode": "replay",
+  "executed": 9,
+  "stop": null,
+  "status": "DONE",
+  "ledger": {
+   "calls": 33,
+   "yuan": 0.254202,
+   "tokens": 126297
+  },
+  "caps": {
+   "calls": 50,
+   "tokens": 160000,
+   "yuan": 0.35
+  },
+  "authorization": {
+   "calls": 377,
+   "tokens": 1348528,
+   "yuan": 2.3788
+  },
+  "r2_ledger": {
+   "calls": 45,
+   "yuan": 0.27604,
+   "tokens": 143501
+  },
+  "manifest_pre": {
+   "ok": true,
+   "mismatches": [],
+   "manifest_sha256": "ccfe8aad893218eaa279cdee79de82406050cf2b978ba0bccf4fcd38b27969db",
+   "n": 28
+  },
+  "manifest_post": {
+   "ok": true,
+   "mismatches": [],
+   "manifest_sha256": "ccfe8aad893218eaa279cdee79de82406050cf2b978ba0bccf4fcd38b27969db",
+   "n": 28
+  },
+  "integrity": "OK",
+  "note": "real API calls not authorized; separate GO required (DAMJS_NDC_GO=run)"
+ },
+ "summary": {
+  "passed": 8,
+  "failed": 0,
+  "wall_s": 117.5,
+  "manifest_sha256": "ccfe8aad893218eaa279cdee79de82406050cf2b978ba0bccf4fcd38b27969db",
+  "batch_status": "DONE"
+ }
+}

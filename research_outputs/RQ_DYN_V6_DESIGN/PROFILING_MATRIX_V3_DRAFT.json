@@ -1,0 +1,69 @@
+{
+ "version": "PROFILING_MATRIX_V3_DRAFT(设计,未执行,需单独GO)",
+ "basis": "V2已完成56格(2模型);补GLM-5.3与Qwen3.7-Max各28格 → 112格",
+ "models": [
+  {
+   "id": "deepseek-chat",
+   "status": "已完成28格",
+   "config": "max_tokens=8192",
+   "phase": "p1/p2"
+  },
+  {
+   "id": "glm-5.3-flash",
+   "status": "已完成28格",
+   "config": "28格中2格为8192阶段(短文档)、26格为32768阶段",
+   "phase": "p1+p2",
+   "caveat": "两阶段必须分开标记,不得无差别合并"
+  },
+  {
+   "id": "glm-5.3",
+   "status": "待测28格",
+   "config": "max_tokens=32768(推理模型)",
+   "note": "与Flash为不同模型,不得互替"
+  },
+  {
+   "id": "qwen3.7-max",
+   "status": "待测28格",
+   "config": "max_tokens=8192(非推理型,待验证)",
+   "endpoint": "dashscope.aliyuncs.com/compatible-mode/v1",
+   "note": "连通已验(1.4s)"
+  }
+ ],
+ "new_cells": {
+  "per_model": "12任务×2节点类型 + 4重复格 = 28",
+  "glm53": 28,
+  "qwen37max": 28,
+  "total_new": 56
+ },
+ "coverage_after": {
+  "extract": "6任务×4模型=24格",
+  "reason": 24,
+  "verification": 24,
+  "report": 24
+ },
+ "budget": {
+  "cap_yuan": 3.0,
+  "already_spent_yuan": 1.1359,
+  "estimate_new": "GLM-5.3约¥0.03/次×28≈¥0.84; Qwen3.7-Max约¥0.02/次×28≈¥0.56",
+  "estimate_total": "¥1.14+1.40≈¥2.54(<¥3.00)",
+  "note": "实际单价需首批2次回调后校准"
+ },
+ "frozen_fields": [
+  "提示词(PROMPTS)",
+  "温度0",
+  "任务与节点类型映射",
+  "重复格位置",
+  "输出合同",
+  "五维Q评分",
+  "统计口径"
+ ],
+ "discipline": [
+  "四类节点覆盖各6任务×4模型",
+  "不删Flash",
+  "不重复测量已完成格",
+  "每模型独立config_phase标记",
+  "熔断: 112格或¥3.00任一触顶即停",
+  "保存原始输入输出/usage/成本/时延/合同评分"
+ ],
+ "status": "DRAFT — 未获GO,零调用"
+}

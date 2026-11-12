@@ -1,0 +1,104 @@
+{
+ "generated": "2026-11-07T23:54:06",
+ "tests": [
+  {
+   "id": "K1",
+   "name": "300 s / 8-pair flow complete; 16 arm executions with unique exec records; per-pair arm order from the frozen seed (orders vary across pairs)",
+   "ok": true,
+   "evidence": {
+    "status": "DONE",
+    "orders": [
+     [
+      "R2",
+      "ND-only"
+     ],
+     [
+      "R2",
+      "ND-only"
+     ],
+     [
+      "ND-only",
+      "R2"
+     ],
+     [
+      "ND-only",
+      "R2"
+     ],
+     [
+      "R2",
+      "ND-only"
+     ],
+     [
+      "ND-only",
+      "R2"
+     ],
+     [
+      "ND-only",
+      "R2"
+     ],
+     [
+      "ND-only",
+      "R2"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "K2",
+   "name": "confirm caps enforced and within limits",
+   "ok": true,
+   "evidence": {
+    "ledger": {
+     "calls": 88,
+     "yuan": 0.677872,
+     "tokens": 336792
+    },
+    "caps": {
+     "calls": 100,
+     "tokens": 360000,
+     "yuan": 1.6
+    }
+   }
+  },
+  {
+   "id": "K3",
+   "name": "resume protection: second invocation executes nothing, ledger unchanged, no orphan stop",
+   "ok": true,
+   "evidence": {
+    "second_executed": 0,
+    "ledger": {
+     "calls": 88,
+     "yuan": 0.677872,
+     "tokens": 336792
+    }
+   }
+  },
+  {
+   "id": "K4",
+   "name": "caliber v3 SHA matches its freeze record; confirm prereg registered and matches disk",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "K5",
+   "name": "mechanism on pair 1: R2 destructive (empty J1), ND byte-exact rollback to fixture v1",
+   "ok": true,
+   "evidence": {}
+  },
+  {
+   "id": "K6",
+   "name": "zero network attempts across all 24 replay executions",
+   "ok": true,
+   "evidence": {
+    "trips": 0
+   }
+  }
+ ],
+ "summary": {
+  "passed": 6,
+  "failed": 0,
+  "wall_s": 313.2,
+  "manifest_sha256": "2951ef39a83dde81a2740eea69674410392bb02155b1e9e8cc2b9ce1f7e252a1",
+  "prereg_sha256": "6b923536352b1ee82ed2d310e45f16cea407bab799111108a906dd7662cb7a35"
+ }
+}

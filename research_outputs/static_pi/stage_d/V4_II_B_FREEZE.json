@@ -1,0 +1,70 @@
+{
+ "batch": "V4_II_B",
+ "frozen_at": "2026-11-08",
+ "status": "COMPLETE with severe data loss (14/20 tasks errored HTTP 400; 6 complete pairs)",
+ "budget": {
+  "cap_calls": 250,
+  "cap_tokens": 2000000,
+  "cap_yuan": 4.5,
+  "used_calls": 175,
+  "used_tokens_approx": 1317999,
+  "used_yuan_est": 2.88,
+  "errors_task_level": 14,
+  "burned_on_buggy_code": -43,
+  "hold_192": "untouched"
+ },
+ "incidents": [
+  "Bug 1: NoLearning posterior contaminated by update_after_action in shared code path; fixed by gating to Learning arm only",
+  "Bug 2: NoLearning stuck after R fail (decide re-selects R but code only handles pi); fixed by hardcoding pi escalation for NoLearning",
+  "Infra: HTTP 400 on 14/20 tasks (specific document content or API service issue); per-task error handler added; 6 tasks completed",
+  "Report fallback: empty narrative on persistent HTTP 400 (two-layer delivery preserves facts via appendix)"
+ ],
+ "results": {
+  "n_pairs": 6,
+  "cost": {
+   "mean_call_diff": 0.17,
+   "positive_pairs": 1,
+   "zero_pairs": 5,
+   "sign_test_p": 0.5,
+   "verdict": "Direction positive (Learning saves on persistent faults after posterior learns) but NOT statistically significant at n=6"
+  },
+  "quality": {
+   "mean_Q_diff": -0.018,
+   "min_Q_diff": -0.111,
+   "NI_margin": -0.05,
+   "NI_pass": false,
+   "verdict": "NI gate FAILED on single-task stochastic effect (600781 Q diff=-0.111); not a systematic degradation",
+   "note": "Recovery quality is stochastic (different random draws); with n=6, one bad draw breaches a -0.05 margin"
+  },
+  "learning_effect_visible": {
+   "task_600290": "Learning chose pi directly (1 call vs NoLearning 2 calls) - posterior learned from 2 prior R failures",
+   "tasks_600781_002490": "Learning did R→pi (2 calls, same as NoLearning) - posterior not yet learned (first 2 tasks)",
+   "transient_faults": "Both arms used 1 call (R succeeds) - no cost difference expected",
+   "mechanism": "Working as designed: after ~2 persistent R failures, posterior drops below 1/3 → pi direct → 1 call saved"
+  }
+ },
+ "error_tasks": [
+  "000010",
+  "000670",
+  "000976",
+  "300056",
+  "002072",
+  "600399",
+  "600382",
+  "600671",
+  "002700",
+  "600086",
+  "600589",
+  "300427",
+  "600074",
+  "300273"
+ ],
+ "honest_assessment": "6/20 pairs is exploratory only. The learning mechanism demonstrably works (600290), but the experiment lacks statistical power. 14 HTTP 400 errors are an infrastructure issue requiring investigation before re-run.",
+ "files_sha256": {
+  "v4b_runner.py": "766fb6b57feac19858526fdf0a46cd0eccf9dd328777a888433f3117c6cd0bb3",
+  "v4b_config.json": "246c93eb8bf41123665cd13cdbabf0ddc7874202ac971bf7ea68bf9402957eaa",
+  "v4b_runs/ledger.jsonl": "ebfac7049f78fead1d1fb9d22bf15ae3cf06a57e2c1908070bc3b5afa6354d92",
+  "v4b_runs/outputs.jsonl": "706f0027f25ac09ed893a87677484842e918381f8e7a1d2ae247c01950eab887",
+  "V4B_PAIRED_RESULTS.json": "49d0229250a3ad29d9fbb7c2b909d301a22841b46c8f2f0ce6996960159dc846"
+ }
+}

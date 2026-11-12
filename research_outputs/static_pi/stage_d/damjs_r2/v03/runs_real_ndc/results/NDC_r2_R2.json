@@ -1,0 +1,320 @@
+{
+ "batch": "DAMJS_ND_CONTROLLED",
+ "arm": "R2",
+ "executor_arm": "Proposed-Dynamic",
+ "policy_source": "damjs_v03.BridgeV03",
+ "nd": false,
+ "ev_gate": false,
+ "scenario": "S3",
+ "rep": 2,
+ "deadline_s": 240.0,
+ "deadline_ex_s": 239.881,
+ "startup_offset_s": 0.119,
+ "mode": "real",
+ "exec_id": "R2|S3|r2|D240",
+ "status": "COMPLETE",
+ "tp": 5,
+ "tp_strict": 0,
+ "unsupported": [
+  "A1",
+  "A2",
+  "B3b",
+  "B4",
+  "E1"
+ ],
+ "slot_success": 0.2174,
+ "makespan_s": 183.5,
+ "elapsed_since_launch_s": 173.61,
+ "calls": 8,
+ "tokens_in": 10029,
+ "tokens_out": 15891,
+ "accounting_yuan": 0.052518,
+ "actual_cash_yuan": 0.0175084,
+ "actions": [
+  {
+   "kind": "structure_repair",
+   "node": "J1",
+   "t": 43.1
+  }
+ ],
+ "decisions": [
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "acts": [
+    [
+     "structure_repair",
+     "J1"
+    ]
+   ],
+   "t_rem": 197,
+   "engine": "damjs_engine.Scheduler",
+   "chosen": "Z_structure"
+  },
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "acts": [],
+   "t_rem": 77,
+   "engine": "damjs_engine.Scheduler",
+   "chosen": "NONE"
+  }
+ ],
+ "anomalies": [
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "t": 43.1
+  },
+  {
+   "node": "J1",
+   "sig": {
+    "D2": "structure"
+   },
+   "t": 163.2
+  }
+ ],
+ "final_states": {
+  "E1": "Completed",
+  "E2": "Completed",
+  "E3": "Completed",
+  "E4": "Completed",
+  "J1": "Completed",
+  "J2": "Completed",
+  "SINK": "Completed",
+  "FMT": "Completed"
+ },
+ "invalid_reason": null,
+ "per_node_calls": {
+  "E1": [
+   "deepseek"
+  ],
+  "E2": [
+   "deepseek"
+  ],
+  "E3": [
+   "deepseek"
+  ],
+  "E4": [
+   "deepseek"
+  ],
+  "J1": [
+   "glm53flash",
+   "glm53flash"
+  ],
+  "J2": [
+   "deepseek"
+  ],
+  "SINK": [
+   "deepseek"
+  ],
+  "FMT": []
+ },
+ "exec_record": "runs_real_ndc/exec_records/R2__S3__r2__D240.json",
+ "bridge": {
+  "engine_module": "/root/research_outputs/static_pi/stage_d/damsj_engine.py",
+  "counts": {
+   "build_candidates": 2,
+   "select": 2,
+   "apply": 1,
+   "observe": 1
+  },
+  "history": {
+   "J1|Z_structure": {
+    "count": 1,
+    "gains": [
+     0.0
+    ]
+   }
+  },
+  "engine_log": [
+   {
+    "ev": "apply",
+    "kind": "Z_structure",
+    "node": "J1",
+    "t": 43.12851249426603
+   }
+  ],
+  "unresolved": [],
+  "version": "V0.3.1",
+  "nd": false,
+  "ev_gate": false,
+  "rollbacks": [],
+  "estimator": {
+   "deepseek": {
+    "p": 0.05846774193548387,
+    "n_eff": 248.0,
+    "observed": {
+     "calls": 6,
+     "fails": 0
+    },
+    "truncated": 0,
+    "injected": 0,
+    "ci95": [
+     0.0293,
+     0.0877
+    ],
+    "slow": false
+   },
+   "glm53flash": {
+    "p": 0.059670781893004114,
+    "n_eff": 243.0,
+    "observed": {
+     "calls": 1,
+     "fails": 0
+    },
+    "truncated": 0,
+    "injected": 1,
+    "ci95": [
+     0.0299,
+     0.0895
+    ],
+    "slow": false
+   }
+  }
+ },
+ "controlled_injection": true,
+ "controlled_log": [
+  {
+   "node": "E1",
+   "call": 1,
+   "source": "fixture"
+  },
+  {
+   "node": "E2",
+   "call": 1,
+   "source": "fixture"
+  },
+  {
+   "node": "E3",
+   "call": 1,
+   "source": "fixture"
+  },
+  {
+   "node": "E4",
+   "call": 1,
+   "source": "fixture"
+  },
+  {
+   "node": "J1",
+   "call": 1,
+   "source": "fixture"
+  },
+  {
+   "node": "J1",
+   "call": 2,
+   "source": "injected"
+  },
+  {
+   "node": "J2",
+   "call": 1,
+   "source": "live"
+  },
+  {
+   "node": "SINK",
+   "call": 1,
+   "source": "live"
+  }
+ ],
+ "injected_calls": [
+  {
+   "node": "J1",
+   "call": 2,
+   "source": "injected"
+  }
+ ],
+ "network_attempts": 0,
+ "wall_s": 173.49,
+ "identity": {
+  "pre": {
+   "verified": true,
+   "mismatches": [],
+   "components": {
+    "child:damjs_r2/v03/v03_child.py": "883db88643fd1cf6221dfe7ac919cdb2f6c40bd81615cf57b811039c92debc01",
+    "ndc_runner:damjs_r2/v03/nd_controlled.py": "95fccce0414e4aff0e43e334392e3fd8b25cca78702b0b69b84fddeb93a9e3d6",
+    "v03_mechanisms:damjs_r2/v03/damjs_v03.py": "bbb997ced7dbeb916679463950d290bc2ad805ff797b3e924e01fd6de91911ba",
+    "r2_child_lib:damjs_r2/damjs_r2_child.py": "6443250ff90c377fcb1d269bb84637477ca20454d1b5a8b2edb3289380bc38f7",
+    "r2_runner_lib:damjs_r2/damjs_r2_runner.py": "6043b300aba964ad80bf64a580cf3798f89578419fab2959b75edaf9e7b24f8d",
+    "bridge:damjs_r2/damjs_bridge.py": "c3e21e85f986cf60aaa8633ab93ea7deee9ff731e95a884c43869f26831b7ce6",
+    "wrapper:damsj_executor.py": "107db96a0308c5317b229ca21892de0bb697a2ff4b527c0082cdc344f95292b6",
+    "engine:damsj_engine.py": "7eec919b6a11ea99e4e5fb8bfc8ab7edfa0b90def5f360e145b062e570493aef",
+    "executor:stage_d_v2_executor.py": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+    "config:stage_d_v2_executor_config.json": "914f3edd4c4848e3f7063ce6c398f80afc773cf790844973638550848f543581",
+    "dependency_d2:d2_executor.py": "df8a2de69079916110018699c57ec7f4ad9fd482af3f2fa9917360bac056c16e",
+    "dependency_prompts:/root/research_outputs/static_pi/stage_a/executor.py": "5f1de3c770aa4869c2b39daa54f8917a90dcd100a8a1952e3315862abf14f889",
+    "dependency_transport:/root/capital_opinion_pilot/transport.py": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+    "scorer:/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+    "task_contract:/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/PHASE2B/TASK_CONTRACT_PHASE2B_v2_1.json": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234"
+   },
+   "manifest_sha256": "25901ae0411152f8b5cc0308662f438d000c01523b03bf579202a861e7a397da",
+   "batch_id": "DAMJS_ND_CONTROLLED"
+  },
+  "post": {
+   "verified": true,
+   "mismatches": [],
+   "components": {
+    "child:damjs_r2/v03/v03_child.py": "883db88643fd1cf6221dfe7ac919cdb2f6c40bd81615cf57b811039c92debc01",
+    "ndc_runner:damjs_r2/v03/nd_controlled.py": "95fccce0414e4aff0e43e334392e3fd8b25cca78702b0b69b84fddeb93a9e3d6",
+    "v03_mechanisms:damjs_r2/v03/damjs_v03.py": "bbb997ced7dbeb916679463950d290bc2ad805ff797b3e924e01fd6de91911ba",
+    "r2_child_lib:damjs_r2/damjs_r2_child.py": "6443250ff90c377fcb1d269bb84637477ca20454d1b5a8b2edb3289380bc38f7",
+    "r2_runner_lib:damjs_r2/damjs_r2_runner.py": "6043b300aba964ad80bf64a580cf3798f89578419fab2959b75edaf9e7b24f8d",
+    "bridge:damjs_r2/damjs_bridge.py": "c3e21e85f986cf60aaa8633ab93ea7deee9ff731e95a884c43869f26831b7ce6",
+    "wrapper:damsj_executor.py": "107db96a0308c5317b229ca21892de0bb697a2ff4b527c0082cdc344f95292b6",
+    "engine:damsj_engine.py": "7eec919b6a11ea99e4e5fb8bfc8ab7edfa0b90def5f360e145b062e570493aef",
+    "executor:stage_d_v2_executor.py": "e80fe6a3a37947cada79540885dc8cbd631dbcd1a0daffbc82e3ef3bb9ea8d5b",
+    "config:stage_d_v2_executor_config.json": "914f3edd4c4848e3f7063ce6c398f80afc773cf790844973638550848f543581",
+    "dependency_d2:d2_executor.py": "df8a2de69079916110018699c57ec7f4ad9fd482af3f2fa9917360bac056c16e",
+    "dependency_prompts:/root/research_outputs/static_pi/stage_a/executor.py": "5f1de3c770aa4869c2b39daa54f8917a90dcd100a8a1952e3315862abf14f889",
+    "dependency_transport:/root/capital_opinion_pilot/transport.py": "7a423eb38d07592a05419ea66f8d250ece27e6295da74763b7be9096b0ca1482",
+    "scorer:/root/.worktrees/quality-v4/r3_own_pool/deadline_reward_v1/quality_v4/terminal_quality.py": "136b2e1b09c3fbc991da34a836e6638e36d5c04510975094fa90126ed37b352c",
+    "task_contract:/root/KDX_GOLD_HUMAN_ANNOTATION_PACKAGE/evidence/PHASE2B/TASK_CONTRACT_PHASE2B_v2_1.json": "f92090b0fb3d38af6f782c19cbb1b8b70ba93801cad535b8eba4933924e61234"
+   },
+   "manifest_sha256": "25901ae0411152f8b5cc0308662f438d000c01523b03bf579202a861e7a397da",
+   "batch_id": "DAMJS_ND_CONTROLLED"
+  },
+  "ok": true
+ },
+ "runner": {
+  "batch": "DAMJS_ND_CONTROLLED",
+  "phase": "ndc-r2",
+  "block": "R2|r2",
+  "tag": "NDC_r2_R2",
+  "arm": "R2",
+  "scenario": "S3",
+  "rep": 2,
+  "deadline_s": 240.0,
+  "mode": "real",
+  "watchdog": "COMPLETE",
+  "elapsed_s": 173.7,
+  "aborted": false,
+  "status": "COMPLETE",
+  "tp": 5,
+  "joint_success": false,
+  "identity_ok": true,
+  "network_attempts": 0,
+  "reconcile": {
+   "n_calls_started": 8,
+   "n_unsettled": 0,
+   "topup_tokens": 0,
+   "topup_yuan": 0,
+   "unsettled": []
+  },
+  "ledger_before": {
+   "calls": 35,
+   "yuan": 0.27275,
+   "tokens": 138585
+  },
+  "ledger_after": {
+   "calls": 35,
+   "yuan": 0.27275,
+   "tokens": 138585
+  },
+  "replay_src": "/root/research_outputs/static_pi/stage_d/damjs_r2/runs_real/exec_records/DAMJS__S3__r1__D240.json"
+ }
+}

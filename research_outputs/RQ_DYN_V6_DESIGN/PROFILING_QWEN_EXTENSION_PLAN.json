@@ -1,0 +1,37 @@
+{
+ "issue": "Profiling仅含2个模型(glm-5.3-flash/deepseek-chat),未含Qwen",
+ "root_cause": {
+  "primary": "PROFILING_MATRIX_V2冻结时模型池限定为2个——依据窗口2026-11-11裁决『模型池先冻结为GLM-5.3-Flash、DeepSeek-Chat;本轮不增加GLM-Air,避免第三个模型改变实验规模』",
+  "engine_shortcoming": "当窗口写明'不增加GLM-Air'时,引擎未提示Qwen同样可用且可作为第三模型候选——属引擎侧沟通不足"
+ },
+ "qwen_availability": {
+  "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+  "credential": "QWEN_API_KEY(/root/.env, len=35, 已脱敏不入库)",
+  "model_count": 182,
+  "tested_ok": [
+   "qwen-plus(0.4s)",
+   "qwen3.7-flash(3.8s)",
+   "qwen3.8-flash(1.2s)",
+   "qwen3.7-max(1.4s)"
+  ],
+  "candidates_for_profiling": [
+   "qwen3.7-max(强)",
+   "qwen3.7-flash(快)",
+   "qwen-plus(经典)"
+  ]
+ },
+ "extension_design": {
+  "new_cells": "12任务×2节点类型×1新模型=24 + 4重复格×1模型=4 → 28格",
+  "matrix_total_after": "56+28=84次",
+  "coverage_after": "四类节点各9任务(原6+新3)? 否——同一12任务×2类型结构,仅加1模型:每类型6任务×3模型=18格",
+  "budget_est": "按qwen-plus量级(¥0.008/1k in, ¥0.02/1k out)估¥0.01-0.05/次 → 28次约¥0.3-1.4",
+  "cumulative_est": "已花¥0.959 + 新增约¥0.3-1.4 = ¥1.26-2.36(<¥3.00上限)"
+ },
+ "decision_needed": [
+  "①是否批准追加28次Qwen调用(总84次)",
+  "②选择哪个Qwen模型(qwen3.7-max/qwen3.7-flash/qwen-plus)",
+  "③是否允许超出原56次配额(矩阵升版V3)"
+ ],
+ "recommendation": "选qwen3.7-max(与glm-5.3-flash、deepseek-chat同属强/主力档,三方对比更有解释力);若担心成本可选qwen3.7-flash",
+ "honest_note": "原56次配额已因引擎缺陷实耗约69次(超13次);若再加28次Qwen,累计约97次调用、¥1.26-2.36,仍在¥3.00预算内但配额偏差需窗口确认"
+}

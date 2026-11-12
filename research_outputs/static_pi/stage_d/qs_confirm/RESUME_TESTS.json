@@ -1,0 +1,61 @@
+{
+ "passed": 11,
+ "total": 11,
+ "results": [
+  {
+   "name": "A1 rep 6 registered: three incomplete arms, Q_all 0, safety UNDEFINED, cause recorded, no rerun of its call",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A2 analysis over six reps: rep 6 counts as ties in both C-A and C-B",
+   "ok": true,
+   "detail": "{'rep': 6, 'flagged': False, 'q': {'A': 0.0, 'B': 0.0, 'C': 0.0}, 'calls': {'A': 1, 'B': 1, 'C': 1}, 'yuan': {'A': 0.027653, 'B': 0.027653, 'C': 0.027653}, 'lat': {'B': 0.0, 'C': 0.0}, 'err': {'A': None, 'B': None, 'C': None}, 'incomplete': {'A': True, 'B': True, 'C': True}}"
+  },
+  {
+   "name": "B1 resume runs only reps 7 and 8; scenes of reps 1-6 and both block records are byte-untouched",
+   "ok": true,
+   "detail": "[7, 8]"
+  },
+  {
+   "name": "B2 resumed summary is PASS with resume flag, and the analysis now covers eight reps",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B3 the resumed budget continues from this block's earlier spend only (block-2 prior = 10 calls / 124,056 tok / ¥0.2187)",
+   "ok": true,
+   "detail": "{'calls': 10, 'tokens': 124056, 'yuan_accounting': 0.21866480000000002, 'yuan_marginal': 0.0826916}"
+  },
+  {
+   "name": "B4 without --resume the runner still refuses when a replicate scene exists",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B5 the shared-stage stop rule is unchanged in resume mode (E_D1 truncation stops the batch again)",
+   "ok": true,
+   "detail": "rep 7: shared-stage node fault at E_D1: truncated"
+  },
+  {
+   "name": "B6 resume gate: wrong --after against the stop record is refused",
+   "ok": true,
+   "detail": "REFUSED: --after does not match BLOCK_2.json"
+  },
+  {
+   "name": "B7 the non-resume block-2 gate still chains to BLOCK_1, not the stop record",
+   "ok": true,
+   "detail": "REFUSED: --after does not match BLOCK_1.json"
+  },
+  {
+   "name": "B8 the freeze pins the amended runner and the rep-6 registration",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "B9 statistics path: 6 positive of 6 valid pairs gives p=0.015625 (matches the operator arithmetic)",
+   "ok": true,
+   "detail": "{'n_eff': 6, 'positive': 6, 'p': 0.015625}"
+  }
+ ]
+}
